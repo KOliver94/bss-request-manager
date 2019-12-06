@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from mongoengine import connect
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -40,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_mongoengine',
     'requests',
 ]
 
@@ -81,17 +78,10 @@ WSGI_APPLICATION = 'manager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo',
+        'NAME': 'test2',
     }
 }
-
-# Configure Mongo as database.
-
-MONGO_DATABASE_NAME = 'test'
-MONGO_HOST = '127.0.0.1'
-MONGO_PORT = 27017
-connect(MONGO_DATABASE_NAME, host=MONGO_HOST, port=MONGO_PORT)
 
 
 # Password validation

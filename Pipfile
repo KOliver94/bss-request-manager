@@ -8,8 +8,7 @@ verify_ssl = true
 [packages]
 django = "==2.2.8"
 djangorestframework = "*"
-django-rest-framework-mongoengine = "*"
-mongoengine = "*"
+djongo = "*"
 
 [requires]
 python_version = "3.8"
