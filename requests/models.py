@@ -3,6 +3,8 @@ from django.contrib.postgres.fields import JSONField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from .choices import STATUS_CHOICES
+
 
 class Request(models.Model):
     title = models.CharField(max_length=100)
@@ -11,9 +13,9 @@ class Request(models.Model):
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
     path_to_footage = models.CharField(max_length=200, blank=True)
-    status = models.CharField(max_length=50)
-    responsible = models.ForeignKey(User, related_name='responsible_user', on_delete=models.CASCADE)
-    requester = models.ForeignKey(User, related_name='requester_user', on_delete=models.CASCADE)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=1)
+    responsible = models.ForeignKey(User, related_name="responsible_user", on_delete=models.CASCADE)
+    requester = models.ForeignKey(User, related_name="requester_user", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
