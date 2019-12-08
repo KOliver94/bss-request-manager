@@ -1,3 +1,4 @@
 from django.contrib import admin
+from .models import Comment, CrewMember, Video, Request, Rating
 
-# Register your models here.
+admin.site.register([Request, Video, Comment, CrewMember, Rating])
