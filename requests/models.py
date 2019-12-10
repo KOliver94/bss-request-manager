@@ -14,7 +14,7 @@ class Request(models.Model):
     place = models.CharField(max_length=150)
     path_to_footage = models.CharField(max_length=200, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=1)
-    responsible = models.ForeignKey(User, related_name="responsible_user", on_delete=models.CASCADE)
+    responsible = models.ForeignKey(User, related_name="responsible_user", on_delete=models.CASCADE, blank=True)
     requester = models.ForeignKey(User, related_name="requester_user", on_delete=models.CASCADE)
 
     def __str__(self):
@@ -23,7 +23,7 @@ class Request(models.Model):
 
 class CrewMember(models.Model):
     member = models.ForeignKey(User, on_delete=models.CASCADE)
-    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="crew")
     position = models.CharField(max_length=20)
 
     def __str__(self):
@@ -32,7 +32,7 @@ class CrewMember(models.Model):
 
 class Video(models.Model):
     title = models.CharField(max_length=100)
-    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="videos")
     editor = models.ForeignKey(User, on_delete=models.CASCADE)
     statuses = JSONField()
 
@@ -41,7 +41,7 @@ class Video(models.Model):
 
 
 class Comment(models.Model):
-    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="comments")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
@@ -53,7 +53,7 @@ class Comment(models.Model):
 
 class Rating(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="ratings")
     rating = models.IntegerField(
         default=1,
         validators=[
