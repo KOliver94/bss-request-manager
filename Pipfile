@@ -11,6 +11,7 @@ djangorestframework = "*"
 psycopg2-binary = "*"
 django-auth-ldap = "*"
 python-ldap = "*"
+djangorestframework_simplejwt = "*"
 
 [requires]
 python_version = "3.8"
