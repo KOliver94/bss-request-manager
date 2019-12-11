@@ -9,6 +9,8 @@ verify_ssl = true
 django = "==2.2.8"
 djangorestframework = "*"
 psycopg2-binary = "*"
+django-auth-ldap = "*"
+python-ldap = "*"
 
 [requires]
 python_version = "3.8"
