@@ -1,5 +1,5 @@
-from django.contrib.auth.models import User
 from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Request, Comment, CrewMember, Video, Rating
@@ -53,13 +53,14 @@ class RequestDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class CommentListCreateView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return Comment.objects.filter(request=self.kwargs['requestId'])
 
     def perform_create(self, serializer):
         serializer.save(request=Request.objects.get(id=self.kwargs['requestId']),
-                        author=User.objects.get(id=1))  # TODO: Change to sender's id
+                        author=self.request.user)
 
 
 class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -88,6 +89,7 @@ class CrewDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class VideoListCreateView(generics.ListCreateAPIView):
     serializer_class = VideoSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return Video.objects.filter(request=self.kwargs['requestId'])
@@ -98,6 +100,7 @@ class VideoListCreateView(generics.ListCreateAPIView):
 
 class VideoDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = VideoSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return Video.objects.filter(request=self.kwargs['requestId'])
