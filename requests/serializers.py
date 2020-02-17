@@ -34,7 +34,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Video
-        fields = ('id', 'title', 'editor', 'statuses', 'ratings')
+        fields = ('id', 'title', 'editor', 'additional_data', 'ratings')
         read_only_fields = ('request',)
 
 
@@ -54,5 +54,5 @@ class RequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Request
-        fields = ('id', 'title', 'created', 'time', 'type', 'place', 'path_to_footage', 'status',
-                  'responsible', 'requester', 'crew', 'videos', 'comments')
+        fields = ('id', 'title', 'created', 'time', 'type', 'place', 'status',
+                  'responsible', 'requester', 'additional_data', 'crew', 'videos', 'comments')
