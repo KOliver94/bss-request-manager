@@ -15,7 +15,7 @@ class Request(models.Model):
     status = models.IntegerField(choices=STATUS_CHOICES, default=1)
     responsible = models.ForeignKey(User, related_name="responsible_user", on_delete=models.CASCADE, blank=True)
     requester = models.ForeignKey(User, related_name="requester_user", on_delete=models.CASCADE)
-    additional_data = JSONField(default=list)
+    additional_data = JSONField(default=dict)
 
     def __str__(self):
         return self.title
