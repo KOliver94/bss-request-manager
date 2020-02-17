@@ -12,10 +12,10 @@ class Request(models.Model):
     time = models.DateField()
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
-    path_to_footage = models.CharField(max_length=200, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=1)
     responsible = models.ForeignKey(User, related_name="responsible_user", on_delete=models.CASCADE, blank=True)
     requester = models.ForeignKey(User, related_name="requester_user", on_delete=models.CASCADE)
+    additional_data = JSONField(default=list)
 
     def __str__(self):
         return self.title
@@ -34,7 +34,7 @@ class Video(models.Model):
     title = models.CharField(max_length=100)
     request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="videos")
     editor = models.ForeignKey(User, on_delete=models.CASCADE)
-    statuses = JSONField()
+    additional_data = JSONField()
 
     def __str__(self):
         return self.title
