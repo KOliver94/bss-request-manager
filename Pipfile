@@ -12,6 +12,7 @@ psycopg2-binary = "*"
 django-auth-ldap = "*"
 python-ldap = "*"
 djangorestframework_simplejwt = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.8"

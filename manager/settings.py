@@ -13,21 +13,20 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 import ldap
+from decouple import config
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from manage import get_env_value
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_env_value('APP_SECRET_KEY')
+SECRET_KEY = config('APP_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('APP_DEBUG') == '1'
+DEBUG = config('APP_DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
 
@@ -83,11 +82,11 @@ WSGI_APPLICATION = 'manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': get_env_value('DATABASE_NAME'),
-        'USER': get_env_value('DATABASE_USER'),
-        'PASSWORD': get_env_value('DATABASE_PASSWORD'),
-        'HOST': get_env_value('DATABASE_HOST'),
-        'PORT': int(get_env_value('DATABASE_PORT')),
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        'HOST': config('DATABASE_HOST'),
+        'PORT': config('DATABASE_PORT', cast=int),
     }
 }
 
@@ -118,10 +117,10 @@ AUTH_LDAP_GLOBAL_OPTIONS = {
     ldap.OPT_REFERRALS: 0,
     ldap.OPT_X_TLS_REQUIRE_CERT: ldap.OPT_X_TLS_NEVER,
 }
-AUTH_LDAP_SERVER_URI = get_env_value('LDAP_SERVER_URI')
-AUTH_LDAP_BASE_DN = get_env_value('LDAP_BASE_DN')
-AUTH_LDAP_BIND_DN = get_env_value('LDAP_BIND_DN')
-AUTH_LDAP_BIND_PASSWORD = get_env_value('LDAP_BIND_PASSWORD')
+AUTH_LDAP_SERVER_URI = config('LDAP_SERVER_URI')
+AUTH_LDAP_BASE_DN = config('LDAP_BASE_DN')
+AUTH_LDAP_BIND_DN = config('LDAP_BIND_DN')
+AUTH_LDAP_BIND_PASSWORD = config('LDAP_BIND_PASSWORD')
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
     'OU=Users,' + AUTH_LDAP_BASE_DN, ldap.SCOPE_SUBTREE, '(sAMAccountName=%(user)s)'
 )
