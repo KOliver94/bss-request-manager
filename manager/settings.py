@@ -163,10 +163,14 @@ AUTH_LDAP_CACHE_TIMEOUT = 3600
 
 # Keep ModelBackend around for per-user permissions and maybe a local
 # superuser.
-AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
+if DEBUG:
+    AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+    )
+else:
+    AUTHENTICATION_BACKENDS = (
+        'django_auth_ldap.backend.LDAPBackend',
+    )
 
 # Django Rest Framework Settings
 
