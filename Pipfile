@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 django = "==2.2.8"
@@ -13,6 +14,7 @@ django-auth-ldap = "*"
 python-ldap = "*"
 djangorestframework_simplejwt = "*"
 python-decouple = "*"
+sentry-sdk = "==0.14.1"
 
 [requires]
 python_version = "3.8"

@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 import ldap
+import sentry_sdk
 from decouple import config, Csv
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -201,3 +203,15 @@ LOGGING = {
     'handlers': {'console': {'class': 'logging.StreamHandler'}},
     'loggers': {'django_auth_ldap': {'level': 'DEBUG', 'handlers': ['console']}},
 }
+
+# Sentry for debugging
+# https://sentry.io
+
+sentry_sdk.init(
+    dsn=config('SENTRY_URL'),
+    integrations=[DjangoIntegration()],
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
