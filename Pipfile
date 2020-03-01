@@ -8,12 +8,11 @@ pylint = "*"
 
 [packages]
 django = "==2.2.8"
-djangorestframework = "*"
-psycopg2-binary = "*"
-django-auth-ldap = "*"
-python-ldap = "*"
-djangorestframework_simplejwt = "*"
-python-decouple = "*"
+djangorestframework = "==3.11.0"
+djangorestframework_simplejwt = "==4.4.0"
+django-auth-ldap = "==2.1.0"
+psycopg2-binary = "==2.8.4"
+python-decouple = "==3.3"
 sentry-sdk = "==0.14.1"
 
 [requires]
