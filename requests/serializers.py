@@ -15,8 +15,8 @@ class RatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rating
-        fields = ('id', 'rating', 'review', 'created', 'author')
-        read_only_fields = ('video', 'author')
+        fields = ('id', 'created', 'author', 'rating', 'review')
+        read_only_fields = ('id', 'created', 'author')
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -24,8 +24,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id', 'created', 'text', 'internal', 'author')
-        read_only_fields = ('request', 'author')
+        fields = ('id', 'created', 'author', 'text', 'internal')
+        read_only_fields = ('id', 'created', 'author')
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -35,7 +35,7 @@ class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = ('id', 'title', 'editor', 'additional_data', 'ratings')
-        read_only_fields = ('request',)
+        read_only_fields = ('id',)
 
 
 class CrewMemberSerializer(serializers.ModelSerializer):
@@ -44,7 +44,6 @@ class CrewMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = CrewMember
         fields = ('id', 'member', 'position')
-        read_only_fields = ('request',)
 
 
 class RequestSerializer(serializers.ModelSerializer):
