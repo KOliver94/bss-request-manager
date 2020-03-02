@@ -6,6 +6,9 @@
 # PyCharm project stuff
 .idea
 
+# VSCode project stuff
+.vscode
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
