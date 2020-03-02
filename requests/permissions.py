@@ -16,8 +16,29 @@ class IsAdminUser(permissions.BasePermission):
     """
     Allows access only to admin members.
     """
+
     def has_permission(self, request, view):
         return request.user and request.user.is_superuser
+
+
+class IsSelf(permissions.BasePermission):
+    """
+    Allows access only if the user is
+    - Requester of the request OR
+    - Requester of the request which contains the video OR
+    - Author of the comment OR
+    - Author of the rating
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if isinstance(obj, Request):
+            return obj.requester == request.user
+        elif isinstance(obj, Video):
+            return obj.request.requester == request.user
+        elif isinstance(obj, Comment) or isinstance(obj, Rating):
+            return obj.author == request.user
+        else:
+            return False
 
 
 class IsSelfOrStaff(permissions.BasePermission):
