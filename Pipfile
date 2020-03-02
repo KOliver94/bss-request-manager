@@ -7,7 +7,7 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
-django = "==2.2.8"
+django = "==2.2.10"
 djangorestframework = "==3.11.0"
 djangorestframework_simplejwt = "==4.4.0"
 django-auth-ldap = "==2.1.0"
