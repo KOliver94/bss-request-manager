@@ -3,7 +3,7 @@ from django.contrib.postgres.fields import JSONField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from .choices import STATUS_CHOICES
+from requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
 
 
 class Request(models.Model):
@@ -12,7 +12,7 @@ class Request(models.Model):
     time = models.DateField()
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
-    status = models.IntegerField(choices=STATUS_CHOICES, default=1)
+    status = models.IntegerField(choices=REQUEST_STATUS_CHOICES, default=1)
     responsible = models.ForeignKey(User, related_name="responsible_user", on_delete=models.CASCADE, blank=True)
     requester = models.ForeignKey(User, related_name="requester_user", on_delete=models.CASCADE)
     additional_data = JSONField(default=dict)
@@ -34,6 +34,7 @@ class Video(models.Model):
     title = models.CharField(max_length=100)
     request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="videos")
     editor = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.IntegerField(choices=VIDEO_STATUS_CHOICES, default=1)
     additional_data = JSONField()
 
     def __str__(self):
@@ -45,10 +46,10 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
-    internal = models.BooleanField()
+    internal = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.text
+        return self.author.last_name + " " + self.author.first_name + " - " + self.text
 
 
 class Rating(models.Model):
@@ -65,4 +66,4 @@ class Rating(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.author.last_name + " " + self.author.first_name + " - " + self.video.title
+        return self.author.last_name + " " + self.author.first_name + "(" + str(self.rating) + ") - " + self.video.title
