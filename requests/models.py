@@ -13,8 +13,9 @@ class Request(models.Model):
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
     status = models.IntegerField(choices=REQUEST_STATUS_CHOICES, default=1)
-    responsible = models.ForeignKey(User, related_name="responsible_user", on_delete=models.CASCADE, blank=True)
-    requester = models.ForeignKey(User, related_name="requester_user", on_delete=models.CASCADE)
+    responsible = models.ForeignKey(User, related_name="responsible_user", on_delete=models.SET_NULL, blank=True,
+                                    null=True)
+    requester = models.ForeignKey(User, related_name="requester_user", on_delete=models.SET_NULL, null=True)
     additional_data = JSONField(default=dict)
 
     def __str__(self):
@@ -33,7 +34,7 @@ class CrewMember(models.Model):
 class Video(models.Model):
     title = models.CharField(max_length=100)
     request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="videos")
-    editor = models.ForeignKey(User, on_delete=models.CASCADE)
+    editor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     status = models.IntegerField(choices=VIDEO_STATUS_CHOICES, default=1)
     additional_data = JSONField()
 
