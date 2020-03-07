@@ -1,6 +1,6 @@
 from django.urls import path
 
-from requests.api.admin.views import RequestAdminListCreateView, RequestAdminDetailView, CommentAdminListCreateView, \
+from api.v1.admin.requests.views import RequestAdminListCreateView, RequestAdminDetailView, CommentAdminListCreateView, \
     CommentAdminDetailView, CrewAdminListCreateView, CrewAdminDetailView, VideoAdminListCreateView, \
     VideoAdminDetailView, RatingAdminListCreateView, RatingAdminDetailView
 

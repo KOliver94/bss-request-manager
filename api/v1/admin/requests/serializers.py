@@ -50,6 +50,8 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     crew = CrewMemberAdminSerializer(many=True, read_only=True)
     videos = VideoAdminSerializer(many=True, read_only=True)
     comments = CommentAdminSerializer(many=True, read_only=True)
+    requester = UserSerializer(read_only=True)
+    responsible = UserSerializer(read_only=True)
 
     class Meta:
         model = Request

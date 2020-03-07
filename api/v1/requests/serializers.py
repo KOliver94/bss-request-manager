@@ -49,6 +49,8 @@ class VideoDefaultSerializer(serializers.ModelSerializer):
 class RequestDefaultSerializer(serializers.ModelSerializer):
     videos = VideoDefaultSerializer(many=True, read_only=True)
     comments = CommentDefaultSerializer(many=True, read_only=True)
+    requester = UserSerializer(read_only=True)
+    responsible = UserSerializer(read_only=True)
 
     class Meta:
         model = Request

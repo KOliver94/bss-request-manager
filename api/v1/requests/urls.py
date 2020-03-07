@@ -1,6 +1,6 @@
 from django.urls import path
 
-from requests.api.user.views import RequestDefaultListCreateView, RequestDefaultDetailView, \
+from api.v1.requests.views import RequestDefaultListCreateView, RequestDefaultDetailView, \
     CommentDefaultListCreateView, CommentDefaultDetailView, VideoDefaultListView, VideoDefaultDetailView, \
     RatingDefaultListCreateView, RatingDefaultDetailView
 
