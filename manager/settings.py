@@ -212,12 +212,12 @@ LOGGING = {
 
 # Sentry for debugging
 # https://sentry.io
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=config('SENTRY_URL'),
+        integrations=[DjangoIntegration()],
 
-sentry_sdk.init(
-    dsn=config('SENTRY_URL'),
-    integrations=[DjangoIntegration()],
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
-)
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )
