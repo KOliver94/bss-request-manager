@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 import ldap
 import sentry_sdk
@@ -181,6 +182,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100
 }
+
+# Simple JWT Settings
+# https://github.com/davesque/django-rest-framework-simplejwt
+
+if DEBUG:
+    SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
