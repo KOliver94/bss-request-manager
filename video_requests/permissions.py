@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from requests.models import Comment, Rating, Request, Video
+from video_requests.models import Comment, Rating, Request, Video
 
 
 class IsStaffUser(permissions.BasePermission):

@@ -3,7 +3,7 @@ from abc import ABC
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from requests.models import Request, Video, Rating, Comment
+from video_requests.models import Request, Video, Rating, Comment
 
 
 class FilteredCommentListSerializer(serializers.ListSerializer, ABC):

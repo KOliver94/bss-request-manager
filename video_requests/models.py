@@ -3,7 +3,7 @@ from django.contrib.postgres.fields import JSONField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
+from video_requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
 
 
 class Request(models.Model):

@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from api.v1.requests.serializers import RequestDefaultSerializer, CommentDefaultSerializer, VideoDefaultSerializer, \
     RatingDefaultSerializer
-from requests.models import Request, Comment, Video, Rating
-from requests.permissions import IsSelf
+from video_requests.models import Request, Comment, Video, Rating
+from video_requests.permissions import IsSelf
 
 
 class RequestDefaultListCreateView(generics.ListCreateAPIView):

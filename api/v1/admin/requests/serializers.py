@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from requests.models import Request, Video, CrewMember, Rating, Comment
+from video_requests.models import Request, Video, CrewMember, Rating, Comment
 
 
 class UserSerializer(serializers.ModelSerializer):

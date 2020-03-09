@@ -3,8 +3,8 @@ from rest_framework.exceptions import ValidationError
 
 from api.v1.admin.requests.serializers import RequestAdminSerializer, CommentAdminSerializer, CrewMemberAdminSerializer, \
     VideoAdminSerializer, RatingAdminSerializer
-from requests.models import Request, Comment, CrewMember, Video, Rating
-from requests.permissions import IsStaffUser, IsStaffSelfOrAdmin
+from video_requests.models import Request, Comment, CrewMember, Video, Rating
+from video_requests.permissions import IsStaffUser, IsStaffSelfOrAdmin
 
 
 class RequestAdminListCreateView(generics.ListCreateAPIView):
