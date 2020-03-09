@@ -16,7 +16,7 @@ class Request(models.Model):
     responsible = models.ForeignKey(User, related_name="responsible_user", on_delete=models.SET_NULL, blank=True,
                                     null=True)
     requester = models.ForeignKey(User, related_name="requester_user", on_delete=models.SET_NULL, null=True)
-    additional_data = JSONField(default=dict)
+    additional_data = JSONField(default=dict, blank=True)
 
     def __str__(self):
         return self.title
@@ -36,7 +36,7 @@ class Video(models.Model):
     request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="videos")
     editor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     status = models.IntegerField(choices=VIDEO_STATUS_CHOICES, default=1)
-    additional_data = JSONField()
+    additional_data = JSONField(default=dict, blank=True)
 
     def __str__(self):
         return self.title
