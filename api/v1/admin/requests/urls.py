@@ -6,7 +6,7 @@ from api.v1.admin.requests.views import RequestAdminListCreateView, RequestAdmin
 
 urlpatterns = [
     path('', RequestAdminListCreateView.as_view()),
-    path('<int:pk>/', RequestAdminDetailView.as_view()),
+    path('<int:pk>', RequestAdminDetailView.as_view()),
     path('<int:requestId>/comments', CommentAdminListCreateView.as_view()),
     path('<int:requestId>/comments/<int:pk>', CommentAdminDetailView.as_view()),
     path('<int:requestId>/crew', CrewAdminListCreateView.as_view()),
