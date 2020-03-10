@@ -18,14 +18,7 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return Request.objects.none()
-        else:
-            return Request.objects.all()
+        return Request.objects.all()
 
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
@@ -45,14 +38,7 @@ class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return Request.objects.none()
-        else:
-            return Request.objects.all()
+        return Request.objects.all()
 
 
 class CommentAdminListCreateView(generics.ListCreateAPIView):
@@ -66,16 +52,9 @@ class CommentAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return Comment.objects.none()
-        else:
-            return Comment.objects.filter(
-                request=self.kwargs['requestId']
-            )
+        return Comment.objects.filter(
+            request=self.kwargs['requestId']
+        )
 
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
@@ -104,16 +83,9 @@ class CommentAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
             return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return Comment.objects.none()
-        else:
-            return Comment.objects.filter(
-                request=self.kwargs['requestId']
-            )
+        return Comment.objects.filter(
+            request=self.kwargs['requestId']
+        )
 
 
 class CrewAdminListCreateView(generics.ListCreateAPIView):
@@ -127,16 +99,9 @@ class CrewAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return CrewMember.objects.none()
-        else:
-            return CrewMember.objects.filter(
-                request=self.kwargs['requestId']
-            )
+        return CrewMember.objects.filter(
+            request=self.kwargs['requestId']
+        )
 
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
@@ -158,16 +123,9 @@ class CrewAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return CrewMember.objects.none()
-        else:
-            return CrewMember.objects.filter(
-                request=self.kwargs['requestId']
-            )
+        return CrewMember.objects.filter(
+            request=self.kwargs['requestId']
+        )
 
 
 class VideoAdminListCreateView(generics.ListCreateAPIView):
@@ -181,16 +139,9 @@ class VideoAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return Video.objects.none()
-        else:
-            return Video.objects.filter(
-                request=self.kwargs['requestId']
-            )
+        return Video.objects.filter(
+            request=self.kwargs['requestId']
+        )
 
     def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
@@ -212,16 +163,9 @@ class VideoAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return Video.objects.none()
-        else:
-            return Video.objects.filter(
-                request=self.kwargs['requestId']
-            )
+        return Video.objects.filter(
+            request=self.kwargs['requestId']
+        )
 
 
 class RatingAdminListCreateView(generics.ListCreateAPIView):
@@ -235,19 +179,12 @@ class RatingAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return Rating.objects.none()
-        else:
-            return Rating.objects.filter(
-                video=Video.objects.get(
-                    request=self.kwargs['requestId'],
-                    id=self.kwargs['videoId']
-                )
+        return Rating.objects.filter(
+            video=Video.objects.get(
+                request=self.kwargs['requestId'],
+                id=self.kwargs['videoId']
             )
+        )
 
     def perform_create(self, serializer):
         """
@@ -283,16 +220,9 @@ class RatingAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
             return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if not self.request.user.is_staff:
-            return Rating.objects.none()
-        else:
-            return Rating.objects.filter(
-                video=Video.objects.get(
-                    request=self.kwargs['requestId'],
-                    id=self.kwargs['videoId']
-                )
+        return Rating.objects.filter(
+            video=Video.objects.get(
+                request=self.kwargs['requestId'],
+                id=self.kwargs['videoId']
             )
+        )
