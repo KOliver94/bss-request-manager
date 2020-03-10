@@ -2,10 +2,10 @@ from rest_framework import generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 
-from requests.api.user.serializers import RequestDefaultSerializer, CommentDefaultSerializer, VideoDefaultSerializer, \
+from api.v1.requests.serializers import RequestDefaultSerializer, CommentDefaultSerializer, VideoDefaultSerializer, \
     RatingDefaultSerializer
-from requests.models import Request, Comment, Video, Rating
-from requests.permissions import IsSelf
+from video_requests.models import Request, Comment, Video, Rating
+from video_requests.permissions import IsSelf
 
 
 class RequestDefaultListCreateView(generics.ListCreateAPIView):
@@ -22,7 +22,6 @@ class RequestDefaultListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         """
         Filter the objects based on roles and rights.
-
         To prevent side-channel attacks :return: Not found if the user would not have right to access it
         """
         if self.request.user.is_anonymous:
@@ -33,7 +32,7 @@ class RequestDefaultListCreateView(generics.ListCreateAPIView):
             )
 
     def perform_create(self, serializer):
-        # TODO: Anonym users will cause problems
+        # TODO: Anonymous users will cause problems
         serializer.save(
             requester=self.request.user
         )
@@ -60,64 +59,6 @@ class RequestDefaultDetailView(generics.RetrieveAPIView):
             )
 
 
-class VideoDefaultListView(generics.ListAPIView):
-    """
-    List (GET) view for Video objects
-
-    Only authenticated and authorized persons access this view:
-    - Authenticated users can get Videos which are related to Requests submitted by them.
-    """
-    serializer_class = VideoDefaultSerializer
-
-    def get_permissions(self):
-        return [IsSelf()]
-
-    def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if self.request.user.is_anonymous:
-            return Request.objects.none()
-        else:
-            return Video.objects.filter(
-                request=Request.objects.get(
-                    id=self.kwargs['requestId'],
-                    requester=self.request.user
-                )
-            )
-
-
-class VideoDefaultDetailView(generics.RetrieveAPIView):
-    """
-    Retrieve (GET), Update (PUT, PATCH) and Delete (DELETE) view for a single Video object
-
-    Only authenticated and authorized persons can access this view:
-    - Authenticated users can get Videos which are related to Requests submitted by them.
-    """
-    serializer_class = VideoDefaultSerializer
-
-    def get_permissions(self):
-        return [IsSelf()]
-
-    def get_queryset(self):
-        """
-        Filter the objects based on roles and rights.
-
-        To prevent side-channel attacks :return: Not found if the user would not have right to access it
-        """
-        if self.request.user.is_anonymous:
-            return Request.objects.none()
-        else:
-            return Video.objects.filter(
-                request=Request.objects.get(
-                    id=self.kwargs['requestId'],
-                    requester=self.request.user
-                )
-            )
-
-
 class CommentDefaultListCreateView(generics.ListCreateAPIView):
     """
     List (GET) and Create (POST) view for Comment objects
@@ -126,12 +67,11 @@ class CommentDefaultListCreateView(generics.ListCreateAPIView):
     - If the user is the requester of the Request object he can list all not internal comments and create new ones.
     """
     serializer_class = CommentDefaultSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         """
         Filter the objects based on roles and rights.
-
         If the requester is anonymous :return: Not found
         To prevent side-channel attacks :return: Not found if the user would not have right to access it
         """
@@ -150,6 +90,7 @@ class CommentDefaultListCreateView(generics.ListCreateAPIView):
         if Request.objects.get(id=self.kwargs['requestId'], requester=self.request.user).requester != self.request.user:
             raise ValidationError('You are trying to post a comment to a request which is unrelated to you.')
 
+        serializer.is_valid(raise_exception=True)
         serializer.save(
             request=Request.objects.get(
                 id=self.kwargs['requestId'],
@@ -178,10 +119,8 @@ class CommentDefaultDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         """
         Filter the objects based on roles and rights.
-
         If the requester is anonymous :return: Not found
         To prevent side-channel attacks :return: Not found if the user would not have right to access it
-
         Not Staff user can only access non-internal comments.
         """
         if self.request.user.is_anonymous:
@@ -193,6 +132,62 @@ class CommentDefaultDetailView(generics.RetrieveUpdateDestroyAPIView):
                     requester=self.request.user
                 ),
                 internal=False
+            )
+
+
+class VideoDefaultListView(generics.ListAPIView):
+    """
+    List (GET) view for Video objects
+
+    Only authenticated and authorized persons access this view:
+    - Authenticated users can get Videos which are related to Requests submitted by them.
+    """
+    serializer_class = VideoDefaultSerializer
+
+    def get_permissions(self):
+        return [IsSelf()]
+
+    def get_queryset(self):
+        """
+        Filter the objects based on roles and rights.
+        To prevent side-channel attacks :return: Not found if the user would not have right to access it
+        """
+        if self.request.user.is_anonymous:
+            return Video.objects.none()
+        else:
+            return Video.objects.filter(
+                request=Request.objects.get(
+                    id=self.kwargs['requestId'],
+                    requester=self.request.user
+                )
+            )
+
+
+class VideoDefaultDetailView(generics.RetrieveAPIView):
+    """
+    Retrieve (GET) view for a single Video object
+
+    Only authenticated and authorized persons can access this view:
+    - Authenticated users can get Videos which are related to Requests submitted by them.
+    """
+    serializer_class = VideoDefaultSerializer
+
+    def get_permissions(self):
+        return [IsSelf()]
+
+    def get_queryset(self):
+        """
+        Filter the objects based on roles and rights.
+        To prevent side-channel attacks :return: Not found if the user would not have right to access it
+        """
+        if self.request.user.is_anonymous:
+            return Video.objects.none()
+        else:
+            return Video.objects.filter(
+                request=Request.objects.get(
+                    id=self.kwargs['requestId'],
+                    requester=self.request.user
+                )
             )
 
 
@@ -215,7 +210,6 @@ class RatingDefaultListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         """
         Filter the objects based on roles and rights.
-
         If the requester is anonymous :return: Not found
         To prevent side-channel attacks :return: Not found if the user would not have right to access it
         """
@@ -223,7 +217,13 @@ class RatingDefaultListCreateView(generics.ListCreateAPIView):
             return Rating.objects.none()
         else:
             return Rating.objects.filter(
-                video=self.kwargs['videoId'],
+                video=Video.objects.get(
+                    request=Request.objects.get(
+                        self.kwargs['requestId'],
+                        requester=self.request.user
+                    ),
+                    id=self.kwargs['videoId']
+                ),
                 author=self.request.user
             )
 
@@ -232,14 +232,19 @@ class RatingDefaultListCreateView(generics.ListCreateAPIView):
         Check if the user has already rated a video. If so do not allow multiple ratings.
         The user should only post to videos which are related to a request by him.
         """
-        if Rating.objects.filter(author=self.request.user).exists():
+        if Rating.objects.filter(video=self.kwargs['videoId'], author=self.request.user).exists():
             raise ValidationError('You have already posted a rating to this video.')
 
         if Video.objects.get(id=self.kwargs['videoId']).request.requester != self.request.user:
             raise ValidationError('You are trying to post a rating to a video which is unrelated to you.')
 
+        serializer.is_valid(raise_exception=True)
         serializer.save(
             video=Video.objects.get(
+                request=Request.objects.get(
+                    self.kwargs['requestId'],
+                    requester=self.request.user
+                ),
                 id=self.kwargs['videoId']
             ),
             author=self.request.user
@@ -261,7 +266,6 @@ class RatingDefaultDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         """
         Filter the objects based on roles and rights.
-
         If the requester is anonymous :return: Not found
         To prevent side-channel attacks :return: Not found if the user would not have right to access it
         """
@@ -270,7 +274,10 @@ class RatingDefaultDetailView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return Rating.objects.filter(
                 video=Video.objects.get(
-                    request=self.kwargs['requestId'],
+                    request=Request.objects.get(
+                        self.kwargs['requestId'],
+                        requester=self.request.user
+                    ),
                     id=self.kwargs['videoId']
                 ),
                 author=self.request.user

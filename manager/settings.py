@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 import ldap
 import sentry_sdk
@@ -43,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'requests',
+    'video_requests',
 ]
 
 MIDDLEWARE = [
@@ -179,8 +180,17 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100
+    'PAGE_SIZE': 100,
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
+
+# Simple JWT Settings
+# https://github.com/davesque/django-rest-framework-simplejwt
+
+if DEBUG:
+    SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -212,12 +222,12 @@ LOGGING = {
 
 # Sentry for debugging
 # https://sentry.io
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=config('SENTRY_URL'),
+        integrations=[DjangoIntegration()],
 
-sentry_sdk.init(
-    dsn=config('SENTRY_URL'),
-    integrations=[DjangoIntegration()],
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
-)
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )

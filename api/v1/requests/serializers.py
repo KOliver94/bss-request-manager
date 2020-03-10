@@ -3,7 +3,7 @@ from abc import ABC
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from requests.models import Request, Video, Rating, Comment
+from video_requests.models import Request, Video, Rating, Comment
 
 
 class FilteredCommentListSerializer(serializers.ListSerializer, ABC):
@@ -49,6 +49,8 @@ class VideoDefaultSerializer(serializers.ModelSerializer):
 class RequestDefaultSerializer(serializers.ModelSerializer):
     videos = VideoDefaultSerializer(many=True, read_only=True)
     comments = CommentDefaultSerializer(many=True, read_only=True)
+    requester = UserSerializer(read_only=True)
+    responsible = UserSerializer(read_only=True)
 
     class Meta:
         model = Request

@@ -1,12 +1,12 @@
 from django.urls import path
 
-from requests.api.admin.views import RequestAdminListCreateView, RequestAdminDetailView, CommentAdminListCreateView, \
+from api.v1.admin.requests.views import RequestAdminListCreateView, RequestAdminDetailView, CommentAdminListCreateView, \
     CommentAdminDetailView, CrewAdminListCreateView, CrewAdminDetailView, VideoAdminListCreateView, \
     VideoAdminDetailView, RatingAdminListCreateView, RatingAdminDetailView
 
 urlpatterns = [
     path('', RequestAdminListCreateView.as_view()),
-    path('<int:pk>/', RequestAdminDetailView.as_view()),
+    path('<int:pk>', RequestAdminDetailView.as_view()),
     path('<int:requestId>/comments', CommentAdminListCreateView.as_view()),
     path('<int:requestId>/comments/<int:pk>', CommentAdminDetailView.as_view()),
     path('<int:requestId>/crew', CrewAdminListCreateView.as_view()),
