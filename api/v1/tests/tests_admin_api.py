@@ -97,6 +97,14 @@ class AdminAPITestCase(APITestCase):
         self.comment3.text = 'Sample text - Admin'
         self.comment3.save()
 
+        self.comment4 = Comment()
+        self.comment4.id = 984
+        self.comment4.request = self.request1
+        self.comment4.author = self.staff_user
+        self.comment4.text = 'Sample text - Staff'
+        self.comment4.internal = True
+        self.comment4.save()
+
         # Create 3 sample Rating objects with different authors
         self.rating1 = Rating()
         self.rating1.id = 876
@@ -269,6 +277,276 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.delete('/api/v1/admin/requests/' + str(self.request1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    --------------------------------------------------
+                          COMMENTS
+    --------------------------------------------------
+    """
+    """
+    GET /api/v1/admin/requests/:id/comments
+    """
+
+    def test_admin_can_get_comments(self):
+        self.authorize_user(ADMIN)
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/comments')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_staff_can_get_comments(self):
+        self.authorize_user(STAFF)
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/comments')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_should_not_get_comments(self):
+        self.authorize_user(USER)
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/comments')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    GET /api/v1/admin/requests/:id/comments/:id
+    """
+
+    def test_admin_can_get_comment_detail(self):
+        self.authorize_user(ADMIN)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_staff_can_get_comment_detail(self):
+        self.authorize_user(STAFF)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_should_not_get_comment_detail(self):
+        self.authorize_user(USER)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    PUT, PATCH /api/v1/admin/requests/:id/comments/:id
+    """
+
+    def test_admin_can_modify_any_comment(self):
+        self.authorize_user(ADMIN)
+        data = {
+            'text': 'Modified by admin',
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id)).json()
+        self.assertIn('Modified by admin', data['text'])
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
+        self.assertIn('Modified by admin', data['text'])
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id)).json()
+        self.assertIn('Modified by admin', data['text'])
+
+        data['text'] = 'Modified by admin (PUT)'
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id)).json()
+        self.assertIn('Modified by admin (PUT)', data['text'])
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
+        self.assertIn('Modified by admin (PUT)', data['text'])
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id)).json()
+        self.assertIn('Modified by admin (PUT)', data['text'])
+
+    def test_staff_can_modify_only_own_comment(self):
+        self.authorize_user(STAFF)
+        data = {
+            'text': 'Modified by staff',
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
+        self.assertIn('Modified by staff', data['text'])
+
+        data['text'] = 'Modified by staff (PUT)'
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
+        self.assertIn('Modified by staff (PUT)', data['text'])
+
+    def test_user_should_not_modify_comments(self):
+        self.authorize_user(USER)
+        data = {
+            'text': 'Modified by user',
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        data = {
+            'text': 'Modified by user',
+            'internal': True
+        }
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    POST /api/v1/admin/requests/:id/comments
+    """
+
+    def test_admin_can_create_comment(self):
+        self.authorize_user(ADMIN)
+        data = {
+            'text': 'New Comment by admin',
+            'internal': True
+        }
+        response = self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/comments', data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['author']['username'], self.admin_user.username)
+        self.assertEqual(response.data['internal'], True)
+
+    def test_staff_can_create_comment(self):
+        self.authorize_user(STAFF)
+        data = {
+            'text': 'New Comment by admin',
+            'internal': True
+        }
+        response = self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/comments', data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['author']['username'], self.staff_user.username)
+        self.assertEqual(response.data['internal'], True)
+
+    def test_user_should_not_create_comment(self):
+        self.authorize_user(USER)
+        data = {
+            'text': 'New Comment by admin',
+            'internal': True
+        }
+        response = self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/comments', data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    DELETE /api/v1/admin/requests/:id/comments/:id
+    """
+
+    def test_admin_can_delete_any_comment(self):
+        self.authorize_user(ADMIN)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_staff_delete_only_own_comment(self):
+        self.authorize_user(STAFF)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment4.id))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_user_should_not_delete_comment(self):
+        self.authorize_user(USER)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     """
