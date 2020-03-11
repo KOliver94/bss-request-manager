@@ -132,7 +132,7 @@ class AdminAPITestCase(APITestCase):
 
     """
     --------------------------------------------------
-                        REQUESTS
+                         REQUESTS
     --------------------------------------------------
     """
     """
@@ -177,7 +177,7 @@ class AdminAPITestCase(APITestCase):
     PUT, PATCH /api/v1/admin/requests/:id
     """
 
-    def test_admin_can_modify_request(self):
+    def test_admin_can_modify_requests(self):
         self.authorize_user(ADMIN)
         data = {
             'title': 'Test Request 1 - Modified',
@@ -195,7 +195,7 @@ class AdminAPITestCase(APITestCase):
         data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id)).json()
         self.assertIn('Modified', data['place'])
 
-    def test_staff_can_modify_request(self):
+    def test_staff_can_modify_requests(self):
         self.authorize_user(STAFF)
         data = {
             'title': 'Test Request 1 - Modified',
@@ -213,7 +213,7 @@ class AdminAPITestCase(APITestCase):
         data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id)).json()
         self.assertIn('Modified', data['place'])
 
-    def test_user_should_not_modify_request(self):
+    def test_user_should_not_modify_requests(self):
         self.authorize_user(USER)
         data = {
             'title': 'Test Request 2 - Modified',
@@ -281,7 +281,7 @@ class AdminAPITestCase(APITestCase):
 
     """
     --------------------------------------------------
-                          COMMENTS
+                         COMMENTS
     --------------------------------------------------
     """
     """
@@ -347,7 +347,7 @@ class AdminAPITestCase(APITestCase):
     PUT, PATCH /api/v1/admin/requests/:id/comments/:id
     """
 
-    def test_admin_can_modify_any_comment(self):
+    def test_admin_can_modify_any_comments(self):
         self.authorize_user(ADMIN)
         data = {
             'text': 'Modified by admin',
@@ -399,7 +399,7 @@ class AdminAPITestCase(APITestCase):
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id)).json()
         self.assertIn('Modified by admin (PUT)', data['text'])
 
-    def test_staff_can_modify_only_own_comment(self):
+    def test_staff_can_modify_only_own_comments(self):
         self.authorize_user(STAFF)
         data = {
             'text': 'Modified by staff',
@@ -478,7 +478,7 @@ class AdminAPITestCase(APITestCase):
     POST /api/v1/admin/requests/:id/comments
     """
 
-    def test_admin_can_create_comment(self):
+    def test_admin_can_create_comments(self):
         self.authorize_user(ADMIN)
         data = {
             'text': 'New Comment by admin',
@@ -500,7 +500,7 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.data['author']['username'], self.staff_user.username)
         self.assertEqual(response.data['internal'], True)
 
-    def test_user_should_not_create_comment(self):
+    def test_user_should_not_create_comments(self):
         self.authorize_user(USER)
         data = {
             'text': 'New Comment by admin',
@@ -513,7 +513,7 @@ class AdminAPITestCase(APITestCase):
     DELETE /api/v1/admin/requests/:id/comments/:id
     """
 
-    def test_admin_can_delete_any_comment(self):
+    def test_admin_can_delete_any_comments(self):
         self.authorize_user(ADMIN)
         response = self.client.delete(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
@@ -525,7 +525,7 @@ class AdminAPITestCase(APITestCase):
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_staff_delete_only_own_comment(self):
+    def test_staff_delete_only_own_comments(self):
         self.authorize_user(STAFF)
         response = self.client.delete(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
@@ -537,7 +537,7 @@ class AdminAPITestCase(APITestCase):
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment4.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_user_should_not_delete_comment(self):
+    def test_user_should_not_delete_comments(self):
         self.authorize_user(USER)
         response = self.client.delete(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
