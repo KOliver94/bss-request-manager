@@ -83,9 +83,17 @@ class CommentAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
             return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
-        return Comment.objects.filter(
-            request=self.kwargs['requestId']
-        )
+        """
+        Because of custom permissions 404 would be returned for unauthorized users if the object does not exist
+        and 401 if exist but has no rights.
+        :return: No object for unauthorized users.
+        """
+        if self.request.user.is_anonymous:
+            return Comment.objects.none()
+        else:
+            return Comment.objects.filter(
+                request=self.kwargs['requestId']
+            )
 
 
 class CrewAdminListCreateView(generics.ListCreateAPIView):
@@ -220,9 +228,17 @@ class RatingAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
             return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
-        return Rating.objects.filter(
-            video=Video.objects.get(
-                request=self.kwargs['requestId'],
-                id=self.kwargs['videoId']
+        """
+        Because of custom permissions 404 would be returned for unauthorized users if the object does not exist
+        and 401 if exist but has no rights.
+        :return: No object for unauthorized users.
+        """
+        if self.request.user.is_anonymous:
+            return Comment.objects.none()
+        else:
+            return Rating.objects.filter(
+                video=Video.objects.get(
+                    request=self.kwargs['requestId'],
+                    id=self.kwargs['videoId']
+                )
             )
-        )
