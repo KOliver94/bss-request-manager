@@ -138,7 +138,6 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/
     """
-
     def test_admin_can_get_requests(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/')
@@ -157,7 +156,6 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id
     """
-
     def test_admin_can_get_request_detail(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id))
@@ -177,10 +175,9 @@ class AdminAPITestCase(APITestCase):
     PUT, PATCH /api/v1/admin/requests/:id
     """
 
-    def test_admin_can_modify_requests(self):
-        self.authorize_user(ADMIN)
+    def modify_request(self):
         data = {
-            'title': 'Test Request 1 - Modified',
+            'title': 'Test Request 1 - Modified'
         }
         response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -194,29 +191,19 @@ class AdminAPITestCase(APITestCase):
 
         data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id)).json()
         self.assertIn('Modified', data['place'])
+
+    def test_admin_can_modify_requests(self):
+        self.authorize_user(ADMIN)
+        self.modify_request()
 
     def test_staff_can_modify_requests(self):
         self.authorize_user(STAFF)
-        data = {
-            'title': 'Test Request 1 - Modified',
-        }
-        response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id), data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id)).json()
-        self.assertIn('Modified', data['title'])
-
-        data['place'] = 'Test place - Modified'
-        response = self.client.put('/api/v1/admin/requests/' + str(self.request1.id), data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id)).json()
-        self.assertIn('Modified', data['place'])
+        self.modify_request()
 
     def test_user_should_not_modify_requests(self):
         self.authorize_user(USER)
         data = {
-            'title': 'Test Request 2 - Modified',
+            'title': 'Test Request 2 - Modified'
         }
         response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -235,15 +222,18 @@ class AdminAPITestCase(APITestCase):
     DELETE /api/v1/admin/requests/:id
     """
 
-    def test_admin_can_create_delete_requests(self):
-        self.authorize_user(ADMIN)
+    def create_request(self):
         data = {
             'title': 'Test Request 2',
             'time': '2020-03-05',
             'place': 'Test place',
             'type': 'Test type'
         }
-        response = self.client.post('/api/v1/admin/requests/', data)
+        return self.client.post('/api/v1/admin/requests/', data)
+
+    def test_admin_can_create_delete_requests(self):
+        self.authorize_user(ADMIN)
+        response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['requester']['username'], ADMIN)
 
@@ -252,13 +242,7 @@ class AdminAPITestCase(APITestCase):
 
     def test_staff_can_create_delete_requests(self):
         self.authorize_user(STAFF)
-        data = {
-            'title': 'Test Request 2',
-            'time': '2020-03-05',
-            'place': 'Test place',
-            'type': 'Test type'
-        }
-        response = self.client.post('/api/v1/admin/requests/', data)
+        response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['requester']['username'], STAFF)
 
@@ -267,13 +251,7 @@ class AdminAPITestCase(APITestCase):
 
     def test_user_should_not_create_delete_requests(self):
         self.authorize_user(USER)
-        data = {
-            'title': 'Test Request 2',
-            'time': '2020-03-05',
-            'place': 'Test place',
-            'type': 'Test type'
-        }
-        response = self.client.post('/api/v1/admin/requests/', data)
+        response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.delete('/api/v1/admin/requests/' + str(self.request1.id))
@@ -287,7 +265,6 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id/comments
     """
-
     def test_admin_can_get_comments(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/comments')
@@ -306,7 +283,6 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id/comments/:id
     """
-
     def test_admin_can_get_comment_detail(self):
         self.authorize_user(ADMIN)
         response = self.client.get(
@@ -346,11 +322,10 @@ class AdminAPITestCase(APITestCase):
     """
     PUT, PATCH /api/v1/admin/requests/:id/comments/:id
     """
-
     def test_admin_can_modify_any_comments(self):
         self.authorize_user(ADMIN)
         data = {
-            'text': 'Modified by admin',
+            'text': 'Modified by admin'
         }
         response = self.client.patch(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
@@ -402,7 +377,7 @@ class AdminAPITestCase(APITestCase):
     def test_staff_can_modify_only_own_comments(self):
         self.authorize_user(STAFF)
         data = {
-            'text': 'Modified by staff',
+            'text': 'Modified by staff'
         }
         response = self.client.patch(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
@@ -442,7 +417,7 @@ class AdminAPITestCase(APITestCase):
     def test_user_should_not_modify_comments(self):
         self.authorize_user(USER)
         data = {
-            'text': 'Modified by user',
+            'text': 'Modified by user'
         }
         response = self.client.patch(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
@@ -478,41 +453,35 @@ class AdminAPITestCase(APITestCase):
     POST /api/v1/admin/requests/:id/comments
     """
 
-    def test_admin_can_create_comments(self):
-        self.authorize_user(ADMIN)
+    def create_comment(self):
         data = {
             'text': 'New Comment by admin',
             'internal': True
         }
-        response = self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/comments', data)
+        return self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/comments', data)
+
+    def test_admin_can_create_comments(self):
+        self.authorize_user(ADMIN)
+        response = self.create_comment()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['author']['username'], self.admin_user.username)
         self.assertEqual(response.data['internal'], True)
 
     def test_staff_can_create_comment(self):
         self.authorize_user(STAFF)
-        data = {
-            'text': 'New Comment by admin',
-            'internal': True
-        }
-        response = self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/comments', data)
+        response = self.create_comment()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['author']['username'], self.staff_user.username)
         self.assertEqual(response.data['internal'], True)
 
     def test_user_should_not_create_comments(self):
         self.authorize_user(USER)
-        data = {
-            'text': 'New Comment by admin',
-            'internal': True
-        }
-        response = self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/comments', data)
+        response = self.create_comment()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     """
     DELETE /api/v1/admin/requests/:id/comments/:id
     """
-
     def test_admin_can_delete_any_comments(self):
         self.authorize_user(ADMIN)
         response = self.client.delete(
@@ -557,7 +526,6 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id/crew
     """
-
     def test_admin_can_get_crew(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew')
@@ -576,7 +544,6 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id/crew/:id
     """
-
     def test_admin_can_get_crew_detail(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id))
@@ -596,10 +563,9 @@ class AdminAPITestCase(APITestCase):
     PUT, PATCH /api/v1/admin/requests/:id/crew/:id
     """
 
-    def test_admin_can_modify_crew(self):
-        self.authorize_user(ADMIN)
+    def modify_crew(self):
         data = {
-            'position': 'Modified position',
+            'position': 'Modified position'
         }
         response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id),
                                      data)
@@ -616,32 +582,19 @@ class AdminAPITestCase(APITestCase):
 
         data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id)).json()
         self.assertIn('PUT Modified', data['position'])
+
+    def test_admin_can_modify_crew(self):
+        self.authorize_user(ADMIN)
+        self.modify_crew()
 
     def test_staff_can_modify_crew(self):
         self.authorize_user(STAFF)
-        data = {
-            'position': 'Modified position',
-        }
-        response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id),
-                                     data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id)).json()
-        self.assertIn('Modified', data['position'])
-
-        data['position'] = 'PUT Modified'
-        data.update(member_id=data['member']['id'])
-        response = self.client.put('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id),
-                                   data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id)).json()
-        self.assertIn('PUT Modified', data['position'])
+        self.modify_crew()
 
     def test_user_should_not_modify_crew(self):
         self.authorize_user(USER)
         data = {
-            'position': 'Modified position',
+            'position': 'Modified position'
         }
         response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id),
                                      data)
@@ -660,13 +613,16 @@ class AdminAPITestCase(APITestCase):
     DELETE /api/v1/admin/requests/:id/crew/:id
     """
 
-    def test_admin_can_create_delete_crew(self):
-        self.authorize_user(ADMIN)
+    def create_crew(self):
         data = {
             'member_id': self.admin_user.id,
             'position': 'new position'
         }
-        response = self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/crew', data)
+        return self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/crew', data)
+
+    def test_admin_can_create_delete_crew(self):
+        self.authorize_user(ADMIN)
+        response = self.create_crew()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         response = self.client.delete(
@@ -675,11 +631,7 @@ class AdminAPITestCase(APITestCase):
 
     def test_staff_can_create_delete_crew(self):
         self.authorize_user(STAFF)
-        data = {
-            'member_id': self.admin_user.id,
-            'position': 'new position'
-        }
-        response = self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/crew', data)
+        response = self.create_crew()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         response = self.client.delete(
@@ -688,13 +640,142 @@ class AdminAPITestCase(APITestCase):
 
     def test_user_should_not_create_delete_crew(self):
         self.authorize_user(USER)
-        data = {
-            'member_id': self.admin_user.id,
-            'position': 'new position'
-        }
-        response = self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/crew', data)
+        response = self.create_crew()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.delete(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    --------------------------------------------------
+                          VIDEOS
+    --------------------------------------------------
+    """
+    """
+    GET /api/v1/admin/requests/:id/videos
+    """
+
+    def test_admin_can_get_videos(self):
+        self.authorize_user(ADMIN)
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_staff_can_get_videos(self):
+        self.authorize_user(STAFF)
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_should_not_get_videos(self):
+        self.authorize_user(USER)
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    GET /api/v1/admin/requests/:id/videos/:id
+    """
+
+    def test_admin_can_get_video_detail(self):
+        self.authorize_user(ADMIN)
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_staff_can_get_video_detail(self):
+        self.authorize_user(STAFF)
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_should_not_get_video_detail(self):
+        self.authorize_user(USER)
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    PUT, PATCH /api/v1/admin/requests/:id/videos/:id
+    """
+
+    def modify_video(self):
+        data = {
+            'editor_id': self.staff_user.id
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id)).json()
+        self.assertEqual(data['editor']['username'], self.staff_user.username)
+
+        data['title'] = data['title'] + ' - Modified'
+        response = self.client.put('/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id),
+                                   data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id)).json()
+        self.assertIn('Modified', data['title'])
+
+    def test_admin_can_modify_video(self):
+        self.authorize_user(ADMIN)
+        self.modify_video()
+
+    def test_staff_can_modify_video(self):
+        self.authorize_user(STAFF)
+        self.modify_video()
+
+    def test_user_should_not_modify_video(self):
+        self.authorize_user(USER)
+        data = {
+            'editor_id': self.staff_user.id
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.crew1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        data = {
+            'title': 'Modified title',
+            'editor_id': self.staff_user.id
+        }
+        response = self.client.put('/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.crew1.id),
+                                   data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    POST /api/v1/admin/requests/:id/videos
+    DELETE /api/v1/admin/requests/:id/videos/:id
+    """
+
+    def create_video(self):
+        data = {
+            'title': 'New video'
+        }
+        return self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/videos', data)
+
+    def test_admin_can_create_delete_videos(self):
+        self.authorize_user(ADMIN)
+        response = self.create_video()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(response.data['id']))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_staff_can_create_delete_videos(self):
+        self.authorize_user(STAFF)
+        response = self.create_video()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(response.data['id']))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_user_should_not_create_delete_videos(self):
+        self.authorize_user(USER)
+        response = self.create_video()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
