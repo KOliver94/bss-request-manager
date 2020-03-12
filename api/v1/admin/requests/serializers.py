@@ -57,7 +57,8 @@ class VideoAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = ('id', 'title', 'editor', 'status', 'additional_data', 'ratings', 'editor_id',)
-        read_only_fields = ('id', 'ratings',)
+        read_only_fields = ('id', 'editor', 'status', 'ratings',)
+        write_only_fields = ('editor_id',)
 
     def create(self, validated_data):
         get_editor_from_id(validated_data)
@@ -75,6 +76,8 @@ class CrewMemberAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = CrewMember
         fields = ('id', 'member', 'position', 'member_id')
+        read_only_fields = ('id', 'member',)
+        write_only_fields = ('member_id',)
 
     def create(self, validated_data):
         get_member_from_id(validated_data)
@@ -97,6 +100,8 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         model = Request
         fields = ('id', 'title', 'created', 'time', 'type', 'place', 'status',
                   'responsible', 'requester', 'additional_data', 'crew', 'videos', 'comments', 'responsible_id',)
+        read_only_fields = ('id', 'created', 'status', 'responsible', 'requester', 'requester', 'crew', 'videos', 'comments',)
+        write_only_fields = ('responsible_id',)
 
     def create(self, validated_data):
         get_responsible_from_id(validated_data)

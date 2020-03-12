@@ -56,4 +56,4 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
         model = Request
         fields = ('id', 'title', 'created', 'time', 'type', 'place', 'status',
                   'responsible', 'requester', 'videos', 'comments',)
-        read_only_field = ('id', 'status', 'responsible', 'videos', 'comments',)
+        read_only_field = ('id', 'created', 'status', 'responsible', 'requester', 'videos', 'comments',)
