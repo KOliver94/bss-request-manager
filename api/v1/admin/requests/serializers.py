@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.fields import IntegerField
+from rest_framework.fields import IntegerField, CharField
 
 from video_requests.models import Request, Video, CrewMember, Rating, Comment
 
@@ -23,6 +23,12 @@ def get_member_from_id(validated_data):
     member_id = validated_data.pop('member_id')
     member = User.objects.get(id=member_id)
     validated_data['member'] = member
+
+
+def check_comment_is_posted(validated_data):
+    if 'comment_text' in validated_data:
+        return validated_data.pop('comment_text')
+    return None
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -95,18 +101,32 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     requester = UserSerializer(read_only=True)
     responsible = UserSerializer(read_only=True)
     responsible_id = IntegerField(write_only=True, required=False)
+    comment_text = CharField(write_only=True, required=False)
 
     class Meta:
         model = Request
         fields = ('id', 'title', 'created', 'time', 'type', 'place', 'status',
-                  'responsible', 'requester', 'additional_data', 'crew', 'videos', 'comments', 'responsible_id',)
+                  'responsible', 'requester', 'additional_data', 'crew', 'videos', 'comments', 'responsible_id',
+                  'comment_text',)
         read_only_fields = (
             'id', 'created', 'status', 'responsible', 'requester', 'requester', 'crew', 'videos', 'comments',)
-        write_only_fields = ('responsible_id',)
+        write_only_fields = ('responsible_id', 'comment_text',)
+
+    def create_comment(self, comment_text, request):
+        comment = Comment()
+        comment.author = self.context['request'].user
+        comment.text = comment_text
+        comment.request = request
+        comment.save()
+        return comment
 
     def create(self, validated_data):
         get_responsible_from_id(validated_data)
-        return super(RequestAdminSerializer, self).create(validated_data)
+        comment_text = check_comment_is_posted(validated_data)
+        request = super(RequestAdminSerializer, self).create(validated_data)
+        if comment_text:
+            request.comments.add(self.create_comment(comment_text, request))
+        return request
 
     def update(self, instance, validated_data):
         get_responsible_from_id(validated_data)

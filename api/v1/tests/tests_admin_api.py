@@ -297,6 +297,20 @@ class AdminAPITestCase(APITestCase):
         response = self.client.delete('/api/v1/admin/requests/' + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_adding_initial_comment_to_request(self):
+        self.authorize_user(ADMIN)
+        data = {
+            'title': 'Test Request 2',
+            'time': '2020-03-05',
+            'place': 'Test place',
+            'type': 'Test type',
+            'comment_text': 'Test comment'
+        }
+        response = self.client.post('/api/v1/admin/requests/', data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['comments'][0]['author']['username'], ADMIN)
+        self.assertEqual(response.data['comments'][0]['text'], 'Test comment')
+
     """
     --------------------------------------------------
                          COMMENTS
