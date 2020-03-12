@@ -61,20 +61,30 @@ class AdminAPITestCase(APITestCase):
         self.crew2.member = self.admin_user
         self.crew2.save()
 
-        # Create 2 sample Video objects
+        # Create 3 sample Video objects
+        # Video 1 has ratings from all users
+        # Video 2 is used to delete the ratings from
+        # Video 3 has no ratings
         self.video1 = Video()
-        self.video1.id = 788
+        self.video1.id = 787
         self.video1.request = self.request1
         self.video1.title = 'Test Video 1'
         self.video1.save()
 
         self.video2 = Video()
-        self.video2.id = 789
+        self.video2.id = 788
         self.video2.request = self.request1
         self.video2.title = 'Test Video 2'
         self.video2.save()
 
-        # Create 3 sample Comment objects with different authors
+        self.video3 = Video()
+        self.video3.id = 789
+        self.video3.request = self.request1
+        self.video3.title = 'Test Video 3'
+        self.video3.save()
+
+        # Create 5 sample Comment objects with different authors
+        # Comment 4 & 5 are used to test comment delete
         self.comment1 = Comment()
         self.comment1.id = 987
         self.comment1.request = self.request1
@@ -105,7 +115,16 @@ class AdminAPITestCase(APITestCase):
         self.comment4.internal = True
         self.comment4.save()
 
-        # Create 3 sample Rating objects with different authors
+        self.comment5 = Comment()
+        self.comment5.id = 983
+        self.comment5.request = self.request1
+        self.comment5.author = self.staff_user
+        self.comment5.text = 'Sample text - Staff'
+        self.comment5.internal = True
+        self.comment5.save()
+
+        # Create 5 sample Rating objects with different authors
+        # Rating 4 & 5 are used to test comment delete
         self.rating1 = Rating()
         self.rating1.id = 876
         self.rating1.video = self.video1
@@ -130,6 +149,22 @@ class AdminAPITestCase(APITestCase):
         self.rating3.review = 'Sample text - Admin'
         self.rating3.save()
 
+        self.rating4 = Rating()
+        self.rating4.id = 873
+        self.rating4.video = self.video2
+        self.rating4.author = self.staff_user
+        self.rating4.rating = 3
+        self.rating4.review = 'Sample text - Staff'
+        self.rating4.save()
+
+        self.rating5 = Rating()
+        self.rating5.id = 872
+        self.rating5.video = self.video2
+        self.rating5.author = self.staff_user
+        self.rating5.rating = 3
+        self.rating5.review = 'Sample text - Staff'
+        self.rating5.save()
+
     """
     --------------------------------------------------
                          REQUESTS
@@ -138,6 +173,7 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/
     """
+
     def test_admin_can_get_requests(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/')
@@ -156,6 +192,7 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id
     """
+
     def test_admin_can_get_request_detail(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id))
@@ -265,6 +302,7 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id/comments
     """
+
     def test_admin_can_get_comments(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/comments')
@@ -283,6 +321,7 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id/comments/:id
     """
+
     def test_admin_can_get_comment_detail(self):
         self.authorize_user(ADMIN)
         response = self.client.get(
@@ -322,6 +361,7 @@ class AdminAPITestCase(APITestCase):
     """
     PUT, PATCH /api/v1/admin/requests/:id/comments/:id
     """
+
     def test_admin_can_modify_any_comments(self):
         self.authorize_user(ADMIN)
         data = {
@@ -482,16 +522,12 @@ class AdminAPITestCase(APITestCase):
     """
     DELETE /api/v1/admin/requests/:id/comments/:id
     """
+
     def test_admin_can_delete_any_comments(self):
         self.authorize_user(ADMIN)
+        # Try to delete one comment created by staff user
         response = self.client.delete(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        response = self.client.delete(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id))
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        response = self.client.delete(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment5.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_delete_only_own_comments(self):
@@ -526,6 +562,7 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id/crew
     """
+
     def test_admin_can_get_crew(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew')
@@ -544,6 +581,7 @@ class AdminAPITestCase(APITestCase):
     """
     GET /api/v1/admin/requests/:id/crew/:id
     """
+
     def test_admin_can_get_crew_detail(self):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id))
@@ -778,4 +816,329 @@ class AdminAPITestCase(APITestCase):
 
         response = self.client.delete(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.crew1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    --------------------------------------------------
+                         RATINGS
+    --------------------------------------------------
+    """
+    """
+    GET /api/v1/admin/requests/:id/videos/:id/ratings
+    """
+
+    def test_admin_can_get_ratings(self):
+        self.authorize_user(ADMIN)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_staff_can_get_ratings(self):
+        self.authorize_user(STAFF)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_should_not_get_ratings(self):
+        self.authorize_user(USER)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    GET /api/v1/admin/requests/:id/videos/:id/ratings/:id
+    """
+
+    def test_admin_can_get_rating_detail(self):
+        self.authorize_user(ADMIN)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_staff_can_get_rating_detail(self):
+        self.authorize_user(STAFF)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_should_not_get_rating_detail(self):
+        self.authorize_user(USER)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    POST /api/v1/admin/requests/:id/videos/:id/ratings
+    """
+
+    def create_rating(self):
+        data = {
+            'rating': 5,
+            'review': 'Great video'
+        }
+        return self.client.post(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video3.id) + '/ratings', data)
+
+    def test_admin_can_only_create_one_rating_to_a_video(self):
+        self.authorize_user(ADMIN)
+        response = self.create_rating()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['author']['username'], self.admin_user.username)
+
+        response = self.create_rating()
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data[0], 'You have already posted a rating.')
+
+    def test_staff_can_only_create_one_rating_to_a_video(self):
+        self.authorize_user(STAFF)
+        response = self.create_rating()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['author']['username'], self.staff_user.username)
+
+        response = self.create_rating()
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data[0], 'You have already posted a rating.')
+
+    def test_user_should_not_create_ratings(self):
+        self.authorize_user(USER)
+        response = self.create_rating()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_rating_validator(self):
+        self.authorize_user(ADMIN)
+        data = {
+            'rating': 50,
+        }
+        response = self.client.post(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings', data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['rating'][0], 'Ensure this value is less than or equal to 5.')
+
+        data['rating'] = -100
+        response = self.client.post(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings', data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['rating'][0], 'Ensure this value is greater than or equal to 1.')
+
+    """
+    PUT, PATCH /api/v1/admin/requests/:id/comments/:id
+    """
+
+    def test_admin_can_modify_any_reviews(self):
+        self.authorize_user(ADMIN)
+        data = {
+            'review': 'Modified by admin'
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id), data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id), data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id), data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id)).json()
+        self.assertIn('Modified by admin', data['review'])
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id)).json()
+        self.assertIn('Modified by admin', data['review'])
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id)).json()
+        self.assertIn('Modified by admin', data['review'])
+
+        data['review'] = 'Modified by admin (PUT)'
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id)).json()
+        self.assertIn('Modified by admin (PUT)', data['review'])
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id)).json()
+        self.assertIn('Modified by admin (PUT)', data['review'])
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id)).json()
+        self.assertIn('Modified by admin (PUT)', data['review'])
+
+    def test_staff_can_modify_only_own_reviews(self):
+        self.authorize_user(STAFF)
+        data = {
+            'review': 'Modified by staff'
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id)).json()
+        self.assertIn('Modified by staff', data['review'])
+
+        data['review'] = 'Modified by staff (PUT)'
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        data = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id)).json()
+        self.assertIn('Modified by staff (PUT)', data['review'])
+
+    def test_user_should_not_modify_reviews(self):
+        self.authorize_user(USER)
+        data = {
+            'text': 'Modified by user'
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        data = {
+            'review': 'Modified by user',
+            'rating': 5
+        }
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    """
+    DELETE /api/v1/admin/requests/:id/videos/:id/ratings/:id
+    """
+
+    def test_admin_can_delete_any_ratings(self):
+        self.authorize_user(ADMIN)
+        # Try to delete one rating created by staff user
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video2.id) + '/ratings/' + str(
+                self.rating5.id))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_staff_delete_only_own_ratings(self):
+        self.authorize_user(STAFF)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video2.id) + '/ratings/' + str(
+                self.rating4.id))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_user_should_not_delete_ratings(self):
+        self.authorize_user(USER)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
