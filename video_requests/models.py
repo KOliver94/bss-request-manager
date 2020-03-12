@@ -57,13 +57,12 @@ class Rating(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="ratings")
     rating = models.IntegerField(
-        default=1,
         validators=[
             MaxValueValidator(5),
             MinValueValidator(1)
         ]
     )
-    review = models.TextField()
+    review = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
