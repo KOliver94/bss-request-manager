@@ -5,6 +5,26 @@ from rest_framework.fields import IntegerField
 from video_requests.models import Request, Video, CrewMember, Rating, Comment
 
 
+def get_editor_from_id(validated_data):
+    if 'editor_id' in validated_data:
+        editor_id = validated_data.pop('editor_id')
+        editor = User.objects.get(id=editor_id)
+        validated_data['editor'] = editor
+
+
+def get_responsible_from_id(validated_data):
+    if 'responsible_id' in validated_data:
+        responsible_id = validated_data.pop('responsible_id')
+        responsible = User.objects.get(id=responsible_id)
+        validated_data['responsible'] = responsible
+
+
+def get_member_from_id(validated_data):
+    member_id = validated_data.pop('member_id')
+    member = User.objects.get(id=member_id)
+    validated_data['member'] = member
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -40,11 +60,12 @@ class VideoAdminSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'ratings',)
 
     def create(self, validated_data):
-        if 'editor_id' in validated_data:
-            editor_id = validated_data.pop('editor_id')
-            editor = User.objects.get(id=editor_id)
-            validated_data['editor'] = editor
+        get_editor_from_id(validated_data)
         return super(VideoAdminSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        get_editor_from_id(validated_data)
+        return super(VideoAdminSerializer, self).update(instance, validated_data)
 
 
 class CrewMemberAdminSerializer(serializers.ModelSerializer):
@@ -56,10 +77,12 @@ class CrewMemberAdminSerializer(serializers.ModelSerializer):
         fields = ('id', 'member', 'position', 'member_id')
 
     def create(self, validated_data):
-        member_id = validated_data.pop('member_id')
-        member = User.objects.get(id=member_id)
-        validated_data['member'] = member
+        get_member_from_id(validated_data)
         return super(CrewMemberAdminSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        get_member_from_id(validated_data)
+        return super(CrewMemberAdminSerializer, self).update(instance, validated_data)
 
 
 class RequestAdminSerializer(serializers.ModelSerializer):
@@ -76,8 +99,9 @@ class RequestAdminSerializer(serializers.ModelSerializer):
                   'responsible', 'requester', 'additional_data', 'crew', 'videos', 'comments', 'responsible_id',)
 
     def create(self, validated_data):
-        if 'responsible_id' in validated_data:
-            responsible_id = validated_data.pop('responsible_id')
-            responsible = User.objects.get(id=responsible_id)
-            validated_data['responsible'] = responsible
+        get_responsible_from_id(validated_data)
         return super(RequestAdminSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        get_responsible_from_id(validated_data)
+        return super(RequestAdminSerializer, self).update(instance, validated_data)

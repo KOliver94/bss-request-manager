@@ -214,13 +214,13 @@ class AdminAPITestCase(APITestCase):
 
     def modify_request(self):
         data = {
-            'title': 'Test Request 1 - Modified'
+            'responsible_id': self.staff_user.id
         }
         response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id)).json()
-        self.assertIn('Modified', data['title'])
+        self.assertEqual(data['responsible']['username'], self.staff_user.username)
 
         data['place'] = 'Test place - Modified'
         response = self.client.put('/api/v1/admin/requests/' + str(self.request1.id), data)
@@ -264,7 +264,8 @@ class AdminAPITestCase(APITestCase):
             'title': 'Test Request 2',
             'time': '2020-03-05',
             'place': 'Test place',
-            'type': 'Test type'
+            'type': 'Test type',
+            'responsible_id': self.admin_user.id
         }
         return self.client.post('/api/v1/admin/requests/', data)
 
@@ -273,6 +274,7 @@ class AdminAPITestCase(APITestCase):
         response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['requester']['username'], ADMIN)
+        self.assertEqual(response.data['responsible']['username'], ADMIN)
 
         response = self.client.delete('/api/v1/admin/requests/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -282,6 +284,7 @@ class AdminAPITestCase(APITestCase):
         response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['requester']['username'], STAFF)
+        self.assertEqual(response.data['responsible']['username'], ADMIN)
 
         response = self.client.delete('/api/v1/admin/requests/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -489,6 +492,38 @@ class AdminAPITestCase(APITestCase):
             data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_get_comment_detail(self):
+        """
+        By default DRF returns 401 for unauthorized requests but with custom object permissions it changes
+        For GET it would return 401 even if the object does not exist
+        For other methods it returns 404 if the object does not exist and 401 if exist but obviously has no right to access.
+        It's information leaking and this behaviour is overwritten in the view, so it returns 404 even if the object exists.
+        """
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        data = {
+            'text': 'Modified by anonymous'
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
     """
     POST /api/v1/admin/requests/:id/comments
     """
@@ -603,11 +638,13 @@ class AdminAPITestCase(APITestCase):
 
     def modify_crew(self):
         data = {
-            'position': 'Modified position'
+            'position': 'Modified position',
+            'member_id': self.admin_user.id
         }
         response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id),
                                      data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['member']['username'], self.admin_user.username)
 
         data = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id)).json()
         self.assertIn('Modified', data['position'])
@@ -787,7 +824,8 @@ class AdminAPITestCase(APITestCase):
 
     def create_video(self):
         data = {
-            'title': 'New video'
+            'title': 'New video',
+            'editor_id': self.admin_user.id
         }
         return self.client.post('/api/v1/admin/requests/' + str(self.request1.id) + '/videos', data)
 
@@ -795,6 +833,7 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.create_video()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['editor']['username'], self.admin_user.username)
 
         response = self.client.delete(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(response.data['id']))
@@ -804,6 +843,7 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(STAFF)
         response = self.create_video()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['editor']['username'], self.admin_user.username)
 
         response = self.client.delete(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(response.data['id']))
@@ -1063,7 +1103,7 @@ class AdminAPITestCase(APITestCase):
     def test_user_should_not_modify_reviews(self):
         self.authorize_user(USER)
         data = {
-            'text': 'Modified by user'
+            'review': 'Modified by user'
         }
         response = self.client.patch(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
@@ -1100,6 +1140,44 @@ class AdminAPITestCase(APITestCase):
                 self.rating3.id),
             data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_get_rating_detail(self):
+        """
+        By default DRF returns 401 for unauthorized requests but with custom object permissions it changes
+        For GET it would return 401 even if the object does not exist
+        For other methods it returns 404 if the object does not exist and 401 if exist but obviously has no right to access.
+        It's information leaking and this behaviour is overwritten in the view, so it returns 404 even if the object exists.
+        """
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        data = {
+            'review': 'Modified by anonymous'
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.put(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     """
     DELETE /api/v1/admin/requests/:id/videos/:id/ratings/:id
