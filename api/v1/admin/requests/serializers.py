@@ -100,7 +100,8 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         model = Request
         fields = ('id', 'title', 'created', 'time', 'type', 'place', 'status',
                   'responsible', 'requester', 'additional_data', 'crew', 'videos', 'comments', 'responsible_id',)
-        read_only_fields = ('id', 'created', 'status', 'responsible', 'requester', 'requester', 'crew', 'videos', 'comments',)
+        read_only_fields = (
+            'id', 'created', 'status', 'responsible', 'requester', 'requester', 'crew', 'videos', 'comments',)
         write_only_fields = ('responsible_id',)
 
     def create(self, validated_data):
