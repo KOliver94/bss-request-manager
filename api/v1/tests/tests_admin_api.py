@@ -46,7 +46,7 @@ class AdminAPITestCase(APITestCase):
         # Create 3 sample Video objects
         # Video 1 has ratings from all users
         # Video 2 is used to delete the ratings from
-        # Video 3 has no ratings
+        # Video 3 has no ratings (used to post ratings to)
         self.video1 = create_video(787, self.request1)
         self.video2 = create_video(788, self.request1)
         self.video3 = create_video(789, self.request1)
@@ -657,13 +657,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['count'], 2)
+        self.assertEqual(response.data['count'], 3)
 
     def test_staff_can_get_videos(self):
         self.authorize_user(STAFF)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['count'], 2)
+        self.assertEqual(response.data['count'], 3)
 
     def test_user_should_not_get_videos(self):
         self.authorize_user(USER)

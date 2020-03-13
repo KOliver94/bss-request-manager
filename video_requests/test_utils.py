@@ -1,11 +1,13 @@
 from datetime import datetime
 from random import randint
+
 from video_requests.models import Request, Comment, CrewMember, Video, Rating
 
-def create_request(id, user):
+
+def create_request(request_id, user):
     request = Request()
-    request.id = id
-    request.title = 'Test Request ' + str(id) + ' - ' + user.username
+    request.id = request_id
+    request.title = 'Test Request ' + str(request_id) + ' - ' + user.username
     request.time = datetime.now()
     request.place = 'Test place'
     request.type = 'Test type'
@@ -14,9 +16,9 @@ def create_request(id, user):
     return request
 
 
-def create_crew(id, request, member, position):
+def create_crew(crew_id, request, member, position):
     crew = CrewMember()
-    crew.id = id
+    crew.id = crew_id
     crew.request = request
     crew.member = member
     crew.position = position
@@ -24,18 +26,18 @@ def create_crew(id, request, member, position):
     return crew
 
 
-def create_video(id, request):
+def create_video(video_id, request):
     video = Video()
-    video.id = id
+    video.id = video_id
     video.request = request
-    video.title = 'Test video - ' + str(id)
+    video.title = 'Test video - ' + str(video_id)
     video.save()
     return video
 
 
-def create_comment(id, request, user, internal):
+def create_comment(comment_id, request, user, internal):
     comment = Comment()
-    comment.id = id
+    comment.id = comment_id
     comment.request = request
     comment.author = user
     comment.text = 'Sample text - ' + user.username
@@ -44,9 +46,9 @@ def create_comment(id, request, user, internal):
     return comment
 
 
-def create_rating(id, video, user):
+def create_rating(rating_id, video, user):
     rating = Rating()
-    rating.id = id
+    rating.id = rating_id
     rating.video = video
     rating.author = user
     rating.rating = randint(1, 5)
