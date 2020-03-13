@@ -1,11 +1,9 @@
-from datetime import datetime
-
 from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from video_requests.models import Request, Comment, CrewMember, Video, Rating
+from video_requests.test_utils import create_comment, create_crew, create_rating, create_request, create_video
 
 ADMIN = "test_admin1"
 STAFF = "test_staff1"
@@ -37,140 +35,37 @@ class AdminAPITestCase(APITestCase):
             username=ADMIN, password=PASSWORD, email='test_admin1@foo.com')
 
         # Create 2 sample Request objects
-        self.request1 = Request()
-        self.request1.id = 999
-        self.request1.title = 'Test Request 1'
-        self.request1.place = 'Test place'
-        self.request1.type = 'Test type'
-        self.request1.requester = self.normal_user
-        self.request1.save()
-
-        self.request2 = Request()
-        self.request2.id = 998
-        self.request2.title = 'Test Request 2'
-        self.request2.place = 'Test place'
-        self.request2.type = 'Test type'
-        self.request2.requester = self.normal_user
-        self.request2.save()
+        # Request 2 is used to delete the comments from
+        self.request1 = create_request(999, self.normal_user)
+        self.request2 = create_request(998, self.admin_user)
 
         # Create 2 sample CrewMember objects
-        self.crew1 = CrewMember()
-        self.crew1.id = 555
-        self.crew1.request = self.request1
-        self.crew1.position = 'Cameraman'
-        self.crew1.member = self.staff_user
-        self.crew1.save()
-
-        self.crew2 = CrewMember()
-        self.crew2.id = 556
-        self.crew2.request = self.request1
-        self.crew2.position = 'Reporter'
-        self.crew2.member = self.admin_user
-        self.crew2.save()
+        self.crew1 = create_crew(555, self.request1, self.staff_user, 'Cameraman')
+        self.crew1 = create_crew(556, self.request1, self.admin_user, 'Reporter')
 
         # Create 3 sample Video objects
         # Video 1 has ratings from all users
         # Video 2 is used to delete the ratings from
         # Video 3 has no ratings
-        self.video1 = Video()
-        self.video1.id = 787
-        self.video1.request = self.request1
-        self.video1.title = 'Test Video 1'
-        self.video1.save()
-
-        self.video2 = Video()
-        self.video2.id = 788
-        self.video2.request = self.request1
-        self.video2.title = 'Test Video 2'
-        self.video2.save()
-
-        self.video3 = Video()
-        self.video3.id = 789
-        self.video3.request = self.request1
-        self.video3.title = 'Test Video 3'
-        self.video3.save()
+        self.video1 = create_video(787, self.request1)
+        self.video2 = create_video(788, self.request1)
+        self.video3 = create_video(789, self.request1)
 
         # Create 5 sample Comment objects with different authors
         # Comment 4 & 5 are used to test comment delete and related to Request 2
-        self.comment1 = Comment()
-        self.comment1.id = 987
-        self.comment1.request = self.request1
-        self.comment1.author = self.normal_user
-        self.comment1.text = 'Sample text - User'
-        self.comment1.save()
-
-        self.comment2 = Comment()
-        self.comment2.id = 986
-        self.comment2.request = self.request1
-        self.comment2.author = self.staff_user
-        self.comment2.text = 'Sample text - Staff'
-        self.comment2.internal = True
-        self.comment2.save()
-
-        self.comment3 = Comment()
-        self.comment3.id = 985
-        self.comment3.request = self.request1
-        self.comment3.author = self.admin_user
-        self.comment3.text = 'Sample text - Admin'
-        self.comment3.save()
-
-        self.comment4 = Comment()
-        self.comment4.id = 984
-        self.comment4.request = self.request2
-        self.comment4.author = self.staff_user
-        self.comment4.text = 'Sample text - Staff'
-        self.comment4.internal = True
-        self.comment4.save()
-
-        self.comment5 = Comment()
-        self.comment5.id = 983
-        self.comment5.request = self.request2
-        self.comment5.author = self.staff_user
-        self.comment5.text = 'Sample text - Staff'
-        self.comment5.internal = True
-        self.comment5.save()
+        self.comment1 = create_comment(907, self.request1, self.normal_user, False)
+        self.comment2 = create_comment(906, self.request1, self.staff_user, True)
+        self.comment3 = create_comment(905, self.request1, self.admin_user, False)
+        self.comment4 = create_comment(904, self.request2, self.staff_user, True)
+        self.comment5 = create_comment(903, self.request2, self.staff_user, False)
 
         # Create 5 sample Rating objects with different authors
         # Rating 4 & 5 are used to test comment delete and related to Video 2
-        self.rating1 = Rating()
-        self.rating1.id = 876
-        self.rating1.video = self.video1
-        self.rating1.author = self.normal_user
-        self.rating1.rating = 5
-        self.rating1.review = 'Sample text - User'
-        self.rating1.save()
-
-        self.rating2 = Rating()
-        self.rating2.id = 875
-        self.rating2.video = self.video1
-        self.rating2.author = self.staff_user
-        self.rating2.rating = 3
-        self.rating2.review = 'Sample text - Staff'
-        self.rating2.save()
-
-        self.rating3 = Rating()
-        self.rating3.id = 874
-        self.rating3.video = self.video1
-        self.rating3.author = self.admin_user
-        self.rating3.rating = 1
-        self.rating3.review = 'Sample text - Admin'
-        self.rating3.save()
-
-        self.rating4 = Rating()
-        self.rating4.id = 873
-        self.rating4.video = self.video2
-        self.rating4.author = self.staff_user
-        self.rating4.rating = 3
-        self.rating4.review = 'Sample text - Staff'
-        self.rating4.save()
-
-        self.rating5 = Rating()
-        self.rating5.id = 872
-        self.rating5.video = self.video2
-        self.rating5.author = self.staff_user
-        self.rating5.rating = 3
-        self.rating5.review = 'Sample text - Staff'
-        self.rating5.save()
+        self.rating1 = create_rating(376, self.video1, self.normal_user)
+        self.rating2 = create_rating(375, self.video1, self.staff_user)
+        self.rating3 = create_rating(374, self.video1, self.admin_user)
+        self.rating4 = create_rating(373, self.video2, self.staff_user)
+        self.rating5 = create_rating(372, self.video2, self.staff_user)
 
     """
     --------------------------------------------------
