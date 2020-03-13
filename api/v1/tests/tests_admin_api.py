@@ -36,15 +36,22 @@ class AdminAPITestCase(APITestCase):
         self.admin_user = User.objects.create_superuser(
             username=ADMIN, password=PASSWORD, email='test_admin1@foo.com')
 
-        # Create a sample Request object
+        # Create 2 sample Request objects
         self.request1 = Request()
         self.request1.id = 999
         self.request1.title = 'Test Request 1'
-        self.request1.time = datetime.now()
         self.request1.place = 'Test place'
         self.request1.type = 'Test type'
         self.request1.requester = self.normal_user
         self.request1.save()
+
+        self.request2 = Request()
+        self.request2.id = 998
+        self.request2.title = 'Test Request 2'
+        self.request2.place = 'Test place'
+        self.request2.type = 'Test type'
+        self.request2.requester = self.normal_user
+        self.request2.save()
 
         # Create 2 sample CrewMember objects
         self.crew1 = CrewMember()
@@ -84,7 +91,7 @@ class AdminAPITestCase(APITestCase):
         self.video3.save()
 
         # Create 5 sample Comment objects with different authors
-        # Comment 4 & 5 are used to test comment delete
+        # Comment 4 & 5 are used to test comment delete and related to Request 2
         self.comment1 = Comment()
         self.comment1.id = 987
         self.comment1.request = self.request1
@@ -109,7 +116,7 @@ class AdminAPITestCase(APITestCase):
 
         self.comment4 = Comment()
         self.comment4.id = 984
-        self.comment4.request = self.request1
+        self.comment4.request = self.request2
         self.comment4.author = self.staff_user
         self.comment4.text = 'Sample text - Staff'
         self.comment4.internal = True
@@ -117,14 +124,14 @@ class AdminAPITestCase(APITestCase):
 
         self.comment5 = Comment()
         self.comment5.id = 983
-        self.comment5.request = self.request1
+        self.comment5.request = self.request2
         self.comment5.author = self.staff_user
         self.comment5.text = 'Sample text - Staff'
         self.comment5.internal = True
         self.comment5.save()
 
         # Create 5 sample Rating objects with different authors
-        # Rating 4 & 5 are used to test comment delete
+        # Rating 4 & 5 are used to test comment delete and related to Video 2
         self.rating1 = Rating()
         self.rating1.id = 876
         self.rating1.video = self.video1
@@ -178,11 +185,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
 
     def test_staff_can_get_requests(self):
         self.authorize_user(STAFF)
         response = self.client.get('/api/v1/admin/requests/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
 
     def test_user_should_not_get_requests(self):
         self.authorize_user(USER)
@@ -324,11 +333,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/comments')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 3)
 
     def test_staff_can_get_comments(self):
         self.authorize_user(STAFF)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/comments')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 3)
 
     def test_user_should_not_get_comments(self):
         self.authorize_user(USER)
@@ -576,7 +587,7 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         # Try to delete one comment created by staff user
         response = self.client.delete(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment5.id))
+            '/api/v1/admin/requests/' + str(self.request2.id) + '/comments/' + str(self.comment5.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_delete_only_own_comments(self):
@@ -588,7 +599,7 @@ class AdminAPITestCase(APITestCase):
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         response = self.client.delete(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment4.id))
+            '/api/v1/admin/requests/' + str(self.request2.id) + '/comments/' + str(self.comment4.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_delete_comments(self):
@@ -616,11 +627,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
 
     def test_staff_can_get_crew(self):
         self.authorize_user(STAFF)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
 
     def test_user_should_not_get_crew(self):
         self.authorize_user(USER)
@@ -749,11 +762,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
 
     def test_staff_can_get_videos(self):
         self.authorize_user(STAFF)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
 
     def test_user_should_not_get_videos(self):
         self.authorize_user(USER)
@@ -886,12 +901,14 @@ class AdminAPITestCase(APITestCase):
         response = self.client.get(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 3)
 
     def test_staff_can_get_ratings(self):
         self.authorize_user(STAFF)
         response = self.client.get(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 3)
 
     def test_user_should_not_get_ratings(self):
         self.authorize_user(USER)
