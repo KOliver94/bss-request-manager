@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError, NotAuthenticated
+from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.serializers import RequestAdminSerializer, CommentAdminSerializer, CrewMemberAdminSerializer, \
     VideoAdminSerializer, RatingAdminSerializer
@@ -21,7 +22,6 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
         return Request.objects.all()
 
     def perform_create(self, serializer):
-        serializer.is_valid(raise_exception=True)
         serializer.save(
             requester=self.request.user
         )
@@ -57,11 +57,8 @@ class CommentAdminListCreateView(generics.ListCreateAPIView):
         )
 
     def perform_create(self, serializer):
-        serializer.is_valid(raise_exception=True)
         serializer.save(
-            request=Request.objects.get(
-                id=self.kwargs['requestId']
-            ),
+            request=get_object_or_404(Request, id=self.kwargs['requestId']),
             author=self.request.user
         )
 
@@ -106,11 +103,8 @@ class CrewAdminListCreateView(generics.ListCreateAPIView):
         )
 
     def perform_create(self, serializer):
-        serializer.is_valid(raise_exception=True)
         serializer.save(
-            request=Request.objects.get(
-                id=self.kwargs['requestId']
-            )
+            request=get_object_or_404(Request, id=self.kwargs['requestId'])
         )
 
 
@@ -146,11 +140,8 @@ class VideoAdminListCreateView(generics.ListCreateAPIView):
         )
 
     def perform_create(self, serializer):
-        serializer.is_valid(raise_exception=True)
         serializer.save(
-            request=Request.objects.get(
-                id=self.kwargs['requestId']
-            )
+            request=get_object_or_404(Request, id=self.kwargs['requestId'])
         )
 
 
@@ -182,10 +173,8 @@ class RatingAdminListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Rating.objects.filter(
-            video=Video.objects.get(
-                request=self.kwargs['requestId'],
-                id=self.kwargs['videoId']
-            )
+            video__pk=self.kwargs['videoId'],
+            video__request__pk=self.kwargs['requestId']
         )
 
     def perform_create(self, serializer):
@@ -195,12 +184,8 @@ class RatingAdminListCreateView(generics.ListCreateAPIView):
         if Rating.objects.filter(video=self.kwargs['videoId'], author=self.request.user).exists():
             raise ValidationError('You have already posted a rating.')
 
-        serializer.is_valid(raise_exception=True)
         serializer.save(
-            video=Video.objects.get(
-                request=self.kwargs['requestId'],
-                id=self.kwargs['videoId']
-            ),
+            video=get_object_or_404(Video, id=self.kwargs['videoId'], request=self.kwargs['requestId']),
             author=self.request.user
         )
 
@@ -225,8 +210,6 @@ class RatingAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Rating.objects.filter(
-            video=Video.objects.get(
-                request=self.kwargs['requestId'],
-                id=self.kwargs['videoId']
-            )
+            video__pk=self.kwargs['videoId'],
+            video__request__pk=self.kwargs['requestId']
         )
