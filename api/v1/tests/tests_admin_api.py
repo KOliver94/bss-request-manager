@@ -93,6 +93,10 @@ class AdminAPITestCase(APITestCase):
         response = self.client.get('/api/v1/admin/requests/')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_get_requests(self):
+        response = self.client.get('/api/v1/admin/requests/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     GET /api/v1/admin/requests/:id
     """
@@ -111,6 +115,10 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(USER)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_get_request_detail(self):
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
     PUT, PATCH /api/v1/admin/requests/:id
@@ -158,6 +166,22 @@ class AdminAPITestCase(APITestCase):
         response = self.client.put('/api/v1/admin/requests/' + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_modify_requests(self):
+        data = {
+            'title': 'Test Request 2 - Modified'
+        }
+        response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id), data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        data = {
+            'title': 'Test Request',
+            'time': '2020-03-05',
+            'place': 'Test place - Modified',
+            'type': 'Test type'
+        }
+        response = self.client.put('/api/v1/admin/requests/' + str(self.request1.id), data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     POST /api/v1/admin/requests/
     DELETE /api/v1/admin/requests/:id
@@ -201,6 +225,13 @@ class AdminAPITestCase(APITestCase):
         response = self.client.delete('/api/v1/admin/requests/' + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_create_delete_requests(self):
+        response = self.create_request()
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = self.client.delete('/api/v1/admin/requests/' + str(self.request1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_adding_initial_comment_to_request(self):
         self.authorize_user(ADMIN)
         data = {
@@ -241,6 +272,10 @@ class AdminAPITestCase(APITestCase):
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/comments')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_get_comments(self):
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/comments')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     GET /api/v1/admin/requests/:id/comments/:id
     """
@@ -280,6 +315,17 @@ class AdminAPITestCase(APITestCase):
         response = self.client.get(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_get_comment_detail(self):
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
     PUT, PATCH /api/v1/admin/requests/:id/comments/:id
@@ -412,23 +458,13 @@ class AdminAPITestCase(APITestCase):
             data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_anonymous_should_not_get_comment_detail(self):
+    def test_anonymous_should_not_modify_or_delete_comments(self):
         """
         By default DRF returns 401 for unauthorized requests but with custom object permissions it changes
         For GET it would return 401 even if the object does not exist
         For other methods it returns 404 if the object does not exist and 401 if exist but obviously has no right to access.
         It's information leaking and this behaviour is overwritten in the view, so it returns 404 even if the object exists.
         """
-        response = self.client.get(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
         data = {
             'text': 'Modified by anonymous'
         }
@@ -473,6 +509,10 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(USER)
         response = self.create_comment()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_create_comments(self):
+        response = self.create_comment()
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
     DELETE /api/v1/admin/requests/:id/comments/:id
@@ -535,6 +575,10 @@ class AdminAPITestCase(APITestCase):
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_get_crew(self):
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     GET /api/v1/admin/requests/:id/crew/:id
     """
@@ -553,6 +597,10 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(USER)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_get_crew_detail(self):
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
     PUT, PATCH /api/v1/admin/requests/:id/crew/:id
@@ -605,6 +653,22 @@ class AdminAPITestCase(APITestCase):
                                    data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_modify_crew(self):
+        data = {
+            'position': 'Modified position'
+        }
+        response = self.client.patch('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id),
+                                     data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        data = {
+            'position': 'new position',
+            'member_id': self.admin_user.id
+        }
+        response = self.client.put('/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id),
+                                   data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     POST /api/v1/admin/requests/:id/crew
     DELETE /api/v1/admin/requests/:id/crew/:id
@@ -644,6 +708,14 @@ class AdminAPITestCase(APITestCase):
             '/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_create_delete_crew(self):
+        response = self.create_crew()
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/crew/' + str(self.crew1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     --------------------------------------------------
                           VIDEOS
@@ -670,6 +742,10 @@ class AdminAPITestCase(APITestCase):
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_get_videos(self):
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     GET /api/v1/admin/requests/:id/videos/:id
     """
@@ -688,6 +764,10 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(USER)
         response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_get_video_detail(self):
+        response = self.client.get('/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
     PUT, PATCH /api/v1/admin/requests/:id/videos/:id
@@ -741,6 +821,23 @@ class AdminAPITestCase(APITestCase):
                                    data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_modify_video(self):
+        data = {
+            'editor_id': self.staff_user.id
+        }
+        response = self.client.patch(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.crew1.id),
+            data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        data = {
+            'title': 'Modified title',
+            'editor_id': self.staff_user.id
+        }
+        response = self.client.put('/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.crew1.id),
+                                   data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     POST /api/v1/admin/requests/:id/videos
     DELETE /api/v1/admin/requests/:id/videos/:id
@@ -782,6 +879,14 @@ class AdminAPITestCase(APITestCase):
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_create_delete_videos(self):
+        response = self.create_video()
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = self.client.delete(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.crew1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     --------------------------------------------------
                          RATINGS
@@ -810,6 +915,11 @@ class AdminAPITestCase(APITestCase):
         response = self.client.get(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_get_ratings(self):
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
     GET /api/v1/admin/requests/:id/videos/:id/ratings/:id
@@ -860,6 +970,20 @@ class AdminAPITestCase(APITestCase):
                 self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_anonymous_should_not_get_rating_detail(self):
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating1.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating2.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.get(
+            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
+                self.rating3.id))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     """
     POST /api/v1/admin/requests/:id/videos/:id/ratings
     """
@@ -896,6 +1020,10 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(USER)
         response = self.create_rating()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_create_ratings(self):
+        response = self.create_rating()
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_rating_validator(self):
         self.authorize_user(ADMIN)
@@ -1067,26 +1195,13 @@ class AdminAPITestCase(APITestCase):
             data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_anonymous_should_not_get_rating_detail(self):
+    def test_anonymous_should_not_modify_or_delete_rating(self):
         """
         By default DRF returns 401 for unauthorized requests but with custom object permissions it changes
         For GET it would return 401 even if the object does not exist
         For other methods it returns 404 if the object does not exist and 401 if exist but obviously has no right to access.
         It's information leaking and this behaviour is overwritten in the view, so it returns 404 even if the object exists.
         """
-        response = self.client.get(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
-                self.rating1.id))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
-                self.rating2.id))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(
-            '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
-                self.rating3.id))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
         data = {
             'review': 'Modified by anonymous'
         }
