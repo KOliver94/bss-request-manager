@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotAuthenticated
 
 from api.v1.admin.requests.serializers import RequestAdminSerializer, CommentAdminSerializer, CrewMemberAdminSerializer, \
     VideoAdminSerializer, RatingAdminSerializer
@@ -77,23 +77,17 @@ class CommentAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentAdminSerializer
 
     def get_permissions(self):
+        if self.request.user.is_anonymous:
+            raise NotAuthenticated()
         if self.request.method == 'GET':
             return [IsStaffUser()]
         else:
             return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
-        """
-        Because of custom permissions 404 would be returned for unauthorized users if the object does not exist
-        and 401 if exist but has no rights.
-        :return: No object for unauthorized users.
-        """
-        if self.request.user.is_anonymous:
-            return Comment.objects.none()
-        else:
-            return Comment.objects.filter(
-                request=self.kwargs['requestId']
-            )
+        return Comment.objects.filter(
+            request=self.kwargs['requestId']
+        )
 
 
 class CrewAdminListCreateView(generics.ListCreateAPIView):
@@ -222,23 +216,17 @@ class RatingAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RatingAdminSerializer
 
     def get_permissions(self):
+        if self.request.user.is_anonymous:
+            raise NotAuthenticated()
         if self.request.method == 'GET':
             return [IsStaffUser()]
         else:
             return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
-        """
-        Because of custom permissions 404 would be returned for unauthorized users if the object does not exist
-        and 401 if exist but has no rights.
-        :return: No object for unauthorized users.
-        """
-        if self.request.user.is_anonymous:
-            return Comment.objects.none()
-        else:
-            return Rating.objects.filter(
-                video=Video.objects.get(
-                    request=self.kwargs['requestId'],
-                    id=self.kwargs['videoId']
-                )
+        return Rating.objects.filter(
+            video=Video.objects.get(
+                request=self.kwargs['requestId'],
+                id=self.kwargs['videoId']
             )
+        )

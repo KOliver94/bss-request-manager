@@ -459,26 +459,20 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_modify_or_delete_comments(self):
-        """
-        By default DRF returns 401 for unauthorized requests but with custom object permissions it changes
-        For GET it would return 401 even if the object does not exist
-        For other methods it returns 404 if the object does not exist and 401 if exist but obviously has no right to access.
-        It's information leaking and this behaviour is overwritten in the view, so it returns 404 even if the object exists.
-        """
         data = {
             'text': 'Modified by anonymous'
         }
         response = self.client.patch(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment1.id),
             data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         response = self.client.put(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment2.id),
             data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         response = self.client.delete(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/comments/' + str(self.comment3.id))
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
     POST /api/v1/admin/requests/:id/comments
@@ -1209,16 +1203,16 @@ class AdminAPITestCase(APITestCase):
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
                 self.rating1.id),
             data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         response = self.client.put(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
                 self.rating2.id),
             data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         response = self.client.delete(
             '/api/v1/admin/requests/' + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings/' + str(
                 self.rating3.id))
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
     DELETE /api/v1/admin/requests/:id/videos/:id/ratings/:id
