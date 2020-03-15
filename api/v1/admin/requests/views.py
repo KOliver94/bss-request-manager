@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.exceptions import ValidationError, NotAuthenticated
+from rest_framework.exceptions import ValidationError, NotAuthenticated, PermissionDenied
 from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.serializers import RequestAdminSerializer, CommentAdminSerializer, CrewMemberAdminSerializer, \
@@ -53,12 +53,12 @@ class CommentAdminListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Comment.objects.filter(
-            request=self.kwargs['requestId']
+            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
 
     def perform_create(self, serializer):
         serializer.save(
-            request=get_object_or_404(Request, id=self.kwargs['requestId']),
+            request=get_object_or_404(Request, pk=self.kwargs['requestId']),
             author=self.request.user
         )
 
@@ -76,6 +76,8 @@ class CommentAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
         if self.request.user.is_anonymous:
             raise NotAuthenticated()
+        elif not self.request.user.is_staff:
+            raise PermissionDenied()
         if self.request.method == 'GET':
             return [IsStaffUser()]
         else:
@@ -83,7 +85,7 @@ class CommentAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Comment.objects.filter(
-            request=self.kwargs['requestId']
+            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
 
 
@@ -99,12 +101,12 @@ class CrewAdminListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return CrewMember.objects.filter(
-            request=self.kwargs['requestId']
+            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
 
     def perform_create(self, serializer):
         serializer.save(
-            request=get_object_or_404(Request, id=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
 
 
@@ -120,7 +122,7 @@ class CrewAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return CrewMember.objects.filter(
-            request=self.kwargs['requestId']
+            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
 
 
@@ -136,12 +138,12 @@ class VideoAdminListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Video.objects.filter(
-            request=self.kwargs['requestId']
+            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
 
     def perform_create(self, serializer):
         serializer.save(
-            request=get_object_or_404(Request, id=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
 
 
@@ -157,7 +159,7 @@ class VideoAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Video.objects.filter(
-            request=self.kwargs['requestId']
+            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
 
 
@@ -173,19 +175,21 @@ class RatingAdminListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Rating.objects.filter(
-            video__pk=self.kwargs['videoId'],
-            video__request__pk=self.kwargs['requestId']
+            video=get_object_or_404(Video, pk=self.kwargs['videoId']),
+            video__request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
 
     def perform_create(self, serializer):
         """
         Check if the user has already rated a video. If so do not allow multiple ratings.
         """
-        if Rating.objects.filter(video=self.kwargs['videoId'], author=self.request.user).exists():
+        if Rating.objects.filter(
+                video=get_object_or_404(Video, pk=self.kwargs['videoId']), author=self.request.user).exists():
             raise ValidationError('You have already posted a rating.')
 
         serializer.save(
-            video=get_object_or_404(Video, id=self.kwargs['videoId'], request=self.kwargs['requestId']),
+            video=get_object_or_404(
+                Video, pk=self.kwargs['videoId'], request=get_object_or_404(Request, pk=self.kwargs['requestId'])),
             author=self.request.user
         )
 
@@ -203,6 +207,8 @@ class RatingAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
         if self.request.user.is_anonymous:
             raise NotAuthenticated()
+        elif not self.request.user.is_staff:
+            raise PermissionDenied()
         if self.request.method == 'GET':
             return [IsStaffUser()]
         else:
@@ -210,6 +216,6 @@ class RatingAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Rating.objects.filter(
-            video__pk=self.kwargs['videoId'],
-            video__request__pk=self.kwargs['requestId']
+            video=get_object_or_404(Video, pk=self.kwargs['videoId']),
+            video__request=get_object_or_404(Request, pk=self.kwargs['requestId'])
         )
