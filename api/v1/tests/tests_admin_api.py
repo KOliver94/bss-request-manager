@@ -88,7 +88,7 @@ class AdminAPITestCase(APITestCase):
     --------------------------------------------------
     """
     """
-    GET /api/v1/admin/requests/
+    GET /api/v1/admin/requests
     """
 
     def test_admin_can_get_requests(self):
@@ -254,7 +254,7 @@ class AdminAPITestCase(APITestCase):
         self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID), data_put)
 
     """
-    POST /api/v1/admin/requests/
+    POST /api/v1/admin/requests
     DELETE /api/v1/admin/requests/:id
     """
 
@@ -1662,10 +1662,10 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.data['rating'][0], 'Ensure this value is greater than or equal to 1.')
 
     """
-    PUT, PATCH /api/v1/admin/requests/:id/comments/:id
+    PUT, PATCH /api/v1/admin/requests/:id/ratings/:id
     """
 
-    def test_admin_can_modify_any_reviews(self):
+    def test_admin_can_modify_any_ratings(self):
         self.authorize_user(ADMIN)
         data = {
             'review': 'Modified by admin'
@@ -1711,7 +1711,7 @@ class AdminAPITestCase(APITestCase):
                                str(self.video1.id) + '/ratings/' + str(self.rating3.id)).json()
         self.assertIn('Modified by admin (PUT)', data['review'])
 
-    def test_staff_can_modify_only_own_reviews(self):
+    def test_staff_can_modify_only_own_ratings(self):
         self.authorize_user(STAFF)
         data = {
             'review': 'Modified by staff'
@@ -1745,7 +1745,7 @@ class AdminAPITestCase(APITestCase):
                                str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
         self.assertIn('Modified by staff (PUT)', data['review'])
 
-    def test_user_should_not_modify_reviews(self):
+    def test_user_should_not_modify_ratings(self):
         self.authorize_user(USER)
         data = {
             'review': 'Modified by user'
