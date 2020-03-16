@@ -93,23 +93,23 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_requests(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(str(BASE_URL))
+        response = self.client.get('/api/v1/admin/requests')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 2)
 
     def test_staff_can_get_requests(self):
         self.authorize_user(STAFF)
-        response = self.client.get(str(BASE_URL))
+        response = self.client.get('/api/v1/admin/requests')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 2)
 
     def test_user_should_not_get_requests(self):
         self.authorize_user(USER)
-        response = self.client.get(str(BASE_URL))
+        response = self.client.get('/api/v1/admin/requests')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_requests(self):
-        response = self.client.get(str(BASE_URL))
+        response = self.client.get('/api/v1/admin/requests')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
@@ -266,7 +266,7 @@ class AdminAPITestCase(APITestCase):
             'type': 'Test type',
             'responsible_id': self.admin_user.id
         }
-        return self.client.post(str(BASE_URL), data)
+        return self.client.post('/api/v1/admin/requests', data)
 
     def test_admin_can_create_and_delete_requests(self):
         self.authorize_user(ADMIN)
@@ -329,7 +329,7 @@ class AdminAPITestCase(APITestCase):
             'type': 'Test type',
             'comment_text': 'Test comment'
         }
-        response = self.client.post(str(BASE_URL), data)
+        response = self.client.post('/api/v1/admin/requests', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['comments'][0]['author']['username'], ADMIN)
         self.assertEqual(response.data['comments'][0]['text'], 'Test comment')
