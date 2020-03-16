@@ -118,40 +118,40 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_request_detail(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_staff_can_get_request_detail(self):
         self.authorize_user(STAFF)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_should_not_get_request_detail(self):
         self.authorize_user(USER)
 
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_request_detail(self):
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_not_existing_request_detail(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID), None)
 
     """
     PUT, PATCH /api/v1/admin/requests/:id
@@ -161,17 +161,17 @@ class AdminAPITestCase(APITestCase):
         data = {
             'responsible_id': self.staff_user.id
         }
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id)).json()
         self.assertEqual(data['responsible']['username'], self.staff_user.username)
 
         data['place'] = 'Test place - Modified'
-        response = self.client.put(str(BASE_URL) + str(self.request1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id)).json()
         self.assertIn('Modified', data['place'])
 
     def test_admin_can_modify_requests(self):
@@ -188,11 +188,11 @@ class AdminAPITestCase(APITestCase):
             'title': 'Test Request - Modified'
         }
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         data = {
@@ -202,11 +202,11 @@ class AdminAPITestCase(APITestCase):
             'type': 'Test type'
         }
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_modify_requests(self):
@@ -214,11 +214,11 @@ class AdminAPITestCase(APITestCase):
             'title': 'Test Request - Modified'
         }
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         data = {
@@ -228,11 +228,11 @@ class AdminAPITestCase(APITestCase):
             'type': 'Test type'
         }
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_modifying_not_existing_request(self):
@@ -246,12 +246,12 @@ class AdminAPITestCase(APITestCase):
             'type': 'Test type'
         }
         self.authorize_user(ADMIN)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID), data_put)
 
         self.authorize_user(STAFF)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID), data_put)
 
     """
     POST /api/v1/admin/requests/
@@ -275,7 +275,7 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.data['requester']['username'], ADMIN)
         self.assertEqual(response.data['responsible']['username'], ADMIN)
 
-        response = self.client.delete(str(BASE_URL) + str(response.data['id']))
+        response = self.client.delete(BASE_URL + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_can_create_and_delete_requests(self):
@@ -285,7 +285,7 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.data['requester']['username'], STAFF)
         self.assertEqual(response.data['responsible']['username'], ADMIN)
 
-        response = self.client.delete(str(BASE_URL) + str(response.data['id']))
+        response = self.client.delete(BASE_URL + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_create_or_delete_requests(self):
@@ -294,11 +294,11 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for existing object
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_create_or_delete_requests(self):
@@ -306,19 +306,19 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for existing object
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_deleting_not_existing_request(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID), None)
 
     def test_adding_initial_comment_to_request(self):
         self.authorize_user(ADMIN)
@@ -345,41 +345,41 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_comments(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 3)
 
     def test_staff_can_get_comments(self):
         self.authorize_user(STAFF)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 3)
 
     def test_user_should_not_get_comments(self):
         self.authorize_user(USER)
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments')
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_comments(self):
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments')
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_comments_on_not_existing_request(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/comments', None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/comments', None)
 
     """
     GET /api/v1/admin/requests/:id/comments/:id
@@ -387,68 +387,68 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_comment_detail(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_staff_can_get_comment_detail(self):
         self.authorize_user(STAFF)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_should_not_get_comment_detail(self):
         self.authorize_user(USER)
 
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_comment_detail(self):
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_comment_detail_on_not_existing_request_or_comment(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), None)
 
     """
     PUT, PATCH /api/v1/admin/requests/:id/comments/:id
@@ -459,33 +459,33 @@ class AdminAPITestCase(APITestCase):
         data = {
             'text': 'Modified by admin'
         }
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id)).json()
         self.assertIn('Modified by admin', data['text'])
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
         self.assertIn('Modified by admin', data['text'])
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id)).json()
         self.assertIn('Modified by admin', data['text'])
 
         data['text'] = 'Modified by admin (PUT)'
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id)).json()
         self.assertIn('Modified by admin (PUT)', data['text'])
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
         self.assertIn('Modified by admin (PUT)', data['text'])
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id)).json()
         self.assertIn('Modified by admin (PUT)', data['text'])
 
     def test_staff_can_modify_only_own_comments(self):
@@ -493,25 +493,25 @@ class AdminAPITestCase(APITestCase):
         data = {
             'text': 'Modified by staff'
         }
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
         self.assertIn('Modified by staff', data['text'])
 
         data['text'] = 'Modified by staff (PUT)'
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id)).json()
         self.assertIn('Modified by staff (PUT)', data['text'])
 
     def test_user_should_not_modify_comments(self):
@@ -521,19 +521,19 @@ class AdminAPITestCase(APITestCase):
         }
 
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         data = {
@@ -542,19 +542,19 @@ class AdminAPITestCase(APITestCase):
         }
 
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_modify_comments(self):
@@ -562,27 +562,27 @@ class AdminAPITestCase(APITestCase):
             'text': 'Modified by anonymous'
         }
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_modifying_comment_on_not_existing_request_or_comment(self):
@@ -595,31 +595,31 @@ class AdminAPITestCase(APITestCase):
         }
 
         self.authorize_user(ADMIN)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
                               data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
                               data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
                               data_put)
 
         self.authorize_user(STAFF)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
                               data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
                               data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
                               data_put)
 
     """
@@ -631,7 +631,7 @@ class AdminAPITestCase(APITestCase):
             'text': 'New Comment',
             'internal': True
         }
-        return self.client.post(str(BASE_URL) + str(request_id) + '/comments', data)
+        return self.client.post(BASE_URL + str(request_id) + '/comments', data)
 
     def test_admin_can_create_comments(self):
         self.authorize_user(ADMIN)
@@ -676,65 +676,65 @@ class AdminAPITestCase(APITestCase):
     def test_admin_can_delete_any_comments(self):
         self.authorize_user(ADMIN)
         # Try to delete one comment created by staff user
-        response = self.client.delete(str(BASE_URL) + str(self.request2.id) + '/comments/' + str(self.comment5.id))
+        response = self.client.delete(BASE_URL + str(self.request2.id) + '/comments/' + str(self.comment5.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_delete_only_own_comments(self):
         self.authorize_user(STAFF)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request2.id) + '/comments/' + str(self.comment4.id))
+        response = self.client.delete(BASE_URL + str(self.request2.id) + '/comments/' + str(self.comment4.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_delete_comments(self):
         self.authorize_user(USER)
 
         # Test error for existing object
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment2.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment2.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_delete_comments(self):
         # Test error for existing object
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(self.comment3.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_deleting_comment_on_not_existing_request_or_comment(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
                               None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
                               None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
                               None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(self.comment3.id),
                               None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/comments/' + str(NOT_EXISTING_ID),
                               None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/comments/' + str(NOT_EXISTING_ID),
                               None)
 
     """
@@ -748,13 +748,13 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_crew(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 2)
 
     def test_staff_can_get_crew(self):
         self.authorize_user(STAFF)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 2)
 
@@ -762,28 +762,28 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(USER)
 
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew')
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/crew')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_crew(self):
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew')
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/crew')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_crew_on_not_existing_request(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/crew', None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/crew', None)
 
     """
     GET /api/v1/admin/requests/:id/crew/:id
@@ -791,52 +791,52 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_crew_detail(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_staff_can_get_crew_detail(self):
         self.authorize_user(STAFF)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_should_not_get_crew_detail(self):
         self.authorize_user(USER)
 
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_crew_detail(self):
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_crew_detail_on_not_existing_request_or_crew(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), None)
 
     """
     PUT, PATCH /api/v1/admin/requests/:id/crew/:id
@@ -847,19 +847,19 @@ class AdminAPITestCase(APITestCase):
             'position': 'Modified position',
             'member_id': self.admin_user.id
         }
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['member']['username'], self.admin_user.username)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id)).json()
         self.assertIn('Modified', data['position'])
 
         data['position'] = 'PUT Modified'
         data.update(member_id=data['member']['id'])
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id)).json()
         self.assertIn('PUT Modified', data['position'])
 
     def test_admin_can_modify_crew(self):
@@ -876,15 +876,15 @@ class AdminAPITestCase(APITestCase):
             'position': 'Modified position'
         }
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         data = {
@@ -892,15 +892,15 @@ class AdminAPITestCase(APITestCase):
             'member_id': self.admin_user.id
         }
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_modify_crew(self):
@@ -908,15 +908,15 @@ class AdminAPITestCase(APITestCase):
             'position': 'Modified position'
         }
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         data = {
@@ -924,15 +924,15 @@ class AdminAPITestCase(APITestCase):
             'member_id': self.admin_user.id
         }
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_modifying_crew_on_not_existing_request_or_crew(self):
@@ -945,26 +945,26 @@ class AdminAPITestCase(APITestCase):
         }
 
         self.authorize_user(ADMIN)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data_put)
 
         self.authorize_user(STAFF)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), data_put)
 
     """
     POST /api/v1/admin/requests/:id/crew
@@ -976,14 +976,14 @@ class AdminAPITestCase(APITestCase):
             'member_id': self.admin_user.id,
             'position': 'new position'
         }
-        return self.client.post(str(BASE_URL) + str(request_id) + '/crew', data)
+        return self.client.post(BASE_URL + str(request_id) + '/crew', data)
 
     def test_admin_can_create_and_delete_crew(self):
         self.authorize_user(ADMIN)
         response = self.create_crew(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(response.data['id']))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/crew/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_can_create_and_delete_crew(self):
@@ -991,7 +991,7 @@ class AdminAPITestCase(APITestCase):
         response = self.create_crew(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(response.data['id']))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/crew/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_create_or_delete_crew(self):
@@ -1000,34 +1000,34 @@ class AdminAPITestCase(APITestCase):
         # Test error for existing object
         response = self.create_crew(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
         response = self.create_crew(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_create_or_delete_crew(self):
         # Test error for existing object
         response = self.create_crew(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(self.crew1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
         response = self.create_crew(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_posting_and_deleting_crew_on_not_existing_request_or_crew(self):
@@ -1035,17 +1035,17 @@ class AdminAPITestCase(APITestCase):
         response = self.create_crew(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
         response = self.create_crew(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/crew/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(self.crew1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/crew/' + str(NOT_EXISTING_ID), None)
 
     """
     --------------------------------------------------
@@ -1058,41 +1058,41 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_videos(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 3)
 
     def test_staff_can_get_videos(self):
         self.authorize_user(STAFF)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 3)
 
     def test_user_should_not_get_videos(self):
         self.authorize_user(USER)
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos')
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_videos(self):
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos')
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos')
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_videos_on_not_existing_request(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos', None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos', None)
 
     """
     GET /api/v1/admin/requests/:id/videos/:id
@@ -1100,51 +1100,51 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_video_detail(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_staff_can_get_video_detail(self):
         self.authorize_user(STAFF)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_should_not_get_video_detail(self):
         self.authorize_user(USER)
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_video_detail(self):
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_video_detail_on_not_existing_request_or_video(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), None)
 
     """
     PUT, PATCH /api/v1/admin/requests/:id/videos/:id
@@ -1154,17 +1154,17 @@ class AdminAPITestCase(APITestCase):
         data = {
             'editor_id': self.staff_user.id
         }
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)).json()
         self.assertEqual(data['editor']['username'], self.staff_user.username)
 
         data['title'] = data['title'] + ' - Modified'
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)).json()
         self.assertIn('Modified', data['title'])
 
     def test_admin_can_modify_video(self):
@@ -1181,15 +1181,15 @@ class AdminAPITestCase(APITestCase):
             'editor_id': self.staff_user.id
         }
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.crew1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         data = {
@@ -1197,15 +1197,15 @@ class AdminAPITestCase(APITestCase):
             'editor_id': self.staff_user.id
         }
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.crew1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_modify_video(self):
@@ -1213,15 +1213,15 @@ class AdminAPITestCase(APITestCase):
             'editor_id': self.staff_user.id
         }
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.crew1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         data = {
@@ -1229,15 +1229,15 @@ class AdminAPITestCase(APITestCase):
             'editor_id': self.staff_user.id
         }
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.crew1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_modifying_video_on_not_existing_request_or_video(self):
@@ -1250,31 +1250,31 @@ class AdminAPITestCase(APITestCase):
         }
 
         self.authorize_user(ADMIN)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID),
                               data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id),
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id),
                               data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID),
                               data_put)
 
         self.authorize_user(STAFF)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id),
                               data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID),
                               data_patch)
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID),
                               data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id),
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id),
                               data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID),
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID),
                               data_put)
 
     """
@@ -1287,7 +1287,7 @@ class AdminAPITestCase(APITestCase):
             'title': 'New video',
             'editor_id': self.admin_user.id
         }
-        return self.client.post(str(BASE_URL) + str(request_id) + '/videos', data)
+        return self.client.post(BASE_URL + str(request_id) + '/videos', data)
 
     def test_admin_can_create_and_delete_videos(self):
         self.authorize_user(ADMIN)
@@ -1295,7 +1295,7 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['editor']['username'], self.admin_user.username)
 
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(response.data['id']))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_can_create_and_delete_videos(self):
@@ -1304,7 +1304,7 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['editor']['username'], self.admin_user.username)
 
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(response.data['id']))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_create_or_delete_videos(self):
@@ -1313,34 +1313,34 @@ class AdminAPITestCase(APITestCase):
         # Test error for existing object
         response = self.create_video(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.crew1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
         response = self.create_video(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_create_or_delete_videos(self):
         # Test error for existing object
         response = self.create_video(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.crew1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
         response = self.create_video(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_posting_and_deleting_video_on_not_existing_request_or_video(self):
@@ -1348,17 +1348,17 @@ class AdminAPITestCase(APITestCase):
         response = self.create_video(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
         response = self.create_video(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.crew1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID), None)
 
     """
     --------------------------------------------------
@@ -1372,14 +1372,14 @@ class AdminAPITestCase(APITestCase):
     def test_admin_can_get_ratings(self):
         self.authorize_user(ADMIN)
         response = self.client.get(
-            str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
+            BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 3)
 
     def test_staff_can_get_ratings(self):
         self.authorize_user(STAFF)
         response = self.client.get(
-            str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
+            BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 3)
 
@@ -1388,52 +1388,52 @@ class AdminAPITestCase(APITestCase):
 
         # Test error for existing object
         response = self.client.get(
-            str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
+            BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
         response = self.client.get(
-            str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings')
+            BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         response = self.client.get(
-            str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.video1.id) + '/ratings')
+            BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.video1.id) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         response = self.client.get(
-            str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings')
+            BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_ratings(self):
         # Test error for existing object
         response = self.client.get(
-            str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
+            BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
         response = self.client.get(
-            str(BASE_URL) + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings')
+            BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         response = self.client.get(
-            str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(self.video1.id) + '/ratings')
+            BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(self.video1.id) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         response = self.client.get(
-            str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings')
+            BASE_URL + str(NOT_EXISTING_ID) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_ratings_on_not_existing_request_or_video(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings', None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings', None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings', None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings', None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings', None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings', None)
 
     """
@@ -1442,25 +1442,25 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_rating_detail(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_staff_can_get_rating_detail(self):
         self.authorize_user(STAFF)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -1468,105 +1468,105 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(USER)
 
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_rating_detail(self):
         # Test error for existing object
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_rating_detail_on_not_existing_request_video_or_rating(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
         self.should_not_found('GET', str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
         self.should_not_found('GET', str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
     """
@@ -1578,7 +1578,7 @@ class AdminAPITestCase(APITestCase):
             'rating': 5,
             'review': 'Great video'
         }
-        return self.client.post(str(BASE_URL) + str(request_id) + '/videos/' + str(video_id) + '/ratings', data)
+        return self.client.post(BASE_URL + str(request_id) + '/videos/' + str(video_id) + '/ratings', data)
 
     def test_admin_can_only_create_one_rating_to_a_video(self):
         self.authorize_user(ADMIN)
@@ -1651,13 +1651,13 @@ class AdminAPITestCase(APITestCase):
             'rating': 50,
         }
         response = self.client.post(
-            str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings', data)
+            BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings', data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['rating'][0], 'Ensure this value is less than or equal to 5.')
 
         data['rating'] = -100
         response = self.client.post(
-            str(BASE_URL) + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings', data)
+            BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) + '/ratings', data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['rating'][0], 'Ensure this value is greater than or equal to 1.')
 
@@ -1670,44 +1670,44 @@ class AdminAPITestCase(APITestCase):
         data = {
             'review': 'Modified by admin'
         }
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
         self.assertIn('Modified by admin', data['review'])
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
         self.assertIn('Modified by admin', data['review'])
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                str(self.video1.id) + '/ratings/' + str(self.rating3.id)).json()
         self.assertIn('Modified by admin', data['review'])
 
         data['review'] = 'Modified by admin (PUT)'
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
         self.assertIn('Modified by admin (PUT)', data['review'])
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
         self.assertIn('Modified by admin (PUT)', data['review'])
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                str(self.video1.id) + '/ratings/' + str(self.rating3.id)).json()
         self.assertIn('Modified by admin (PUT)', data['review'])
 
@@ -1716,32 +1716,32 @@ class AdminAPITestCase(APITestCase):
         data = {
             'review': 'Modified by staff'
         }
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
         self.assertIn('Modified by staff', data['review'])
 
         data['review'] = 'Modified by staff (PUT)'
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        data = self.client.get(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
         self.assertIn('Modified by staff (PUT)', data['review'])
 
@@ -1751,36 +1751,36 @@ class AdminAPITestCase(APITestCase):
             'review': 'Modified by user'
         }
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                      str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                      str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -1789,36 +1789,36 @@ class AdminAPITestCase(APITestCase):
             'rating': 5
         }
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -1827,36 +1827,36 @@ class AdminAPITestCase(APITestCase):
             'review': 'Modified by anonymous'
         }
         # Test error for existing object
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
                                      str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                      str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                      str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                      str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -1865,36 +1865,36 @@ class AdminAPITestCase(APITestCase):
             'rating': 5
         }
         # Test error for existing object
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                    str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -1908,65 +1908,65 @@ class AdminAPITestCase(APITestCase):
         }
 
         self.authorize_user(ADMIN)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
         self.should_not_found('PATCH', str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
 
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
         self.should_not_found('PUT', str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
 
         self.authorize_user(STAFF)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
         self.should_not_found('PATCH', str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
 
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
         self.should_not_found('PUT', str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
 
     """
@@ -1976,19 +1976,19 @@ class AdminAPITestCase(APITestCase):
     def test_admin_can_delete_any_ratings(self):
         self.authorize_user(ADMIN)
         # Try to delete one rating created by staff user
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video2.id) + '/ratings/' + str(self.rating5.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_delete_only_own_ratings(self):
         self.authorize_user(STAFF)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video2.id) + '/ratings/' + str(self.rating4.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -1996,103 +1996,103 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(USER)
 
         # Test error for existing object
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                       str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                       str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_delete_ratings(self):
         # Test error for existing object
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
                                       str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                       str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                       str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                                       str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_deleting_rating_on_not_existing_request_video_or_rating(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
         self.should_not_found('DELETE', str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
         self.should_not_found('DELETE', str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(self.request1.id) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', str(BASE_URL) + str(NOT_EXISTING_ID) + '/videos/' +
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
                               str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
