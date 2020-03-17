@@ -25,12 +25,6 @@ def get_member_from_id(validated_data):
     validated_data['member'] = member
 
 
-def check_comment_is_posted(validated_data):
-    if 'comment_text' in validated_data:
-        return validated_data.pop('comment_text')
-    return None
-
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -122,7 +116,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         get_responsible_from_id(validated_data)
-        comment_text = check_comment_is_posted(validated_data)
+        comment_text = validated_data.pop('comment_text') if 'comment_text' in validated_data else None
         request = super(RequestAdminSerializer, self).create(validated_data)
         if comment_text:
             request.comments.add(self.create_comment(comment_text, request))
