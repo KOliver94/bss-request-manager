@@ -124,4 +124,5 @@ class RequestAdminSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         get_responsible_from_id(validated_data)
+        validated_data.pop('comment_text') if 'comment_text' in validated_data else None
         return super(RequestAdminSerializer, self).update(instance, validated_data)

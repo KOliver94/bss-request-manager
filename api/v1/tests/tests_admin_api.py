@@ -165,7 +165,7 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = self.client.get(BASE_URL + str(self.request1.id)).json()
-        self.assertEqual(data['responsible']['username'], self.staff_user.username)
+        self.assertEqual(data['responsible']['username'], STAFF)
 
         data['place'] = 'Test place - Modified'
         response = self.client.put(BASE_URL + str(self.request1.id), data)
@@ -637,14 +637,14 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.create_comment(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['author']['username'], self.admin_user.username)
+        self.assertEqual(response.data['author']['username'], ADMIN)
         self.assertEqual(response.data['internal'], True)
 
     def test_staff_can_create_comment(self):
         self.authorize_user(STAFF)
         response = self.create_comment(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['author']['username'], self.staff_user.username)
+        self.assertEqual(response.data['author']['username'], STAFF)
         self.assertEqual(response.data['internal'], True)
 
     def test_user_should_not_create_comments(self):
@@ -849,7 +849,7 @@ class AdminAPITestCase(APITestCase):
         }
         response = self.client.patch(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['member']['username'], self.admin_user.username)
+        self.assertEqual(response.data['member']['username'], ADMIN)
 
         data = self.client.get(BASE_URL + str(self.request1.id) + '/crew/' + str(self.crew1.id)).json()
         self.assertIn('Modified', data['position'])
@@ -1158,7 +1158,7 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)).json()
-        self.assertEqual(data['editor']['username'], self.staff_user.username)
+        self.assertEqual(data['editor']['username'], STAFF)
 
         data['title'] = data['title'] + ' - Modified'
         response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id), data)
@@ -1293,7 +1293,7 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.create_video(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['editor']['username'], self.admin_user.username)
+        self.assertEqual(response.data['editor']['username'], ADMIN)
 
         response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -1302,7 +1302,7 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(STAFF)
         response = self.create_video(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['editor']['username'], self.admin_user.username)
+        self.assertEqual(response.data['editor']['username'], ADMIN)
 
         response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -1584,7 +1584,7 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.create_rating(self.request1.id, self.video3.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['author']['username'], self.admin_user.username)
+        self.assertEqual(response.data['author']['username'], ADMIN)
 
         response = self.create_rating(self.request1.id, self.video3.id)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -1594,7 +1594,7 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(STAFF)
         response = self.create_rating(self.request1.id, self.video3.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['author']['username'], self.staff_user.username)
+        self.assertEqual(response.data['author']['username'], STAFF)
 
         response = self.create_rating(self.request1.id, self.video3.id)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
