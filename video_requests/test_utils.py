@@ -40,7 +40,7 @@ def create_comment(comment_id, request, user, internal):
     comment.id = comment_id
     comment.request = request
     comment.author = user
-    comment.text = 'Sample text - ' + user.username
+    comment.text = 'Sample text - ' + user.username + ' (' + str(internal) + ')'
     comment.internal = internal
     comment.save()
     return comment
