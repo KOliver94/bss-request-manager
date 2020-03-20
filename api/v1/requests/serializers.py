@@ -132,8 +132,8 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         user.set_unusable_password()
         user.is_active = False
 
-        if User.objects.filter(email=user.email).exists():
-            return User.objects.get(email=user.email)
+        if User.objects.filter(email__iexact=user.email).exists():
+            return User.objects.get(email__iexact=user.email)
         else:
             user.save()
             return user
