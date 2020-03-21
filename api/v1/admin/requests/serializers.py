@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.fields import IntegerField, CharField
 
+from common.serializers import UserSerializer
 from video_requests.models import Request, Video, CrewMember, Rating, Comment
 
 
@@ -23,12 +24,6 @@ def get_member_from_id(validated_data):
     member_id = validated_data.pop('member_id')
     member = User.objects.get(id=member_id)
     validated_data['member'] = member
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'first_name', 'last_name', 'username',)
 
 
 class RatingAdminSerializer(serializers.ModelSerializer):

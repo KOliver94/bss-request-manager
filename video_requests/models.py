@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from common.models import AbstractComment, AbstractRating
 from video_requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
 
 
@@ -42,28 +42,15 @@ class Video(models.Model):
         return self.title
 
 
-class Comment(models.Model):
+class Comment(AbstractComment):
     request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="comments")
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
-    text = models.TextField()
-    internal = models.BooleanField(default=False)
 
     def __str__(self):
         return self.author.last_name + " " + self.author.first_name + " - " + self.text
 
 
-class Rating(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+class Rating(AbstractRating):
     video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="ratings")
-    rating = models.IntegerField(
-        validators=[
-            MaxValueValidator(5),
-            MinValueValidator(1)
-        ]
-    )
-    review = models.TextField(blank=True)
-    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.author.last_name + " " + self.author.first_name + "(" + str(self.rating) + ") - " + self.video.title

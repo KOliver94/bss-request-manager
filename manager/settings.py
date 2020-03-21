@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'phonenumber_field',
-    'video_requests',
+    'common.apps.CommonConfig',
+    'video_requests.apps.VideoRequestsConfig',
 ]
 
 MIDDLEWARE = [

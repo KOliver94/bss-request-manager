@@ -5,6 +5,7 @@ from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework.fields import CharField, EmailField
 
+from common.serializers import UserSerializer
 from video_requests.models import Request, Video, Rating, Comment
 
 
@@ -15,12 +16,6 @@ class FilteredListSerializer(serializers.ListSerializer, ABC):
         elif data.model is Rating:
             data = data.filter(author=self.context['request'].user)
         return super(FilteredListSerializer, self).to_representation(data)
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'username',)
 
 
 class RatingDefaultSerializer(serializers.ModelSerializer):
@@ -70,6 +65,15 @@ class VideoDefaultSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'title', 'status', 'ratings',)
 
 
+def create_comment(comment_text, request):
+    comment = Comment()
+    comment.author = request.requester
+    comment.text = comment_text
+    comment.request = request
+    comment.save()
+    return comment
+
+
 class RequestDefaultSerializer(serializers.ModelSerializer):
     videos = VideoDefaultSerializer(many=True, read_only=True)
     comments = CommentFilteredSerializer(many=True, read_only=True)
@@ -83,20 +87,12 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
                   'responsible', 'requester', 'videos', 'comments', 'comment_text',)
         read_only_fields = ('id', 'created', 'status', 'responsible', 'requester', 'videos', 'comments',)
 
-    def create_comment(self, comment_text, request):
-        comment = Comment()
-        comment.author = self.context['request'].user
-        comment.text = comment_text
-        comment.request = request
-        comment.save()
-        return comment
-
     def create(self, validated_data):
         comment_text = validated_data.pop('comment_text') if 'comment_text' in validated_data else None
         validated_data['requester'] = self.context['request'].user
         request = super(RequestDefaultSerializer, self).create(validated_data)
         if comment_text:
-            request.comments.add(self.create_comment(comment_text, request))
+            request.comments.add(create_comment(comment_text, request))
         return request
 
 
@@ -114,27 +110,21 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'time', 'type', 'place', 'comment_text', 'requester', 'comments',
                   'requester_first_name', 'requester_last_name', 'requester_email', 'requester_mobile',)
 
-    def create_comment(self, comment_text, request):
-        comment = Comment()
-        comment.author = request.requester
-        comment.text = comment_text
-        comment.request = request
-        comment.save()
-        return comment
-
     def create_user(self, validated_data):
         user = User()
         user.first_name = validated_data.pop('requester_first_name')
         user.last_name = validated_data.pop('requester_last_name')
         user.email = validated_data.pop('requester_email').lower()
         user.username = user.email
-        print(validated_data.pop('requester_mobile') if 'requester_mobile' in validated_data else None)
         user.set_unusable_password()
         user.is_active = False
+        phone_number = validated_data.pop('requester_mobile') if 'requester_mobile' in validated_data else None
 
         if User.objects.filter(email__iexact=user.email).exists():
             return User.objects.get(email__iexact=user.email)
         else:
+            user.save()
+            user.userprofile.phone_number = phone_number
             user.save()
             return user
 
@@ -143,5 +133,5 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         validated_data['requester'] = self.create_user(validated_data)
         request = super(RequestAnonymousSerializer, self).create(validated_data)
         if comment_text:
-            request.comments.add(self.create_comment(comment_text, request))
+            request.comments.add(create_comment(comment_text, request))
         return request
