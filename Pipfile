@@ -8,7 +8,7 @@ pylint = "*"
 coverage = "*"
 
 [packages]
-django = "==2.2.10"
+django = "==2.2.11"
 djangorestframework = "==3.11.0"
 djangorestframework_simplejwt = "==4.4.0"
 django-auth-ldap = "==2.1.0"
