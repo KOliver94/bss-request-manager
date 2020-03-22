@@ -5,4 +5,5 @@ class CommonConfig(AppConfig):
     name = 'common'
 
     def ready(self):
-        pass
+        # noinspection PyUnresolvedReferences
+        import common.signals
