@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from simple_history.models import HistoricalRecords
 
 from common.models import AbstractComment, AbstractRating
 from video_requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
@@ -17,6 +18,7 @@ class Request(models.Model):
                                     null=True)
     requester = models.ForeignKey(User, related_name="requester_user", on_delete=models.SET_NULL, null=True)
     additional_data = JSONField(default=dict, blank=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.title
@@ -37,6 +39,7 @@ class Video(models.Model):
     editor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     status = models.IntegerField(choices=VIDEO_STATUS_CHOICES, default=1)
     additional_data = JSONField(default=dict, blank=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.title

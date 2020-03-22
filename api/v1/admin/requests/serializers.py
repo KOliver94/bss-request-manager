@@ -26,6 +26,18 @@ def get_member_from_id(validated_data):
     validated_data['member'] = member
 
 
+class HistoricalRecordField(serializers.ListField):
+    child = serializers.DictField()
+
+    def to_representation(self, data):
+        return super().to_representation(data.values())
+
+
+# noinspection PyAbstractClass
+class HistorySerializer(serializers.Serializer):
+    history = HistoricalRecordField(read_only=True)
+
+
 class RatingAdminSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
 

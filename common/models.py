@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from simple_history.models import HistoricalRecords
 
 
 class UserProfile(models.Model):
@@ -18,6 +19,7 @@ class AbstractComment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     internal = models.BooleanField(default=False)
+    history = HistoricalRecords(inherit=True)
 
     class Meta:
         abstract = True
@@ -33,6 +35,7 @@ class AbstractRating(models.Model):
     )
     review = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
+    history = HistoricalRecords(inherit=True)
 
     class Meta:
         abstract = True

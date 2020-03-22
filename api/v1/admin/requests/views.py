@@ -3,9 +3,35 @@ from rest_framework.exceptions import ValidationError, NotAuthenticated, Permiss
 from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.serializers import RequestAdminSerializer, CommentAdminSerializer, CrewMemberAdminSerializer, \
-    VideoAdminSerializer, RatingAdminSerializer
+    VideoAdminSerializer, RatingAdminSerializer, HistorySerializer
 from video_requests.models import Request, Comment, CrewMember, Video, Rating
 from video_requests.permissions import IsStaffUser, IsStaffSelfOrAdmin
+
+
+class HistoryRetrieveView(generics.RetrieveAPIView):
+    """
+    Retrieve (GET) view for history of a certain object
+    Supported objects: Requests, Comments, Videos, Ratings
+    """
+    serializer_class = HistorySerializer
+    permission_classes = [IsStaffUser]
+
+    def get_queryset(self):
+        if 'requestId_comment' in self.kwargs.keys():  # Comment object
+            return Comment.objects.filter(
+                request=get_object_or_404(Request, pk=self.kwargs['requestId_comment'])
+            )
+        elif 'requestId_video' in self.kwargs.keys():  # Video object
+            return Video.objects.filter(
+                request=get_object_or_404(Request, pk=self.kwargs['requestId_video'])
+            )
+        elif 'videoId' in self.kwargs.keys():  # Rating object
+            return Rating.objects.filter(
+                video=get_object_or_404(Video, pk=self.kwargs['videoId']),
+                video__request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            )
+        else:  # Request object
+            return Request.objects.all()
 
 
 class RequestAdminListCreateView(generics.ListCreateAPIView):

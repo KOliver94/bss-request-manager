@@ -82,6 +82,10 @@ class AdminAPITestCase(APITestCase):
             raise Exception('Unsupported method specified!')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def access_history(self, uri):
+        response = self.client.get(uri + '/history')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     """
     --------------------------------------------------
                          REQUESTS
@@ -120,11 +124,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.access_history(BASE_URL + str(self.request1.id))
 
     def test_staff_can_get_request_detail(self):
         self.authorize_user(STAFF)
         response = self.client.get(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.access_history(BASE_URL + str(self.request1.id))
 
     def test_user_should_not_get_request_detail(self):
         self.authorize_user(USER)
@@ -393,6 +399,7 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.access_history(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id))
 
     def test_staff_can_get_comment_detail(self):
         self.authorize_user(STAFF)
@@ -402,6 +409,7 @@ class AdminAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.get(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.access_history(BASE_URL + str(self.request1.id) + '/comments/' + str(self.comment1.id))
 
     def test_user_should_not_get_comment_detail(self):
         self.authorize_user(USER)
@@ -1102,11 +1110,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.access_history(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id))
 
     def test_staff_can_get_video_detail(self):
         self.authorize_user(STAFF)
         response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.access_history(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id))
 
     def test_user_should_not_get_video_detail(self):
         self.authorize_user(USER)
@@ -1451,6 +1461,8 @@ class AdminAPITestCase(APITestCase):
         response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.access_history(BASE_URL + str(self.request1.id) + '/videos/' +
+                            str(self.video1.id) + '/ratings/' + str(self.rating1.id))
 
     def test_staff_can_get_rating_detail(self):
         self.authorize_user(STAFF)
@@ -1463,6 +1475,8 @@ class AdminAPITestCase(APITestCase):
         response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
                                    str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.access_history(BASE_URL + str(self.request1.id) + '/videos/' +
+                            str(self.video1.id) + '/ratings/' + str(self.rating1.id))
 
     def test_user_should_not_get_rating_detail(self):
         self.authorize_user(USER)
