@@ -4,8 +4,8 @@ from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.serializers import RequestAdminSerializer, CommentAdminSerializer, CrewMemberAdminSerializer, \
     VideoAdminSerializer, RatingAdminSerializer, HistorySerializer
+from common.permissions import IsStaffUser, IsStaffSelfOrAdmin
 from video_requests.models import Request, Comment, CrewMember, Video, Rating
-from video_requests.permissions import IsStaffUser, IsStaffSelfOrAdmin
 
 
 class HistoryRetrieveView(generics.RetrieveAPIView):
@@ -17,18 +17,18 @@ class HistoryRetrieveView(generics.RetrieveAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
-        if 'requestId_comment' in self.kwargs.keys():  # Comment object
+        if 'request_id_comment' in self.kwargs.keys():  # Comment object
             return Comment.objects.filter(
-                request=get_object_or_404(Request, pk=self.kwargs['requestId_comment'])
+                request=get_object_or_404(Request, pk=self.kwargs['request_id_comment'])
             )
-        elif 'requestId_video' in self.kwargs.keys():  # Video object
+        elif 'request_id_video' in self.kwargs.keys():  # Video object
             return Video.objects.filter(
-                request=get_object_or_404(Request, pk=self.kwargs['requestId_video'])
+                request=get_object_or_404(Request, pk=self.kwargs['request_id_video'])
             )
-        elif 'videoId' in self.kwargs.keys():  # Rating object
+        elif 'video_id' in self.kwargs.keys():  # Rating object
             return Rating.objects.filter(
-                video=get_object_or_404(Video, pk=self.kwargs['videoId']),
-                video__request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+                video=get_object_or_404(Video, pk=self.kwargs['video_id']),
+                video__request=get_object_or_404(Request, pk=self.kwargs['request_id'])
             )
         else:  # Request object
             return Request.objects.all()
@@ -45,6 +45,9 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Request.objects.none()
         return Request.objects.all()
 
     def perform_create(self, serializer):
@@ -64,6 +67,9 @@ class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Request.objects.none()
         return Request.objects.all()
 
 
@@ -78,13 +84,16 @@ class CommentAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Comment.objects.none()
         return Comment.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )
 
     def perform_create(self, serializer):
         serializer.save(
-            request=get_object_or_404(Request, pk=self.kwargs['requestId']),
+            request=get_object_or_404(Request, pk=self.kwargs['request_id']),
             author=self.request.user
         )
 
@@ -110,8 +119,11 @@ class CommentAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
             return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Comment.objects.none()
         return Comment.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )
 
 
@@ -126,13 +138,16 @@ class CrewAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return CrewMember.objects.none()
         return CrewMember.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )
 
     def perform_create(self, serializer):
         serializer.save(
-            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )
 
 
@@ -147,8 +162,11 @@ class CrewAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return CrewMember.objects.none()
         return CrewMember.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )
 
 
@@ -163,13 +181,16 @@ class VideoAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Video.objects.none()
         return Video.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )
 
     def perform_create(self, serializer):
         serializer.save(
-            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )
 
 
@@ -184,8 +205,11 @@ class VideoAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Video.objects.none()
         return Video.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )
 
 
@@ -200,9 +224,12 @@ class RatingAdminListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsStaffUser]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Rating.objects.none()
         return Rating.objects.filter(
-            video=get_object_or_404(Video, pk=self.kwargs['videoId']),
-            video__request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            video=get_object_or_404(Video, pk=self.kwargs['video_id']),
+            video__request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )
 
     def perform_create(self, serializer):
@@ -210,12 +237,12 @@ class RatingAdminListCreateView(generics.ListCreateAPIView):
         Check if the user has already rated a video. If so do not allow multiple ratings.
         """
         if Rating.objects.filter(
-                video=get_object_or_404(Video, pk=self.kwargs['videoId']), author=self.request.user).exists():
+                video=get_object_or_404(Video, pk=self.kwargs['video_id']), author=self.request.user).exists():
             raise ValidationError('You have already posted a rating.')
 
         serializer.save(
             video=get_object_or_404(
-                Video, pk=self.kwargs['videoId'], request=get_object_or_404(Request, pk=self.kwargs['requestId'])),
+                Video, pk=self.kwargs['video_id'], request=get_object_or_404(Request, pk=self.kwargs['request_id'])),
             author=self.request.user
         )
 
@@ -241,7 +268,10 @@ class RatingAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
             return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return Rating.objects.none()
         return Rating.objects.filter(
-            video=get_object_or_404(Video, pk=self.kwargs['videoId']),
-            video__request=get_object_or_404(Request, pk=self.kwargs['requestId'])
+            video=get_object_or_404(Video, pk=self.kwargs['video_id']),
+            video__request=get_object_or_404(Request, pk=self.kwargs['request_id'])
         )

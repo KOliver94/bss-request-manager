@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_social_auth',
     'phonenumber_field',
     'simple_history',
+    'drf_yasg',
     'common.apps.CommonConfig',
     'video_requests.apps.VideoRequestsConfig',
 ]
@@ -68,8 +69,7 @@ ROOT_URLCONF = 'manager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -313,6 +313,20 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {'console': {'class': 'logging.StreamHandler'}},
     'loggers': {'django_auth_ldap': {'level': 'DEBUG', 'handlers': ['console']}},
+}
+
+# Swagger settings
+# https://drf-yasg.readthedocs.io/en/stable/index.html
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
 }
 
 # Sentry (collect unhandled errors and exceptions and sends reports)
