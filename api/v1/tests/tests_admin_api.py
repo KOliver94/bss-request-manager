@@ -16,7 +16,7 @@ PASSWORD = 'password'
 class AdminAPITestCase(APITestCase):
 
     def authorize_user(self, username):
-        url = reverse('token_obtain_pair')
+        url = reverse('login_obtain_jwt_pair')
         resp = self.client.post(url, {'username': username, 'password': PASSWORD}, format='json')
         token = resp.data['access']
         self.client.credentials(HTTP_AUTHORIZATION='Bearer {0}'.format(token))

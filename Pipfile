@@ -18,6 +18,7 @@ pillow = "==7.0.0"
 psycopg2-binary = "==2.8.4"
 python-decouple = "==3.3"
 python-ldap = ">=3.1"
+rest-social-auth = "==4.1.0"
 sentry-sdk = "==0.14.1"
 
 [requires]

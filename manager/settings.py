@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'social_django',
+    'rest_social_auth',
     'phonenumber_field',
     'simple_history',
     'common.apps.CommonConfig',
@@ -166,6 +168,91 @@ AUTH_LDAP_FIND_GROUP_PERMS = True
 # LDAP traffic.
 AUTH_LDAP_CACHE_TIMEOUT = 3600
 
+# Social (OAuth2) User authentication
+# https://github.com/st4lk/django-rest-social-auth
+# https://python-social-auth.readthedocs.io/en/latest/index.html
+
+# When using PostgreSQL, it’s recommended to use the built-in JSONB field to store the extracted extra_data.
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
+# Facebook OAuth2 settings:
+SOCIAL_AUTH_FACEBOOK_KEY = config('AUTH_FACEBOOK_APP_ID')
+SOCIAL_AUTH_FACEBOOK_SECRET = config('AUTH_FACEBOOK_APP_SECRET')
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', ]
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': ','.join([
+        # public_profile
+        'id', 'cover', 'name', 'first_name', 'last_name', 'age_range', 'link',
+        'gender', 'locale', 'picture', 'timezone', 'updated_time', 'verified',
+        # extra fields
+        'email',
+    ]),
+}
+
+# Google OAuth2 settings:
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('AUTH_GOOGLE_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('AUTH_GOOGLE_CLIENT_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', ]
+
+# AuthSCH OAuth2 settings:
+SOCIAL_AUTH_AUTHSCH_KEY = config('AUTH_SCH_CLIENT_ID')
+SOCIAL_AUTH_AUTHSCH_SECRET = config('AUTH_SCH_CLIENT_SECRET')
+
+# For most OAuth providers the redirect URL in frontend and backend should match (e.g.: Facebook)
+# More information: https://github.com/st4lk/django-rest-social-auth#settings
+REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI = 'https://localhost:3000/'
+
+SOCIAL_AUTH_PIPELINE = (
+    # Custom action: Do not compare current user with new one.
+    'common.social_pipeline.auto_logout',
+
+    # Get the information we can about the user and return it in a simple
+    # format to create the user instance later. In some cases the details are
+    # already part of the auth response from the provider, but sometimes this
+    # could hit a provider API.
+    'social_core.pipeline.social_auth.social_details',
+
+    # Get the social uid from whichever service we're authing thru. The uid is
+    # the unique identifier of the given user in the provider.
+    'social_core.pipeline.social_auth.social_uid',
+
+    # Verifies that the current auth process is valid within the current
+    # project, this is where emails and domains whitelists are applied (if
+    # defined).
+    'social_core.pipeline.social_auth.auth_allowed',
+
+    # Custom action: Return error if e-mail was not provided by OAuth
+    'common.social_pipeline.check_for_email',
+
+    # Checks if the current social-account is already associated in the site.
+    'social_core.pipeline.social_auth.social_user',
+
+    # Make up a username for this person, appends a random string at the end if
+    # there's any collision.
+    'social_core.pipeline.user.get_username',
+
+    # Send a validation email to the user to verify its email address.
+    # Disabled by default.
+    # 'social_core.pipeline.mail.mail_validation',
+
+    # Associates the current social details with another user account with
+    # a similar email address. Disabled by default.
+    'social_core.pipeline.social_auth.associate_by_email',
+
+    # Create a user account if we haven't found one yet.
+    'social_core.pipeline.user.create_user',
+
+    # Create the record that associates the social account with the user.
+    'social_core.pipeline.social_auth.associate_user',
+
+    # Populate the extra_data field in the social record with the values
+    # specified by settings (and the default ones like access_token, etc).
+    'social_core.pipeline.social_auth.load_extra_data',
+
+    # Update the user record with any changed info from the auth service.
+    'social_core.pipeline.user.user_details',
+)
+
 # Keep ModelBackend around for per-user permissions and maybe a local
 # superuser.
 if DEBUG:
@@ -175,9 +262,13 @@ if DEBUG:
 else:
     AUTHENTICATION_BACKENDS = (
         'django_auth_ldap.backend.LDAPBackend',
+        'common.authentication.AuthSCHOAuth2',
+        'social_core.backends.facebook.FacebookOAuth2',
+        'social_core.backends.google.GoogleOAuth2',
     )
 
 # Django Rest Framework Settings
+# https://www.django-rest-framework.org/
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -224,8 +315,9 @@ LOGGING = {
     'loggers': {'django_auth_ldap': {'level': 'DEBUG', 'handlers': ['console']}},
 }
 
-# Sentry for debugging
+# Sentry (collect unhandled errors and exceptions and sends reports)
 # https://sentry.io
+
 if not DEBUG:
     sentry_sdk.init(
         dsn=config('SENTRY_URL'),
