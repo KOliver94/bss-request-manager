@@ -83,7 +83,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Request
-        fields = ('id', 'title', 'created', 'time', 'type', 'place', 'status',
+        fields = ('id', 'title', 'created', 'date', 'type', 'place', 'status',
                   'responsible', 'requester', 'videos', 'comments', 'comment_text',)
         read_only_fields = ('id', 'created', 'status', 'responsible', 'requester', 'videos', 'comments',)
 
@@ -107,7 +107,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Request
-        fields = ('id', 'title', 'time', 'type', 'place', 'comment_text', 'requester', 'comments',
+        fields = ('id', 'title', 'date', 'type', 'place', 'comment_text', 'requester', 'comments',
                   'requester_first_name', 'requester_last_name', 'requester_email', 'requester_mobile',)
 
     def create_user(self, validated_data):

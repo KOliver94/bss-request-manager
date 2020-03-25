@@ -8,7 +8,7 @@ def create_request(request_id, user):
     request = Request()
     request.id = request_id
     request.title = 'Test Request ' + str(request_id) + ' - ' + user.username
-    request.time = datetime.now()
+    request.date = datetime.now()
     request.place = 'Test place'
     request.type = 'Test type'
     request.requester = user

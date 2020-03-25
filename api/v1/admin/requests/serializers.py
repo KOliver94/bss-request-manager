@@ -106,7 +106,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Request
-        fields = ('id', 'title', 'created', 'time', 'type', 'place', 'status',
+        fields = ('id', 'title', 'created', 'date', 'type', 'place', 'status',
                   'responsible', 'requester', 'additional_data', 'crew', 'videos', 'comments', 'responsible_id',
                   'comment_text',)
         read_only_fields = (

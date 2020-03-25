@@ -10,7 +10,7 @@ from video_requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
 class Request(models.Model):
     title = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
-    time = models.DateField()
+    date = models.DateField()
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
     status = models.IntegerField(choices=REQUEST_STATUS_CHOICES, default=1)
