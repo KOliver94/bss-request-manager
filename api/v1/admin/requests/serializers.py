@@ -4,6 +4,7 @@ from rest_framework.fields import IntegerField, CharField
 
 from common.serializers import UserSerializer
 from video_requests.models import Request, Video, CrewMember, Rating, Comment
+from video_requests.utilities import update_request_status, update_video_status
 
 
 def get_editor_from_id(validated_data):
@@ -24,6 +25,20 @@ def get_member_from_id(validated_data):
     member_id = validated_data.pop('member_id')
     member = User.objects.get(id=member_id)
     validated_data['member'] = member
+
+
+def check_and_remove_unauthorized_additional_data(validated_data, user):
+    if 'additional_data' in validated_data:
+        if not user.is_superuser:
+            if 'status_by_admin' in validated_data['additional_data']:
+                validated_data['additional_data'].pop('status_by_admin')
+            if 'accepted' in validated_data['additional_data']:
+                validated_data['additional_data'].pop('accepted')
+            if 'denied' in validated_data['additional_data']:
+                validated_data['additional_data'].pop('denied')
+            if 'failed' in validated_data['additional_data']:
+                validated_data['additional_data'].pop('failed')
+    return validated_data
 
 
 class HistoricalRecordField(serializers.ListField):
@@ -69,11 +84,17 @@ class VideoAdminSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         get_editor_from_id(validated_data)
-        return super(VideoAdminSerializer, self).create(validated_data)
+        check_and_remove_unauthorized_additional_data(validated_data, self.context['request'].user)
+        video = super(VideoAdminSerializer, self).create(validated_data)
+        update_video_status(video)
+        return video
 
     def update(self, instance, validated_data):
         get_editor_from_id(validated_data)
-        return super(VideoAdminSerializer, self).update(instance, validated_data)
+        check_and_remove_unauthorized_additional_data(validated_data, self.context['request'].user)
+        video = super(VideoAdminSerializer, self).update(instance, validated_data)
+        update_video_status(video)
+        return video
 
 
 class CrewMemberAdminSerializer(serializers.ModelSerializer):
@@ -124,12 +145,17 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         get_responsible_from_id(validated_data)
         comment_text = validated_data.pop('comment_text') if 'comment_text' in validated_data else None
+        check_and_remove_unauthorized_additional_data(validated_data, self.context['request'].user)
         request = super(RequestAdminSerializer, self).create(validated_data)
         if comment_text:
             request.comments.add(self.create_comment(comment_text, request))
+        update_request_status(request)
         return request
 
     def update(self, instance, validated_data):
         get_responsible_from_id(validated_data)
         validated_data.pop('comment_text') if 'comment_text' in validated_data else None
-        return super(RequestAdminSerializer, self).update(instance, validated_data)
+        check_and_remove_unauthorized_additional_data(validated_data, self.context['request'].user)
+        request = super(RequestAdminSerializer, self).update(instance, validated_data)
+        update_request_status(request)
+        return request
