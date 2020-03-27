@@ -251,6 +251,9 @@ SOCIAL_AUTH_PIPELINE = (
 
     # Update the user record with any changed info from the auth service.
     'social_core.pipeline.user.user_details',
+
+    # Custom action: Add phone number to user's profile
+    'common.social_pipeline.add_phone_number_to_profile'
 )
 
 # Keep ModelBackend around for per-user permissions and maybe a local
