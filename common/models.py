@@ -15,7 +15,7 @@ class UserProfile(models.Model):
 
 
 class AbstractComment(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=1)
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     internal = models.BooleanField(default=False)
@@ -26,7 +26,7 @@ class AbstractComment(models.Model):
 
 
 class AbstractRating(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=1)
     rating = models.IntegerField(
         validators=[
             MaxValueValidator(5),
