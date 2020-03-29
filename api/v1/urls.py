@@ -8,13 +8,13 @@ from rest_social_auth import views
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="BSS Request Manager API",
+        title='BSS Request Manager API',
         default_version='v1',
-        description="This is the Schema of the BSS Request Manager REST API.\n\n"
-                    "You need to log in to see the available endpoint with your user privileges.\n"
-                    "To do that use the login endpoint and use the obtained access token as Bearer token "
-                    "in Authorization header. For Chrome you can use ModHeader extension.",
-        contact=openapi.Contact(name="Olivér Kecskeméty", email="bssinfo@sch.bme.hu"),
+        description='This is the Schema of the BSS Request Manager REST API.\n\n'
+                    'You need to log in to see the available endpoint with your user privileges.\n'
+                    'To do that use the login endpoint and use the obtained access token as Bearer token '
+                    'in Authorization header. For Chrome you can use ModHeader extension.',
+        contact=openapi.Contact(name='Olivér Kecskeméty', email='bssinfo@sch.bme.hu'),
     ),
     public=False,
     permission_classes=(permissions.AllowAny,),
