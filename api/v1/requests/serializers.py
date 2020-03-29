@@ -1,5 +1,3 @@
-from abc import ABC
-
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
@@ -9,7 +7,8 @@ from common.serializers import UserSerializer
 from video_requests.models import Request, Video, Rating, Comment
 
 
-class FilteredListSerializer(serializers.ListSerializer, ABC):
+# noinspection PyAbstractClass
+class FilteredListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         if data.model is Comment:
             data = data.filter(internal=False)
