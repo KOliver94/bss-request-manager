@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 coverage = "*"
+tox = "*"
 
 [packages]
 django = "==2.2.11"
