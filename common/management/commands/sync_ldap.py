@@ -20,7 +20,7 @@ class Command(BaseCommand):
         query.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)  # Define user credentials
 
         # Get only user objects from the given DN
-        results = query.search_s('OU=Users,' + settings.AUTH_LDAP_BASE_DN, ldap.SCOPE_SUBTREE, '(objectClass=User)')
+        results = query.search_s(settings.AUTH_LDAP_USER_DN, ldap.SCOPE_SUBTREE, '(objectClass=User)')
 
         total_created = 0
         total = 0
@@ -28,6 +28,7 @@ class Command(BaseCommand):
         for a, r in results:
             # Get the username and pass it to the django-ldap-auth function.
             # This results another ldap query but this way we don't need to handle the saving and attribute mappings
+            # It also handles group mirroring and assignment
             username = r['sAMAccountName'][0].decode('utf-8')  # returns bytes by default so we need to decode to string
             user = LDAPBackend().populate_user(username)
 

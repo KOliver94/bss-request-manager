@@ -127,23 +127,29 @@ AUTH_LDAP_GLOBAL_OPTIONS = {
     ldap.OPT_X_TLS_REQUIRE_CERT: ldap.OPT_X_TLS_NEVER,
 }
 AUTH_LDAP_SERVER_URI = config('LDAP_SERVER_URI')
-AUTH_LDAP_BASE_DN = config('LDAP_BASE_DN')
 AUTH_LDAP_BIND_DN = config('LDAP_BIND_DN')
 AUTH_LDAP_BIND_PASSWORD = config('LDAP_BIND_PASSWORD')
+
+AUTH_LDAP_USER_DN = config('LDAP_USER_DN')
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    'OU=Users,' + AUTH_LDAP_BASE_DN, ldap.SCOPE_SUBTREE, '(sAMAccountName=%(user)s)'
+    AUTH_LDAP_USER_DN, ldap.SCOPE_SUBTREE, '(sAMAccountName=%(user)s)'
 )
 
 # Set up the basic group parameters.
+AUTH_LDAP_GROUP_DN = config('LDAP_GROUP_DN')
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-    AUTH_LDAP_BASE_DN,
+    AUTH_LDAP_GROUP_DN,
     ldap.SCOPE_SUBTREE,
-    '(objectClass=groupOfNames)',
+    '(objectClass=group)',
 )
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr='cn')
 
+# Mirror user's groups to Django
+AUTH_LDAP_MIRROR_GROUPS = True
+AUTH_LDAP_MIRROR_GROUPS_EXCEPT = config('LDAP_MIRROR_GROUPS_EXCEPT', cast=Csv())
+
 # Simple group restrictions
-AUTH_LDAP_REQUIRE_GROUP = 'CN=BSS,' + AUTH_LDAP_BASE_DN
+AUTH_LDAP_REQUIRE_GROUP = config('LDAP_STAFF_GROUP')
 
 # Populate the Django user from the LDAP directory.
 AUTH_LDAP_USER_ATTR_MAP = {
@@ -154,8 +160,8 @@ AUTH_LDAP_USER_ATTR_MAP = {
 }
 
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    'is_staff': 'CN=BSS,' + AUTH_LDAP_BASE_DN,
-    'is_superuser': 'CN=ADMIN,' + AUTH_LDAP_BASE_DN,
+    'is_staff': config('LDAP_STAFF_GROUP'),
+    'is_superuser': config('LDAP_ADMIN_GROUP'),
 }
 
 # This is the default, but I like to be explicit.
@@ -295,7 +301,7 @@ if DEBUG:
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = config('TIME_ZONE')
 
 USE_I18N = True
 
