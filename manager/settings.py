@@ -118,6 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # LDAP User authentication
 # https://django-auth-ldap.readthedocs.io/en/latest/index.html
 
@@ -173,6 +174,7 @@ AUTH_LDAP_FIND_GROUP_PERMS = True
 # Cache distinguished names and group memberships for an hour to minimize
 # LDAP traffic.
 AUTH_LDAP_CACHE_TIMEOUT = 3600
+
 
 # Social (OAuth2) User authentication
 # https://github.com/st4lk/django-rest-social-auth
@@ -262,19 +264,17 @@ SOCIAL_AUTH_PIPELINE = (
     'common.social_pipeline.add_phone_number_to_profile'
 )
 
-# Keep ModelBackend around for per-user permissions and maybe a local
-# superuser.
-if DEBUG:
-    AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.ModelBackend',
-    )
-else:
-    AUTHENTICATION_BACKENDS = (
-        'django_auth_ldap.backend.LDAPBackend',
-        'common.authentication.AuthSCHOAuth2',
-        'social_core.backends.facebook.FacebookOAuth2',
-        'social_core.backends.google.GoogleOAuth2',
-    )
+
+# User authentication backends
+# https://docs.djangoproject.com/en/3.0/ref/settings/#authentication-backends
+
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'common.authentication.AuthSCHOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+)
+
 
 # Django Rest Framework Settings
 # https://www.django-rest-framework.org/
@@ -288,20 +288,13 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 
-# Simple JWT Settings
-# https://github.com/davesque/django-rest-framework-simplejwt
-
-if DEBUG:
-    SIMPLE_JWT = {
-        'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
-    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = config('TIME_ZONE')
+TIME_ZONE = config('TIME_ZONE', default='Europe/Budapest')
 
 USE_I18N = True
 
@@ -309,20 +302,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
 
-# Logging
-# https://docs.djangoproject.com/en/3.0/topics/logging/
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {'console': {'class': 'logging.StreamHandler'}},
-    'loggers': {'django_auth_ldap': {'level': 'DEBUG', 'handlers': ['console']}},
-}
 
 # Swagger settings
 # https://drf-yasg.readthedocs.io/en/stable/index.html
@@ -338,6 +323,7 @@ SWAGGER_SETTINGS = {
     }
 }
 
+
 # Sentry (collect unhandled errors and exceptions and sends reports)
 # https://sentry.io
 
@@ -350,3 +336,28 @@ if not DEBUG:
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True
     )
+
+
+# Debug settings
+
+if DEBUG:
+    # Enable local Django user based login
+    AUTHENTICATION_BACKENDS += (
+        'django.contrib.auth.backends.ModelBackend',
+    )
+
+    # Simple JWT Settings
+    # https://github.com/davesque/django-rest-framework-simplejwt
+    # Extend JWT token lifetime
+    SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    }
+
+    # Logging
+    # https://docs.djangoproject.com/en/3.0/topics/logging/
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {'console': {'class': 'logging.StreamHandler'}},
+        'loggers': {'django_auth_ldap': {'level': 'DEBUG', 'handlers': ['console']}},
+    }

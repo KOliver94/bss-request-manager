@@ -16,7 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from manager import settings
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
 ]
+
+# Enable Django Admin in Debug mode
+if settings.DEBUG:
+    urlpatterns += path('admin/', admin.site.urls),

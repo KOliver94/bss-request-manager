@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.test.utils import override_settings
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -14,6 +15,7 @@ USER = 'test_user1'
 PASSWORD = 'password'
 
 
+@override_settings(AUTHENTICATION_BACKENDS=('django.contrib.auth.backends.ModelBackend',))
 class DefaultAPITestCase(APITestCase):
 
     def authorize_user(self, username):

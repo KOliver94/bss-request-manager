@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.test.utils import override_settings
 from django.urls import reverse
 from rest_framework import status
 
 
+@override_settings(AUTHENTICATION_BACKENDS=('django.contrib.auth.backends.ModelBackend',))
 class UtilitiesTestCase(TestCase):
     def test_api_jwt(self):
-        url = reverse('token_obtain_pair')
+        url = reverse('login_obtain_jwt_pair')
 
         # Create inactive user
         u = User.objects.create_user(username='user', email='user@foo.com', password='pass')
