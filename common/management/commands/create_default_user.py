@@ -18,4 +18,4 @@ class Command(BaseCommand):
         if user.username != 'defaultuser':
             raise Exception(f'The user with ID = 1 is not defaultuser. User found: {user.username}')
 
-        self.stdout.write(self.style.SUCCESS(f'Default user was created successfully.'))
+        self.stdout.write(self.style.SUCCESS('Default user was created successfully.'))
