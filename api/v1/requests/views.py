@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.exceptions import ValidationError, NotAuthenticated
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -18,6 +18,9 @@ class RequestDefaultListCreateView(generics.ListCreateAPIView):
     Only authenticated and authorized persons can access the list view:
     - Authenticated users can get Requests which are submitted by them.
     """
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['title', 'created', 'date', 'status']
+    ordering = ['created']
 
     def get_permissions(self):
         if self.request.method == 'POST':
@@ -71,6 +74,9 @@ class CommentDefaultListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = CommentDefaultSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created', 'author']
+    ordering = ['created']
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -125,6 +131,9 @@ class VideoDefaultListView(generics.ListAPIView):
     """
     serializer_class = VideoDefaultSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['title', 'status']
+    ordering = ['title']
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -168,6 +177,9 @@ class RatingDefaultListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = RatingDefaultSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created', 'author', 'rating', 'review']
+    ordering = ['created']
 
     def get_video_related_to_user(self):
         return get_object_or_404(Video,

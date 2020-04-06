@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.exceptions import ValidationError, NotAuthenticated, PermissionDenied
 from rest_framework.generics import get_object_or_404
 
@@ -43,6 +43,9 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = RequestAdminSerializer
     permission_classes = [IsStaffUser]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['title', 'created', 'date', 'status']
+    ordering = ['created']
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -82,6 +85,9 @@ class CommentAdminListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = CommentAdminSerializer
     permission_classes = [IsStaffUser]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created', 'author', 'internal']
+    ordering = ['created']
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -136,6 +142,9 @@ class CrewAdminListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = CrewMemberAdminSerializer
     permission_classes = [IsStaffUser]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['member', 'position']
+    ordering = ['position']
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -179,6 +188,9 @@ class VideoAdminListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = VideoAdminSerializer
     permission_classes = [IsStaffUser]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['title', 'editor', 'status']
+    ordering = ['title']
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -222,6 +234,9 @@ class RatingAdminListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = RatingAdminSerializer
     permission_classes = [IsStaffUser]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created', 'author', 'rating', 'review']
+    ordering = ['created']
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
