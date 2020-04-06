@@ -40,7 +40,6 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -286,6 +285,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100,
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
@@ -365,10 +367,23 @@ if not DEBUG:
 # Debug settings
 
 if DEBUG:
+    # Enable Django admin
+    INSTALLED_APPS += [
+        'django.contrib.admin',
+    ]
+
     # Enable local Django user based login
     AUTHENTICATION_BACKENDS += (
         'django.contrib.auth.backends.ModelBackend',
     )
+
+    # Enable Browsable API
+    REST_FRAMEWORK.update({
+        'DEFAULT_RENDERER_CLASSES': [
+            'rest_framework.renderers.JSONRenderer',
+            'rest_framework.renderers.BrowsableAPIRenderer',
+        ],
+    })
 
     # Simple JWT Settings
     # https://github.com/davesque/django-rest-framework-simplejwt
