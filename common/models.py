@@ -27,7 +27,7 @@ class AbstractComment(models.Model):
 
 class AbstractRating(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=1)
-    rating = models.IntegerField(
+    rating = models.PositiveSmallIntegerField(
         validators=[
             MaxValueValidator(5),
             MinValueValidator(1)
