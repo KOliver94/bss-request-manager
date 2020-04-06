@@ -1,5 +1,7 @@
 from datetime import date
 
+from video_requests.emails import email_user_video_published
+
 
 def update_request_status(request, called_from_video=False):
     # Check if the status is set by admin (overwrites everything)
@@ -83,8 +85,13 @@ def update_video_status(video, called_from_request=False):
 
         # Check if the video is published on the website
         if status == 4 and 'publishing' in video.additional_data:
-            if 'website' in video.additional_data['publishing']:
-                status = 5 if video.additional_data['publishing']['website'] is True else status
+            if 'website' in video.additional_data['publishing'] and \
+                    video.additional_data['publishing']['website'] is True:
+                status = 5
+                # If the current status of the video is before published sent an e-mail to the requester
+                if video.status < 5:
+                    # TODO: Check if an e-mail was already sent
+                    email_user_video_published(video)
 
         # Check if the HQ export has been moved to its place
         if status == 5 and 'archiving' in video.additional_data:

@@ -22,6 +22,9 @@ from sentry_sdk.integrations.django import DjangoIntegration
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# URL of the site such as: website.example.com
+BASE_URL = config('BASE_URL')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -292,7 +295,7 @@ REST_FRAMEWORK = {
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = config('LANGUAGE_CODE', default='en-us')
 
 TIME_ZONE = config('TIME_ZONE', default='Europe/Budapest')
 
@@ -322,6 +325,25 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+# E-mail settings
+# https://docs.djangoproject.com/en/3.0/topics/email/
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default=None)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default=None)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=None)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=None)
+EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=None)
+EMAIL_SSL_KEYFILE = config('EMAIL_SSL_KEYFILE', default=None)
+EMAIL_SSL_CERTFILE = config('EMAIL_SSL_CERTFILE', default=None)
+
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+DEFAULT_REPLY_EMAIL = config('DEFAULT_REPLY_EMAIL')
+WEEKLY_TASK_EMAIL = config('WEEKLY_TASK_EMAIL')
 
 
 # Sentry (collect unhandled errors and exceptions and sends reports)
@@ -361,3 +383,6 @@ if DEBUG:
         'handlers': {'console': {'class': 'logging.StreamHandler'}},
         'loggers': {'django_auth_ldap': {'level': 'DEBUG', 'handlers': ['console']}},
     }
+
+    # Do not send real e-mails in Debug mode
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

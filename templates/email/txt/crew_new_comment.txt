@@ -1,0 +1,11 @@
+Szia!
+
+A {{ request_title }} felkéréshez új {% if comment_internal %}belső{% endif %} hozzászólás érkezett:
+{% language 'hu' %}{{ comment_created|date:"DATETIME_FORMAT" }}{% endlanguage %}
+{{ commenter_name }}:
+{{ comment_message }}
+
+Válaszolok: {{ comment_url }}
+
+Üdv:
+Felkérés kezelő robotka

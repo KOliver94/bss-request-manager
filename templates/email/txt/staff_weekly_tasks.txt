@@ -1,0 +1,19 @@
+{% load i18n %}
+Sziasztok!
+
+{% if recording %}
+Közetkező heti forgatások:
+Esemény neve | Dátum
+{% for req in recording %}{{ req.title }} | {% language 'hu' %}{{ req.date|date:"N j l" }}{% endlanguage %}
+{% endfor %}
+{% endif %}
+
+{% if editing %}
+Vágandó anyagok:
+Anyag neve | Vágó
+{% for req in editing %}{{ req.title }} | {{ req.editor }}
+{% endfor %}
+{% endif %}
+
+Üdv:
+Felkérés kezelő robotka

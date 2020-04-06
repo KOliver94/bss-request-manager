@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.fields import CharField, EmailField
 
 from common.serializers import UserSerializer
+from video_requests.emails import email_user_new_request_confirmation, email_crew_new_comment
 from video_requests.models import Request, Video, Rating, Comment
 
 
@@ -43,6 +44,11 @@ class CommentDefaultSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'created', 'author', 'text',)
         read_only_fields = ('id', 'created', 'author',)
+
+    def create(self, validated_data):
+        comment = super(CommentDefaultSerializer, self).create(validated_data)
+        email_crew_new_comment(comment)
+        return comment
 
 
 class CommentFilteredSerializer(serializers.ModelSerializer):
@@ -92,6 +98,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
         request = super(RequestDefaultSerializer, self).create(validated_data)
         if comment_text:
             request.comments.add(create_comment(comment_text, request))
+        email_user_new_request_confirmation(request)
         return request
 
 
@@ -126,12 +133,14 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
                 'requester': {
                     'first_name': user.first_name,
                     'last_name': user.last_name,
-                    'phone_number': phone_number.as_e164
                 }}
+            if phone_number:
+                additional_data['requester'].update({'phone_number': phone_number.as_e164})
             return User.objects.get(email__iexact=user.email), additional_data
         else:
             user.save()
-            user.userprofile.phone_number = phone_number
+            if phone_number:
+                user.userprofile.phone_number = phone_number
             user.save()
             return user, None
 
@@ -144,4 +153,5 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         if comment_text:
             request.comments.add(create_comment(comment_text, request))
         request.save()
+        email_user_new_request_confirmation(request)
         return request

@@ -1,0 +1,12 @@
+{% load i18n %}
+Kedves {{ first_name }}!
+
+{{ request_title }} forgatási felkérésedhez új hozzászólás érkezett:
+{% language 'hu' %}{{ comment_created|date:"DATETIME_FORMAT" }}{% endlanguage %}
+{{ commenter_name }}:
+{{ comment_message }}
+
+A következő oldalon válaszolhatsz: {{ comment_url }}
+
+Üdvözlettel:
+a Budavári Schönherz Stúdió csapata

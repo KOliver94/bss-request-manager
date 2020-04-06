@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.fields import IntegerField, CharField
 
 from common.serializers import UserSerializer
+from video_requests.emails import email_user_new_comment, email_crew_new_comment
 from video_requests.models import Request, Video, CrewMember, Rating, Comment
 from video_requests.utilities import update_request_status, update_video_status
 
@@ -69,6 +70,13 @@ class CommentAdminSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'created', 'author', 'text', 'internal',)
         read_only_fields = ('id', 'created', 'author',)
+
+    def create(self, validated_data):
+        comment = super(CommentAdminSerializer, self).create(validated_data)
+        if not comment.internal and comment.request.requester.is_active:
+            email_user_new_comment(comment)
+        email_crew_new_comment(comment)
+        return comment
 
 
 class VideoAdminSerializer(serializers.ModelSerializer):

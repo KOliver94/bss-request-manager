@@ -1,0 +1,12 @@
+Kedves {{ first_name }}!
+
+Felkérsedhez új videót publikáltunk {{ video_title }} címmel, melyet az alábbi linken tekinthetsz meg: {{ video_url }}
+
+{% if registered %}
+Kiváncsiak vagyunk a véleményedre. Kérjük a következő linken értékeld az elkészült videót és a munkánkat: {{ ratings_url }}
+{% else %}
+Kiváncsiak vagyunk a véleményedre. Amennyiben a felkéréshez megadott e-mail címedet használó Facebook, Google vagy AuthSCH fiókkal belépsz az oldalra értékelheted az elkészült videót.
+{% endif %}
+
+Üdvözlettel:
+a Budavári Schönherz Stúdió csapata

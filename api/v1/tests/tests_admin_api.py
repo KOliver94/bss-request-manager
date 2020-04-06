@@ -15,6 +15,7 @@ PASSWORD = 'password'
 
 
 @override_settings(AUTHENTICATION_BACKENDS=('django.contrib.auth.backends.ModelBackend',))
+@override_settings(EMAIL_BACKEND='django.core.mail.backends.dummy.EmailBackend')  # do not send emails
 class AdminAPITestCase(APITestCase):
 
     def authorize_user(self, username):
