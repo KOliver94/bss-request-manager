@@ -16,7 +16,7 @@ django-auth-ldap = "==2.1.1"
 django-phonenumber-field = {extras = ["phonenumbers"],version = "==4.0.0"}
 django-simple-history = "==2.8.0"
 drf-yasg = "==1.17.1"
-pillow = "==7.0.0"
+pillow = "==7.1.1"
 psycopg2-binary = "==2.8.5"
 python-decouple = "==3.3"
 python-ldap = ">=3.1"
