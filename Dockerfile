@@ -52,7 +52,7 @@ COPY --from=react-build /app/frontend/build /app/frontend
 
 # Set up cron
 RUN touch /var/log/cron.log
-RUN crontab /app/crontab && rm /app/crontab
+RUN crontab /app/backend/crontab && rm /app/backend/crontab
 
 # Open port
 EXPOSE 8000
