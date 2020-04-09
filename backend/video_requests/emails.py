@@ -5,6 +5,7 @@ from common.utilities import get_editor_in_chief, get_pr_responsible, get_produc
 from manager import settings
 
 TEXT_HTML = 'text/html'
+BASE_URL = settings.BASE_URL
 
 
 # EmailMultiAlternatives object attributes detailed description
@@ -19,10 +20,11 @@ def debug_email(subject, msg_plain):
 
 def email_user_new_request_confirmation(request):
     context = {
+        'base_url': BASE_URL,
         'first_name': request.requester.first_name,
         'request': request,
-        'registered': request.requester.is_active,
-        'details_url': f'https://{settings.BASE_URL}/requests/{request.id}'
+        'is_registered': request.requester.is_active,
+        'details_url': f'{BASE_URL}/requests/{request.id}'
     }
 
     msg_plain = render_to_string('email/txt/user_new_request_confirmation.txt', context)
@@ -47,11 +49,12 @@ def email_user_new_request_confirmation(request):
 
 def email_user_video_published(video):
     context = {
+        'base_url': BASE_URL,
         'first_name': video.request.requester.first_name,
-        'registered': video.request.requester.is_active,
+        'is_registered': video.request.requester.is_active,
         'video_title': video.title,
         'video_url': video.additional_data['publishing']['website'],
-        'rating_url': f'https://{settings.BASE_URL}/requests/{video.request.id}/videos/{video.id}/rating'
+        'rating_url': f'{BASE_URL}/requests/{video.request.id}/videos/{video.id}/rating'
     }
 
     msg_plain = render_to_string('email/txt/user_video_published.txt', context)
@@ -75,12 +78,13 @@ def email_user_video_published(video):
 
 def email_user_new_comment(comment):
     context = {
+        'base_url': BASE_URL,
         'first_name': comment.request.requester.first_name,
         'request_title': comment.request.title,
         'commenter_name': f'{comment.author.last_name} {comment.author.first_name}',
         'comment_message': comment.text,
         'comment_created': comment.created,
-        'comment_url': f'https://{settings.BASE_URL}/requests/{comment.request.id}/comments'
+        'comment_url': f'{BASE_URL}/requests/{comment.request.id}/comments'
     }
 
     msg_plain = render_to_string('email/txt/user_new_comment.txt', context)
@@ -101,6 +105,7 @@ def email_user_new_comment(comment):
 
 def email_staff_weekly_tasks(recording, editing):
     context = {
+        'base_url': BASE_URL,
         'recording': recording,
         'editing': editing
     }
@@ -123,8 +128,9 @@ def email_staff_weekly_tasks(recording, editing):
 
 def email_crew_daily_reminder(request, crew_members):
     context = {
+        'base_url': BASE_URL,
         'request_title': request.title,
-        'request_url': f'https://{settings.BASE_URL}/admin/requests/{request.id}'
+        'request_url': f'{BASE_URL}/admin/requests/{request.id}'
     }
     msg_plain = render_to_string('email/txt/crew_daily_reminder.txt', context)
     msg_html = render_to_string('email/html/crew_daily_reminder.html', context)
@@ -143,12 +149,13 @@ def email_crew_daily_reminder(request, crew_members):
 
 def email_crew_new_comment(comment):
     context = {
+        'base_url': BASE_URL,
         'request_title': comment.request.title,
         'comment_internal': comment.internal,
         'commenter_name': f'{comment.author.last_name} {comment.author.first_name}',
         'comment_message': comment.text,
         'comment_created': comment.created,
-        'comment_url': f'https://{settings.BASE_URL}/requests/{comment.request.id}/comments'
+        'comment_url': f'{BASE_URL}/requests/{comment.request.id}/comments'
     }
 
     msg_plain = render_to_string('email/txt/crew_new_comment.txt', context)
@@ -174,6 +181,7 @@ def email_crew_new_comment(comment):
 
 def email_production_manager_unfinished_requests(requests):
     context = {
+        'base_url': BASE_URL,
         'requests': requests
     }
 

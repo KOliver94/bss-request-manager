@@ -47,16 +47,24 @@ RUN pipenv install --system
 COPY ./backend /app/backend
 
 # Copy built frontend assets
-RUN mkdir -p /app/frontend
-COPY --from=react-build /app/frontend/build /app/frontend
+RUN mkdir -p /app/frontend/build
+COPY --from=react-build /app/frontend/build /app/frontend/build
+
+# Have to move all static files other than index.html to root/ for whitenoise middleware
+WORKDIR /app/frontend/build
+RUN mkdir root && mv *.ico *.js *.json root
 
 # Set up cron
 RUN touch /var/log/cron.log
 RUN crontab /app/backend/crontab && rm /app/backend/crontab
 
+# Make migrations, collect static files and create default user
+WORKDIR /app/backend
+RUN python manage.py makemigrations && python manage.py migrate \
+    && python manager.py collectstatic --noinput && python manage.py create_default_user
+
 # Open port
 EXPOSE 8000
 
-# Make migrations, create default user and start the server
-CMD python manage.py makemigrations && python manage.py migrate \
-&& python manage.py create_default_user && cron && python manage.py runserver 0.0.0.0:8000
+# Start the server
+CMD cron && gunicorn --bind 0.0.0.0:8000 manager.wsgi
