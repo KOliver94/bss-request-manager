@@ -1,3 +1,5 @@
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 from social_core.backends.oauth import BaseOAuth2
 
 
@@ -34,3 +36,23 @@ class AuthSCHOAuth2(BaseOAuth2):
             'https://auth.sch.bme.hu/api/profile/',
             params={'access_token': access_token}
         )
+
+
+class ExtendedTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """ Extended JWT Token serializer with user permissions and groups """
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['name'] = f'{user.last_name} {user.first_name}'
+        token['is_staff'] = user.is_staff
+        token['is_admin'] = user.is_superuser
+        token['groups'] = list(user.groups.values_list('name', flat=True))
+
+        return token
+
+
+class ExtendedTokenObtainPairView(TokenObtainPairView):
+    """ View for extended JWT serializer """
+    serializer_class = ExtendedTokenObtainPairSerializer
