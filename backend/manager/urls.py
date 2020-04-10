@@ -26,4 +26,4 @@ urlpatterns = [
 
 # Enable Django Admin in Debug mode
 if settings.DEBUG:
-    urlpatterns += path('admin/', admin.site.urls),
+    urlpatterns.insert(0, path('admin/', admin.site.urls))
