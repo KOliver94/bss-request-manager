@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^login/social/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$',
         views.SocialJWTPairOnlyAuthView.as_view(),
         name='login_social_obtain_jwt_pair'),
+    path('users/', include('api.v1.users.urls')),
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

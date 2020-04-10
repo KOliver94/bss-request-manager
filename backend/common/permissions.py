@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import permissions
 
 from video_requests.models import Comment, Rating, Request, Video
@@ -28,6 +29,7 @@ class IsSelf(permissions.BasePermission):
     - Requester of the request which contains the video OR
     - Author of the comment OR
     - Author of the rating
+    - the requested user itself
     """
 
     def has_object_permission(self, request, view, obj):
@@ -37,6 +39,8 @@ class IsSelf(permissions.BasePermission):
             return obj.request.requester == request.user
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
             return obj.author == request.user
+        elif isinstance(obj, User):
+            return obj == request.user
         else:
             return False
 
@@ -48,6 +52,7 @@ class IsSelfOrStaff(permissions.BasePermission):
     - Requester of the request which contains the video OR
     - Author of the comment OR
     - Author of the rating
+    - the requested user itself
     """
 
     def has_object_permission(self, request, view, obj):
@@ -57,6 +62,8 @@ class IsSelfOrStaff(permissions.BasePermission):
             return obj.request.requester == request.user or request.user.is_staff
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
             return obj.author == request.user or request.user.is_staff
+        elif isinstance(obj, User):
+            return obj == request.user or request.user.is_staff
         else:
             return False
 
@@ -68,6 +75,7 @@ class IsSelfOrAdmin(permissions.BasePermission):
     - Requester of the request which contains the video OR
     - Author of the comment OR
     - Author of the rating
+    - the requested user itself
     """
 
     def has_object_permission(self, request, view, obj):
@@ -77,6 +85,8 @@ class IsSelfOrAdmin(permissions.BasePermission):
             return obj.request.requester == request.user or request.user.is_superuser
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
             return obj.author == request.user or request.user.is_superuser
+        elif isinstance(obj, User):
+            return obj == request.user or request.user.is_superuser
         else:
             return False
 
@@ -88,6 +98,7 @@ class IsStaffSelfOrAdmin(permissions.BasePermission):
     - Requester of the request which contains the video OR
     - Author of the comment OR
     - Author of the rating
+    - the requested user itself
     """
 
     def has_object_permission(self, request, view, obj):
@@ -97,5 +108,7 @@ class IsStaffSelfOrAdmin(permissions.BasePermission):
             return (obj.request.requester == request.user and request.user.is_staff) or request.user.is_superuser
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
             return (obj.author == request.user and request.user.is_staff) or request.user.is_superuser
+        elif isinstance(obj, User):
+            return (obj == request.user and request.user.is_staff) or request.user.is_superuser
         else:
             return False
