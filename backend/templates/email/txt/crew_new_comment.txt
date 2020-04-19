@@ -1,3 +1,4 @@
+{% load i18n %}
 Szia!
 
 A {{ request_title }} felkéréshez új {% if comment_internal %}belső{% endif %} hozzászólás érkezett:
