@@ -1,3 +1,5 @@
+from collections import abc
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.fields import IntegerField, CharField
@@ -28,17 +30,42 @@ def get_member_from_id(validated_data):
     validated_data['member'] = member
 
 
-def check_and_remove_unauthorized_additional_data(validated_data, user):
+def check_and_remove_unauthorized_additional_data(additional_data, user):
+    """ Remove keys and values which are used by other functions and should be changed only by authorized users """
+    if not user.is_superuser:
+        if 'status_by_admin' in additional_data:
+            additional_data.pop('status_by_admin')
+        if 'accepted' in additional_data:
+            additional_data.pop('accepted')
+        if 'denied' in additional_data:
+            additional_data.pop('denied')
+        if 'failed' in additional_data:
+            additional_data.pop('failed')
+    else:
+        if 'status_by_admin' in additional_data:
+            additional_data['status_by_admin'].update({'admin_id': user.id})
+    return additional_data
+
+
+def update_additional_data(orig_dict, new_dict):
+    """ Update existing additional data. Only replaces/extends changed keys. Takes care of nested dictionaries. """
+    for key, value in new_dict.items():
+        if isinstance(value, abc.Mapping):
+            orig_dict[key] = update_additional_data(orig_dict.get(key, {}), value)
+        elif isinstance(value, list):
+            orig_dict[key] = (orig_dict.get(key, []) + value)
+        else:
+            orig_dict[key] = new_dict[key]
+    return orig_dict
+
+
+def handle_additional_data(validated_data, user, original_data=None):
     if 'additional_data' in validated_data:
-        if not user.is_superuser:
-            if 'status_by_admin' in validated_data['additional_data']:
-                validated_data['additional_data'].pop('status_by_admin')
-            if 'accepted' in validated_data['additional_data']:
-                validated_data['additional_data'].pop('accepted')
-            if 'denied' in validated_data['additional_data']:
-                validated_data['additional_data'].pop('denied')
-            if 'failed' in validated_data['additional_data']:
-                validated_data['additional_data'].pop('failed')
+        validated_data['additional_data'] = \
+            check_and_remove_unauthorized_additional_data(validated_data['additional_data'], user)
+        if original_data:
+            validated_data['additional_data'] = \
+                update_additional_data(original_data.additional_data, validated_data['additional_data'])
     return validated_data
 
 
@@ -92,14 +119,14 @@ class VideoAdminSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         get_editor_from_id(validated_data)
-        check_and_remove_unauthorized_additional_data(validated_data, self.context['request'].user)
+        handle_additional_data(validated_data, self.context['request'].user)
         video = super(VideoAdminSerializer, self).create(validated_data)
         update_video_status(video)
         return video
 
     def update(self, instance, validated_data):
         get_editor_from_id(validated_data)
-        check_and_remove_unauthorized_additional_data(validated_data, self.context['request'].user)
+        handle_additional_data(validated_data, self.context['request'].user, instance)
         video = super(VideoAdminSerializer, self).update(instance, validated_data)
         update_video_status(video)
         return video
@@ -153,7 +180,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         get_responsible_from_id(validated_data)
         comment_text = validated_data.pop('comment_text') if 'comment_text' in validated_data else None
-        check_and_remove_unauthorized_additional_data(validated_data, self.context['request'].user)
+        handle_additional_data(validated_data, self.context['request'].user)
         request = super(RequestAdminSerializer, self).create(validated_data)
         if comment_text:
             request.comments.add(self.create_comment(comment_text, request))
@@ -163,7 +190,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         get_responsible_from_id(validated_data)
         validated_data.pop('comment_text') if 'comment_text' in validated_data else None
-        check_and_remove_unauthorized_additional_data(validated_data, self.context['request'].user)
+        handle_additional_data(validated_data, self.context['request'].user, instance)
         request = super(RequestAdminSerializer, self).update(instance, validated_data)
         update_request_status(request)
         return request
