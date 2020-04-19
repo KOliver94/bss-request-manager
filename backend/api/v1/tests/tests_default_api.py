@@ -1161,18 +1161,18 @@ class DefaultAPITestCase(APITestCase):
                             {'rating': 5})
 
         self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating3), None)
+                            str(self.video1.id) + '/ratings/' + str(self.rating3.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating6), None)
+                            str(self.video3.id) + '/ratings/' + str(self.rating6.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1), None)
+                            str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating5), None)
+                            str(self.video3.id) + '/ratings/' + str(self.rating5.id), None)
 
         self.assertNotFound('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating9), None)
+                            str(self.video5.id) + '/ratings/' + str(self.rating9.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating9), None)
+                            str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating9.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
                             str(self.video5.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
@@ -1201,18 +1201,18 @@ class DefaultAPITestCase(APITestCase):
                             {'rating': 5})
 
         self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating2), None)
+                            str(self.video1.id) + '/ratings/' + str(self.rating2.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating8), None)
+                            str(self.video5.id) + '/ratings/' + str(self.rating8.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1), None)
+                            str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating9), None)
+                            str(self.video5.id) + '/ratings/' + str(self.rating9.id), None)
 
         self.assertNotFound('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating5), None)
+                            str(self.video3.id) + '/ratings/' + str(self.rating5.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating5), None)
+                            str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating5.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
                             str(self.video3.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
@@ -1241,18 +1241,18 @@ class DefaultAPITestCase(APITestCase):
                             {'rating': 5})
 
         self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating4), None)
+                            str(self.video3.id) + '/ratings/' + str(self.rating4.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating7), None)
+                            str(self.video5.id) + '/ratings/' + str(self.rating7.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating5), None)
+                            str(self.video3.id) + '/ratings/' + str(self.rating5.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating9), None)
+                            str(self.video5.id) + '/ratings/' + str(self.rating9.id), None)
 
         self.assertNotFound('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1), None)
+                            str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1), None)
+                            str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
         self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
                             str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
