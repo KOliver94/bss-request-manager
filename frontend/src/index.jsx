@@ -7,8 +7,7 @@ import * as serviceWorker from './serviceWorker';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
-    dsn:
-      '***REMOVED***',
+    dsn: process.env.REACT_APP_SENTRY_URL,
   });
 }
 
