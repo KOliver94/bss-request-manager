@@ -19,7 +19,7 @@ class RequestDefaultListCreateView(generics.ListCreateAPIView):
     - Authenticated users can get Requests which are submitted by them.
     """
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['title', 'created', 'date', 'status']
+    ordering_fields = ['title', 'created', 'start_datetime', 'status']
     ordering = ['created']
 
     def get_permissions(self):

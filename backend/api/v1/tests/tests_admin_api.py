@@ -206,7 +206,8 @@ class AdminAPITestCase(APITestCase):
 
         data = {
             'title': 'Test Request',
-            'date': '2020-03-05',
+            'start_datetime': '2020-03-05T10:30',
+            'end_datetime': '2020-03-06T10:30',
             'place': 'Test place - Modified',
             'type': 'Test type'
         }
@@ -232,7 +233,8 @@ class AdminAPITestCase(APITestCase):
 
         data = {
             'title': 'Test Request',
-            'date': '2020-03-05',
+            'start_datetime': '2020-03-05T10:30',
+            'end_datetime': '2020-03-06T10:30',
             'place': 'Test place - Modified',
             'type': 'Test type'
         }
@@ -250,7 +252,8 @@ class AdminAPITestCase(APITestCase):
         }
         data_put = {
             'title': 'Test Request',
-            'date': '2020-03-05',
+            'start_datetime': '2020-03-05T10:30',
+            'end_datetime': '2020-03-06T10:30',
             'place': 'Test place - Modified',
             'type': 'Test type'
         }
@@ -270,7 +273,8 @@ class AdminAPITestCase(APITestCase):
     def create_request(self):
         data = {
             'title': 'Test Request',
-            'date': '2020-03-05',
+            'start_datetime': '2020-03-05T10:30',
+            'end_datetime': '2020-03-06T10:30',
             'place': 'Test place',
             'type': 'Test type',
             'responsible_id': self.admin_user.id
@@ -333,7 +337,8 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         data = {
             'title': 'Test Request',
-            'date': '2020-03-05',
+            'start_datetime': '2020-03-05T10:30',
+            'end_datetime': '2020-03-06T10:30',
             'place': 'Test place',
             'type': 'Test type',
             'comment_text': 'Test comment'

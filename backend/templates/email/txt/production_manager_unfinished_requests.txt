@@ -3,7 +3,7 @@ Szia!
 
 Az alábbi anyagok elkészültek, de még nincsenek lezárva:
 Esemény neve | Dátum
-{% for req in requests %}{{ req.title }} | {% language 'hu' %}{{ req.date|date:"N j l" }}{% endlanguage %}
+{% for req in requests %}{{ req.title }} | {% language 'hu' %}{{ req.start_datetime|date:"N j l" }}{% endlanguage %}
 {% endfor %}
 
 Üdv:

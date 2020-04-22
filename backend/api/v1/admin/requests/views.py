@@ -44,7 +44,7 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
     serializer_class = RequestAdminSerializer
     permission_classes = [IsStaffUser]
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['title', 'created', 'date', 'status']
+    ordering_fields = ['title', 'created', 'start_datetime', 'status']
     ordering = ['created']
 
     def get_queryset(self):

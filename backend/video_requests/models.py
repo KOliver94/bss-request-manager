@@ -10,7 +10,8 @@ from video_requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
 class Request(models.Model):
     title = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
-    date = models.DateField()
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField()
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
     status = models.PositiveSmallIntegerField(choices=REQUEST_STATUS_CHOICES, default=1)
@@ -21,7 +22,7 @@ class Request(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f'{self.title} - {self.date}'
+        return f'{self.title} - {self.start_datetime}'
 
 
 class CrewMember(models.Model):

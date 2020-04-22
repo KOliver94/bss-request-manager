@@ -214,7 +214,8 @@ class DefaultAPITestCase(APITestCase):
     def create_request(self):
         data = {
             'title': 'Test Request',
-            'date': '2020-03-05',
+            'start_datetime': '2020-03-05T10:30',
+            'end_datetime': '2020-03-06T10:30',
             'place': 'Test place',
             'type': 'Test type',
         }
@@ -251,7 +252,8 @@ class DefaultAPITestCase(APITestCase):
         self.authorize_user(USER)
         data = {
             'title': 'Test Request',
-            'date': '2020-03-05',
+            'start_datetime': '2020-03-05T10:30',
+            'end_datetime': '2020-03-06T10:30',
             'place': 'Test place',
             'type': 'Test type',
             'comment_text': 'Test comment'
@@ -264,7 +266,9 @@ class DefaultAPITestCase(APITestCase):
     def test_anonymous_can_create_requests(self):
         data = {
             'title': 'Test Request',
-            'date': '2020-03-05',
+            'start_datetime': '2020-03-05T10:30',
+            'end_datetime': '2020-03-06T10:30',
+
             'place': 'Test place',
             'type': 'Test type',
             'requester_first_name': 'Test',
@@ -283,7 +287,8 @@ class DefaultAPITestCase(APITestCase):
     def test_anonymous_can_create_requests_and_get_connected_to_existing_user(self):
         data = {
             'title': 'Anonymous Test Request',
-            'date': '2020-03-05',
+            'start_datetime': '2020-03-05T10:30',
+            'end_datetime': '2020-03-06T10:30',
             'place': 'Test place',
             'type': 'Test type',
             'requester_first_name': 'Test',

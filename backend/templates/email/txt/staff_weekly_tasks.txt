@@ -4,7 +4,7 @@ Sziasztok!
 {% if recording %}
 Közetkező heti forgatások:
 Esemény neve | Dátum
-{% for req in recording %}{{ req.title }} | {% language 'hu' %}{{ req.date|date:"N j l" }}{% endlanguage %}
+{% for req in recording %}{{ req.title }} | {% language 'hu' %}{{ req.start_datetime|date:"N j l, H:i" }}{% endlanguage %}
 {% endfor %}
 {% endif %}
 

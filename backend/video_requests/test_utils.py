@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import timedelta
+from django.utils import timezone
 from random import randint
 
 from video_requests.models import Request, Comment, CrewMember, Video, Rating
@@ -8,7 +9,8 @@ def create_request(request_id, user):
     request = Request()
     request.id = request_id
     request.title = 'Test Request ' + str(request_id) + ' - ' + user.username
-    request.date = datetime.now()
+    request.start_datetime = timezone.now()
+    request.end_datetime = timezone.now() + timedelta(days=1)
     request.place = 'Test place'
     request.type = 'Test type'
     request.requester = user

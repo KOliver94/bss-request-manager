@@ -14,11 +14,12 @@ class Command(BaseCommand):
         date = datetime.date.today()
         start_week = date - datetime.timedelta(date.weekday())
         end_week = start_week + datetime.timedelta(7)
-        recording = Request.objects.filter(date__range=[start_week, end_week], status__range=[1, 2]).order_by('date')
+        recording = Request.objects.filter(start_datetime__range=[start_week, end_week], status__range=[1, 2]) \
+            .order_by('start_datetime')
 
         # Get requests which are already recorded but either no video was created or it is not finished yet
         recorded_requests_without_video = Request.objects.filter(status__range=[3, 4], videos__isnull=True)
-        requests_with_unedited_video =\
+        requests_with_unedited_video = \
             Request.objects.filter(
                 status__range=[3, 4],
                 videos__status__range=[1, 2]
