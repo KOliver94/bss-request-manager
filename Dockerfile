@@ -1,7 +1,7 @@
 # Stage 1 - Build Frontend
 
 # Pull base image
-FROM node:13-alpine AS react-build
+FROM node:14-alpine AS react-build
 
 # Set work directory
 WORKDIR /app/frontend
