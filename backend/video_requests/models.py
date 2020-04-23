@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from rest_framework.exceptions import ValidationError
 from simple_history.models import HistoricalRecords
 
 from common.models import AbstractComment, AbstractRating
@@ -20,6 +21,11 @@ class Request(models.Model):
     requester = models.ForeignKey(User, related_name='requester_user', on_delete=models.SET_NULL, null=True)
     additional_data = JSONField(default=dict, blank=True)
     history = HistoricalRecords()
+
+    def clean(self):
+        super().clean()
+        if not (self.start_datetime <= self.end_datetime):
+            raise ValidationError('Start time must be earlier then end.')
 
     def __str__(self):
         return f'{self.title} - {self.start_datetime}'
