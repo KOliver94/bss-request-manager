@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.fields import CharField, EmailField
 
 from common.serializers import UserSerializer
+from common.utilities import create_calendar_event
 from video_requests.emails import email_user_new_request_confirmation, email_crew_new_comment
 from video_requests.models import Request, Video, Rating, Comment
 
@@ -99,6 +100,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
         if comment_text:
             request.comments.add(create_comment(comment_text, request))
         email_user_new_request_confirmation(request)
+        create_calendar_event(request)
         return request
 
 
@@ -154,4 +156,5 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
             request.comments.add(create_comment(comment_text, request))
         request.save()
         email_user_new_request_confirmation(request)
+        create_calendar_event(request)
         return request

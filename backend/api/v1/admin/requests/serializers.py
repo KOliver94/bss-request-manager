@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework.fields import IntegerField, CharField
 
 from common.serializers import UserSerializer
+from common.utilities import create_calendar_event
 from video_requests.emails import email_user_new_comment, email_crew_new_comment
 from video_requests.models import Request, Video, CrewMember, Rating, Comment
 from video_requests.utilities import update_request_status, update_video_status
@@ -193,4 +194,5 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         handle_additional_data(validated_data, self.context['request'].user, instance)
         request = super(RequestAdminSerializer, self).update(instance, validated_data)
         update_request_status(request)
+        create_calendar_event(request)
         return request

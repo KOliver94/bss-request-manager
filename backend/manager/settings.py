@@ -364,6 +364,11 @@ WEEKLY_TASK_EMAIL = config('WEEKLY_TASK_EMAIL')
 DEBUG_EMAIL = config('DEBUG_EMAIL', default=None)  # if set all e-mails will be sent to this address only
 
 
+# Google Calendar settings:
+GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH = config('GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH')
+GOOGLE_CALENDAR_ID = config('GOOGLE_CALENDAR_ID')
+
+
 # Sentry (collect unhandled errors and exceptions and sends reports)
 # https://sentry.io
 
