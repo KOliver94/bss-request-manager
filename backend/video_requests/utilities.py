@@ -26,7 +26,7 @@ def update_request_status(request, called_from_video=False):
         if 2 <= status < 9 and 'failed' in request.additional_data:
             status = 10 if request.additional_data['failed'] is True else status
 
-        # If the status is not canceled or failed and the request is accepted check if the end date is earlier then now
+        # If the status is not canceled or failed and the request is accepted check if the end date is earlier than now
         if 2 <= status < 9 and request.end_datetime < timezone.now():
             status = 3
 

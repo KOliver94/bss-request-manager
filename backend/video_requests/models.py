@@ -25,7 +25,7 @@ class Request(models.Model):
     def clean(self):
         super().clean()
         if not (self.start_datetime <= self.end_datetime):
-            raise ValidationError('Start time must be earlier then end.')
+            raise ValidationError('Start time must be earlier than end.')
 
     def __str__(self):
         return f'{self.title} - {self.start_datetime}'
