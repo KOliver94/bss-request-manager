@@ -20,14 +20,13 @@ def get_pr_responsible():
 def get_google_calendar_service():
     credentials = Credentials.from_service_account_file(filename=settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH,
                                                         scopes=['https://www.googleapis.com/auth/calendar'])
-    service = build('calendar', 'v3', credentials=credentials)
-    return service
+    return build('calendar', 'v3', credentials=credentials)
 
 
 def create_calendar_event(request):
     service = get_google_calendar_service()
 
-    event = service.events().insert(calendarId=settings.GOOGLE_CALENDAR_ID, body={
+    service.events().insert(calendarId=settings.GOOGLE_CALENDAR_ID, body={
         'summary': request.title,
         'location': request.place,
         'start': {
