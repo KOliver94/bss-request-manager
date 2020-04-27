@@ -117,6 +117,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         model = Request
         fields = ('id', 'title', 'start_datetime', 'end_datetime', 'type', 'place', 'comment_text', 'requester',
                   'comments', 'requester_first_name', 'requester_last_name', 'requester_email', 'requester_mobile',)
+        read_only_fields = ('id', 'status', 'requester', 'videos', 'comments',)
 
     def create_user(self, validated_data):
         user = User()
