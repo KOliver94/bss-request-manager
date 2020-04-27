@@ -39,6 +39,7 @@ SECRET_KEY = config('APP_SECRET_KEY')
 DEBUG = config('APP_DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+CORS_ORIGIN_WHITELIST = config('CORS_ORIGIN_WHITELIST', default='', cast=Csv())
 
 
 # Application definition
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'social_django',
     'rest_social_auth',
     'phonenumber_field',
@@ -62,6 +64,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -403,6 +406,9 @@ if DEBUG:
             'rest_framework.renderers.BrowsableAPIRenderer',
         ],
     })
+
+    # Enable CORS requests from anywhere
+    CORS_ORIGIN_ALLOW_ALL = True
 
     # Simple JWT Settings
     # https://github.com/davesque/django-rest-framework-simplejwt
