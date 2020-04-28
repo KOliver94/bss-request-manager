@@ -53,8 +53,12 @@ class ExtendedTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['name'] = f'{user.last_name} {user.first_name}'
-        token['is_staff'] = user.is_staff
-        token['is_admin'] = user.is_superuser
+        if not user.is_staff or not user.is_superuser:
+            token['role'] = 'user'
+        elif not user.is_superuser:
+            token['role'] = 'staff'
+        else:
+            token['role'] = 'admin'
         token['groups'] = list(user.groups.values_list('name', flat=True))
 
         return token
