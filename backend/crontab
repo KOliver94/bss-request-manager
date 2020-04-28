@@ -4,4 +4,5 @@
  0   7   *   *  *   python /code/manage.py email_daily_reminders >> /dev/stdout 2>&1
 30   0   *   *  1   python /code/manage.py email_weekly_tasks >> /dev/stdout 2>&1
  0  20   *   *  7   python /code/manage.py email_unfinished_requests >> /dev/stdout 2>&1
+ 30  3   *   *  5   python /code/manage.py flushexpiredtokens >> /dev/stdout 2>&1
 # Don't remove the empty line at the end of this file. It is required to run the cron job

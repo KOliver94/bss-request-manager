@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
     'social_django',
     'rest_social_auth',
     'phonenumber_field',
@@ -305,6 +306,13 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 
+# Simple JWT Settings
+# https://github.com/davesque/django-rest-framework-simplejwt
+SIMPLE_JWT = {
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -413,9 +421,9 @@ if DEBUG:
     # Simple JWT Settings
     # https://github.com/davesque/django-rest-framework-simplejwt
     # Extend JWT token lifetime
-    SIMPLE_JWT = {
+    SIMPLE_JWT.update({
         'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
-    }
+    })
 
     # Logging
     # https://docs.djangoproject.com/en/3.0/topics/logging/

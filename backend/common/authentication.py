@@ -1,4 +1,10 @@
+from rest_framework import serializers, generics, status
+from rest_framework.exceptions import NotAuthenticated
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from social_core.backends.oauth import BaseOAuth2
 
@@ -40,6 +46,7 @@ class AuthSCHOAuth2(BaseOAuth2):
 
 class ExtendedTokenObtainPairSerializer(TokenObtainPairSerializer):
     """ Extended JWT Token serializer with user permissions and groups """
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
@@ -56,3 +63,25 @@ class ExtendedTokenObtainPairSerializer(TokenObtainPairSerializer):
 class ExtendedTokenObtainPairView(TokenObtainPairView):
     """ View for extended JWT serializer """
     serializer_class = ExtendedTokenObtainPairSerializer
+
+
+class RefreshTokenSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def create(self, validated_data):
+        try:
+            RefreshToken(validated_data['refresh']).blacklist()
+        except TokenError:
+            raise NotAuthenticated(detail='Token is invalid or expired')
+
+
+class LogoutAndBlacklistRefreshTokenView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = RefreshTokenSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(status=status.HTTP_205_RESET_CONTENT, headers=headers)

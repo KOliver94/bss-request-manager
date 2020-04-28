@@ -6,7 +6,7 @@ from rest_framework import permissions
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_social_auth import views
 
-from common.authentication import ExtendedTokenObtainPairView
+from common.authentication import ExtendedTokenObtainPairView, LogoutAndBlacklistRefreshTokenView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -27,6 +27,7 @@ urlpatterns = [
     path('admin/', include('api.v1.admin.urls')),
     path('login', ExtendedTokenObtainPairView.as_view(), name='login_obtain_jwt_pair'),
     path('login/refresh', TokenRefreshView.as_view(), name='login_refresh_jwt_token'),
+    path('logout', LogoutAndBlacklistRefreshTokenView.as_view(), name='logout'),
     url(r'^login/social/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$',
         views.SocialJWTPairOnlyAuthView.as_view(),
         name='login_social_obtain_jwt_pair'),
