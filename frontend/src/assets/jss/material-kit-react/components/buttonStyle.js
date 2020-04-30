@@ -54,7 +54,7 @@ const buttonStyle = {
       top: '0',
       width: '18px',
       height: '18px',
-      marginRight: '4px',
+      marginRight: '0px',
       verticalAlign: 'middle',
     },
     '&$justIcon': {

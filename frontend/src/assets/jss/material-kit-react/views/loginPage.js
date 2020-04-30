@@ -1,4 +1,4 @@
-import { container } from 'assets/jss/material-kit-react';
+import { container, primaryColor } from 'assets/jss/material-kit-react';
 
 const signupPageStyle = {
   container: {
@@ -85,6 +85,13 @@ const signupPageStyle = {
   },
   inputIconsColor: {
     color: '#495057',
+  },
+  circularProgress: {
+    color: primaryColor,
+  },
+  circularProgressContainer: {
+    padding: '8px 36px',
+    margin: '5px 1px',
   },
 };
 

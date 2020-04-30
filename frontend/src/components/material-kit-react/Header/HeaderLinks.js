@@ -1,120 +1,127 @@
-/*eslint-disable*/
-import React from "react";
-import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
+import React from 'react';
+import PropTypes from 'prop-types';
 // react components for routing our app without refresh
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Tooltip from "@material-ui/core/Tooltip";
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // @material-ui/icons
-import { Apps, CloudDownload } from "@material-ui/icons";
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import SendRoundedIcon from '@material-ui/icons/SendRounded';
 
 // core components
-import CustomDropdown from "components/material-kit-react/CustomDropdown/CustomDropdown.js";
-import Button from "components/material-kit-react/CustomButtons/Button.js";
+import Button from 'components/material-kit-react/CustomButtons/Button.js';
+import CustomDropdown from 'components/material-kit-react/CustomDropdown/CustomDropdown.js';
 
-import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js";
+import styles from 'assets/jss/material-kit-react/components/headerLinksStyle.js';
+
+import { useSnackbar } from 'notistack';
+import { logoutUser, isAdminOrStaff } from 'api/loginApi';
 
 const useStyles = makeStyles(styles);
 
-export default function HeaderLinks(props) {
+const AdminButton = () => {
   const classes = useStyles();
+  if (isAdminOrStaff()) {
+    return (
+      <Link to="/admin" className={classes.dropdownLink}>
+        <i className="fas fa-tools"></i> Admin
+      </Link>
+    );
+  }
+  return null;
+};
+
+export default function HeaderLinks({
+  isAuthenticated = false,
+  setIsAuthenticated,
+}) {
+  const classes = useStyles();
+  const [loading, setLoading] = React.useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  async function handleLogout(event) {
+    event.preventDefault();
+    setLoading(true);
+
+    try {
+      await logoutUser();
+      enqueueSnackbar('Sikeres kijelentkezés', {
+        variant: 'success',
+      });
+    } catch (e) {
+      enqueueSnackbar(e.message, {
+        variant: 'error',
+      });
+    } finally {
+      setIsAuthenticated(false);
+      setLoading(false);
+    }
+  }
+
   return (
     <List className={classes.list}>
+      {isAuthenticated ? (
+        <ListItem className={classes.listItem}>
+          <CustomDropdown
+            noLiPadding
+            buttonText={localStorage.getItem('name')}
+            buttonProps={{
+              className: classes.navLinkUserProfile,
+              color: 'transparent',
+            }}
+            buttonIcon={{ type: 'Avatar' }}
+            dropdownList={[
+              <AdminButton />,
+              { divider: isAdminOrStaff() },
+              <Link to="/profile" className={classes.dropdownLink}>
+                <i className="fas fa-user-circle"></i> Profilom
+              </Link>,
+              <Link to="/my-requests" className={classes.dropdownLink}>
+                <i className="fas fa-tasks"></i> Felkéréseim
+              </Link>,
+              { divider: true },
+              <Link
+                to="/"
+                onClick={handleLogout}
+                className={classes.dropdownLink}
+              >
+                {loading ? (
+                  <CircularProgress size={10} />
+                ) : (
+                    <i className="fas fa-sign-out-alt"></i>
+                  )}{' '}
+                Kijelentkezés
+              </Link>,
+            ]}
+          />
+        </ListItem>
+      ) : (
+          <ListItem className={classes.listItem}>
+            <Link to="/login" className={classes.navReactRouterLink}>
+              <Button color="transparent" className={classes.navLink}>
+                <LockOutlinedIcon className={classes.icons} /> Bejelentkezés
+            </Button>
+            </Link>
+          </ListItem>
+        )}
+
       <ListItem className={classes.listItem}>
-        <CustomDropdown
-          noLiPadding
-          buttonText="Components"
-          buttonProps={{
-            className: classes.navLink,
-            color: "transparent"
-          }}
-          buttonIcon={Apps}
-          dropdownList={[
-            <Link to="/" className={classes.dropdownLink}>
-              All components
-            </Link>,
-            <a
-              href="https://creativetimofficial.github.io/material-kit-react/#/documentation?ref=mkr-navbar"
-              target="_blank"
-              className={classes.dropdownLink}
-            >
-              Documentation
-            </a>
-          ]}
-        />
-      </ListItem>
-      <ListItem className={classes.listItem}>
-        <Button
-          href="https://www.creative-tim.com/product/material-kit-react?ref=mkr-navbar"
-          color="transparent"
-          target="_blank"
-          className={classes.navLink}
-        >
-          <CloudDownload className={classes.icons} /> Download
-        </Button>
-      </ListItem>
-      <ListItem className={classes.listItem}>
-        {/*<Tooltip title="Delete">
-          <IconButton aria-label="Delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>*/}
-        <Tooltip
-          id="instagram-twitter"
-          title="Follow us on twitter"
-          placement={window.innerWidth > 959 ? "top" : "left"}
-          classes={{ tooltip: classes.tooltip }}
-        >
-          <Button
-            href="https://twitter.com/CreativeTim?ref=creativetim"
-            target="_blank"
-            color="transparent"
-            className={classes.navLink}
-          >
-            <i className={classes.socialIcons + " fab fa-twitter"} />
+        <Link to="/new-request" className={classes.navReactRouterLink}>
+          <Button color="primary" className={classes.navLinkMain}>
+            <SendRoundedIcon className={classes.icons} />
+            Felkérés beküldése
           </Button>
-        </Tooltip>
-      </ListItem>
-      <ListItem className={classes.listItem}>
-        <Tooltip
-          id="instagram-facebook"
-          title="Follow us on facebook"
-          placement={window.innerWidth > 959 ? "top" : "left"}
-          classes={{ tooltip: classes.tooltip }}
-        >
-          <Button
-            color="transparent"
-            href="https://www.facebook.com/CreativeTim?ref=creativetim"
-            target="_blank"
-            className={classes.navLink}
-          >
-            <i className={classes.socialIcons + " fab fa-facebook"} />
-          </Button>
-        </Tooltip>
-      </ListItem>
-      <ListItem className={classes.listItem}>
-        <Tooltip
-          id="instagram-tooltip"
-          title="Follow us on instagram"
-          placement={window.innerWidth > 959 ? "top" : "left"}
-          classes={{ tooltip: classes.tooltip }}
-        >
-          <Button
-            color="transparent"
-            href="https://www.instagram.com/CreativeTimOfficial?ref=creativetim"
-            target="_blank"
-            className={classes.navLink}
-          >
-            <i className={classes.socialIcons + " fab fa-instagram"} />
-          </Button>
-        </Tooltip>
+        </Link>
       </ListItem>
     </List>
   );
 }
+
+HeaderLinks.propTypes = {
+  isAuthenticated: PropTypes.bool,
+};

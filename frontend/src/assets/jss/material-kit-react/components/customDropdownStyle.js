@@ -129,6 +129,11 @@ const customDropdownStyle = (theme) => ({
     width: '20px',
     height: '20px',
   },
+  buttonAvatar: {
+    width: '30px',
+    height: '30px',
+    marginRight: '5px',
+  },
   caret: {
     transition: 'all 150ms ease-in',
     display: 'inline-block',

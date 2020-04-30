@@ -65,6 +65,9 @@ const headerStyle = {
       background: 'transparent',
     },
   },
+  titleLink: {
+    color: 'inherit !important',
+  },
   appResponsive: {
     margin: '20px 10px',
   },

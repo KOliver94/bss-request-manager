@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { SnackbarProvider } from 'notistack';
 import * as Sentry from '@sentry/browser';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+import App from './App';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -13,7 +13,17 @@ if (process.env.NODE_ENV === 'production') {
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <SnackbarProvider
+      maxSnack={3}
+      preventDuplicate
+      autoHideDuration={2000}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+    >
+      <App />
+    </SnackbarProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

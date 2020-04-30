@@ -55,5 +55,9 @@ const footerStyle = {
     position: 'relative',
     top: '3px',
   },
+  socialIcon: {
+    padding: '15px 10px',
+    margin: '0',
+  },
 };
 export default footerStyle;
