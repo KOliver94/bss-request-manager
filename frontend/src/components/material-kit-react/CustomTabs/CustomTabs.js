@@ -1,20 +1,20 @@
-import React from "react";
+import React from 'react';
 // nodejs library that concatenates classes
-import classNames from "classnames";
+import classNames from 'classnames';
 // nodejs library to set properties for components
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 // material-ui components
-import { makeStyles } from "@material-ui/core/styles";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Icon from "@material-ui/core/Icon";
+import { makeStyles } from '@material-ui/core/styles';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Icon from '@material-ui/core/Icon';
 // core components
-import Card from "components/material-kit-react/Card/Card.js";
-import CardBody from "components/material-kit-react/Card/CardBody.js";
-import CardHeader from "components/material-kit-react/Card/CardHeader.js";
+import Card from 'components/material-kit-react/Card/Card.js';
+import CardBody from 'components/material-kit-react/Card/CardBody.js';
+import CardHeader from 'components/material-kit-react/Card/CardHeader.js';
 
-import styles from "assets/jss/material-kit-react/components/customTabsStyle.js";
+import styles from 'assets/jss/material-kit-react/components/customTabsStyle.js';
 
 const useStyles = makeStyles(styles);
 
@@ -28,7 +28,7 @@ export default function CustomTabs(props) {
   const { headerColor, plainTabs, tabs, title, rtlActive } = props;
   const cardTitle = classNames({
     [classes.cardTitle]: true,
-    [classes.cardTitleRTL]: rtlActive
+    [classes.cardTitleRTL]: rtlActive,
   });
   return (
     <Card plain={plainTabs}>
@@ -39,7 +39,7 @@ export default function CustomTabs(props) {
           onChange={handleChange}
           classes={{
             root: classes.tabsRoot,
-            indicator: classes.displayNone
+            indicator: classes.displayNone,
           }}
         >
           {tabs.map((prop, key) => {
@@ -47,11 +47,11 @@ export default function CustomTabs(props) {
             if (prop.tabIcon) {
               icon = {
                 icon:
-                  typeof prop.tabIcon === "string" ? (
+                  typeof prop.tabIcon === 'string' ? (
                     <Icon>{prop.tabIcon}</Icon>
                   ) : (
-                      <prop.tabIcon />
-                    )
+                    <prop.tabIcon />
+                  ),
               };
             }
             return (
@@ -60,7 +60,7 @@ export default function CustomTabs(props) {
                   root: classes.tabRootButton,
                   label: classes.tabLabel,
                   selected: classes.tabSelected,
-                  wrapper: classes.tabWrapper
+                  wrapper: classes.tabWrapper,
                 }}
                 key={key}
                 label={prop.tabName}
@@ -84,21 +84,21 @@ export default function CustomTabs(props) {
 
 CustomTabs.propTypes = {
   headerColor: PropTypes.oneOf([
-    "warning",
-    "success",
-    "danger",
-    "info",
-    "primary",
-    "rose"
+    'warning',
+    'success',
+    'danger',
+    'info',
+    'primary',
+    'rose',
   ]),
   title: PropTypes.string,
   tabs: PropTypes.arrayOf(
     PropTypes.shape({
       tabName: PropTypes.string.isRequired,
       tabIcon: PropTypes.object,
-      tabContent: PropTypes.node.isRequired
+      tabContent: PropTypes.node.isRequired,
     })
   ),
   rtlActive: PropTypes.bool,
-  plainTabs: PropTypes.bool
+  plainTabs: PropTypes.bool,
 };

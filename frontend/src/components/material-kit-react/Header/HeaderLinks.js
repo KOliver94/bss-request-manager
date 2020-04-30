@@ -93,22 +93,22 @@ export default function HeaderLinks({
                 {loading ? (
                   <CircularProgress size={10} />
                 ) : (
-                    <i className="fas fa-sign-out-alt"></i>
-                  )}{' '}
+                  <i className="fas fa-sign-out-alt"></i>
+                )}{' '}
                 Kijelentkezés
               </Link>,
             ]}
           />
         </ListItem>
       ) : (
-          <ListItem className={classes.listItem}>
-            <Link to="/login" className={classes.navReactRouterLink}>
-              <Button color="transparent" className={classes.navLink}>
-                <LockOutlinedIcon className={classes.icons} /> Bejelentkezés
+        <ListItem className={classes.listItem}>
+          <Link to="/login" className={classes.navReactRouterLink}>
+            <Button color="transparent" className={classes.navLink}>
+              <LockOutlinedIcon className={classes.icons} /> Bejelentkezés
             </Button>
-            </Link>
-          </ListItem>
-        )}
+          </Link>
+        </ListItem>
+      )}
 
       <ListItem className={classes.listItem}>
         <Link to="/new-request" className={classes.navReactRouterLink}>
