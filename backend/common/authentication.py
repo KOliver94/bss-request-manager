@@ -75,6 +75,7 @@ class RefreshTokenSerializer(serializers.Serializer):
     def create(self, validated_data):
         try:
             RefreshToken(validated_data['refresh']).blacklist()
+            return validated_data
         except TokenError:
             raise NotAuthenticated(detail='Token is invalid or expired')
 
