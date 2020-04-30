@@ -19,7 +19,7 @@ export async function loginLdap(loginDetails) {
     .post('/login', loginDetails)
     .then(handleLogin)
     .catch((error) => {
-      if (error.response.status === 401) {
+      if (error.response && error.response.status === 401) {
         throw new Error('Hibás felhasználónév vagy jelszó!');
       }
       throw new Error('Network response was not ok.');
@@ -65,4 +65,9 @@ export function isAdminOrStaff() {
   return (
     role && (role.toLowerCase() === 'admin' || role.toLowerCase() === 'staff')
   );
+}
+
+export function isAdmin() {
+  const role = localStorage.getItem('role');
+  return role && role.toLowerCase() === 'admin';
 }

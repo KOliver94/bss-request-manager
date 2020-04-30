@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
@@ -31,26 +31,29 @@ import { loginLdap } from 'api/loginApi';
 
 const useStyles = makeStyles(styles);
 
-export default function LoginPage({ setIsAuthenticated }) {
+export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   const [cardAnimaton, setCardAnimation] = useState('cardHidden');
   const [loginDetails, setloginDetails] = useState({});
   const [loading, setLoading] = useState(false);
 
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { from } = location.state || { from: { pathname: '/' } };
 
   async function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);
 
     try {
-      await loginLdap(loginDetails);
-      setIsAuthenticated(true);
-      enqueueSnackbar('Sikeres bejelentkezés', {
-        variant: 'success',
+      await loginLdap(loginDetails).then(() => {
+        setIsAuthenticated(true);
+        enqueueSnackbar('Sikeres bejelentkezés', {
+          variant: 'success',
+        });
       });
-      history.push('/');
     } catch (e) {
       enqueueSnackbar(e.message, {
         variant: 'error',
@@ -75,6 +78,12 @@ export default function LoginPage({ setIsAuthenticated }) {
   setTimeout(() => {
     setCardAnimation('');
   }, 700);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.replace(from);
+    }
+  });
 
   return (
     <div>
@@ -202,5 +211,6 @@ export default function LoginPage({ setIsAuthenticated }) {
 }
 
 LoginPage.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
   setIsAuthenticated: PropTypes.func.isRequired,
 };

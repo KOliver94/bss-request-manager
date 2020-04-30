@@ -14,20 +14,18 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <LandingPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          )}
-        />
-        <Route
-          path="/login"
-          render={() => <LoginPage setIsAuthenticated={setIsAuthenticated} />}
-        />
+        <Route exact path="/">
+          <LandingPage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </Route>
+        <Route path="/login">
+          <LoginPage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </Route>
         <Route component={PageNotFound} />
       </Switch>
     </Router>
