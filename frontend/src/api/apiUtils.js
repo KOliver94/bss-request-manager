@@ -9,6 +9,16 @@ const axiosInstance = axios.create({
   },
 });
 
+// If axios instance has no Authorization header but we have token add the Header to the request
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  const myConfig = config;
+  if (!config.headers.Authorization && token) {
+    myConfig.headers.Authorization = `Bearer ${token}`;
+  }
+  return myConfig;
+});
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
