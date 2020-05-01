@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework.exceptions import NotAuthenticated
 
-from common.permissions import IsSelfOrStaff, IsSelfOrAdmin
+from common.permissions import IsSelfOrStaff, IsSelfOrAdmin, IsStaffUser
 from common.serializers import UserSerializer, UserProfileSerializer
 
 
@@ -41,3 +41,21 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
         if self.kwargs.get('pk', None) == 'me':
             self.kwargs['pk'] = self.request.user.pk
         return super(UserDetailView, self).get_object()
+
+
+class StaffUserListView(generics.ListAPIView):
+    """
+    List (GET) view for a Staff User objects.
+
+    Only Staff users can access this view.
+
+    This view is used in the frontend to get a list to select crew members.
+    """
+    serializer_class = UserSerializer
+    permission_classes = [IsStaffUser]
+
+    def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            # queryset just for schema generation metadata
+            return User.objects.none()
+        return User.objects.filter(is_staff=True, is_active=True)
