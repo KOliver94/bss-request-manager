@@ -2,13 +2,16 @@ import jwtDecode from 'jwt-decode';
 import axiosInstance from './apiUtils';
 
 async function handleLogin(response) {
+  const accessToken = response.data.access
+    ? response.data.access
+    : response.data.token;
   // Set auth header and save the tokens.
-  axiosInstance.defaults.headers.Authorization = `Bearer ${response.data.access}`;
-  localStorage.setItem('access_token', response.data.access);
+  axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
+  localStorage.setItem('access_token', accessToken);
   localStorage.setItem('refresh_token', response.data.refresh);
 
   // Decode the JWT token and save the name of the user and his role.
-  const decoded = jwtDecode(response.data.access);
+  const decoded = jwtDecode(accessToken);
   localStorage.setItem('name', decoded.name);
   localStorage.setItem('role', decoded.role);
   return response;

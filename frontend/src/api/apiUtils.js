@@ -4,7 +4,6 @@ const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   timeout: 5000,
   headers: {
-    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
@@ -30,11 +29,14 @@ axiosInstance.interceptors.response.use(
       return axiosInstance
         .post('/login/refresh', { refresh: refreshToken })
         .then((response) => {
-          localStorage.setItem('access_token', response.data.access);
+          const accessToken = response.data.access
+            ? response.data.access
+            : response.data.token;
+          localStorage.setItem('access_token', accessToken);
           localStorage.setItem('refresh_token', response.data.refresh);
 
-          axiosInstance.defaults.headers.Authorization = `Bearer ${response.data.access}`;
-          originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
+          axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
           return axiosInstance(originalRequest);
         })

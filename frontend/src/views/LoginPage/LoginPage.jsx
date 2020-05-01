@@ -27,7 +27,7 @@ import styles from 'assets/jss/material-kit-react/views/loginPage';
 
 import background from 'assets/img/bg7.jpg';
 
-import { loginLdap } from 'api/loginApi';
+import { loginLdap, loginSocial } from 'api/loginApi';
 
 const useStyles = makeStyles(styles);
 
@@ -43,17 +43,26 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
 
   const { from } = location.state || { from: { pathname: '/' } };
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+  async function handleLogin(type, data) {
     setLoading(true);
 
-    try {
-      await loginLdap(loginDetails).then(() => {
-        setIsAuthenticated(true);
-        enqueueSnackbar('Sikeres bejelentkezés', {
-          variant: 'success',
-        });
+    function handleSuccess() {
+      setIsAuthenticated(true);
+      enqueueSnackbar('Sikeres bejelentkezés', {
+        variant: 'success',
       });
+    }
+
+    try {
+      if (type === 'ldap') {
+        await loginLdap(data).then(() => {
+          handleSuccess();
+        });
+      } else {
+        await loginSocial(type, data).then(() => {
+          handleSuccess();
+        });
+      }
     } catch (e) {
       enqueueSnackbar(e.message, {
         variant: 'error',
@@ -64,7 +73,13 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
       });
     } finally {
       setLoading(false);
+      history.replace('/login');
     }
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    handleLogin('ldap', loginDetails);
   }
 
   function handleChange(event) {
@@ -84,6 +99,15 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
       history.replace(from);
     }
   });
+
+  useEffect(() => {
+    const code = (location.search.match(/code=([^&]+)/) || [])[1];
+    const state = (location.search.match(/state=([^&]+)/) || [])[1];
+    if (code && ['authsch', 'facebook', 'google-oauth2'].includes(state)) {
+      setLoading(true);
+      handleLogin(state, decodeURIComponent(code));
+    }
+  }, []);
 
   return (
     <div>
@@ -111,31 +135,28 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                     <div className={classes.socialLine}>
                       <Button
                         justIcon
-                        href="#pablo"
-                        target="_blank"
+                        href={process.env.REACT_APP_AUTHSCH_OAUTH_URL}
+                        target="_self"
                         color="transparent"
                         disabled={loading}
-                        onClick={(e) => e.preventDefault()}
                       >
                         <i className="fas fa-graduation-cap" />
                       </Button>
                       <Button
                         justIcon
-                        href="#pablo"
-                        target="_blank"
+                        href={process.env.REACT_APP_FACEBOOK_OAUTH_URL}
+                        target="_self"
                         color="transparent"
                         disabled={loading}
-                        onClick={(e) => e.preventDefault()}
                       >
                         <i className="fab fa-facebook" />
                       </Button>
                       <Button
                         justIcon
-                        href="#pablo"
-                        target="_blank"
+                        href={process.env.REACT_APP_GOOGLE_OAUTH_URL}
+                        target="_self"
                         color="transparent"
                         disabled={loading}
-                        onClick={(e) => e.preventDefault()}
                       >
                         <i className="fab fa-google" />
                       </Button>
