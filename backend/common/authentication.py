@@ -6,6 +6,8 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_social_auth.serializers import JWTPairSerializer
+from rest_social_auth.views import SocialJWTPairOnlyAuthView
 from social_core.backends.oauth import BaseOAuth2
 
 
@@ -64,9 +66,36 @@ class ExtendedTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
+class ExtendedSocialJWTPairOnlyAuthSerializer(JWTPairSerializer):
+    """ Extended JWT Token serializer with user permissions and groups (Social) """
+
+    def get_token(self, user):
+        if not user.is_active:
+            raise NotAuthenticated(detail='User is not active')
+
+        token = self.get_token_instance().access_token
+
+        # Add custom claims
+        token['name'] = f'{user.last_name} {user.first_name}'
+        if not user.is_staff or not user.is_superuser:
+            token['role'] = 'user'
+        elif not user.is_superuser:
+            token['role'] = 'staff'
+        else:
+            token['role'] = 'admin'
+        token['groups'] = list(user.groups.values_list('name', flat=True))
+
+        return str(token)
+
+
 class ExtendedTokenObtainPairView(TokenObtainPairView):
     """ View for extended JWT serializer """
     serializer_class = ExtendedTokenObtainPairSerializer
+
+
+class ExtendedSocialJWTPairOnlyAuthView(SocialJWTPairOnlyAuthView):
+    """ View for extended JWT serializer (Social) """
+    serializer_class = ExtendedSocialJWTPairOnlyAuthSerializer
 
 
 class RefreshTokenSerializer(serializers.Serializer):

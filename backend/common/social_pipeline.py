@@ -11,6 +11,12 @@ def check_for_email(backend, uid, user=None, *args, **kwargs):
         raise ValidationError('Email was not provided by OAuth provider.')
 
 
+def set_user_active_when_first_logs_in(backend, uid, user=None, *args, **kwargs):
+    if user and not backend.strategy.storage.user.get_social_auth_for_user(user):
+        user.is_active = True
+        user.save()
+
+
 def add_phone_number_to_profile(backend, uid, user=None, *args, **kwargs):
     if kwargs['details'].get('mobile'):
         user.userprofile.phone_number = kwargs['details'].get('mobile')

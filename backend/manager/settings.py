@@ -223,7 +223,8 @@ SOCIAL_AUTH_AUTHSCH_SECRET = config('AUTH_SCH_CLIENT_SECRET')
 
 # For most OAuth providers the redirect URL in frontend and backend should match (e.g.: Facebook)
 # More information: https://github.com/st4lk/django-rest-social-auth#settings
-REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI = 'https://localhost:3000/'
+REST_SOCIAL_OAUTH_REDIRECT_URI = '/login'
+REST_SOCIAL_DOMAIN_FROM_ORIGIN = DEBUG
 
 SOCIAL_AUTH_PIPELINE = (
     # Custom action: Do not compare current user with new one.
@@ -261,6 +262,10 @@ SOCIAL_AUTH_PIPELINE = (
     # Associates the current social details with another user account with
     # a similar email address. Disabled by default.
     'social_core.pipeline.social_auth.associate_by_email',
+
+    # Custom action: If the user already exists check if this is the first login
+    # If so set the user to active.
+    'common.social_pipeline.set_user_active_when_first_logs_in',
 
     # Create a user account if we haven't found one yet.
     'social_core.pipeline.user.create_user',

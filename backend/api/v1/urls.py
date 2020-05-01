@@ -4,9 +4,9 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework_simplejwt.views import TokenRefreshView
-from rest_social_auth import views
 
-from common.authentication import ExtendedTokenObtainPairView, LogoutAndBlacklistRefreshTokenView
+from common.authentication import ExtendedTokenObtainPairView, LogoutAndBlacklistRefreshTokenView, \
+    ExtendedSocialJWTPairOnlyAuthView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -29,7 +29,7 @@ urlpatterns = [
     path('login/refresh', TokenRefreshView.as_view(), name='login_refresh_jwt_token'),
     path('logout', LogoutAndBlacklistRefreshTokenView.as_view(), name='logout'),
     url(r'^login/social/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$',
-        views.SocialJWTPairOnlyAuthView.as_view(),
+        ExtendedSocialJWTPairOnlyAuthView.as_view(),
         name='login_social_obtain_jwt_pair'),
     path('users/', include('api.v1.users.urls')),
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
