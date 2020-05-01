@@ -107,7 +107,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
       setLoading(true);
       handleLogin(state, decodeURIComponent(code));
     }
-  }, []);
+  }, [location.search]);
 
   return (
     <div>
