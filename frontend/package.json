@@ -14,7 +14,7 @@
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "jwt-decode": "^2.2.0",
-    "moment": "^2.24.0",
+    "moment": "^2.25.0",
     "node-sass": "^4.14.0",
     "notistack": "^0.9.11",
     "prop-types": "^15.7.2",
