@@ -7,8 +7,8 @@ export async function createRequest(requestData) {
   return axiosInstance.post('/requests', requestData);
 }
 
-export async function listRequests() {
-  return axiosInstance.get('/requests');
+export async function listRequests(page) {
+  return axiosInstance.get(`/requests?page=${page}`);
 }
 
 export async function getRequest(requestId) {
