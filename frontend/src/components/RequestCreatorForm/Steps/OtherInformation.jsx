@@ -40,7 +40,7 @@ const OtherInformation = ({
                 variant="outlined"
                 fullWidth
                 multiline
-                rows={8}
+                rows={10}
                 placeholder="További fontos információk (esemény menetrendje időpontokkal, különleges igények, stb)"
               />
             </GridItem>

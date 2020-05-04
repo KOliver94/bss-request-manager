@@ -64,26 +64,6 @@ export default function RequestCreatorPage({
   const [formData, setFormData] = useState(formInitialState);
   const [loading, setLoading] = useState(true);
 
-  async function loadAuthenticatedUser() {
-    if (isAuthenticated) {
-      setLoading(true);
-      try {
-        getUserMe().then((result) => {
-          const newData = {
-            requester_first_name: result.data.first_name,
-            requester_last_name: result.data.last_name,
-            requester_email: result.data.email,
-            requester_mobile: result.data.userprofile.phone_number,
-          };
-          setFormData({ ...formData, ...newData });
-          setLoading(false);
-        });
-      } catch (e) {
-        setLoading(false);
-      }
-    }
-  }
-
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };
@@ -93,26 +73,49 @@ export default function RequestCreatorPage({
   };
 
   const handleReset = () => {
-    setActiveStep(0);
-    setFormData(formInitialState);
-    loadAuthenticatedUser();
+    window.location.reload();
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
-      createRequest(formData).then(() => {
+      await createRequest(formData).then(() => {
         handleNext();
+        setLoading(false);
       });
     } catch (e) {
       enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
         variant: 'error',
+        autoHideDuration: 5000,
       });
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadAuthenticatedUser();
-  }, []);
+    async function loadUserData() {
+      try {
+        await getUserMe().then((result) => {
+          const newData = {
+            requester_first_name: result.data.first_name,
+            requester_last_name: result.data.last_name,
+            requester_email: result.data.email,
+            requester_mobile: result.data.userprofile.phone_number,
+          };
+          setFormData((prevState) => ({ ...prevState, ...newData }));
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (isAuthenticated) {
+      setLoading(true);
+      loadUserData();
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
 
   return (
     <div>
@@ -168,7 +171,14 @@ export default function RequestCreatorPage({
               </Stepper>
             </GridItem>
           </GridContainer>
-          {!loading ? (
+          {loading && activeStep === 0 ? (
+            <GridContainer justify="center">
+              <CircularProgress
+                className={classes.circularProgress}
+                size={60}
+              />
+            </GridContainer>
+          ) : (
             <>
               <GridContainer justify="center">
                 <GridItem xs={12} sm={12} md={6} className={classes.contentBox}>
@@ -187,10 +197,24 @@ export default function RequestCreatorPage({
                     <>
                       {activeStep === steps.length - 1 && (
                         <>
-                          <Button onClick={handleBack}>Vissza</Button>
-                          <Button onClick={handleSubmit} color="success">
-                            Küldés
-                          </Button>
+                          <div className={classes.wrapper}>
+                            <Button onClick={handleBack} disabled={loading}>
+                              Vissza
+                            </Button>
+                            <Button
+                              onClick={handleSubmit}
+                              color="success"
+                              disabled={loading}
+                            >
+                              Küldés
+                            </Button>
+                            {loading && (
+                              <CircularProgress
+                                size={24}
+                                className={classes.buttonProgress}
+                              />
+                            )}
+                          </div>
                         </>
                       )}
                     </>
@@ -204,13 +228,6 @@ export default function RequestCreatorPage({
                 </GridItem>
               </GridContainer>
             </>
-          ) : (
-            <GridContainer justify="center">
-              <CircularProgress
-                className={classes.circularProgress}
-                size={60}
-              />
-            </GridContainer>
           )}
         </div>
       </div>

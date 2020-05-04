@@ -5,7 +5,7 @@ import {
   successColor,
 } from 'assets/jss/material-kit-react';
 
-const landingPageStyle = {
+const requestCreatorPage = {
   container: {
     zIndex: '12',
     color: '#FFFFFF',
@@ -67,6 +67,17 @@ const landingPageStyle = {
     margin: '50px 30px',
     color: primaryColor,
   },
+  wrapper: {
+    position: 'relative',
+  },
+  buttonProgress: {
+    color: primaryColor,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: '40px',
+  },
 };
 
-export default landingPageStyle;
+export default requestCreatorPage;
