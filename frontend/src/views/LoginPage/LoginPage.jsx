@@ -71,9 +71,9 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
           horizontal: 'center',
         },
       });
+      history.replace('/login');
     } finally {
       setLoading(false);
-      history.replace('/login');
     }
   }
 

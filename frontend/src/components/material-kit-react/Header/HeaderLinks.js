@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // react components for routing our app without refresh
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
@@ -44,6 +45,7 @@ export default function HeaderLinks({
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const location = useLocation();
 
   async function handleLogout(event) {
     event.preventDefault();
@@ -103,7 +105,10 @@ export default function HeaderLinks({
         </ListItem>
       ) : (
         <ListItem className={classes.listItem}>
-          <Link to="/login" className={classes.navReactRouterLink}>
+          <Link
+            to={{ pathname: '/login', state: { from: location.pathname } }}
+            className={classes.navReactRouterLink}
+          >
             <Button color="transparent" className={classes.navLink}>
               <LockOutlinedIcon className={classes.icons} /> Bejelentkezés
             </Button>
