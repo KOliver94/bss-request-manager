@@ -39,6 +39,7 @@ const AdminButton = () => {
 export default function HeaderLinks({
   isAuthenticated = false,
   setIsAuthenticated,
+  hideNewRequest = false,
 }) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
@@ -110,14 +111,18 @@ export default function HeaderLinks({
         </ListItem>
       )}
 
-      <ListItem className={classes.listItem}>
-        <Link to="/new-request" className={classes.navReactRouterLink}>
-          <Button color="primary" className={classes.navLinkMain}>
-            <SendRoundedIcon className={classes.icons} />
-            Felkérés beküldése
-          </Button>
-        </Link>
-      </ListItem>
+      {hideNewRequest ? (
+        <></>
+      ) : (
+        <ListItem className={classes.listItem}>
+          <Link to="/new-request" className={classes.navReactRouterLink}>
+            <Button color="primary" className={classes.navLinkMain}>
+              <SendRoundedIcon className={classes.icons} />
+              Felkérés beküldése
+            </Button>
+          </Link>
+        </ListItem>
+      )}
     </List>
   );
 }

@@ -85,7 +85,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
     comments = CommentFilteredSerializer(many=True, read_only=True)
     requester = UserSerializer(read_only=True)
     responsible = UserSerializer(read_only=True)
-    comment_text = CharField(write_only=True, required=False)
+    comment_text = CharField(write_only=True, required=False, allow_blank=True)
 
     class Meta:
         model = Request
