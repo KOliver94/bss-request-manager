@@ -32,9 +32,6 @@ import { updateRequestAdmin, deleteRequestAdmin } from 'api/requestAdminApi';
 import { requestEnumConverter } from 'api/enumConverter';
 
 const useStyles = makeStyles(() => ({
-  flex: {
-    display: 'flex',
-  },
   title: {
     padding: '10px 15px',
   },
@@ -137,7 +134,7 @@ export default function BasicInformation({
         >
           <Grid item>
             <Typography variant="h6" className={classes.title}>
-              Alapinformációk{' '}
+              Alapinformációk
             </Typography>
           </Grid>
           <Grid item>
@@ -316,6 +313,6 @@ BasicInformation.propTypes = {
   requestId: PropTypes.string.isRequired,
   requestData: PropTypes.object.isRequired,
   setRequestData: PropTypes.func.isRequired,
-  staffMembers: PropTypes.object.isRequired,
+  staffMembers: PropTypes.array.isRequired,
   isAdmin: PropTypes.bool.isRequired,
 };
