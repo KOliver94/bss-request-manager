@@ -69,7 +69,7 @@ export default function Footer(props) {
           </List>
         </div>
         <div className={classes.right}>
-          &copy; {1900 + new Date().getYear()} , Budavári Schönherz Stúdió
+          &copy; {1900 + new Date().getYear()}, Budavári Schönherz Stúdió
         </div>
       </div>
     </footer>

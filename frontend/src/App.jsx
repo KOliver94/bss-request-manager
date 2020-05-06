@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import AuthenticatedRouter from './components/AuthenticatedRoute';
+import AuthenticatedRoute from './components/AuthenticatedRoute';
+import AdminRoute from './components/AdminRoute';
 
 import PageNotFound from './views/PageNotFound/PageNotFound';
 import LandingPage from './views/LandingPage/LandingPage';
 import LoginPage from './views/LoginPage/LoginPage';
 import RequestCreatorPage from './views/RequestCreatorPage/RequestCreatorPage';
 import MyRequestsPage from './views/MyRequestsPage/MyRequestsPage';
+import RequestDetailPage from './views/RequestDetailPage/RequestDetailPage';
 
 import 'assets/scss/material-kit-react.scss';
 
@@ -36,12 +38,36 @@ function App() {
             setIsAuthenticated={setIsAuthenticated}
           />
         </Route>
-        <AuthenticatedRouter exact path="/my-requests">
+        <AuthenticatedRoute exact path="/my-requests">
           <MyRequestsPage
             isAuthenticated={isAuthenticated}
             setIsAuthenticated={setIsAuthenticated}
           />
-        </AuthenticatedRouter>
+        </AuthenticatedRoute>
+        <AuthenticatedRoute exact path="/my-requests/:id">
+          <RequestDetailPage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </AuthenticatedRoute>
+        <AuthenticatedRoute exact path="/admin/requests">
+          <AdminRoute>
+            <MyRequestsPage
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+              isAdmin
+            />
+          </AdminRoute>
+        </AuthenticatedRoute>
+        <AuthenticatedRoute exact path="/admin/requests/:id">
+          <AdminRoute>
+            <RequestDetailPage
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+              isAdmin
+            />
+          </AdminRoute>
+        </AuthenticatedRoute>
         <Route component={PageNotFound} />
       </Switch>
     </Router>

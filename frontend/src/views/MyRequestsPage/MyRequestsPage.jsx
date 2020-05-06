@@ -31,6 +31,7 @@ import { useSnackbar } from 'notistack';
 import { format } from 'date-fns';
 // API calls
 import { listRequests } from 'api/requestApi';
+import { listRequestsAdmin } from 'api/requestAdminApi';
 import { requestEnumConverter } from 'api/enumConverter';
 
 import styles from 'assets/jss/material-kit-react/views/myRequestsPage';
@@ -40,6 +41,7 @@ const useStyles = makeStyles(styles);
 export default function MyRequestsPage({
   isAuthenticated,
   setIsAuthenticated,
+  isAdmin,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -48,10 +50,14 @@ export default function MyRequestsPage({
 
   async function loadData(pageNumber) {
     try {
-      await listRequests(pageNumber).then((result) => {
-        setData(result.data);
-        setLoading(false);
-      });
+      let result;
+      if (isAdmin) {
+        result = await listRequestsAdmin(pageNumber);
+      } else {
+        result = await listRequests(pageNumber);
+      }
+      setData(result.data);
+      setLoading(false);
     } catch (e) {
       enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
         variant: 'error',
@@ -121,7 +127,11 @@ export default function MyRequestsPage({
                           {data.results.map((item) => (
                             <TableRow
                               component={Link}
-                              to={`/my-requests/${item.id}`}
+                              to={
+                                isAdmin
+                                  ? `/admin/requests/${item.id}`
+                                  : `/my-requests/${item.id}`
+                              }
                               key={item.id}
                               hover
                             >
@@ -176,4 +186,9 @@ export default function MyRequestsPage({
 MyRequestsPage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   setIsAuthenticated: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool,
+};
+
+MyRequestsPage.defaultProps = {
+  isAdmin: false,
 };

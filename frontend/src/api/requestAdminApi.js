@@ -3,44 +3,44 @@ import axiosInstance from './apiUtils';
 /*
  * Requests API calls
  */
-export async function createRequest(requestData) {
+export async function createRequestAdmin(requestData) {
   return axiosInstance.post('/admin/requests', requestData);
 }
 
-export async function listRequests(page) {
+export async function listRequestsAdmin(page) {
   return axiosInstance.get(`admin/requests?page=${page}`);
 }
 
-export async function getRequest(requestId) {
+export async function getRequestAdmin(requestId) {
   return axiosInstance.get(`/admin/requests/${requestId}`);
 }
 
-export async function updateRequest(requestId, requestData) {
+export async function updateRequestAdmin(requestId, requestData) {
   return axiosInstance.patch(`/admin/requests/${requestId}`, requestData);
 }
 
-export async function deleteRequest(requestId) {
+export async function deleteRequestAdmin(requestId) {
   return axiosInstance.delete(`/admin/requests/${requestId}`);
 }
 
 /*
  * Comments API calls
  */
-export async function createComment(requestId, commentData) {
+export async function createCommentAdmin(requestId, commentData) {
   return axiosInstance.post(
     `/admin/requests/${requestId}/comments`,
     commentData
   );
 }
 
-export async function updateComment(requestId, commentId, commentData) {
+export async function updateCommentAdmin(requestId, commentId, commentData) {
   return axiosInstance.patch(
     `/admin/requests/${requestId}/comments/${commentId}`,
     commentData
   );
 }
 
-export async function deleteComment(requestId, commentId) {
+export async function deleteCommentAdmin(requestId, commentId) {
   return axiosInstance.delete(
     `/admin/requests/${requestId}/comments/${commentId}`
   );
@@ -49,36 +49,36 @@ export async function deleteComment(requestId, commentId) {
 /*
  * Crew API calls
  */
-export async function createCrew(requestId, crewData) {
+export async function createCrewAdmin(requestId, crewData) {
   return axiosInstance.post(`/admin/requests/${requestId}/crew`, crewData);
 }
 
-export async function updateCrew(requestId, crewtId, crewData) {
+export async function updateCrewAdmin(requestId, crewtId, crewData) {
   return axiosInstance.patch(
     `/admin/requests/${requestId}/crew/${crewtId}`,
     crewData
   );
 }
 
-export async function deleteCrew(requestId, crewtId) {
+export async function deleteCrewAdmin(requestId, crewtId) {
   return axiosInstance.delete(`/admin/requests/${requestId}/crew/${crewtId}`);
 }
 
 /*
  * Videos API calls
  */
-export async function createVideo(requestId, videoData) {
+export async function createVideoAdmin(requestId, videoData) {
   return axiosInstance.post(`/admin/requests/${requestId}`, videoData);
 }
 
-export async function updateVideo(requestId, videoId, videoData) {
+export async function updateVideoAdmin(requestId, videoId, videoData) {
   return axiosInstance.patch(
     `/admin/requests/${requestId}/videos/${videoId}`,
     videoData
   );
 }
 
-export async function deleteVideo(requestId, videoId) {
+export async function deleteVideoAdmin(requestId, videoId) {
   return axiosInstance.delete(`/admin/requests/${requestId}/videos/${videoId}`);
 }
 
@@ -86,21 +86,26 @@ export async function deleteVideo(requestId, videoId) {
  * Ratings API calls
  */
 
-export async function createRating(requestId, videoId, ratingData) {
+export async function createRatingAdmin(requestId, videoId, ratingData) {
   return axiosInstance.post(
     `/admin/requests/${requestId}/videos/${videoId}/ratings`,
     ratingData
   );
 }
 
-export async function updateRating(requestId, videoId, ratingId, ratingData) {
+export async function updateRatingAdmin(
+  requestId,
+  videoId,
+  ratingId,
+  ratingData
+) {
   return axiosInstance.patch(
     `/admin/requests/${requestId}/videos/${videoId}/ratings/${ratingId}`,
     ratingData
   );
 }
 
-export async function deleteRating(requestId, videoId, ratingId) {
+export async function deleteRatingAdmin(requestId, videoId, ratingId) {
   return axiosInstance.delete(
     `/admin/requests/${requestId}/videos/${videoId}/ratings/${ratingId}`
   );

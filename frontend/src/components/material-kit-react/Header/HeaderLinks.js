@@ -29,7 +29,7 @@ const AdminButton = () => {
   const classes = useStyles();
   if (isAdminOrStaff()) {
     return (
-      <Link to="/admin" className={classes.dropdownLink}>
+      <Link to="/admin/requests" className={classes.dropdownLink}>
         <i className="fas fa-tools"></i> Admin
       </Link>
     );

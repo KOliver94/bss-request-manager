@@ -14,6 +14,7 @@ async function handleLogin(response) {
   const decoded = jwtDecode(accessToken);
   localStorage.setItem('name', decoded.name);
   localStorage.setItem('role', decoded.role);
+  localStorage.setItem('user_id', decoded.user_id);
   return response;
 }
 
@@ -56,6 +57,7 @@ export async function logoutUser() {
       localStorage.removeItem('refresh_token');
       localStorage.removeItem('name');
       localStorage.removeItem('role');
+      localStorage.removeItem('user_id');
     });
 }
 
