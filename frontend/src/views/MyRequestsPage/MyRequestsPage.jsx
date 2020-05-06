@@ -95,7 +95,9 @@ export default function MyRequestsPage({
         <div className={classes.container}>
           <GridContainer justify="center">
             <GridItem xs={12} sm={12} md={6} className={classes.textCenter}>
-              <h1 className={classes.title}>Felkéréseim</h1>
+              <h1 className={classes.title}>
+                {isAdmin ? 'Felkérések' : 'Felkéréseim'}
+              </h1>
             </GridItem>
           </GridContainer>
         </div>
