@@ -19,6 +19,7 @@ import Parallax from 'components/material-kit-react/Parallax/Parallax';
 import { useSnackbar } from 'notistack';
 // Page components
 import BasicInformation from 'components/RequestDetails/BasicInformation';
+import Comments from 'components/RequestDetails/Comments';
 // API calls
 import { getRequest } from 'api/requestApi';
 import { getRequestAdmin } from 'api/requestAdminApi';
@@ -133,6 +134,14 @@ export default function RequestDetailPage({
                     requestData={data}
                     setRequestData={setData}
                     staffMembers={staffMembers}
+                    isAdmin={isAdmin}
+                  />
+                </GridItem>
+                <GridItem xs={12} className={classes.textColor}>
+                  <Comments
+                    requestId={id}
+                    requestData={data}
+                    setRequestData={setData}
                     isAdmin={isAdmin}
                   />
                 </GridItem>
