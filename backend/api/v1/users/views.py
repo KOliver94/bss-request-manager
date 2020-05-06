@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework.exceptions import NotAuthenticated
 
+from api.v1.users.serializers import UserSerializer, UserProfileSerializer
 from common.permissions import IsSelfOrStaff, IsSelfOrAdmin, IsStaffUser
-from common.serializers import UserSerializer, UserProfileSerializer
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -53,6 +53,7 @@ class StaffUserListView(generics.ListAPIView):
     """
     serializer_class = UserSerializer
     permission_classes = [IsStaffUser]
+    pagination_class = None
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):

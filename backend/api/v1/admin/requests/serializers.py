@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.fields import IntegerField, CharField
 
-from common.serializers import UserSerializer
+from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event
 from video_requests.emails import email_user_new_comment, email_crew_new_comment
 from video_requests.models import Request, Video, CrewMember, Rating, Comment

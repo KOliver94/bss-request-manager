@@ -235,7 +235,7 @@ export default function BasicInformation({
                         id: 'responsible_id',
                       }}
                     >
-                      {staffMembers.results.map((item) => (
+                      {staffMembers.map((item) => (
                         <MenuItem value={item.id} key={item.id}>
                           {`${item.last_name} ${item.first_name}`}{' '}
                         </MenuItem>

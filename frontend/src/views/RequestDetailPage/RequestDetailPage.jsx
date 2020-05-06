@@ -51,7 +51,7 @@ export default function RequestDetailPage({
     videos: [],
     comments: [],
   });
-  const [staffMembers, setStaffMembers] = useState({ results: [] });
+  const [staffMembers, setStaffMembers] = useState([]);
 
   useEffect(() => {
     async function loadData(requestId) {
@@ -76,7 +76,7 @@ export default function RequestDetailPage({
     }
 
     loadData(id);
-  }, [id, enqueueSnackbar]);
+  }, [id, isAdmin, enqueueSnackbar]);
 
   return (
     <div>
