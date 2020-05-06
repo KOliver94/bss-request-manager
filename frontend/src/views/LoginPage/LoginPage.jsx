@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // @material-ui/core components
@@ -43,52 +43,55 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
 
   const { from } = location.state || { from: { pathname: '/' } };
 
-  async function handleLogin(type, data) {
-    setLoading(true);
+  const handleLogin = useCallback(
+    async (type, data) => {
+      setLoading(true);
 
-    function handleSuccess() {
-      setIsAuthenticated(true);
-      enqueueSnackbar('Sikeres bejelentkezés', {
-        variant: 'success',
-      });
-    }
+      const handleSuccess = () => {
+        setIsAuthenticated(true);
+        enqueueSnackbar('Sikeres bejelentkezés', {
+          variant: 'success',
+        });
+      };
 
-    try {
-      if (type === 'ldap') {
-        await loginLdap(data).then(() => {
-          handleSuccess();
+      try {
+        if (type === 'ldap') {
+          await loginLdap(data).then(() => {
+            handleSuccess();
+          });
+        } else {
+          await loginSocial(type, data).then(() => {
+            handleSuccess();
+          });
+        }
+      } catch (e) {
+        enqueueSnackbar(e.message, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
         });
-      } else {
-        await loginSocial(type, data).then(() => {
-          handleSuccess();
-        });
+        history.replace('/login');
+      } finally {
+        setLoading(false);
       }
-    } catch (e) {
-      enqueueSnackbar(e.message, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'center',
-        },
-      });
-      history.replace('/login');
-    } finally {
-      setLoading(false);
-    }
-  }
+    },
+    [enqueueSnackbar, history, setIsAuthenticated]
+  );
 
-  function handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
     handleLogin('ldap', loginDetails);
-  }
+  };
 
-  function handleChange(event) {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setloginDetails((prevLoginDetails) => ({
       ...prevLoginDetails,
       [name]: value,
     }));
-  }
+  };
 
   setTimeout(() => {
     setCardAnimation('');
@@ -107,7 +110,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
       setLoading(true);
       handleLogin(state, decodeURIComponent(code));
     }
-  }, [location.search]);
+  }, [location.search, handleLogin]);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
@@ -48,31 +48,34 @@ export default function MyRequestsPage({
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ results: [], total_pages: 0 });
 
-  async function loadData(pageNumber) {
-    try {
-      let result;
-      if (isAdmin) {
-        result = await listRequestsAdmin(pageNumber);
-      } else {
-        result = await listRequests(pageNumber);
+  const loadData = useCallback(
+    async (pageNumber) => {
+      try {
+        let result;
+        if (isAdmin) {
+          result = await listRequestsAdmin(pageNumber);
+        } else {
+          result = await listRequests(pageNumber);
+        }
+        setData(result.data);
+        setLoading(false);
+      } catch (e) {
+        enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
+          variant: 'error',
+          autoHideDuration: 5000,
+        });
       }
-      setData(result.data);
-      setLoading(false);
-    } catch (e) {
-      enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
-        variant: 'error',
-        autoHideDuration: 5000,
-      });
-    }
-  }
+    },
+    [enqueueSnackbar, isAdmin]
+  );
 
-  function handlePageChange(event, page) {
+  const handlePageChange = (page) => {
     loadData(page);
-  }
+  };
 
   useEffect(() => {
     loadData(1);
-  }, []);
+  }, [loadData]);
 
   return (
     <div>
