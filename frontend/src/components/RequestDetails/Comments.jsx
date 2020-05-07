@@ -152,7 +152,7 @@ export default function BasicInformation({
         </Grid>
       </div>
       <Divider variant="middle" />
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={2}>
         {requestData.comments.length > 0 && (
           <>
             {requestData.comments.map((comment) => (

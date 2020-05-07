@@ -159,7 +159,7 @@ export default function BasicInformation({
         </Grid>
       </div>
       <Divider variant="middle" />
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={2}>
         {editing ? (
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={hu}>
             <Formik
