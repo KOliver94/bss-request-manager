@@ -26,9 +26,10 @@ def get_responsible_from_id(validated_data):
 
 
 def get_member_from_id(validated_data):
-    member_id = validated_data.pop('member_id')
-    member = User.objects.get(id=member_id)
-    validated_data['member'] = member
+    if 'member_id' in validated_data:
+        member_id = validated_data.pop('member_id')
+        member = User.objects.get(id=member_id)
+        validated_data['member'] = member
 
 
 def check_and_remove_unauthorized_additional_data(additional_data, user):
