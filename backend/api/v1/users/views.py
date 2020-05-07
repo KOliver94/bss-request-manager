@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.exceptions import NotAuthenticated
 
 from api.v1.users.serializers import UserSerializer, UserProfileSerializer
@@ -54,6 +54,9 @@ class StaffUserListView(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsStaffUser]
     pagination_class = None
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['id', 'last_name', 'first_name']
+    ordering = ['last_name']
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
