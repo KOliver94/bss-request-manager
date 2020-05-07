@@ -11,6 +11,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 // Form components
 import { Formik, Form, Field } from 'formik';
@@ -35,8 +36,9 @@ const useStyles = makeStyles(() => ({
   title: {
     padding: '10px 15px',
   },
-  dataBox: {
+  paper: {
     padding: '15px',
+    margin: '16px',
   },
 }));
 
@@ -159,7 +161,7 @@ export default function BasicInformation({
         </Grid>
       </div>
       <Divider variant="middle" />
-      <div className={classes.dataBox}>
+      <Paper className={classes.paper}>
         {editing ? (
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={hu}>
             <Formik
@@ -304,7 +306,7 @@ export default function BasicInformation({
             </p>
           </>
         )}
-      </div>
+      </Paper>
     </div>
   );
 }
