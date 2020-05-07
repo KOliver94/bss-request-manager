@@ -122,11 +122,11 @@ export default function BasicInformation({
     }
   };
 
-  const handleEditing = async (commentId) => {
+  const handleEdit = (commentId) => {
     setEditingCommentId(commentId);
   };
 
-  const handleCancel = async () => {
+  const handleCancel = () => {
     setEditingCommentId(0);
   };
 
@@ -288,7 +288,7 @@ export default function BasicInformation({
                         </Grid>
                         <Grid item key={`${comment.id}-edit`}>
                           <IconButton
-                            onClick={() => handleEditing(comment.id)}
+                            onClick={() => handleEdit(comment.id)}
                             disabled={loading}
                           >
                             <EditIcon />
