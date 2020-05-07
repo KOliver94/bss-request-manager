@@ -6,9 +6,12 @@ import classNames from 'classnames';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Face from '@material-ui/icons/Face';
+import TheatersIcon from '@material-ui/icons/Theaters';
 // background
 import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
+import CustomTabs from 'components/material-kit-react/CustomTabs/CustomTabs';
 import Header from 'components/material-kit-react/Header/Header';
 import Footer from 'components/material-kit-react/Footer/Footer';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
@@ -54,6 +57,32 @@ export default function RequestDetailPage({
     comments: [],
   });
   const [staffMembers, setStaffMembers] = useState([]);
+
+  const tabsContent = () => {
+    const content = [
+      {
+        tabName: 'Videók',
+        tabIcon: TheatersIcon,
+        tabContent: <p>Videos</p>,
+      },
+    ];
+    if (isAdmin) {
+      content.unshift({
+        tabName: 'Stáb',
+        tabIcon: Face,
+        tabContent: (
+          <Crew
+            requestId={id}
+            requestData={data}
+            setRequestData={setData}
+            staffMembers={staffMembers}
+            isAdmin={isAdmin}
+          />
+        ),
+      });
+    }
+    return content;
+  };
 
   useEffect(() => {
     async function loadData(requestId) {
@@ -130,12 +159,10 @@ export default function RequestDetailPage({
                   />
                 </GridItem>
                 <GridItem xs={12} sm={6} className={classes.textColor}>
-                  <Crew
-                    requestId={id}
-                    requestData={data}
-                    setRequestData={setData}
-                    staffMembers={staffMembers}
-                    isAdmin={isAdmin}
+                  <CustomTabs
+                    headerColor="primary"
+                    tabs={tabsContent()}
+                    activeTab={isAdmin && data.status > 4 ? 1 : 0}
                   />
                 </GridItem>
                 <GridItem xs={12} className={classes.textColor}>

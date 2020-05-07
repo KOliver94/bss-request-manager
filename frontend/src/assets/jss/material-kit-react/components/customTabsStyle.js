@@ -1,4 +1,9 @@
 const customTabsStyle = {
+  card: {
+    marginLeft: '16px',
+    marginRight: '16px',
+    width: 'auto',
+  },
   cardTitle: {
     float: 'left',
     padding: '10px 10px 10px 0px',

@@ -19,19 +19,19 @@ import styles from 'assets/jss/material-kit-react/components/customTabsStyle.js'
 const useStyles = makeStyles(styles);
 
 export default function CustomTabs(props) {
-  const [value, setValue] = React.useState(0);
+  const { headerColor, plainTabs, tabs, title, rtlActive, activeTab } = props;
+  const [value, setValue] = React.useState(activeTab);
 
   const handleChange = (event, value) => {
     setValue(value);
   };
   const classes = useStyles();
-  const { headerColor, plainTabs, tabs, title, rtlActive } = props;
   const cardTitle = classNames({
     [classes.cardTitle]: true,
     [classes.cardTitleRTL]: rtlActive,
   });
   return (
-    <Card plain={plainTabs}>
+    <Card plain={plainTabs} className={classes.card}>
       <CardHeader color={headerColor} plain={plainTabs}>
         {title !== undefined ? <div className={cardTitle}>{title}</div> : null}
         <Tabs
@@ -101,4 +101,9 @@ CustomTabs.propTypes = {
   ),
   rtlActive: PropTypes.bool,
   plainTabs: PropTypes.bool,
+  activeTab: PropTypes.number,
+};
+
+CustomTabs.defaultProps = {
+  activeTab: 0,
 };

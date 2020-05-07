@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // Material UI components
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Divider from '@material-ui/core/Divider';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Fab from '@material-ui/core/Fab';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -34,16 +31,19 @@ import {
 } from 'api/requestAdminApi';
 
 const useStyles = makeStyles(() => ({
-  title: {
-    padding: '10px 15px',
-  },
-  paper: {
-    padding: '15px',
-    margin: '16px',
+  table: {
+    marginBottom: '25px',
     width: 'auto',
   },
   inputField: {
     marginTop: '24px',
+  },
+  fab: {
+    top: 'auto',
+    right: '10px',
+    bottom: '10px',
+    left: 'auto',
+    position: 'absolute',
   },
 }));
 
@@ -130,29 +130,8 @@ export default function Crew({
   if (isAdmin) {
     return (
       <div>
-        <div>
-          <Grid
-            container
-            spacing={1}
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-          >
-            <Grid item>
-              <Typography variant="h6" className={classes.title}>
-                Stábtagok
-              </Typography>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={handleDialogOpen} disabled={loading}>
-                <AddIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </div>
-        <Divider variant="middle" />
         {requestData.crew.length > 0 && (
-          <TableContainer component={Paper} className={classes.paper}>
+          <TableContainer className={classes.table}>
             <Table>
               <TableBody>
                 {requestData.crew.map((crewMember) => (
@@ -210,6 +189,9 @@ export default function Crew({
             </Table>
           </TableContainer>
         )}
+        <Fab color="primary" onClick={handleDialogOpen} className={classes.fab}>
+          <AddIcon />
+        </Fab>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
           <DialogTitle id="add-crew-dialog">Új stábtag hozzáadása</DialogTitle>
           <DialogContent>
