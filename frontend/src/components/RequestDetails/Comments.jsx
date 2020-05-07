@@ -8,7 +8,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import LockIcon from '@material-ui/icons/Lock';
 import EditIcon from '@material-ui/icons/Edit';
 import ClearIcon from '@material-ui/icons/Clear';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
@@ -283,7 +283,7 @@ export default function BasicInformation({
                             onClick={() => handleDelete(comment.id)}
                             disabled={loading}
                           >
-                            <DeleteForeverIcon />
+                            <DeleteIcon />
                           </IconButton>
                         </Grid>
                         <Grid item key={`${comment.id}-edit`}>
