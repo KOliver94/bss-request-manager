@@ -16,9 +16,7 @@ import { makeStyles } from '@material-ui/core/styles';
 // Form components
 import { Formik, Form, Field } from 'formik';
 import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import { Select, TextField } from 'formik-material-ui';
+import { TextField } from 'formik-material-ui';
 import { DateTimePicker } from 'formik-material-ui-pickers';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -225,22 +223,24 @@ export default function BasicInformation({
                     error={touched.type && errors.type}
                     helperText={touched.type && errors.type}
                   />
-                  <FormControl fullWidth variant="outlined">
-                    <InputLabel htmlFor="responsible_id">Felelős</InputLabel>
-                    <Field
-                      component={Select}
-                      name="responsible_id"
-                      inputProps={{
-                        id: 'responsible_id',
-                      }}
-                    >
-                      {staffMembers.map((item) => (
-                        <MenuItem value={item.id} key={item.id}>
-                          {`${item.last_name} ${item.first_name}`}{' '}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                  </FormControl>
+                  <Field
+                    name="responsible_id"
+                    label="Felelős"
+                    margin="normal"
+                    component={TextField}
+                    variant="outlined"
+                    defaultValue={
+                      requestData.responsible && requestData.responsible.id
+                    }
+                    fullWidth
+                    select
+                  >
+                    {staffMembers.map((item) => (
+                      <MenuItem value={item.id} key={item.id}>
+                        {`${item.last_name} ${item.first_name}`}
+                      </MenuItem>
+                    ))}
+                  </Field>
                 </Form>
               )}
             </Formik>
