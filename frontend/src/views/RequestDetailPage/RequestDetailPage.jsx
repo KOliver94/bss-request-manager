@@ -20,6 +20,7 @@ import { useSnackbar } from 'notistack';
 // Page components
 import BasicInformation from 'components/RequestDetails/BasicInformation';
 import Comments from 'components/RequestDetails/Comments';
+import Crew from 'components/RequestDetails/Crew';
 // API calls
 import { getRequest } from 'api/requestApi';
 import { getRequestAdmin } from 'api/requestAdminApi';
@@ -129,7 +130,7 @@ export default function RequestDetailPage({
                   />
                 </GridItem>
                 <GridItem xs={12} sm={6} className={classes.textColor}>
-                  <BasicInformation
+                  <Crew
                     requestId={id}
                     requestData={data}
                     setRequestData={setData}
