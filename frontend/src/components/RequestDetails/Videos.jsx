@@ -190,33 +190,18 @@ export default function Videos({
                 <Formik
                   initialValues={{
                     ...video,
-                    ...{
-                      additional_data: {
-                        editing_done: video.additional_data.editing_done
-                          ? video.additional_data.editing_done
-                          : false,
-                        coding: {
-                          website:
-                            video.additional_data.coding &&
-                            video.additional_data.coding.website
-                              ? video.additional_data.coding.website
-                              : false,
-                        },
-                        publishing: {
-                          website:
-                            video.additional_data.publishing &&
-                            video.additional_data.publishing.website
-                              ? video.additional_data.publishing.website
-                              : '',
-                        },
-                        archiving: {
-                          hq_archive:
-                            video.additional_data.archiving &&
-                            video.additional_data.archiving.hq_archive
-                              ? video.additional_data.archiving.hq_archive
-                              : false,
-                        },
+                    additional_data: {
+                      editing_done: false,
+                      coding: {
+                        website: false,
                       },
+                      publishing: {
+                        website: '',
+                      },
+                      archiving: {
+                        hq_archive: false,
+                      },
+                      ...video.additional_data,
                     },
                   }}
                   onSubmit={(values) => handleSubmit(values, video.id)}
@@ -321,8 +306,10 @@ export default function Videos({
                       <ExpansionPanelDetails>
                         <Typography>
                           Az elkészült videót itt tekintheted meg:{' '}
-                          {video.additional_data.publishing.website}
-                          /* TODO: Backend support needed */
+                          {
+                            video.additional_data.publishing.website
+                            /* TODO: Backend support needed */
+                          }
                         </Typography>
                       </ExpansionPanelDetails>
                     )}
