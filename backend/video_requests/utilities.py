@@ -51,7 +51,7 @@ def update_request_status(request, called_from_video=False):
         # If the recording is removed set the status
         if status == 6:
             if 'removed' in request.additional_data['recording']:
-                status = 6 if request.additional_data['recording']['removed'] is True else status
+                status = 7 if request.additional_data['recording']['removed'] is True else status
 
         # Set the request status to the final score
         request.status = status
@@ -86,7 +86,7 @@ def update_video_status(video, called_from_request=False):
         # Check if the video is published on the website
         if status == 4 and 'publishing' in video.additional_data:
             if 'website' in video.additional_data['publishing'] and \
-                    video.additional_data['publishing']['website'] is True:
+                    video.additional_data['publishing']['website']:
                 status = 5
                 # If the current status of the video is before published sent an e-mail to the requester
                 if video.status < 5:
