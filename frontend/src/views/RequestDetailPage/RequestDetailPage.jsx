@@ -171,7 +171,7 @@ export default function RequestDetailPage({
                   <CustomTabs
                     headerColor="primary"
                     tabs={tabsContent()}
-                    activeTab={isAdmin && data.status > 4 ? 1 : 0}
+                    activeTab={isAdmin && data.status >= 4 ? 1 : 0}
                   />
                 </GridItem>
                 <GridItem xs={12} className={classes.textColor}>

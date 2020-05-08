@@ -8,6 +8,15 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import BackupIcon from '@material-ui/icons/Backup';
+import CloudDoneIcon from '@material-ui/icons/CloudDone';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import DeleteIcon from '@material-ui/icons/Delete';
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
@@ -17,7 +26,7 @@ import Badge from 'components/material-kit-react/Badge/Badge';
 // Form components
 import { Formik, Form, Field } from 'formik';
 import MenuItem from '@material-ui/core/MenuItem';
-import { TextField } from 'formik-material-ui';
+import { TextField, CheckboxWithLabel } from 'formik-material-ui';
 import { DateTimePicker } from 'formik-material-ui-pickers';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -43,6 +52,18 @@ const useStyles = makeStyles(() => ({
     padding: '10px 15px',
     display: 'flex',
     alignSelf: 'center',
+  },
+  form: {
+    margin: 0,
+  },
+  formSection: {
+    padding: '15px 0px',
+  },
+  formSectionFirst: {
+    paddingBottom: '15px',
+  },
+  formSectionLast: {
+    paddingTop: '15px',
   },
 }));
 
@@ -177,78 +198,150 @@ export default function BasicInformation({
               innerRef={formRef}
             >
               {({ errors, touched }) => (
-                <Form>
-                  <Field
-                    name="title"
-                    label="Esemény neve"
-                    margin="normal"
-                    component={TextField}
-                    variant="outlined"
-                    fullWidth
-                    error={touched.title && errors.title}
-                    helperText={touched.title && errors.title}
-                  />
-                  <Field
-                    name="start_datetime"
-                    label="Kezdés időpontja"
-                    margin="normal"
-                    component={DateTimePicker}
-                    inputVariant="outlined"
-                    value=""
-                    ampm={false}
-                    fullWidth
-                    error={touched.start_datetime && errors.start_datetime}
-                    helperText={touched.start_datetime && errors.start_datetime}
-                  />
-                  <Field
-                    name="end_datetime"
-                    label="Várható befejezés"
-                    margin="normal"
-                    component={DateTimePicker}
-                    inputVariant="outlined"
-                    ampm={false}
-                    fullWidth
-                    error={touched.end_datetime && errors.end_datetime}
-                    helperText={touched.end_datetime && errors.end_datetime}
-                  />
-                  <Field
-                    name="place"
-                    label="Helyszín"
-                    margin="normal"
-                    component={TextField}
-                    variant="outlined"
-                    fullWidth
-                    error={touched.place && errors.place}
-                    helperText={touched.place && errors.place}
-                  />
-                  <Field
-                    name="type"
-                    label="Videó típusa"
-                    margin="normal"
-                    component={TextField}
-                    variant="outlined"
-                    fullWidth
-                    error={touched.type && errors.type}
-                    helperText={touched.type && errors.type}
-                  />
-                  <Field
-                    name="responsible_id"
-                    label="Felelős"
-                    margin="normal"
-                    component={TextField}
-                    variant="outlined"
-                    defaultValue={
-                      requestData.responsible ? requestData.responsible.id : ''
-                    }
-                    fullWidth
-                    select
-                  >
-                    {staffMembers.map((item) => (
-                      <MenuItem value={item.id} key={item.id}>
-                        {`${item.last_name} ${item.first_name}`}
-                      </MenuItem>
-                    ))}
-                  </Field>
+                <Form className={classes.form}>
+                  <div className={classes.formSectionFirst}>
+                    <Typography variant="h6">Részletek</Typography>
+                    {localStorage.getItem('role') === 'admin' && (
+                      <>
+                        <Field
+                          name="additional_data.accepted"
+                          Label={{ label: 'Elfogadva' }}
+                          component={CheckboxWithLabel}
+                          type="checkbox"
+                          icon={<SentimentVeryDissatisfiedIcon />}
+                          checkedIcon={<SentimentVerySatisfiedIcon />}
+                          indeterminateIcon={<RadioButtonUncheckedIcon />}
+                        />
+                        <Field
+                          name="additional_data.canceled"
+                          Label={{ label: 'Lemondva' }}
+                          component={CheckboxWithLabel}
+                          type="checkbox"
+                          icon={<RadioButtonUncheckedIcon />}
+                          checkedIcon={<NotInterestedIcon />}
+                          indeterminateIcon={<RadioButtonUncheckedIcon />}
+                        />
+                        <Field
+                          name="additional_data.failed"
+                          Label={{ label: 'Meghiúsult' }}
+                          component={CheckboxWithLabel}
+                          type="checkbox"
+                          icon={<RadioButtonUncheckedIcon />}
+                          checkedIcon={<ErrorOutlineIcon />}
+                          indeterminateIcon={<RadioButtonUncheckedIcon />}
+                        />
+                      </>
+                    )}
+                    <Field
+                      name="responsible_id"
+                      label="Felelős"
+                      margin="normal"
+                      component={TextField}
+                      variant="outlined"
+                      defaultValue={
+                        requestData.responsible
+                          ? requestData.responsible.id
+                          : ''
+                      }
+                      fullWidth
+                      select
+                    >
+                      {staffMembers.map((item) => (
+                        <MenuItem value={item.id} key={item.id}>
+                          {`${item.last_name} ${item.first_name}`}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </div>
+                  <Divider />
+                  <div className={classes.formSection}>
+                    <Typography variant="h6">Nyersek</Typography>
+                    <Field
+                      name="additional_data.recording.copied_to_gdrive"
+                      Label={{ label: 'Google Driveba felmásolva' }}
+                      component={CheckboxWithLabel}
+                      type="checkbox"
+                      icon={<BackupIcon />}
+                      checkedIcon={<CloudDoneIcon />}
+                      indeterminateIcon={<BackupIcon />}
+                    />
+                    <Field
+                      name="additional_data.recording.removed"
+                      Label={{ label: 'Törölve' }}
+                      component={CheckboxWithLabel}
+                      type="checkbox"
+                      icon={<DeleteOutlineIcon />}
+                      checkedIcon={<DeleteIcon />}
+                      indeterminateIcon={<DeleteOutlineIcon />}
+                    />
+                    <Field
+                      name="additional_data.recording.path"
+                      label="Nyersek helye"
+                      margin="normal"
+                      component={TextField}
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </div>
+                  <Divider />
+                  <div className={classes.formSectionLast}>
+                    <Typography variant="h6">Alapinformációk</Typography>
+                    <Field
+                      name="title"
+                      label="Esemény neve"
+                      margin="normal"
+                      component={TextField}
+                      variant="outlined"
+                      fullWidth
+                      error={touched.title && errors.title}
+                      helperText={touched.title && errors.title}
+                    />
+                    <Field
+                      name="start_datetime"
+                      label="Kezdés időpontja"
+                      margin="normal"
+                      component={DateTimePicker}
+                      inputVariant="outlined"
+                      value=""
+                      ampm={false}
+                      fullWidth
+                      error={touched.start_datetime && errors.start_datetime}
+                      helperText={
+                        touched.start_datetime && errors.start_datetime
+                      }
+                    />
+                    <Field
+                      name="end_datetime"
+                      label="Várható befejezés"
+                      margin="normal"
+                      component={DateTimePicker}
+                      inputVariant="outlined"
+                      ampm={false}
+                      fullWidth
+                      error={touched.end_datetime && errors.end_datetime}
+                      helperText={touched.end_datetime && errors.end_datetime}
+                    />
+                    <Field
+                      name="place"
+                      label="Helyszín"
+                      margin="normal"
+                      component={TextField}
+                      variant="outlined"
+                      fullWidth
+                      error={touched.place && errors.place}
+                      helperText={touched.place && errors.place}
+                    />
+                    <Field
+                      name="type"
+                      label="Videó típusa"
+                      margin="normal"
+                      component={TextField}
+                      variant="outlined"
+                      fullWidth
+                      error={touched.type && errors.type}
+                      helperText={touched.type && errors.type}
+                    />
+                  </div>
                 </Form>
               )}
             </Formik>

@@ -295,22 +295,7 @@ export default function Videos({
               </ExpansionPanelSummary>
               {isAdmin ? (
                 <Formik
-                  initialValues={{
-                    ...video,
-                    additional_data: {
-                      editing_done: false,
-                      coding: {
-                        website: false,
-                      },
-                      publishing: {
-                        website: '',
-                      },
-                      archiving: {
-                        hq_archive: false,
-                      },
-                      ...video.additional_data,
-                    },
-                  }}
+                  initialValues={video}
                   onSubmit={(values) => handleSubmit(values, video.id)}
                   validationSchema={validationSchema}
                 >
@@ -325,6 +310,7 @@ export default function Videos({
                             type="checkbox"
                             icon={<PersonalVideoIcon />}
                             checkedIcon={<OndemandVideoIcon />}
+                            indeterminateIcon={<PersonalVideoIcon />}
                           />
                           <Field
                             name="additional_data.coding.website"
@@ -333,6 +319,7 @@ export default function Videos({
                             type="checkbox"
                             icon={<SyncDisabledIcon />}
                             checkedIcon={<SyncIcon />}
+                            indeterminateIcon={<SyncDisabledIcon />}
                           />
                           <Field
                             name="additional_data.archiving.hq_archive"
@@ -341,6 +328,7 @@ export default function Videos({
                             type="checkbox"
                             icon={<FolderOpenIcon />}
                             checkedIcon={<FolderIcon />}
+                            indeterminateIcon={<FolderOpenIcon />}
                           />
                           <Field
                             name="additional_data.publishing.website"
