@@ -238,7 +238,7 @@ export default function BasicInformation({
                     component={TextField}
                     variant="outlined"
                     defaultValue={
-                      requestData.responsible && requestData.responsible.id
+                      requestData.responsible ? requestData.responsible.id : ''
                     }
                     fullWidth
                     select

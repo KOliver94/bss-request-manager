@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import RateReviewIcon from '@material-ui/icons/RateReview';
 import Fab from '@material-ui/core/Fab';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import TextFieldMUI from '@material-ui/core/TextField';
@@ -40,8 +42,14 @@ import {
   createVideoAdmin,
   updateVideoAdmin,
   deleteVideoAdmin,
+  createRatingAdmin,
+  updateRatingAdmin,
+  deleteRatingAdmin,
 } from 'api/requestAdminApi';
+import { createRating, updateRating, deleteRating } from 'api/requestApi';
 import { videoEnumConverter } from 'api/enumConverter';
+// Review component
+import ReviewDialog from './ReviewDialog';
 
 const useStyles = makeStyles((theme) => ({
   inputField: {
@@ -91,9 +99,29 @@ export default function Videos({
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [createVideoDialogOpen, setCreateVideoDialogOpen] = useState(false);
-  const [setRatingDialogOpen] = useState(false);
-  const [rating, setRating] = useState(0);
+  const [ratingRemoveDialog, setRatingRemoveDialog] = useState({
+    videoId: 0,
+    ratingId: 0,
+    open: false,
+  });
+  const [reviewDialogData, setReviewDialogData] = useState({
+    requestId,
+    videoId: 0,
+    rating: {},
+    open: false,
+  });
   const [videoDetails, setVideoDetails] = useState({});
+
+  const getOwnRatingForVideo = (video) => {
+    let found = null;
+    if (video.ratings.length > 0) {
+      found = video.ratings.find(
+        (rating) =>
+          rating.author.id.toString() === localStorage.getItem('user_id')
+      );
+    }
+    return found || { rating: 0, review: '' };
+  };
 
   const showError = () => {
     enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
@@ -142,6 +170,81 @@ export default function Videos({
     }
   };
 
+  const handleRatingCreateUpdate = async (value, video) => {
+    const rating = getOwnRatingForVideo(video);
+    setLoading(true);
+    if (value) {
+      try {
+        if (rating.rating === 0) {
+          if (isAdmin) {
+            await createRatingAdmin(requestId, video.id, { rating: value });
+          } else {
+            await createRating(requestId, video.id, { rating: value });
+          }
+        } else if (isAdmin) {
+          await updateRatingAdmin(requestId, video.id, rating.id, {
+            rating: value,
+          });
+        } else {
+          await updateRating(requestId, video.id, rating.id, { rating: value });
+        }
+        // TODO: Add to data instead of reloading
+        window.location.reload();
+      } catch (e) {
+        showError();
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setRatingRemoveDialog({
+        videoId: video.id,
+        ratingId: rating.id,
+        open: true,
+      });
+    }
+  };
+
+  const handleRatingDelete = async () => {
+    setLoading(true);
+    try {
+      if (isAdmin) {
+        await deleteRatingAdmin(
+          requestId,
+          ratingRemoveDialog.videoId,
+          ratingRemoveDialog.ratingId
+        );
+      } else {
+        await deleteRating(
+          requestId,
+          ratingRemoveDialog.videoId,
+          ratingRemoveDialog.ratingId
+        );
+      }
+      // TODO: Add to data instead of reloading
+      window.location.reload();
+    } catch (e) {
+      showError();
+    } finally {
+      setRatingRemoveDialog({
+        videoId: 0,
+        ratingId: 0,
+        open: false,
+      });
+      setLoading(false);
+    }
+  };
+
+  const handleReview = (video) => {
+    setReviewDialogData({
+      ...reviewDialogData,
+      ...{
+        videoId: video.id,
+        rating: getOwnRatingForVideo(video),
+        open: true,
+      },
+    });
+  };
+
   const handleCreateVideoDialogOpen = () => {
     setCreateVideoDialogOpen(true);
   };
@@ -151,9 +254,13 @@ export default function Videos({
     setVideoDetails({});
   };
 
-  const handleRatingDialogOpen = (value) => {
-    setRatingDialogOpen(true);
-    setRating(value);
+  const handleRatingRemoveDialogClose = () => {
+    setLoading(false);
+    setRatingRemoveDialog({
+      videoId: 0,
+      ratingId: 0,
+      open: false,
+    });
   };
 
   const validationSchema = Yup.object().shape({
@@ -261,7 +368,7 @@ export default function Videos({
                             margin="normal"
                             component={TextField}
                             size="small"
-                            defaultValue={video.editor && video.editor.id}
+                            defaultValue={video.editor ? video.editor.id : ''}
                             fullWidth
                             select
                           >
@@ -317,14 +424,24 @@ export default function Videos({
               )}
               {!isAdmin && <Divider />}
               <ExpansionPanelActions>
+                {getOwnRatingForVideo(video).rating > 0 && (
+                  <IconButton
+                    onClick={() => handleReview(video)}
+                    disabled={loading}
+                    size="small"
+                  >
+                    <RateReviewIcon fontSize="small" />
+                  </IconButton>
+                )}
                 <Rating
+                  name={`${video.id}-own-rating`}
                   classes={{
                     label: classes.ratingLabel,
                   }}
-                  value={rating}
-                  onChange={(event, newValue) => {
-                    handleRatingDialogOpen(newValue);
-                  }}
+                  value={getOwnRatingForVideo(video).rating}
+                  onChange={(event, value) =>
+                    handleRatingCreateUpdate(value, video)
+                  }
                 />
               </ExpansionPanelActions>
             </ExpansionPanel>
@@ -397,6 +514,33 @@ export default function Videos({
           </Dialog>
         </>
       )}
+      <Dialog
+        open={ratingRemoveDialog.open}
+        onClose={handleRatingRemoveDialogClose}
+      >
+        <DialogTitle id="rating-delete-confirmation">
+          Biztosan törölni akarod az értékelést?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="rating-delete-confirmation-description">
+            Az értékelés törlésével a szöveges értékelés is törlésre kerül.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleRatingRemoveDialogClose} autoFocus>
+            Mégsem
+          </Button>
+          <Button onClick={handleRatingDelete} color="primary">
+            Törlés
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <ReviewDialog
+        reviewDialogData={reviewDialogData}
+        setReviewDialogData={setReviewDialogData}
+        isAdmin={isAdmin}
+        /* setRequestData={setRequestData} */
+      />
     </div>
   );
 }
