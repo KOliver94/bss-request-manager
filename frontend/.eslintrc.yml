@@ -24,4 +24,8 @@ parserOptions:
 plugins:
   - react
   - prettier
-rules: { 'prettier/prettier': ['error'], 'react/forbid-prop-types': 0 }
+rules:
+  {
+    'prettier/prettier': ['error', { 'endOfLine': 'auto' }],
+    'react/forbid-prop-types': 0,
+  }
