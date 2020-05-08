@@ -68,7 +68,7 @@ export async function deleteCrewAdmin(requestId, crewtId) {
  * Videos API calls
  */
 export async function createVideoAdmin(requestId, videoData) {
-  return axiosInstance.post(`/admin/requests/${requestId}`, videoData);
+  return axiosInstance.post(`/admin/requests/${requestId}/videos`, videoData);
 }
 
 export async function updateVideoAdmin(requestId, videoId, videoData) {

@@ -84,6 +84,7 @@ export default function Crew({
       } else {
         await createCrewAdmin(requestId, crewMemberDetails);
       }
+      setDialogOpen(false);
       setCrewMemberDetails({});
       // TODO: Add to data instead of reloading
       window.location.reload();
@@ -221,10 +222,18 @@ export default function Crew({
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleDialogClose} color="primary">
+            <Button
+              onClick={handleDialogClose}
+              color="primary"
+              disabled={loading}
+            >
               Mégsem
             </Button>
-            <Button onClick={() => handleSubmit(true)} color="primary">
+            <Button
+              onClick={() => handleSubmit(true)}
+              color="primary"
+              disabled={loading}
+            >
               Hozzáadás
             </Button>
           </DialogActions>

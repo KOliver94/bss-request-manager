@@ -24,6 +24,7 @@ import { useSnackbar } from 'notistack';
 import BasicInformation from 'components/RequestDetails/BasicInformation';
 import Comments from 'components/RequestDetails/Comments';
 import Crew from 'components/RequestDetails/Crew';
+import Videos from 'components/RequestDetails/Videos';
 // API calls
 import { getRequest } from 'api/requestApi';
 import { getRequestAdmin } from 'api/requestAdminApi';
@@ -63,7 +64,15 @@ export default function RequestDetailPage({
       {
         tabName: 'Videók',
         tabIcon: TheatersIcon,
-        tabContent: <p>Videos</p>,
+        tabContent: (
+          <Videos
+            requestId={id}
+            requestData={data}
+            setRequestData={setData}
+            staffMembers={staffMembers}
+            isAdmin={isAdmin}
+          />
+        ),
       },
     ];
     if (isAdmin) {
