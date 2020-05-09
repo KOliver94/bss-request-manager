@@ -130,7 +130,9 @@ export default function Videos({
     });
   };
 
-  const handleSubmit = async (values, videoId = 0) => {
+  const handleSubmit = async (val, videoId = 0) => {
+    const values = val;
+    values.editor_id = values.editor_id === '' ? 0 : values.editor_id;
     let result;
     try {
       if (values && videoId) {
@@ -428,6 +430,9 @@ export default function Videos({
                             fullWidth
                             select
                           >
+                            <MenuItem value="">
+                              <em>Senki</em>
+                            </MenuItem>
                             {staffMembers.map((item) => (
                               <MenuItem value={item.id} key={item.id}>
                                 {`${item.last_name} ${item.first_name}`}
@@ -560,6 +565,9 @@ export default function Videos({
                         fullWidth
                         select
                       >
+                        <MenuItem value="">
+                          <em>Senki</em>
+                        </MenuItem>
                         {staffMembers.map((item) => (
                           <MenuItem value={item.id} key={item.id}>
                             {`${item.last_name} ${item.first_name}`}

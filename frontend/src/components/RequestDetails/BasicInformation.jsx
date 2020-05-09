@@ -117,7 +117,10 @@ export default function BasicInformation({
     setEditing(!editing);
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (val) => {
+    const values = val;
+    values.responsible_id =
+      values.responsible_id === '' ? 0 : values.responsible_id;
     setLoading(true);
     try {
       await updateRequestAdmin(requestId, values).then((response) => {
@@ -246,6 +249,9 @@ export default function BasicInformation({
                       fullWidth
                       select
                     >
+                      <MenuItem value="">
+                        <em>Senki</em>
+                      </MenuItem>
                       {staffMembers.map((item) => (
                         <MenuItem value={item.id} key={item.id}>
                           {`${item.last_name} ${item.first_name}`}

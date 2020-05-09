@@ -3,6 +3,7 @@ from collections import abc
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.fields import IntegerField, CharField
+from rest_framework.generics import get_object_or_404
 
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event
@@ -11,25 +12,26 @@ from video_requests.models import Request, Video, CrewMember, Rating, Comment
 from video_requests.utilities import update_request_status, update_video_status
 
 
+def get_user_by_id(user_id):
+    if user_id:
+        return get_object_or_404(User, pk=user_id)
+    else:
+        User.objects.none()
+
+
 def get_editor_from_id(validated_data):
     if 'editor_id' in validated_data:
-        editor_id = validated_data.pop('editor_id')
-        editor = User.objects.get(id=editor_id)
-        validated_data['editor'] = editor
+        validated_data['editor'] = get_user_by_id(validated_data.pop('editor_id'))
 
 
 def get_responsible_from_id(validated_data):
     if 'responsible_id' in validated_data:
-        responsible_id = validated_data.pop('responsible_id')
-        responsible = User.objects.get(id=responsible_id)
-        validated_data['responsible'] = responsible
+        validated_data['responsible'] = get_user_by_id(validated_data.pop('responsible_id'))
 
 
 def get_member_from_id(validated_data):
     if 'member_id' in validated_data:
-        member_id = validated_data.pop('member_id')
-        member = User.objects.get(id=member_id)
-        validated_data['member'] = member
+        validated_data['member'] = get_user_by_id(validated_data.pop('member_id'))
 
 
 def check_and_remove_unauthorized_additional_data(additional_data, user):
