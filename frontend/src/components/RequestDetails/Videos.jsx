@@ -12,7 +12,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import TextFieldMUI from '@material-ui/core/TextField';
 import PersonalVideoIcon from '@material-ui/icons/PersonalVideo';
 import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 import SyncIcon from '@material-ui/icons/Sync';
@@ -91,18 +90,20 @@ const useStyles = makeStyles((theme) => ({
 export default function Videos({
   requestId,
   requestData,
-  /* setRequestData, */
+  setRequestData,
   staffMembers,
   isAdmin,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const [loading, setLoading] = useState(false);
+  const [videoDeleteLoading, setVideoDeleteLoading] = useState(false);
+  const [ratingLoading, setRatingLoading] = useState(false);
   const [createVideoDialogOpen, setCreateVideoDialogOpen] = useState(false);
   const [ratingRemoveDialog, setRatingRemoveDialog] = useState({
     videoId: 0,
     ratingId: 0,
     open: false,
+    loading: false,
   });
   const [reviewDialogData, setReviewDialogData] = useState({
     requestId,
@@ -110,7 +111,6 @@ export default function Videos({
     rating: {},
     open: false,
   });
-  const [videoDetails, setVideoDetails] = useState({});
 
   const getOwnRatingForVideo = (video) => {
     let found = null;
@@ -130,70 +130,108 @@ export default function Videos({
     });
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setVideoDetails((prevVideoDetails) => ({
-      ...prevVideoDetails,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (values, videoId) => {
-    setLoading(true);
+  const handleSubmit = async (values, videoId = 0) => {
+    let result;
     try {
       if (values && videoId) {
-        await updateVideoAdmin(requestId, videoId, values);
+        result = await updateVideoAdmin(requestId, videoId, values);
+        setRequestData({
+          ...requestData,
+          videos: requestData.videos.map((video) => {
+            if (video.id === videoId) {
+              return result.data;
+            }
+            return video;
+          }),
+        });
       } else {
-        await createVideoAdmin(requestId, videoDetails);
+        result = await createVideoAdmin(requestId, values);
         setCreateVideoDialogOpen(false);
+        setRequestData({
+          ...requestData,
+          videos: [...requestData.videos, result.data],
+        });
       }
-      // TODO: Add to data instead of reloading
-      window.location.reload();
     } catch (e) {
       showError();
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleDelete = async (videoId) => {
-    setLoading(true);
+    setVideoDeleteLoading(true);
     try {
       await deleteVideoAdmin(requestId, videoId);
-
-      // TODO: Add to data instead of reloading
-      window.location.reload();
+      setRequestData({
+        ...requestData,
+        videos: requestData.videos.filter((video) => video.id !== videoId),
+      });
     } catch (e) {
       showError();
     } finally {
-      setLoading(false);
+      setVideoDeleteLoading(false);
     }
   };
 
   const handleRatingCreateUpdate = async (value, video) => {
     const rating = getOwnRatingForVideo(video);
-    setLoading(true);
+    let result;
     if (value) {
+      setRatingLoading(true);
       try {
         if (rating.rating === 0) {
           if (isAdmin) {
-            await createRatingAdmin(requestId, video.id, { rating: value });
+            result = await createRatingAdmin(requestId, video.id, {
+              rating: value,
+            });
           } else {
-            await createRating(requestId, video.id, { rating: value });
+            result = await createRating(requestId, video.id, { rating: value });
           }
-        } else if (isAdmin) {
-          await updateRatingAdmin(requestId, video.id, rating.id, {
-            rating: value,
+          setRequestData({
+            ...requestData,
+            videos: requestData.videos.map((vid) => {
+              if (vid.id !== video.id) {
+                return vid;
+              }
+
+              return {
+                ...vid,
+                ratings: [...vid.ratings, result.data],
+              };
+            }),
           });
         } else {
-          await updateRating(requestId, video.id, rating.id, { rating: value });
+          if (isAdmin) {
+            result = await updateRatingAdmin(requestId, video.id, rating.id, {
+              rating: value,
+            });
+          } else {
+            result = await updateRating(requestId, video.id, rating.id, {
+              rating: value,
+            });
+          }
+          setRequestData({
+            ...requestData,
+            videos: requestData.videos.map((vid) => {
+              if (vid.id !== video.id) {
+                return vid;
+              }
+
+              return {
+                ...vid,
+                ratings: vid.ratings.map((rat) => {
+                  if (rat.id === rating.id) {
+                    return result.data;
+                  }
+                  return rat;
+                }),
+              };
+            }),
+          });
         }
-        // TODO: Add to data instead of reloading
-        window.location.reload();
       } catch (e) {
         showError();
       } finally {
-        setLoading(false);
+        setRatingLoading(false);
       }
     } else {
       setRatingRemoveDialog({
@@ -205,7 +243,10 @@ export default function Videos({
   };
 
   const handleRatingDelete = async () => {
-    setLoading(true);
+    setRatingRemoveDialog({
+      ...ratingRemoveDialog,
+      loading: true,
+    });
     try {
       if (isAdmin) {
         await deleteRatingAdmin(
@@ -220,17 +261,33 @@ export default function Videos({
           ratingRemoveDialog.ratingId
         );
       }
-      // TODO: Add to data instead of reloading
-      window.location.reload();
-    } catch (e) {
-      showError();
-    } finally {
+      setRequestData({
+        ...requestData,
+        videos: requestData.videos.map((video) => {
+          if (video.id !== ratingRemoveDialog.videoId) {
+            return video;
+          }
+
+          return {
+            ...video,
+            ratings: video.ratings.filter(
+              (rating) => rating.id !== ratingRemoveDialog.ratingId
+            ),
+          };
+        }),
+      });
       setRatingRemoveDialog({
         videoId: 0,
         ratingId: 0,
         open: false,
+        loading: false,
       });
-      setLoading(false);
+    } catch (e) {
+      showError();
+      setRatingRemoveDialog({
+        ...ratingRemoveDialog,
+        loading: false,
+      });
     }
   };
 
@@ -251,11 +308,9 @@ export default function Videos({
 
   const handleCreateVideoDialogClose = () => {
     setCreateVideoDialogOpen(false);
-    setVideoDetails({});
   };
 
   const handleRatingRemoveDialogClose = () => {
-    setLoading(false);
     setRatingRemoveDialog({
       videoId: 0,
       ratingId: 0,
@@ -269,6 +324,13 @@ export default function Videos({
         website: Yup.string().url('Nem megfelelő URL formátum'),
       }),
     }),
+  });
+
+  const newVideoValidationSchema = Yup.object({
+    title: Yup.string()
+      .min(1, 'A videó címe túl rövid!')
+      .max(200, 'A videó címe túl hosszú!')
+      .required('A videó címének megadása kötelező'),
   });
 
   return (
@@ -299,7 +361,13 @@ export default function Videos({
                   onSubmit={(values) => handleSubmit(values, video.id)}
                   validationSchema={validationSchema}
                 >
-                  {({ submitForm, resetForm, errors, touched }) => (
+                  {({
+                    submitForm,
+                    resetForm,
+                    isSubmitting,
+                    errors,
+                    touched,
+                  }) => (
                     <>
                       <ExpansionPanelDetails>
                         <Form>
@@ -374,18 +442,23 @@ export default function Videos({
                       >
                         <IconButton
                           onClick={() => handleDelete(video.id)}
-                          disabled={loading}
+                          disabled={isSubmitting || videoDeleteLoading}
                           size="small"
                         >
                           <DeleteIcon fontSize="small" />
                         </IconButton>
-                        <Button size="small" onClick={resetForm}>
+                        <Button
+                          size="small"
+                          onClick={resetForm}
+                          disabled={isSubmitting || videoDeleteLoading}
+                        >
                           Mégsem
                         </Button>
                         <Button
                           size="small"
                           color="primary"
                           onClick={submitForm}
+                          disabled={isSubmitting || videoDeleteLoading}
                         >
                           Mentés
                         </Button>
@@ -415,7 +488,7 @@ export default function Videos({
                 {getOwnRatingForVideo(video).rating > 0 && (
                   <IconButton
                     onClick={() => handleReview(video)}
-                    disabled={loading}
+                    disabled={reviewDialogData.open || ratingLoading}
                     size="small"
                   >
                     <RateReviewIcon fontSize="small" />
@@ -430,6 +503,7 @@ export default function Videos({
                   onChange={(event, value) =>
                     handleRatingCreateUpdate(value, video)
                   }
+                  disabled={reviewDialogData.open || ratingLoading}
                 />
               </ExpansionPanelActions>
             </ExpansionPanel>
@@ -457,48 +531,62 @@ export default function Videos({
             open={createVideoDialogOpen}
             onClose={handleCreateVideoDialogClose}
           >
-            <DialogTitle id="add-video-dialog">Új videó hozzáadása</DialogTitle>
-            <DialogContent>
-              <TextFieldMUI
-                id="title"
-                name="title"
-                label="Videó címe"
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-              <TextFieldMUI
-                className={classes.inputField}
-                id="editor_id"
-                name="editor_id"
-                select
-                fullWidth
-                label="Vágó"
-                onChange={handleChange}
-              >
-                {staffMembers.map((item) => (
-                  <MenuItem value={item.id} key={item.id}>
-                    {`${item.last_name} ${item.first_name}`}
-                  </MenuItem>
-                ))}
-              </TextFieldMUI>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={handleCreateVideoDialogClose}
-                color="primary"
-                disabled={loading}
-              >
-                Mégsem
-              </Button>
-              <Button
-                onClick={() => handleSubmit(true)}
-                color="primary"
-                disabled={loading}
-              >
-                Hozzáadás
-              </Button>
-            </DialogActions>
+            <Formik
+              initialValues={{
+                title: '',
+              }}
+              onSubmit={(values) => handleSubmit(values)}
+              validationSchema={newVideoValidationSchema}
+            >
+              {({ submitForm, isSubmitting, errors, touched }) => (
+                <>
+                  <DialogTitle>Új videó hozzáadása</DialogTitle>
+                  <DialogContent>
+                    <Form>
+                      <Field
+                        name="title"
+                        label="Videó címe"
+                        margin="normal"
+                        component={TextField}
+                        fullWidth
+                        error={touched.title && errors.title}
+                        helperText={touched.title && errors.title}
+                      />
+                      <Field
+                        name="editor_id"
+                        label="Vágó"
+                        margin="normal"
+                        component={TextField}
+                        fullWidth
+                        select
+                      >
+                        {staffMembers.map((item) => (
+                          <MenuItem value={item.id} key={item.id}>
+                            {`${item.last_name} ${item.first_name}`}
+                          </MenuItem>
+                        ))}
+                      </Field>
+                    </Form>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={handleCreateVideoDialogClose}
+                      color="primary"
+                      disabled={isSubmitting}
+                    >
+                      Mégsem
+                    </Button>
+                    <Button
+                      onClick={submitForm}
+                      color="primary"
+                      disabled={isSubmitting}
+                    >
+                      Hozzáadás
+                    </Button>
+                  </DialogActions>
+                </>
+              )}
+            </Formik>
           </Dialog>
         </>
       )}
@@ -515,10 +603,18 @@ export default function Videos({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleRatingRemoveDialogClose} autoFocus>
+          <Button
+            onClick={handleRatingRemoveDialogClose}
+            autoFocus
+            disabled={ratingRemoveDialog.loading}
+          >
             Mégsem
           </Button>
-          <Button onClick={handleRatingDelete} color="primary">
+          <Button
+            onClick={handleRatingDelete}
+            color="primary"
+            disabled={ratingRemoveDialog.loading}
+          >
             Törlés
           </Button>
         </DialogActions>
@@ -527,7 +623,8 @@ export default function Videos({
         reviewDialogData={reviewDialogData}
         setReviewDialogData={setReviewDialogData}
         isAdmin={isAdmin}
-        /* setRequestData={setRequestData} */
+        requestData={requestData}
+        setRequestData={setRequestData}
       />
     </div>
   );
@@ -536,7 +633,7 @@ export default function Videos({
 Videos.propTypes = {
   requestId: PropTypes.string.isRequired,
   requestData: PropTypes.object.isRequired,
-  /* setRequestData: PropTypes.func.isRequired, */
+  setRequestData: PropTypes.func.isRequired,
   staffMembers: PropTypes.array.isRequired,
   isAdmin: PropTypes.bool.isRequired,
 };

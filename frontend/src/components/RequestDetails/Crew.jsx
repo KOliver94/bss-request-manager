@@ -50,7 +50,7 @@ const useStyles = makeStyles(() => ({
 export default function Crew({
   requestId,
   requestData,
-  /* setRequestData, */
+  setRequestData,
   staffMembers,
   isAdmin,
 }) {
@@ -78,16 +78,33 @@ export default function Crew({
 
   const handleSubmit = async (newCrewMember = false) => {
     setLoading(true);
+    let result;
     try {
       if (editingCrewId > 0 && !newCrewMember) {
-        await updateCrewAdmin(requestId, editingCrewId, crewMemberDetails);
+        result = await updateCrewAdmin(
+          requestId,
+          editingCrewId,
+          crewMemberDetails
+        );
+        setRequestData({
+          ...requestData,
+          crew: requestData.crew.map((crew) => {
+            if (crew.id === editingCrewId) {
+              return result.data;
+            }
+            return crew;
+          }),
+        });
+        setEditingCrewId(0);
       } else {
-        await createCrewAdmin(requestId, crewMemberDetails);
+        result = await createCrewAdmin(requestId, crewMemberDetails);
+        setRequestData({
+          ...requestData,
+          crew: [...requestData.crew, result.data],
+        });
+        setDialogOpen(false);
       }
-      setDialogOpen(false);
       setCrewMemberDetails({});
-      // TODO: Add to data instead of reloading
-      window.location.reload();
     } catch (e) {
       showError();
     } finally {
@@ -99,9 +116,10 @@ export default function Crew({
     setLoading(true);
     try {
       await deleteCrewAdmin(requestId, crewId);
-
-      // TODO: Add to data instead of reloading
-      window.location.reload();
+      setRequestData({
+        ...requestData,
+        crew: requestData.crew.filter((crew) => crew.id !== crewId),
+      });
     } catch (e) {
       showError();
     } finally {
@@ -247,7 +265,7 @@ export default function Crew({
 Crew.propTypes = {
   requestId: PropTypes.string.isRequired,
   requestData: PropTypes.object.isRequired,
-  /* setRequestData: PropTypes.func.isRequired, */
+  setRequestData: PropTypes.func.isRequired,
   staffMembers: PropTypes.array.isRequired,
   isAdmin: PropTypes.bool.isRequired,
 };

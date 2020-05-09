@@ -63,10 +63,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function BasicInformation({
+export default function Comments({
   requestId,
   requestData,
-  /* setRequestData, */
+  setRequestData,
   isAdmin,
 }) {
   const classes = useStyles();
@@ -81,26 +81,43 @@ export default function BasicInformation({
     });
   };
 
-  const handleSubmit = async (values, newComment = false) => {
-    setLoading(true);
+  const handleSubmit = async (values, newComment = false, { resetForm }) => {
+    let result;
     try {
       if (editingCommentId > 0 && !newComment) {
         if (isAdmin) {
-          await updateCommentAdmin(requestId, editingCommentId, values);
+          result = await updateCommentAdmin(
+            requestId,
+            editingCommentId,
+            values
+          );
         } else {
-          await updateComment(requestId, editingCommentId, values);
+          result = await updateComment(requestId, editingCommentId, values);
         }
-      } else if (isAdmin) {
-        await createCommentAdmin(requestId, values);
+        setEditingCommentId(0);
+        setRequestData({
+          ...requestData,
+          comments: requestData.comments.map((comment) => {
+            if (comment.id === editingCommentId) {
+              return result.data;
+            }
+            return comment;
+          }),
+        });
       } else {
-        await createComment(requestId, values);
+        if (isAdmin) {
+          result = await createCommentAdmin(requestId, values);
+        } else {
+          result = await createComment(requestId, values);
+        }
+        setRequestData({
+          ...requestData,
+          comments: [...requestData.comments, result.data],
+        });
+        resetForm();
       }
-      // TODO: Add to data instead of reloading
-      window.location.reload();
     } catch (e) {
       showError();
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -112,9 +129,12 @@ export default function BasicInformation({
       } else {
         await deleteComment(requestId, commentId);
       }
-
-      // TODO: Add to data instead of reloading
-      window.location.reload();
+      setRequestData({
+        ...requestData,
+        comments: requestData.comments.filter(
+          (comment) => comment.id !== commentId
+        ),
+      });
     } catch (e) {
       showError();
     } finally {
@@ -156,31 +176,23 @@ export default function BasicInformation({
         {requestData.comments.length > 0 && (
           <>
             {requestData.comments.map((comment) => (
-              <>
+              <div key={`${comment.id}-base`}>
                 {editingCommentId === comment.id ? (
-                  <>
+                  <div key={`${comment.id}-edit-base`}>
                     <Formik
                       initialValues={comment}
-                      onSubmit={(values) => handleSubmit(values, false)}
+                      onSubmit={(values, resetForm) =>
+                        handleSubmit(values, false, resetForm)
+                      }
                       validationSchema={validationSchema}
                     >
                       {({ isSubmitting, errors, touched }) => (
                         <Form>
-                          <Grid
-                            container
-                            wrap="nowrap"
-                            spacing={2}
-                            key={`${comment.id}-container`}
-                          >
-                            <Grid item key={`${comment.id}-avatar`}>
+                          <Grid container wrap="nowrap" spacing={2}>
+                            <Grid item>
                               <Avatar />
                             </Grid>
-                            <Grid
-                              item
-                              xs
-                              zeroMinWidth
-                              key={`${comment.id}-content`}
-                            >
+                            <Grid item xs zeroMinWidth>
                               <h4 className={classes.commentAuthor}>
                                 {`${comment.author.last_name} ${comment.author.first_name}`}
                               </h4>
@@ -197,13 +209,9 @@ export default function BasicInformation({
                                 helperText={touched.text && errors.text}
                               />
                             </Grid>
-                            <Grid
-                              item
-                              className={classes.commentButtons}
-                              key={`${comment.id}-buttons`}
-                            >
+                            <Grid item className={classes.commentButtons}>
                               {isAdmin && (
-                                <Grid item key={`${comment.id}-internal`}>
+                                <Grid item>
                                   <Field
                                     component={Checkbox}
                                     type="checkbox"
@@ -213,7 +221,7 @@ export default function BasicInformation({
                                   />
                                 </Grid>
                               )}
-                              <Grid item key={`${comment.id}-cancel`}>
+                              <Grid item>
                                 <IconButton
                                   onClick={handleCancel}
                                   disabled={isSubmitting}
@@ -221,7 +229,7 @@ export default function BasicInformation({
                                   <ClearIcon />
                                 </IconButton>
                               </Grid>
-                              <Grid item key={`${comment.id}-send`}>
+                              <Grid item>
                                 <IconButton
                                   type="submit"
                                   disabled={isSubmitting}
@@ -234,19 +242,18 @@ export default function BasicInformation({
                         </Form>
                       )}
                     </Formik>
-                  </>
+                  </div>
                 ) : (
                   <Grid
                     container
                     wrap="nowrap"
                     spacing={2}
                     className={comment.internal ? classes.internalComment : ''}
-                    key={`${comment.id}-container`}
                   >
-                    <Grid item key={`${comment.id}-avatar`}>
+                    <Grid item>
                       <Avatar />
                     </Grid>
-                    <Grid item xs zeroMinWidth key={`${comment.id}-content`}>
+                    <Grid item xs zeroMinWidth>
                       <h4 className={classes.commentAuthor}>
                         {`${comment.author.last_name} ${comment.author.first_name}`}
                       </h4>
@@ -273,12 +280,8 @@ export default function BasicInformation({
                     {(isAdmin ||
                       comment.author.id.toString() ===
                         localStorage.getItem('user_id')) && (
-                      <Grid
-                        item
-                        className={classes.commentButtons}
-                        key={`${comment.id}-buttons`}
-                      >
-                        <Grid item key={`${comment.id}-delete`}>
+                      <Grid item className={classes.commentButtons}>
+                        <Grid item>
                           <IconButton
                             onClick={() => handleDelete(comment.id)}
                             disabled={loading}
@@ -286,7 +289,7 @@ export default function BasicInformation({
                             <DeleteIcon />
                           </IconButton>
                         </Grid>
-                        <Grid item key={`${comment.id}-edit`}>
+                        <Grid item>
                           <IconButton
                             onClick={() => handleEdit(comment.id)}
                             disabled={loading}
@@ -302,7 +305,7 @@ export default function BasicInformation({
                   variant="fullWidth"
                   className={classes.commentDivider}
                 />
-              </>
+              </div>
             ))}
           </>
         )}
@@ -311,21 +314,18 @@ export default function BasicInformation({
             text: '',
             internal: false,
           }}
-          onSubmit={(values) => handleSubmit(values, true)}
+          onSubmit={(values, resetForm) =>
+            handleSubmit(values, true, resetForm)
+          }
           validationSchema={validationSchema}
         >
           {({ isSubmitting, errors, touched }) => (
             <Form>
-              <Grid
-                container
-                wrap="nowrap"
-                spacing={2}
-                key="new-comment-container"
-              >
-                <Grid item key="new-comment-avatar">
+              <Grid container wrap="nowrap" spacing={2}>
+                <Grid item>
                   <Avatar />
                 </Grid>
-                <Grid item xs zeroMinWidth key="new-comment-content">
+                <Grid item xs zeroMinWidth>
                   <h4 className={classes.commentAuthor}>
                     {localStorage.getItem('name')}
                   </h4>
@@ -342,13 +342,9 @@ export default function BasicInformation({
                     helperText={touched.text && errors.text}
                   />
                 </Grid>
-                <Grid
-                  item
-                  className={classes.commentButtons}
-                  key="new-comment-buttons"
-                >
+                <Grid item className={classes.commentButtons}>
                   {isAdmin && (
-                    <Grid item key="new-comment-internal">
+                    <Grid item>
                       <Field
                         component={Checkbox}
                         type="checkbox"
@@ -358,7 +354,7 @@ export default function BasicInformation({
                       />
                     </Grid>
                   )}
-                  <Grid item key="new-comment-send">
+                  <Grid item>
                     <IconButton type="submit" disabled={isSubmitting}>
                       <SendIcon />
                     </IconButton>
@@ -373,9 +369,9 @@ export default function BasicInformation({
   );
 }
 
-BasicInformation.propTypes = {
+Comments.propTypes = {
   requestId: PropTypes.string.isRequired,
   requestData: PropTypes.object.isRequired,
-  /* setRequestData: PropTypes.func.isRequired, */
+  setRequestData: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired,
 };

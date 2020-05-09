@@ -17,7 +17,8 @@ export default function Videos({
   reviewDialogData,
   setReviewDialogData,
   isAdmin,
-  /* setRequestData, */
+  requestData,
+  setRequestData,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
@@ -48,24 +49,42 @@ export default function Videos({
 
   const handleSave = async () => {
     setLoading(true);
+    let result;
     try {
       if (isAdmin) {
-        await updateRatingAdmin(
+        result = await updateRatingAdmin(
           reviewDialogData.requestId,
           reviewDialogData.videoId,
           reviewDialogData.rating.id,
           reviewData
         );
       } else {
-        await updateRating(
+        result = await updateRating(
           reviewDialogData.requestId,
           reviewDialogData.videoId,
           reviewDialogData.rating.id,
           reviewData
         );
       }
-      // TODO: Add to data instead of reloading
-      window.location.reload();
+      setReviewDialogData({ ...reviewDialogData, open: false });
+      setRequestData({
+        ...requestData,
+        videos: requestData.videos.map((vid) => {
+          if (vid.id !== reviewDialogData.videoId) {
+            return vid;
+          }
+
+          return {
+            ...vid,
+            ratings: vid.ratings.map((rat) => {
+              if (rat.id === reviewDialogData.rating.id) {
+                return result.data;
+              }
+              return rat;
+            }),
+          };
+        }),
+      });
     } catch (e) {
       showError();
     } finally {
@@ -112,5 +131,6 @@ Videos.propTypes = {
   reviewDialogData: PropTypes.object.isRequired,
   setReviewDialogData: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired,
-  /* setRequestData: PropTypes.func.isRequired, */
+  requestData: PropTypes.object.isRequired,
+  setRequestData: PropTypes.func.isRequired,
 };
