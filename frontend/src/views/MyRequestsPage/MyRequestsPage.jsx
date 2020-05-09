@@ -29,6 +29,7 @@ import Parallax from 'components/material-kit-react/Parallax/Parallax';
 import { useSnackbar } from 'notistack';
 // Date format
 import { format } from 'date-fns';
+import { hu } from 'date-fns/locale';
 // API calls
 import { listRequests } from 'api/requestApi';
 import { listRequestsAdmin } from 'api/requestAdminApi';
@@ -146,7 +147,8 @@ export default function MyRequestsPage({
                               <TableCell align="center">
                                 {format(
                                   new Date(item.start_datetime),
-                                  'yyyy.MM.dd. HH:mm'
+                                  'yyyy. MMMM d. (eeee) | H:mm',
+                                  { locale: hu }
                                 )}
                               </TableCell>
                               <TableCell align="center">

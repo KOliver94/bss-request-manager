@@ -261,7 +261,10 @@ export default function Comments({
                       <Tooltip
                         title={format(
                           new Date(comment.created),
-                          'yyyy.MM.dd. HH:mm:ss'
+                          'yyyy. MMMM d. H:mm:ss',
+                          {
+                            locale: hu,
+                          }
                         )}
                         placement="bottom-start"
                       >

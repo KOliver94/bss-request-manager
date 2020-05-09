@@ -30,10 +30,10 @@ import { TextField, CheckboxWithLabel } from 'formik-material-ui';
 import { DateTimePicker } from 'formik-material-ui-pickers';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { hu } from 'date-fns/locale';
 import * as Yup from 'yup';
 // Date format
 import { format } from 'date-fns';
+import { hu } from 'date-fns/locale';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
@@ -360,7 +360,13 @@ export default function BasicInformation({
             <p>
               Beküldve:{' '}
               <b>
-                {format(new Date(requestData.created), 'yyyy.MM.dd. HH:mm')}
+                {format(
+                  new Date(requestData.created),
+                  'yyyy. MMMM d. (eeee) | H:mm',
+                  {
+                    locale: hu,
+                  }
+                )}
               </b>
             </p>
             <p>
@@ -368,7 +374,8 @@ export default function BasicInformation({
               <b>
                 {format(
                   new Date(requestData.start_datetime),
-                  'yyyy.MM.dd. HH:mm'
+                  'yyyy. MMMM d. (eeee) | H:mm',
+                  { locale: hu }
                 )}
               </b>
             </p>
@@ -377,7 +384,8 @@ export default function BasicInformation({
               <b>
                 {format(
                   new Date(requestData.end_datetime),
-                  'yyyy.MM.dd. HH:mm'
+                  'yyyy. MMMM d. (eeee) | H:mm',
+                  { locale: hu }
                 )}
               </b>
             </p>

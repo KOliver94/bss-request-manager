@@ -4,6 +4,7 @@ import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import Typography from '@material-ui/core/Typography';
 import { format } from 'date-fns';
+import { hu } from 'date-fns/locale';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
@@ -33,8 +34,24 @@ const Summary = ({ formData }) => {
           <p>{formData.type}</p>
         </GridItem>
         <GridItem xs={10} sm={6}>
-          <p>Kezdés: {format(formData.start_datetime, 'yyyy.MM.dd. HH:mm')}</p>
-          <p>Befejezés: {format(formData.end_datetime, 'yyyy.MM.dd. HH:mm')}</p>
+          <p>
+            Kezdés:{' '}
+            {
+              (format(formData.start_datetime, 'yyyy. MMMM d. (eeee) | H:mm'),
+              {
+                locale: hu,
+              })
+            }
+          </p>
+          <p>
+            Befejezés:{' '}
+            {
+              (format(formData.end_datetime, 'yyyy. MMMM d. (eeee) | H:mm'),
+              {
+                locale: hu,
+              })
+            }
+          </p>
         </GridItem>
       </GridContainer>
       <GridContainer className={classes.container}>
