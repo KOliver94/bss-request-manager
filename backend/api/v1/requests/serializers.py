@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
-from rest_framework.fields import CharField, EmailField
+from rest_framework.fields import CharField, EmailField, SerializerMethodField
 
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event
@@ -64,11 +64,19 @@ class CommentFilteredSerializer(serializers.ModelSerializer):
 
 class VideoDefaultSerializer(serializers.ModelSerializer):
     ratings = RatingFilteredSerializer(many=True, read_only=True)
+    video_url = SerializerMethodField('get_video_url', read_only=True)
+
+    @staticmethod
+    def get_video_url(obj):
+        if obj.status >= 4 and 'publishing' in obj.additional_data and \
+                'website' in obj.additional_data['publishing'] and obj.additional_data['publishing']['website']:
+            return obj.additional_data['publishing']['website']
+        return None
 
     class Meta:
         model = Video
-        fields = ('id', 'title', 'status', 'ratings',)
-        read_only_fields = ('id', 'title', 'status', 'ratings',)
+        fields = ('id', 'title', 'status', 'ratings', 'video_url')
+        read_only_fields = ('id', 'title', 'status', 'ratings', 'video_url')
 
 
 def create_comment(comment_text, request):

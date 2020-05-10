@@ -473,19 +473,20 @@ export default function Videos({
                 </Formik>
               ) : (
                 <>
-                  {video.additional_data &&
-                    video.additional_data.publishing &&
-                    video.additional_data.publishing.website && (
-                      <ExpansionPanelDetails>
-                        <Typography>
-                          Az elkészült videót itt tekintheted meg:{' '}
-                          {
-                            video.additional_data.publishing.website
-                            /* TODO: Backend support needed */
-                          }
-                        </Typography>
-                      </ExpansionPanelDetails>
-                    )}
+                  {video.video_url && (
+                    <ExpansionPanelDetails>
+                      <Typography variant="body2" align="justify" gutterBottom>
+                        Az elkészült videót itt tekintheted meg:{' '}
+                        <a
+                          href={video.video_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {video.video_url}
+                        </a>
+                      </Typography>
+                    </ExpansionPanelDetails>
+                  )}
                 </>
               )}
               {!isAdmin && <Divider />}
