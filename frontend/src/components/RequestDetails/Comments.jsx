@@ -31,6 +31,7 @@ import {
   updateCommentAdmin,
   deleteCommentAdmin,
 } from 'api/requestAdminApi';
+import compareValues from 'api/objectComperator';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -175,7 +176,7 @@ export default function Comments({
       <Paper className={classes.paper} elevation={2}>
         {requestData.comments.length > 0 && (
           <>
-            {requestData.comments.map((comment) => (
+            {requestData.comments.sort(compareValues('id')).map((comment) => (
               <div key={`${comment.id}-base`}>
                 {editingCommentId === comment.id ? (
                   <div key={`${comment.id}-edit-base`}>

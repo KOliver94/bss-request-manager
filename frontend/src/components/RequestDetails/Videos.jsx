@@ -47,6 +47,7 @@ import {
 } from 'api/requestAdminApi';
 import { createRating, updateRating, deleteRating } from 'api/requestApi';
 import { videoEnumConverter } from 'api/enumConverter';
+import compareValues from 'api/objectComperator';
 // Review component
 import ReviewDialog from './ReviewDialog';
 
@@ -339,7 +340,7 @@ export default function Videos({
     <div>
       {requestData.videos.length > 0 ? (
         <>
-          {requestData.videos.map((video) => (
+          {requestData.videos.sort(compareValues('id')).map((video) => (
             <ExpansionPanel
               key={`${video.id}-panel`}
               defaultExpanded={requestData.videos.length === 1}

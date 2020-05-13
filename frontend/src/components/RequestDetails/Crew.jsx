@@ -29,6 +29,7 @@ import {
   updateCrewAdmin,
   deleteCrewAdmin,
 } from 'api/requestAdminApi';
+import compareValues from 'api/objectComperator';
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -153,57 +154,62 @@ export default function Crew({
           <TableContainer className={classes.table}>
             <Table>
               <TableBody>
-                {requestData.crew.map((crewMember) => (
-                  <TableRow key={crewMember.id} hover>
-                    <TableCell>
-                      {`${crewMember.member.last_name} ${crewMember.member.first_name}`}
-                    </TableCell>
-                    {editingCrewId === crewMember.id ? (
+                {requestData.crew
+                  .sort(compareValues('position'))
+                  .map((crewMember) => (
+                    <TableRow key={crewMember.id} hover>
                       <TableCell>
-                        <TextField
-                          id="position"
-                          name="position"
-                          label="Pozíció"
-                          defaultValue={crewMember.position}
-                          onChange={handleChange}
-                        />
+                        {`${crewMember.member.last_name} ${crewMember.member.first_name}`}
                       </TableCell>
-                    ) : (
-                      <TableCell>{crewMember.position}</TableCell>
-                    )}
-
-                    <TableCell align="right">
                       {editingCrewId === crewMember.id ? (
-                        <>
-                          <IconButton
-                            onClick={() => handleSubmit()}
-                            disabled={loading}
-                          >
-                            <CheckIcon />
-                          </IconButton>
-                          <IconButton onClick={handleCancel} disabled={loading}>
-                            <ClearIcon />
-                          </IconButton>
-                        </>
+                        <TableCell>
+                          <TextField
+                            id="position"
+                            name="position"
+                            label="Pozíció"
+                            defaultValue={crewMember.position}
+                            onChange={handleChange}
+                          />
+                        </TableCell>
                       ) : (
-                        <>
-                          <IconButton
-                            onClick={() => handleEdit(crewMember.id)}
-                            disabled={loading}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => handleDelete(crewMember.id)}
-                            disabled={loading}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </>
+                        <TableCell>{crewMember.position}</TableCell>
                       )}
-                    </TableCell>
-                  </TableRow>
-                ))}
+
+                      <TableCell align="right">
+                        {editingCrewId === crewMember.id ? (
+                          <>
+                            <IconButton
+                              onClick={() => handleSubmit()}
+                              disabled={loading}
+                            >
+                              <CheckIcon />
+                            </IconButton>
+                            <IconButton
+                              onClick={handleCancel}
+                              disabled={loading}
+                            >
+                              <ClearIcon />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <>
+                            <IconButton
+                              onClick={() => handleEdit(crewMember.id)}
+                              disabled={loading}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => handleDelete(crewMember.id)}
+                              disabled={loading}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
