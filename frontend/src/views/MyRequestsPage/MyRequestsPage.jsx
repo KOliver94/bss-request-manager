@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -45,6 +45,7 @@ export default function MyRequestsPage({
   isAdmin,
 }) {
   const classes = useStyles();
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ results: [], total_pages: 0 });
@@ -72,6 +73,10 @@ export default function MyRequestsPage({
 
   const handlePageChange = (page) => {
     loadData(page);
+  };
+
+  const handleRowClick = (id) => {
+    history.push(isAdmin ? `/admin/requests/${id}` : `/my-requests/${id}`);
   };
 
   useEffect(() => {
@@ -132,12 +137,7 @@ export default function MyRequestsPage({
                         <TableBody>
                           {data.results.map((item) => (
                             <TableRow
-                              component={Link}
-                              to={
-                                isAdmin
-                                  ? `/admin/requests/${item.id}`
-                                  : `/my-requests/${item.id}`
-                              }
+                              onClick={() => handleRowClick(item.id)}
                               key={item.id}
                               hover
                             >
