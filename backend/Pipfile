@@ -26,7 +26,7 @@ psycopg2-binary = "==2.8.5"
 python-decouple = "==3.3"
 python-ldap = ">=3.1"
 rest-social-auth = "==4.2.0"
-sentry-sdk = "==0.14.3"
+sentry-sdk = "==0.14.4"
 whitenoise = {extras = ["brotli"],version = "==5.0.1"}
 
 [requires]
