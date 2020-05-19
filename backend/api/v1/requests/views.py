@@ -1,5 +1,5 @@
 from rest_framework import generics, filters
-from rest_framework.exceptions import ValidationError, NotAuthenticated
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -50,11 +50,7 @@ class RequestDefaultDetailView(generics.RetrieveAPIView):
     - Authenticated users can get Requests which are submitted by them. No other operation are available.
     """
     serializer_class = RequestDefaultSerializer
-
-    def get_permissions(self):
-        if self.request.user.is_anonymous:
-            raise NotAuthenticated()
-        return [IsSelf()]
+    permission_classes = [IsSelf]
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -105,8 +101,6 @@ class CommentDefaultDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentDefaultSerializer
 
     def get_permissions(self):
-        if self.request.user.is_anonymous:
-            raise NotAuthenticated()
         if self.request.method == 'GET':
             return [IsAuthenticated()]
         else:
@@ -152,11 +146,7 @@ class VideoDefaultDetailView(generics.RetrieveAPIView):
     - Authenticated users can get Videos which are related to Requests submitted by them.
     """
     serializer_class = VideoDefaultSerializer
-
-    def get_permissions(self):
-        if self.request.user.is_anonymous:
-            raise NotAuthenticated()
-        return [IsSelf()]
+    permission_classes = [IsSelf]
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
@@ -219,11 +209,7 @@ class RatingDefaultDetailView(generics.RetrieveUpdateDestroyAPIView):
     - If the user was the author he can access, modify and delete his own rating.
     """
     serializer_class = RatingDefaultSerializer
-
-    def get_permissions(self):
-        if self.request.user.is_anonymous:
-            raise NotAuthenticated()
-        return [IsSelf()]
+    permission_classes = [IsSelf]
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):

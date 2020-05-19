@@ -4,13 +4,17 @@ from rest_framework import permissions
 from video_requests.models import Comment, Rating, Request, Video
 
 
+def is_staff(user):
+    return bool(user.is_staff or user.is_superuser)
+
+
 class IsStaffUser(permissions.BasePermission):
     """
-    Allows access only to staff members.
+    Allows access only to staff members and admins.
     """
 
     def has_permission(self, request, view):
-        return request.user and request.user.is_staff
+        return bool(request.user and is_staff(request.user))
 
 
 class IsAdminUser(permissions.BasePermission):
@@ -19,12 +23,12 @@ class IsAdminUser(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        return request.user and request.user.is_superuser
+        return bool(request.user and request.user.is_superuser)
 
 
-class IsSelf(permissions.BasePermission):
+class IsSelf(permissions.IsAuthenticated):
     """
-    Allows access only if the user is
+    Allows access only if the user is authenticated and
     - Requester of the request OR
     - Requester of the request which contains the video OR
     - Author of the comment OR
@@ -34,20 +38,20 @@ class IsSelf(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Request):
-            return obj.requester == request.user
+            return bool(obj.requester == request.user)
         elif isinstance(obj, Video):
-            return obj.request.requester == request.user
+            return bool(obj.request.requester == request.user)
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
-            return obj.author == request.user
+            return bool(obj.author == request.user)
         elif isinstance(obj, User):
-            return obj == request.user
+            return bool(obj == request.user)
         else:
             return False
 
 
-class IsSelfOrStaff(permissions.BasePermission):
+class IsSelfOrStaff(permissions.IsAuthenticated):
     """
-    Allows access only to admin members and if the user is
+    Allows access only to admin members and if the authenticated user is
     - Requester of the request OR
     - Requester of the request which contains the video OR
     - Author of the comment OR
@@ -57,20 +61,20 @@ class IsSelfOrStaff(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Request):
-            return obj.requester == request.user or request.user.is_staff
+            return bool(obj.requester == request.user or is_staff(request.user))
         elif isinstance(obj, Video):
-            return obj.request.requester == request.user or request.user.is_staff
+            return bool(obj.request.requester == request.user or is_staff(request.user))
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
-            return obj.author == request.user or request.user.is_staff
+            return bool(obj.author == request.user or is_staff(request.user))
         elif isinstance(obj, User):
-            return obj == request.user or request.user.is_staff
+            return bool(obj == request.user or is_staff(request.user))
         else:
             return False
 
 
-class IsSelfOrAdmin(permissions.BasePermission):
+class IsSelfOrAdmin(permissions.IsAuthenticated):
     """
-    Allows access only to admin members and if the user is
+    Allows access only to admin members and if the authenticated user is
     - Requester of the request OR
     - Requester of the request which contains the video OR
     - Author of the comment OR
@@ -80,35 +84,25 @@ class IsSelfOrAdmin(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Request):
-            return obj.requester == request.user or request.user.is_superuser
+            return bool(obj.requester == request.user or request.user.is_superuser)
         elif isinstance(obj, Video):
-            return obj.request.requester == request.user or request.user.is_superuser
+            return bool(obj.request.requester == request.user or request.user.is_superuser)
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
-            return obj.author == request.user or request.user.is_superuser
+            return bool(obj.author == request.user or request.user.is_superuser)
         elif isinstance(obj, User):
-            return obj == request.user or request.user.is_superuser
+            return bool(obj == request.user or request.user.is_superuser)
         else:
             return False
 
 
-class IsStaffSelfOrAdmin(permissions.BasePermission):
+class IsStaffSelfOrAdmin(IsStaffUser, IsSelfOrAdmin):
     """
-    Allows access only to admin members and if the user is staff member and
+    Allows access only to admin members and if the authenticated user is staff member and
     - Requester of the request OR
     - Requester of the request which contains the video OR
     - Author of the comment OR
     - Author of the rating
     - the requested user itself
-    """
 
-    def has_object_permission(self, request, view, obj):
-        if isinstance(obj, Request):
-            return (obj.requester == request.user and request.user.is_staff) or request.user.is_superuser
-        elif isinstance(obj, Video):
-            return (obj.request.requester == request.user and request.user.is_staff) or request.user.is_superuser
-        elif isinstance(obj, Comment) or isinstance(obj, Rating):
-            return (obj.author == request.user and request.user.is_staff) or request.user.is_superuser
-        elif isinstance(obj, User):
-            return (obj == request.user and request.user.is_staff) or request.user.is_superuser
-        else:
-            return False
+    This class is based on multiple inheritance. The sequence of the classes is important!
+    """

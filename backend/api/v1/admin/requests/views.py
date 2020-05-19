@@ -1,5 +1,5 @@
 from rest_framework import generics, filters
-from rest_framework.exceptions import ValidationError, NotAuthenticated, PermissionDenied
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.serializers import RequestAdminSerializer, CommentAdminSerializer, CrewMemberAdminSerializer, \
@@ -115,10 +115,6 @@ class CommentAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentAdminSerializer
 
     def get_permissions(self):
-        if self.request.user.is_anonymous:
-            raise NotAuthenticated()
-        elif not self.request.user.is_staff:
-            raise PermissionDenied()
         if self.request.method == 'GET':
             return [IsStaffUser()]
         else:
@@ -273,10 +269,6 @@ class RatingAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RatingAdminSerializer
 
     def get_permissions(self):
-        if self.request.user.is_anonymous:
-            raise NotAuthenticated()
-        elif not self.request.user.is_staff:
-            raise PermissionDenied()
         if self.request.method == 'GET':
             return [IsStaffUser()]
         else:

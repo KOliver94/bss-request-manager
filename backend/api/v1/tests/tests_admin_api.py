@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.test.utils import override_settings
 from rest_framework import status
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
@@ -22,7 +23,7 @@ class AdminAPITestCase(APITestCase):
         url = reverse('login_obtain_jwt_pair')
         resp = self.client.post(url, {'username': username, 'password': PASSWORD}, format='json')
         token = resp.data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {0}'.format(token))
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
 
     def setUp(self):
         # Create normal user
@@ -82,7 +83,7 @@ class AdminAPITestCase(APITestCase):
         elif method == 'DELETE':
             response = self.client.delete(uri)
         else:
-            raise Exception('Unsupported method specified!')
+            raise MethodNotAllowed(method)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def access_history(self, uri):
