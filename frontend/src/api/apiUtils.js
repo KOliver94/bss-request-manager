@@ -60,10 +60,7 @@ axiosInstance.interceptors.response.use(
           } finally {
             // Remove tokens and auth header.
             axiosInstance.defaults.headers.Authorization = null;
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
-            localStorage.removeItem('name');
-            localStorage.removeItem('role');
+            localStorage.clear();
             console.error(`API call failed. User has been logged out. ${err}`);
           }
         });

@@ -53,11 +53,7 @@ export async function logoutUser() {
     })
     .finally(() => {
       axiosInstance.defaults.headers.Authorization = null;
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('name');
-      localStorage.removeItem('role');
-      localStorage.removeItem('user_id');
+      localStorage.clear();
     });
 }
 
