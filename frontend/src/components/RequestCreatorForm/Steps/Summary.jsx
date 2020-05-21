@@ -36,21 +36,23 @@ const Summary = ({ formData }) => {
         <GridItem xs={10} sm={6}>
           <p>
             Kezdés:{' '}
-            {
-              (format(formData.start_datetime, 'yyyy. MMMM d. (eeee) | H:mm'),
+            {format(
+              new Date(formData.start_datetime),
+              'yyyy. MMMM d. (eeee) | H:mm',
               {
                 locale: hu,
-              })
-            }
+              }
+            )}
           </p>
           <p>
             Befejezés:{' '}
-            {
-              (format(formData.end_datetime, 'yyyy. MMMM d. (eeee) | H:mm'),
+            {format(
+              new Date(formData.end_datetime),
+              'yyyy. MMMM d. (eeee) | H:mm',
               {
                 locale: hu,
-              })
-            }
+              }
+            )}
           </p>
         </GridItem>
       </GridContainer>
