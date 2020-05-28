@@ -24,7 +24,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-swipeable-views": "^0.13.9",
-    "yup": "^0.29.0"
+    "yup": "^0.29.1"
   },
   "scripts": {
     "start": "set HTTPS=true&&react-scripts start",
