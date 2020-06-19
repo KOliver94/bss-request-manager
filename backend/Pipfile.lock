@@ -513,10 +513,10 @@
         },
         "python-ldap": {
             "hashes": [
-                "sha256:7d1c4b15375a533564aad3d3deade789221e450052b21ebb9720fb822eccdb8e"
+                "sha256:de04939485b53ee5d9a6855562d415b73060c52e681644386de4d5bd18e3f540"
             ],
             "index": "pypi",
-            "version": "==3.2.0"
+            "version": "==3.3.0"
         },
         "python3-openid": {
             "hashes": [
