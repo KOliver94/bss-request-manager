@@ -281,7 +281,7 @@ export default function Comments({
                       </Tooltip>
                     </Grid>
 
-                    {(isAdmin ||
+                    {((isAdmin && localStorage.getItem('role') === 'admin') ||
                       comment.author.id.toString() ===
                         localStorage.getItem('user_id')) && (
                       <Grid item className={classes.commentButtons}>
