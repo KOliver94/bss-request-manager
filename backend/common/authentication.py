@@ -1,5 +1,5 @@
 from rest_framework import serializers, generics, status
-from rest_framework.exceptions import NotAuthenticated
+from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.exceptions import TokenError
@@ -103,8 +103,12 @@ class RefreshTokenSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         try:
-            RefreshToken(validated_data['refresh']).blacklist()
-            return validated_data
+            token = RefreshToken(validated_data['refresh'])
+            if token.payload['user_id'] is self.context['request'].user.id:
+                token.blacklist()
+                return validated_data
+            else:
+                raise PermissionDenied(detail='You can only logout from you own account')
         except TokenError:
             raise NotAuthenticated(detail='Token is invalid or expired')
 

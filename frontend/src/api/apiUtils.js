@@ -32,6 +32,7 @@ axiosInstance.interceptors.response.use(
     else if (
       error.response.status === 401 &&
       error.response.data.code === 'token_not_valid' &&
+      error.config.url !== '/login/refresh' &&
       localStorage.getItem('refresh_token')
     ) {
       const refreshToken = localStorage.getItem('refresh_token');
@@ -62,6 +63,7 @@ axiosInstance.interceptors.response.use(
             axiosInstance.defaults.headers.Authorization = null;
             localStorage.clear();
             console.error(`API call failed. User has been logged out. ${err}`);
+            window.location.href = '/';
           }
         });
     }
