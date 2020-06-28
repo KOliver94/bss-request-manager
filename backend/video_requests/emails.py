@@ -24,7 +24,7 @@ def email_user_new_request_confirmation(request):
         'first_name': request.requester.first_name,
         'request': request,
         'is_registered': request.requester.is_active,
-        'details_url': f'{BASE_URL}/requests/{request.id}'
+        'details_url': f'{BASE_URL}/my-requests/{request.id}'
     }
 
     msg_plain = render_to_string('email/txt/user_new_request_confirmation.txt', context)
@@ -54,7 +54,7 @@ def email_user_video_published(video):
         'is_registered': video.request.requester.is_active,
         'video_title': video.title,
         'video_url': video.additional_data['publishing']['website'],
-        'rating_url': f'{BASE_URL}/requests/{video.request.id}/videos/{video.id}/rating'
+        'rating_url': f'{BASE_URL}/my-requests/{video.request.id}'
     }
 
     msg_plain = render_to_string('email/txt/user_video_published.txt', context)
@@ -84,7 +84,7 @@ def email_user_new_comment(comment):
         'commenter_name': f'{comment.author.last_name} {comment.author.first_name}',
         'comment_message': comment.text,
         'comment_created': comment.created,
-        'comment_url': f'{BASE_URL}/requests/{comment.request.id}/comments'
+        'comment_url': f'{BASE_URL}/my-requests/{comment.request.id}'
     }
 
     msg_plain = render_to_string('email/txt/user_new_comment.txt', context)
@@ -155,7 +155,7 @@ def email_crew_new_comment(comment):
         'commenter_name': f'{comment.author.last_name} {comment.author.first_name}',
         'comment_message': comment.text,
         'comment_created': comment.created,
-        'comment_url': f'{BASE_URL}/requests/{comment.request.id}/comments'
+        'comment_url': f'{BASE_URL}/admin/requests/{comment.request.id}'
     }
 
     msg_plain = render_to_string('email/txt/crew_new_comment.txt', context)
