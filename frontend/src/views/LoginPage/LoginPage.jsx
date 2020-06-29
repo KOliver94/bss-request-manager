@@ -41,7 +41,9 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { from } = location.state || { from: { pathname: '/' } };
+  const { from } = location.state || {
+    from: { pathname: localStorage.getItem('redirectedFrom') || '/' },
+  };
 
   const handleLogin = useCallback(
     async (type, data) => {
@@ -49,6 +51,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
 
       const handleSuccess = () => {
         setIsAuthenticated(true);
+        localStorage.removeItem('redirectedFrom');
         enqueueSnackbar('Sikeres bejelentkezés', {
           variant: 'success',
         });
@@ -93,6 +96,14 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
     }));
   };
 
+  const handleButtonClick = () => {
+    if (from.pathname) {
+      localStorage.setItem('redirectedFrom', from.pathname);
+    } else if (from) {
+      localStorage.setItem('redirectedFrom', from);
+    }
+  };
+
   setTimeout(() => {
     setCardAnimation('');
   }, 700);
@@ -118,7 +129,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
         absolute
         color="transparent"
         brand="BSS Felkérés kezelő"
-        rightLinks={<HeaderLinks />}
+        rightLinks={<HeaderLinks hideLogin />}
       />
       <div
         className={classes.pageHeader}
@@ -139,6 +150,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       <Button
                         justIcon
                         href={process.env.REACT_APP_AUTHSCH_OAUTH_URL}
+                        onClick={handleButtonClick}
                         target="_self"
                         color="transparent"
                         disabled={loading}
@@ -148,6 +160,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       <Button
                         justIcon
                         href={process.env.REACT_APP_FACEBOOK_OAUTH_URL}
+                        onClick={handleButtonClick}
                         target="_self"
                         color="transparent"
                         disabled={loading}
@@ -157,6 +170,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       <Button
                         justIcon
                         href={process.env.REACT_APP_GOOGLE_OAUTH_URL}
+                        onClick={handleButtonClick}
                         target="_self"
                         color="transparent"
                         disabled={loading}

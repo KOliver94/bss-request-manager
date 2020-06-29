@@ -41,6 +41,7 @@ export default function HeaderLinks({
   isAuthenticated = false,
   setIsAuthenticated,
   hideNewRequest = false,
+  hideLogin = false,
 }) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
@@ -104,16 +105,20 @@ export default function HeaderLinks({
           />
         </ListItem>
       ) : (
-        <ListItem className={classes.listItem}>
-          <Link
-            to={{ pathname: '/login', state: { from: location.pathname } }}
-            className={classes.navReactRouterLink}
-          >
-            <Button color="transparent" className={classes.navLink}>
-              <LockOutlinedIcon className={classes.icons} /> Bejelentkezés
-            </Button>
-          </Link>
-        </ListItem>
+        <>
+          {!hideLogin && (
+            <ListItem className={classes.listItem}>
+              <Link
+                to={{ pathname: '/login', state: { from: location.pathname } }}
+                className={classes.navReactRouterLink}
+              >
+                <Button color="transparent" className={classes.navLink}>
+                  <LockOutlinedIcon className={classes.icons} /> Bejelentkezés
+                </Button>
+              </Link>
+            </ListItem>
+          )}
+        </>
       )}
 
       {hideNewRequest ? (
@@ -134,4 +139,7 @@ export default function HeaderLinks({
 
 HeaderLinks.propTypes = {
   isAuthenticated: PropTypes.bool,
+  setIsAuthenticated: PropTypes.func,
+  hideNewRequest: PropTypes.bool,
+  hideLogin: PropTypes.bool,
 };
