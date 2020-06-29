@@ -281,7 +281,10 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 
     # Custom action: Add phone number to user's profile
-    'common.social_pipeline.add_phone_number_to_profile'
+    'common.social_pipeline.add_phone_number_to_profile',
+    
+    # Custom action: Get user's avatar
+    'common.social_pipeline.get_avatar'
 )
 
 

@@ -78,7 +78,10 @@ export default function HeaderLinks({
               className: classes.navLinkUserProfile,
               color: 'transparent',
             }}
-            buttonIcon={{ type: 'Avatar' }}
+            buttonIcon={{
+              type: 'Avatar',
+              imgSrc: localStorage.getItem('avatar'),
+            }}
             dropdownList={[
               <AdminButton />,
               { divider: isAdminOrStaff() },

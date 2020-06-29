@@ -16,9 +16,10 @@ def get_role(user):
 
 
 def add_custom_claims(token, user):
+    token['avatar'] = user.userprofile.avatar_url
+    token['groups'] = list(user.groups.values_list('name', flat=True))
     token['name'] = f'{user.last_name} {user.first_name}'
     token['role'] = get_role(user)
-    token['groups'] = list(user.groups.values_list('name', flat=True))
     return token
 
 

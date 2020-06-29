@@ -7,7 +7,7 @@ from simple_history.models import HistoricalRecords
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(blank=True)
+    avatar_url = models.URLField(blank=True)
     phone_number = PhoneNumberField(blank=True)
 
     def __str__(self):

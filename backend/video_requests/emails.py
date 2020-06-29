@@ -81,6 +81,8 @@ def email_user_new_comment(comment):
         'base_url': BASE_URL,
         'first_name': comment.request.requester.first_name,
         'request_title': comment.request.title,
+        'commenter_avatar': comment.author.userprofile.avatar_url
+        if comment.author.userprofile.avatar_url else BASE_URL + "/static/images/default_avatar.png",
         'commenter_name': f'{comment.author.last_name} {comment.author.first_name}',
         'comment_message': comment.text,
         'comment_created': comment.created,
@@ -152,6 +154,8 @@ def email_crew_new_comment(comment):
         'base_url': BASE_URL,
         'request_title': comment.request.title,
         'comment_internal': comment.internal,
+        'commenter_avatar': comment.author.userprofile.avatar_url
+        if comment.author.userprofile.avatar_url else BASE_URL + "/static/images/default_avatar.png",
         'commenter_name': f'{comment.author.last_name} {comment.author.first_name}',
         'comment_message': comment.text,
         'comment_created': comment.created,

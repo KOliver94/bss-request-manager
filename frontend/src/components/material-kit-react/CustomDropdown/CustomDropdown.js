@@ -74,9 +74,7 @@ export default function CustomDropdown(props) {
     case 'object':
       if (buttonIcon.type === 'Avatar') {
         icon = (
-          <Avatar className={classes.buttonAvatar} src={buttonIcon.imgSrc}>
-            {buttonIcon.letters}
-          </Avatar>
+          <Avatar className={classes.buttonAvatar} src={buttonIcon.imgSrc} />
         );
         break;
       }

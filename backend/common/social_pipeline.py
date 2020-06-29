@@ -1,3 +1,5 @@
+import requests
+from libgravatar import Gravatar, sanitize_email
 from rest_framework.exceptions import ValidationError
 
 
@@ -20,4 +22,19 @@ def set_user_active_when_first_logs_in(backend, uid, user=None, *args, **kwargs)
 def add_phone_number_to_profile(backend, uid, user=None, *args, **kwargs):
     if kwargs['details'].get('mobile'):
         user.userprofile.phone_number = kwargs['details'].get('mobile')
+        user.save()
+
+
+def get_avatar(backend, strategy, details, response, user, *args, **kwargs):
+    if backend.name == 'facebook':
+        url = f"https://graph.facebook.com/{response['id']}/picture?width=500&height=500"
+    elif backend.name == 'google-oauth2':
+        url = response['picture']
+    else:
+        url = Gravatar(sanitize_email(user.email)).get_image(size=500, use_ssl=True, default='404')
+        if requests.get(url).status_code == 404:
+            url = None
+
+    if url and url != user.userprofile.avatar_url:
+        user.userprofile.avatar_url = url
         user.save()

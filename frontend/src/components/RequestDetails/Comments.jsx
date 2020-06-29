@@ -191,7 +191,10 @@ export default function Comments({
                         <Form>
                           <Grid container wrap="nowrap" spacing={2}>
                             <Grid item>
-                              <Avatar />
+                              <Avatar
+                                alt={`${comment.author.first_name} ${comment.author.last_name}`}
+                                src={comment.author.userprofile.avatar_url}
+                              />
                             </Grid>
                             <Grid item xs zeroMinWidth>
                               <h4 className={classes.commentAuthor}>
@@ -252,7 +255,10 @@ export default function Comments({
                     className={comment.internal ? classes.internalComment : ''}
                   >
                     <Grid item>
-                      <Avatar />
+                      <Avatar
+                        alt={`${comment.author.first_name} ${comment.author.last_name}`}
+                        src={comment.author.userprofile.avatar_url}
+                      />
                     </Grid>
                     <Grid item xs zeroMinWidth>
                       <h4 className={classes.commentAuthor}>
@@ -327,7 +333,7 @@ export default function Comments({
             <Form>
               <Grid container wrap="nowrap" spacing={2}>
                 <Grid item>
-                  <Avatar />
+                  <Avatar src={localStorage.getItem('avatar')} />
                 </Grid>
                 <Grid item xs zeroMinWidth>
                   <h4 className={classes.commentAuthor}>
