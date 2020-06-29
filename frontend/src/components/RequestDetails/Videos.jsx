@@ -444,7 +444,9 @@ export default function Videos({
                       </ExpansionPanelDetails>
                       <Divider />
                       <ExpansionPanelActions
-                        className={classes.adminEditButtons}
+                        className={
+                          video.status >= 3 ? classes.adminEditButtons : null
+                        }
                       >
                         <IconButton
                           onClick={() => handleDelete(video.id)}
@@ -490,29 +492,34 @@ export default function Videos({
                   )}
                 </>
               )}
-              {!isAdmin && <Divider />}
-              <ExpansionPanelActions>
-                {getOwnRatingForVideo(video).rating > 0 && (
-                  <IconButton
-                    onClick={() => handleReview(video)}
-                    disabled={reviewDialogData.open || ratingLoading}
-                    size="small"
-                  >
-                    <RateReviewIcon fontSize="small" />
-                  </IconButton>
-                )}
-                <Rating
-                  name={`${video.id}-own-rating`}
-                  classes={{
-                    label: classes.ratingLabel,
-                  }}
-                  value={getOwnRatingForVideo(video).rating}
-                  onChange={(event, value) =>
-                    handleRatingCreateUpdate(value, video)
-                  }
-                  disabled={reviewDialogData.open || ratingLoading}
-                />
-              </ExpansionPanelActions>
+              {((isAdmin && video.status >= 3) ||
+                (!isAdmin && video.status >= 5)) && (
+                <>
+                  {!isAdmin && <Divider />}
+                  <ExpansionPanelActions>
+                    {getOwnRatingForVideo(video).rating > 0 && (
+                      <IconButton
+                        onClick={() => handleReview(video)}
+                        disabled={reviewDialogData.open || ratingLoading}
+                        size="small"
+                      >
+                        <RateReviewIcon fontSize="small" />
+                      </IconButton>
+                    )}
+                    <Rating
+                      name={`${video.id}-own-rating`}
+                      classes={{
+                        label: classes.ratingLabel,
+                      }}
+                      value={getOwnRatingForVideo(video).rating}
+                      onChange={(event, value) =>
+                        handleRatingCreateUpdate(value, video)
+                      }
+                      disabled={reviewDialogData.open || ratingLoading}
+                    />
+                  </ExpansionPanelActions>
+                </>
+              )}
             </ExpansionPanel>
           ))}
         </>

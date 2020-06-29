@@ -33,6 +33,7 @@ def create_video(video_id, request):
     video.id = video_id
     video.request = request
     video.title = 'Test video - ' + str(video_id)
+    video.status = 6
     video.save()
     return video
 
