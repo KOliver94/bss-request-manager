@@ -46,6 +46,11 @@ RUN pipenv install --system
 # Copy everything over to Docker environment
 COPY ./backend /app/backend
 
+# Create log files
+RUN mkdir -p /app/backend/logs
+RUN touch /app/backend/logs/backend.log
+RUN touch /app/backend/logs/backend.err
+
 # Copy built frontend assets
 RUN mkdir -p /app/frontend/build
 COPY --from=react-build /app/frontend/build /app/frontend/build

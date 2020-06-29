@@ -398,9 +398,33 @@ if not DEBUG:
         send_default_pii=True
     )
 
+# Logging
+# https://docs.djangoproject.com/en/3.0/topics/logging/
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BACKEND_DIR, 'logs', 'backend.log'),
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BACKEND_DIR, 'logs', 'backend.err'),
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file', 'error_file'],
+        'level': config('LOGGING_LEVEL'),
+    },
+}
 
 # Debug settings
-
 if DEBUG:
     # Enable Django admin
     INSTALLED_APPS += [
@@ -429,15 +453,6 @@ if DEBUG:
     SIMPLE_JWT.update({
         'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
     })
-
-    # Logging
-    # https://docs.djangoproject.com/en/3.0/topics/logging/
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {'console': {'class': 'logging.StreamHandler'}},
-        'loggers': {'django_auth_ldap': {'level': 'DEBUG', 'handlers': ['console']}},
-    }
 
     # Do not send real e-mails in Debug mode
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
