@@ -6,7 +6,7 @@ from rest_framework.fields import IntegerField, CharField
 from rest_framework.generics import get_object_or_404
 
 from api.v1.users.serializers import UserSerializer
-from common.utilities import create_calendar_event
+from common.utilities import create_calendar_event, update_calendar_event
 from video_requests.emails import email_user_new_comment, email_crew_new_comment
 from video_requests.models import Request, Video, CrewMember, Rating, Comment
 from video_requests.utilities import update_request_status, update_video_status
@@ -189,6 +189,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         if comment_text:
             request.comments.add(self.create_comment(comment_text, request))
         update_request_status(request)
+        create_calendar_event(request)
         return request
 
     def update(self, instance, validated_data):
@@ -197,5 +198,5 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         handle_additional_data(validated_data, self.context['request'].user, instance)
         request = super(RequestAdminSerializer, self).update(instance, validated_data)
         update_request_status(request)
-        create_calendar_event(request)
+        update_calendar_event(request)
         return request

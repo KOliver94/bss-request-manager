@@ -5,6 +5,7 @@ from rest_framework.generics import get_object_or_404
 from api.v1.admin.requests.serializers import RequestAdminSerializer, CommentAdminSerializer, CrewMemberAdminSerializer, \
     VideoAdminSerializer, RatingAdminSerializer, HistorySerializer
 from common.permissions import IsStaffUser, IsStaffSelfOrAdmin
+from common.utilities import remove_calendar_event
 from video_requests.models import Request, Comment, CrewMember, Video, Rating
 
 
@@ -74,6 +75,10 @@ class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
             # queryset just for schema generation metadata
             return Request.objects.none()
         return Request.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        remove_calendar_event(get_object_or_404(Request, pk=self.kwargs['pk']))
+        return super(RequestAdminDetailView, self).destroy(request, *args, **kwargs)
 
 
 class CommentAdminListCreateView(generics.ListCreateAPIView):
