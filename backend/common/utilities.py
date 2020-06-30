@@ -1,11 +1,15 @@
 from django.contrib.auth.models import User
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
+from googleapiclient.discovery_cache.base import Cache
 from googleapiclient.errors import HttpError
 
-from manager import settings
+from django.conf import settings
 
 
+##############################
+#           LDAP             #
+##############################
 def get_editor_in_chief():
     return User.objects.filter(groups__name='FOSZERKESZTO')
 
@@ -18,10 +22,25 @@ def get_pr_responsible():
     return User.objects.filter(groups__name='PR')
 
 
+##############################
+#      Google Calendar       #
+##############################
+
+# https://github.com/googleapis/google-api-python-client/issues/325#issuecomment-274349841
+class MemoryCache(Cache):
+    _CACHE = {}
+
+    def get(self, url):
+        return MemoryCache._CACHE.get(url)
+
+    def set(self, url, content):
+        MemoryCache._CACHE[url] = content
+
+
 def get_google_calendar_service():
     credentials = Credentials.from_service_account_file(filename=settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH,
                                                         scopes=['https://www.googleapis.com/auth/calendar'])
-    return build('calendar', 'v3', credentials=credentials)
+    return build('calendar', 'v3', credentials=credentials, cache=MemoryCache())
 
 
 def get_calendar_event_body(request):

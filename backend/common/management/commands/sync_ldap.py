@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django_auth_ldap.backend import LDAPBackend
 
-from manager import settings
+from django.conf import settings
 
 
 class Command(BaseCommand):
