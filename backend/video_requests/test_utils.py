@@ -1,6 +1,7 @@
 from datetime import timedelta
-from django.utils import timezone
 from random import randint
+
+from django.utils import timezone
 
 from video_requests.models import Request, Comment, CrewMember, Video, Rating
 

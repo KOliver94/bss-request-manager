@@ -1,8 +1,8 @@
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
 from common.utilities import get_editor_in_chief, get_pr_responsible, get_production_manager
-from django.conf import settings
 
 TEXT_HTML = 'text/html'
 BASE_URL = settings.BASE_URL

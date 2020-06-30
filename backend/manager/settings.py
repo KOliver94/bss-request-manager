@@ -282,7 +282,7 @@ SOCIAL_AUTH_PIPELINE = (
 
     # Custom action: Add phone number to user's profile
     'common.social_pipeline.add_phone_number_to_profile',
-    
+
     # Custom action: Get user's avatar
     'common.social_pipeline.get_avatar'
 )
@@ -313,6 +313,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
+
 
 # Simple JWT Settings
 # https://github.com/davesque/django-rest-framework-simplejwt
@@ -361,6 +362,7 @@ SWAGGER_SETTINGS = {
     }
 }
 
+
 # E-mail settings
 # https://docs.djangoproject.com/en/3.0/topics/email/
 
@@ -401,8 +403,10 @@ if not DEBUG:
         send_default_pii=True
     )
 
+
 # Logging
 # https://docs.djangoproject.com/en/3.0/topics/logging/
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -427,7 +431,9 @@ LOGGING = {
     },
 }
 
+
 # Debug settings
+
 if DEBUG:
     # Enable Django admin
     INSTALLED_APPS += [

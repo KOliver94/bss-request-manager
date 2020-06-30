@@ -1,10 +1,9 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.discovery_cache.base import Cache
 from googleapiclient.errors import HttpError
-
-from django.conf import settings
 
 
 ##############################

@@ -40,7 +40,8 @@
                                 </td>
                                 <td align="left" width="75%"
                                     style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                    {% language 'hu' %}{{ request.start_datetime|date:"SHORT_DATETIME_FORMAT" }}{% endlanguage %}
+                                    {% language 'hu' %}
+                                        {{ request.start_datetime|date:"SHORT_DATETIME_FORMAT" }}{% endlanguage %}
                                 </td>
                             </tr>
                             <tr>
@@ -50,7 +51,8 @@
                                 </td>
                                 <td align="left" width="75%"
                                     style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                    {% language 'hu' %}{{ request.end_datetime|date:"SHORT_DATETIME_FORMAT" }}{% endlanguage %}
+                                    {% language 'hu' %}
+                                        {{ request.end_datetime|date:"SHORT_DATETIME_FORMAT" }}{% endlanguage %}
                                 </td>
                             </tr>
                             <tr>
