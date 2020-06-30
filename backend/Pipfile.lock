@@ -654,14 +654,6 @@
             ],
             "version": "==2.4.2"
         },
-        "colorama": {
-            "hashes": [
-                "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff",
-                "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"
-            ],
-            "markers": "platform_system == 'Windows'",
-            "version": "==0.4.3"
-        },
         "coverage": {
             "hashes": [
                 "sha256:00f1d23f4336efc3b311ed0d807feb45098fc86dee1ca13b3d6768cdab187c8a",
@@ -805,11 +797,11 @@
         },
         "tox": {
             "hashes": [
-                "sha256:a0d36849e59ac4a28664e80951a634b0e920d88047ce3fa8fa7b45216e573f30",
-                "sha256:db12b48359ba2cbc8c8f7ab712706ee67d59f8f9e8e0c795dcc45349b8784e48"
+                "sha256:60c3793f8ab194097ec75b5a9866138444f63742b0f664ec80be1222a40687c5",
+                "sha256:9a746cda9cadb9e1e05c7ab99f98cfcea355140d2ecac5f97520be94657c3bc7"
             ],
             "index": "pypi",
-            "version": "==3.16.0"
+            "version": "==3.16.1"
         },
         "virtualenv": {
             "hashes": [
