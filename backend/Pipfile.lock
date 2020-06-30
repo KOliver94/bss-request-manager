@@ -493,10 +493,10 @@
         },
         "python-ldap": {
             "hashes": [
-                "sha256:de04939485b53ee5d9a6855562d415b73060c52e681644386de4d5bd18e3f540"
+                "sha256:4711cacf013e298754abd70058ccc995758177fb425f1c2d30e71adfc1d00aa5"
             ],
             "index": "pypi",
-            "version": "==3.3.0"
+            "version": "==3.3.1"
         },
         "python3-openid": {
             "hashes": [
@@ -653,14 +653,6 @@
                 "sha256:bc58d83eb610252fd8de6363e39d4f1d0619c894b0ed24603b881c02e64c7386"
             ],
             "version": "==2.4.2"
-        },
-        "colorama": {
-            "hashes": [
-                "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff",
-                "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"
-            ],
-            "markers": "platform_system == 'Windows'",
-            "version": "==0.4.3"
         },
         "coverage": {
             "hashes": [
