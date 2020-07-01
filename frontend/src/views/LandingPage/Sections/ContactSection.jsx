@@ -60,11 +60,9 @@ export default function ContactSection() {
                   rows: 5,
                 }}
               />
-              <GridContainer justify="center">
-                <GridItem xs={12} sm={12} md={4} className={classes.textCenter}>
-                  <Button color="primary">Küldés</Button>
-                </GridItem>
-              </GridContainer>
+              <GridItem xs={12} sm={12} md={4}>
+                <Button color="primary">Küldés</Button>
+              </GridItem>
             </GridContainer>
           </form>
         </GridItem>
