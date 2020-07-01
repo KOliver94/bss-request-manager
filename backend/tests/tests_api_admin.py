@@ -1441,20 +1441,20 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_and_staff_error_for_getting_ratings_on_not_existing_request_or_video(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings', None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings', None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings', None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings', None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings', None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings', None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings', None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings', None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings', None)
 
     """
     GET /api/v1/admin/requests/:id/videos/:id/ratings/:id
@@ -1462,136 +1462,136 @@ class AdminAPITestCase(APITestCase):
 
     def test_admin_can_get_rating_detail(self):
         self.authorize_user(ADMIN)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating2.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating3.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.access_history(BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        self.access_history(BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
 
     def test_staff_can_get_rating_detail(self):
         self.authorize_user(STAFF)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating2.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating3.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.access_history(BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        self.access_history(BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
 
     def test_user_should_not_get_rating_detail(self):
         self.authorize_user(USER)
 
         # Test error for existing object
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating2.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating3.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_get_rating_detail(self):
         # Test error for existing object
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating2.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating3.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_rating_detail_on_not_existing_request_video_or_rating(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('GET', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('GET', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
     """
     POST /api/v1/admin/requests/:id/videos/:id/ratings
@@ -1694,45 +1694,45 @@ class AdminAPITestCase(APITestCase):
         data = {
             'review': 'Modified by admin'
         }
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                               str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                               + str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
         self.assertIn('Modified by admin', data['review'])
-        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                               str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                               + str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
         self.assertIn('Modified by admin', data['review'])
-        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                               str(self.video1.id) + '/ratings/' + str(self.rating3.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                               + str(self.video1.id) + '/ratings/' + str(self.rating3.id)).json()
         self.assertIn('Modified by admin', data['review'])
 
         data['review'] = 'Modified by admin (PUT)'
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                               str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                               + str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
         self.assertIn('Modified by admin (PUT)', data['review'])
-        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                               str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                               + str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
         self.assertIn('Modified by admin (PUT)', data['review'])
-        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                               str(self.video1.id) + '/ratings/' + str(self.rating3.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                               + str(self.video1.id) + '/ratings/' + str(self.rating3.id)).json()
         self.assertIn('Modified by admin (PUT)', data['review'])
 
     def test_staff_can_modify_only_own_ratings(self):
@@ -1740,33 +1740,33 @@ class AdminAPITestCase(APITestCase):
         data = {
             'review': 'Modified by staff'
         }
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                               str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                               + str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
         self.assertIn('Modified by staff', data['review'])
 
         data['review'] = 'Modified by staff (PUT)'
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                               str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
+        data = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                               + str(self.video1.id) + '/ratings/' + str(self.rating2.id)).json()
         self.assertIn('Modified by staff (PUT)', data['review'])
 
     def test_user_should_not_modify_ratings(self):
@@ -1775,37 +1775,37 @@ class AdminAPITestCase(APITestCase):
             'review': 'Modified by user'
         }
         # Test error for existing object
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                     str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                     + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                     str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                     + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         data = {
@@ -1813,37 +1813,37 @@ class AdminAPITestCase(APITestCase):
             'rating': 5
         }
         # Test error for existing object
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_modify_rating(self):
@@ -1851,37 +1851,37 @@ class AdminAPITestCase(APITestCase):
             'review': 'Modified by anonymous'
         }
         # Test error for existing object
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                     str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                     + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                     str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                     + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         data = {
@@ -1889,37 +1889,37 @@ class AdminAPITestCase(APITestCase):
             'rating': 5
         }
         # Test error for existing object
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating2.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating3.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                   str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
+        response = self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                   + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_modifying_rating_on_not_existing_request_video_or_rating(self):
@@ -1932,66 +1932,66 @@ class AdminAPITestCase(APITestCase):
         }
 
         self.authorize_user(ADMIN)
-        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PATCH', str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
 
-        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
 
         self.authorize_user(STAFF)
-        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PATCH', str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_patch)
+        self.should_not_found('PATCH', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_patch)
 
-        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
-        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
-        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
+        self.should_not_found('PUT', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), data_put)
+        self.should_not_found('PUT', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), data_put)
 
     """
     DELETE /api/v1/admin/requests/:id/videos/:id/ratings/:id
@@ -2000,123 +2000,123 @@ class AdminAPITestCase(APITestCase):
     def test_admin_can_delete_any_ratings(self):
         self.authorize_user(ADMIN)
         # Try to delete one rating created by staff user
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video2.id) + '/ratings/' + str(self.rating5.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video2.id) + '/ratings/' + str(self.rating5.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_delete_only_own_ratings(self):
         self.authorize_user(STAFF)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating3.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video2.id) + '/ratings/' + str(self.rating4.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video2.id) + '/ratings/' + str(self.rating4.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_delete_ratings(self):
         self.authorize_user(USER)
 
         # Test error for existing object
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating2.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating3.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                      str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                      + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                      str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                      + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_delete_ratings(self):
         # Test error for existing object
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating2.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating2.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating3.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating3.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         # Test error for not existing object - Error should be the same
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                      str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                      + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(self.rating1.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                      str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                      + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                      str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                      + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                      str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
+        response = self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                      + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_deleting_rating_on_not_existing_request_video_or_rating(self):
         self.authorize_user(ADMIN)
-        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
         self.authorize_user(STAFF)
-        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
-        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                              str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
+        self.should_not_found('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                              + str(NOT_EXISTING_ID) + '/ratings/' + str(NOT_EXISTING_ID), None)

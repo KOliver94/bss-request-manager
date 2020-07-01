@@ -607,25 +607,25 @@ class DefaultAPITestCase(APITestCase):
 
     def test_anonymous_cannot_get_comment_detail(self):
         # Try to access comments
-        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request1.id) + '/comments/' +
-                                                str(self.comment1.id)))
-        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request1.id) + '/comments/' +
-                                                str(self.comment2.id)))
-        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request2.id) + '/comments/' +
-                                                str(self.comment6.id)))
-        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request2.id) + '/comments/' +
-                                                str(self.comment7.id)))
-        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request3.id) + '/comments/' +
-                                                str(self.comment11.id)))
-        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request3.id) + '/comments/' +
-                                                str(self.comment12.id)))
+        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request1.id) + '/comments/'
+                                                + str(self.comment1.id)))
+        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request1.id) + '/comments/'
+                                                + str(self.comment2.id)))
+        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request2.id) + '/comments/'
+                                                + str(self.comment6.id)))
+        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request2.id) + '/comments/'
+                                                + str(self.comment7.id)))
+        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request3.id) + '/comments/'
+                                                + str(self.comment11.id)))
+        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request3.id) + '/comments/'
+                                                + str(self.comment12.id)))
         # Try to access not existing comment
-        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request1.id) + '/comments/' +
-                                                str(NOT_EXISTING_ID)))
-        self.assertUnauthorized(self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' +
-                                                str(self.comment1.id)))
-        self.assertUnauthorized(self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' +
-                                                str(NOT_EXISTING_ID)))
+        self.assertUnauthorized(self.client.get(BASE_URL + str(self.request1.id) + '/comments/'
+                                                + str(NOT_EXISTING_ID)))
+        self.assertUnauthorized(self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments/'
+                                                + str(self.comment1.id)))
+        self.assertUnauthorized(self.client.get(BASE_URL + str(NOT_EXISTING_ID) + '/comments/'
+                                                + str(NOT_EXISTING_ID)))
 
     """
     PATCH /api/v1/requests/:id/comments/:id
@@ -720,25 +720,25 @@ class DefaultAPITestCase(APITestCase):
 
     def test_anonymous_cannot_modify_comment(self):
         # Try to modify comments
-        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' +
-                                                  str(self.comment1.id), None))
-        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request1.id) + '/comments/' +
-                                                str(self.comment2.id), None))
-        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request2.id) + '/comments/' +
-                                                  str(self.comment6.id), None))
-        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request2.id) + '/comments/' +
-                                                str(self.comment7.id), None))
-        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request3.id) + '/comments/' +
-                                                  str(self.comment11.id), None))
-        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request3.id) + '/comments/' +
-                                                str(self.comment12.id), None))
+        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request1.id) + '/comments/'
+                                                  + str(self.comment1.id), None))
+        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request1.id) + '/comments/'
+                                                + str(self.comment2.id), None))
+        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request2.id) + '/comments/'
+                                                  + str(self.comment6.id), None))
+        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request2.id) + '/comments/'
+                                                + str(self.comment7.id), None))
+        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request3.id) + '/comments/'
+                                                  + str(self.comment11.id), None))
+        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request3.id) + '/comments/'
+                                                + str(self.comment12.id), None))
         # Try to modify not existing comments
-        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request1.id) + '/comments/' +
-                                                  str(NOT_EXISTING_ID), None))
-        self.assertUnauthorized(self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' +
-                                                str(self.comment1.id), None))
-        self.assertUnauthorized(self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' +
-                                                  str(NOT_EXISTING_ID), None))
+        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request1.id) + '/comments/'
+                                                  + str(NOT_EXISTING_ID), None))
+        self.assertUnauthorized(self.client.put(BASE_URL + str(NOT_EXISTING_ID) + '/comments/'
+                                                + str(self.comment1.id), None))
+        self.assertUnauthorized(self.client.patch(BASE_URL + str(NOT_EXISTING_ID) + '/comments/'
+                                                  + str(NOT_EXISTING_ID), None))
 
     """
     POST /api/v1/requests/:id/comments
@@ -884,25 +884,25 @@ class DefaultAPITestCase(APITestCase):
         self.assertUnauthorized(self.client.post(BASE_URL + str(NOT_EXISTING_ID) + '/comments', data))
 
         # Try to delete comments
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' +
-                                                   str(self.comment1.id)))
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' +
-                                                   str(self.comment2.id)))
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request2.id) + '/comments/' +
-                                                   str(self.comment6.id)))
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request2.id) + '/comments/' +
-                                                   str(self.comment7.id)))
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request3.id) + '/comments/' +
-                                                   str(self.comment11.id)))
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request3.id) + '/comments/' +
-                                                   str(self.comment12.id)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/comments/'
+                                                   + str(self.comment1.id)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/comments/'
+                                                   + str(self.comment2.id)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request2.id) + '/comments/'
+                                                   + str(self.comment6.id)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request2.id) + '/comments/'
+                                                   + str(self.comment7.id)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request3.id) + '/comments/'
+                                                   + str(self.comment11.id)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request3.id) + '/comments/'
+                                                   + str(self.comment12.id)))
         # Try to delete not existing comments
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/comments/' +
-                                                   str(NOT_EXISTING_ID)))
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' +
-                                                   str(self.comment1.id)))
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/comments/' +
-                                                   str(NOT_EXISTING_ID)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/comments/'
+                                                   + str(NOT_EXISTING_ID)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/comments/'
+                                                   + str(self.comment1.id)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(NOT_EXISTING_ID) + '/comments/'
+                                                   + str(NOT_EXISTING_ID)))
 
     """
     --------------------------------------------------
@@ -1019,33 +1019,26 @@ class DefaultAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Try to access other users ratings on own request
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id) +
-                   '/ratings/' + str(self.rating7.id), None)
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id) +
-                   '/ratings/' + str(self.rating8.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id)
+                            + '/ratings/' + str(self.rating7.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id)
+                            + '/ratings/' + str(self.rating8.id), None)
 
         # Try to access own rating on other users request
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) +
-                   '/ratings/' + str(self.rating3.id), None)
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id) +
-                   '/ratings/' + str(self.rating6.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)
+                            + '/ratings/' + str(self.rating3.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id)
+                            + '/ratings/' + str(self.rating6.id), None)
 
         # Try to access other users rating on other their requests
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) +
-                   '/ratings/' + str(self.rating1.id), None)
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id) +
-                   '/ratings/' + str(self.rating4.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)
+                            + '/ratings/' + str(self.rating1.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id)
+                            + '/ratings/' + str(self.rating4.id), None)
 
         # Try to access not existing rating
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id) +
-                   '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id)
+                            + '/ratings/' + str(NOT_EXISTING_ID), None)
 
     def test_staff_can_get_rating_detail(self):
         self.authorize_user(STAFF)
@@ -1054,33 +1047,26 @@ class DefaultAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Try to access other users ratings on own request
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id) +
-                   '/ratings/' + str(self.rating4.id), None)
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id) +
-                   '/ratings/' + str(self.rating6.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id)
+                            + '/ratings/' + str(self.rating4.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id)
+                            + '/ratings/' + str(self.rating6.id), None)
 
         # Try to access own rating on other users request
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) +
-                   '/ratings/' + str(self.rating5.id), None)
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id) +
-                   '/ratings/' + str(self.rating8.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)
+                            + '/ratings/' + str(self.rating5.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id)
+                            + '/ratings/' + str(self.rating8.id), None)
 
         # Try to access other users rating on other their requests
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) +
-                   '/ratings/' + str(self.rating1.id), None)
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id) +
-                   '/ratings/' + str(self.rating9.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)
+                            + '/ratings/' + str(self.rating1.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id)
+                            + '/ratings/' + str(self.rating9.id), None)
 
         # Try to access not existing rating
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id) +
-                   '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id)
+                            + '/ratings/' + str(NOT_EXISTING_ID), None)
 
     def test_user_can_get_rating_detail(self):
         self.authorize_user(USER)
@@ -1089,33 +1075,26 @@ class DefaultAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Try to access other users ratings on own request
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) +
-                   '/ratings/' + str(self.rating2.id), None)
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) +
-                   '/ratings/' + str(self.rating3.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)
+                            + '/ratings/' + str(self.rating2.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)
+                            + '/ratings/' + str(self.rating3.id), None)
 
         # Try to access own rating on other users request
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id) +
-                   '/ratings/' + str(self.rating4.id), None)
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id) +
-                   '/ratings/' + str(self.rating7.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video3.id)
+                            + '/ratings/' + str(self.rating4.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id)
+                            + '/ratings/' + str(self.rating7.id), None)
 
         # Try to access other users rating on other their requests
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video2.id) +
-                   '/ratings/' + str(self.rating5.id), None)
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id) +
-                   '/ratings/' + str(self.rating9.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request2.id) + '/videos/' + str(self.video2.id)
+                            + '/ratings/' + str(self.rating5.id), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request3.id) + '/videos/' + str(self.video5.id)
+                            + '/ratings/' + str(self.rating9.id), None)
 
         # Try to access not existing rating
-        self.assertNotFound(
-            'GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id) +
-                   '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.assertNotFound('GET', BASE_URL + str(self.request1.id) + '/videos/' + str(self.video1.id)
+                            + '/ratings/' + str(NOT_EXISTING_ID), None)
 
     def test_anonymous_cannot_get_rating_detail(self):
         self.assertUnauthorized(self.client.get(
@@ -1149,9 +1128,8 @@ class DefaultAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['author']['username'], ADMIN)
 
-        response = self.client.delete(
-            BASE_URL + str(self.request3.id) + '/videos/' + str(self.video6.id) +
-            '/ratings/' + str(response.data['id']))
+        response = self.client.delete(BASE_URL + str(self.request3.id) + '/videos/' + str(self.video6.id)
+                                      + '/ratings/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         response = self.create_rating(self.request3.id, self.video5.id)
@@ -1167,21 +1145,21 @@ class DefaultAPITestCase(APITestCase):
         self.assertNotFound('POST', BASE_URL + str(self.request3.id) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings',
                             {'rating': 5})
 
-        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating3.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating6.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating5.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating3.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(self.rating6.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(self.rating5.id), None)
 
-        self.assertNotFound('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating9.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating9.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.assertNotFound('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                            + str(self.video5.id) + '/ratings/' + str(self.rating9.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating9.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(self.video5.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
     def test_staff_can_create_only_one_rating_to_own_video_and_delete_only_own_rating(self):
         self.authorize_user(STAFF)
@@ -1189,9 +1167,8 @@ class DefaultAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['author']['username'], STAFF)
 
-        response = self.client.delete(
-            BASE_URL + str(self.request2.id) + '/videos/' + str(self.video4.id) +
-            '/ratings/' + str(response.data['id']))
+        response = self.client.delete(BASE_URL + str(self.request2.id) + '/videos/' + str(self.video4.id)
+                                      + '/ratings/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         response = self.create_rating(self.request2.id, self.video3.id)
@@ -1207,21 +1184,21 @@ class DefaultAPITestCase(APITestCase):
         self.assertNotFound('POST', BASE_URL + str(self.request2.id) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings',
                             {'rating': 5})
 
-        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating2.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating8.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating9.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating2.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(self.video5.id) + '/ratings/' + str(self.rating8.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(self.video5.id) + '/ratings/' + str(self.rating9.id), None)
 
-        self.assertNotFound('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating5.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating5.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.assertNotFound('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(self.rating5.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating5.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
     def test_user_can_create_only_one_rating_to_own_video_and_delete_only_own_rating(self):
         self.authorize_user(USER)
@@ -1229,9 +1206,8 @@ class DefaultAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['author']['username'], USER)
 
-        response = self.client.delete(
-            BASE_URL + str(self.request1.id) + '/videos/' + str(self.video2.id) +
-            '/ratings/' + str(response.data['id']))
+        response = self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' + str(self.video2.id)
+                                      + '/ratings/' + str(response.data['id']))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         response = self.create_rating(self.request1.id, self.video1.id)
@@ -1247,21 +1223,21 @@ class DefaultAPITestCase(APITestCase):
         self.assertNotFound('POST', BASE_URL + str(self.request1.id) + '/videos/' + str(NOT_EXISTING_ID) + '/ratings',
                             {'rating': 5})
 
-        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating4.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating7.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating5.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating9.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(self.rating4.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(self.video5.id) + '/ratings/' + str(self.rating7.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(self.rating5.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(self.video5.id) + '/ratings/' + str(self.rating9.id), None)
 
-        self.assertNotFound('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
-        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
+        self.assertNotFound('DELETE', BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating1.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(NOT_EXISTING_ID) + '/ratings/' + str(self.rating1.id), None)
+        self.assertNotFound('DELETE', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID), None)
 
     def anonymous_cannot_create_and_delete_rating(self):
         data = {
@@ -1269,21 +1245,21 @@ class DefaultAPITestCase(APITestCase):
             'review': 'Great video'
         }
 
-        self.assertUnauthorized(self.client.post(BASE_URL + str(self.request1.id) + '/videos/' +
-                                                 str(self.video1.id) + '/ratings', data))
-        self.assertUnauthorized(self.client.post(BASE_URL + str(self.request1.id) + '/videos/' +
-                                                 str(self.video2.id) + '/ratings', data))
-        self.assertUnauthorized(self.client.post(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                                 str(self.video2.id) + '/ratings', data))
-        self.assertUnauthorized(self.client.post(BASE_URL + str(self.request1.id) + '/videos/' +
-                                                 str(NOT_EXISTING_ID) + '/ratings', data))
-        self.assertUnauthorized(self.client.post(BASE_URL + str(NOT_EXISTING_ID) + '/videos/' +
-                                                 str(NOT_EXISTING_ID) + '/ratings', data))
+        self.assertUnauthorized(self.client.post(BASE_URL + str(self.request1.id) + '/videos/'
+                                                 + str(self.video1.id) + '/ratings', data))
+        self.assertUnauthorized(self.client.post(BASE_URL + str(self.request1.id) + '/videos/'
+                                                 + str(self.video2.id) + '/ratings', data))
+        self.assertUnauthorized(self.client.post(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                                 + str(self.video2.id) + '/ratings', data))
+        self.assertUnauthorized(self.client.post(BASE_URL + str(self.request1.id) + '/videos/'
+                                                 + str(NOT_EXISTING_ID) + '/ratings', data))
+        self.assertUnauthorized(self.client.post(BASE_URL + str(NOT_EXISTING_ID) + '/videos/'
+                                                 + str(NOT_EXISTING_ID) + '/ratings', data))
 
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id)))
-        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/videos/' +
-                                                   str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id)))
+        self.assertUnauthorized(self.client.delete(BASE_URL + str(self.request1.id) + '/videos/'
+                                                   + str(self.video1.id) + '/ratings/' + str(NOT_EXISTING_ID)))
 
     """
     PUT, PATCH /api/v1/requests/:id/ratings/:id
@@ -1294,32 +1270,32 @@ class DefaultAPITestCase(APITestCase):
         data_patch = {'review': 'Modified by admin'}
         data_put = {'review': 'Modified by admin (PUT)', 'rating': 5}
         # Try to modify own rating on own request/video
-        response = self.client.patch(BASE_URL + str(self.request3.id) + '/videos/' +
-                                     str(self.video5.id) + '/ratings/' + str(self.rating9.id), data_patch)
+        response = self.client.patch(BASE_URL + str(self.request3.id) + '/videos/'
+                                     + str(self.video5.id) + '/ratings/' + str(self.rating9.id), data_patch)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check if modify was successful
-        response = self.client.get(BASE_URL + str(self.request3.id) + '/videos/' +
-                                   str(self.video5.id) + '/ratings/' + str(self.rating9.id)).json()
+        response = self.client.get(BASE_URL + str(self.request3.id) + '/videos/'
+                                   + str(self.video5.id) + '/ratings/' + str(self.rating9.id)).json()
         self.assertIn('Modified by admin', response['review'])
 
         # Try to modify other users rating on own request/video
-        self.assertNotFound('PATCH', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating7.id), data_patch)
-        self.assertNotFound('PUT', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video5.id) + '/ratings/' + str(self.rating8.id), data_put)
+        self.assertNotFound('PATCH', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(self.video5.id) + '/ratings/' + str(self.rating7.id), data_patch)
+        self.assertNotFound('PUT', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(self.video5.id) + '/ratings/' + str(self.rating8.id), data_put)
         # Try to modify other users rating on his request/video
-        self.assertNotFound('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.assertNotFound('PUT', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating5.id), data_put)
+        self.assertNotFound('PATCH', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
+        self.assertNotFound('PUT', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(self.rating5.id), data_put)
 
         # Try to modify own rating on own request/video
-        response = self.client.put(BASE_URL + str(self.request3.id) + '/videos/' +
-                                   str(self.video5.id) + '/ratings/' + str(self.rating9.id), data_put)
+        response = self.client.put(BASE_URL + str(self.request3.id) + '/videos/'
+                                   + str(self.video5.id) + '/ratings/' + str(self.rating9.id), data_put)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check if modify was successful
-        response = self.client.get(BASE_URL + str(self.request3.id) + '/videos/' +
-                                   str(self.video5.id) + '/ratings/' + str(self.rating9.id)).json()
+        response = self.client.get(BASE_URL + str(self.request3.id) + '/videos/'
+                                   + str(self.video5.id) + '/ratings/' + str(self.rating9.id)).json()
         self.assertIn('Modified by admin (PUT)', response['review'])
 
     def test_staff_can_modify_only_own_rating(self):
@@ -1327,32 +1303,32 @@ class DefaultAPITestCase(APITestCase):
         data_patch = {'review': 'Modified by staff'}
         data_put = {'review': 'Modified by staff (PUT)', 'rating': 5}
         # Try to modify own rating on own request/video
-        response = self.client.patch(BASE_URL + str(self.request2.id) + '/videos/' +
-                                     str(self.video3.id) + '/ratings/' + str(self.rating5.id), data_patch)
+        response = self.client.patch(BASE_URL + str(self.request2.id) + '/videos/'
+                                     + str(self.video3.id) + '/ratings/' + str(self.rating5.id), data_patch)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check if modify was successful
-        response = self.client.get(BASE_URL + str(self.request2.id) + '/videos/' +
-                                   str(self.video3.id) + '/ratings/' + str(self.rating5.id)).json()
+        response = self.client.get(BASE_URL + str(self.request2.id) + '/videos/'
+                                   + str(self.video3.id) + '/ratings/' + str(self.rating5.id)).json()
         self.assertIn('Modified by staff', response['review'])
 
         # Try to modify other users rating on own request/video
-        self.assertNotFound('PATCH', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating4.id), data_patch)
-        self.assertNotFound('PUT', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating6.id), data_put)
+        self.assertNotFound('PATCH', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(self.rating4.id), data_patch)
+        self.assertNotFound('PUT', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(self.rating6.id), data_put)
         # Try to modify other users rating on his request/video
-        self.assertNotFound('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
-        self.assertNotFound('PUT', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video6.id) + '/ratings/' + str(self.rating9.id), data_put)
+        self.assertNotFound('PATCH', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
+        self.assertNotFound('PUT', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(self.video6.id) + '/ratings/' + str(self.rating9.id), data_put)
 
         # Try to modify own rating on own request/video
-        response = self.client.put(BASE_URL + str(self.request2.id) + '/videos/' +
-                                   str(self.video3.id) + '/ratings/' + str(self.rating5.id), data_put)
+        response = self.client.put(BASE_URL + str(self.request2.id) + '/videos/'
+                                   + str(self.video3.id) + '/ratings/' + str(self.rating5.id), data_put)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check if modify was successful
-        response = self.client.get(BASE_URL + str(self.request2.id) + '/videos/' +
-                                   str(self.video3.id) + '/ratings/' + str(self.rating5.id)).json()
+        response = self.client.get(BASE_URL + str(self.request2.id) + '/videos/'
+                                   + str(self.video3.id) + '/ratings/' + str(self.rating5.id)).json()
         self.assertIn('Modified by staff (PUT)', response['review'])
 
     def test_user_can_modify_only_own_rating(self):
@@ -1360,44 +1336,44 @@ class DefaultAPITestCase(APITestCase):
         data_patch = {'review': 'Modified by user'}
         data_put = {'review': 'Modified by user (PUT)', 'rating': 5}
         # Try to modify own rating on own request/video
-        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                     str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
+        response = self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                     + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_patch)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check if modify was successful
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
         self.assertIn('Modified by user', response['review'])
 
         # Try to modify other users rating on own request/video
-        self.assertNotFound('PATCH', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating2.id), data_patch)
-        self.assertNotFound('PUT', BASE_URL + str(self.request1.id) + '/videos/' +
-                            str(self.video1.id) + '/ratings/' + str(self.rating3.id), data_put)
+        self.assertNotFound('PATCH', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating2.id), data_patch)
+        self.assertNotFound('PUT', BASE_URL + str(self.request1.id) + '/videos/'
+                            + str(self.video1.id) + '/ratings/' + str(self.rating3.id), data_put)
         # Try to modify other users rating on his request/video
-        self.assertNotFound('PATCH', BASE_URL + str(self.request2.id) + '/videos/' +
-                            str(self.video3.id) + '/ratings/' + str(self.rating5.id), data_patch)
-        self.assertNotFound('PUT', BASE_URL + str(self.request3.id) + '/videos/' +
-                            str(self.video6.id) + '/ratings/' + str(self.rating9.id), data_put)
+        self.assertNotFound('PATCH', BASE_URL + str(self.request2.id) + '/videos/'
+                            + str(self.video3.id) + '/ratings/' + str(self.rating5.id), data_patch)
+        self.assertNotFound('PUT', BASE_URL + str(self.request3.id) + '/videos/'
+                            + str(self.video6.id) + '/ratings/' + str(self.rating9.id), data_put)
 
         # Try to modify own rating on own request/video
-        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_put)
+        response = self.client.put(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id), data_put)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check if modify was successful
-        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/' +
-                                   str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
+        response = self.client.get(BASE_URL + str(self.request1.id) + '/videos/'
+                                   + str(self.video1.id) + '/ratings/' + str(self.rating1.id)).json()
         self.assertIn('Modified by user (PUT)', response['review'])
 
     def test_anonymous_cannot_modify_ratings(self):
-        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request1.id) + '/videos/' +
-                                                  str(self.video1.id) + '/ratings/' + str(self.rating1.id),
+        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request1.id) + '/videos/'
+                                                  + str(self.video1.id) + '/ratings/' + str(self.rating1.id),
                                                   {'review': 'Modified'}))
-        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request2.id) + '/videos/' +
-                                                  str(self.video3.id) + '/ratings/' + str(self.rating5.id),
+        self.assertUnauthorized(self.client.patch(BASE_URL + str(self.request2.id) + '/videos/'
+                                                  + str(self.video3.id) + '/ratings/' + str(self.rating5.id),
                                                   {'review': 'Modified'}))
-        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request3.id) + '/videos/' +
-                                                str(self.video6.id) + '/ratings/' + str(self.rating9.id),
+        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request3.id) + '/videos/'
+                                                + str(self.video6.id) + '/ratings/' + str(self.rating9.id),
                                                 {'review': 'Modified'}))
-        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request2.id) + '/videos/' +
-                                                str(self.video3.id) + '/ratings/' + str(NOT_EXISTING_ID),
+        self.assertUnauthorized(self.client.put(BASE_URL + str(self.request2.id) + '/videos/'
+                                                + str(self.video3.id) + '/ratings/' + str(NOT_EXISTING_ID),
                                                 {'review': 'Modified'}))
