@@ -10,7 +10,7 @@ pylint = "*"
 tox = "*"
 
 [packages]
-django = "==3.0.7"
+django = "==3.0.8"
 djangorestframework = "==3.11.0"
 djangorestframework_simplejwt = "==4.4.0"
 django-auth-ldap = "==2.2.0"
