@@ -19,10 +19,10 @@ import SyncDisabledIcon from '@material-ui/icons/SyncDisabled';
 import FolderIcon from '@material-ui/icons/Folder';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import MenuItem from '@material-ui/core/MenuItem';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionActions from '@material-ui/core/AccordionActions';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '10px',
     fontWeight: '300',
   },
-  expansionPanel: {
+  accordion: {
     justifyContent: 'space-between',
   },
   heading: {
@@ -341,13 +341,13 @@ export default function Videos({
       {requestData.videos.length > 0 ? (
         <>
           {requestData.videos.sort(compareValues('id')).map((video) => (
-            <ExpansionPanel
+            <Accordion
               key={`${video.id}-panel`}
               defaultExpanded={requestData.videos.length === 1}
             >
-              <ExpansionPanelSummary
+              <AccordionSummary
                 expandIcon={requestData.videos.length > 1 && <ExpandMoreIcon />}
-                classes={{ content: classes.expansionPanel }}
+                classes={{ content: classes.accordion }}
               >
                 <Typography className={classes.heading}>
                   {video.title}
@@ -357,7 +357,7 @@ export default function Videos({
                     {videoEnumConverter(video.status)}
                   </Badge>
                 </div>
-              </ExpansionPanelSummary>
+              </AccordionSummary>
               {isAdmin ? (
                 <Formik
                   initialValues={video}
@@ -372,7 +372,7 @@ export default function Videos({
                     touched,
                   }) => (
                     <>
-                      <ExpansionPanelDetails>
+                      <AccordionDetails>
                         <Form>
                           <Field
                             name="additional_data.editing_done"
@@ -441,9 +441,9 @@ export default function Videos({
                             ))}
                           </Field>
                         </Form>
-                      </ExpansionPanelDetails>
+                      </AccordionDetails>
                       <Divider />
-                      <ExpansionPanelActions
+                      <AccordionActions
                         className={
                           video.status >= 3 ? classes.adminEditButtons : null
                         }
@@ -470,14 +470,14 @@ export default function Videos({
                         >
                           Mentés
                         </Button>
-                      </ExpansionPanelActions>
+                      </AccordionActions>
                     </>
                   )}
                 </Formik>
               ) : (
                 <>
                   {video.video_url && (
-                    <ExpansionPanelDetails>
+                    <AccordionDetails>
                       <Typography variant="body2" align="justify" gutterBottom>
                         Az elkészült videót itt tekintheted meg:{' '}
                         <a
@@ -488,7 +488,7 @@ export default function Videos({
                           {video.video_url}
                         </a>
                       </Typography>
-                    </ExpansionPanelDetails>
+                    </AccordionDetails>
                   )}
                 </>
               )}
@@ -496,7 +496,7 @@ export default function Videos({
                 (!isAdmin && video.status >= 5)) && (
                 <>
                   {!isAdmin && <Divider />}
-                  <ExpansionPanelActions>
+                  <AccordionActions>
                     {getOwnRatingForVideo(video).rating > 0 && (
                       <IconButton
                         onClick={() => handleReview(video)}
@@ -517,10 +517,10 @@ export default function Videos({
                       }
                       disabled={reviewDialogData.open || ratingLoading}
                     />
-                  </ExpansionPanelActions>
+                  </AccordionActions>
                 </>
               )}
-            </ExpansionPanel>
+            </Accordion>
           ))}
         </>
       ) : (
