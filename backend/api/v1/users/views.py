@@ -1,9 +1,8 @@
+from api.v1.users.serializers import UserProfileSerializer, UserSerializer
+from common.permissions import IsSelfOrAdmin, IsSelfOrStaff, IsStaffUser
 from django.contrib.auth.models import User
-from rest_framework import generics, filters
+from rest_framework import filters, generics
 from rest_framework.exceptions import NotAuthenticated
-
-from api.v1.users.serializers import UserSerializer, UserProfileSerializer
-from common.permissions import IsSelfOrStaff, IsSelfOrAdmin, IsStaffUser
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):

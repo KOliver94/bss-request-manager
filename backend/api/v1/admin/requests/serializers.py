@@ -1,14 +1,13 @@
 from collections import abc
 
-from django.contrib.auth.models import User
-from rest_framework import serializers
-from rest_framework.fields import IntegerField, CharField
-from rest_framework.generics import get_object_or_404
-
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event, update_calendar_event
-from video_requests.emails import email_user_new_comment, email_crew_new_comment
-from video_requests.models import Request, Video, CrewMember, Rating, Comment
+from django.contrib.auth.models import User
+from rest_framework import serializers
+from rest_framework.fields import CharField, IntegerField
+from rest_framework.generics import get_object_or_404
+from video_requests.emails import email_crew_new_comment, email_user_new_comment
+from video_requests.models import Comment, CrewMember, Rating, Request, Video
 from video_requests.utilities import update_request_status, update_video_status
 
 

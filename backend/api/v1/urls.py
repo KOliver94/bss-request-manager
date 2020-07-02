@@ -1,15 +1,14 @@
+from api.v1.login.views import (
+    ExtendedSocialJWTPairOnlyAuthView,
+    ExtendedTokenObtainPairView,
+    LogoutAndBlacklistRefreshTokenView,
+)
 from django.conf.urls import url
-from django.urls import path, include
+from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework_simplejwt.views import TokenRefreshView
-
-from api.v1.login.views import (
-    ExtendedTokenObtainPairView,
-    ExtendedSocialJWTPairOnlyAuthView,
-    LogoutAndBlacklistRefreshTokenView,
-)
 
 schema_view = get_schema_view(
     openapi.Info(

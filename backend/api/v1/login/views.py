@@ -1,14 +1,13 @@
+from api.v1.login.serializers import (
+    ExtendedSocialJWTPairOnlyAuthSerializer,
+    ExtendedTokenObtainPairSerializer,
+    LogoutAndBlacklistRefreshTokenSerializer,
+)
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_social_auth.views import SocialJWTPairOnlyAuthView
-
-from api.v1.login.serializers import (
-    ExtendedTokenObtainPairSerializer,
-    ExtendedSocialJWTPairOnlyAuthSerializer,
-    LogoutAndBlacklistRefreshTokenSerializer,
-)
 
 
 class ExtendedTokenObtainPairView(TokenObtainPairView):

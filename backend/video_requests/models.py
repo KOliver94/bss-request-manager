@@ -1,10 +1,9 @@
+from common.models import AbstractComment, AbstractRating
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from rest_framework.exceptions import ValidationError
 from simple_history.models import HistoricalRecords
-
-from common.models import AbstractComment, AbstractRating
 from video_requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
 
 

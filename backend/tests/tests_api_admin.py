@@ -4,8 +4,7 @@ from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-
-from video_requests.test_utils import (
+from tests.video_requests_test_utils import (
     create_comment,
     create_crew,
     create_rating,

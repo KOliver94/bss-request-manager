@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from django.core.management import BaseCommand
-
 from video_requests.models import Request
 from video_requests.utilities import update_request_status
 

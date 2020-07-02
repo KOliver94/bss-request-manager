@@ -1,6 +1,5 @@
+from api.v1.users.views import StaffUserListView, UserDetailView
 from django.urls import path
-
-from api.v1.users.views import UserDetailView, StaffUserListView
 
 urlpatterns = [
     path("<int:pk>", UserDetailView.as_view()),

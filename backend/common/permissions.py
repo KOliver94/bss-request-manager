@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework import permissions
-
 from video_requests.models import Comment, Rating, Request, Video
 
 

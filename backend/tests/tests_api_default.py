@@ -4,14 +4,13 @@ from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-
-from video_requests.models import Request
-from video_requests.test_utils import (
+from tests.video_requests_test_utils import (
     create_comment,
     create_rating,
     create_request,
     create_video,
 )
+from video_requests.models import Request
 
 BASE_URL = "/api/v1/requests/"
 NOT_EXISTING_ID = 9000

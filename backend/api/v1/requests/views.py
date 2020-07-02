@@ -1,17 +1,16 @@
-from rest_framework import generics, filters
-from rest_framework.exceptions import ValidationError
-from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated, AllowAny
-
 from api.v1.requests.serializers import (
-    RequestDefaultSerializer,
     CommentDefaultSerializer,
-    VideoDefaultSerializer,
     RatingDefaultSerializer,
     RequestAnonymousSerializer,
+    RequestDefaultSerializer,
+    VideoDefaultSerializer,
 )
 from common.permissions import IsSelf
-from video_requests.models import Request, Comment, Video, Rating
+from rest_framework import filters, generics
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from video_requests.models import Comment, Rating, Request, Video
 
 
 class RequestDefaultListCreateView(generics.ListCreateAPIView):

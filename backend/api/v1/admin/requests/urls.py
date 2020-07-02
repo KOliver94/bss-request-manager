@@ -1,18 +1,17 @@
-from django.urls import path
-
 from api.v1.admin.requests.views import (
-    RequestAdminListCreateView,
-    RequestAdminDetailView,
-    CommentAdminListCreateView,
     CommentAdminDetailView,
-    CrewAdminListCreateView,
+    CommentAdminListCreateView,
     CrewAdminDetailView,
-    VideoAdminListCreateView,
-    VideoAdminDetailView,
-    RatingAdminListCreateView,
-    RatingAdminDetailView,
+    CrewAdminListCreateView,
     HistoryRetrieveView,
+    RatingAdminDetailView,
+    RatingAdminListCreateView,
+    RequestAdminDetailView,
+    RequestAdminListCreateView,
+    VideoAdminDetailView,
+    VideoAdminListCreateView,
 )
+from django.urls import path
 
 urlpatterns = [
     path("requests", RequestAdminListCreateView.as_view()),

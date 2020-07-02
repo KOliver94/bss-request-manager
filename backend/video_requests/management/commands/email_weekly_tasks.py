@@ -1,7 +1,6 @@
 import datetime
 
 from django.core.management import BaseCommand
-
 from video_requests.emails import email_staff_weekly_tasks
 from video_requests.models import Request
 

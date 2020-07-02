@@ -1,15 +1,14 @@
+from api.v1.users.serializers import UserSerializer
+from common.utilities import create_calendar_event
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework.fields import CharField, EmailField, SerializerMethodField
-
-from api.v1.users.serializers import UserSerializer
-from common.utilities import create_calendar_event
 from video_requests.emails import (
-    email_user_new_request_confirmation,
     email_crew_new_comment,
+    email_user_new_request_confirmation,
 )
-from video_requests.models import Request, Video, Rating, Comment
+from video_requests.models import Comment, Rating, Request, Video
 
 
 # noinspection PyAbstractClass

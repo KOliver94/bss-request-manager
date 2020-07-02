@@ -2,8 +2,7 @@ from datetime import timedelta
 from random import randint
 
 from django.utils import timezone
-
-from video_requests.models import Request, Comment, CrewMember, Video, Rating
+from video_requests.models import Comment, CrewMember, Rating, Request, Video
 
 
 def create_request(request_id, user):

@@ -1,15 +1,14 @@
-from django.urls import path
-
 from api.v1.requests.views import (
-    RequestDefaultListCreateView,
-    RequestDefaultDetailView,
-    CommentDefaultListCreateView,
     CommentDefaultDetailView,
-    VideoDefaultListView,
-    VideoDefaultDetailView,
-    RatingDefaultListCreateView,
+    CommentDefaultListCreateView,
     RatingDefaultDetailView,
+    RatingDefaultListCreateView,
+    RequestDefaultDetailView,
+    RequestDefaultListCreateView,
+    VideoDefaultDetailView,
+    VideoDefaultListView,
 )
+from django.urls import path
 
 urlpatterns = [
     path("requests", RequestDefaultListCreateView.as_view()),

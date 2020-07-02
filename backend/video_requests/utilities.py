@@ -1,5 +1,4 @@
 from django.utils import timezone
-
 from video_requests.emails import email_user_video_published
 
 

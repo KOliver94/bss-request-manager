@@ -15,8 +15,8 @@ from datetime import timedelta
 
 import ldap
 import sentry_sdk
-from decouple import config, Csv
-from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+from decouple import Csv, config
+from django_auth_ldap.config import GroupOfNamesType, LDAPSearch
 from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

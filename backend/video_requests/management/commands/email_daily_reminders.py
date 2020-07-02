@@ -1,7 +1,6 @@
 import datetime
 
 from django.core.management import BaseCommand
-
 from video_requests.emails import email_crew_daily_reminder
 from video_requests.models import Request
 
