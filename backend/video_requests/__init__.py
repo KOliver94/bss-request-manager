@@ -1,1 +1,1 @@
-default_app_config = 'video_requests.apps.VideoRequestsConfig'
+default_app_config = "video_requests.apps.VideoRequestsConfig"

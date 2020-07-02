@@ -9,11 +9,11 @@ from video_requests.models import Request, Comment, CrewMember, Video, Rating
 def create_request(request_id, user):
     request = Request()
     request.id = request_id
-    request.title = 'Test Request ' + str(request_id) + ' - ' + user.username
+    request.title = "Test Request " + str(request_id) + " - " + user.username
     request.start_datetime = timezone.now()
     request.end_datetime = timezone.now() + timedelta(days=1)
-    request.place = 'Test place'
-    request.type = 'Test type'
+    request.place = "Test place"
+    request.type = "Test type"
     request.requester = user
     request.save()
     return request
@@ -33,7 +33,7 @@ def create_video(video_id, request):
     video = Video()
     video.id = video_id
     video.request = request
-    video.title = 'Test video - ' + str(video_id)
+    video.title = "Test video - " + str(video_id)
     video.status = 6
     video.save()
     return video
@@ -44,7 +44,7 @@ def create_comment(comment_id, request, user, internal):
     comment.id = comment_id
     comment.request = request
     comment.author = user
-    comment.text = 'Sample text - ' + user.username + ' (' + str(internal) + ')'
+    comment.text = "Sample text - " + user.username + " (" + str(internal) + ")"
     comment.internal = internal
     comment.save()
     return comment
@@ -56,6 +56,6 @@ def create_rating(rating_id, video, user):
     rating.video = video
     rating.author = user
     rating.rating = randint(1, 5)
-    rating.review = 'Sample text - ' + user.username
+    rating.review = "Sample text - " + user.username
     rating.save()
     return rating

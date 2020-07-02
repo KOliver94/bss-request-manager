@@ -8,18 +8,18 @@ from rest_social_auth.serializers import JWTPairSerializer
 
 def get_role(user):
     if not user.is_staff and not user.is_superuser:
-        return 'user'
+        return "user"
     elif not user.is_superuser:
-        return 'staff'
+        return "staff"
     else:
-        return 'admin'
+        return "admin"
 
 
 def add_custom_claims(token, user):
-    token['avatar'] = user.userprofile.avatar_url
-    token['groups'] = list(user.groups.values_list('name', flat=True))
-    token['name'] = f'{user.last_name} {user.first_name}'
-    token['role'] = get_role(user)
+    token["avatar"] = user.userprofile.avatar_url
+    token["groups"] = list(user.groups.values_list("name", flat=True))
+    token["name"] = f"{user.last_name} {user.first_name}"
+    token["role"] = get_role(user)
     return token
 
 
@@ -37,7 +37,7 @@ class ExtendedSocialJWTPairOnlyAuthSerializer(JWTPairSerializer):
 
     def get_token(self, user):
         if not user.is_active:
-            raise NotAuthenticated(detail='User is not active')
+            raise NotAuthenticated(detail="User is not active")
 
         token = self.get_token_instance().access_token
         return str(add_custom_claims(token, user))
@@ -48,11 +48,13 @@ class LogoutAndBlacklistRefreshTokenSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         try:
-            token = RefreshToken(validated_data['refresh'])
-            if token.payload['user_id'] is self.context['request'].user.id:
+            token = RefreshToken(validated_data["refresh"])
+            if token.payload["user_id"] is self.context["request"].user.id:
                 token.blacklist()
                 return validated_data
             else:
-                raise PermissionDenied(detail='You can only logout from you own account')
+                raise PermissionDenied(
+                    detail="You can only logout from you own account"
+                )
         except TokenError:
-            raise NotAuthenticated(detail='Token is invalid or expired')
+            raise NotAuthenticated(detail="Token is invalid or expired")

@@ -86,7 +86,9 @@ class IsSelfOrAdmin(permissions.IsAuthenticated):
         if isinstance(obj, Request):
             return bool(obj.requester == request.user or request.user.is_superuser)
         elif isinstance(obj, Video):
-            return bool(obj.request.requester == request.user or request.user.is_superuser)
+            return bool(
+                obj.request.requester == request.user or request.user.is_superuser
+            )
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
             return bool(obj.author == request.user or request.user.is_superuser)
         elif isinstance(obj, User):

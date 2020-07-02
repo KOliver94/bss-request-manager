@@ -4,17 +4,22 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_social_auth.views import SocialJWTPairOnlyAuthView
 
-from api.v1.login.serializers import ExtendedTokenObtainPairSerializer, ExtendedSocialJWTPairOnlyAuthSerializer, \
-    LogoutAndBlacklistRefreshTokenSerializer
+from api.v1.login.serializers import (
+    ExtendedTokenObtainPairSerializer,
+    ExtendedSocialJWTPairOnlyAuthSerializer,
+    LogoutAndBlacklistRefreshTokenSerializer,
+)
 
 
 class ExtendedTokenObtainPairView(TokenObtainPairView):
     """ View for extended JWT serializer """
+
     serializer_class = ExtendedTokenObtainPairSerializer
 
 
 class ExtendedSocialJWTPairOnlyAuthView(SocialJWTPairOnlyAuthView):
     """ View for extended JWT serializer (Social) """
+
     serializer_class = ExtendedSocialJWTPairOnlyAuthSerializer
 
 

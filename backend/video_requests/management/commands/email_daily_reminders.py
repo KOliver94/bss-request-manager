@@ -12,7 +12,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
         today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-        requests = Request.objects.filter(status__range=[1, 2], start_datetime__range=[today_min, today_max])
+        requests = Request.objects.filter(
+            status__range=[1, 2], start_datetime__range=[today_min, today_max]
+        )
 
         total_sent = 0
 
@@ -23,7 +25,10 @@ class Command(BaseCommand):
 
         if requests.exists():
             self.stdout.write(
-                self.style.SUCCESS(f'{total_sent} reminders were sent to crew members. '
-                                   f'There are {requests.count()} request(s) today.'))
+                self.style.SUCCESS(
+                    f"{total_sent} reminders were sent to crew members. "
+                    f"There are {requests.count()} request(s) today."
+                )
+            )
         else:
-            self.stdout.write(self.style.NOTICE('No reminders for today.'))
+            self.stdout.write(self.style.NOTICE("No reminders for today."))

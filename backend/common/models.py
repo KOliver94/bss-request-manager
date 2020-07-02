@@ -11,7 +11,7 @@ class UserProfile(models.Model):
     phone_number = PhoneNumberField(blank=True)
 
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return f"{self.user.username} Profile"
 
 
 class AbstractComment(models.Model):
@@ -28,10 +28,7 @@ class AbstractComment(models.Model):
 class AbstractRating(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=1)
     rating = models.PositiveSmallIntegerField(
-        validators=[
-            MaxValueValidator(5),
-            MinValueValidator(1)
-        ]
+        validators=[MaxValueValidator(5), MinValueValidator(1)]
     )
     review = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)

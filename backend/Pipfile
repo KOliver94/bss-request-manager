@@ -4,9 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+bandit = "*"
 coverage = "*"
-flake8 = "*"
-pylint = "*"
+pre-commit = "*"
 tox = "*"
 
 [packages]

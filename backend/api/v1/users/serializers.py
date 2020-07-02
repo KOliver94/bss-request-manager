@@ -7,8 +7,11 @@ from common.models import UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('phone_number', 'avatar_url',)
-        read_only_fields = ('avatar_url',)
+        fields = (
+            "phone_number",
+            "avatar_url",
+        )
+        read_only_fields = ("avatar_url",)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,4 +19,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'username', 'email', 'userprofile',)
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "userprofile",
+        )
