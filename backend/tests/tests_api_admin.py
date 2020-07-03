@@ -366,13 +366,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/comments")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 3)
+        self.assertEqual(len(response.data), 3)
 
     def test_staff_can_get_comments(self):
         self.authorize_user(STAFF)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/comments")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 3)
+        self.assertEqual(len(response.data), 3)
 
     def test_user_should_not_get_comments(self):
         self.authorize_user(USER)
@@ -1008,13 +1008,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/crew")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 2)
+        self.assertEqual(len(response.data), 2)
 
     def test_staff_can_get_crew(self):
         self.authorize_user(STAFF)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/crew")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 2)
+        self.assertEqual(len(response.data), 2)
 
     def test_user_should_not_get_crew(self):
         self.authorize_user(USER)
@@ -1469,13 +1469,13 @@ class AdminAPITestCase(APITestCase):
         self.authorize_user(ADMIN)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 3)
+        self.assertEqual(len(response.data), 3)
 
     def test_staff_can_get_videos(self):
         self.authorize_user(STAFF)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 3)
+        self.assertEqual(len(response.data), 3)
 
     def test_user_should_not_get_videos(self):
         self.authorize_user(USER)
@@ -1944,7 +1944,7 @@ class AdminAPITestCase(APITestCase):
             + "/ratings"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 3)
+        self.assertEqual(len(response.data), 3)
 
     def test_staff_can_get_ratings(self):
         self.authorize_user(STAFF)
@@ -1956,7 +1956,7 @@ class AdminAPITestCase(APITestCase):
             + "/ratings"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 3)
+        self.assertEqual(len(response.data), 3)
 
     def test_user_should_not_get_ratings(self):
         self.authorize_user(USER)

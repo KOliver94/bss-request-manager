@@ -1,8 +1,10 @@
-from rest_framework import pagination
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 
-class ExtendedPagination(pagination.PageNumberPagination):
+class ExtendedPagination(PageNumberPagination):
+    page_size = 100
+
     def get_paginated_response(self, data):
         return Response(
             {

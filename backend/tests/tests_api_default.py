@@ -341,7 +341,7 @@ class DefaultAPITestCase(APITestCase):
         # Try to access videos on own request
         response = self.client.get(BASE_URL + str(self.request3.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 2)
+        self.assertEqual(len(response.data), 2)
 
     def test_staff_can_get_videos_only_related_to_own_requests(self):
         self.authorize_user(STAFF)
@@ -353,7 +353,7 @@ class DefaultAPITestCase(APITestCase):
         # Try to access videos on own request
         response = self.client.get(BASE_URL + str(self.request2.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 2)
+        self.assertEqual(len(response.data), 2)
 
     def test_user_can_get_videos_only_related_to_own_requests(self):
         self.authorize_user(USER)
@@ -365,7 +365,7 @@ class DefaultAPITestCase(APITestCase):
         # Try to access videos on own request
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 2)
+        self.assertEqual(len(response.data), 2)
 
     def test_anonymous_cannot_get_videos(self):
         # Try to access videos on other user's requests
@@ -680,10 +680,10 @@ class DefaultAPITestCase(APITestCase):
         # Try to access videos on own request
         response = self.client.get(BASE_URL + str(self.request3.id) + "/comments")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 3)
+        self.assertEqual(len(response.data), 3)
         # Sample comment is the following: Sample text - USERNAME (INTERNAL?)
         # No comment should contain True because that would be an internal comment
-        for comment in response.data["results"]:
+        for comment in response.data:
             self.assertNotIn("True", comment["text"])
 
     def test_staff_can_get_comments_only_related_to_own_requests_and_not_internal(self):
@@ -696,10 +696,10 @@ class DefaultAPITestCase(APITestCase):
         # Try to access videos on own request
         response = self.client.get(BASE_URL + str(self.request2.id) + "/comments")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 3)
+        self.assertEqual(len(response.data), 3)
         # Sample comment is the following: Sample text - USERNAME (INTERNAL?)
         # No comment should contain True because that would be an internal comment
-        for comment in response.data["results"]:
+        for comment in response.data:
             self.assertNotIn("True", comment["text"])
 
     def test_user_can_get_comments_only_related_to_own_requests_and_not_internal(self):
@@ -712,10 +712,10 @@ class DefaultAPITestCase(APITestCase):
         # Try to access videos on own request
         response = self.client.get(BASE_URL + str(self.request1.id) + "/comments")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 3)
+        self.assertEqual(len(response.data), 3)
         # Sample comment is the following: Sample text - USERNAME (INTERNAL?)
         # No comment should contain True because that would be an internal comment
-        for comment in response.data["results"]:
+        for comment in response.data:
             self.assertNotIn("True", comment["text"])
 
     def test_anonymous_cannot_get_comments(self):
@@ -1348,7 +1348,7 @@ class DefaultAPITestCase(APITestCase):
     def check_count_of_comments_on_request(self, request_id, count):
         response = self.client.get(BASE_URL + str(request_id) + "/comments")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], count)
+        self.assertEqual(len(response.data), count)
 
     def test_admin_can_create_comments_only_on_own_request_and_delete_only_own_comment(
         self,
@@ -1744,8 +1744,8 @@ class DefaultAPITestCase(APITestCase):
             + "/ratings"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 1)
-        for rating in response.data["results"]:
+        self.assertEqual(len(response.data), 1)
+        for rating in response.data:
             self.assertEqual(rating["author"]["username"], ADMIN)
 
         # Try to access ratings on other users requests and videos
@@ -1825,8 +1825,8 @@ class DefaultAPITestCase(APITestCase):
             + "/ratings"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 1)
-        for rating in response.data["results"]:
+        self.assertEqual(len(response.data), 1)
+        for rating in response.data:
             self.assertEqual(rating["author"]["username"], STAFF)
 
         # Try to access ratings on other users requests and videos
@@ -1906,8 +1906,8 @@ class DefaultAPITestCase(APITestCase):
             + "/ratings"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 1)
-        for rating in response.data["results"]:
+        self.assertEqual(len(response.data), 1)
+        for rating in response.data:
             self.assertEqual(rating["author"]["username"], USER)
 
         # Try to access ratings on other users requests and videos

@@ -5,6 +5,7 @@ from api.v1.requests.serializers import (
     RequestDefaultSerializer,
     VideoDefaultSerializer,
 )
+from common.pagination import ExtendedPagination
 from common.permissions import IsSelf
 from rest_framework import filters, generics
 from rest_framework.exceptions import ValidationError
@@ -26,6 +27,7 @@ class RequestDefaultListCreateView(generics.ListCreateAPIView):
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["title", "created", "start_datetime", "status"]
     ordering = ["created"]
+    pagination_class = ExtendedPagination
 
     def get_permissions(self):
         if self.request.method == "POST":

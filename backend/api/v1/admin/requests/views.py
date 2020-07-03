@@ -6,6 +6,7 @@ from api.v1.admin.requests.serializers import (
     RequestAdminSerializer,
     VideoAdminSerializer,
 )
+from common.pagination import ExtendedPagination
 from common.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from common.utilities import remove_calendar_event
 from rest_framework import filters, generics
@@ -54,6 +55,7 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["title", "created", "start_datetime", "status"]
     ordering = ["created"]
+    pagination_class = ExtendedPagination
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
