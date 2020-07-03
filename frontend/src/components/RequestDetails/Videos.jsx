@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 // Material UI components
 import AddIcon from '@material-ui/icons/Add';
@@ -38,6 +38,7 @@ import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 // API calls
 import {
+  getRequestAdmin,
   createVideoAdmin,
   updateVideoAdmin,
   deleteVideoAdmin,
@@ -96,6 +97,7 @@ export default function Videos({
   isAdmin,
 }) {
   const classes = useStyles();
+  const isInitialMount = useRef(true);
   const { enqueueSnackbar } = useSnackbar();
   const [videoDeleteLoading, setVideoDeleteLoading] = useState(false);
   const [ratingLoading, setRatingLoading] = useState(false);
@@ -130,6 +132,22 @@ export default function Videos({
       autoHideDuration: 5000,
     });
   };
+
+  useEffect(() => {
+    const updateRequestStatus = async () => {
+      const result = await getRequestAdmin(requestId);
+      setRequestData({
+        ...requestData,
+        status: result.data.status,
+      });
+    };
+
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      updateRequestStatus();
+    }
+  }, [requestData.videos]);
 
   const handleSubmit = async (val, videoId = 0) => {
     const values = val;
