@@ -14,7 +14,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Chip from '@material-ui/core/Chip';
 import Pagination from '@material-ui/lab/Pagination';
 // background
 import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
@@ -25,6 +24,7 @@ import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import Badge from 'components/material-kit-react/Badge/Badge';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Date format
@@ -152,9 +152,9 @@ export default function MyRequestsPage({
                                 )}
                               </TableCell>
                               <TableCell align="center">
-                                <Chip
-                                  label={requestEnumConverter(item.status)}
-                                />
+                                <Badge color="primary">
+                                  {requestEnumConverter(item.status)}
+                                </Badge>
                               </TableCell>
                             </TableRow>
                           ))}
