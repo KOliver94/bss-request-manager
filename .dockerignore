@@ -1,9 +1,12 @@
 # Items that don't need to be in a Docker image.
 # Anything not used by the build system should go here.
 .dockerignore
+.flake8
 .git
 .gitignore
 .idea
+.isort.cfg
+.pre-commit-config.yaml
 .vscode
 Dockerfile
 README.md
