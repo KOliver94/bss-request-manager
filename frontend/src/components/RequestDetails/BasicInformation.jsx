@@ -403,7 +403,21 @@ export default function BasicInformation({
               </b>
               <br />
               <b>
-                {`(${requestData.requester.email}, ${requestData.requester.userprofile.phone_number})`}
+                (
+                <a href={`mailto:${requestData.requester.email}`}>
+                  {requestData.requester.email}
+                </a>
+                {requestData.requester.userprofile.phone_number && (
+                  <>
+                    {', '}
+                    <a
+                      href={`tel:${requestData.requester.userprofile.phone_number}`}
+                    >
+                      {requestData.requester.userprofile.phone_number}
+                    </a>
+                  </>
+                )}
+                )
               </b>
             </p>
             <p>
@@ -415,7 +429,21 @@ export default function BasicInformation({
                   </b>
                   <br />
                   <b>
-                    {`(${requestData.responsible.email}, ${requestData.responsible.userprofile.phone_number})`}
+                    (
+                    <a href={`mailto:${requestData.responsible.email}`}>
+                      {requestData.responsible.email}
+                    </a>
+                    {requestData.responsible.userprofile.phone_number && (
+                      <>
+                        {', '}
+                        <a
+                          href={`tel:${requestData.responsible.userprofile.phone_number}`}
+                        >
+                          {requestData.responsible.userprofile.phone_number}
+                        </a>
+                      </>
+                    )}
+                    )
                   </b>
                 </>
               )}
