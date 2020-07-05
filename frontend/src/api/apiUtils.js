@@ -24,8 +24,10 @@ axiosInstance.interceptors.response.use(
   (error) => {
     const originalRequest = error.config;
 
-    if (error.code === 'ECONNABORTED' || error.response.status === 408) {
+    if (error.code === 'ECONNABORTED') {
       console.error(`A timeout happend on url ${error.config.url}`);
+    } else if (!error.response) {
+      console.error(`${error.message}`);
     }
 
     // If requests fail with 401 Unauthorized because JWT token is not valid try to get new token with refresh token.
