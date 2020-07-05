@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/lab/Pagination';
@@ -49,15 +50,16 @@ export default function MyRequestsPage({
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ results: [], total_pages: 0 });
+  const [ordering, setOrdering] = useState('-created');
 
   const loadData = useCallback(
     async (pageNumber) => {
       try {
         let result;
         if (isAdmin) {
-          result = await listRequestsAdmin(pageNumber);
+          result = await listRequestsAdmin(pageNumber, ordering);
         } else {
-          result = await listRequests(pageNumber);
+          result = await listRequests(pageNumber, ordering);
         }
         setData(result.data);
         setLoading(false);
@@ -68,7 +70,7 @@ export default function MyRequestsPage({
         });
       }
     },
-    [enqueueSnackbar, isAdmin]
+    [enqueueSnackbar, isAdmin, ordering]
   );
 
   const handlePageChange = (page) => {
@@ -77,6 +79,18 @@ export default function MyRequestsPage({
 
   const handleRowClick = (id) => {
     history.push(isAdmin ? `/admin/requests/${id}` : `/my-requests/${id}`);
+  };
+
+  const handleOrderingChange = (orderBy) => {
+    if (ordering.endsWith(orderBy)) {
+      if (ordering === orderBy) {
+        setOrdering(`-${ordering}`);
+      } else {
+        setOrdering('-created');
+      }
+    } else {
+      setOrdering(orderBy);
+    }
   };
 
   useEffect(() => {
@@ -129,9 +143,38 @@ export default function MyRequestsPage({
                       <Table aria-label="simple table">
                         <TableHead>
                           <TableRow>
-                            <TableCell>Esemény neve</TableCell>
-                            <TableCell align="center">Időpont</TableCell>
-                            <TableCell align="center">Státusz</TableCell>
+                            <TableCell>
+                              Esemény neve
+                              <TableSortLabel
+                                active={ordering.endsWith('title')}
+                                direction={
+                                  ordering.startsWith('-') ? 'desc' : 'asc'
+                                }
+                                onClick={() => handleOrderingChange('title')}
+                              />
+                            </TableCell>
+                            <TableCell align="center">
+                              Időpont
+                              <TableSortLabel
+                                active={ordering.endsWith('start_datetime')}
+                                direction={
+                                  ordering.startsWith('-') ? 'desc' : 'asc'
+                                }
+                                onClick={() =>
+                                  handleOrderingChange('start_datetime')
+                                }
+                              />
+                            </TableCell>
+                            <TableCell align="center">
+                              Státusz
+                              <TableSortLabel
+                                active={ordering.endsWith('status')}
+                                direction={
+                                  ordering.startsWith('-') ? 'desc' : 'asc'
+                                }
+                                onClick={() => handleOrderingChange('status')}
+                              />
+                            </TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>

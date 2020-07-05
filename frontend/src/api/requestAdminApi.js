@@ -7,8 +7,8 @@ export async function createRequestAdmin(requestData) {
   return axiosInstance.post('/admin/requests', requestData);
 }
 
-export async function listRequestsAdmin(page) {
-  return axiosInstance.get(`admin/requests?page=${page}`);
+export async function listRequestsAdmin(page, ordering = '-created') {
+  return axiosInstance.get(`admin/requests?page=${page}&ordering=${ordering}`);
 }
 
 export async function getRequestAdmin(requestId) {
