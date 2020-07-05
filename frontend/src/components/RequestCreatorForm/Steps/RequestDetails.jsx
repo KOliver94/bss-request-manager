@@ -25,13 +25,15 @@ const validationSchema = Yup.object({
     .required('Az esemény nevének megadása kötelező'),
   start_datetime: Yup.date()
     .min(new Date(), 'A mostaninál korábbi időpont nem adható meg!')
-    .required('A kezdés időpontjának megadása kötelező'),
+    .required('A kezdés időpontjának megadása kötelező')
+    .nullable(),
   end_datetime: Yup.date()
     .min(
       Yup.ref('start_datetime'),
       'A befejezés időpontja nem lehet korábbi mint a kezdés!'
     )
-    .required('A várható befejezés megadása kötelező'),
+    .required('A várható befejezés megadása kötelező')
+    .nullable(),
   place: Yup.string()
     .min(1, 'Túl rövid helyszín!')
     .max(150, 'Túl hosszú helyszín!')
