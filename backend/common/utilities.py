@@ -77,7 +77,7 @@ def create_calendar_event(request):
 
 
 def update_calendar_event(request):
-    if request.additional_data and request.additional_data["calendar_id"]:
+    if request.additional_data and "calendar_id" in request.additional_data:
         service = get_google_calendar_service()
         try:
             service.events().patch(
@@ -90,7 +90,7 @@ def update_calendar_event(request):
 
 
 def remove_calendar_event(request):
-    if request.additional_data and request.additional_data["calendar_id"]:
+    if request.additional_data and "calendar_id" in request.additional_data:
         service = get_google_calendar_service()
         try:
             service.events().delete(
