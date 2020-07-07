@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
-import TextField from '@material-ui/core/TextField';
+import MUITextField from '@material-ui/core/TextField';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -19,8 +19,12 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
+// Form components
+import { Formik, Form, Field } from 'formik';
+import { TextField } from 'formik-material-ui';
+import { Autocomplete } from 'formik-material-ui-lab';
+import * as Yup from 'yup';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
@@ -77,12 +81,30 @@ export default function Crew({
     }));
   };
 
-  const handleSubmit = async (newCrewMember = false) => {
-    setLoading(true);
-    let result;
+  const handleSubmit = async (val) => {
+    const values = val;
     try {
-      if (editingCrewId > 0 && !newCrewMember) {
-        result = await updateCrewAdmin(
+      values.member_id = values.member_id.id;
+      const result = await createCrewAdmin(requestId, values);
+      setRequestData({
+        ...requestData,
+        crew: [...requestData.crew, result.data],
+      });
+      setDialogOpen(false);
+    } catch (e) {
+      showError();
+    }
+  };
+
+  const handleEditSubmit = async () => {
+    setLoading(true);
+    try {
+      if (
+        editingCrewId > 0 &&
+        crewMemberDetails.position &&
+        crewMemberDetails.position.length <= 20
+      ) {
+        const result = await updateCrewAdmin(
           requestId,
           editingCrewId,
           crewMemberDetails
@@ -97,15 +119,8 @@ export default function Crew({
           }),
         });
         setEditingCrewId(0);
-      } else {
-        result = await createCrewAdmin(requestId, crewMemberDetails);
-        setRequestData({
-          ...requestData,
-          crew: [...requestData.crew, result.data],
-        });
-        setDialogOpen(false);
+        setCrewMemberDetails({});
       }
-      setCrewMemberDetails({});
     } catch (e) {
       showError();
     } finally {
@@ -130,7 +145,7 @@ export default function Crew({
 
   const handleEdit = (crewId) => {
     setEditingCrewId(crewId);
-    setCrewMemberDetails({});
+    setCrewMemberDetails(requestData.crew.find((x) => x.id === crewId));
   };
 
   const handleCancel = () => {
@@ -146,6 +161,16 @@ export default function Crew({
     setDialogOpen(false);
     setCrewMemberDetails({});
   };
+
+  const validationSchema = Yup.object({
+    member_id: Yup.object()
+      .required('A stábtag kiválasztása kötelező!')
+      .nullable(),
+    position: Yup.string()
+      .min(1, 'A pozíció túl rövid!')
+      .max(20, 'A pozíció túl hosszú!')
+      .required('A pozíció megadása kötelező'),
+  });
 
   if (isAdmin) {
     return (
@@ -163,12 +188,23 @@ export default function Crew({
                       </TableCell>
                       {editingCrewId === crewMember.id ? (
                         <TableCell>
-                          <TextField
+                          <MUITextField
                             id="position"
                             name="position"
                             label="Pozíció"
                             defaultValue={crewMember.position}
                             onChange={handleChange}
+                            required
+                            error={
+                              !crewMemberDetails.position ||
+                              crewMemberDetails.position.length > 20
+                            }
+                            helperText={
+                              (!crewMemberDetails.position &&
+                                'Pozíció megadása kötelező!') ||
+                              (crewMemberDetails.position.length > 20 &&
+                                'A pozíció túl hosszú')
+                            }
                           />
                         </TableCell>
                       ) : (
@@ -179,7 +215,7 @@ export default function Crew({
                         {editingCrewId === crewMember.id ? (
                           <>
                             <IconButton
-                              onClick={() => handleSubmit()}
+                              onClick={() => handleEditSubmit()}
                               disabled={loading}
                             >
                               <CheckIcon />
@@ -218,49 +254,72 @@ export default function Crew({
           <AddIcon />
         </Fab>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle id="add-crew-dialog">Új stábtag hozzáadása</DialogTitle>
-          <DialogContent>
-            <TextField
-              id="member_id"
-              name="member_id"
-              select
-              fullWidth
-              label="Stábtag"
-              required
-              onChange={handleChange}
-            >
-              {staffMembers.map((item) => (
-                <MenuItem value={item.id} key={item.id}>
-                  {`${item.last_name} ${item.first_name}`}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              className={classes.inputField}
-              id="position"
-              name="position"
-              label="Pozíció"
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={handleDialogClose}
-              color="primary"
-              disabled={loading}
-            >
-              Mégsem
-            </Button>
-            <Button
-              onClick={() => handleSubmit(true)}
-              color="primary"
-              disabled={loading}
-            >
-              Hozzáadás
-            </Button>
-          </DialogActions>
+          <Formik
+            initialValues={{
+              position: '',
+            }}
+            onSubmit={(values) => handleSubmit(values)}
+            validationSchema={validationSchema}
+          >
+            {({ submitForm, isSubmitting, errors, touched }) => (
+              <>
+                <DialogTitle>Új stábtag hozzáadása</DialogTitle>
+                <DialogContent>
+                  <Form>
+                    <Field
+                      name="member_id"
+                      component={Autocomplete}
+                      options={staffMembers}
+                      getOptionLabel={(option) =>
+                        `${option.last_name} ${option.first_name}`
+                      }
+                      getOptionSelected={(option, value) =>
+                        option.id === value.id
+                      }
+                      autoHighlight
+                      clearOnEscape
+                      fullWidth
+                      renderInput={(params) => (
+                        <MUITextField
+                          // eslint-disable-next-line react/jsx-props-no-spreading
+                          {...params}
+                          label="Vágó"
+                          margin="normal"
+                          error={touched.member_id && errors.member_id}
+                          helperText={touched.member_id && errors.member_id}
+                        />
+                      )}
+                    />
+                    <Field
+                      name="position"
+                      label="Pozíció"
+                      margin="normal"
+                      component={TextField}
+                      fullWidth
+                      error={touched.position && errors.position}
+                      helperText={touched.position && errors.position}
+                    />
+                  </Form>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={handleDialogClose}
+                    color="primary"
+                    disabled={isSubmitting}
+                  >
+                    Mégsem
+                  </Button>
+                  <Button
+                    onClick={submitForm}
+                    color="primary"
+                    disabled={isSubmitting}
+                  >
+                    Hozzáadás
+                  </Button>
+                </DialogActions>
+              </>
+            )}
+          </Formik>
         </Dialog>
       </div>
     );

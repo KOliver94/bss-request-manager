@@ -18,7 +18,6 @@ import SyncIcon from '@material-ui/icons/Sync';
 import SyncDisabledIcon from '@material-ui/icons/SyncDisabled';
 import FolderIcon from '@material-ui/icons/Folder';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
-import MenuItem from '@material-ui/core/MenuItem';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -28,11 +27,13 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
 import { makeStyles } from '@material-ui/core/styles';
+import MUITextField from '@material-ui/core/TextField';
 // Material React Kit components
 import Badge from 'components/material-kit-react/Badge/Badge';
 // Form components
 import { Formik, Form, Field, getIn } from 'formik';
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
+import { Autocomplete } from 'formik-material-ui-lab';
 import * as Yup from 'yup';
 // Notistack
 import { useSnackbar } from 'notistack';
@@ -152,7 +153,9 @@ export default function Videos({
 
   const handleSubmit = async (val, videoId = 0) => {
     const values = val;
-    values.editor_id = values.editor_id === '' ? 0 : values.editor_id;
+    if (values.editor_id !== undefined) {
+      values.editor_id = values.editor_id ? values.editor_id.id : 0;
+    }
     let result;
     try {
       if (values && videoId) {
@@ -442,23 +445,28 @@ export default function Videos({
                           />
                           <Field
                             name="editor_id"
-                            label="Vágó"
-                            margin="normal"
-                            component={TextField}
+                            component={Autocomplete}
+                            options={staffMembers}
+                            getOptionLabel={(option) =>
+                              `${option.last_name} ${option.first_name}`
+                            }
+                            getOptionSelected={(option, value) =>
+                              option.id === value.id
+                            }
+                            defaultValue={video.editor ? video.editor : null}
                             size="small"
-                            defaultValue={video.editor ? video.editor.id : ''}
+                            autoHighlight
+                            clearOnEscape
                             fullWidth
-                            select
-                          >
-                            <MenuItem value="">
-                              <em>Senki</em>
-                            </MenuItem>
-                            {staffMembers.map((item) => (
-                              <MenuItem value={item.id} key={item.id}>
-                                {`${item.last_name} ${item.first_name}`}
-                              </MenuItem>
-                            ))}
-                          </Field>
+                            renderInput={(params) => (
+                              <MUITextField
+                                // eslint-disable-next-line react/jsx-props-no-spreading
+                                {...params}
+                                label="Vágó"
+                                margin="normal"
+                              />
+                            )}
+                          />
                         </Form>
                       </AccordionDetails>
                       <Divider />
@@ -587,21 +595,26 @@ export default function Videos({
                       />
                       <Field
                         name="editor_id"
-                        label="Vágó"
-                        margin="normal"
-                        component={TextField}
+                        component={Autocomplete}
+                        options={staffMembers}
+                        getOptionLabel={(option) =>
+                          `${option.last_name} ${option.first_name}`
+                        }
+                        getOptionSelected={(option, value) =>
+                          option.id === value.id
+                        }
+                        autoHighlight
+                        clearOnEscape
                         fullWidth
-                        select
-                      >
-                        <MenuItem value="">
-                          <em>Senki</em>
-                        </MenuItem>
-                        {staffMembers.map((item) => (
-                          <MenuItem value={item.id} key={item.id}>
-                            {`${item.last_name} ${item.first_name}`}
-                          </MenuItem>
-                        ))}
-                      </Field>
+                        renderInput={(params) => (
+                          <MUITextField
+                            // eslint-disable-next-line react/jsx-props-no-spreading
+                            {...params}
+                            label="Vágó"
+                            margin="normal"
+                          />
+                        )}
+                      />
                     </Form>
                   </DialogContent>
                   <DialogActions>

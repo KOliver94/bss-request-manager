@@ -21,13 +21,14 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
+import MUITextField from '@material-ui/core/TextField';
 // Material React Kit components
 import Badge from 'components/material-kit-react/Badge/Badge';
 // Form components
 import { Formik, Form, Field } from 'formik';
-import MenuItem from '@material-ui/core/MenuItem';
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
 import { DateTimePicker } from 'formik-material-ui-pickers';
+import { Autocomplete } from 'formik-material-ui-lab';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import * as Yup from 'yup';
@@ -120,8 +121,11 @@ export default function BasicInformation({
 
   const handleSubmit = async (val) => {
     const values = val;
-    values.responsible_id =
-      values.responsible_id === '' ? 0 : values.responsible_id;
+    if (values.responsible_id !== undefined) {
+      values.responsible_id = values.responsible_id
+        ? values.responsible_id.id
+        : 0;
+    }
     setLoading(true);
     try {
       await updateRequestAdmin(requestId, values).then((response) => {
@@ -238,27 +242,30 @@ export default function BasicInformation({
                     )}
                     <Field
                       name="responsible_id"
-                      label="Felelős"
-                      margin="normal"
-                      component={TextField}
-                      variant="outlined"
-                      defaultValue={
-                        requestData.responsible
-                          ? requestData.responsible.id
-                          : ''
+                      component={Autocomplete}
+                      options={staffMembers}
+                      getOptionLabel={(option) =>
+                        `${option.last_name} ${option.first_name}`
                       }
+                      getOptionSelected={(option, value) =>
+                        option.id === value.id
+                      }
+                      defaultValue={
+                        requestData.responsible ? requestData.responsible : null
+                      }
+                      autoHighlight
+                      clearOnEscape
                       fullWidth
-                      select
-                    >
-                      <MenuItem value="">
-                        <em>Senki</em>
-                      </MenuItem>
-                      {staffMembers.map((item) => (
-                        <MenuItem value={item.id} key={item.id}>
-                          {`${item.last_name} ${item.first_name}`}
-                        </MenuItem>
-                      ))}
-                    </Field>
+                      renderInput={(params) => (
+                        <MUITextField
+                          // eslint-disable-next-line react/jsx-props-no-spreading
+                          {...params}
+                          label="Felelős"
+                          variant="outlined"
+                          margin="normal"
+                        />
+                      )}
+                    />
                   </div>
                   <Divider />
                   <div className={classes.formSection}>
