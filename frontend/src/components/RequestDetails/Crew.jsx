@@ -253,7 +253,12 @@ export default function Crew({
         <Fab color="primary" onClick={handleDialogOpen} className={classes.fab}>
           <AddIcon />
         </Fab>
-        <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <Dialog
+          open={dialogOpen}
+          onClose={handleDialogClose}
+          fullWidth
+          maxWidth="xs"
+        >
           <Formik
             initialValues={{
               position: '',

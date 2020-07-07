@@ -571,6 +571,8 @@ export default function Videos({
           <Dialog
             open={createVideoDialogOpen}
             onClose={handleCreateVideoDialogClose}
+            fullWidth
+            maxWidth="xs"
           >
             <Formik
               initialValues={{
@@ -642,6 +644,8 @@ export default function Videos({
       <Dialog
         open={ratingRemoveDialog.open}
         onClose={handleRatingRemoveDialogClose}
+        fullWidth
+        maxWidth="xs"
       >
         <DialogTitle id="rating-delete-confirmation">
           Biztosan törölni akarod az értékelést?

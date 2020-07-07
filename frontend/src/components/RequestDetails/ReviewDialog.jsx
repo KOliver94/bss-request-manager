@@ -93,7 +93,12 @@ export default function Videos({
   };
 
   return (
-    <Dialog open={reviewDialogData.open} onClose={handleCancel}>
+    <Dialog
+      open={reviewDialogData.open}
+      onClose={handleCancel}
+      fullWidth
+      maxWidth="xs"
+    >
       <DialogTitle id="review-dialog">Értékelés írása</DialogTitle>
       <DialogContent>
         <TextField
