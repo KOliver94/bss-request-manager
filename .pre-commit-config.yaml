@@ -9,7 +9,7 @@ repos:
     hooks:
     - id: seed-isort-config
 -   repo: https://github.com/pre-commit/mirrors-isort
-    rev: v4.3.21
+    rev: v5.0.5
     hooks:
     - id: isort
 -   repo: https://github.com/ambv/black
@@ -28,7 +28,7 @@ repos:
     - id: bandit
       exclude: ^backend/tests/
 -   repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v7.3.1
+    rev: v7.4.0
     hooks:
     - id: eslint
       types: [file]
