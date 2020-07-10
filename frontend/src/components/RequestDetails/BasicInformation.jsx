@@ -316,6 +316,7 @@ export default function BasicInformation({
                       inputVariant="outlined"
                       value=""
                       ampm={false}
+                      format="yyyy. MMMM dd. HH:mm"
                       fullWidth
                       error={touched.start_datetime && errors.start_datetime}
                       helperText={
@@ -329,6 +330,7 @@ export default function BasicInformation({
                       component={DateTimePicker}
                       inputVariant="outlined"
                       ampm={false}
+                      format="yyyy. MMMM dd. HH:mm"
                       fullWidth
                       error={touched.end_datetime && errors.end_datetime}
                       helperText={touched.end_datetime && errors.end_datetime}
