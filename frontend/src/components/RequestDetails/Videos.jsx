@@ -154,7 +154,7 @@ export default function Videos({
   const handleSubmit = async (val, videoId = 0) => {
     const values = val;
     if (values.editor_id !== undefined) {
-      values.editor_id = values.editor_id ? values.editor_id.id : 0;
+      values.editor_id = values.editor_id && values.editor_id.id;
     }
     let result;
     try {

@@ -122,9 +122,7 @@ export default function BasicInformation({
   const handleSubmit = async (val) => {
     const values = val;
     if (values.responsible_id !== undefined) {
-      values.responsible_id = values.responsible_id
-        ? values.responsible_id.id
-        : 0;
+      values.responsible_id = values.responsible_id && values.responsible_id.id;
     }
     setLoading(true);
     try {

@@ -138,7 +138,7 @@ class CommentAdminSerializer(serializers.ModelSerializer):
 class VideoAdminSerializer(serializers.ModelSerializer):
     ratings = RatingAdminSerializer(many=True, read_only=True)
     editor = UserSerializer(read_only=True)
-    editor_id = IntegerField(write_only=True, required=False)
+    editor_id = IntegerField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = Video
@@ -202,7 +202,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     comments = CommentAdminSerializer(many=True, read_only=True)
     requester = UserSerializer(read_only=True)
     responsible = UserSerializer(read_only=True)
-    responsible_id = IntegerField(write_only=True, required=False)
+    responsible_id = IntegerField(write_only=True, required=False, allow_null=True)
     comment_text = CharField(write_only=True, required=False)
 
     class Meta:
