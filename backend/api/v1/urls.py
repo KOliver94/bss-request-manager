@@ -3,6 +3,8 @@ from api.v1.login.views import (
     ExtendedTokenObtainPairView,
     LogoutAndBlacklistRefreshTokenView,
 )
+from api.v1.requests.views import RequestDefaultListCreateView
+from api.v1.users.views import UserListView
 from django.conf.urls import url
 from django.urls import include, path
 from drf_yasg import openapi
@@ -25,16 +27,16 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path("", include("api.v1.requests.urls")),
     path("admin/", include("api.v1.admin.urls")),
     path("login", ExtendedTokenObtainPairView.as_view(), name="login_obtain_jwt_pair"),
     path("login/refresh", TokenRefreshView.as_view(), name="login_refresh_jwt_token"),
-    path("logout", LogoutAndBlacklistRefreshTokenView.as_view(), name="logout"),
     url(
         r"^login/social/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$",
         ExtendedSocialJWTPairOnlyAuthView.as_view(),
         name="login_social_obtain_jwt_pair",
     ),
+    path("logout", LogoutAndBlacklistRefreshTokenView.as_view(), name="logout"),
+    path("users", UserListView.as_view()),
     path("users/", include("api.v1.users.urls")),
     url(
         r"^swagger(?P<format>\.json|\.yaml)$",
@@ -49,4 +51,6 @@ urlpatterns = [
     url(
         r"^redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
     ),
+    path("requests", RequestDefaultListCreateView.as_view()),
+    path("requests/", include("api.v1.requests.urls")),
 ]
