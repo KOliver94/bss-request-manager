@@ -1,8 +1,11 @@
+from distutils import util
+
 from api.v1.users.serializers import UserProfileSerializer, UserSerializer
-from common.permissions import IsSelfOrAdmin, IsSelfOrStaff, IsStaffUser
+from common.pagination import ExtendedPagination
+from common.permissions import IsAdminUser, IsSelfOrAdmin, IsSelfOrStaff, IsStaffUser
 from django.contrib.auth.models import User
 from rest_framework import filters, generics
-from rest_framework.exceptions import NotAuthenticated
+from rest_framework.exceptions import NotAuthenticated, ValidationError
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -42,9 +45,45 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
         return super(UserDetailView, self).get_object()
 
 
+class UserListView(generics.ListAPIView):
+    """
+    List (GET) view for User objects.
+    Only Admin users can access this view.
+    """
+
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = [
+        "id",
+        "last_name",
+        "first_name",
+    ]
+    ordering = ["last_name"]
+    pagination_class = ExtendedPagination
+
+    def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            # queryset just for schema generation metadata
+            return User.objects.none()
+        queryset = User.objects.all()
+        staff = self.request.query_params.get("staff", None)
+        admin = self.request.query_params.get("admin", None)
+
+        try:
+            if staff is not None:
+                queryset = queryset.filter(is_staff=util.strtobool(staff))
+            if admin is not None:
+                queryset = queryset.filter(is_superuser=util.strtobool(admin))
+        except ValueError:
+            raise ValidationError("Invalid filter")
+
+        return queryset
+
+
 class StaffUserListView(generics.ListAPIView):
     """
-    List (GET) view for a Staff User objects.
+    List (GET) view for Staff User objects.
 
     Only Staff users can access this view.
 
@@ -53,7 +92,6 @@ class StaffUserListView(generics.ListAPIView):
 
     serializer_class = UserSerializer
     permission_classes = [IsStaffUser]
-    pagination_class = None
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["id", "last_name", "first_name"]
     ordering = ["last_name"]
