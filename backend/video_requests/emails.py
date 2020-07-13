@@ -199,10 +199,15 @@ def email_crew_new_comment(comment):
         else ""
     )
     responsible_email_address = (
-        comment.request.responsible.email if comment.request.responsible else ""
+        comment.request.responsible.email
+        if comment.request.responsible and comment.request.responsible.is_staff
+        else ""
     )
     crew_members_email_addresses = (
-        [user.member.email for user in comment.request.crew.all()]
+        [
+            user.member.email
+            for user in comment.request.crew.filter(member__is_staff=True)
+        ]
         if comment.request.crew.exists()
         else ""
     )
