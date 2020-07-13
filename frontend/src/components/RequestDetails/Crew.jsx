@@ -288,7 +288,7 @@ export default function Crew({
                         <MUITextField
                           // eslint-disable-next-line react/jsx-props-no-spreading
                           {...params}
-                          label="Vágó"
+                          label="Stábtag"
                           margin="normal"
                           error={touched.member_id && errors.member_id}
                           helperText={touched.member_id && errors.member_id}
