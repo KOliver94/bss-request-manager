@@ -114,10 +114,24 @@ DATABASES = {
     }
 }
 
+# Cache
+# https://docs.djangoproject.com/en/3.0/topics/cache/
+# https://github.com/jazzband/django-redis
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": config("CACHE_REDIS", default="redis://localhost:6379/0"),
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+    }
+}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 # Celery
 # https://docs.celeryproject.org/en/stable/userguide/configuration.html
 
-CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://localhost:6379/0")
+CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://localhost:6379/1")
 CELERY_RESULT_BACKEND = "django-db"
 
 # Scheduled tasks

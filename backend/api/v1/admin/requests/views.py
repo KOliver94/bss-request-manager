@@ -9,6 +9,8 @@ from api.v1.admin.requests.serializers import (
 from common.pagination import ExtendedPagination
 from common.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from common.utilities import remove_calendar_event
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import filters, generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
@@ -65,6 +67,10 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(requester=self.request.user)
+
+    @method_decorator(cache_page(60 * 15))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):

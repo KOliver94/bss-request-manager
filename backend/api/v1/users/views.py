@@ -4,6 +4,8 @@ from api.v1.users.serializers import UserProfileSerializer, UserSerializer
 from common.pagination import ExtendedPagination
 from common.permissions import IsAdminUser, IsSelfOrAdmin, IsSelfOrStaff, IsStaffUser
 from django.contrib.auth.models import User
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import filters, generics
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 
@@ -101,3 +103,7 @@ class StaffUserListView(generics.ListAPIView):
             # queryset just for schema generation metadata
             return User.objects.none()
         return User.objects.filter(is_staff=True, is_active=True)
+
+    @method_decorator(cache_page(60 * 60))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
