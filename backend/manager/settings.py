@@ -112,6 +112,11 @@ DATABASES = {
     }
 }
 
+# Celery
+# https://docs.celeryproject.org/en/stable/userguide/configuration.html
+
+CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://localhost:6379/0")
+
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 

@@ -79,7 +79,7 @@ class CommentDefaultSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         comment = super(CommentDefaultSerializer, self).create(validated_data)
-        email_crew_new_comment(comment)
+        email_crew_new_comment.delay(comment.id)
         return comment
 
 
@@ -176,19 +176,19 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
         request = super(RequestDefaultSerializer, self).create(validated_data)
         if comment_text:
             request.comments.add(create_comment(comment_text, request))
-        email_user_new_request_confirmation(request)
-        create_calendar_event(request)
+        create_calendar_event.delay(request.id)
+        email_user_new_request_confirmation.delay(request.id)
         return request
 
 
 class RequestAnonymousSerializer(serializers.ModelSerializer):
     requester = UserSerializer(read_only=True)
     comments = CommentFilteredSerializer(many=True, read_only=True)
-    comment_text = CharField(write_only=True, required=False)
+    comment_text = CharField(write_only=True, required=False, allow_blank=True)
     requester_first_name = CharField(write_only=True, required=True)
     requester_last_name = CharField(write_only=True, required=True)
     requester_email = EmailField(write_only=True, required=True)
-    requester_mobile = PhoneNumberField(write_only=True, required=False)
+    requester_mobile = PhoneNumberField(write_only=True, required=True)
 
     class Meta:
         model = Request
@@ -215,7 +215,8 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
             "comments",
         )
 
-    def create_user(self, validated_data):
+    @staticmethod
+    def create_user(validated_data):
         user = User()
         user.first_name = validated_data.pop("requester_first_name")
         user.last_name = validated_data.pop("requester_last_name")
@@ -263,6 +264,6 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         if comment_text:
             request.comments.add(create_comment(comment_text, request))
         request.save()
-        email_user_new_request_confirmation(request)
-        create_calendar_event(request)
+        create_calendar_event.delay(request.id)
+        email_user_new_request_confirmation.delay(request.id)
         return request

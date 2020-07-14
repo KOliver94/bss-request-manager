@@ -130,8 +130,8 @@ class CommentAdminSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         comment = super(CommentAdminSerializer, self).create(validated_data)
         if not comment.internal and comment.request.requester.is_active:
-            email_user_new_comment(comment)
-        email_crew_new_comment(comment)
+            email_user_new_comment.delay(comment.id)
+        email_crew_new_comment.delay(comment.id)
         return comment
 
 
@@ -261,7 +261,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         if comment_text:
             request.comments.add(self.create_comment(comment_text, request))
         update_request_status(request)
-        create_calendar_event(request)
+        create_calendar_event.delay(request.id)
         return request
 
     def update(self, instance, validated_data):
@@ -270,5 +270,5 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         handle_additional_data(validated_data, self.context["request"].user, instance)
         request = super(RequestAdminSerializer, self).update(instance, validated_data)
         update_request_status(request)
-        update_calendar_event(request)
+        update_calendar_event.delay(request.id)
         return request

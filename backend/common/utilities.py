@@ -1,9 +1,11 @@
+from celery import shared_task
 from django.conf import settings
 from django.contrib.auth.models import User
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.discovery_cache.base import Cache
 from googleapiclient.errors import HttpError
+from video_requests.models import Request
 
 
 ##############################
@@ -60,7 +62,9 @@ def get_calendar_event_body(request):
     }
 
 
-def create_calendar_event(request):
+@shared_task
+def create_calendar_event(request_id):
+    request = Request.objects.get(pk=request_id)
     service = get_google_calendar_service()
     try:
         request.additional_data["calendar_id"] = (
@@ -76,7 +80,9 @@ def create_calendar_event(request):
         return
 
 
-def update_calendar_event(request):
+@shared_task
+def update_calendar_event(request_id):
+    request = Request.objects.get(pk=request_id)
     if request.additional_data and "calendar_id" in request.additional_data:
         service = get_google_calendar_service()
         try:
@@ -89,13 +95,12 @@ def update_calendar_event(request):
             return
 
 
-def remove_calendar_event(request):
-    if request.additional_data and "calendar_id" in request.additional_data:
-        service = get_google_calendar_service()
-        try:
-            service.events().delete(
-                calendarId=settings.GOOGLE_CALENDAR_ID,
-                eventId=request.additional_data["calendar_id"],
-            ).execute()
-        except HttpError:
-            return
+@shared_task
+def remove_calendar_event(calendar_id):
+    service = get_google_calendar_service()
+    try:
+        service.events().delete(
+            calendarId=settings.GOOGLE_CALENDAR_ID, eventId=calendar_id,
+        ).execute()
+    except HttpError:
+        return

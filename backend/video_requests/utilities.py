@@ -106,7 +106,7 @@ def update_video_status(video, called_from_request=False):
                 # If the current status of the video is before published sent an e-mail to the requester
                 if video.status < 5:
                     # TODO: Check if an e-mail was already sent
-                    email_user_video_published(video)
+                    email_user_video_published.delay(video.id)
 
         # Check if the HQ export has been moved to its place
         if status == 5 and "archiving" in video.additional_data:

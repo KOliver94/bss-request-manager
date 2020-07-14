@@ -87,7 +87,7 @@ class Command(BaseCommand):
         elif test:
             request = create_request(999999, User.objects.get(pk=1))
             try:
-                create_calendar_event(request)
+                create_calendar_event(request.id)
                 self.stdout.write(self.style.SUCCESS("Event was saved successfully."))
             finally:
                 request.delete()

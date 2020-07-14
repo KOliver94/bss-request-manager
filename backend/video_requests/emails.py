@@ -1,3 +1,4 @@
+from celery import shared_task
 from common.utilities import (
     get_editor_in_chief,
     get_pr_responsible,
@@ -6,6 +7,7 @@ from common.utilities import (
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from video_requests.models import Comment, Request, Video
 
 TEXT_HTML = "text/html"
 BASE_URL = settings.BASE_URL
@@ -19,7 +21,9 @@ def debug_email(subject, msg_plain):
     )
 
 
-def email_user_new_request_confirmation(request):
+@shared_task
+def email_user_new_request_confirmation(request_id):
+    request = Request.objects.get(pk=request_id)
     context = {
         "base_url": BASE_URL,
         "first_name": request.requester.first_name,
@@ -57,7 +61,9 @@ def email_user_new_request_confirmation(request):
     msg.send()
 
 
-def email_user_video_published(video):
+@shared_task
+def email_user_video_published(video_id):
+    video = Video.objects.get(pk=video_id)
     context = {
         "base_url": BASE_URL,
         "first_name": video.request.requester.first_name,
@@ -93,7 +99,9 @@ def email_user_video_published(video):
     msg.send()
 
 
-def email_user_new_comment(comment):
+@shared_task
+def email_user_new_comment(comment_id):
+    comment = Comment.objects.get(pk=comment_id)
     context = {
         "base_url": BASE_URL,
         "first_name": comment.request.requester.first_name,
@@ -175,7 +183,9 @@ def email_crew_daily_reminder(request, crew_members):
     msg.send()
 
 
-def email_crew_new_comment(comment):
+@shared_task
+def email_crew_new_comment(comment_id):
+    comment = Comment.objects.get(pk=comment_id)
     context = {
         "base_url": BASE_URL,
         "request_title": comment.request.title,

@@ -9,6 +9,7 @@ pre-commit = "*"
 tox = "*"
 
 [packages]
+celery = {extras = ["redis"],version = "==4.4.6"}
 django = "==3.0.8"
 djangorestframework = "==3.11.0"
 djangorestframework_simplejwt = "==4.4.0"
