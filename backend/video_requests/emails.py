@@ -59,6 +59,7 @@ def email_user_new_request_confirmation(request_id):
 
     msg.attach_alternative(msg_html, TEXT_HTML)
     msg.send()
+    return f"Request confirmation e-mail was sent to {request.requester.email} successfully."
 
 
 @shared_task
@@ -97,6 +98,7 @@ def email_user_video_published(video_id):
 
     msg.attach_alternative(msg_html, TEXT_HTML)
     msg.send()
+    return f"Video published e-mail was sent to {video.request.requester.email} successfully."
 
 
 @shared_task
@@ -133,6 +135,7 @@ def email_user_new_comment(comment_id):
 
     msg.attach_alternative(msg_html, TEXT_HTML)
     msg.send()
+    return f"New comment e-mail was sent to {comment.request.requester.email} successfully."
 
 
 def email_staff_weekly_tasks(recording, editing):
@@ -235,6 +238,7 @@ def email_crew_new_comment(comment_id):
 
     msg.attach_alternative(msg_html, TEXT_HTML)
     msg.send()
+    return f"New comment e-mail was sent to {[crew_members_email_addresses, editor_in_chief_email_address, responsible_email_address]} successfully."
 
 
 def email_production_manager_unfinished_requests(requests):

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
+    "django_celery_results",
     "rest_framework",
     "corsheaders",
     "rest_framework_simplejwt.token_blacklist",
@@ -117,9 +118,7 @@ DATABASES = {
 # https://docs.celeryproject.org/en/stable/userguide/configuration.html
 
 CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://localhost:6379/0")
-CELERY_RESULT_BACKEND = config(
-    "CELERY_RESULT_BACKEND", default="redis://localhost:6379/0"
-)
+CELERY_RESULT_BACKEND = "django-db"
 
 # Scheduled tasks
 # https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html

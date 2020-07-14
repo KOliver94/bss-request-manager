@@ -66,18 +66,16 @@ def get_calendar_event_body(request):
 def create_calendar_event(request_id):
     request = Request.objects.get(pk=request_id)
     service = get_google_calendar_service()
-    try:
-        request.additional_data["calendar_id"] = (
-            service.events()
-            .insert(
-                calendarId=settings.GOOGLE_CALENDAR_ID,
-                body=get_calendar_event_body(request),
-            )
-            .execute()["id"]
+    request.additional_data["calendar_id"] = (
+        service.events()
+        .insert(
+            calendarId=settings.GOOGLE_CALENDAR_ID,
+            body=get_calendar_event_body(request),
         )
-        request.save()
-    except HttpError:
-        return
+        .execute()["id"]
+    )
+    request.save()
+    return f"Calendar event for {request.title} was created successfully."
 
 
 @shared_task
@@ -85,22 +83,18 @@ def update_calendar_event(request_id):
     request = Request.objects.get(pk=request_id)
     if request.additional_data and "calendar_id" in request.additional_data:
         service = get_google_calendar_service()
-        try:
-            service.events().patch(
-                calendarId=settings.GOOGLE_CALENDAR_ID,
-                eventId=request.additional_data["calendar_id"],
-                body=get_calendar_event_body(request),
-            ).execute()
-        except HttpError:
-            return
+        service.events().patch(
+            calendarId=settings.GOOGLE_CALENDAR_ID,
+            eventId=request.additional_data["calendar_id"],
+            body=get_calendar_event_body(request),
+        ).execute()
+        return f"Calendar event for {request.title} was updated successfully."
 
 
 @shared_task
 def remove_calendar_event(calendar_id):
     service = get_google_calendar_service()
-    try:
-        service.events().delete(
-            calendarId=settings.GOOGLE_CALENDAR_ID, eventId=calendar_id,
-        ).execute()
-    except HttpError:
-        return
+    service.events().delete(
+        calendarId=settings.GOOGLE_CALENDAR_ID, eventId=calendar_id,
+    ).execute()
+    return "Calendar event was deleted successfully."
