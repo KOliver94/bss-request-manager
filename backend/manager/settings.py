@@ -15,6 +15,7 @@ from datetime import timedelta
 
 import ldap
 import sentry_sdk
+from celery.schedules import crontab
 from decouple import Csv, config
 from django_auth_ldap.config import GroupOfNamesType, LDAPSearch
 from sentry_sdk.integrations.django import DjangoIntegration
@@ -116,6 +117,39 @@ DATABASES = {
 # https://docs.celeryproject.org/en/stable/userguide/configuration.html
 
 CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = config(
+    "CELERY_RESULT_BACKEND", default="redis://localhost:6379/0"
+)
+
+# Scheduled tasks
+# https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html
+
+CELERY_BEAT_SCHEDULE = {
+    "sync_ldap_users": {
+        "task": "manager.tasks.scheduled_sync_ldap_users",
+        "schedule": crontab(minute=15, hour=4),
+    },
+    "update_request_status": {
+        "task": "manager.tasks.scheduled_update_request_status",
+        "schedule": crontab(minute=0, hour=0),
+    },
+    "daily_reminder_email": {
+        "task": "manager.tasks.scheduled_send_daily_reminder_email",
+        "schedule": crontab(minute=0, hour=7),
+    },
+    "weekly_tasks_email": {
+        "task": "manager.tasks.scheduled_send_weekly_tasks_email",
+        "schedule": crontab(minute=30, hour=0, day_of_week="mon"),
+    },
+    "unfinished_requests_email": {
+        "task": "manager.tasks.scheduled_send_unfinished_requests_email",
+        "schedule": crontab(minute=0, hour=20, day_of_week="sun"),
+    },
+    "flush_expired_jwt_tokens": {
+        "task": "manager.tasks.scheduled_flush_expired_jwt_tokens",
+        "schedule": crontab(minute=30, hour=3, day_of_week="fri"),
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

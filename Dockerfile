@@ -34,7 +34,7 @@ WORKDIR /app/backend
 
 # Install dependencies
 RUN apt-get update
-    && apt-get install -y python3-dev libldap2-dev libsasl2-dev cron
+    && apt-get install -y python3-dev libldap2-dev libsasl2-dev
 RUN pip install pipenv
 
 # Copy Pipfile and Pipfile.lock to Docker environment
@@ -59,10 +59,6 @@ COPY --from=react-build /app/frontend/build /app/frontend/build
 WORKDIR /app/frontend/build
 RUN mkdir root && mv *.ico *.js *.json root
 
-# Set up cron
-RUN touch /var/log/cron.log
-RUN crontab /app/backend/crontab && rm /app/backend/crontab
-
 # Make migrations, collect static files and create default user
 WORKDIR /app/backend
 RUN python manage.py makemigrations && python manage.py migrate \
@@ -72,4 +68,4 @@ RUN python manage.py makemigrations && python manage.py migrate \
 EXPOSE 8000
 
 # Start the server
-CMD cron && gunicorn --bind 0.0.0.0:8000 manager.wsgi
+CMD gunicorn --bind 0.0.0.0:8000 manager.wsgi
