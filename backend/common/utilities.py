@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.discovery_cache.base import Cache
-from googleapiclient.errors import HttpError
 from video_requests.models import Request
 
 

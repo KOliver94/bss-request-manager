@@ -1,4 +1,4 @@
-from api.v1.users.views import StaffUserListView, UserDetailView, UserListView
+from api.v1.users.views import StaffUserListView, UserDetailView
 from django.urls import path
 
 urlpatterns = [
