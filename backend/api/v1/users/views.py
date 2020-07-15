@@ -4,8 +4,6 @@ from api.v1.users.serializers import UserProfileSerializer, UserSerializer
 from common.pagination import ExtendedPagination
 from common.permissions import IsAdminUser, IsSelfOrAdmin, IsSelfOrStaff, IsStaffUser
 from django.contrib.auth.models import User
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from rest_framework import filters, generics
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 
@@ -74,9 +72,9 @@ class UserListView(generics.ListAPIView):
 
         try:
             if staff is not None:
-                queryset = queryset.filter(is_staff=util.strtobool(staff))
+                queryset = queryset.filter(is_staff=util.strtobool(staff)).cache()
             if admin is not None:
-                queryset = queryset.filter(is_superuser=util.strtobool(admin))
+                queryset = queryset.filter(is_superuser=util.strtobool(admin)).cache()
         except ValueError:
             raise ValidationError("Invalid filter")
 
@@ -102,8 +100,4 @@ class StaffUserListView(generics.ListAPIView):
         if getattr(self, "swagger_fake_view", False):
             # queryset just for schema generation metadata
             return User.objects.none()
-        return User.objects.filter(is_staff=True, is_active=True)
-
-    @method_decorator(cache_page(60 * 60))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+        return User.objects.filter(is_staff=True, is_active=True).cache()

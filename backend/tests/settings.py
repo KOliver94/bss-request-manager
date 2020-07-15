@@ -11,6 +11,9 @@ REST_FRAMEWORK.update(
     {"DEFAULT_THROTTLE_RATES": {"anon": "500000/second", "login": "500000/second"}}
 )
 
+# Disable caching
+CACHEOPS_ENABLED = False
+
 # Do not send real e-mails
 EMAIL_BACKEND = ["django.core.mail.backends.dummy.EmailBackend"]
 

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "django_celery_results",
+    "cacheops",
     "rest_framework",
     "corsheaders",
     "rest_framework_simplejwt.token_blacklist",
@@ -114,19 +115,22 @@ DATABASES = {
     }
 }
 
-# Cache
-# https://docs.djangoproject.com/en/3.0/topics/cache/
-# https://github.com/jazzband/django-redis
+# Cacheops
+# https://github.com/Suor/django-cacheops
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": config("CACHE_REDIS", default="redis://localhost:6379/0"),
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
-    }
+CACHEOPS_REDIS = config("CACHE_REDIS", default="redis://localhost:6379/0")
+CACHEOPS_DEGRADE_ON_FAILURE = True
+CACHEOPS = {
+    # Automatically cache all gets and queryset fetches
+    # to django.contrib.auth models for an hour
+    "auth.*": {"ops": {"fetch", "get"}, "timeout": 60 * 60},
+    # Cache all queries to Permission
+    # 'all' is an alias for {'get', 'fetch', 'count', 'aggregate', 'exists'}
+    "auth.permission": {"ops": "all", "timeout": 60 * 60},
+    # Enable manual caching on all other models with default timeout of an hour
+    # Invalidation is still automatic
+    "*.*": {"timeout": 60 * 60},
 }
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
 
 # Celery
 # https://docs.celeryproject.org/en/stable/userguide/configuration.html
