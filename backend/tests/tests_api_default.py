@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.test import override_settings
 from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
@@ -20,11 +19,6 @@ USER = "test_user1"
 PASSWORD = "password"
 
 
-@override_settings(
-    AUTHENTICATION_BACKENDS=("django.contrib.auth.backends.ModelBackend",),
-    EMAIL_BACKEND="django.core.mail.backends.dummy.EmailBackend",  # do not send emails
-    GOOGLE_CALENDAR_ID="NOT_EXISTING",
-)  # do not create calendar event
 class DefaultAPITestCase(APITestCase):
     def authorize_user(self, username):
         url = reverse("login_obtain_jwt_pair")

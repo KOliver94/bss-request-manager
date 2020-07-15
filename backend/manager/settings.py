@@ -351,11 +351,12 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.AnonRateThrottle"],
-    "DEFAULT_THROTTLE_RATES": {"anon": "5/hour"},
+    "DEFAULT_THROTTLE_RATES": {"anon": "5/hour", "login": "5/minute"},
 }
 
 # Simple JWT Settings
 # https://github.com/davesque/django-rest-framework-simplejwt
+
 SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -461,7 +462,9 @@ LOGGING = {
     },
 }
 
-# Debug settings
+################################################################################
+#                                Debug settings                                #
+################################################################################
 
 if DEBUG:
     # Enable Django admin
@@ -473,22 +476,15 @@ if DEBUG:
     AUTHENTICATION_BACKENDS += ("django.contrib.auth.backends.ModelBackend",)
 
     # Enable Browsable API
-    REST_FRAMEWORK.update(
-        {
-            "DEFAULT_RENDERER_CLASSES": [
-                "rest_framework.renderers.JSONRenderer",
-                "rest_framework.renderers.BrowsableAPIRenderer",
-            ],
-        }
+    REST_FRAMEWORK.setdefault("DEFAULT_RENDERER_CLASSES", []).append(
+        "rest_framework.renderers.BrowsableAPIRenderer"
     )
 
     # Enable CORS requests from anywhere
     CORS_ORIGIN_ALLOW_ALL = True
 
-    # Simple JWT Settings
-    # https://github.com/davesque/django-rest-framework-simplejwt
-    # Extend JWT token lifetime
+    # Extend JWT access token lifetime
     SIMPLE_JWT.update({"ACCESS_TOKEN_LIFETIME": timedelta(days=5)})
 
-    # Do not send real e-mails in Debug mode
+    # Do not send real e-mails
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
