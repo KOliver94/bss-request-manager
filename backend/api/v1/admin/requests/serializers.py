@@ -35,20 +35,36 @@ def get_member_from_id(validated_data):
         validated_data["member"] = get_user_by_id(validated_data.pop("member_id"))
 
 
-def check_and_remove_unauthorized_additional_data(additional_data, user):
+def check_and_remove_unauthorized_additional_data(additional_data, user, original_data):
     """ Remove keys and values which are used by other functions and should be changed only by authorized users """
+    if "requester" in additional_data:
+        additional_data.pop("requester")
     if not user.is_superuser:
         if "status_by_admin" in additional_data:
             additional_data.pop("status_by_admin")
         if "accepted" in additional_data:
             additional_data.pop("accepted")
-        if "denied" in additional_data:
-            additional_data.pop("denied")
+        if "canceled" in additional_data:
+            additional_data.pop("canceled")
         if "failed" in additional_data:
             additional_data.pop("failed")
+        if "calendar_id" in additional_data:
+            additional_data.pop("calendar_id")
     else:
         if "status_by_admin" in additional_data:
-            additional_data["status_by_admin"].update({"admin_id": user.id})
+            """
+            Do not need to check whether other fields exists because validation schema makes
+            both status and admin_id required at save.
+            """
+            if (
+                original_data
+                and "status_by_admin" in original_data.additional_data
+                and original_data.additional_data["status_by_admin"]["status"]
+                is additional_data["status_by_admin"]["status"]
+            ):
+                additional_data.pop("status_by_admin")
+            else:
+                additional_data["status_by_admin"].update({"admin_id": user.id})
     return additional_data
 
 
@@ -69,7 +85,7 @@ def handle_additional_data(validated_data, user, original_data=None):
         validated_data[
             "additional_data"
         ] = check_and_remove_unauthorized_additional_data(
-            validated_data["additional_data"], user
+            validated_data["additional_data"], user, original_data
         )
         if original_data:
             validated_data["additional_data"] = update_additional_data(
