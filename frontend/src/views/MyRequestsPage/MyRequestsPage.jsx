@@ -34,7 +34,7 @@ import { hu } from 'date-fns/locale';
 // API calls
 import { listRequests } from 'api/requestApi';
 import { listRequestsAdmin } from 'api/requestAdminApi';
-import { requestEnumConverter } from 'api/enumConverter';
+import { requestStatuses } from 'api/enumConstants';
 
 import styles from 'assets/jss/material-kit-react/views/myRequestsPage';
 
@@ -196,7 +196,11 @@ export default function MyRequestsPage({
                               </TableCell>
                               <TableCell align="center">
                                 <Badge color="primary">
-                                  {requestEnumConverter(item.status)}
+                                  {
+                                    requestStatuses.find(
+                                      (x) => x.id === item.status
+                                    ).text
+                                  }
                                 </Badge>
                               </TableCell>
                             </TableRow>

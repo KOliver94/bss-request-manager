@@ -39,7 +39,7 @@ import { hu } from 'date-fns/locale';
 import { useSnackbar } from 'notistack';
 // API calls
 import { updateRequestAdmin, deleteRequestAdmin } from 'api/requestAdminApi';
-import { requestEnumConverter } from 'api/enumConverter';
+import { requestStatuses } from 'api/enumConstants';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -172,7 +172,7 @@ export default function BasicInformation({
           </Grid>
           <div className={classes.statusBadge}>
             <Badge color="primary">
-              {requestEnumConverter(requestData.status)}
+              {requestStatuses.find((x) => x.id === requestData.status).text}
             </Badge>
           </div>
           {isAdmin && (

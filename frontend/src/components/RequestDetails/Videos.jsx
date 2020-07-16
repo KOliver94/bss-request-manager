@@ -48,7 +48,7 @@ import {
   deleteRatingAdmin,
 } from 'api/requestAdminApi';
 import { createRating, updateRating, deleteRating } from 'api/requestApi';
-import { videoEnumConverter } from 'api/enumConverter';
+import { videoStatuses } from 'api/enumConstants';
 import compareValues from 'api/objectComperator';
 // Review component
 import ReviewDialog from './ReviewDialog';
@@ -376,7 +376,7 @@ export default function Videos({
                 </Typography>
                 <div className={classes.statusBadge}>
                   <Badge color="primary">
-                    {videoEnumConverter(video.status)}
+                    {videoStatuses.find((x) => x.id === video.status).text}
                   </Badge>
                 </div>
               </AccordionSummary>
