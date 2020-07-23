@@ -74,5 +74,6 @@ jobs:
           DATABASE_PASSWORD: postgres
           DJANGO_SETTINGS_MODULE: manager.settings.test
         run: |
+          pipenv run python manage.py makemigrations --no-input
           pipenv run python manage.py migrate --no-input
           pipenv run python manage.py test tests --parallel
