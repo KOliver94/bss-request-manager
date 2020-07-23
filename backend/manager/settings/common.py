@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "phonenumber_field",
     "simple_history",
-    "drf_yasg",
     "common.apps.CommonConfig",
     "video_requests.apps.VideoRequestsConfig",
 ]
@@ -224,16 +223,6 @@ STATIC_ROOT = os.path.join(BACKEND_DIR, "staticfiles")
 
 STATIC_URL = "/static/"
 WHITENOISE_ROOT = os.path.join(FRONTEND_DIR, "build", "root")
-
-# Swagger settings
-# https://drf-yasg.readthedocs.io/en/stable/index.html
-
-SWAGGER_SETTINGS = {
-    "USE_SESSION_AUTH": False,
-    "SECURITY_DEFINITIONS": {
-        "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
-    },
-}
 
 # Logging
 # https://docs.djangoproject.com/en/3.0/topics/logging/

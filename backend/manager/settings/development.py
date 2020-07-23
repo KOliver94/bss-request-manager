@@ -7,24 +7,34 @@ from manager.settings.production import *
 ################################################################################
 
 if DEBUG:
-    # Enable Django admin
-    INSTALLED_APPS += [
-        "django.contrib.admin",
-    ]
-
     # Enable local Django user based login
     AUTHENTICATION_BACKENDS += ("django.contrib.auth.backends.ModelBackend",)
+
+    # Enable CORS requests from anywhere
+    CORS_ORIGIN_ALLOW_ALL = True
+
+    # Do not send real e-mails
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+    # Enable Django admin and Swagger/ReDoc
+    INSTALLED_APPS += [
+        "django.contrib.admin",
+        "drf_yasg",
+    ]
 
     # Enable Browsable API
     REST_FRAMEWORK.setdefault("DEFAULT_RENDERER_CLASSES", []).append(
         "rest_framework.renderers.BrowsableAPIRenderer"
     )
 
-    # Enable CORS requests from anywhere
-    CORS_ORIGIN_ALLOW_ALL = True
-
     # Extend JWT access token lifetime
     SIMPLE_JWT.update({"ACCESS_TOKEN_LIFETIME": timedelta(days=5)})
 
-    # Do not send real e-mails
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    # Swagger settings
+    # https://drf-yasg.readthedocs.io/en/stable/index.html
+    SWAGGER_SETTINGS = {
+        "USE_SESSION_AUTH": False,
+        "SECURITY_DEFINITIONS": {
+            "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
+        },
+    }
