@@ -6,7 +6,6 @@ verify_ssl = true
 [dev-packages]
 coverage = "*"
 pre-commit = "*"
-tox = "*"
 
 [packages]
 celery = {extras = ["redis"],version = "==4.4.6"}

@@ -30,7 +30,7 @@
   "scripts": {
     "start": "set HTTPS=true&&react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
     "format": "prettier --write src/**/*.js src/**/*.jsx",
     "lint": "eslint src/**/*.js src/**/*.jsx",

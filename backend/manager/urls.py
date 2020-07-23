@@ -24,5 +24,5 @@ urlpatterns = [
 ]
 
 # Enable Django Admin in Debug mode
-if settings.DEBUG:
-    urlpatterns.insert(0, path("admin/", admin.site.urls))
+if settings.DEBUG and "django.contrib.admin" in settings.INSTALLED_APPS:
+    urlpatterns.insert(0, path("django-admin/", admin.site.urls))

@@ -1,0 +1,78 @@
+name: Backend CI
+
+on:
+  pull_request:
+  push:
+    paths:
+    - 'backend/**'
+
+jobs:
+  backend-test:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.8]
+    defaults:
+      run:
+        working-directory: backend
+
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: github_actions
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+        - 5432:5432
+
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+        - 6379:6379
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pipenv, libpq and ldap system dependencies
+        run: |
+          sudo apt-get install libpq-dev python3-dev libldap2-dev libsasl2-dev -y
+          pip install pipenv
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile.lock') }}
+      - name: Cache virtualenv
+        uses: actions/cache@v2
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-venv-${{ hashFiles('**/Pipfile.lock') }}
+      - name: Install dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true' || steps.cache-virtualenv.outputs.cache-hit != 'true'
+        run: pipenv install
+      - name: Run Tests
+        env:
+          APP_SECRET_KEY: Sup3r!S3cr3t_R4nd0m/g3N3r4T3d.k3Y
+          DATABASE_NAME: github_actions
+          DATABASE_USER: postgres
+          DATABASE_PASSWORD: postgres
+          DJANGO_SETTINGS_MODULE: manager.settings.development
+        run: |
+          pipenv run python manage.py migrate --no-input
+          pipenv run python manage.py test tests --parallel

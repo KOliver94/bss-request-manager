@@ -4,4 +4,4 @@ max-complexity = 18
 select = B,C,E,F,W,T4,B9
 ignore = E203, E266, E501, F401, W503
 per-file-ignores =
-    backend/tests/settings.py: F403,F405
+    backend/manager/settings/*.py: F403,F405
