@@ -8,7 +8,7 @@ coverage = "*"
 pre-commit = "*"
 
 [packages]
-celery = {extras = ["redis"],version = "==4.4.6"}
+celery = {extras = ["redis"],version = "==4.4.7"}
 django = "==3.0.8"
 djangorestframework = "==3.11.0"
 djangorestframework_simplejwt = "==4.4.0"
