@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "73788c650448d17c8197a675eb5e5eed69e4d1aa2e29d3fec89bc9b2e527ed1c"
+            "sha256": "17df3c4b93ad9fb67dfa3493a6b6ea530f4c73221a81aeb6710f0c5a529d09ec"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -751,11 +751,11 @@
                 "brotli"
             ],
             "hashes": [
-                "sha256:60154b976a13901414a25b0273a841145f77eb34a141f9ae032a0ace3e4d5b27",
-                "sha256:6dd26bfda3af29177d8ab7333a0c7b7642eb615ce83764f4d15a9aecda3201c4"
+                "sha256:05ce0be39ad85740a78750c86a93485c40f08ad8c62a6006de0233765996e5c7",
+                "sha256:05d00198c777028d72d8b0bbd234db605ef6d60e9410125124002518a48e515d"
             ],
             "index": "pypi",
-            "version": "==5.1.0"
+            "version": "==5.2.0"
         }
     },
     "develop": {
@@ -880,10 +880,10 @@
         },
         "virtualenv": {
             "hashes": [
-                "sha256:8aa9c37b082664dbce2236fa420759c02d64109d8e6013593ad13914718a30fd",
-                "sha256:f14a0a98ea4397f0d926cff950361766b6a73cd5975ae7eb259d12919f819a25"
+                "sha256:7b54fd606a1b85f83de49ad8d80dbec08e983a2d2f96685045b262ebc7481ee5",
+                "sha256:8cd7b2a4850b003a11be2fc213e206419efab41115cc14bca20e69654f2ac08e"
             ],
-            "version": "==20.0.29"
+            "version": "==20.0.30"
         }
     }
 }
