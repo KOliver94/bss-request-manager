@@ -1,7 +1,7 @@
 from common.models import AbstractComment, AbstractRating
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models import JSONField
 from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
 from rest_framework.exceptions import ValidationError
