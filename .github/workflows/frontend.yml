@@ -36,7 +36,7 @@ jobs:
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
       - name: Install frontend dependencies
-        run: npm install --dev
+        run: npm install
       - name: Run ESLint config and code check
         run: |
           npm run check-eslint-config
