@@ -35,7 +35,7 @@ SECRET_KEY = config("APP_SECRET_KEY")
 DEBUG = config("APP_DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost", cast=Csv())
-CORS_ORIGIN_WHITELIST = config("CORS_ORIGIN_WHITELIST", default="", cast=Csv())
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
 
 # Application definition
 
