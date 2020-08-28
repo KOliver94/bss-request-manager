@@ -11,7 +11,7 @@
     "@sentry/browser": "^5.21.4",
     "axios": "^0.20.0",
     "classnames": "^2.2.6",
-    "date-fns": "^2.15.0",
+    "date-fns": "^2.16.0",
     "formik": "^2.1.5",
     "formik-material-ui": "^2.0.1",
     "formik-material-ui-lab": "0.0.5",
