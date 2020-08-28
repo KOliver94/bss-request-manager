@@ -7,7 +7,7 @@ FROM node:14-alpine AS react-build
 WORKDIR /app/frontend
 
 # Copy package.json and package-lock.json to Docker environment
-COPY ./frontend/package*.json /app/frontend
+COPY ./frontend/package*.json /app/frontend/
 
 # Install all required node packages
 RUN npm install
@@ -33,23 +33,18 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app/backend
 
 # Install dependencies
-RUN apt-get update
+RUN apt-get update \
     && apt-get install -y python3-dev libldap2-dev libsasl2-dev
 RUN pip install pipenv
 
 # Copy Pipfile and Pipfile.lock to Docker environment
-COPY ./backend/Pipfile* /app/backend
+COPY ./backend/Pipfile* /app/backend/
 
 # Install all required python packages
 RUN pipenv install --system
 
 # Copy everything over to Docker environment
 COPY ./backend /app/backend
-
-# Create log files
-RUN mkdir -p /app/backend/logs
-RUN touch /app/backend/logs/backend.log
-RUN touch /app/backend/logs/backend.err
 
 # Copy built frontend assets
 RUN mkdir -p /app/frontend/build
@@ -62,7 +57,7 @@ RUN mkdir root && mv *.ico *.js *.json root
 # Make migrations, collect static files and create default user
 WORKDIR /app/backend
 RUN python manage.py makemigrations && python manage.py migrate \
-    && python manager.py collectstatic --noinput && python manage.py create_default_user
+    && python manage.py collectstatic --noinput && python manage.py create_default_user
 
 # Open port
 EXPOSE 8000
