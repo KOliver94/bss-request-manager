@@ -79,7 +79,6 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   component={DateTimePicker}
                   inputVariant="outlined"
                   clearable
-                  value=""
                   ampm={false}
                   disablePast
                   fullWidth

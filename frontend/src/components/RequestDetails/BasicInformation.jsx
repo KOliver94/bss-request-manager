@@ -314,7 +314,6 @@ export default function BasicInformation({
                       margin="normal"
                       component={DateTimePicker}
                       inputVariant="outlined"
-                      value=""
                       ampm={false}
                       format="yyyy. MMMM dd. HH:mm"
                       fullWidth
