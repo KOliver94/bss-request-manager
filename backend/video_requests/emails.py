@@ -17,7 +17,9 @@ BASE_URL = settings.BASE_URL
 # https://docs.djangoproject.com/en/3.0/topics/email/#emailmessage-objects
 def debug_email(subject, msg_plain):
     return EmailMultiAlternatives(
-        subject=subject, body=msg_plain, to=[settings.DEBUG_EMAIL],
+        subject=subject,
+        body=msg_plain,
+        to=[settings.DEBUG_EMAIL],
     )
 
 
@@ -260,7 +262,9 @@ def email_production_manager_unfinished_requests(requests):
 
     msg = (
         EmailMultiAlternatives(
-            subject=subject, body=msg_plain, to=[production_manager_email_address],
+            subject=subject,
+            body=msg_plain,
+            to=[production_manager_email_address],
         )
         if not settings.DEBUG_EMAIL
         else debug_email(subject, msg_plain)

@@ -94,6 +94,7 @@ def update_calendar_event(request_id):
 def remove_calendar_event(calendar_id):
     service = get_google_calendar_service()
     service.events().delete(
-        calendarId=settings.GOOGLE_CALENDAR_ID, eventId=calendar_id,
+        calendarId=settings.GOOGLE_CALENDAR_ID,
+        eventId=calendar_id,
     ).execute()
     return "Calendar event was deleted successfully."

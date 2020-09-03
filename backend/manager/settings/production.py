@@ -29,7 +29,9 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
 # Set up the basic group parameters.
 AUTH_LDAP_GROUP_DN = config("LDAP_GROUP_DN")
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-    AUTH_LDAP_GROUP_DN, ldap.SCOPE_SUBTREE, "(objectClass=group)",
+    AUTH_LDAP_GROUP_DN,
+    ldap.SCOPE_SUBTREE,
+    "(objectClass=group)",
 )
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
 

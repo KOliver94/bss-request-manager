@@ -12,7 +12,10 @@ from django.urls import path
 urlpatterns = [
     path("<int:pk>", RequestDefaultDetailView.as_view()),
     path("<int:request_id>/comments", CommentDefaultListCreateView.as_view()),
-    path("<int:request_id>/comments/<int:pk>", CommentDefaultDetailView.as_view(),),
+    path(
+        "<int:request_id>/comments/<int:pk>",
+        CommentDefaultDetailView.as_view(),
+    ),
     path("<int:request_id>/videos", VideoDefaultListView.as_view()),
     path("<int:request_id>/videos/<int:pk>", VideoDefaultDetailView.as_view()),
     path(

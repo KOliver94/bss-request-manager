@@ -26,7 +26,8 @@ urlpatterns = [
     path("<int:request_id>/videos", VideoAdminListCreateView.as_view()),
     path("<int:request_id>/videos/<int:pk>", VideoAdminDetailView.as_view()),
     path(
-        "<int:request_id_video>/videos/<int:pk>/history", HistoryRetrieveView.as_view(),
+        "<int:request_id_video>/videos/<int:pk>/history",
+        HistoryRetrieveView.as_view(),
     ),
     path(
         "<int:request_id>/videos/<int:video_id>/ratings",
