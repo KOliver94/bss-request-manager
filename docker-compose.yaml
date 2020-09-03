@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  web:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - API_URL=http://localhost/api/v1/
+        - AUTHSCH_URL=https://auth.sch.bme.hu/site/login?response_type=code&client_id=60451969490994503646&scope=basic+mail+givenName+sn+eduPersonEntitlement+mobile&state=authsch
+        - FACEBOOK_URL=https://www.facebook.com/v6.0/dialog/oauth?client_id=616497219172280&redirect_uri=https://localhost/login&scope=email&state=facebook
+        - GOOGLE_URL=https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile&include_granted_scopes=true&response_type=code&redirect_uri=https://localhost/login&client_id=834523770186-m52qdel4juccp05tbvdkorcbcd2jvd6p.apps.googleusercontent.com&state=google-oauth2
+        - SENTRY_URL=https://dhfiufsc9y2ufovnyjg8kevzd9jzh5qe@o651076.ingest.sentry.io/4461243
+    image: bss-request-manager
+    command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 manager.wsgi
+    volumes:
+      - backend_logs:/app/backend/logs
+    ports:
+      - 80:8000
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - postgres
+      - redis
+
+  celery-worker:
+    restart: always
+    image: bss-request-manager
+    command: celery -A manager worker
+    env_file:
+      - ./backend/.env
+    environment:
+      - DJANGO_CONTAINER=false
+    depends_on:
+      - web
+      - postgres
+      - redis
+
+  celery-beat:
+    restart: always
+    image: bss-request-manager
+    command: celery -A manager beat
+    env_file:
+      - ./backend/.env
+    environment:
+      - DJANGO_CONTAINER=false
+    depends_on:
+      - web
+      - postgres
+      - redis
+
+  postgres:
+    restart: always
+    image: postgres:12-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=myprojectuser
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=myproject
+
+  redis:
+    restart: always
+    image: redis:6-alpine
+
+volumes:
+  backend_logs:
+  postgres_data:

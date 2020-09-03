@@ -3,6 +3,20 @@
 # Pull base image
 FROM node:14-alpine AS react-build
 
+# Build args
+ARG API_URL
+ARG AUTHSCH_URL
+ARG FACEBOOK_URL
+ARG GOOGLE_URL
+ARG SENTRY_URL
+
+# Environment vars
+ENV REACT_APP_API_URL=$API_URL
+ENV REACT_APP_AUTHSCH_OAUTH_URL=$AUTHSCH_URL
+ENV REACT_APP_FACEBOOK_OAUTH_URL=$FACEBOOK_URL
+ENV REACT_APP_GOOGLE_OAUTH_URL=$GOOGLE_URL
+ENV REACT_APP_SENTRY_URL=$SENTRY_URL
+
 # Set work directory
 WORKDIR /app/frontend
 
@@ -10,7 +24,7 @@ WORKDIR /app/frontend
 COPY ./frontend/package*.json /app/frontend/
 
 # Install all required node packages
-RUN npm install
+RUN npm install --silent
 
 # Copy everything over to Docker environment
 COPY ./frontend /app/frontend
@@ -23,7 +37,7 @@ RUN npm run build
 # Stage 2 - The Production Environment
 
 # Pull base image
-FROM python:3.8
+FROM python:3.8-alpine
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -32,16 +46,32 @@ ENV PYTHONUNBUFFERED 1
 # Set work directory
 WORKDIR /app/backend
 
-# Install dependencies
-RUN apt-get update \
-    && apt-get install -y python3-dev libldap2-dev libsasl2-dev
-RUN pip install pipenv
+# Create the app user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 # Copy Pipfile and Pipfile.lock to Docker environment
 COPY ./backend/Pipfile* /app/backend/
 
-# Install all required python packages
-RUN pipenv install --system
+# Install dependencies
+RUN apk update \
+    && apk add --no-cache --virtual .build-deps \
+    postgresql-dev gcc python3-dev musl-dev openldap-dev build-base libffi-dev \
+    && pip install --no-cache-dir pipenv \
+    && pipenv install --system --deploy --clear \
+    && find /usr/local \
+        \( -type d -a -name test -o -name tests \) \
+        -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+        -exec rm -rf '{}' + \
+    && runDeps="$( \
+        scanelf --needed --nobanner --recursive /usr/local \
+                | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+                | sort -u \
+                | xargs -r apk info --installed \
+                | sort -u \
+    )" \
+    && apk add --virtual .rundeps $runDeps \
+    && apk del .build-deps \
+    && pip uninstall pipenv -y
 
 # Copy everything over to Docker environment
 COPY ./backend /app/backend
@@ -54,13 +84,20 @@ COPY --from=react-build /app/frontend/build /app/frontend/build
 WORKDIR /app/frontend/build
 RUN mkdir root && mv *.ico *.js *.json root
 
-# Make migrations, collect static files and create default user
-WORKDIR /app/backend
-RUN python manage.py makemigrations && python manage.py migrate \
-    && python manage.py collectstatic --noinput && python manage.py create_default_user
+# Change the owner of all files to the app user
+RUN chown -R appuser:appgroup /app
+
+# Change to the app user
+USER appuser
 
 # Open port
 EXPOSE 8000
 
+# Copy and run entrypoint.sh
+COPY --chown=appuser:appgroup ./docker-entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
+
 # Start the server
-CMD gunicorn --bind 0.0.0.0:8000 manager.wsgi
+WORKDIR /app/backend
+CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=5", "--threads=2", "manager.wsgi"]
