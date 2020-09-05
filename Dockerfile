@@ -100,4 +100,4 @@ ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Start the server
 WORKDIR /app/backend
-CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=5", "--threads=2", "manager.wsgi"]
+CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=5", "--threads=2", "core.wsgi"]

@@ -5,10 +5,10 @@ import os
 from celery import Celery
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "manager.settings.production")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings.production")
 
 app = Celery(
-    "manager", include=["common.utilities", "manager.tasks", "video_requests.emails"]
+    "core", include=["common.utilities", "core.tasks", "video_requests.emails"]
 )
 
 # Using a string here means the worker doesn't have to serialize

@@ -13,7 +13,7 @@ services:
         - GOOGLE_URL=https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile&include_granted_scopes=true&response_type=code&redirect_uri=https://localhost/login&client_id=834523770186-m52qdel4juccp05tbvdkorcbcd2jvd6p.apps.googleusercontent.com&state=google-oauth2
         - SENTRY_URL=https://dhfiufsc9y2ufovnyjg8kevzd9jzh5qe@o651076.ingest.sentry.io/4461243
     image: bss-request-manager
-    command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 manager.wsgi
+    command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 core.wsgi
     volumes:
       - backend_logs:/app/backend/logs
     ports:
@@ -27,7 +27,7 @@ services:
   celery-worker:
     restart: always
     image: bss-request-manager
-    command: celery -A manager worker
+    command: celery -A core worker
     env_file:
       - ./backend/.env
     environment:
@@ -40,7 +40,7 @@ services:
   celery-beat:
     restart: always
     image: bss-request-manager
-    command: celery -A manager beat
+    command: celery -A core beat
     env_file:
       - ./backend/.env
     environment:

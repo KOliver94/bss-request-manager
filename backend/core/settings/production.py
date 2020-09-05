@@ -1,7 +1,7 @@
 import ldap
 import sentry_sdk
+from core.settings.common import *
 from django_auth_ldap.config import GroupOfNamesType, LDAPSearch
-from manager.settings.common import *
 from sentry_sdk.integrations.django import DjangoIntegration
 
 INSTALLED_APPS += [

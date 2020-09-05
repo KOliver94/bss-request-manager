@@ -74,7 +74,7 @@ jobs:
           DATABASE_NAME: github_actions
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
-          DJANGO_SETTINGS_MODULE: manager.settings.test
+          DJANGO_SETTINGS_MODULE: core.settings.test
         run: |
           pipenv run python manage.py makemigrations --no-input
           pipenv run python manage.py migrate --no-input

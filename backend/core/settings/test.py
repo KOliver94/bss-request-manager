@@ -1,4 +1,4 @@
-from manager.settings.common import *
+from core.settings.common import *
 
 # Use the default Django authentication backend only
 AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]

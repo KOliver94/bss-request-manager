@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from manager.settings.production import *
+from core.settings.production import *
 
 ################################################################################
 #                                Debug settings                                #
