@@ -1,8 +1,16 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from simple_history.models import HistoricalRecords
+
+
+def get_sentinel_user():
+    return get_user_model().objects.get_or_create(
+        username="deleted",
+        defaults={"first_name": "Felhasználó", "last_name": "Törölt"},
+    )[0]
 
 
 class UserProfile(models.Model):
@@ -15,7 +23,7 @@ class UserProfile(models.Model):
 
 
 class AbstractComment(models.Model):
-    author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=1)
+    author = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     internal = models.BooleanField(default=False)
@@ -26,7 +34,7 @@ class AbstractComment(models.Model):
 
 
 class AbstractRating(models.Model):
-    author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=1)
+    author = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
     rating = models.PositiveSmallIntegerField(
         validators=[MaxValueValidator(5), MinValueValidator(1)]
     )
