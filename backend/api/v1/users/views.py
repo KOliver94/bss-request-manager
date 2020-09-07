@@ -1,6 +1,10 @@
 from distutils import util
 
-from api.v1.users.serializers import UserProfileSerializer, UserSerializer
+from api.v1.users.serializers import (
+    UserDetailSerializer,
+    UserProfileSerializer,
+    UserSerializer,
+)
 from common.pagination import ExtendedPagination
 from common.permissions import IsAdminUser, IsSelfOrAdmin, IsSelfOrStaff, IsStaffUser
 from django.contrib.auth.models import User
@@ -23,7 +27,7 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-            return UserSerializer
+            return UserDetailSerializer
         return UserProfileSerializer
 
     def get_permissions(self):

@@ -193,7 +193,7 @@ export default function Comments({
                             <Grid item>
                               <Avatar
                                 alt={`${comment.author.first_name} ${comment.author.last_name}`}
-                                src={comment.author.userprofile.avatar_url}
+                                src={comment.author.profile.avatar_url}
                               />
                             </Grid>
                             <Grid item xs zeroMinWidth>
@@ -257,7 +257,7 @@ export default function Comments({
                     <Grid item>
                       <Avatar
                         alt={`${comment.author.first_name} ${comment.author.last_name}`}
-                        src={comment.author.userprofile.avatar_url}
+                        src={comment.author.profile.avatar_url}
                       />
                     </Grid>
                     <Grid item xs zeroMinWidth>

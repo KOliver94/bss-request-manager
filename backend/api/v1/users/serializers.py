@@ -1,6 +1,20 @@
 from common.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from social_django.models import UserSocialAuth
+
+
+class UserSocialProfileSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = UserSocialAuth
+        fields = (
+            "provider",
+            "uid",
+        )
+        read_only_fields = (
+            "provider",
+            "uid",
+        )
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -14,7 +28,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    userprofile = UserProfileSerializer(read_only=True)
+    profile = UserProfileSerializer(read_only=True, source="userprofile")
 
     class Meta:
         model = User
@@ -24,5 +38,24 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "username",
             "email",
-            "userprofile",
+            "profile",
+        )
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    profile = UserProfileSerializer(read_only=True, source="userprofile")
+    social_accounts = UserSocialProfileSerializer(
+        many=True, read_only=True, source="social_auth"
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "profile",
+            "social_accounts",
         )

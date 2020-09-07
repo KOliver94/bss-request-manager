@@ -100,7 +100,7 @@ export default function RequestCreatorPage({
             requester_first_name: result.data.first_name,
             requester_last_name: result.data.last_name,
             requester_email: result.data.email,
-            requester_mobile: result.data.userprofile.phone_number,
+            requester_mobile: result.data.profile.phone_number,
           };
           setFormData((prevState) => ({ ...prevState, ...newData }));
         });

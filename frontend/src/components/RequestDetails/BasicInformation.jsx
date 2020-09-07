@@ -413,13 +413,13 @@ export default function BasicInformation({
                 <a href={`mailto:${requestData.requester.email}`}>
                   {requestData.requester.email}
                 </a>
-                {requestData.requester.userprofile.phone_number && (
+                {requestData.requester.profile.phone_number && (
                   <>
                     {', '}
                     <a
-                      href={`tel:${requestData.requester.userprofile.phone_number}`}
+                      href={`tel:${requestData.requester.profile.phone_number}`}
                     >
-                      {requestData.requester.userprofile.phone_number}
+                      {requestData.requester.profile.phone_number}
                     </a>
                   </>
                 )}
@@ -439,13 +439,13 @@ export default function BasicInformation({
                     <a href={`mailto:${requestData.responsible.email}`}>
                       {requestData.responsible.email}
                     </a>
-                    {requestData.responsible.userprofile.phone_number && (
+                    {requestData.responsible.profile.phone_number && (
                       <>
                         {', '}
                         <a
-                          href={`tel:${requestData.responsible.userprofile.phone_number}`}
+                          href={`tel:${requestData.responsible.profile.phone_number}`}
                         >
-                          {requestData.responsible.userprofile.phone_number}
+                          {requestData.responsible.profile.phone_number}
                         </a>
                       </>
                     )}
