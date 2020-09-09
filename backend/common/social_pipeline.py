@@ -1,6 +1,8 @@
+import logging
+
 import requests
 from libgravatar import Gravatar, sanitize_email
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
 
 def auto_logout(*args, **kwargs):
@@ -13,10 +15,20 @@ def check_for_email(backend, uid, user=None, *args, **kwargs):
         raise ValidationError("Email was not provided by OAuth provider.")
 
 
-def set_user_active_when_first_logs_in(backend, uid, user=None, *args, **kwargs):
-    if user and not backend.strategy.storage.user.get_social_auth_for_user(user):
+def check_if_user_is_banned(backend, uid, user=None, *args, **kwargs):
+    """
+    Check if user is banned.
+    If the user existed but was not active (most likely to be created when (s)he sent a request without logging in)
+    set the user to active.
+    """
+    if user and user.groups.filter(name="Banned").exists():
+        raise AuthenticationFailed(detail="Your user account has been suspended.")
+    elif not user.is_active:
         user.is_active = True
         user.save()
+        logging.warning(
+            f"User account has been activated for {user.last_name} {user.first_name} ({user.username})"
+        )
 
 
 def add_phone_number_to_profile(backend, uid, user=None, *args, **kwargs):

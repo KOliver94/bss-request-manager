@@ -1,15 +1,17 @@
 from distutils import util
 
 from api.v1.users.serializers import (
+    BanUserSerializer,
     UserDetailSerializer,
     UserProfileSerializer,
     UserSerializer,
 )
 from common.pagination import ExtendedPagination
 from common.permissions import IsAdminUser, IsSelfOrAdmin, IsSelfOrStaff, IsStaffUser
-from django.contrib.auth.models import User
-from rest_framework import filters, generics
+from django.contrib.auth.models import Group, User
+from rest_framework import filters, generics, status
 from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.response import Response
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -105,3 +107,37 @@ class StaffUserListView(generics.ListAPIView):
             # queryset just for schema generation metadata
             return User.objects.none()
         return User.objects.filter(is_staff=True, is_active=True).cache()
+
+
+class BanUserView(generics.UpdateAPIView):
+    """
+    Ban/Unban a user - Add to group "Banned" and set the user inactive.
+    The Banned group is needed to disable authentication with social provider
+    and the inactive status is due to avoid LDAP login
+
+    Only Admin members can call this endpoint with PUT/PATCH. The body must be {"ban": True/False}
+    """
+
+    permission_classes = [IsAdminUser]
+    serializer_class = BanUserSerializer
+
+    def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            # queryset just for schema generation metadata
+            return User.objects.none()
+        return User.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = self.get_object()
+        group = Group.objects.get_or_create(name="Banned")[0]
+        if serializer.data["ban"]:
+            user.groups.add(group)
+            user.is_active = False
+        else:
+            user.groups.remove(group)
+            user.is_active = True
+        user.save()
+        return Response(status=status.HTTP_202_ACCEPTED)

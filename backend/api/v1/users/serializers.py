@@ -1,10 +1,15 @@
 from common.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.fields import BooleanField
 from social_django.models import UserSocialAuth
 
 
-class UserSocialProfileSerializer(serializers.HyperlinkedModelSerializer):
+class BanUserSerializer(serializers.Serializer):
+    ban = BooleanField()
+
+
+class UserSocialProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSocialAuth
         fields = (
@@ -47,6 +52,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
     social_accounts = UserSocialProfileSerializer(
         many=True, read_only=True, source="social_auth"
     )
+    groups = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
 
     class Meta:
         model = User
@@ -58,4 +64,5 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "email",
             "profile",
             "social_accounts",
+            "groups",
         )

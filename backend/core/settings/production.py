@@ -148,9 +148,8 @@ SOCIAL_AUTH_PIPELINE = (
     # Associates the current social details with another user account with
     # a similar email address. Disabled by default.
     "social_core.pipeline.social_auth.associate_by_email",
-    # Custom action: If the user already exists check if this is the first login
-    # If so set the user to active.
-    "common.social_pipeline.set_user_active_when_first_logs_in",
+    # Custom action: Check whether the user has been banned.
+    "common.social_pipeline.check_if_user_is_banned",
     # Create a user account if we haven't found one yet.
     "social_core.pipeline.user.create_user",
     # Create the record that associates the social account with the user.
