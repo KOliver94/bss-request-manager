@@ -35,7 +35,7 @@ AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
 )
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
 
-# Mirror user's groups to Django
+# Mirror user's groups to Django. Note: It overwrites the user's existing groups.
 # If LDAP_MIRROR_GROUPS_EXCEPT is not set or empty mirror all groups
 if config("LDAP_MIRROR_GROUPS_EXCEPT", default="", cast=Csv()):
     AUTH_LDAP_MIRROR_GROUPS_EXCEPT = config("LDAP_MIRROR_GROUPS_EXCEPT", cast=Csv())

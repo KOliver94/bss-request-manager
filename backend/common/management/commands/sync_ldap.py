@@ -1,10 +1,14 @@
+import logging
 from datetime import timedelta
 
 import ldap
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
+from django.db.models import Q
 from django.utils import timezone
 from django_auth_ldap.backend import LDAPBackend
+from rest_framework.exceptions import AuthenticationFailed
 
 
 class Command(BaseCommand):
@@ -26,7 +30,8 @@ class Command(BaseCommand):
         )
 
         total_created = 0
-        total = 0
+        total_demoted = 0
+        users_found = []
 
         for a, r in results:
             # Get the username and pass it to the django-ldap-auth function.
@@ -35,16 +40,40 @@ class Command(BaseCommand):
             username = r["sAMAccountName"][0].decode(
                 "utf-8"
             )  # returns bytes by default so we need to decode to string
-            user = LDAPBackend().populate_user(username)
+            try:
+                user = LDAPBackend().populate_user(username)
+            except AuthenticationFailed:  # This exception is being raised when a user is banned.
+                continue  # Continue with the next iteration
 
             # If the user was created in the last minute count it as new user.
             if user is None:
                 raise Exception(f"No user named {username}")
             else:
-                total += 1
+                users_found.append(username)
                 if user.date_joined > timezone.now() - timedelta(minutes=1):
                     total_created += 1
 
+        # Demote users who have staff or admin privileges but were not found in AD
+        for user in User.objects.filter(
+            Q(is_superuser=True) | Q(is_staff=True)
+        ).exclude(username__in=users_found):
+            user.is_superuser = False
+            user.is_staff = False
+            user.is_active = False
+            group = user.groups.filter(
+                name="Banned"
+            ).first()  # If the user was in Banned group get the group
+            user.groups.clear()  # Remove all group membership
+            if group:  # If user was banned add again to the banned group
+                user.groups.add(group)
+            user.save()  # Save modifications
+            total_demoted += 1
+            logging.warning(
+                f"{user.last_name} {user.first_name} ({user.username}) has been demoted."
+            )
+
         self.stdout.write(
-            self.style.SUCCESS(f"Found {total} user(s), {total_created} new.")
+            self.style.SUCCESS(
+                f"Found {len(users_found)} user(s), {total_created} new, {total_demoted} demoted."
+            )
         )

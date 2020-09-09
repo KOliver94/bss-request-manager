@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from libgravatar import Gravatar, sanitize_email
+from rest_framework.exceptions import AuthenticationFailed
 
 
 @receiver(post_save, sender=User)
@@ -19,6 +20,10 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 def populate_user_profile_from_ldap(sender, user=None, ldap_user=None, **kwargs):
+    # Before doing anything check if the user is banned.
+    if user and user.groups.filter(name="Banned").exists():
+        raise AuthenticationFailed(detail="Your user account has been suspended.")
+
     user.save()  # Create the user which will create the profile as well
 
     try:
