@@ -10,12 +10,12 @@ def auto_logout(*args, **kwargs):
     return {"user": None}
 
 
-def check_for_email(backend, uid, user=None, *args, **kwargs):
-    if not kwargs["details"].get("email"):
+def check_for_email(details, *args, **kwargs):
+    if not details.get("email"):
         raise ValidationError("Email was not provided by OAuth provider.")
 
 
-def check_if_user_is_banned(backend, uid, user=None, *args, **kwargs):
+def check_if_user_is_banned(user=None, *args, **kwargs):
     """
     Check if user is banned.
     If the user existed but was not active (most likely to be created when (s)he sent a request without logging in)
@@ -31,13 +31,13 @@ def check_if_user_is_banned(backend, uid, user=None, *args, **kwargs):
         )
 
 
-def add_phone_number_to_profile(backend, uid, user=None, *args, **kwargs):
-    if kwargs["details"].get("mobile"):
-        user.userprofile.phone_number = kwargs["details"].get("mobile")
+def add_phone_number_to_profile(details, user, *args, **kwargs):
+    if details.get("mobile"):
+        user.userprofile.phone_number = details.get("mobile")
         user.save()
 
 
-def get_avatar(backend, strategy, details, response, user, *args, **kwargs):
+def get_avatar(backend, response, user, *args, **kwargs):
     if backend.name == "facebook":
         url = (
             f"https://graph.facebook.com/{response['id']}/picture?width=500&height=500"

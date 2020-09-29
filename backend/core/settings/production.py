@@ -138,16 +138,13 @@ SOCIAL_AUTH_PIPELINE = (
     # project, this is where emails and domains whitelists are applied (if
     # defined).
     "social_core.pipeline.social_auth.auth_allowed",
-    # Custom action: Return error if e-mail was not provided by OAuth
+    # Custom action: Return error if e-mail was not provided by OAuth.
     "common.social_pipeline.check_for_email",
     # Checks if the current social-account is already associated in the site.
     "social_core.pipeline.social_auth.social_user",
     # Make up a username for this person, appends a random string at the end if
     # there's any collision.
     "social_core.pipeline.user.get_username",
-    # Send a validation email to the user to verify its email address.
-    # Disabled by default.
-    # 'social_core.pipeline.mail.mail_validation',
     # Associates the current social details with another user account with
     # a similar email address. Disabled by default.
     "social_core.pipeline.social_auth.associate_by_email",
@@ -162,9 +159,9 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.load_extra_data",
     # Update the user record with any changed info from the auth service.
     "social_core.pipeline.user.user_details",
-    # Custom action: Add phone number to user's profile
+    # Custom action: Add phone number to user's profile.
     "common.social_pipeline.add_phone_number_to_profile",
-    # Custom action: Get user's avatar
+    # Custom action: Get user's avatar.
     "common.social_pipeline.get_avatar",
 )
 
