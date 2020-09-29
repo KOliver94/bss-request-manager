@@ -2,6 +2,7 @@ from distutils import util
 
 from api.v1.users.serializers import (
     BanUserSerializer,
+    ConnectOAuth2ProfileInputSerializer,
     UserDetailSerializer,
     UserProfileSerializer,
     UserSerializer,
@@ -11,7 +12,9 @@ from common.permissions import IsAdminUser, IsSelfOrAdmin, IsSelfOrStaff, IsStaf
 from django.contrib.auth.models import Group, User
 from rest_framework import filters, generics, status
 from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_social_auth.views import BaseSocialAuthView
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -141,3 +144,14 @@ class BanUserView(generics.UpdateAPIView):
             user.is_active = True
         user.save()
         return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class ConnectSocialProfileView(BaseSocialAuthView):
+    """
+    Connect social profile to existing account.
+    Works the same as social login but available only for authenticated users.
+    """
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserDetailSerializer
+    oauth2_serializer_class_in = ConnectOAuth2ProfileInputSerializer

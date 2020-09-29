@@ -2,6 +2,7 @@ from common.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.fields import BooleanField
+from rest_social_auth.serializers import OAuth2InputSerializer
 from social_django.models import UserSocialAuth
 
 
@@ -66,3 +67,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "social_accounts",
             "groups",
         )
+
+
+class ConnectOAuth2ProfileInputSerializer(OAuth2InputSerializer):
+    force = serializers.BooleanField(required=False, default=False)
