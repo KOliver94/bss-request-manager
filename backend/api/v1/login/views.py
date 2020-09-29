@@ -3,6 +3,7 @@ from api.v1.login.serializers import (
     ExtendedTokenObtainPairSerializer,
     LogoutAndBlacklistRefreshTokenSerializer,
 )
+from common.permissions import IsNotAuthenticated
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -14,6 +15,7 @@ from rest_social_auth.views import SocialJWTPairOnlyAuthView
 class ExtendedTokenObtainPairView(TokenObtainPairView):
     """ View for extended JWT serializer """
 
+    permission_classes = [IsNotAuthenticated]
     serializer_class = ExtendedTokenObtainPairSerializer
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "login"
@@ -22,6 +24,7 @@ class ExtendedTokenObtainPairView(TokenObtainPairView):
 class ExtendedSocialJWTPairOnlyAuthView(SocialJWTPairOnlyAuthView):
     """ View for extended JWT serializer (Social) """
 
+    permission_classes = [IsNotAuthenticated]
     serializer_class = ExtendedSocialJWTPairOnlyAuthSerializer
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "login"

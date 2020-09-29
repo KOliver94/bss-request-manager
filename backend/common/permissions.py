@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework import permissions
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from video_requests.models import Comment, Rating, Request, Video
 
 
@@ -7,7 +7,16 @@ def is_staff(user):
     return bool(user.is_staff or user.is_superuser)
 
 
-class IsStaffUser(permissions.BasePermission):
+class IsNotAuthenticated(BasePermission):
+    """
+    Allows access only to unauthenticated (anonymous) users.
+    """
+
+    def has_permission(self, request, view):
+        return not request.user.is_authenticated
+
+
+class IsStaffUser(BasePermission):
     """
     Allows access only to staff members and admins.
     """
@@ -16,7 +25,7 @@ class IsStaffUser(permissions.BasePermission):
         return bool(request.user and is_staff(request.user))
 
 
-class IsAdminUser(permissions.BasePermission):
+class IsAdminUser(BasePermission):
     """
     Allows access only to admin members.
     """
@@ -25,7 +34,7 @@ class IsAdminUser(permissions.BasePermission):
         return bool(request.user and request.user.is_superuser)
 
 
-class IsSelf(permissions.IsAuthenticated):
+class IsSelf(IsAuthenticated):
     """
     Allows access only if the user is authenticated and
     - Requester of the request OR
@@ -48,7 +57,7 @@ class IsSelf(permissions.IsAuthenticated):
             return False
 
 
-class IsSelfOrStaff(permissions.IsAuthenticated):
+class IsSelfOrStaff(IsAuthenticated):
     """
     Allows access only to admin members and if the authenticated user is
     - Requester of the request OR
@@ -71,7 +80,7 @@ class IsSelfOrStaff(permissions.IsAuthenticated):
             return False
 
 
-class IsSelfOrAdmin(permissions.IsAuthenticated):
+class IsSelfOrAdmin(IsAuthenticated):
     """
     Allows access only to admin members and if the authenticated user is
     - Requester of the request OR
