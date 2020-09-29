@@ -75,6 +75,9 @@ AUTH_LDAP_CACHE_TIMEOUT = 3600
 # When using PostgreSQL, it’s recommended to use the built-in JSONB field to store the extracted extra_data.
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
+# Do not let name to be changed by social profile.
+SOCIAL_AUTH_PROTECTED_USER_FIELDS = ["first_name", "last_name"]
+
 # Facebook OAuth2 settings:
 SOCIAL_AUTH_FACEBOOK_KEY = config("AUTH_FACEBOOK_APP_ID")
 SOCIAL_AUTH_FACEBOOK_SECRET = config("AUTH_FACEBOOK_APP_SECRET")
