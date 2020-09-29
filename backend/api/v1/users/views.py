@@ -12,9 +12,11 @@ from common.permissions import IsAdminUser, IsSelfOrAdmin, IsSelfOrStaff, IsStaf
 from django.contrib.auth.models import Group, User
 from rest_framework import filters, generics, status
 from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_social_auth.views import BaseSocialAuthView
+from social_django.models import UserSocialAuth
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -58,6 +60,8 @@ class UserListView(generics.ListAPIView):
     """
     List (GET) view for User objects.
     Only Admin users can access this view.
+
+    Example: /users?ordering=id&staff=False&admin=False
     """
 
     serializer_class = UserSerializer
@@ -155,3 +159,26 @@ class ConnectSocialProfileView(BaseSocialAuthView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserDetailSerializer
     oauth2_serializer_class_in = ConnectOAuth2ProfileInputSerializer
+
+
+class DisconnectSocialProfileView(generics.DestroyAPIView):
+    """
+    Disconnects user's social profile from given provider.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        provider = self.kwargs.get("provider", None)
+        if provider not in ["authsch", "facebook", "google-oauth2"]:
+            raise ValidationError(detail="Invalid provider.")
+        else:
+            social_auth = get_object_or_404(
+                UserSocialAuth, user=self.request.user, provider=provider
+            )
+            if UserSocialAuth.objects.filter(user=self.request.user).count() > 1:
+                social_auth.delete()
+            else:
+                raise ValidationError(
+                    detail="You must have at least 1 remaining connected profile."
+                )

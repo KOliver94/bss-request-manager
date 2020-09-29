@@ -1,6 +1,7 @@
 from api.v1.users.views import (
     BanUserView,
     ConnectSocialProfileView,
+    DisconnectSocialProfileView,
     StaffUserListView,
     UserDetailView,
 )
@@ -14,6 +15,7 @@ urlpatterns = [
         r"^me/connect/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$",
         ConnectSocialProfileView.as_view(),
     ),
+    path("me/disconnect/<str:provider>", DisconnectSocialProfileView.as_view()),
     path("<int:pk>", UserDetailView.as_view()),
     path("<int:pk>/ban", BanUserView.as_view()),
 ]
