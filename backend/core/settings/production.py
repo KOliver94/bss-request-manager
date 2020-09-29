@@ -150,6 +150,10 @@ SOCIAL_AUTH_PIPELINE = (
     "common.social_pipeline.check_if_only_one_association_from_a_provider",
     # Custom action: Check whether the user has been banned.
     "common.social_pipeline.check_if_user_is_banned",
+    # Custom action: Check if admin/staff user is still in Active Directory.
+    "common.social_pipeline.check_if_admin_or_staff_user_is_still_privileged",
+    # Custom action: Check if admin/staff user has already associated social profile to his/her account.
+    "common.social_pipeline.check_if_admin_or_staff_user_already_associated",
     # Create a user account if we haven't found one yet.
     "social_core.pipeline.user.create_user",
     # Create the record that associates the social account with the user.
