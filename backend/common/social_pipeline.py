@@ -84,6 +84,25 @@ def social_user(backend, strategy, uid, user=None, *args, **kwargs):
     }
 
 
+def check_if_only_one_association_from_a_provider(
+    backend, new_association=True, user=None, *args, **kwargs
+):
+    """
+    Check if there is only one association from a provider to a user.
+    Only one profile can be connected to a user from a provider.
+    """
+    if (
+        user
+        and new_association
+        and backend.strategy.storage.user.get_social_auth_for_user(
+            user, provider=backend.name
+        ).count()
+        > 0
+    ):
+        msg = "There is already a connected account from this provider. Please disconnect the other one first."
+        raise AuthAlreadyAssociated(backend, msg)
+
+
 def check_if_user_is_banned(strategy, user=None, *args, **kwargs):
     """
     Check if user is banned.
