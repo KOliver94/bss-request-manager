@@ -34,7 +34,7 @@ class Request(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
-    deadline = models.DateField()
+    deadline = models.DateField(blank=True)
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
     status = models.PositiveSmallIntegerField(choices=REQUEST_STATUS_CHOICES, default=1)
@@ -62,7 +62,7 @@ class Request(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.deadline:
-            self.deadline = self.end_datetime + timedelta(weeks=3)
+            self.deadline = (self.end_datetime + timedelta(weeks=3)).date()
         super().save(*args, **kwargs)
 
     def __str__(self):
