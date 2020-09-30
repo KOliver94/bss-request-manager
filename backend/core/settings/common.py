@@ -155,6 +155,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "core.tasks.scheduled_send_unfinished_requests_email",
         "schedule": crontab(minute=0, hour=20, day_of_week="sun"),
     },
+    "overdue_requests_email": {
+        "task": "core.tasks.scheduled_send_overdue_requests_email",
+        "schedule": crontab(minute=30, hour=8),
+    },
     "flush_expired_jwt_tokens": {
         "task": "core.tasks.scheduled_flush_expired_jwt_tokens",
         "schedule": crontab(minute=30, hour=3, day_of_week="fri"),

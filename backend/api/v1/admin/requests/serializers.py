@@ -229,6 +229,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
             "created",
             "start_datetime",
             "end_datetime",
+            "deadline",
             "type",
             "place",
             "status",

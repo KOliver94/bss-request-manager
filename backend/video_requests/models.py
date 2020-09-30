@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from common.models import AbstractComment, AbstractRating
 from django.contrib.auth.models import User
 from django.db import models
@@ -32,6 +34,7 @@ class Request(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
+    deadline = models.DateField()
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
     status = models.PositiveSmallIntegerField(choices=REQUEST_STATUS_CHOICES, default=1)
@@ -54,6 +57,13 @@ class Request(models.Model):
         super().clean()
         if not (self.start_datetime <= self.end_datetime):
             raise ValidationError("Start time must be earlier than end.")
+        if not (self.end_datetime < self.deadline):
+            raise ValidationError("Deadline must be later than end of the event.")
+
+    def save(self, *args, **kwargs):
+        if not self.deadline:
+            self.deadline = self.end_datetime + timedelta(weeks=3)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.title} - {self.start_datetime}"

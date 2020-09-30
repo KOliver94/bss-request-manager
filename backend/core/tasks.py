@@ -37,6 +37,12 @@ def scheduled_send_unfinished_requests_email():
 
 
 @shared_task
+def scheduled_send_overdue_requests_email():
+    call_command("email_overdue_requests", stdout=out)
+    return out.getvalue()
+
+
+@shared_task
 def scheduled_flush_expired_jwt_tokens():
     call_command("flushexpiredtokens", stdout=out)
     return out.getvalue()

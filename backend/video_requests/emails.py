@@ -272,3 +272,45 @@ def email_production_manager_unfinished_requests(requests):
 
     msg.attach_alternative(msg_html, TEXT_HTML)
     msg.send()
+
+
+def email_responsible_overdue_request(request):
+    context = {"base_url": BASE_URL, "request": request}
+
+    msg_plain = render_to_string(
+        "email/txt/email_responsible_overdue_request.txt", context
+    )
+    msg_html = render_to_string(
+        "email/html/email_responsible_overdue_request.html", context
+    )
+
+    subject = f"Lejárt határidejű felkérés - {request.title}"
+    responsible_email_address = (
+        request.responsible.email
+        if request.responsible and request.responsible.is_staff
+        else ""
+    )
+    editor_in_chief_email_address = (
+        [user.email for user in get_editor_in_chief()]
+        if get_editor_in_chief().exists()
+        else ""
+    )
+    production_manager_email_address = (
+        [user.email for user in get_production_manager()]
+        if get_production_manager().exists()
+        else ""
+    )
+
+    msg = (
+        EmailMultiAlternatives(
+            subject=subject,
+            body=msg_plain,
+            to=[responsible_email_address],
+            cc=[editor_in_chief_email_address, production_manager_email_address],
+        )
+        if not settings.DEBUG_EMAIL
+        else debug_email(subject, msg_plain)
+    )
+
+    msg.attach_alternative(msg_html, TEXT_HTML)
+    msg.send()
