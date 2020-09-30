@@ -85,11 +85,18 @@ class UserListView(generics.ListAPIView):
 
         try:
             if staff is not None:
-                queryset = queryset.filter(is_staff=util.strtobool(staff)).cache()
+                staff = util.strtobool(staff)
             if admin is not None:
-                queryset = queryset.filter(is_superuser=util.strtobool(admin)).cache()
+                admin = util.strtobool(admin)
         except ValueError:
             raise ValidationError("Invalid filter")
+
+        if staff is not None and admin is None:
+            queryset = queryset.filter(is_staff=staff).cache()
+        elif admin is not None and staff is None:
+            queryset = queryset.filter(is_superuser=admin).cache()
+        elif staff is not None and admin is not None:
+            queryset = queryset.filter(is_staff=staff, is_superuser=admin).cache()
 
         return queryset
 
