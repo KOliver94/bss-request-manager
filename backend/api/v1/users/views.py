@@ -1,3 +1,4 @@
+from datetime import date, datetime, timedelta
 from distutils import util
 
 from api.v1.users.serializers import (
@@ -8,7 +9,13 @@ from api.v1.users.serializers import (
     UserSerializer,
 )
 from common.pagination import ExtendedPagination
-from common.permissions import IsAdminUser, IsSelfOrAdmin, IsSelfOrStaff, IsStaffUser
+from common.permissions import (
+    IsAdminUser,
+    IsSelfOrAdmin,
+    IsSelfOrStaff,
+    IsStaffSelfOrAdmin,
+    IsStaffUser,
+)
 from django.contrib.auth.models import Group, User
 from rest_framework import filters, generics, status
 from rest_framework.exceptions import NotAuthenticated, ValidationError
@@ -17,6 +24,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_social_auth.views import BaseSocialAuthView
 from social_django.models import UserSocialAuth
+from video_requests.models import CrewMember, Request, Video
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -89,7 +97,7 @@ class UserListView(generics.ListAPIView):
             if admin is not None:
                 admin = util.strtobool(admin)
         except ValueError:
-            raise ValidationError("Invalid filter")
+            raise ValidationError("Invalid filter.")
 
         if staff is not None and admin is None:
             queryset = queryset.filter(is_staff=staff).cache()
@@ -189,3 +197,95 @@ class DisconnectSocialProfileView(generics.DestroyAPIView):
                 raise ValidationError(
                     detail="You must have at least 1 remaining connected profile."
                 )
+
+
+class UserWorkedOnListView(generics.ListAPIView):
+    """
+    List the requests and positions a user worked on.
+    The staff users can check themselves and admin users can check anybody.
+
+    Example: /users/me/worked?from=2020-06-20&to=2020-05-20&responsible=False
+    Params:
+    @from = Date from when we check the requests. By default: 20 weeks before today.
+    @to = Date until we check the requests. By default: today.
+    @responsible = If True the requests where the user was the responsible will be shown as well.
+    """
+
+    permission_classes = [IsStaffSelfOrAdmin]
+    queryset = User.objects.all()
+
+    def get_object(self):
+        if self.kwargs.get("pk", None) == "me":
+            self.kwargs["pk"] = self.request.user.pk
+        return super(UserWorkedOnListView, self).get_object()
+
+    def list(self, request, *args, **kwargs):
+        worked_on = []
+        user = self.get_object()
+
+        # Get and validate all query parameters by trying to convert them to the corresponding type
+        # if not the default value was used.
+        try:
+            to_date = self.request.query_params.get("to", date.today())
+            to_date = (
+                datetime.strptime(to_date, "%Y-%m-%d").date()
+                if type(to_date) is str
+                else to_date
+            )
+            from_date = self.request.query_params.get(
+                "from", to_date - timedelta(weeks=20)
+            )
+            from_date = (
+                datetime.strptime(from_date, "%Y-%m-%d").date()
+                if type(from_date) is str
+                else from_date
+            )
+            responsible = self.request.query_params.get("responsible", True)
+            responsible = (
+                util.strtobool(responsible) if type(responsible) is str else responsible
+            )
+        except ValueError:
+            raise ValidationError("Invalid filter.")
+
+        # Check if date range is valid
+        if to_date < from_date:
+            raise ValidationError("From date must be earlier than to date.")
+
+        if responsible:
+            for request in Request.objects.filter(
+                responsible=user, start_datetime__range=[from_date, to_date]
+            ):
+                worked_on.append(
+                    {
+                        "title": request.title,
+                        "position": "Felelős",
+                        "start_datetime": request.start_datetime,
+                        "end_datetime": request.end_datetime,
+                    }
+                )
+
+        for crew in CrewMember.objects.filter(
+            member=user, request__start_datetime__range=[from_date, to_date]
+        ):
+            worked_on.append(
+                {
+                    "title": crew.request.title,
+                    "position": crew.position,
+                    "start_datetime": crew.request.start_datetime,
+                    "end_datetime": crew.request.end_datetime,
+                }
+            )
+
+        for video in Video.objects.filter(
+            editor=user, request__start_datetime__range=[from_date, to_date]
+        ):
+            worked_on.append(
+                {
+                    "title": video.request.title,
+                    "position": "Vágó",
+                    "start_datetime": video.request.start_datetime,
+                    "end_datetime": video.request.end_datetime,
+                }
+            )
+
+        return Response(worked_on)

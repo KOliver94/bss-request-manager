@@ -4,6 +4,7 @@ from api.v1.users.views import (
     DisconnectSocialProfileView,
     StaffUserListView,
     UserDetailView,
+    UserWorkedOnListView,
 )
 from django.conf.urls import url
 from django.urls import path
@@ -16,6 +17,8 @@ urlpatterns = [
         ConnectSocialProfileView.as_view(),
     ),
     path("me/disconnect/<str:provider>", DisconnectSocialProfileView.as_view()),
+    path("me/worked", UserWorkedOnListView.as_view(), kwargs={"pk": "me"}),
     path("<int:pk>", UserDetailView.as_view()),
     path("<int:pk>/ban", BanUserView.as_view()),
+    path("<int:pk>/worked", UserWorkedOnListView.as_view()),
 ]
