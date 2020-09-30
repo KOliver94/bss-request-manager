@@ -23,6 +23,6 @@ urlpatterns = [
     re_path(r"", TemplateView.as_view(template_name="index.html")),  # React frontend
 ]
 
-# Enable Django Admin in Debug mode
-if settings.DEBUG and "django.contrib.admin" in settings.INSTALLED_APPS:
+# Enable Django Admin when requested
+if settings.DJANGO_ADMIN and "django.contrib.admin" in settings.INSTALLED_APPS:
     urlpatterns.insert(0, path("django-admin/", admin.site.urls))

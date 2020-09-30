@@ -16,9 +16,8 @@ if DEBUG:
     # Do not send real e-mails
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-    # Enable Django admin and Swagger/ReDoc
+    # Enable Swagger/ReDoc
     INSTALLED_APPS += [
-        "django.contrib.admin",
         "drf_yasg",
     ]
 

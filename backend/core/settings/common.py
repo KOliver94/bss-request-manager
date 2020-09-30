@@ -33,6 +33,7 @@ SECRET_KEY = config("APP_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("APP_DEBUG", default=False, cast=bool)
+DJANGO_ADMIN = config("DJANGO_ADMIN", default=False, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost", cast=Csv())
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
@@ -248,3 +249,10 @@ LOGGING = {
         "level": config("LOGGING_LEVEL", default="WARNING"),
     },
 }
+
+# If requested enable Django's admin site
+if DJANGO_ADMIN:
+    # Enable Django admin
+    INSTALLED_APPS += [
+        "django.contrib.admin",
+    ]
