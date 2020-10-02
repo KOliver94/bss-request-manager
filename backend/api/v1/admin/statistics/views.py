@@ -10,6 +10,23 @@ from video_requests.models import Request, Video
 
 
 class RequestStatisticView(generics.RetrieveAPIView):
+    """
+    Get some statistics about Requests and Videos.
+    This endpoint is only accessible for staff users.
+
+    Example: /admin/statistics/requests?from_date=2020-09-30&to_date=2020-10-01
+    Params:
+        @from_date = Date from when we check the requests. If not specified all Requests will be checked.
+        @to_date = The date until we want to check the stats. If not specified it will be checked until today.
+
+    Response: (All requests will be filtered by date if specified)
+        new_requests = Number of requests with status = 1 which means we have not decided yet to accept it or not.
+        in_progress_requests = Number of requests which are accepted but not yet done.
+        completed_requests = Number of fully finished requests.
+        upcoming_requests = The next 5 upcoming, accepted Request.
+        best_videos = Top 5 best rated Video.
+    """
+
     permission_classes = [IsStaffUser]
     serializer_class = RequestStatisticSerializer
 
@@ -67,8 +84,12 @@ class RequestStatisticView(generics.RetrieveAPIView):
                 request__start_datetime__gte=from_date
             )
 
-        # Return only the top 5 result of each part
-        instance = {key: instance[key][:5] for key in instance}
+        # Get the number of requests of the first 3 query sets and the top 5 from the last 2
+        instance["new_requests"] = instance["new_requests"].count()
+        instance["in_progress_requests"] = instance["in_progress_requests"].count()
+        instance["completed_requests"] = instance["completed_requests"].count()
+        instance["upcoming_requests"] = instance["upcoming_requests"][:5]
+        instance["best_videos"] = instance["best_videos"][:5]
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
