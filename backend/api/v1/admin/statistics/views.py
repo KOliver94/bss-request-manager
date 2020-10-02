@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
 from api.v1.admin.statistics.serializers import RequestStatisticSerializer
 from common.permissions import IsStaffUser
