@@ -1,5 +1,6 @@
 from django.db.models import Avg
 from rest_framework import serializers
+from rest_framework.fields import IntegerField
 from video_requests.models import Request, Video
 
 
@@ -37,8 +38,8 @@ class StatisticVideoSerializer(serializers.ModelSerializer):
 
 
 class RequestStatisticSerializer(serializers.Serializer):
-    new_requests = StatisticRequestSerializer(many=True, read_only=True)
-    in_progress_requests = StatisticRequestSerializer(many=True, read_only=True)
-    completed_requests = StatisticRequestSerializer(many=True, read_only=True)
+    new_requests = IntegerField(read_only=True)
+    in_progress_requests = IntegerField(read_only=True)
+    completed_requests = IntegerField(read_only=True)
     upcoming_requests = StatisticRequestSerializer(many=True, read_only=True)
     best_videos = StatisticVideoSerializer(many=True, read_only=True)
