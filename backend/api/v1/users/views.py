@@ -204,7 +204,7 @@ class UserWorkedOnListView(generics.ListAPIView):
     List the requests and positions a user worked on.
     The staff users can check themselves and admin users can check anybody.
 
-    Example: /users/me/worked?from=2020-06-20&to=2020-05-20&responsible=False
+    Example: /users/me/worked?from_date=2020-06-20&to_date=2020-05-20&responsible=False
     Params:
     @from = Date from when we check the requests. By default: 20 weeks before today.
     @to = Date until we check the requests. By default: today.
