@@ -6,9 +6,11 @@ from api.v1.admin.requests.serializers import (
     RequestAdminSerializer,
     VideoAdminSerializer,
 )
+from api.v1.requests.filters import RequestFilter
 from common.pagination import ExtendedPagination
 from common.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from common.utilities import remove_calendar_event
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
@@ -52,8 +54,14 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
 
     serializer_class = RequestAdminSerializer
     permission_classes = [IsStaffUser]
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        DjangoFilterBackend,
+    ]
     ordering_fields = ["title", "created", "start_datetime", "status"]
+    search_fields = ["title", "videos__title"]
+    filterset_class = RequestFilter
     ordering = ["created"]
     pagination_class = ExtendedPagination
 

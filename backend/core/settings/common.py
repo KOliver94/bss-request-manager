@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "cacheops",
     "rest_framework",
+    "django_filters",
     "corsheaders",
     "rest_framework_simplejwt.token_blacklist",
     "phonenumber_field",
