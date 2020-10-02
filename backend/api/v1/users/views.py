@@ -226,14 +226,14 @@ class UserWorkedOnListView(generics.ListAPIView):
         # Get and validate all query parameters by trying to convert them to the corresponding type
         # if not the default value was used.
         try:
-            to_date = self.request.query_params.get("to", date.today())
+            to_date = self.request.query_params.get("to_date", date.today())
             to_date = (
                 datetime.strptime(to_date, "%Y-%m-%d").date()
                 if type(to_date) is str
                 else to_date
             )
             from_date = self.request.query_params.get(
-                "from", to_date - timedelta(weeks=20)
+                "from_date", to_date - timedelta(weeks=20)
             )
             from_date = (
                 datetime.strptime(from_date, "%Y-%m-%d").date()
