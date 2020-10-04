@@ -11,7 +11,6 @@ from video_requests.emails import (
 from video_requests.models import Comment, Rating, Request, Video
 
 
-# noinspection PyAbstractClass
 class FilteredListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         if data.model is Comment:

@@ -7,6 +7,13 @@ from rest_framework.response import Response
 
 
 class FlushExpiredTokensView(generics.DestroyAPIView):
+    """
+    Manually call flushexpiredtokens management function to remove exipred JWT tokens from DB.
+    The function is called through Celery to be asynchronous.
+    Call: DELETE /api/v1/admin/management/flush_expired_tokens
+    Return: Celery task id
+    """
+
     permission_classes = [IsAdminUser]
 
     def delete(self, request, *args, **kwargs):
@@ -15,6 +22,13 @@ class FlushExpiredTokensView(generics.DestroyAPIView):
 
 
 class SyncLdapView(generics.ListAPIView):
+    """
+    Manually call sync_ldap management function to sync users from LDAP (Active Directory).
+    The function is called through Celery to be asynchronous.
+    Call: GET /api/v1/admin/management/sync_ldap
+    Return: Celery task id
+    """
+
     permission_classes = [IsAdminUser]
 
     def list(self, request, *args, **kwargs):
@@ -23,6 +37,10 @@ class SyncLdapView(generics.ListAPIView):
 
 
 class CeleryTasksView(generics.ListAPIView):
+    """
+    List Celery tasks.
+    """
+
     permission_classes = [IsAdminUser]
     serializer_class = CeleryTasksSerializer
     queryset = TaskResult.objects.all()

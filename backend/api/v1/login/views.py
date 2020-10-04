@@ -31,6 +31,20 @@ class ExtendedSocialJWTPairOnlyAuthView(SocialJWTPairOnlyAuthView):
 
 
 class LogoutAndBlacklistRefreshTokenView(generics.CreateAPIView):
+    """
+    Logout and blacklist refresh token.
+
+    Since JWT does not support logging out this is a workaround of this problem.
+    JWT tokens are valid until they expire.
+    Refresh tokens have longer expire time than access tokens and can be used to acquire new access + refresh tokens.
+    If someone steals a refresh token they can have unlimited access to the site.
+    Logging out saves the refresh token to a blacklist (stored in database) which is used to validate a refresh token.
+    When a refresh token is blacklisted it cannot be used to acquire new JWT tokens.
+
+    Example: POST /api/v1/logout
+    Body: {"refresh": "REFRESH_TOKEN"}
+    """
+
     permission_classes = [IsAuthenticated]
     serializer_class = LogoutAndBlacklistRefreshTokenSerializer
 

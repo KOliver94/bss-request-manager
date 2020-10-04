@@ -101,7 +101,6 @@ class HistoricalRecordField(serializers.ListField):
         return super().to_representation(data.values())
 
 
-# noinspection PyAbstractClass
 class HistorySerializer(serializers.Serializer):
     history = HistoricalRecordField(read_only=True)
 
