@@ -1,9 +1,10 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from common.models import AbstractComment, AbstractRating
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import JSONField
+from jsonschema import FormatChecker
 from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
 from rest_framework.exceptions import ValidationError
@@ -17,14 +18,14 @@ from video_requests.schemas import (
 
 def validate_request_additional_data(value):
     try:
-        validate(value, REQUEST_ADDITIONAL_DATA_SCHEMA)
+        validate(value, REQUEST_ADDITIONAL_DATA_SCHEMA, format_checker=FormatChecker())
     except JsonValidationError as e:
         raise ValidationError(e)
 
 
 def validate_video_additional_data(value):
     try:
-        validate(value, VIDEO_ADDITIONAL_DATA_SCHEMA)
+        validate(value, VIDEO_ADDITIONAL_DATA_SCHEMA, format_checker=FormatChecker())
     except JsonValidationError as e:
         raise ValidationError(e)
 
@@ -89,6 +90,20 @@ class Video(models.Model):
         validators=[validate_video_additional_data], default=dict, blank=True
     )
     history = HistoricalRecords()
+
+    __original_aired = None
+
+    def __init__(self, *args, **kwargs):
+        super(Video, self).__init__(*args, **kwargs)
+        self.__original_aired = self.additional_data.get("aired", None)
+
+    def save(self, *args, **kwargs):
+        aired = self.additional_data.get("aired", None)
+        if aired and aired != self.__original_aired:
+            aired.sort(
+                key=lambda date: datetime.strptime(date, "%Y-%m-%d"), reverse=True
+            )
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.request.title} - {self.title}"

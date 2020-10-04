@@ -9,6 +9,7 @@ from api.v1.admin.requests.views import (
     RequestAdminDetailView,
     VideoAdminDetailView,
     VideoAdminListCreateView,
+    VideoAdminListView,
 )
 from django.urls import path
 
@@ -41,4 +42,5 @@ urlpatterns = [
         "<int:request_id>/videos/<int:video_id>/ratings/<int:pk>/history",
         HistoryRetrieveView.as_view(),
     ),
+    path("videos", VideoAdminListView.as_view()),
 ]
