@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from common.models import AbstractComment, AbstractRating
 from django.contrib.auth.models import User
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import JSONField
 from jsonschema import FormatChecker
@@ -50,7 +51,10 @@ class Request(models.Model):
         User, related_name="requester_user", on_delete=models.SET_NULL, null=True
     )
     additional_data = JSONField(
-        validators=[validate_request_additional_data], default=dict, blank=True
+        encoder=DjangoJSONEncoder,
+        validators=[validate_request_additional_data],
+        default=dict,
+        blank=True,
     )
     history = HistoricalRecords()
 
@@ -87,7 +91,10 @@ class Video(models.Model):
     editor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     status = models.PositiveSmallIntegerField(choices=VIDEO_STATUS_CHOICES, default=1)
     additional_data = JSONField(
-        validators=[validate_video_additional_data], default=dict, blank=True
+        encoder=DjangoJSONEncoder,
+        validators=[validate_video_additional_data],
+        default=dict,
+        blank=True,
     )
     history = HistoricalRecords()
 

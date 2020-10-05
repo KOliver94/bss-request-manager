@@ -6,9 +6,10 @@ from api.v1.admin.requests.serializers import (
     HistorySerializer,
     RatingAdminSerializer,
     RequestAdminSerializer,
+    VideoAdminListSerializer,
     VideoAdminSerializer,
 )
-from api.v1.requests.filters import RequestFilter
+from api.v1.requests.filters import RequestFilter, VideoFilter
 from common.pagination import ExtendedPagination
 from common.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from common.utilities import remove_calendar_event
@@ -215,15 +216,24 @@ class VideoAdminListView(generics.ListAPIView):
     Lists all videos. Can be used for searching purposes.
     """
 
-    serializer_class = VideoAdminSerializer
+    serializer_class = VideoAdminListSerializer
     permission_classes = [IsStaffUser]
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
+        DjangoFilterBackend,
     ]
     search_fields = ["title"]
-    ordering_fields = ["title", "editor", "status"]
-    ordering = ["title"]
+    filterset_class = VideoFilter
+    ordering_fields = [
+        "title",
+        "editor",
+        "status",
+        "request__start_datetime",
+        "request__end_datetime",
+    ]
+    ordering = ["-request__start_datetime"]
+    pagination_class = ExtendedPagination
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):

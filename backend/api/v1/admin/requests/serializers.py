@@ -150,6 +150,13 @@ class CommentAdminSerializer(serializers.ModelSerializer):
         return comment
 
 
+class VideoRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Request
+        fields = ("id", "title", "start_datetime", "end_datetime")
+        read_only_fields = ("id", "title", "start_datetime", "end_datetime")
+
+
 class VideoAdminSerializer(serializers.ModelSerializer):
     ratings = RatingAdminSerializer(many=True, read_only=True)
     editor = UserSerializer(read_only=True)
@@ -187,6 +194,29 @@ class VideoAdminSerializer(serializers.ModelSerializer):
         video = super(VideoAdminSerializer, self).update(instance, validated_data)
         update_video_status(video)
         return video
+
+
+class VideoAdminListSerializer(VideoAdminSerializer):
+    request = VideoRequestSerializer(read_only=True)
+
+    class Meta:
+        model = Video
+        fields = (
+            "id",
+            "title",
+            "editor",
+            "status",
+            "additional_data",
+            "request",
+        )
+        read_only_fields = (
+            "id",
+            "title",
+            "editor",
+            "status",
+            "additional_data",
+            "request",
+        )
 
 
 class CrewMemberAdminSerializer(serializers.ModelSerializer):
