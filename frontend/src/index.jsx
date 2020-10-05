@@ -4,6 +4,7 @@ import { SnackbarProvider } from 'notistack';
 import * as Sentry from '@sentry/browser';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
+import './assets/css/style.css';
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({

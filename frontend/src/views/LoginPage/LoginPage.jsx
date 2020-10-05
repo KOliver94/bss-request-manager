@@ -155,7 +155,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         color="transparent"
                         disabled={loading}
                       >
-                        <i className="fas fa-graduation-cap" />
+                        <i className="icon-sch" />
                       </Button>
                       <Button
                         justIcon
