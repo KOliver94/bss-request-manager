@@ -4,7 +4,7 @@ from common.models import AbstractComment, AbstractRating
 from django.contrib.auth.models import User
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
-from django.db.models import JSONField
+from django.db.models import Avg, JSONField
 from jsonschema import FormatChecker
 from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
@@ -29,6 +29,11 @@ def validate_video_additional_data(value):
         validate(value, VIDEO_ADDITIONAL_DATA_SCHEMA, format_checker=FormatChecker())
     except JsonValidationError as e:
         raise ValidationError(e)
+
+
+class AnnotatedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().annotate(avg_rating=Avg("ratings__rating"))
 
 
 class Request(models.Model):
@@ -97,6 +102,7 @@ class Video(models.Model):
         blank=True,
     )
     history = HistoricalRecords()
+    objects = AnnotatedManager()
 
     __original_aired = None
 

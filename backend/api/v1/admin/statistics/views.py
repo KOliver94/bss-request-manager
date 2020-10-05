@@ -2,7 +2,6 @@ from datetime import date, datetime
 
 from api.v1.admin.statistics.serializers import RequestStatisticSerializer
 from common.permissions import IsStaffUser
-from django.db.models import Avg
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -63,8 +62,7 @@ class RequestStatisticView(generics.RetrieveAPIView):
             "upcoming_requests": Request.objects.filter(status=2)
             .order_by("start_datetime")
             .cache(),
-            "best_videos": Video.objects.annotate(avg_rating=Avg("ratings__rating"))
-            .order_by("-avg_rating")
+            "best_videos": Video.objects.order_by("-avg_rating")
             .filter(avg_rating__gt=0, request__start_datetime__lte=to_date)
             .cache(),
         }

@@ -161,6 +161,7 @@ class VideoAdminSerializer(serializers.ModelSerializer):
     ratings = RatingAdminSerializer(many=True, read_only=True)
     editor = UserSerializer(read_only=True)
     editor_id = IntegerField(write_only=True, required=False, allow_null=True)
+    avg_rating = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Video
@@ -172,12 +173,14 @@ class VideoAdminSerializer(serializers.ModelSerializer):
             "additional_data",
             "ratings",
             "editor_id",
+            "avg_rating",
         )
         read_only_fields = (
             "id",
             "editor",
             "status",
             "ratings",
+            "avg_rating",
         )
         write_only_fields = ("editor_id",)
 
@@ -208,6 +211,7 @@ class VideoAdminListSerializer(VideoAdminSerializer):
             "status",
             "additional_data",
             "request",
+            "avg_rating",
         )
         read_only_fields = (
             "id",
@@ -216,6 +220,7 @@ class VideoAdminListSerializer(VideoAdminSerializer):
             "status",
             "additional_data",
             "request",
+            "avg_rating",
         )
 
 

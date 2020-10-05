@@ -1,4 +1,3 @@
-from django.db.models import Avg
 from rest_framework import serializers
 from rest_framework.fields import IntegerField
 from video_requests.models import Request, Video
@@ -25,16 +24,22 @@ class StatisticRequestSerializer(serializers.ModelSerializer):
 
 class StatisticVideoSerializer(serializers.ModelSerializer):
     request = StatisticRequestSerializer(read_only=True)
-    average_rating = serializers.SerializerMethodField(read_only=True)
+    avg_rating = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Video
-        fields = ("id", "title", "request", "average_rating")
-        read_only_fields = ("id", "title", "request", "average_rating")
-
-    @staticmethod
-    def get_average_rating(obj):
-        return obj.ratings.aggregate(Avg("rating")).get("rating__avg")
+        fields = (
+            "id",
+            "title",
+            "request",
+            "avg_rating",
+        )
+        read_only_fields = (
+            "id",
+            "title",
+            "request",
+            "avg_rating",
+        )
 
 
 class RequestStatisticSerializer(serializers.Serializer):
