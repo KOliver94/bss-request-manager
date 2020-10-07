@@ -34,4 +34,4 @@ sentry-sdk = "==0.18.0"
 whitenoise = {extras = ["brotli"],version = "==5.2.0"}
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
