@@ -18,7 +18,7 @@ django-celery-results = "==1.2.1"
 django-cors-headers = "==3.5.0"
 django-filter = "==2.4.0"
 django-phonenumber-field = {extras = ["phonenumbers"],version = "==5.0.0"}
-django-simple-history = "==2.11.0"
+django-simple-history = "==2.12.0"
 drf-yasg = "==1.17.1"
 google-api-python-client = "==1.12.3"
 google-auth-httplib2 = "==0.0.4"
