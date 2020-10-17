@@ -14,7 +14,7 @@
     "date-fns": "^2.16.1",
     "formik": "^2.2.0",
     "formik-material-ui": "^2.0.1",
-    "formik-material-ui-lab": "0.0.5",
+    "formik-material-ui-lab": "0.0.7",
     "formik-material-ui-pickers": "0.0.11",
     "jwt-decode": "^3.0.0",
     "node-sass": "^4.14.1",
