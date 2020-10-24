@@ -134,21 +134,30 @@ class DefaultAPITestCase(APITestCase):
         response = self.client.get("/api/v1/requests")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
-        self.assertEqual(response.data["results"][0]["requester"]["username"], ADMIN)
+        response = self.client.get(
+            "/api/v1/requests/" + str(response.data["results"][0]["id"])
+        )
+        self.assertEqual(response.data["requester"]["username"], ADMIN)
 
     def test_staff_can_get_own_requests(self):
         self.authorize_user(STAFF)
         response = self.client.get("/api/v1/requests")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
-        self.assertEqual(response.data["results"][0]["requester"]["username"], STAFF)
+        response = self.client.get(
+            "/api/v1/requests/" + str(response.data["results"][0]["id"])
+        )
+        self.assertEqual(response.data["requester"]["username"], STAFF)
 
     def test_user_can_get_own_requests(self):
         self.authorize_user(USER)
         response = self.client.get("/api/v1/requests")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
-        self.assertEqual(response.data["results"][0]["requester"]["username"], USER)
+        response = self.client.get(
+            "/api/v1/requests/" + str(response.data["results"][0]["id"])
+        )
+        self.assertEqual(response.data["requester"]["username"], USER)
 
     def test_anonymous_cannot_get_requests(self):
         self.assertUnauthorized(self.client.get("/api/v1/requests"))
