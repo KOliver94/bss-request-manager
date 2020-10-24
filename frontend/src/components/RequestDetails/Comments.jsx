@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 // Material UI components
 import Typography from '@material-ui/core/Typography';

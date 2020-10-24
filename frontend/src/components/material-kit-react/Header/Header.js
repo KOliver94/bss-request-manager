@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -21,8 +21,8 @@ const useStyles = makeStyles(styles);
 
 export default function Header(props) {
   const classes = useStyles();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  React.useEffect(() => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  useEffect(() => {
     if (props.changeColorOnScroll) {
       window.addEventListener('scroll', headerColorChange);
     }

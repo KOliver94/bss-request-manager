@@ -1,6 +1,4 @@
-import React from 'react';
-
-// mterial-ui components
+// material-ui components
 import { makeStyles } from '@material-ui/core/styles';
 
 const styles = {

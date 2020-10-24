@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
 // @material-ui/core components
@@ -46,7 +46,7 @@ export default function SnackbarContent(props) {
       snackIcon = null;
       break;
   }
-  const [alert, setAlert] = React.useState(
+  const [alert, setAlert] = useState(
     <Snack
       message={
         <div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // nodejs library to set properties for components
@@ -24,7 +24,7 @@ import styles from 'assets/jss/material-kit-react/components/customDropdownStyle
 const useStyles = makeStyles(styles);
 
 export default function CustomDropdown(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
     if (anchorEl && anchorEl.contains(event.target)) {
       setAnchorEl(null);
