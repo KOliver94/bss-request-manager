@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Success = () => {
   return (
     <div style={{ paddingTop: 30, paddingBottom: 50 }}>

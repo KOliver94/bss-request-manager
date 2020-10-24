@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 // react components for routing our app without refresh
 import { Link } from 'react-router-dom';
@@ -44,7 +44,7 @@ export default function HeaderLinks({
   hideLogin = false,
 }) {
   const classes = useStyles();
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const location = useLocation();
 

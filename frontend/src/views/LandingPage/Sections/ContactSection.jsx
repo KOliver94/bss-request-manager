@@ -1,10 +1,5 @@
-import React from 'react';
-// @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 
-// @material-ui/icons
-
-// core components
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import CustomInput from 'components/material-kit-react/CustomInput/CustomInput';

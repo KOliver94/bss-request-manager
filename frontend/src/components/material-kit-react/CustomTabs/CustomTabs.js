@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // nodejs library to set properties for components
@@ -20,7 +20,7 @@ const useStyles = makeStyles(styles);
 
 export default function CustomTabs(props) {
   const { headerColor, plainTabs, tabs, title, rtlActive, activeTab } = props;
-  const [value, setValue] = React.useState(activeTab);
+  const [value, setValue] = useState(activeTab);
 
   const handleChange = (event, value) => {
     setValue(value);

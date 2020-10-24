@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 // Material UI components
 import IconButton from '@material-ui/core/IconButton';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // nodejs library to set properties for components
@@ -18,10 +18,10 @@ export default function Parallax(props) {
   } else {
     windowScrollTop = 0;
   }
-  const [transform, setTransform] = React.useState(
+  const [transform, setTransform] = useState(
     'translate3d(0,' + windowScrollTop + 'px,0)'
   );
-  React.useEffect(() => {
+  useEffect(() => {
     if (window.innerWidth >= 768) {
       window.addEventListener('scroll', resetTransform);
     }

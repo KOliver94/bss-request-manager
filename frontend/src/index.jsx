@@ -1,4 +1,4 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import { SnackbarProvider } from 'notistack';
 import * as Sentry from '@sentry/browser';
@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 ReactDOM.render(
-  <React.StrictMode>
+  <StrictMode>
     <SnackbarProvider
       maxSnack={3}
       preventDuplicate
@@ -25,7 +25,7 @@ ReactDOM.render(
     >
       <App />
     </SnackbarProvider>
-  </React.StrictMode>,
+  </StrictMode>,
   document.getElementById('root')
 );
 
