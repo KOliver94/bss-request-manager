@@ -43,5 +43,7 @@ jobs:
           npm run check-code
       - name: Build frontend
         run: npm run build --if-present
+        env:
+          CI: ""
       - name: Run frontend tests
         run: npm test
