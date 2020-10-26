@@ -8,13 +8,13 @@ coverage = "*"
 pre-commit = "*"
 
 [packages]
-celery = {extras = ["redis"],version = "==4.4.7"}
+celery = {extras = ["redis"],version = "==5.0.1"}
 django = "==3.1.2"
 djangorestframework = "==3.11.2"
 djangorestframework_simplejwt = "==4.4.0"
 django-auth-ldap = "==2.2.0"
 django-cacheops = "==5.1"
-django-celery-results = "==1.2.1"
+django-celery-results = {editable = true, git = "https://github.com/celery/django-celery-results.git", ref = "ed94080cea3d68a38f9ff048657a37b08e74fc35"}
 django-cors-headers = "==3.5.0"
 django-filter = "==2.4.0"
 django-phonenumber-field = {extras = ["phonenumbers"],version = "==5.0.0"}
