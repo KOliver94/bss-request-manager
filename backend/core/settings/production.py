@@ -179,7 +179,7 @@ AUTHENTICATION_BACKENDS = (
 # E-mail settings
 # https://docs.djangoproject.com/en/3.0/topics/email/
 
-EMAIL_BACKEND = ["django.core.mail.backends.smtp.EmailBackend"]
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_PORT = config("EMAIL_PORT")
 

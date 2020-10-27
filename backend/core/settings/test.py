@@ -15,7 +15,7 @@ REST_FRAMEWORK.update(
 CACHEOPS_ENABLED = False
 
 # Do not send real e-mails
-EMAIL_BACKEND = ["django.core.mail.backends.dummy.EmailBackend"]
+EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
 # Do not create real calendar events
 GOOGLE_CALENDAR_ID = "NOT_EXISTING"

@@ -14,7 +14,14 @@ if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 
     # Do not send real e-mails
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    EMAIL_BACKEND_TYPE = config("EMAIL_BACKEND", default="console")
+    if EMAIL_BACKEND_TYPE.casefold() == "console":
+        EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    elif EMAIL_BACKEND_TYPE.casefold() == "file":
+        EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+        EMAIL_FILE_PATH = "logs/emails"
+    else:
+        EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
     # Enable Swagger/ReDoc
     INSTALLED_APPS += [
