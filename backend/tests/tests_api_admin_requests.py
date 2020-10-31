@@ -2616,6 +2616,13 @@ class AdminRequestsAPITestCase(APITestCase):
             "Ensure this value is greater than or equal to 1.",
         )
 
+    def test_user_cannot_rate_video_before_certain_status(self):
+        unedited_video = create_video(504, self.request1, 1)
+        self.authorize_user(ADMIN)
+        response = self.create_rating(self.request1.id, unedited_video.id)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data[0], "The video has not been edited yet.")
+
     """
     PUT, PATCH /api/v1/admin/requests/:id/ratings/:id
     """
