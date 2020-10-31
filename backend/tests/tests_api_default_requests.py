@@ -311,10 +311,10 @@ class DefaultRequestsAPITestCase(APITestCase):
             "end_datetime": "2020-03-06T10:30",
             "place": "Test place",
             "type": "Test type",
-            "requester_first_name": "Test",
-            "requester_last_name": "User",
+            "requester_first_name": "Anonymous",
+            "requester_last_name": "Tester",
             "requester_email": "test_user1@foo.com",
-            "requester_mobile": "+36509999999",
+            "requester_mobile": "+36701234567",
         }
         response = self.client.post("/api/v1/requests", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -324,6 +324,18 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["title"], "Anonymous Test Request")
         self.assertEqual(response.data["requester"]["username"], USER)
+
+        # Check if data was saved to additional_data
+        req = Request.objects.get(pk=response.data["id"])
+        self.assertEqual(
+            req.additional_data["requester"]["first_name"], data["requester_first_name"]
+        )
+        self.assertEqual(
+            req.additional_data["requester"]["last_name"], data["requester_last_name"]
+        )
+        self.assertEqual(
+            req.additional_data["requester"]["phone_number"], data["requester_mobile"]
+        )
 
     """
     --------------------------------------------------
@@ -2856,6 +2868,13 @@ class DefaultRequestsAPITestCase(APITestCase):
                 + str(NOT_EXISTING_ID)
             )
         )
+
+    def test_user_cannot_rate_video_before_certain_status(self):
+        unfinished_video = create_video(307, self.request1, 3)
+        self.authorize_user(USER)
+        response = self.create_rating(self.request1.id, unfinished_video.id)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data[0], "The video has not been published yet.")
 
     """
     PUT, PATCH /api/v1/requests/:id/ratings/:id

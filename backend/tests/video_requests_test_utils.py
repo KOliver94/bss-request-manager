@@ -28,12 +28,12 @@ def create_crew(crew_id, request, member, position):
     return crew
 
 
-def create_video(video_id, request):
+def create_video(video_id, request, status=6):
     video = Video()
     video.id = video_id
     video.request = request
     video.title = "Test video - " + str(video_id)
-    video.status = 6
+    video.status = status
     video.save()
     return video
 
