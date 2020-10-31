@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from core.settings.common import *
 
 # Use the default Django authentication backend only
@@ -5,6 +7,9 @@ AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
 # Use faster password hashing algorithm
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
+
+# Use short lifetime on access tokens
+SIMPLE_JWT.update({"ACCESS_TOKEN_LIFETIME": timedelta(seconds=10)})
 
 # Increase the throttling rates
 REST_FRAMEWORK.update(

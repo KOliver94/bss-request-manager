@@ -19,7 +19,7 @@ USER = "test_user1"
 PASSWORD = "password"
 
 
-class AdminAPITestCase(APITestCase):
+class AdminRequestsAPITestCase(APITestCase):
     def authorize_user(self, username):
         url = reverse("login_obtain_jwt_pair")
         resp = self.client.post(
