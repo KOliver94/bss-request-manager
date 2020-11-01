@@ -5,6 +5,7 @@ from api.v1.admin.requests.serializers import (
     CrewMemberAdminSerializer,
     HistorySerializer,
     RatingAdminSerializer,
+    RequestAdminListSerializer,
     RequestAdminSerializer,
     VideoAdminListSerializer,
     VideoAdminSerializer,
@@ -55,7 +56,6 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
     - Staff and Admin users can do anything.
     """
 
-    serializer_class = RequestAdminSerializer
     permission_classes = [IsStaffUser]
     filter_backends = [
         filters.OrderingFilter,
@@ -67,6 +67,11 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
     filterset_class = RequestFilter
     ordering = ["created"]
     pagination_class = ExtendedPagination
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return RequestAdminSerializer
+        return RequestAdminListSerializer
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):

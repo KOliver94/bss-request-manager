@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';

@@ -11,6 +11,15 @@ from video_requests.emails import (
 from video_requests.models import Comment, Rating, Request, Video
 
 
+def create_comment(comment_text, request):
+    comment = Comment()
+    comment.author = request.requester
+    comment.text = comment_text
+    comment.request = request
+    comment.save()
+    return comment
+
+
 class FilteredListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         if data.model is Comment:
@@ -21,25 +30,6 @@ class FilteredListSerializer(serializers.ListSerializer):
 
 
 class RatingDefaultSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Rating
-        fields = (
-            "id",
-            "created",
-            "author",
-            "rating",
-            "review",
-        )
-        read_only_fields = (
-            "id",
-            "created",
-            "author",
-        )
-
-
-class RatingFilteredSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
 
     class Meta:
@@ -64,6 +54,7 @@ class CommentDefaultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
+        list_serializer_class = FilteredListSerializer
         fields = (
             "id",
             "created",
@@ -82,27 +73,8 @@ class CommentDefaultSerializer(serializers.ModelSerializer):
         return comment
 
 
-class CommentFilteredSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Comment
-        list_serializer_class = FilteredListSerializer
-        fields = (
-            "id",
-            "created",
-            "author",
-            "text",
-        )
-        read_only_fields = (
-            "id",
-            "created",
-            "author",
-        )
-
-
 class VideoDefaultSerializer(serializers.ModelSerializer):
-    ratings = RatingFilteredSerializer(many=True, read_only=True)
+    ratings = RatingDefaultSerializer(many=True, read_only=True)
     video_url = SerializerMethodField("get_video_url", read_only=True)
 
     @staticmethod
@@ -122,18 +94,30 @@ class VideoDefaultSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "title", "status", "ratings", "video_url")
 
 
-def create_comment(comment_text, request):
-    comment = Comment()
-    comment.author = request.requester
-    comment.text = comment_text
-    comment.request = request
-    comment.save()
-    return comment
+class RequestDefaultListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Request
+        fields = (
+            "id",
+            "title",
+            "created",
+            "start_datetime",
+            "end_datetime",
+            "status",
+        )
+        read_only_fields = (
+            "id",
+            "title",
+            "created",
+            "start_datetime",
+            "end_datetime",
+            "status",
+        )
 
 
 class RequestDefaultSerializer(serializers.ModelSerializer):
     videos = VideoDefaultSerializer(many=True, read_only=True)
-    comments = CommentFilteredSerializer(many=True, read_only=True)
+    comments = CommentDefaultSerializer(many=True, read_only=True)
     requester = UserSerializer(read_only=True)
     responsible = UserSerializer(read_only=True)
     comment_text = CharField(write_only=True, required=False, allow_blank=True)
@@ -164,6 +148,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
             "videos",
             "comments",
         )
+        write_only_fields = ("comment_text",)
 
     def create(self, validated_data):
         comment_text = (
@@ -181,8 +166,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
 
 
 class RequestAnonymousSerializer(serializers.ModelSerializer):
-    requester = UserSerializer(read_only=True)
-    comments = CommentFilteredSerializer(many=True, read_only=True)
+    comments = CommentDefaultSerializer(many=True, read_only=True)
     comment_text = CharField(write_only=True, required=False, allow_blank=True)
     requester_first_name = CharField(write_only=True, required=True)
     requester_last_name = CharField(write_only=True, required=True)
@@ -194,13 +178,13 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "title",
+            "status",
             "start_datetime",
             "end_datetime",
             "type",
             "place",
-            "comment_text",
-            "requester",
             "comments",
+            "comment_text",
             "requester_first_name",
             "requester_last_name",
             "requester_email",
@@ -209,9 +193,14 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "id",
             "status",
-            "requester",
-            "videos",
             "comments",
+        )
+        write_only_fields = (
+            "comment_text",
+            "requester_first_name",
+            "requester_last_name",
+            "requester_email",
+            "requester_mobile",
         )
 
     @staticmethod

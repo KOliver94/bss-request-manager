@@ -94,6 +94,15 @@ def handle_additional_data(validated_data, user, original_data=None):
     return validated_data
 
 
+class FilteredListSerializer(serializers.ListSerializer):
+    """ For VideoAdminSerializer return only own rating """
+
+    def to_representation(self, data):
+        if isinstance(self.parent, VideoAdminSerializer):
+            data = data.filter(author=self.context["request"].user)
+        return super(FilteredListSerializer, self).to_representation(data)
+
+
 class HistoricalRecordField(serializers.ListField):
     child = serializers.DictField()
 
@@ -110,6 +119,7 @@ class RatingAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rating
+        list_serializer_class = FilteredListSerializer
         fields = (
             "id",
             "created",
@@ -246,6 +256,40 @@ class CrewMemberAdminSerializer(serializers.ModelSerializer):
         return super(CrewMemberAdminSerializer, self).update(instance, validated_data)
 
 
+class RequestAdminListSerializer(serializers.ModelSerializer):
+    requester = UserSerializer(read_only=True)
+    responsible = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Request
+        fields = (
+            "id",
+            "title",
+            "created",
+            "start_datetime",
+            "end_datetime",
+            "deadline",
+            "type",
+            "place",
+            "status",
+            "responsible",
+            "requester",
+        )
+        read_only_fields = (
+            "id",
+            "title",
+            "created",
+            "start_datetime",
+            "end_datetime",
+            "deadline",
+            "type",
+            "place",
+            "status",
+            "responsible",
+            "requester",
+        )
+
+
 class RequestAdminSerializer(serializers.ModelSerializer):
     crew = CrewMemberAdminSerializer(many=True, read_only=True)
     videos = VideoAdminSerializer(many=True, read_only=True)
@@ -281,7 +325,6 @@ class RequestAdminSerializer(serializers.ModelSerializer):
             "created",
             "status",
             "responsible",
-            "requester",
             "requester",
             "crew",
             "videos",

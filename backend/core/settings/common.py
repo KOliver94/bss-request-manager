@@ -131,6 +131,8 @@ CACHEOPS = {
 
 CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://localhost:6379/1")
 CELERY_RESULT_BACKEND = "django-db"
+CELERY_IMPORTS = ["common.utilities", "core.tasks", "video_requests.emails"]
+CELERY_TIMEZONE = config("TIME_ZONE", default="Europe/Budapest")
 
 # Scheduled tasks
 # https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html

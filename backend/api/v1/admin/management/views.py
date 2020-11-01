@@ -39,6 +39,7 @@ class SyncLdapView(generics.ListAPIView):
 class CeleryTasksView(generics.ListAPIView):
     """
     List Celery tasks.
+    Old tasks are deleted after 1 day (by default)
     """
 
     permission_classes = [IsAdminUser]

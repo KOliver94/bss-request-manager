@@ -7,12 +7,12 @@ from rest_social_auth.serializers import JWTPairSerializer
 
 
 def get_role(user):
-    if not user.is_staff and not user.is_superuser:
-        return "user"
-    elif not user.is_superuser:
+    if user.is_staff and user.is_superuser:
+        return "admin"
+    elif user.is_staff:
         return "staff"
     else:
-        return "admin"
+        return "user"
 
 
 def add_custom_claims(token, user):
@@ -53,8 +53,6 @@ class LogoutAndBlacklistRefreshTokenSerializer(serializers.Serializer):
                 token.blacklist()
                 return validated_data
             else:
-                raise PermissionDenied(
-                    detail="You can only logout from you own account"
-                )
+                raise TokenError
         except TokenError:
             raise NotAuthenticated(detail="Token is invalid or expired")

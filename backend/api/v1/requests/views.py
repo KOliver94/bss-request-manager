@@ -3,6 +3,7 @@ from api.v1.requests.serializers import (
     CommentDefaultSerializer,
     RatingDefaultSerializer,
     RequestAnonymousSerializer,
+    RequestDefaultListSerializer,
     RequestDefaultSerializer,
     VideoDefaultSerializer,
 )
@@ -46,7 +47,9 @@ class RequestDefaultListCreateView(generics.ListCreateAPIView):
     def get_serializer_class(self):
         if self.request.user.is_anonymous:
             return RequestAnonymousSerializer
-        return RequestDefaultSerializer
+        if self.request.method == "POST":
+            return RequestDefaultSerializer
+        return RequestDefaultListSerializer
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
