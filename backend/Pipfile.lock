@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9c5deafb2f03ce7f5f0376e9d969245e8ee83826e0151d73f5b5873389546316"
+            "sha256": "7eaffb7017dbe4943231f6e3e4047caf109606f14c67321ddbbe2c1f76033ce4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -294,12 +294,9 @@
             "version": "==3.11.2"
         },
         "djangorestframework-simplejwt": {
-            "hashes": [
-                "sha256:288ee78618d906f26abf6282b639b8f1806ce1d9a7578897a125cf79c609f259",
-                "sha256:c315be70aa12a5f5790c0ab9acd426c3a58eebea65a77d0893248c5144a5080c"
-            ],
-            "index": "pypi",
-            "version": "==4.4.0"
+            "editable": true,
+            "git": "https://github.com/SimpleJWT/django-rest-framework-simplejwt.git",
+            "ref": "f511e0aeabc24ec792c66f720f4a059ab1c4180c"
         },
         "drf-yasg": {
             "hashes": [
@@ -333,10 +330,10 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:712dd7d140a9a1ea218e5688c7fcb04af71b431a29ec9ce433e384c60e387b98",
-                "sha256:9c0f71789438d703f77b94aad4ea545afaec9a65f10e6cc1bc8b89ce242244bb"
+                "sha256:5176db85f1e7e837a646cd9cede72c3c404ccf2e3373d9ee14b2db88febad440",
+                "sha256:b728625ff5dfce8f9e56a499c8a4eb51443a67f20f6d28b67d5774c310ec4b6b"
             ],
-            "version": "==1.22.1"
+            "version": "==1.23.0"
         },
         "google-auth-httplib2": {
             "hashes": [
@@ -892,11 +889,11 @@
         },
         "pre-commit": {
             "hashes": [
-                "sha256:92c62687ff39b92dc700d68369ec9081de85c2e0373d8bf5fc07a36116ddec4e",
-                "sha256:973b8f53e426266cfb136886a1fcfdbea2ca2641dde77f4ad9b4f9a7e174f742"
+                "sha256:22e6aa3bd571debb01eb7d34483f11c01b65237be4eebbf30c3d4fb65762d315",
+                "sha256:905ebc9b534b991baec87e934431f2d0606ba27f2b90f7f652985f5a5b8b6ae6"
             ],
             "index": "pypi",
-            "version": "==2.8.0"
+            "version": "==2.8.2"
         },
         "pyyaml": {
             "hashes": [
