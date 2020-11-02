@@ -333,10 +333,10 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:712dd7d140a9a1ea218e5688c7fcb04af71b431a29ec9ce433e384c60e387b98",
-                "sha256:9c0f71789438d703f77b94aad4ea545afaec9a65f10e6cc1bc8b89ce242244bb"
+                "sha256:5176db85f1e7e837a646cd9cede72c3c404ccf2e3373d9ee14b2db88febad440",
+                "sha256:b728625ff5dfce8f9e56a499c8a4eb51443a67f20f6d28b67d5774c310ec4b6b"
             ],
-            "version": "==1.22.1"
+            "version": "==1.23.0"
         },
         "google-auth-httplib2": {
             "hashes": [
@@ -491,10 +491,10 @@
         },
         "phonenumbers": {
             "hashes": [
-                "sha256:17f39f06c1e0e20eabe69ff735b1c08e4547d12a12595da3d835fd3256a9ee0c",
-                "sha256:f5277ce92ac8813cb1f4174c6d1ee1fd08d563da28f9dec1f4bed0031a780a80"
+                "sha256:23944f9e628f32a975d3b221b6d76e6ba8ae618d53cb3d82fc23d9e100a59b29",
+                "sha256:70aa98a50ba7bc7f6bf17851f806c927107e7c44e7d21eb46bdbec07b99d23ae"
             ],
-            "version": "==8.12.11"
+            "version": "==8.12.12"
         },
         "prompt-toolkit": {
             "hashes": [
@@ -892,11 +892,11 @@
         },
         "pre-commit": {
             "hashes": [
-                "sha256:92c62687ff39b92dc700d68369ec9081de85c2e0373d8bf5fc07a36116ddec4e",
-                "sha256:973b8f53e426266cfb136886a1fcfdbea2ca2641dde77f4ad9b4f9a7e174f742"
+                "sha256:22e6aa3bd571debb01eb7d34483f11c01b65237be4eebbf30c3d4fb65762d315",
+                "sha256:905ebc9b534b991baec87e934431f2d0606ba27f2b90f7f652985f5a5b8b6ae6"
             ],
             "index": "pypi",
-            "version": "==2.8.0"
+            "version": "==2.8.2"
         },
         "pyyaml": {
             "hashes": [
@@ -923,10 +923,10 @@
         },
         "toml": {
             "hashes": [
-                "sha256:926b612be1e5ce0634a2ca03470f95169cf16f939018233a670519cb4ac58b0f",
-                "sha256:bda89d5935c2eac546d648028b9901107a595863cb36bae0c73ac804a9b4ce88"
+                "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b",
+                "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"
             ],
-            "version": "==0.10.1"
+            "version": "==0.10.2"
         },
         "virtualenv": {
             "hashes": [
