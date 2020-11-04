@@ -98,10 +98,7 @@ def update_video_status(video, called_from_request=False):
 
         # Check if the video is published on the website
         if status == 4 and "publishing" in video.additional_data:
-            if (
-                "website" in video.additional_data["publishing"]
-                and video.additional_data["publishing"]["website"]
-            ):
+            if video.additional_data["publishing"].get("website", None):
                 status = 5
                 # If the current status of the video is before published sent an e-mail to the requester
                 if video.status < 5:
