@@ -100,9 +100,10 @@ def update_video_status(video, called_from_request=False):
         if status == 4 and "publishing" in video.additional_data:
             if video.additional_data["publishing"].get("website", None):
                 status = 5
-                # If the current status of the video is before published sent an e-mail to the requester
-                if video.status < 5:
-                    # TODO: Check if an e-mail was already sent
+                # If the current status of the video is before published send an e-mail to the requester
+                if video.status < 5 and not video.additional_data["publishing"].get(
+                    "email_sent_to_user", False
+                ):
                     email_user_video_published.delay(video.id)
 
         # Check if the HQ export has been moved to its place

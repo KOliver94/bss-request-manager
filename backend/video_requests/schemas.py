@@ -58,7 +58,10 @@ VIDEO_ADDITIONAL_DATA_SCHEMA = {
         },
         "publishing": {
             "type": "object",
-            "properties": {"website": {"type": "string"}},
+            "properties": {
+                "website": {"type": "string"},
+                "email_sent_to_user": {"type": "boolean"},
+            },
             "additionalProperties": False,
         },
         "archiving": {

@@ -100,6 +100,7 @@ def email_user_video_published(video_id):
 
     msg.attach_alternative(msg_html, TEXT_HTML)
     msg.send()
+    video.additional_data["publishing"]["email_sent_to_user"] = True
     return f"Video published e-mail was sent to {video.request.requester.email} successfully."
 
 

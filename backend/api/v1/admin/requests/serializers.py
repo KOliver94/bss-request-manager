@@ -39,6 +39,11 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
     """ Remove keys and values which are used by other functions and should be changed only by authorized users """
     if "requester" in additional_data:
         additional_data.pop("requester")
+    if (
+        "publishing" in additional_data
+        and "email_sent_to_user" in additional_data["publishing"]
+    ):
+        additional_data["publishing"].pop("email_sent_to_user")
     if not user.is_superuser:
         if "status_by_admin" in additional_data:
             additional_data.pop("status_by_admin")
