@@ -128,7 +128,7 @@ class LoginAPITestCase(APITestCase):
         refresh_token = resp.data["refresh"]
 
         # Try to logout without token in header
-        resp = self.client.post(logout_url, {"refresh": refresh_token}, follow="json")
+        resp = self.client.post(logout_url, {"refresh": refresh_token}, format="json")
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(
             resp.data["detail"], "Authentication credentials were not provided."
@@ -136,7 +136,7 @@ class LoginAPITestCase(APITestCase):
 
         # Set Header and try again
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
-        resp = self.client.post(logout_url, {"refresh": refresh_token}, follow="json")
+        resp = self.client.post(logout_url, {"refresh": refresh_token}, format="json")
         self.assertEqual(resp.status_code, status.HTTP_205_RESET_CONTENT)
 
         # Try to get new access token with blacklisted refresh token
@@ -175,7 +175,7 @@ class LoginAPITestCase(APITestCase):
         # When the user tries to logout using another user's refresh token an error should occur
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token_u1}")
         resp = self.client.post(
-            logout_url, {"refresh": refresh_token_u2}, follow="json"
+            logout_url, {"refresh": refresh_token_u2}, format="json"
         )
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(resp.data["detail"], "Token is invalid or expired")

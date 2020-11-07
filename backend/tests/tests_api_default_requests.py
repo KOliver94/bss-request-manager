@@ -9,6 +9,7 @@ from tests.video_requests_test_utils import (
     create_request,
     create_video,
 )
+from video_requests.choices import VIDEO_STATUS_CHOICES
 from video_requests.models import Request
 
 BASE_URL = "/api/v1/requests/"
@@ -675,6 +676,35 @@ class DefaultRequestsAPITestCase(APITestCase):
                 BASE_URL + str(NOT_EXISTING_ID) + "/videos/" + str(NOT_EXISTING_ID)
             )
         )
+
+    def test_user_can_get_video_url_after_certain_status(self):
+        test_request = create_request(104, self.normal_user)
+        test_video = create_video(307, test_request, 1)
+        test_video.additional_data.update(
+            {"publishing": {"website": "https://example.com"}}
+        )
+        test_video.save()
+
+        # Login
+        self.authorize_user(USER)
+
+        # Check if it works for all statuses
+        for x in VIDEO_STATUS_CHOICES:
+            # Change status
+            test_video.status = x[0]
+            test_video.save()
+
+            # Get video details and check if video_url is present as key
+            response = self.client.get(
+                BASE_URL + str(test_request.id) + "/videos/" + str(test_video.id)
+            )
+            self.assertIn("video_url", response.data)
+
+            # If status is below 4 no url should be visible
+            if x[0] >= 5:
+                self.assertEqual(response.data["video_url"], "https://example.com")
+            else:
+                self.assertIsNone(response.data["video_url"])
 
     """
     --------------------------------------------------
