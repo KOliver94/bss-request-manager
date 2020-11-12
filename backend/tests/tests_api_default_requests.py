@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
+from tests.users_test_utils import create_user, get_default_password
 from tests.video_requests_test_utils import (
     create_comment,
     create_rating,
@@ -14,38 +15,28 @@ from video_requests.models import Request
 
 BASE_URL = "/api/v1/requests/"
 NOT_EXISTING_ID = 9000
-ADMIN = "test_admin1"
-STAFF = "test_staff1"
-USER = "test_user1"
-PASSWORD = "password"
 
 
 class DefaultRequestsAPITestCase(APITestCase):
-    def authorize_user(self, username):
+    def authorize_user(self, user):
         url = reverse("login_obtain_jwt_pair")
         resp = self.client.post(
-            url, {"username": username, "password": PASSWORD}, format="json"
+            url,
+            {"username": user.username, "password": get_default_password()},
+            format="json",
         )
         token = resp.data["access"]
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
 
     def setUp(self):
         # Create normal user
-        self.normal_user = User.objects.create_user(
-            username=USER, password=PASSWORD, email="test_user1@foo.com"
-        )
+        self.normal_user = create_user()
 
         # Create staff user
-        self.staff_user = User.objects.create_user(
-            username=STAFF, password=PASSWORD, email="test_staff1@foo.com"
-        )
-        self.staff_user.is_staff = True
-        self.staff_user.save()
+        self.staff_user = create_user(is_staff=True)
 
         # Create admin user
-        self.admin_user = User.objects.create_superuser(
-            username=ADMIN, password=PASSWORD, email="test_admin1@foo.com"
-        )
+        self.admin_user = create_user(is_admin=True)
 
         # Create 3 sample Request objects (1 for each user type)
         self.request1 = create_request(101, self.normal_user)
@@ -131,34 +122,40 @@ class DefaultRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_own_requests(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get("/api/v1/requests")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
         response = self.client.get(
             "/api/v1/requests/" + str(response.data["results"][0]["id"])
         )
-        self.assertEqual(response.data["requester"]["username"], ADMIN)
+        self.assertEqual(
+            response.data["requester"]["username"], self.admin_user.username
+        )
 
     def test_staff_can_get_own_requests(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get("/api/v1/requests")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
         response = self.client.get(
             "/api/v1/requests/" + str(response.data["results"][0]["id"])
         )
-        self.assertEqual(response.data["requester"]["username"], STAFF)
+        self.assertEqual(
+            response.data["requester"]["username"], self.staff_user.username
+        )
 
     def test_user_can_get_own_requests(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.client.get("/api/v1/requests")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
         response = self.client.get(
             "/api/v1/requests/" + str(response.data["results"][0]["id"])
         )
-        self.assertEqual(response.data["requester"]["username"], USER)
+        self.assertEqual(
+            response.data["requester"]["username"], self.normal_user.username
+        )
 
     def test_anonymous_cannot_get_requests(self):
         self.assertUnauthorized(self.client.get("/api/v1/requests"))
@@ -168,7 +165,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_only_own_request_detail(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         # Try to access other user's requests
         self.assertNotFound("GET", BASE_URL + str(self.request1.id), None)
         self.assertNotFound("GET", BASE_URL + str(self.request2.id), None)
@@ -177,14 +174,16 @@ class DefaultRequestsAPITestCase(APITestCase):
         # Try to access own request
         response = self.client.get(BASE_URL + str(self.request3.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["requester"]["username"], ADMIN)
+        self.assertEqual(
+            response.data["requester"]["username"], self.admin_user.username
+        )
         # Check if user can only see non internal comments
         self.assertEqual(len(response.data["comments"]), 3)
         for comment in response.data["comments"]:
             self.assertNotIn("True", comment["text"])
 
     def test_staff_can_get_only_own_request_detail(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         # Try to access other user's requests
         self.assertNotFound("GET", BASE_URL + str(self.request1.id), None)
         self.assertNotFound("GET", BASE_URL + str(self.request3.id), None)
@@ -193,14 +192,16 @@ class DefaultRequestsAPITestCase(APITestCase):
         # Try to access own request
         response = self.client.get(BASE_URL + str(self.request2.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["requester"]["username"], STAFF)
+        self.assertEqual(
+            response.data["requester"]["username"], self.staff_user.username
+        )
         # Check if user can only see non internal comments
         self.assertEqual(len(response.data["comments"]), 3)
         for comment in response.data["comments"]:
             self.assertNotIn("True", comment["text"])
 
     def test_user_can_get_only_own_request_detail(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         # Try to access other user's requests
         self.assertNotFound("GET", BASE_URL + str(self.request2.id), None)
         self.assertNotFound("GET", BASE_URL + str(self.request3.id), None)
@@ -209,7 +210,9 @@ class DefaultRequestsAPITestCase(APITestCase):
         # Try to access own request
         response = self.client.get(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["requester"]["username"], USER)
+        self.assertEqual(
+            response.data["requester"]["username"], self.normal_user.username
+        )
         # Check if user can only see non internal comments
         self.assertEqual(len(response.data["comments"]), 3)
         for comment in response.data["comments"]:
@@ -244,28 +247,34 @@ class DefaultRequestsAPITestCase(APITestCase):
         Request.objects.get(id=request_id).delete()
 
     def test_admin_can_create_requests(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["requester"]["username"], ADMIN)
+        self.assertEqual(
+            response.data["requester"]["username"], self.admin_user.username
+        )
         self.check_request_created_and_remove(response.data["id"])
 
     def test_staff_can_create_requests(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["requester"]["username"], STAFF)
+        self.assertEqual(
+            response.data["requester"]["username"], self.staff_user.username
+        )
         self.check_request_created_and_remove(response.data["id"])
 
     def test_user_can_create_requests(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["requester"]["username"], USER)
+        self.assertEqual(
+            response.data["requester"]["username"], self.normal_user.username
+        )
         self.check_request_created_and_remove(response.data["id"])
 
     def test_adding_initial_comment_to_request(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         data = {
             "title": "Test Request",
             "start_datetime": "2020-03-05T10:30",
@@ -276,7 +285,10 @@ class DefaultRequestsAPITestCase(APITestCase):
         }
         response = self.client.post("/api/v1/requests", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["comments"][0]["author"]["username"], USER)
+        self.assertEqual(
+            response.data["comments"][0]["author"]["username"],
+            self.normal_user.username,
+        )
         self.assertEqual(response.data["comments"][0]["text"], "Test comment")
 
     def test_anonymous_can_create_requests(self):
@@ -314,17 +326,19 @@ class DefaultRequestsAPITestCase(APITestCase):
             "type": "Test type",
             "requester_first_name": "Anonymous",
             "requester_last_name": "Tester",
-            "requester_email": "test_user1@foo.com",
+            "requester_email": self.normal_user.email,
             "requester_mobile": "+36701234567",
         }
         response = self.client.post("/api/v1/requests", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.client.get(BASE_URL + str(response.data["id"]))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["title"], "Anonymous Test Request")
-        self.assertEqual(response.data["requester"]["username"], USER)
+        self.assertEqual(
+            response.data["requester"]["username"], self.normal_user.username
+        )
 
         # Check if data was saved to additional_data
         req = Request.objects.get(pk=response.data["id"])
@@ -348,7 +362,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_videos_only_related_to_own_requests(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         # Try to access videos on other user's requests
         self.assertNotFound("GET", BASE_URL + str(self.request1.id) + "/videos", None)
         self.assertNotFound("GET", BASE_URL + str(self.request2.id) + "/videos", None)
@@ -360,7 +374,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.assertEqual(len(response.data), 2)
 
     def test_staff_can_get_videos_only_related_to_own_requests(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         # Try to access videos on other user's requests
         self.assertNotFound("GET", BASE_URL + str(self.request1.id) + "/videos", None)
         self.assertNotFound("GET", BASE_URL + str(self.request3.id) + "/videos", None)
@@ -372,7 +386,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.assertEqual(len(response.data), 2)
 
     def test_user_can_get_videos_only_related_to_own_requests(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         # Try to access videos on other user's requests
         self.assertNotFound("GET", BASE_URL + str(self.request2.id) + "/videos", None)
         self.assertNotFound("GET", BASE_URL + str(self.request3.id) + "/videos", None)
@@ -404,7 +418,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_video_detail_only_related_to_own_requests(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         # Try to access videos related to other user's requests
         self.assertNotFound(
             "GET",
@@ -476,10 +490,10 @@ class DefaultRequestsAPITestCase(APITestCase):
         # Check if user can only see own rating
         self.assertEqual(len(response.data["ratings"]), 1)
         for rating in response.data["ratings"]:
-            self.assertEqual(rating["author"]["username"], ADMIN)
+            self.assertEqual(rating["author"]["username"], self.admin_user.username)
 
     def test_staff_can_get_video_detail_only_related_to_own_requests(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         # Try to access videos related to other user's requests
         self.assertNotFound(
             "GET",
@@ -551,10 +565,10 @@ class DefaultRequestsAPITestCase(APITestCase):
         # Check if user can only see own rating
         self.assertEqual(len(response.data["ratings"]), 1)
         for rating in response.data["ratings"]:
-            self.assertEqual(rating["author"]["username"], STAFF)
+            self.assertEqual(rating["author"]["username"], self.staff_user.username)
 
     def test_user_can_get_video_detail_only_related_to_own_requests(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         # Try to access videos related to other user's requests
         self.assertNotFound(
             "GET",
@@ -626,7 +640,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         # Check if user can only see own rating
         self.assertEqual(len(response.data["ratings"]), 1)
         for rating in response.data["ratings"]:
-            self.assertEqual(rating["author"]["username"], USER)
+            self.assertEqual(rating["author"]["username"], self.normal_user.username)
 
     def test_anonymous_cannot_get_video_detail(self):
         # Try to access videos related to other user's requests
@@ -686,7 +700,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         test_video.save()
 
         # Login
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Check if it works for all statuses
         for x in VIDEO_STATUS_CHOICES:
@@ -716,7 +730,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_comments_only_related_to_own_requests_and_not_internal(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         # Try to access videos on other user's requests
         self.assertNotFound("GET", BASE_URL + str(self.request1.id) + "/comments", None)
         self.assertNotFound("GET", BASE_URL + str(self.request2.id) + "/comments", None)
@@ -732,7 +746,7 @@ class DefaultRequestsAPITestCase(APITestCase):
             self.assertNotIn("True", comment["text"])
 
     def test_staff_can_get_comments_only_related_to_own_requests_and_not_internal(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         # Try to access videos on other user's requests
         self.assertNotFound("GET", BASE_URL + str(self.request1.id) + "/comments", None)
         self.assertNotFound("GET", BASE_URL + str(self.request3.id) + "/comments", None)
@@ -748,7 +762,7 @@ class DefaultRequestsAPITestCase(APITestCase):
             self.assertNotIn("True", comment["text"])
 
     def test_user_can_get_comments_only_related_to_own_requests_and_not_internal(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         # Try to access videos on other user's requests
         self.assertNotFound("GET", BASE_URL + str(self.request2.id) + "/comments", None)
         self.assertNotFound("GET", BASE_URL + str(self.request3.id) + "/comments", None)
@@ -786,7 +800,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     def test_admin_can_get_comment_detail_only_related_to_own_requests_and_not_internal(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         # Try to access internal comments
         self.assertNotFound(
             "GET",
@@ -864,7 +878,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     def test_staff_can_get_comment_detail_only_related_to_own_requests_and_not_internal(
         self,
     ):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         # Try to access internal comments
         self.assertNotFound(
             "GET",
@@ -942,7 +956,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     def test_user_can_get_comment_detail_only_related_to_own_requests_and_not_internal(
         self,
     ):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         # Try to access internal comments
         self.assertNotFound(
             "GET",
@@ -1094,7 +1108,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.assertIn("Put modified text", data["text"])
 
     def test_admin_can_modify_only_own_comments_on_own_request(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         # Try to modify other user's comments
         self.assertForbidden(
             "PATCH",
@@ -1170,7 +1184,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.modify_comment(self.request3.id, self.comment15.id)
 
     def test_staff_can_modify_only_own_comments_on_own_request(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         # Try to modify other user's comments
         self.assertForbidden(
             "PATCH",
@@ -1246,7 +1260,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.modify_comment(self.request2.id, self.comment9.id)
 
     def test_user_can_modify_only_own_comments_on_own_request(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         # Try to modify other user's comments
         self.assertForbidden(
             "PATCH",
@@ -1399,14 +1413,14 @@ class DefaultRequestsAPITestCase(APITestCase):
         self,
     ):
         data = {"text": "New comment"}
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
 
         # Create comment on own request
         response = self.client.post(
             BASE_URL + str(self.request3.id) + "/comments", data
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], ADMIN)
+        self.assertEqual(response.data["author"]["username"], self.admin_user.username)
         self.check_count_of_comments_on_request(self.request3.id, 4)
 
         # Delete own comment
@@ -1502,14 +1516,14 @@ class DefaultRequestsAPITestCase(APITestCase):
         self,
     ):
         data = {"text": "New comment"}
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
 
         # Create comment on own request
         response = self.client.post(
             BASE_URL + str(self.request2.id) + "/comments", data
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], STAFF)
+        self.assertEqual(response.data["author"]["username"], self.staff_user.username)
         self.check_count_of_comments_on_request(self.request2.id, 4)
 
         # Delete own comment
@@ -1605,14 +1619,14 @@ class DefaultRequestsAPITestCase(APITestCase):
         self,
     ):
         data = {"text": "New comment"}
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Create comment on own request
         response = self.client.post(
             BASE_URL + str(self.request1.id) + "/comments", data
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], USER)
+        self.assertEqual(response.data["author"]["username"], self.normal_user.username)
         self.check_count_of_comments_on_request(self.request1.id, 4)
 
         # Delete own comment
@@ -1780,7 +1794,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_ratings_only_on_own_requests_and_videos(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(
             BASE_URL
             + str(self.request3.id)
@@ -1791,7 +1805,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         for rating in response.data:
-            self.assertEqual(rating["author"]["username"], ADMIN)
+            self.assertEqual(rating["author"]["username"], self.admin_user.username)
 
         # Try to access ratings on other users requests and videos
         self.assertNotFound(
@@ -1861,7 +1875,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         )
 
     def test_staff_can_get_ratings_only_on_own_requests_and_videos(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(
             BASE_URL
             + str(self.request2.id)
@@ -1872,7 +1886,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         for rating in response.data:
-            self.assertEqual(rating["author"]["username"], STAFF)
+            self.assertEqual(rating["author"]["username"], self.staff_user.username)
 
         # Try to access ratings on other users requests and videos
         self.assertNotFound(
@@ -1942,7 +1956,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         )
 
     def test_user_can_get_ratings_only_on_own_requests_and_videos(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.client.get(
             BASE_URL
             + str(self.request1.id)
@@ -1953,7 +1967,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         for rating in response.data:
-            self.assertEqual(rating["author"]["username"], USER)
+            self.assertEqual(rating["author"]["username"], self.normal_user.username)
 
         # Try to access ratings on other users requests and videos
         self.assertNotFound(
@@ -2083,7 +2097,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_rating_detail(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(
             BASE_URL
             + str(self.request3.id)
@@ -2173,7 +2187,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         )
 
     def test_staff_can_get_rating_detail(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(
             BASE_URL
             + str(self.request2.id)
@@ -2263,7 +2277,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         )
 
     def test_user_can_get_rating_detail(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.client.get(
             BASE_URL
             + str(self.request1.id)
@@ -2428,10 +2442,10 @@ class DefaultRequestsAPITestCase(APITestCase):
     def test_admin_can_create_only_one_rating_to_own_video_and_delete_only_own_rating(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_rating(self.request3.id, self.video6.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], ADMIN)
+        self.assertEqual(response.data["author"]["username"], self.admin_user.username)
 
         response = self.client.delete(
             BASE_URL
@@ -2561,10 +2575,10 @@ class DefaultRequestsAPITestCase(APITestCase):
     def test_staff_can_create_only_one_rating_to_own_video_and_delete_only_own_rating(
         self,
     ):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_rating(self.request2.id, self.video4.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], STAFF)
+        self.assertEqual(response.data["author"]["username"], self.staff_user.username)
 
         response = self.client.delete(
             BASE_URL
@@ -2694,10 +2708,10 @@ class DefaultRequestsAPITestCase(APITestCase):
     def test_user_can_create_only_one_rating_to_own_video_and_delete_only_own_rating(
         self,
     ):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.create_rating(self.request1.id, self.video2.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], USER)
+        self.assertEqual(response.data["author"]["username"], self.normal_user.username)
 
         response = self.client.delete(
             BASE_URL
@@ -2901,7 +2915,7 @@ class DefaultRequestsAPITestCase(APITestCase):
 
     def test_user_cannot_rate_video_before_certain_status(self):
         unfinished_video = create_video(307, self.request1, 3)
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.create_rating(self.request1.id, unfinished_video.id)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data[0], "The video has not been published yet.")
@@ -2911,7 +2925,7 @@ class DefaultRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_modify_only_own_rating(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         data_patch = {"review": "Modified by admin"}
         data_put = {"review": "Modified by admin (PUT)", "rating": 5}
         # Try to modify own rating on own request/video
@@ -3002,7 +3016,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.assertIn("Modified by admin (PUT)", response["review"])
 
     def test_staff_can_modify_only_own_rating(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         data_patch = {"review": "Modified by staff"}
         data_put = {"review": "Modified by staff (PUT)", "rating": 5}
         # Try to modify own rating on own request/video
@@ -3093,7 +3107,7 @@ class DefaultRequestsAPITestCase(APITestCase):
         self.assertIn("Modified by staff (PUT)", response["review"])
 
     def test_user_can_modify_only_own_rating(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         data_patch = {"review": "Modified by user"}
         data_put = {"review": "Modified by user (PUT)", "rating": 5}
         # Try to modify own rating on own request/video

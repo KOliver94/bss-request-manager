@@ -1,35 +1,33 @@
 from time import sleep
 
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken
+from tests.users_test_utils import create_user, get_default_password
 from tests.video_requests_test_utils import create_request
-
-PASSWORD = "password"
 
 
 class LoginAPITestCase(APITestCase):
     def test_login(self):
         url = reverse("login_obtain_jwt_pair")
+        password = get_default_password()
 
         # Create inactive user
-        u = User.objects.create_user(
-            username="user", email="user@foo.com", password=PASSWORD
-        )
+        u = create_user()
         u.is_active = False
         u.save()
 
         # Try login with e-mail - Should return error
         resp = self.client.post(
-            url, {"email": u.email, "password": PASSWORD}, format="json"
+            url, {"email": u.email, "password": password}, format="json"
         )
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
         # Try login with username (still inactive) - Should return error
         resp = self.client.post(
-            url, {"username": u.username, "password": PASSWORD}, format="json"
+            url, {"username": u.username, "password": password}, format="json"
         )
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -39,7 +37,7 @@ class LoginAPITestCase(APITestCase):
 
         # Try login with active profile - Should return the JWT token
         resp = self.client.post(
-            url, {"username": u.username, "password": PASSWORD}, format="json"
+            url, {"username": u.username, "password": password}, format="json"
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertTrue("access" in resp.data)
@@ -50,17 +48,16 @@ class LoginAPITestCase(APITestCase):
         refresh_url = reverse("login_refresh_jwt_token")
 
         # Create a user
-        u = User.objects.create_user(
-            username="user", email="user@foo.com", password=PASSWORD
-        )
-        u.save()
+        u = create_user()
 
         # Create test request for the user
         r = create_request(101, u)
 
         # Login and check all data is present
         resp = self.client.post(
-            login_url, {"username": u.username, "password": PASSWORD}, format="json"
+            login_url,
+            {"username": u.username, "password": get_default_password()},
+            format="json",
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertTrue("access" in resp.data)
@@ -110,14 +107,13 @@ class LoginAPITestCase(APITestCase):
         logout_url = reverse("logout")
 
         # Create a user
-        u = User.objects.create_user(
-            username="user", email="user@foo.com", password=PASSWORD
-        )
-        u.save()
+        u = create_user()
 
         # Login and check all data is present
         resp = self.client.post(
-            login_url, {"username": u.username, "password": PASSWORD}, format="json"
+            login_url,
+            {"username": u.username, "password": get_default_password()},
+            format="json",
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertTrue("access" in resp.data)
@@ -149,22 +145,20 @@ class LoginAPITestCase(APITestCase):
         logout_url = reverse("logout")
 
         # Create two users
-        u1 = User.objects.create_user(
-            username="user1", email="user1@foo.com", password=PASSWORD
-        )
-        u1.save()
-        u2 = User.objects.create_user(
-            username="user2", email="user2@foo.com", password=PASSWORD
-        )
-        u2.save()
+        u1 = create_user()
+        u2 = create_user()
 
         # Login to both users
         resp_u1 = self.client.post(
-            login_url, {"username": u1.username, "password": PASSWORD}, format="json"
+            login_url,
+            {"username": u1.username, "password": get_default_password()},
+            format="json",
         )
         self.assertEqual(resp_u1.status_code, status.HTTP_200_OK)
         resp_u2 = self.client.post(
-            login_url, {"username": u2.username, "password": PASSWORD}, format="json"
+            login_url,
+            {"username": u2.username, "password": get_default_password()},
+            format="json",
         )
         self.assertEqual(resp_u2.status_code, status.HTTP_200_OK)
 
@@ -187,21 +181,15 @@ class LoginAPITestCase(APITestCase):
         g = Group.objects.get_or_create(name="Test Group")[0]
 
         # Create a user
-        u = User.objects.create_user(
-            username="user",
-            email="user@foo.com",
-            password=PASSWORD,
-            first_name="Test",
-            last_name="User",
-        )
+        u = create_user()
         u.groups.add(g)
-        u.save()
-        u.userprofile.avatar_url = "https://via.placeholder.com/150"
         u.save()
 
         # Login
         resp = self.client.post(
-            login_url, {"username": u.username, "password": PASSWORD}, format="json"
+            login_url,
+            {"username": u.username, "password": get_default_password()},
+            format="json",
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
@@ -218,7 +206,9 @@ class LoginAPITestCase(APITestCase):
 
         # Get new token with new role
         resp = self.client.post(
-            login_url, {"username": u.username, "password": PASSWORD}, format="json"
+            login_url,
+            {"username": u.username, "password": get_default_password()},
+            format="json",
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
@@ -232,7 +222,9 @@ class LoginAPITestCase(APITestCase):
 
         # Get new token with new role
         resp = self.client.post(
-            login_url, {"username": u.username, "password": PASSWORD}, format="json"
+            login_url,
+            {"username": u.username, "password": get_default_password()},
+            format="json",
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 

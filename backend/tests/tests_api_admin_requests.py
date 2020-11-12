@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
+from tests.users_test_utils import create_user, get_default_password
 from tests.video_requests_test_utils import (
     create_comment,
     create_crew,
@@ -13,38 +13,28 @@ from tests.video_requests_test_utils import (
 
 BASE_URL = "/api/v1/admin/requests/"
 NOT_EXISTING_ID = 9000
-ADMIN = "test_admin1"
-STAFF = "test_staff1"
-USER = "test_user1"
-PASSWORD = "password"
 
 
 class AdminRequestsAPITestCase(APITestCase):
-    def authorize_user(self, username):
+    def authorize_user(self, user):
         url = reverse("login_obtain_jwt_pair")
         resp = self.client.post(
-            url, {"username": username, "password": PASSWORD}, format="json"
+            url,
+            {"username": user.username, "password": get_default_password()},
+            format="json",
         )
         token = resp.data["access"]
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
 
     def setUp(self):
         # Create normal user
-        self.normal_user = User.objects.create_user(
-            username=USER, password=PASSWORD, email="test_user1@foo.com"
-        )
+        self.normal_user = create_user()
 
         # Create staff user
-        self.staff_user = User.objects.create_user(
-            username=STAFF, password=PASSWORD, email="test_staff1@foo.com"
-        )
-        self.staff_user.is_staff = True
-        self.staff_user.save()
+        self.staff_user = create_user(is_staff=True)
 
         # Create admin user
-        self.admin_user = User.objects.create_superuser(
-            username=ADMIN, password=PASSWORD, email="test_admin1@foo.com"
-        )
+        self.admin_user = create_user(is_admin=True)
 
         # Create 2 sample Request objects
         # Request 2 is used to delete the comments from
@@ -106,19 +96,19 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_requests(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get("/api/v1/admin/requests")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 2)
 
     def test_staff_can_get_requests(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get("/api/v1/admin/requests")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 2)
 
     def test_user_should_not_get_requests(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.client.get("/api/v1/admin/requests")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -131,19 +121,19 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_request_detail(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.access_history(BASE_URL + str(self.request1.id))
 
     def test_staff_can_get_request_detail(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(BASE_URL + str(self.request1.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.access_history(BASE_URL + str(self.request1.id))
 
     def test_user_should_not_get_request_detail(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.client.get(BASE_URL + str(self.request1.id))
@@ -163,10 +153,10 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_not_existing_request_detail(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found("GET", BASE_URL + str(NOT_EXISTING_ID), None)
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found("GET", BASE_URL + str(NOT_EXISTING_ID), None)
 
     """
@@ -179,7 +169,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = self.client.get(BASE_URL + str(self.request1.id)).json()
-        self.assertEqual(data["responsible"]["username"], STAFF)
+        self.assertEqual(data["responsible"]["username"], self.staff_user.username)
 
         data["place"] = "Test place - Modified"
         response = self.client.put(BASE_URL + str(self.request1.id), data)
@@ -189,15 +179,15 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertIn("Modified", data["place"])
 
     def test_admin_can_modify_requests(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.modify_request()
 
     def test_staff_can_modify_requests(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.modify_request()
 
     def test_user_should_not_modify_requests(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         data = {"title": "Test Request - Modified"}
         # Test error for existing object
         response = self.client.patch(BASE_URL + str(self.request1.id), data)
@@ -256,11 +246,11 @@ class AdminRequestsAPITestCase(APITestCase):
             "place": "Test place - Modified",
             "type": "Test type",
         }
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found("PATCH", BASE_URL + str(NOT_EXISTING_ID), data_patch)
         self.should_not_found("PUT", BASE_URL + str(NOT_EXISTING_ID), data_put)
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found("PATCH", BASE_URL + str(NOT_EXISTING_ID), data_patch)
         self.should_not_found("PUT", BASE_URL + str(NOT_EXISTING_ID), data_put)
 
@@ -281,27 +271,35 @@ class AdminRequestsAPITestCase(APITestCase):
         return self.client.post("/api/v1/admin/requests", data)
 
     def test_admin_can_create_and_delete_requests(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["requester"]["username"], ADMIN)
-        self.assertEqual(response.data["responsible"]["username"], ADMIN)
+        self.assertEqual(
+            response.data["requester"]["username"], self.admin_user.username
+        )
+        self.assertEqual(
+            response.data["responsible"]["username"], self.admin_user.username
+        )
 
         response = self.client.delete(BASE_URL + str(response.data["id"]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_can_create_and_delete_requests(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["requester"]["username"], STAFF)
-        self.assertEqual(response.data["responsible"]["username"], ADMIN)
+        self.assertEqual(
+            response.data["requester"]["username"], self.staff_user.username
+        )
+        self.assertEqual(
+            response.data["responsible"]["username"], self.admin_user.username
+        )
 
         response = self.client.delete(BASE_URL + str(response.data["id"]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_create_or_delete_requests(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.create_request()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -326,14 +324,14 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_deleting_not_existing_request(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found("DELETE", BASE_URL + str(NOT_EXISTING_ID), None)
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found("DELETE", BASE_URL + str(NOT_EXISTING_ID), None)
 
     def test_adding_initial_comment_to_request(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         data = {
             "title": "Test Request",
             "start_datetime": "2020-03-05T10:30",
@@ -344,7 +342,9 @@ class AdminRequestsAPITestCase(APITestCase):
         }
         response = self.client.post("/api/v1/admin/requests", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["comments"][0]["author"]["username"], ADMIN)
+        self.assertEqual(
+            response.data["comments"][0]["author"]["username"], self.admin_user.username
+        )
         self.assertEqual(response.data["comments"][0]["text"], "Test comment")
 
     """
@@ -357,19 +357,19 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_comments(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/comments")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 3)
 
     def test_staff_can_get_comments(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/comments")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 3)
 
     def test_user_should_not_get_comments(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         # Test error for existing object
         response = self.client.get(BASE_URL + str(self.request1.id) + "/comments")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -388,12 +388,12 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_comments_on_not_existing_request(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "GET", BASE_URL + str(NOT_EXISTING_ID) + "/comments", None
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "GET", BASE_URL + str(NOT_EXISTING_ID) + "/comments", None
         )
@@ -403,7 +403,7 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_comment_detail(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(
             BASE_URL + str(self.request1.id) + "/comments/" + str(self.comment1.id)
         )
@@ -421,7 +421,7 @@ class AdminRequestsAPITestCase(APITestCase):
         )
 
     def test_staff_can_get_comment_detail(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(
             BASE_URL + str(self.request1.id) + "/comments/" + str(self.comment1.id)
         )
@@ -439,7 +439,7 @@ class AdminRequestsAPITestCase(APITestCase):
         )
 
     def test_user_should_not_get_comment_detail(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.client.get(
@@ -501,7 +501,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_getting_comment_detail_on_not_existing_request_or_comment(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "GET",
             BASE_URL + str(NOT_EXISTING_ID) + "/comments/" + str(self.comment3.id),
@@ -518,7 +518,7 @@ class AdminRequestsAPITestCase(APITestCase):
             None,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "GET",
             BASE_URL + str(NOT_EXISTING_ID) + "/comments/" + str(self.comment3.id),
@@ -540,7 +540,7 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_modify_any_comments(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         data = {"text": "Modified by admin"}
         response = self.client.patch(
             BASE_URL + str(self.request1.id) + "/comments/" + str(self.comment1.id),
@@ -602,7 +602,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertIn("Modified by admin (PUT)", data["text"])
 
     def test_staff_can_modify_only_own_comments(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         data = {"text": "Modified by staff"}
         response = self.client.patch(
             BASE_URL + str(self.request1.id) + "/comments/" + str(self.comment1.id),
@@ -648,7 +648,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertIn("Modified by staff (PUT)", data["text"])
 
     def test_user_should_not_modify_comments(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         data = {"text": "Modified by user"}
 
         # Test error for existing object
@@ -765,7 +765,7 @@ class AdminRequestsAPITestCase(APITestCase):
         data_patch = {"text": "Modified"}
         data_put = {"text": "Modified", "internal": True}
 
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "PATCH",
             BASE_URL + str(NOT_EXISTING_ID) + "/comments/" + str(self.comment3.id),
@@ -797,7 +797,7 @@ class AdminRequestsAPITestCase(APITestCase):
             data_put,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "PATCH",
             BASE_URL + str(NOT_EXISTING_ID) + "/comments/" + str(self.comment3.id),
@@ -838,21 +838,21 @@ class AdminRequestsAPITestCase(APITestCase):
         return self.client.post(BASE_URL + str(request_id) + "/comments", data)
 
     def test_admin_can_create_comments(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_comment(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], ADMIN)
+        self.assertEqual(response.data["author"]["username"], self.admin_user.username)
         self.assertEqual(response.data["internal"], True)
 
     def test_staff_can_create_comment(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_comment(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], STAFF)
+        self.assertEqual(response.data["author"]["username"], self.staff_user.username)
         self.assertEqual(response.data["internal"], True)
 
     def test_user_should_not_create_comments(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         response = self.create_comment(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         response = self.create_comment(NOT_EXISTING_ID)
@@ -865,11 +865,11 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_posting_comment_on_not_existing_request(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_comment(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_comment(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -878,7 +878,7 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_delete_any_comments(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         # Try to delete one comment created by staff user
         response = self.client.delete(
             BASE_URL + str(self.request2.id) + "/comments/" + str(self.comment5.id)
@@ -886,7 +886,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_delete_only_own_comments(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.delete(
             BASE_URL + str(self.request1.id) + "/comments/" + str(self.comment1.id)
         )
@@ -901,7 +901,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_delete_comments(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.client.delete(
@@ -955,7 +955,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_deleting_comment_on_not_existing_request_or_comment(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "DELETE",
             BASE_URL + str(NOT_EXISTING_ID) + "/comments/" + str(self.comment3.id),
@@ -972,7 +972,7 @@ class AdminRequestsAPITestCase(APITestCase):
             None,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "DELETE",
             BASE_URL + str(NOT_EXISTING_ID) + "/comments/" + str(self.comment3.id),
@@ -999,19 +999,19 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_crew(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/crew")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
 
     def test_staff_can_get_crew(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/crew")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
 
     def test_user_should_not_get_crew(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.client.get(BASE_URL + str(self.request1.id) + "/crew")
@@ -1031,10 +1031,10 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_crew_on_not_existing_request(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found("GET", BASE_URL + str(NOT_EXISTING_ID) + "/crew", None)
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found("GET", BASE_URL + str(NOT_EXISTING_ID) + "/crew", None)
 
     """
@@ -1042,21 +1042,21 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_crew_detail(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(
             BASE_URL + str(self.request1.id) + "/crew/" + str(self.crew1.id)
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_staff_can_get_crew_detail(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(
             BASE_URL + str(self.request1.id) + "/crew/" + str(self.crew1.id)
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_user_should_not_get_crew_detail(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.client.get(
@@ -1102,7 +1102,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_getting_crew_detail_on_not_existing_request_or_crew(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "GET",
             BASE_URL + str(self.request1.id) + "/crew/" + str(NOT_EXISTING_ID),
@@ -1117,7 +1117,7 @@ class AdminRequestsAPITestCase(APITestCase):
             None,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "GET",
             BASE_URL + str(self.request1.id) + "/crew/" + str(NOT_EXISTING_ID),
@@ -1142,7 +1142,7 @@ class AdminRequestsAPITestCase(APITestCase):
             BASE_URL + str(self.request1.id) + "/crew/" + str(self.crew1.id), data
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["member"]["username"], ADMIN)
+        self.assertEqual(response.data["member"]["username"], self.admin_user.username)
 
         data = self.client.get(
             BASE_URL + str(self.request1.id) + "/crew/" + str(self.crew1.id)
@@ -1162,15 +1162,15 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertIn("PUT Modified", data["position"])
 
     def test_admin_can_modify_crew(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.modify_crew()
 
     def test_staff_can_modify_crew(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.modify_crew()
 
     def test_user_should_not_modify_crew(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         data = {"position": "Modified position"}
         # Test error for existing object
         response = self.client.patch(
@@ -1262,7 +1262,7 @@ class AdminRequestsAPITestCase(APITestCase):
         data_patch = {"position": "Modified position"}
         data_put = {"position": "new position", "member_id": self.admin_user.id}
 
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "PATCH",
             BASE_URL + str(self.request1.id) + "/crew/" + str(NOT_EXISTING_ID),
@@ -1294,7 +1294,7 @@ class AdminRequestsAPITestCase(APITestCase):
             data_put,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "PATCH",
             BASE_URL + str(self.request1.id) + "/crew/" + str(NOT_EXISTING_ID),
@@ -1336,7 +1336,7 @@ class AdminRequestsAPITestCase(APITestCase):
         return self.client.post(BASE_URL + str(request_id) + "/crew", data)
 
     def test_admin_can_create_and_delete_crew(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_crew(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -1346,7 +1346,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_can_create_and_delete_crew(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_crew(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -1356,7 +1356,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_create_or_delete_crew(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.create_crew(self.request1.id)
@@ -1410,7 +1410,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_posting_and_deleting_crew_on_not_existing_request_or_crew(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_crew(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -1430,7 +1430,7 @@ class AdminRequestsAPITestCase(APITestCase):
             None,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_crew(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -1460,19 +1460,19 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_videos(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 3)
 
     def test_staff_can_get_videos(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 3)
 
     def test_user_should_not_get_videos(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         # Test error for existing object
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -1491,10 +1491,10 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_admin_and_staff_error_for_getting_videos_on_not_existing_request(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found("GET", BASE_URL + str(NOT_EXISTING_ID) + "/videos", None)
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found("GET", BASE_URL + str(NOT_EXISTING_ID) + "/videos", None)
 
     """
@@ -1502,7 +1502,7 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_video_detail(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(
             BASE_URL + str(self.request1.id) + "/videos/" + str(self.video1.id)
         )
@@ -1512,7 +1512,7 @@ class AdminRequestsAPITestCase(APITestCase):
         )
 
     def test_staff_can_get_video_detail(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(
             BASE_URL + str(self.request1.id) + "/videos/" + str(self.video1.id)
         )
@@ -1522,7 +1522,7 @@ class AdminRequestsAPITestCase(APITestCase):
         )
 
     def test_user_should_not_get_video_detail(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         # Test error for existing object
         response = self.client.get(
             BASE_URL + str(self.request1.id) + "/videos/" + str(self.crew1.id)
@@ -1567,7 +1567,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_getting_video_detail_on_not_existing_request_or_video(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "GET",
             BASE_URL + str(self.request1.id) + "/videos/" + str(NOT_EXISTING_ID),
@@ -1584,7 +1584,7 @@ class AdminRequestsAPITestCase(APITestCase):
             None,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "GET",
             BASE_URL + str(self.request1.id) + "/videos/" + str(NOT_EXISTING_ID),
@@ -1615,7 +1615,7 @@ class AdminRequestsAPITestCase(APITestCase):
         data = self.client.get(
             BASE_URL + str(self.request1.id) + "/videos/" + str(self.video1.id)
         ).json()
-        self.assertEqual(data["editor"]["username"], STAFF)
+        self.assertEqual(data["editor"]["username"], self.staff_user.username)
 
         data["title"] = data["title"] + " - Modified"
         response = self.client.put(
@@ -1629,15 +1629,15 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertIn("Modified", data["title"])
 
     def test_admin_can_modify_video(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.modify_video()
 
     def test_staff_can_modify_video(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.modify_video()
 
     def test_user_should_not_modify_video(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         data = {"editor_id": self.staff_user.id}
         # Test error for existing object
         response = self.client.patch(
@@ -1729,7 +1729,7 @@ class AdminRequestsAPITestCase(APITestCase):
         data_patch = {"editor_id": self.staff_user.id}
         data_put = {"title": "Modified title", "editor_id": self.staff_user.id}
 
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "PATCH",
             BASE_URL + str(self.request1.id) + "/videos/" + str(NOT_EXISTING_ID),
@@ -1761,7 +1761,7 @@ class AdminRequestsAPITestCase(APITestCase):
             data_put,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "PATCH",
             BASE_URL + str(self.request1.id) + "/videos/" + str(NOT_EXISTING_ID),
@@ -1803,10 +1803,10 @@ class AdminRequestsAPITestCase(APITestCase):
         return self.client.post(BASE_URL + str(request_id) + "/videos", data)
 
     def test_admin_can_create_and_delete_videos(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_video(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["editor"]["username"], ADMIN)
+        self.assertEqual(response.data["editor"]["username"], self.admin_user.username)
 
         response = self.client.delete(
             BASE_URL + str(self.request1.id) + "/videos/" + str(response.data["id"])
@@ -1814,10 +1814,10 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_can_create_and_delete_videos(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_video(self.request1.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["editor"]["username"], ADMIN)
+        self.assertEqual(response.data["editor"]["username"], self.admin_user.username)
 
         response = self.client.delete(
             BASE_URL + str(self.request1.id) + "/videos/" + str(response.data["id"])
@@ -1825,7 +1825,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_create_or_delete_videos(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.create_video(self.request1.id)
@@ -1879,7 +1879,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_posting_and_deleting_video_on_not_existing_request_or_video(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_video(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -1899,7 +1899,7 @@ class AdminRequestsAPITestCase(APITestCase):
             None,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_video(NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -1929,7 +1929,7 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_ratings(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(
             BASE_URL
             + str(self.request1.id)
@@ -1941,7 +1941,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(len(response.data), 3)
 
     def test_staff_can_get_ratings(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(
             BASE_URL
             + str(self.request1.id)
@@ -1953,7 +1953,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(len(response.data), 3)
 
     def test_user_should_not_get_ratings(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.client.get(
@@ -2031,7 +2031,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_getting_ratings_on_not_existing_request_or_video(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "GET",
             BASE_URL
@@ -2060,7 +2060,7 @@ class AdminRequestsAPITestCase(APITestCase):
             None,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "GET",
             BASE_URL
@@ -2094,7 +2094,7 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_get_rating_detail(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.client.get(
             BASE_URL
             + str(self.request1.id)
@@ -2132,7 +2132,7 @@ class AdminRequestsAPITestCase(APITestCase):
         )
 
     def test_staff_can_get_rating_detail(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.get(
             BASE_URL
             + str(self.request1.id)
@@ -2170,7 +2170,7 @@ class AdminRequestsAPITestCase(APITestCase):
         )
 
     def test_user_should_not_get_rating_detail(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.client.get(
@@ -2364,7 +2364,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_getting_rating_detail_on_not_existing_request_video_or_rating(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "GET",
             BASE_URL
@@ -2435,7 +2435,7 @@ class AdminRequestsAPITestCase(APITestCase):
             None,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "GET",
             BASE_URL
@@ -2517,27 +2517,27 @@ class AdminRequestsAPITestCase(APITestCase):
         )
 
     def test_admin_can_only_create_one_rating_to_a_video(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_rating(self.request1.id, self.video3.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], ADMIN)
+        self.assertEqual(response.data["author"]["username"], self.admin_user.username)
 
         response = self.create_rating(self.request1.id, self.video3.id)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data[0], "You have already posted a rating.")
 
     def test_staff_can_only_create_one_rating_to_a_video(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_rating(self.request1.id, self.video3.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["author"]["username"], STAFF)
+        self.assertEqual(response.data["author"]["username"], self.staff_user.username)
 
         response = self.create_rating(self.request1.id, self.video3.id)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data[0], "You have already posted a rating.")
 
     def test_user_should_not_create_ratings(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.create_rating(self.request1.id, self.video3.id)
@@ -2567,7 +2567,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_posting_rating_on_not_existing_request_or_video(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_rating(self.request1.id, NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         response = self.create_rating(NOT_EXISTING_ID, self.video3.id)
@@ -2575,7 +2575,7 @@ class AdminRequestsAPITestCase(APITestCase):
         response = self.create_rating(NOT_EXISTING_ID, NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.create_rating(self.request1.id, NOT_EXISTING_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         response = self.create_rating(NOT_EXISTING_ID, self.video3.id)
@@ -2584,7 +2584,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_rating_validator(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         data = {
             "rating": 50,
         }
@@ -2618,7 +2618,7 @@ class AdminRequestsAPITestCase(APITestCase):
 
     def test_user_cannot_rate_video_before_certain_status(self):
         unedited_video = create_video(504, self.request1, 1)
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         response = self.create_rating(self.request1.id, unedited_video.id)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data[0], "The video has not been edited yet.")
@@ -2628,7 +2628,7 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_modify_any_ratings(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         data = {"review": "Modified by admin"}
         response = self.client.patch(
             BASE_URL
@@ -2750,7 +2750,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertIn("Modified by admin (PUT)", data["review"])
 
     def test_staff_can_modify_only_own_ratings(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         data = {"review": "Modified by staff"}
         response = self.client.patch(
             BASE_URL
@@ -2836,7 +2836,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertIn("Modified by staff (PUT)", data["review"])
 
     def test_user_should_not_modify_ratings(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
         data = {"review": "Modified by user"}
         # Test error for existing object
         response = self.client.patch(
@@ -3264,7 +3264,7 @@ class AdminRequestsAPITestCase(APITestCase):
         data_patch = {"review": "Modified by anonymous"}
         data_put = {"review": "Modified", "rating": 5}
 
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "PATCH",
             BASE_URL
@@ -3405,7 +3405,7 @@ class AdminRequestsAPITestCase(APITestCase):
             data_put,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "PATCH",
             BASE_URL
@@ -3551,7 +3551,7 @@ class AdminRequestsAPITestCase(APITestCase):
     """
 
     def test_admin_can_delete_any_ratings(self):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         # Try to delete one rating created by staff user
         response = self.client.delete(
             BASE_URL
@@ -3564,7 +3564,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_staff_delete_only_own_ratings(self):
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         response = self.client.delete(
             BASE_URL
             + str(self.request1.id)
@@ -3594,7 +3594,7 @@ class AdminRequestsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_should_not_delete_ratings(self):
-        self.authorize_user(USER)
+        self.authorize_user(self.normal_user)
 
         # Test error for existing object
         response = self.client.delete(
@@ -3788,7 +3788,7 @@ class AdminRequestsAPITestCase(APITestCase):
     def test_admin_and_staff_error_for_deleting_rating_on_not_existing_request_video_or_rating(
         self,
     ):
-        self.authorize_user(ADMIN)
+        self.authorize_user(self.admin_user)
         self.should_not_found(
             "DELETE",
             BASE_URL
@@ -3859,7 +3859,7 @@ class AdminRequestsAPITestCase(APITestCase):
             None,
         )
 
-        self.authorize_user(STAFF)
+        self.authorize_user(self.staff_user)
         self.should_not_found(
             "DELETE",
             BASE_URL
