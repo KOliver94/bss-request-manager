@@ -1,7 +1,7 @@
 from common.utilities import create_calendar_event, get_google_calendar_service
 from django.contrib.auth.models import User
 from django.core.management import BaseCommand
-from tests.video_requests_test_utils import create_request
+from tests.helpers.video_requests_test_utils import create_request
 
 
 class Command(BaseCommand):

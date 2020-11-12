@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from tests.users_test_utils import create_user, get_default_password
-from tests.video_requests_test_utils import (
+from tests.helpers.users_test_utils import create_user, get_default_password
+from tests.helpers.video_requests_test_utils import (
     create_comment,
     create_crew,
     create_rating,
@@ -15,7 +15,7 @@ BASE_URL = "/api/v1/admin/requests/"
 NOT_EXISTING_ID = 9000
 
 
-class AdminRequestsAPITestCase(APITestCase):
+class RequestsAPIAdminTestCase(APITestCase):
     def authorize_user(self, user):
         url = reverse("login_obtain_jwt_pair")
         resp = self.client.post(

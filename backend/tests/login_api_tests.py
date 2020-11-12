@@ -1,12 +1,11 @@
 from time import sleep
 
-from django.contrib.auth.models import Group
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken
-from tests.users_test_utils import create_user, get_default_password
-from tests.video_requests_test_utils import create_request
+from tests.helpers.users_test_utils import create_user, get_default_password
+from tests.helpers.video_requests_test_utils import create_request
 
 
 class LoginAPITestCase(APITestCase):
@@ -176,14 +175,8 @@ class LoginAPITestCase(APITestCase):
 
     def test_custom_jwt_claims(self):
         login_url = reverse("login_obtain_jwt_pair")
-
-        # Create a group
-        g = Group.objects.get_or_create(name="Test Group")[0]
-
-        # Create a user
-        u = create_user()
-        u.groups.add(g)
-        u.save()
+        groups = ["Group1", "Group2", "Group3", "Group4", "Group5"]
+        u = create_user(groups=groups)
 
         # Login
         resp = self.client.post(
@@ -197,8 +190,9 @@ class LoginAPITestCase(APITestCase):
         token = AccessToken(resp.data["access"])
         self.assertEqual(token.payload["name"], u.last_name + " " + u.first_name)
         self.assertEqual(token.payload["role"], "user")
-        self.assertEqual(token.payload["groups"][0], g.name)
         self.assertEqual(token.payload["avatar"], u.userprofile.avatar_url)
+        for group in groups:
+            self.assertIn(group, token.payload["groups"])
 
         # Set user as staff member
         u.is_staff = True

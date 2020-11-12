@@ -1,7 +1,7 @@
 import datetime
 import uuid
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 
 PASSWORD = "ae9U$89z#zyA!YoPE$6m"
 
@@ -10,7 +10,9 @@ def get_default_password():
     return PASSWORD
 
 
-def create_user(username=None, password=PASSWORD, is_staff=False, is_admin=False):
+def create_user(
+    username=None, password=PASSWORD, is_staff=False, is_admin=False, groups=None
+):
     suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
     username = username if username else str(uuid.uuid4())
     user = User.objects.create_user(
@@ -27,5 +29,8 @@ def create_user(username=None, password=PASSWORD, is_staff=False, is_admin=False
     user.is_superuser = is_admin
     user.userprofile.avatar_url = "https://via.placeholder.com/150"
     user.userprofile.phone_number = "+36701234567"
+    for group in groups:
+        grp = Group.objects.get_or_create(name=group)[0]
+        user.groups.add(grp)
     user.save()
     return user
