@@ -13,10 +13,18 @@ def get_default_password():
 def create_user(
     username=None, password=PASSWORD, is_staff=False, is_admin=False, groups=None
 ):
+    # Initial parameters
+    if groups is None:
+        groups = []
     suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
     username = username if username else str(uuid.uuid4())
+
+    # Create user
     user = User.objects.create_user(
-        username=username, password=password, email=f"{username}@example.com"
+        username=username,
+        password=password,
+        email=f"{username}@example.com",
+        last_name=f"Test_{suffix}",
     )
     if is_admin:
         user.first_name = "Admin"
@@ -24,13 +32,20 @@ def create_user(
         user.first_name = "Staff"
     else:
         user.first_name = "User"
-    user.last_name = f"Test_{suffix}"
+
+    # Set permissions
     user.is_staff = is_staff or is_admin
     user.is_superuser = is_admin
+
+    # Set user's profile
     user.userprofile.avatar_url = "https://via.placeholder.com/150"
     user.userprofile.phone_number = "+36701234567"
+
+    # Get or create groups and add user to them
     for group in groups:
         grp = Group.objects.get_or_create(name=group)[0]
         user.groups.add(grp)
+
+    # Save user and return
     user.save()
     return user

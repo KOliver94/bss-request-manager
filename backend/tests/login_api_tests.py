@@ -188,7 +188,7 @@ class LoginAPITestCase(APITestCase):
 
         # Check if token contains all custom information
         token = AccessToken(resp.data["access"])
-        self.assertEqual(token.payload["name"], u.last_name + " " + u.first_name)
+        self.assertEqual(token.payload["name"], f"{u.last_name} {u.first_name}")
         self.assertEqual(token.payload["role"], "user")
         self.assertEqual(token.payload["avatar"], u.userprofile.avatar_url)
         for group in groups:

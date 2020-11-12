@@ -80,4 +80,4 @@ jobs:
         run: |
           pipenv run python manage.py makemigrations --no-input
           pipenv run python manage.py migrate --no-input
-          pipenv run python manage.py test tests --parallel
+          pipenv run python manage.py test tests --parallel --pattern="*_tests.py"
