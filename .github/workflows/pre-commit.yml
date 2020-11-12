@@ -1,6 +1,7 @@
 name: Pre-commit hooks
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
@@ -12,26 +13,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-    - name: Use Node.js 14
-      uses: actions/setup-node@v2-beta
-      with:
-       node-version: '14.8.0'
-    - name: Cache Node.js modules
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.OS }}-node-
-          ${{ runner.OS }}-
-    - name: Install frontend dependencies
-      run: npm install
-      working-directory: frontend
-    - name: Run pre-commit hooks
-      uses: pre-commit/action@v2.0.0
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14.8.0'
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: frontend
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@v2.0.0
