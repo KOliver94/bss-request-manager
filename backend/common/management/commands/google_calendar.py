@@ -1,5 +1,12 @@
-from common.utilities import create_calendar_event, get_google_calendar_service
-from django.contrib.auth.models import User
+from datetime import timedelta
+
+from common.models import get_sentinel_user
+from common.utilities import (
+    create_calendar_event,
+    get_google_calendar_service,
+    remove_calendar_event,
+    update_calendar_event,
+)
 from django.core.management import BaseCommand
 from tests.helpers.video_requests_test_utils import create_request
 
@@ -85,10 +92,42 @@ class Command(BaseCommand):
             )
 
         elif test:
-            request = create_request(999999, User.objects.get(pk=1))
+            request = create_request(999999, get_sentinel_user())
             try:
+                # Create the event
+                self.stdout.write("----------- Creating new event -----------")
+                self.stdout.write("The event will be created for today.")
+                self.stdout.write(
+                    "It should contain: title, description, place, start and end datetime."
+                )
                 create_calendar_event(request.id)
                 self.stdout.write(self.style.SUCCESS("Event was saved successfully."))
+                input("Check and validate the calendar and press Enter to continue...")
+
+                # Change some data and update the event
+                self.stdout.write("----------- Updating the event -----------")
+                self.stdout.write("The event should be shifted one day forward.")
+                self.stdout.write(
+                    "The following fields should be updated: title, place, start and end datetime."
+                )
+                request.refresh_from_db()  # Refresh the object to contain calendar_id
+                request.title = "Changed title"
+                request.place = "Changed place"
+                request.end_datetime = request.end_datetime + timedelta(days=1)
+                request.start_datetime = request.start_datetime + timedelta(days=1)
+                request.save()
+                update_calendar_event(request.id)
+                self.stdout.write(self.style.SUCCESS("Event was updated successfully."))
+                input("Check and validate the calendar and press Enter to continue...")
+
+                # Delete the event from the calendar
+                self.stdout.write("----------- Deleting the event -----------")
+                remove_calendar_event(request.additional_data["calendar_id"])
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        "Event was deleted successfully. Check the calendar."
+                    )
+                )
             finally:
                 request.delete()
 
