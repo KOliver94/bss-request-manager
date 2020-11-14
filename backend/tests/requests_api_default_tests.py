@@ -300,7 +300,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
             "type": "Test type",
             "requester_first_name": "Test",
             "requester_last_name": "User",
-            "requester_email": "test.user@foo.bar",
+            "requester_email": "test.user@example.com",
             "requester_mobile": "+36509999999",
             "comment_text": "Additional information",
         }
@@ -313,7 +313,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
             User.objects.filter(email=data["requester_email"]).exists(), True
         )
         self.assertEqual(
-            response.data["comments"][0]["author"]["username"], "test.user@foo.bar"
+            response.data["comments"][0]["author"]["username"], "test.user@example.com"
         )
         self.assertEqual(response.data["comments"][0]["text"], "Additional information")
 

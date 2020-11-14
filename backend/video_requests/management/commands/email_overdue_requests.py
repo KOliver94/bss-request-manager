@@ -21,4 +21,4 @@ class Command(BaseCommand):
                 )
             )
         if not len(overdue_requests):
-            self.stdout.write(self.style.NOTICE("No overdue request for today."))
+            self.stdout.write(self.style.NOTICE("No overdue request was found."))

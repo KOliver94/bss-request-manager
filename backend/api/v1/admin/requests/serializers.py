@@ -159,7 +159,10 @@ class CommentAdminSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         comment = super(CommentAdminSerializer, self).create(validated_data)
-        if not comment.internal and comment.request.requester.is_active:
+        if (
+            not comment.internal
+            and not comment.request.requester.groups.filter(name="Banned").exists()
+        ):
             email_user_new_comment.delay(comment.id)
         email_crew_new_comment.delay(comment.id)
         return comment

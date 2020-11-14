@@ -16,4 +16,4 @@ class Command(BaseCommand):
                 self.style.SUCCESS("Unfinished requests email was sent successfully.")
             )
         else:
-            self.stdout.write(self.style.NOTICE("No tasks for this week."))
+            self.stdout.write(self.style.NOTICE("All requests are finished."))

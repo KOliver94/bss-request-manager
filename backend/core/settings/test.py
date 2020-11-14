@@ -21,9 +21,13 @@ CACHEOPS_ENABLED = False
 
 # Do not send real e-mails
 EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
+DEBUG_EMAIL = None
+DEFAULT_REPLY_EMAIL = "reply@example.com"
+WEEKLY_TASK_EMAIL = "weekly@example.com"
 
 # Do not create real calendar events
 GOOGLE_CALENDAR_ID = "NOT_EXISTING"
+GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH = None
 
 # Disable file logging
 LOGGING = {

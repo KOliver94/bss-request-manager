@@ -70,7 +70,7 @@ jobs:
           key: ${{ runner.os }}-py${{ matrix.python-version }}-venv-${{ hashFiles('**/Pipfile.lock') }}
       - name: Install dependencies
         if: steps.cache-dependencies.outputs.cache-hit != 'true' || steps.cache-virtualenv.outputs.cache-hit != 'true'
-        run: pipenv install
+        run: pipenv install --dev
       - name: Run Tests
         env:
           APP_SECRET_KEY: Sup3r!S3cr3t_R4nd0m/g3N3r4T3d.k3Y
@@ -81,4 +81,5 @@ jobs:
         run: |
           pipenv run python manage.py makemigrations --no-input
           pipenv run python manage.py migrate --no-input
+          pipenv run python manage.py collectstatic --no-input --clear --link
           pipenv run python manage.py test tests --parallel --pattern="*_tests.py"

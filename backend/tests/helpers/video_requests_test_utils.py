@@ -1,19 +1,26 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from random import randint
 
 from django.utils import timezone
 from video_requests.models import Comment, CrewMember, Rating, Request, Video
 
 
-def create_request(request_id, user):
+def create_request(request_id, user, status=1, start=None, end=None):
     request = Request()
     request.id = request_id
     request.title = "Test Request " + str(request_id) + " - " + user.username
-    request.start_datetime = timezone.now()
-    request.end_datetime = timezone.now() + timedelta(days=1)
+    request.start_datetime = (
+        datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z") if start else timezone.now()
+    )
+    request.end_datetime = (
+        datetime.strptime(end, "%Y-%m-%dT%H:%M:%S%z")
+        if end
+        else request.start_datetime + timedelta(days=1)
+    )
     request.place = "Test place"
     request.type = "Test type"
     request.requester = user
+    request.status = status
     request.save()
     return request
 
