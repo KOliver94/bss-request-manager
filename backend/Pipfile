@@ -11,7 +11,7 @@ pre-commit = "*"
 celery = {extras = ["redis"],version = "==5.0.2"}
 django = "==3.1.3"
 djangorestframework = "==3.11.2"
-djangorestframework_simplejwt = "==4.5.0"
+djangorestframework_simplejwt = "==4.6.0"
 django-auth-ldap = "==2.2.0"
 django-cacheops = "==5.1"
 django-celery-results = {editable = true, git = "https://github.com/celery/django-celery-results.git", ref = "ed94080cea3d68a38f9ff048657a37b08e74fc35"}
