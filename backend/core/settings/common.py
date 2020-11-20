@@ -228,9 +228,7 @@ STATICFILES_DIRS = [
 ]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_ROOT = os.path.join(BACKEND_DIR, "staticfiles")
-
 STATIC_URL = "/static/"
-WHITENOISE_ROOT = os.path.join(FRONTEND_DIR, "build", "root")
 
 # Logging
 # https://docs.djangoproject.com/en/3.0/topics/logging/

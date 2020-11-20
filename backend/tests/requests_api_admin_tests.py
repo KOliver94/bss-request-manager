@@ -199,8 +199,8 @@ class RequestsAPIAdminTestCase(APITestCase):
 
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-03-05T10:30",
-            "end_datetime": "2020-03-06T10:30",
+            "start_datetime": "2020-03-05T10:30:00+01:00",
+            "end_datetime": "2020-03-06T10:30:00+01:00",
             "place": "Test place - Modified",
             "type": "Test type",
         }
@@ -224,8 +224,8 @@ class RequestsAPIAdminTestCase(APITestCase):
 
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-03-05T10:30",
-            "end_datetime": "2020-03-06T10:30",
+            "start_datetime": "2020-03-05T10:30:00+01:00",
+            "end_datetime": "2020-03-06T10:30:00+01:00",
             "place": "Test place - Modified",
             "type": "Test type",
         }
@@ -241,8 +241,8 @@ class RequestsAPIAdminTestCase(APITestCase):
         data_patch = {"title": "Test Request - Modified"}
         data_put = {
             "title": "Test Request",
-            "start_datetime": "2020-03-05T10:30",
-            "end_datetime": "2020-03-06T10:30",
+            "start_datetime": "2020-03-05T10:30:00+01:00",
+            "end_datetime": "2020-03-06T10:30:00+01:00",
             "place": "Test place - Modified",
             "type": "Test type",
         }
@@ -262,8 +262,8 @@ class RequestsAPIAdminTestCase(APITestCase):
     def create_request(self):
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-03-05T10:30",
-            "end_datetime": "2020-03-06T10:30",
+            "start_datetime": "2020-03-05T10:30:00+01:00",
+            "end_datetime": "2020-03-06T10:30:00+01:00",
             "place": "Test place",
             "type": "Test type",
             "responsible_id": self.admin_user.id,
@@ -334,8 +334,8 @@ class RequestsAPIAdminTestCase(APITestCase):
         self.authorize_user(self.admin_user)
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-03-05T10:30",
-            "end_datetime": "2020-03-06T10:30",
+            "start_datetime": "2020-03-05T10:30:00+01:00",
+            "end_datetime": "2020-03-06T10:30:00+01:00",
             "place": "Test place",
             "type": "Test type",
             "comment_text": "Test comment",

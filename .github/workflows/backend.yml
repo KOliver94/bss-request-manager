@@ -56,6 +56,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install libpq-dev python3-dev libldap2-dev libsasl2-dev -y
+          pip install tblib
           pip install pipenv
           pipenv --python ${{ matrix.python-version }}
       - name: Cache dependencies
