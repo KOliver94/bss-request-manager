@@ -8,6 +8,9 @@ AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 # Use faster password hashing algorithm
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 
+# Do not search for frontend build for tests
+STATICFILES_DIRS.pop(0)
+
 # Use short lifetime on access tokens
 SIMPLE_JWT.update({"ACCESS_TOKEN_LIFETIME": timedelta(seconds=10)})
 
