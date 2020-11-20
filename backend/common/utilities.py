@@ -63,6 +63,8 @@ def get_calendar_event_body(request):
 
 @shared_task
 def create_calendar_event(request_id):
+    if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
+        return "Missing credentials file for Google Calendar"
     request = Request.objects.get(pk=request_id)
     service = get_google_calendar_service()
     request.additional_data["calendar_id"] = (
@@ -79,6 +81,8 @@ def create_calendar_event(request_id):
 
 @shared_task
 def update_calendar_event(request_id):
+    if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
+        return "Missing credentials file for Google Calendar"
     request = Request.objects.get(pk=request_id)
     if request.additional_data and "calendar_id" in request.additional_data:
         service = get_google_calendar_service()
@@ -92,6 +96,8 @@ def update_calendar_event(request_id):
 
 @shared_task
 def remove_calendar_event(calendar_id):
+    if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
+        return "Missing credentials file for Google Calendar"
     service = get_google_calendar_service()
     service.events().delete(
         calendarId=settings.GOOGLE_CALENDAR_ID,

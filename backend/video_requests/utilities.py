@@ -1,4 +1,4 @@
-from django.utils import timezone
+from django.utils.timezone import localtime
 from video_requests.emails import email_user_video_published
 
 
@@ -26,7 +26,7 @@ def update_request_status(request, called_from_video=False):
             status = 10 if request.additional_data["failed"] is True else status
 
         # If the status is not canceled or failed and the request is accepted check if the end date is earlier than now
-        if 2 <= status < 9 and request.end_datetime < timezone.now():
+        if 2 <= status < 9 and request.end_datetime < localtime():
             status = 3
 
         # If path in recording is specified consider as successful recording and update video status

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.db.models import Q
-from django.utils import timezone
+from django.utils.timezone import localtime
 from django_auth_ldap.backend import LDAPBackend
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 raise Exception(f"No user named {username}")
             else:
                 users_found.append(username)
-                if user.date_joined > timezone.now() - timedelta(minutes=1):
+                if user.date_joined > localtime() - timedelta(minutes=1):
                     total_created += 1
 
         # Demote users who have staff or admin privileges but were not found in AD

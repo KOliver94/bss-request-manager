@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from django.core.management import BaseCommand
+from django.utils.timezone import localdate
 from video_requests.emails import email_responsible_overdue_request
 from video_requests.models import Request
 
@@ -9,7 +8,7 @@ class Command(BaseCommand):
     help = "Send email to responsible, production manager and editor in chief about overdue requests"
 
     def handle(self, *args, **options):
-        today = datetime.now().date()
+        today = localdate()
         overdue_requests = Request.objects.filter(
             status__range=[1, 4], deadline__lt=today
         )

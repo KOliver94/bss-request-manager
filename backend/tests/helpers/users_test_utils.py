@@ -1,7 +1,7 @@
-import datetime
 import uuid
 
 from django.contrib.auth.models import Group, User
+from django.utils.timezone import localtime
 
 PASSWORD = "ae9U$89z#zyA!YoPE$6m"
 
@@ -16,7 +16,7 @@ def create_user(
     # Initial parameters
     if groups is None:
         groups = []
-    suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+    suffix = localtime().strftime("%y%m%d_%H%M%S")
     username = username if username else str(uuid.uuid4())
 
     # Create user

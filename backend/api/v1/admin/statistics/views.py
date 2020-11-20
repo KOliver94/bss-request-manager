@@ -1,7 +1,8 @@
-from datetime import date, datetime
+from datetime import datetime
 
 from api.v1.admin.statistics.serializers import RequestStatisticSerializer
 from common.permissions import IsStaffUser
+from django.utils.timezone import get_current_timezone, localtime
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -35,10 +36,22 @@ class RequestStatisticView(generics.RetrieveAPIView):
         try:
             from_date = self.request.query_params.get("from_date", None)
             if from_date:
-                from_date = datetime.strptime(from_date, "%Y-%m-%d").date()
-            to_date = self.request.query_params.get("to_date", date.today())
+                from_date = datetime.strptime(from_date, "%Y-%m-%d").replace(
+                    hour=0,
+                    minute=0,
+                    second=0,
+                    microsecond=0,
+                    tzinfo=get_current_timezone(),
+                )
+            to_date = self.request.query_params.get("to_date", localtime())
             to_date = (
-                datetime.strptime(to_date, "%Y-%m-%d").date()
+                datetime.strptime(to_date, "%Y-%m-%d").replace(
+                    hour=23,
+                    minute=59,
+                    second=59,
+                    microsecond=999999,
+                    tzinfo=get_current_timezone(),
+                )
                 if type(to_date) is str
                 else to_date
             )

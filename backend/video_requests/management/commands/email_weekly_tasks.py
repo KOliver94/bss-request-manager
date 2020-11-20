@@ -1,6 +1,7 @@
-import datetime
+from datetime import timedelta
 
 from django.core.management import BaseCommand
+from django.utils.timezone import localtime
 from video_requests.emails import email_staff_weekly_tasks
 from video_requests.models import Request
 
@@ -10,9 +11,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Get requests which will happen this week
-        date = datetime.date.today()
-        start_week = date - datetime.timedelta(date.weekday())
-        end_week = start_week + datetime.timedelta(7)
+        date = localtime().replace(hour=0, minute=0, second=0, microsecond=0)
+        start_week = date - timedelta(date.weekday())
+        end_week = (start_week + timedelta(6)).replace(
+            hour=23, minute=59, second=59, microsecond=999999
+        )
         recording = Request.objects.filter(
             start_datetime__range=[start_week, end_week], status__range=[1, 2]
         ).order_by("start_datetime")

@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from distutils import util
 
 from api.v1.users.serializers import (
@@ -17,6 +17,7 @@ from common.permissions import (
     IsStaffUser,
 )
 from django.contrib.auth.models import Group, User
+from django.utils.timezone import get_current_timezone, localtime
 from rest_framework import filters, generics, status
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.generics import get_object_or_404
@@ -226,17 +227,32 @@ class UserWorkedOnListView(generics.ListAPIView):
         # Get and validate all query parameters by trying to convert them to the corresponding type
         # if not the default value was used.
         try:
-            to_date = self.request.query_params.get("to_date", date.today())
+            to_date = self.request.query_params.get("to_date", localtime())
             to_date = (
-                datetime.strptime(to_date, "%Y-%m-%d").date()
+                datetime.strptime(to_date, "%Y-%m-%d").replace(
+                    hour=23,
+                    minute=59,
+                    second=59,
+                    microsecond=999999,
+                    tzinfo=get_current_timezone(),
+                )
                 if type(to_date) is str
                 else to_date
             )
             from_date = self.request.query_params.get(
-                "from_date", to_date - timedelta(weeks=20)
+                "from_date",
+                (to_date - timedelta(weeks=20)).replace(
+                    hour=0, minute=0, second=0, microsecond=0
+                ),
             )
             from_date = (
-                datetime.strptime(from_date, "%Y-%m-%d").date()
+                datetime.strptime(from_date, "%Y-%m-%d").replace(
+                    hour=0,
+                    minute=0,
+                    second=0,
+                    microsecond=0,
+                    tzinfo=get_current_timezone(),
+                )
                 if type(from_date) is str
                 else from_date
             )

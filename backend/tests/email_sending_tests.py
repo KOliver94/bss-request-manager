@@ -56,8 +56,8 @@ class EmailSendingTestCase(APITestCase):
         self.authorize_user(self.normal_user)
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-11-08T10:30:00+01:00:00+01:00",
-            "end_datetime": "2020-11-09T10:30:00+01:00:00+01:00",
+            "start_datetime": "2020-11-08T10:30:00+01:00",
+            "end_datetime": "2020-11-09T10:30:00+01:00",
             "place": "Test place",
             "type": "Test type",
         }
@@ -77,8 +77,8 @@ class EmailSendingTestCase(APITestCase):
         # Create a Request without login
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-11-08T10:30:00+01:00:00+01:00",
-            "end_datetime": "2020-11-09T10:30:00+01:00:00+01:00",
+            "start_datetime": "2020-11-08T10:30:00+01:00",
+            "end_datetime": "2020-11-09T10:30:00+01:00",
             "place": "Test place",
             "type": "Test type",
             "requester_first_name": "Test",
@@ -263,7 +263,7 @@ class EmailSendingTestCase(APITestCase):
     In production use it is done by Celery Beat
     """
 
-    @freeze_time("2020-11-19 10:20:30", as_kwarg="frozen_time")
+    @freeze_time("2020-11-19 10:20:30", tz_offset=+1, as_kwarg="frozen_time")
     @patch(
         "video_requests.emails.email_staff_weekly_tasks", wraps=email_staff_weekly_tasks
     )
@@ -352,7 +352,7 @@ class EmailSendingTestCase(APITestCase):
             call_command("email_weekly_tasks", stdout=out)
             self.assertEquals(out.getvalue(), "No tasks for this week.\n")
 
-    @freeze_time("2020-11-19 10:20:30", as_kwarg="frozen_time")
+    @freeze_time("2020-11-19 10:20:30", tz_offset=+1, as_kwarg="frozen_time")
     @patch(
         "video_requests.emails.email_crew_daily_reminder",
         wraps=email_crew_daily_reminder,
@@ -425,6 +425,10 @@ class EmailSendingTestCase(APITestCase):
         incl_1 = create_request(103, self.normal_user, 5)
         incl_2 = create_request(104, self.normal_user, 6)
 
+        """
+        Case 1: Some unfinished Requests
+        """
+
         # Call management command
         with StringIO() as out:
             call_command("email_unfinished_requests", stdout=out)
@@ -462,14 +466,15 @@ class EmailSendingTestCase(APITestCase):
         self.assertIn(self.production_manager.email, mail.outbox[0].to)
         self.assertEquals(mail.outbox[0].subject, "Lezáratlan anyagok")
 
-    @patch("video_requests.emails.email_production_manager_unfinished_requests")
-    def test_unfinished_requests_email_no_tasks(
-        self, mock_email_production_manager_unfinished_requests
-    ):
-        # Setup test Requests
-        create_request(100, self.normal_user, 2)
-        create_request(101, self.normal_user, 4)
-        create_request(102, self.normal_user, 7)
+        """
+        Case 2: No unfinished Request
+        """
+        # Delete the included Requests
+        incl_1.delete()
+        incl_2.delete()
+
+        # Reset mock
+        mock_email_production_manager_unfinished_requests.reset_mock()
 
         # Call management command
         with StringIO() as out:
@@ -479,7 +484,7 @@ class EmailSendingTestCase(APITestCase):
         # Check if function was called with correct parameters
         mock_email_production_manager_unfinished_requests.assert_not_called()
 
-    @freeze_time("2020-11-19 10:20:30")
+    @freeze_time("2020-11-19 10:20:30", tz_offset=+1)
     @patch(
         "video_requests.emails.email_responsible_overdue_request",
         wraps=email_responsible_overdue_request,
