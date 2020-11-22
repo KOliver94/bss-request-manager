@@ -116,6 +116,7 @@ def update_video_status(video, called_from_request=False):
                 )
 
         # Set the video status to the final score
+        video.refresh_from_db()  # update object from DB because async task might have changed additional_data
         video.status = status
 
     # Save the status and update the status of the request as well
