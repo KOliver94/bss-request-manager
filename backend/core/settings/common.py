@@ -144,7 +144,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     "update_request_status": {
         "task": "core.tasks.scheduled_update_request_status",
-        "schedule": crontab(minute=0, hour=0),
+        "schedule": crontab(minute=10),
     },
     "daily_reminder_email": {
         "task": "core.tasks.scheduled_send_daily_reminder_email",
