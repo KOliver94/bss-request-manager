@@ -2,13 +2,13 @@ from datetime import datetime, timedelta
 
 from common.models import AbstractComment, AbstractRating
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import Avg, JSONField
 from jsonschema import FormatChecker
 from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
-from rest_framework.exceptions import ValidationError
 from simple_history.models import HistoricalRecords
 from video_requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
 from video_requests.schemas import (
@@ -67,7 +67,7 @@ class Request(models.Model):
         super().clean()
         if not (self.start_datetime <= self.end_datetime):
             raise ValidationError("Start time must be earlier than end.")
-        if not (self.end_datetime < self.deadline):
+        if self.deadline and not (self.end_datetime.date() < self.deadline):
             raise ValidationError("Deadline must be later than end of the event.")
 
     def save(self, *args, **kwargs):

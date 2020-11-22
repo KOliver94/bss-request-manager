@@ -1,4 +1,5 @@
 from django.utils.timezone import localtime
+from rest_framework.exceptions import ValidationError
 from video_requests.emails import email_user_video_published
 
 
@@ -123,3 +124,22 @@ def update_video_status(video, called_from_request=False):
     video.save()
     if not called_from_request:
         update_request_status(video.request, True)
+
+
+def validate_request_date_correlations(instance, data):
+    start_datetime = data.get("start_datetime")
+    end_datetime = data.get("end_datetime")
+    deadline = data.get("deadline")
+
+    if instance:
+        if not start_datetime:
+            start_datetime = instance.start_datetime
+        if not end_datetime:
+            end_datetime = instance.end_datetime
+        if not deadline and instance.deadline:
+            deadline = instance.deadline
+
+    if not (start_datetime <= end_datetime):
+        raise ValidationError("Start time must be earlier than end.")
+    if deadline and not (end_datetime.date() < deadline):
+        raise ValidationError("Deadline must be later than end of the event.")

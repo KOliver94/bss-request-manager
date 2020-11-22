@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from tests.helpers.users_test_utils import create_user, get_default_password
-from tests.helpers.video_requests_test_utils import create_request
+from tests.helpers.video_requests_test_utils import create_request, create_video
 
 
 def get_test_data():
@@ -442,4 +442,35 @@ class RequestsUtilitiesTestCase(APITestCase):
         )
         self.assertNotEqual(
             response.data["additional_data"]["publishing"]["email_sent_to_user"], False
+        )
+
+    def test_video_additional_data_aired_get_sorted_by_date(self):
+        request = create_request(100, self.user)
+        video = create_video(200, request)
+
+        data = {
+            "additional_data": {
+                "aired": [
+                    "2020-01-12",
+                    "2019-11-25",
+                    "2020-10-25",
+                    "2018-05-19",
+                    "2020-07-14",
+                ]
+            }
+        }
+
+        response = self.client.patch(f"{self.url}/{request.id}/videos/{video.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual(
+            response.data["additional_data"]["aired"],
+            ["2020-10-25", "2020-07-14", "2020-01-12", "2019-11-25", "2018-05-19"],
+        )
+
+    def test_request_deadline_get_automatically_generated(self):
+        response = self.client.post(self.url, get_test_data())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            response.data["deadline"],
+            str((get_test_data()["end_datetime"] + timedelta(weeks=3)).date()),
         )

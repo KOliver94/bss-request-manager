@@ -9,6 +9,7 @@ from video_requests.emails import (
     email_user_new_request_confirmation,
 )
 from video_requests.models import Comment, Rating, Request, Video
+from video_requests.utilities import validate_request_date_correlations
 
 
 def create_comment(comment_text, request):
@@ -163,6 +164,10 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
         email_user_new_request_confirmation.delay(request.id)
         return request
 
+    def validate(self, data):
+        validate_request_date_correlations(self.instance, data)
+        return data
+
 
 class RequestAnonymousSerializer(serializers.ModelSerializer):
     comments = CommentDefaultSerializer(many=True, read_only=True)
@@ -254,3 +259,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         create_calendar_event.delay(request.id)
         email_user_new_request_confirmation.delay(request.id)
         return request
+
+    def validate(self, data):
+        validate_request_date_correlations(self.instance, data)
+        return data

@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import User
+from django.utils.timezone import localtime
 from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
@@ -350,6 +353,41 @@ class RequestsAPIDefaultTestCase(APITestCase):
         )
         self.assertEqual(
             req.additional_data["requester"]["phone_number"], data["requester_mobile"]
+        )
+
+    def test_request_date_relation_validation_user(self):
+        self.authorize_user(self.normal_user)
+        data = {
+            "title": "Test Request",
+            "start_datetime": localtime(),
+            "place": "Test place",
+            "type": "Test type",
+            "comment_text": "Test comment",
+        }
+        data["end_datetime"] = data["start_datetime"] - timedelta(hours=2)
+        response = self.client.post("/api/v1/requests", data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["non_field_errors"][0], "Start time must be earlier than end."
+        )
+
+    def test_request_date_relation_validation_anonymous(self):
+        data = {
+            "title": "Test Request",
+            "start_datetime": localtime(),
+            "place": "Test place",
+            "type": "Test type",
+            "requester_first_name": "Test",
+            "requester_last_name": "User",
+            "requester_email": "test.user@example.com",
+            "requester_mobile": "+36509999999",
+            "comment_text": "Additional information",
+        }
+        data["end_datetime"] = data["start_datetime"] - timedelta(hours=2)
+        response = self.client.post("/api/v1/requests", data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["non_field_errors"][0], "Start time must be earlier than end."
         )
 
     """

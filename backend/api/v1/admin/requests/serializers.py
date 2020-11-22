@@ -8,7 +8,11 @@ from rest_framework.fields import CharField, IntegerField
 from rest_framework.generics import get_object_or_404
 from video_requests.emails import email_crew_new_comment, email_user_new_comment
 from video_requests.models import Comment, CrewMember, Rating, Request, Video
-from video_requests.utilities import update_request_status, update_video_status
+from video_requests.utilities import (
+    update_request_status,
+    update_video_status,
+    validate_request_date_correlations,
+)
 
 
 def get_user_by_id(user_id):
@@ -374,3 +378,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         update_request_status(request)
         update_calendar_event.delay(request.id)
         return request
+
+    def validate(self, data):
+        validate_request_date_correlations(self.instance, data)
+        return data

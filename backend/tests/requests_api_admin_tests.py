@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+from django.utils.timezone import localtime
 from rest_framework import status
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
@@ -346,6 +349,43 @@ class RequestsAPIAdminTestCase(APITestCase):
             response.data["comments"][0]["author"]["username"], self.admin_user.username
         )
         self.assertEqual(response.data["comments"][0]["text"], "Test comment")
+
+    @staticmethod
+    def get_test_data():
+        return {
+            "title": "Test Request",
+            "start_datetime": localtime(),
+            "end_datetime": localtime() + timedelta(hours=4),
+            "place": "Test place",
+            "type": "Test type",
+        }
+
+    def test_request_date_relation_validation(self):
+        self.authorize_user(self.admin_user)
+        url = "/api/v1/admin/requests"
+
+        data = self.get_test_data()
+        data["end_datetime"] = data["start_datetime"] - timedelta(hours=2)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["non_field_errors"][0], "Start time must be earlier than end."
+        )
+
+        data = self.get_test_data()
+        data["deadline"] = data["end_datetime"].date()
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["non_field_errors"][0],
+            "Deadline must be later than end of the event.",
+        )
+
+        data = self.get_test_data()
+        data["deadline"] = data["end_datetime"].date() + timedelta(days=1)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["deadline"], str(data["deadline"]))
 
     """
     --------------------------------------------------
