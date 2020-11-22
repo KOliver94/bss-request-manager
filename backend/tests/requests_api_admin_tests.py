@@ -1499,19 +1499,19 @@ class RequestsAPIAdminTestCase(APITestCase):
     GET /api/v1/admin/requests/:id/videos
     """
 
-    def test_admin_can_get_videos(self):
+    def test_admin_can_get_videos_on_request(self):
         self.authorize_user(self.admin_user)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 3)
 
-    def test_staff_can_get_videos(self):
+    def test_staff_can_get_videos_on_request(self):
         self.authorize_user(self.staff_user)
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 3)
 
-    def test_user_should_not_get_videos(self):
+    def test_user_should_not_get_videos_on_request(self):
         self.authorize_user(self.normal_user)
         # Test error for existing object
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
@@ -1521,7 +1521,7 @@ class RequestsAPIAdminTestCase(APITestCase):
         response = self.client.get(BASE_URL + str(NOT_EXISTING_ID) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_anonymous_should_not_get_videos(self):
+    def test_anonymous_should_not_get_videos_on_request(self):
         # Test error for existing object
         response = self.client.get(BASE_URL + str(self.request1.id) + "/videos")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -3969,3 +3969,33 @@ class RequestsAPIAdminTestCase(APITestCase):
             + str(NOT_EXISTING_ID),
             None,
         )
+
+    """
+    --------------------------------------------------
+                         VIDEOS
+    --------------------------------------------------
+    """
+    """
+    GET /api/v1/admin/requests/videos
+    """
+
+    def test_admin_can_get_videos(self):
+        self.authorize_user(self.admin_user)
+        response = self.client.get(BASE_URL + "videos")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 3)
+
+    def test_staff_can_get_videos(self):
+        self.authorize_user(self.staff_user)
+        response = self.client.get(BASE_URL + "videos")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 3)
+
+    def test_user_should_not_get_videos(self):
+        self.authorize_user(self.normal_user)
+        response = self.client.get(BASE_URL + "videos")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_get_videos(self):
+        response = self.client.get(BASE_URL + "videos")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from api.v1.admin.statistics.serializers import RequestStatisticSerializer
 from common.permissions import IsStaffUser
-from django.utils.timezone import get_current_timezone, localtime
+from django.utils.timezone import localdate
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -36,22 +36,10 @@ class RequestStatisticView(generics.RetrieveAPIView):
         try:
             from_date = self.request.query_params.get("from_date", None)
             if from_date:
-                from_date = datetime.strptime(from_date, "%Y-%m-%d").replace(
-                    hour=0,
-                    minute=0,
-                    second=0,
-                    microsecond=0,
-                    tzinfo=get_current_timezone(),
-                )
-            to_date = self.request.query_params.get("to_date", localtime())
+                from_date = datetime.strptime(from_date, "%Y-%m-%d").date()
+            to_date = self.request.query_params.get("to_date", localdate())
             to_date = (
-                datetime.strptime(to_date, "%Y-%m-%d").replace(
-                    hour=23,
-                    minute=59,
-                    second=59,
-                    microsecond=999999,
-                    tzinfo=get_current_timezone(),
-                )
+                datetime.strptime(to_date, "%Y-%m-%d").date()
                 if type(to_date) is str
                 else to_date
             )
@@ -64,35 +52,35 @@ class RequestStatisticView(generics.RetrieveAPIView):
 
         instance = {
             "new_requests": Request.objects.filter(
-                status=1, start_datetime__lte=to_date
+                status=1, start_datetime__date__lte=to_date
             ).cache(),
             "in_progress_requests": Request.objects.filter(
-                status__range=[2, 6], start_datetime__lte=to_date
+                status__range=[2, 6], start_datetime__date__lte=to_date
             ).cache(),
             "completed_requests": Request.objects.filter(
-                status=7, start_datetime__lte=to_date
+                status=7, start_datetime__date__lte=to_date
             ).cache(),
             "upcoming_requests": Request.objects.filter(status=2)
             .order_by("start_datetime")
             .cache(),
             "best_videos": Video.objects.order_by("-avg_rating")
-            .filter(avg_rating__gt=0, request__start_datetime__lte=to_date)
+            .filter(avg_rating__gt=0, request__start_datetime__date__lte=to_date)
             .cache(),
         }
 
         # If from date was specified as a query parameter filter the results
         if from_date:
             instance["new_requests"] = instance["new_requests"].filter(
-                start_datetime__gte=from_date
+                start_datetime__date__gte=from_date
             )
             instance["in_progress_requests"] = instance["in_progress_requests"].filter(
-                start_datetime__gte=from_date
+                start_datetime__date__gte=from_date
             )
             instance["completed_requests"] = instance["completed_requests"].filter(
-                start_datetime__gte=from_date
+                start_datetime__date__gte=from_date
             )
             instance["best_videos"] = instance["best_videos"].filter(
-                request__start_datetime__gte=from_date
+                request__start_datetime__date__gte=from_date
             )
 
         # Get the number of requests of the first 3 query sets and the top 5 from the last 2

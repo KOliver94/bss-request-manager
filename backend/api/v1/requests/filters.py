@@ -13,8 +13,8 @@ class IntegerFilter(Filter):
 
 
 class RequestFilter(FilterSet):
-    from_date = DateFilter(field_name="start_datetime", lookup_expr="gte")
-    to_date = DateFilter(field_name="end_datetime", lookup_expr="lte")
+    from_date = DateFilter(field_name="start_datetime__date", lookup_expr="gte")
+    to_date = DateFilter(field_name="end_datetime__date", lookup_expr="lte")
 
     class Meta:
         model = Request
@@ -22,8 +22,10 @@ class RequestFilter(FilterSet):
 
 
 class VideoFilter(FilterSet):
-    from_date = DateFilter(field_name="request__start_datetime", lookup_expr="gte")
-    to_date = DateFilter(field_name="request__end_datetime", lookup_expr="lte")
+    from_date = DateFilter(
+        field_name="request__start_datetime__date", lookup_expr="gte"
+    )
+    to_date = DateFilter(field_name="request__end_datetime__date", lookup_expr="lte")
     length = IntegerFilter(field_name="additional_data__length", lookup_expr="lte")
 
     class Meta:

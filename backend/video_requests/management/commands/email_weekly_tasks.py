@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django.core.management import BaseCommand
-from django.utils.timezone import localtime
+from django.utils.timezone import localdate
 from video_requests.emails import email_staff_weekly_tasks
 from video_requests.models import Request
 
@@ -11,13 +11,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Get requests which will happen this week
-        date = localtime().replace(hour=0, minute=0, second=0, microsecond=0)
+        date = localdate()
         start_week = date - timedelta(date.weekday())
-        end_week = (start_week + timedelta(6)).replace(
-            hour=23, minute=59, second=59, microsecond=999999
-        )
+        end_week = start_week + timedelta(7)
         recording = Request.objects.filter(
-            start_datetime__range=[start_week, end_week], status__range=[1, 2]
+            start_datetime__date__range=[start_week, end_week], status__range=[1, 2]
         ).order_by("start_datetime")
 
         # Get requests which are already recorded but either no video was created or it is not finished yet
