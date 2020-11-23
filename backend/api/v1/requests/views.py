@@ -224,7 +224,10 @@ class RatingDefaultListCreateView(generics.ListCreateAPIView):
         The user should only post to videos which are related to a request by him.
         A Video cannot be rated before being published (reached status 5).
         """
-        if get_object_or_404(Video, pk=self.kwargs["video_id"]).status < 5:
+        if (
+            get_object_or_404(Video, pk=self.kwargs["video_id"]).status
+            < Video.Statuses.PUBLISHED
+        ):
             raise ValidationError("The video has not been published yet.")
 
         if Rating.objects.filter(

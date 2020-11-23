@@ -10,6 +10,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from tests.helpers.users_test_utils import create_user, get_default_password
 from tests.helpers.video_requests_test_utils import create_request, create_video
+from video_requests.models import Request, Video
 
 
 def get_test_data():
@@ -43,7 +44,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         # 1. Create Request
         response = self.client.post(self.url, get_test_data())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], 1)
+        self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
         request_id = response.data["id"]
 
         # 2. Accept the Request
@@ -51,7 +52,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             f"{self.url}/{request_id}", {"additional_data": {"accepted": True}}
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 2)
+        self.assertEqual(response.data["status"], Request.Statuses.ACCEPTED)
 
         # 3. Change time to the end of the event and update status
         frozen_time.move_to("2020-11-21 14:30:20")
@@ -62,7 +63,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             )
         response = self.client.get(f"{self.url}/{request_id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 3)
+        self.assertEqual(response.data["status"], Request.Statuses.RECORDED)
 
         # 4. Add recording information
         response = self.client.patch(
@@ -70,14 +71,14 @@ class RequestsUtilitiesTestCase(APITestCase):
             {"additional_data": {"recording": {"path": "N:/20201121_test"}}},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 4)
+        self.assertEqual(response.data["status"], Request.Statuses.UPLOADED)
 
         # 5./1 Add a video
         response = self.client.post(
             f"{self.url}/{request_id}/videos", {"title": "New video"}
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], 1)
+        self.assertEqual(response.data["status"], Video.Statuses.PENDING)
         video_id = response.data["id"]
 
         # 5./2 Assign editor to the video
@@ -85,7 +86,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             f"{self.url}/{request_id}/videos/{video_id}", {"editor_id": self.user.id}
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 2)
+        self.assertEqual(response.data["status"], Video.Statuses.IN_PROGRESS)
 
         # 5./3 Finish the editing of the video
         response = self.client.patch(
@@ -93,11 +94,11 @@ class RequestsUtilitiesTestCase(APITestCase):
             {"additional_data": {"editing_done": True}},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 3)
+        self.assertEqual(response.data["status"], Video.Statuses.EDITED)
         # Request status should also change
         response = self.client.get(f"{self.url}/{request_id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 5)
+        self.assertEqual(response.data["status"], Request.Statuses.EDITED)
 
         # 6./1 Copy raw materials to Google Drive
         response = self.client.patch(
@@ -112,7 +113,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             {"additional_data": {"coding": {"website": True}}},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 4)
+        self.assertEqual(response.data["status"], Video.Statuses.CODED)
 
         # 6./3 Publish the video on the website
         response = self.client.patch(
@@ -120,7 +121,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             {"additional_data": {"publishing": {"website": "https://example.com"}}},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 5)
+        self.assertEqual(response.data["status"], Video.Statuses.PUBLISHED)
 
         # 6./4 Archive the HQ export
         response = self.client.patch(
@@ -128,11 +129,11 @@ class RequestsUtilitiesTestCase(APITestCase):
             {"additional_data": {"archiving": {"hq_archive": True}}},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 6)
+        self.assertEqual(response.data["status"], Video.Statuses.DONE)
         # Request status should also change
         response = self.client.get(f"{self.url}/{request_id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 6)
+        self.assertEqual(response.data["status"], Request.Statuses.ARCHIVED)
 
         # 7. Remove raw files
         response = self.client.patch(
@@ -140,7 +141,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             {"additional_data": {"recording": {"removed": True}}},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 7)
+        self.assertEqual(response.data["status"], Request.Statuses.DONE)
 
         # 8. Remove video
         response = self.client.delete(f"{self.url}/{request_id}/videos/{video_id}")
@@ -148,14 +149,14 @@ class RequestsUtilitiesTestCase(APITestCase):
         # Request status should also change
         response = self.client.get(f"{self.url}/{request_id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 4)
+        self.assertEqual(response.data["status"], Request.Statuses.UPLOADED)
 
         # 10. Cancel the Request
         response = self.client.patch(
             f"{self.url}/{request_id}", {"additional_data": {"canceled": True}}
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 9)
+        self.assertEqual(response.data["status"], Request.Statuses.CANCELED)
         self.client.patch(
             f"{self.url}/{request_id}", {"additional_data": {"canceled": False}}
         )
@@ -165,29 +166,36 @@ class RequestsUtilitiesTestCase(APITestCase):
             f"{self.url}/{request_id}", {"additional_data": {"failed": True}}
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 10)
+        self.assertEqual(response.data["status"], Request.Statuses.FAILED)
 
         # 12. Decline the Request
         response = self.client.patch(
             f"{self.url}/{request_id}", {"additional_data": {"accepted": False}}
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 0)
+        self.assertEqual(response.data["status"], Request.Statuses.DENIED)
 
     def test_request_and_video_status_changes_set_by_admin(self):
         # 1. Create Request
         response = self.client.post(self.url, get_test_data())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], 1)
+        self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
         request_id = response.data["id"]
 
         # 2. Set status by admin
         response = self.client.patch(
             f"{self.url}/{request_id}",
-            {"additional_data": {"status_by_admin": {"status": 6, "admin_id": 123}}},
+            {
+                "additional_data": {
+                    "status_by_admin": {
+                        "status": Request.Statuses.ARCHIVED,
+                        "admin_id": 123,
+                    }
+                }
+            },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 6)
+        self.assertEqual(response.data["status"], Request.Statuses.ARCHIVED)
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_id"],
             self.user.id,
@@ -198,16 +206,20 @@ class RequestsUtilitiesTestCase(APITestCase):
             f"{self.url}/{request_id}/videos", {"title": "New video"}
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], 1)
+        self.assertEqual(response.data["status"], Video.Statuses.PENDING)
         video_id = response.data["id"]
 
         # 4. Set status by admin
         response = self.client.patch(
             f"{self.url}/{request_id}/videos/{video_id}",
-            {"additional_data": {"status_by_admin": {"status": 6, "admin_id": 123}}},
+            {
+                "additional_data": {
+                    "status_by_admin": {"status": Video.Statuses.DONE, "admin_id": 123}
+                }
+            },
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 6)
+        self.assertEqual(response.data["status"], Video.Statuses.DONE)
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_id"],
             self.user.id,
@@ -216,12 +228,15 @@ class RequestsUtilitiesTestCase(APITestCase):
         # 5. Check the Request again
         response = self.client.get(f"{self.url}/{request_id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 6)
+        self.assertEqual(response.data["status"], Request.Statuses.ARCHIVED)
 
     def patch_additional_data_to_request(self, request_id):
         data = {
             "additional_data": {
-                "status_by_admin": {"status": 6, "admin_id": 123},
+                "status_by_admin": {
+                    "status": Request.Statuses.ARCHIVED,
+                    "admin_id": 123,
+                },
                 "accepted": True,
                 "failed": True,
                 "canceled": True,
@@ -247,7 +262,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         # Create Request
         response = self.client.post(self.url, get_test_data())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], 1)
+        self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
         request_id = response.data["id"]
 
         # Try to add unauthorized additional_data parts
@@ -268,7 +283,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         # Create Request
         response = self.client.post(self.url, get_test_data())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], 1)
+        self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
         request_id = response.data["id"]
 
         # Try to add unauthorized additional_data parts
@@ -295,7 +310,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         # Create Request
         response = self.client.post(self.url, get_test_data())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], 1)
+        self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
         request_id = response.data["id"]
 
         # Change the status by admin
@@ -317,7 +332,8 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertIn("status_by_admin", response.data["additional_data"])
         self.assertIn("status", response.data["additional_data"]["status_by_admin"])
         self.assertEqual(
-            response.data["additional_data"]["status_by_admin"]["status"], 6
+            response.data["additional_data"]["status_by_admin"]["status"],
+            Request.Statuses.ARCHIVED,
         )
         self.assertIn("admin_id", response.data["additional_data"]["status_by_admin"])
         self.assertEqual(
@@ -332,12 +348,20 @@ class RequestsUtilitiesTestCase(APITestCase):
         # Change the status_by_admin with the new admin --> admin_id should change
         response = self.client.patch(
             f"{self.url}/{request_id}",
-            {"additional_data": {"status_by_admin": {"status": 4, "admin_id": 123}}},
+            {
+                "additional_data": {
+                    "status_by_admin": {
+                        "status": Request.Statuses.UPLOADED,
+                        "admin_id": 123,
+                    }
+                }
+            },
         )
         self.assertIn("status_by_admin", response.data["additional_data"])
         self.assertIn("status", response.data["additional_data"]["status_by_admin"])
         self.assertEqual(
-            response.data["additional_data"]["status_by_admin"]["status"], 4
+            response.data["additional_data"]["status_by_admin"]["status"],
+            Request.Statuses.UPLOADED,
         )
         self.assertIn("admin_id", response.data["additional_data"]["status_by_admin"])
         self.assertNotEqual(
@@ -353,7 +377,7 @@ class RequestsUtilitiesTestCase(APITestCase):
     def test_publishing_email_sent_to_user_in_video_additional_data_should_not_be_overwritten(
         self,
     ):
-        request = create_request(100, self.user, 4)
+        request = create_request(100, self.user, Request.Statuses.UPLOADED)
         staff = create_user(is_staff=True)
 
         # Add a video with some data
@@ -367,7 +391,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         }
         response = self.client.post(f"{self.url}/{request.id}/videos", video_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], 4)
+        self.assertEqual(response.data["status"], Video.Statuses.CODED)
         video_id = response.data["id"]
 
         # Try to add email_sent_to_user before defined with admin user
@@ -395,7 +419,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         )
 
         # Request was updated due to changes is video so the forced status was changed. Change again
-        request.status = 4
+        request.status = Request.Statuses.UPLOADED
         request.save()
 
         # Publish video
@@ -404,7 +428,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             {"additional_data": {"publishing": {"website": "https://example.com"}}},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], 5)
+        self.assertEqual(response.data["status"], Video.Statuses.PUBLISHED)
 
         # Because of the async tasks the email_sent_to_user might not be in the response. Get the video again and check
         response = self.client.get(f"{self.url}/{request.id}/videos/{video_id}")

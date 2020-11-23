@@ -21,6 +21,7 @@ from video_requests.emails import (
     email_responsible_overdue_request,
     email_staff_weekly_tasks,
 )
+from video_requests.models import Request, Video
 
 
 @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
@@ -101,8 +102,8 @@ class EmailSendingTestCase(APITestCase):
 
     def test_video_published_email_sent_to_user(self):
         # Setup data - Create a Request with status 4, and a video
-        request = create_request(100, self.normal_user, 4)
-        video = create_video(300, request, 1)
+        request = create_request(100, self.normal_user, Request.Statuses.UPLOADED)
+        video = create_video(300, request, Video.Statuses.PENDING)
 
         # Video data to be patched
         data = {
@@ -274,7 +275,10 @@ class EmailSendingTestCase(APITestCase):
         # Should be included
         rec1 = create_request(100, self.normal_user, start="2020-11-16T04:16:13+0100")
         rec2 = create_request(
-            101, self.normal_user, start="2020-11-21T21:41:57+0100", status=2
+            101,
+            self.normal_user,
+            Request.Statuses.ACCEPTED,
+            start="2020-11-21T21:41:57+0100",
         )
         # Should not be included
         rec3 = create_request(
@@ -284,24 +288,29 @@ class EmailSendingTestCase(APITestCase):
             103, self.normal_user, start="2020-11-24T17:22:05+0100"
         )  # next week
         rec5 = create_request(
-            104, self.normal_user, start="2020-11-20T14:55:45+0100", status=5
+            104,
+            self.normal_user,
+            Request.Statuses.EDITED,
+            start="2020-11-20T14:55:45+0100",
         )  # this week but wrong status
 
         # Create test Requests - Editing
         # Should be included
-        edit1 = create_request(110, self.normal_user, status=3)
-        edit2 = create_request(111, self.normal_user, status=4)
-        create_video(211, edit2, status=1)
+        edit1 = create_request(110, self.normal_user, Request.Statuses.RECORDED)
+        edit2 = create_request(111, self.normal_user, Request.Statuses.UPLOADED)
+        create_video(211, edit2, Video.Statuses.PENDING)
         # Should not be included
-        edit3 = create_request(112, self.normal_user, status=5)  # later status
+        edit3 = create_request(
+            112, self.normal_user, Request.Statuses.EDITED
+        )  # later status
         edit4 = create_request(
-            113, self.normal_user, status=3
+            113, self.normal_user, Request.Statuses.RECORDED
         )  # good status but wrong status video
-        create_video(213, edit4, status=3)
+        create_video(213, edit4, Video.Statuses.EDITED)
         edit5 = create_request(
-            114, self.normal_user, status=5
+            114, self.normal_user, Request.Statuses.EDITED
         )  # wrong status but good status video
-        create_video(214, edit5, status=1)
+        create_video(214, edit5, Video.Statuses.PENDING)
 
         """
         Case 1: Successful e-mail sending
@@ -342,9 +351,9 @@ class EmailSendingTestCase(APITestCase):
         frozen_time.move_to("2020-12-21 10:20:30")
 
         # Change editing objects
-        edit1.status = 5
+        edit1.status = Request.Statuses.EDITED
         edit1.save()
-        edit2.status = 6
+        edit2.status = Request.Statuses.ARCHIVED
         edit2.save()
 
         # Call management command
@@ -419,11 +428,11 @@ class EmailSendingTestCase(APITestCase):
         self, mock_email_production_manager_unfinished_requests
     ):
         # Setup test Requests
-        not_incl_1 = create_request(100, self.normal_user, 2)
-        not_incl_2 = create_request(101, self.normal_user, 4)
-        not_incl_3 = create_request(102, self.normal_user, 7)
-        incl_1 = create_request(103, self.normal_user, 5)
-        incl_2 = create_request(104, self.normal_user, 6)
+        not_incl_1 = create_request(100, self.normal_user, Request.Statuses.ACCEPTED)
+        not_incl_2 = create_request(101, self.normal_user, Request.Statuses.UPLOADED)
+        not_incl_3 = create_request(102, self.normal_user, Request.Statuses.DONE)
+        incl_1 = create_request(103, self.normal_user, Request.Statuses.EDITED)
+        incl_2 = create_request(104, self.normal_user, Request.Statuses.ARCHIVED)
 
         """
         Case 1: Some unfinished Requests
@@ -498,10 +507,23 @@ class EmailSendingTestCase(APITestCase):
             100, self.normal_user, start="2020-10-05T18:00:00+0100"
         )
         overdue2 = create_request(
-            101, self.normal_user, 4, start="2020-09-29T15:30:00+0100"
+            101,
+            self.normal_user,
+            Request.Statuses.UPLOADED,
+            start="2020-09-29T15:30:00+0100",
         )
-        create_request(102, self.normal_user, 6, start="2020-09-29T15:30:00+0100")
-        create_request(103, self.normal_user, 4, start="2020-11-05T21:00:00+0100")
+        create_request(
+            102,
+            self.normal_user,
+            Request.Statuses.ARCHIVED,
+            start="2020-09-29T15:30:00+0100",
+        )
+        create_request(
+            103,
+            self.normal_user,
+            Request.Statuses.UPLOADED,
+            start="2020-11-05T21:00:00+0100",
+        )
 
         # Set responsible for overdue Requests
         overdue1.responsible = self.staff_user
@@ -544,9 +566,9 @@ class EmailSendingTestCase(APITestCase):
         Case 2: No overdue Request until today
         """
         # Change the previous Request statuses
-        overdue1.status = 5
+        overdue1.status = Request.Statuses.EDITED
         overdue1.save()
-        overdue2.status = 7
+        overdue2.status = Request.Statuses.DONE
         overdue2.save()
 
         # Reset mock

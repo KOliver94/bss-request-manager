@@ -13,7 +13,8 @@ class Command(BaseCommand):
             hour=23, minute=59, second=59, microsecond=999999
         )
         requests = Request.objects.filter(
-            status__range=[1, 2], start_datetime__range=[today_min, today_max]
+            status__range=[Request.Statuses.REQUESTED, Request.Statuses.ACCEPTED],
+            start_datetime__range=[today_min, today_max],
         )
 
         total_sent = 0

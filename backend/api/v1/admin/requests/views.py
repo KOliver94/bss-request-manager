@@ -345,7 +345,10 @@ class RatingAdminListCreateView(generics.ListCreateAPIView):
         Check if the user has already rated a video. If so do not allow multiple ratings.
         A Video cannot be rated before being edited (reached status 3).
         """
-        if get_object_or_404(Video, pk=self.kwargs["video_id"]).status < 3:
+        if (
+            get_object_or_404(Video, pk=self.kwargs["video_id"]).status
+            < Video.Statuses.EDITED
+        ):
             raise ValidationError("The video has not been edited yet.")
 
         if Rating.objects.filter(

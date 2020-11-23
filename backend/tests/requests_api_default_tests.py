@@ -13,8 +13,7 @@ from tests.helpers.video_requests_test_utils import (
     create_request,
     create_video,
 )
-from video_requests.choices import VIDEO_STATUS_CHOICES
-from video_requests.models import Request
+from video_requests.models import Request, Video
 
 BASE_URL = "/api/v1/requests/"
 NOT_EXISTING_ID = 9000
@@ -731,7 +730,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
 
     def test_user_can_get_video_url_after_certain_status(self):
         test_request = create_request(104, self.normal_user)
-        test_video = create_video(307, test_request, 1)
+        test_video = create_video(307, test_request, Video.Statuses.PENDING)
         test_video.additional_data.update(
             {"publishing": {"website": "https://example.com"}}
         )
@@ -741,9 +740,9 @@ class RequestsAPIDefaultTestCase(APITestCase):
         self.authorize_user(self.normal_user)
 
         # Check if it works for all statuses
-        for x in VIDEO_STATUS_CHOICES:
+        for stat in Video.Statuses:
             # Change status
-            test_video.status = x[0]
+            test_video.status = stat
             test_video.save()
 
             # Get video details and check if video_url is present as key
@@ -753,7 +752,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
             self.assertIn("video_url", response.data)
 
             # If status is below 4 no url should be visible
-            if x[0] >= 5:
+            if stat >= Video.Statuses.PUBLISHED:
                 self.assertEqual(response.data["video_url"], "https://example.com")
             else:
                 self.assertIsNone(response.data["video_url"])
@@ -2952,7 +2951,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
         )
 
     def test_user_cannot_rate_video_before_certain_status(self):
-        unfinished_video = create_video(307, self.request1, 3)
+        unfinished_video = create_video(307, self.request1, Video.Statuses.EDITED)
         self.authorize_user(self.normal_user)
         response = self.create_rating(self.request1.id, unfinished_video.id)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

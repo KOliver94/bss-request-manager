@@ -10,7 +10,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         today = localdate()
         overdue_requests = Request.objects.filter(
-            status__range=[1, 4], deadline__lt=today
+            status__range=[Request.Statuses.REQUESTED, Request.Statuses.UPLOADED],
+            deadline__lt=today,
         )
         for request in overdue_requests:
             email_responsible_overdue_request(request)

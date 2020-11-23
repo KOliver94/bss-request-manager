@@ -5,7 +5,9 @@ from django.utils import timezone
 from video_requests.models import Comment, CrewMember, Rating, Request, Video
 
 
-def create_request(request_id, user, status=1, start=None, end=None):
+def create_request(
+    request_id, user, status=Request.Statuses.REQUESTED, start=None, end=None
+):
     request = Request()
     request.id = request_id
     request.title = "Test Request " + str(request_id) + " - " + user.username
@@ -35,7 +37,7 @@ def create_crew(crew_id, request, member, position):
     return crew
 
 
-def create_video(video_id, request, status=6):
+def create_video(video_id, request, status=Video.Statuses.DONE):
     video = Video()
     video.id = video_id
     video.request = request

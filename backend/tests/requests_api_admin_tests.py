@@ -13,6 +13,7 @@ from tests.helpers.video_requests_test_utils import (
     create_request,
     create_video,
 )
+from video_requests.models import Video
 
 BASE_URL = "/api/v1/admin/requests/"
 NOT_EXISTING_ID = 9000
@@ -2657,7 +2658,7 @@ class RequestsAPIAdminTestCase(APITestCase):
         )
 
     def test_user_cannot_rate_video_before_certain_status(self):
-        unedited_video = create_video(504, self.request1, 1)
+        unedited_video = create_video(504, self.request1, Video.Statuses.IN_PROGRESS)
         self.authorize_user(self.admin_user)
         response = self.create_rating(self.request1.id, unedited_video.id)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

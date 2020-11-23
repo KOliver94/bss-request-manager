@@ -10,7 +10,6 @@ from jsonschema import FormatChecker
 from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
 from simple_history.models import HistoricalRecords
-from video_requests.choices import REQUEST_STATUS_CHOICES, VIDEO_STATUS_CHOICES
 from video_requests.schemas import (
     REQUEST_ADDITIONAL_DATA_SCHEMA,
     VIDEO_ADDITIONAL_DATA_SCHEMA,
@@ -37,6 +36,18 @@ class AnnotatedManager(models.Manager):
 
 
 class Request(models.Model):
+    class Statuses(models.IntegerChoices):
+        DENIED = 0, "Elutasítva"
+        REQUESTED = 1, "Felkérés"
+        ACCEPTED = 2, "Elvállalva"
+        RECORDED = 3, "Leforgatva"
+        UPLOADED = 4, "Beírva"
+        EDITED = 5, "Megvágva"
+        ARCHIVED = 6, "Archiválva"
+        DONE = 7, "Lezárva"
+        CANCELED = 9, "Szervezők által lemondva"
+        FAILED = 10, "Meghiúsult"
+
     title = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
     start_datetime = models.DateTimeField()
@@ -44,7 +55,9 @@ class Request(models.Model):
     deadline = models.DateField(blank=True)
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
-    status = models.PositiveSmallIntegerField(choices=REQUEST_STATUS_CHOICES, default=1)
+    status = models.PositiveSmallIntegerField(
+        choices=Statuses.choices, default=Statuses.REQUESTED
+    )
     responsible = models.ForeignKey(
         User,
         related_name="responsible_user",
@@ -89,12 +102,22 @@ class CrewMember(models.Model):
 
 
 class Video(models.Model):
+    class Statuses(models.IntegerChoices):
+        PENDING = 1, "Vágásra vár"
+        IN_PROGRESS = 2, "Vágás alatt"
+        EDITED = 3, "Megvágva"
+        CODED = 4, "Kikódolva"
+        PUBLISHED = 5, "Közzétéve"
+        DONE = 6, "Lezárva"
+
     title = models.CharField(max_length=200)
     request = models.ForeignKey(
         Request, on_delete=models.CASCADE, related_name="videos"
     )
     editor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    status = models.PositiveSmallIntegerField(choices=VIDEO_STATUS_CHOICES, default=1)
+    status = models.PositiveSmallIntegerField(
+        choices=Statuses.choices, default=Statuses.PENDING
+    )
     additional_data = JSONField(
         encoder=DjangoJSONEncoder,
         validators=[validate_video_additional_data],

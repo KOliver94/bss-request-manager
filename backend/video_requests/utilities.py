@@ -1,6 +1,7 @@
 from django.utils.timezone import localtime
 from rest_framework.exceptions import ValidationError
 from video_requests.emails import email_user_video_published
+from video_requests.models import Request, Video
 
 
 def update_request_status(request, called_from_video=False):
@@ -12,55 +13,82 @@ def update_request_status(request, called_from_video=False):
     # If status is not set by admin follow the flow and check if all required data are provided.
     else:
         # Incrementing this status variable if the required part is correct.
-        status = 1
+        status = Request.Statuses.REQUESTED
 
         # Check if request is accepted else consider as denied
         if "accepted" in request.additional_data:
-            status = 2 if request.additional_data["accepted"] is True else 0
+            status = (
+                Request.Statuses.ACCEPTED
+                if request.additional_data["accepted"] is True
+                else Request.Statuses.DENIED
+            )
 
         # If the request is accepted but canceled by requester set the status
-        if 2 <= status < 9 and "canceled" in request.additional_data:
-            status = 9 if request.additional_data["canceled"] is True else status
+        if (
+            Request.Statuses.ACCEPTED <= status <= Request.Statuses.DONE
+            and "canceled" in request.additional_data
+        ):
+            status = (
+                Request.Statuses.CANCELED
+                if request.additional_data["canceled"] is True
+                else status
+            )
 
         # If the request is accepted but we failed to record it set the status
-        if 2 <= status < 9 and "failed" in request.additional_data:
-            status = 10 if request.additional_data["failed"] is True else status
+        if (
+            Request.Statuses.ACCEPTED <= status <= Request.Statuses.DONE
+            and "failed" in request.additional_data
+        ):
+            status = (
+                Request.Statuses.FAILED
+                if request.additional_data["failed"] is True
+                else status
+            )
 
         # If the status is not canceled or failed and the request is accepted check if the end date is earlier than now
-        if 2 <= status < 9 and request.end_datetime < localtime():
-            status = 3
+        if (
+            Request.Statuses.ACCEPTED <= status <= Request.Statuses.DONE
+            and request.end_datetime < localtime()
+        ):
+            status = Request.Statuses.RECORDED
 
         # If path in recording is specified consider as successful recording and update video status
-        if 2 <= status < 9 and "recording" in request.additional_data:
+        if (
+            Request.Statuses.ACCEPTED <= status <= Request.Statuses.DONE
+            and "recording" in request.additional_data
+        ):
             if "path" in request.additional_data["recording"]:
-                status = 4
+                status = Request.Statuses.UPLOADED
                 for video in request.videos.all():
                     update_video_status(video, True)
 
         # If all videos are edited set the request status
-        if status == 4:
+        if status == Request.Statuses.UPLOADED:
             if request.videos.exists() and all(
-                video.status >= 3 for video in request.videos.all()
+                video.status >= Video.Statuses.EDITED for video in request.videos.all()
             ):
-                status = 5
+                status = Request.Statuses.EDITED
 
         # If all videos are done and the recording is copied to Google Drive set the status
-        if status == 5:
+        if status == Request.Statuses.EDITED:
             if (
-                all(video.status == 6 for video in request.videos.all())
+                all(
+                    video.status == Video.Statuses.DONE
+                    for video in request.videos.all()
+                )
                 and "copied_to_gdrive" in request.additional_data["recording"]
             ):
                 status = (
-                    6
+                    Request.Statuses.ARCHIVED
                     if request.additional_data["recording"]["copied_to_gdrive"] is True
                     else status
                 )
 
         # If the recording is removed set the status
-        if status == 6:
+        if status == Request.Statuses.ARCHIVED:
             if "removed" in request.additional_data["recording"]:
                 status = (
-                    7
+                    Request.Statuses.DONE
                     if request.additional_data["recording"]["removed"] is True
                     else status
                 )
@@ -80,38 +108,50 @@ def update_video_status(video, called_from_request=False):
     # If status is not set by admin follow the flow and check if all required data are provided.
     else:
         # Incrementing this status variable if the required part is correct.
-        status = 1
+        status = Video.Statuses.PENDING
 
         # If the the event was recorded and the video has an editor
-        if video.request.status >= 4 and video.editor:
-            status = 2
+        if video.request.status >= Request.Statuses.UPLOADED and video.editor:
+            status = Video.Statuses.IN_PROGRESS
 
         # Check if the editing_done field is True
-        if status == 2 and "editing_done" in video.additional_data:
-            status = 3 if video.additional_data["editing_done"] is True else status
+        if (
+            status == Video.Statuses.IN_PROGRESS
+            and "editing_done" in video.additional_data
+        ):
+            status = (
+                Video.Statuses.EDITED
+                if video.additional_data["editing_done"] is True
+                else status
+            )
 
         # Check if the video is coded on the website
-        if status == 3 and "coding" in video.additional_data:
+        if status == Video.Statuses.EDITED and "coding" in video.additional_data:
             if "website" in video.additional_data["coding"]:
                 status = (
-                    4 if video.additional_data["coding"]["website"] is True else status
+                    Video.Statuses.CODED
+                    if video.additional_data["coding"]["website"] is True
+                    else status
                 )
 
         # Check if the video is published on the website
-        if status == 4 and "publishing" in video.additional_data:
+        if status == Video.Statuses.CODED and "publishing" in video.additional_data:
             if video.additional_data["publishing"].get("website", None):
-                status = 5
+                status = Video.Statuses.PUBLISHED
                 # If the current status of the video is before published send an e-mail to the requester
-                if video.status < 5 and not video.additional_data["publishing"].get(
-                    "email_sent_to_user", False
+                if (
+                    video.status < Video.Statuses.PUBLISHED
+                    and not video.additional_data["publishing"].get(
+                        "email_sent_to_user", False
+                    )
                 ):
                     email_user_video_published.delay(video.id)
 
         # Check if the HQ export has been moved to its place
-        if status == 5 and "archiving" in video.additional_data:
+        if status == Video.Statuses.PUBLISHED and "archiving" in video.additional_data:
             if "hq_archive" in video.additional_data["archiving"]:
                 status = (
-                    6
+                    Video.Statuses.DONE
                     if video.additional_data["archiving"]["hq_archive"] is True
                     else status
                 )

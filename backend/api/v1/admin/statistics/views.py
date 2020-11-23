@@ -52,15 +52,18 @@ class RequestStatisticView(generics.RetrieveAPIView):
 
         instance = {
             "new_requests": Request.objects.filter(
-                status=1, start_datetime__date__lte=to_date
+                status=Request.Statuses.REQUESTED, start_datetime__date__lte=to_date
             ).cache(),
             "in_progress_requests": Request.objects.filter(
-                status__range=[2, 6], start_datetime__date__lte=to_date
+                status__range=[Request.Statuses.ACCEPTED, Request.Statuses.ARCHIVED],
+                start_datetime__date__lte=to_date,
             ).cache(),
             "completed_requests": Request.objects.filter(
-                status=7, start_datetime__date__lte=to_date
+                status=Request.Statuses.DONE, start_datetime__date__lte=to_date
             ).cache(),
-            "upcoming_requests": Request.objects.filter(status=2)
+            "upcoming_requests": Request.objects.filter(
+                status=Request.Statuses.ACCEPTED
+            )
             .order_by("start_datetime")
             .cache(),
             "best_videos": Video.objects.order_by("-avg_rating")

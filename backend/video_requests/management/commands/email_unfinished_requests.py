@@ -7,9 +7,9 @@ class Command(BaseCommand):
     help = "Send email to production manager about unfinished requests"
 
     def handle(self, *args, **options):
-        unfinished_requests = Request.objects.filter(status__range=[5, 6]).order_by(
-            "start_datetime"
-        )
+        unfinished_requests = Request.objects.filter(
+            status__range=[Request.Statuses.EDITED, Request.Statuses.ARCHIVED]
+        ).order_by("start_datetime")
         if unfinished_requests.exists():
             email_production_manager_unfinished_requests(unfinished_requests)
             self.stdout.write(
