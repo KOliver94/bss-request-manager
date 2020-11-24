@@ -58,7 +58,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         frozen_time.move_to("2020-11-21 14:30:20")
         with StringIO() as out:
             call_command("update_request_status", stdout=out)
-            self.assertEquals(
+            self.assertEqual(
                 out.getvalue(), "1 requests was checked for valid status.\n"
             )
         response = self.client.get(f"{self.url}/{request_id}")

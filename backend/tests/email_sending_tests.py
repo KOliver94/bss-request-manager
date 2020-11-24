@@ -66,11 +66,11 @@ class EmailSendingTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertIn(self.normal_user.email, mail.outbox[0].to)
         self.assertIn(self.editor_in_chief.email, mail.outbox[0].bcc)
         self.assertIn(settings.DEFAULT_REPLY_EMAIL, mail.outbox[0].reply_to)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[0].subject, f"{data['title']} | Forgatási felkérésedet fogadtuk"
         )
 
@@ -92,11 +92,11 @@ class EmailSendingTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertIn(data["requester_email"], mail.outbox[0].to)
         self.assertIn(self.editor_in_chief.email, mail.outbox[0].bcc)
         self.assertIn(settings.DEFAULT_REPLY_EMAIL, mail.outbox[0].reply_to)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[0].subject, f"{data['title']} | Forgatási felkérésedet fogadtuk"
         )
 
@@ -123,11 +123,11 @@ class EmailSendingTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertIn(self.normal_user.email, mail.outbox[0].to)
         self.assertIn(self.pr_responsible.email, mail.outbox[0].bcc)
         self.assertIn(settings.DEFAULT_REPLY_EMAIL, mail.outbox[0].reply_to)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[0].subject, f"{video.request.title} | Új videót publikáltunk"
         )
 
@@ -153,11 +153,11 @@ class EmailSendingTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 2)
+        self.assertEqual(len(mail.outbox), 2)
         # User e-mail
         self.assertIn(self.normal_user.email, mail.outbox[0].to)
         self.assertIn(settings.DEFAULT_REPLY_EMAIL, mail.outbox[0].reply_to)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[0].subject, f"{request.title} | Hozzászólás érkezett"
         )
         # Crew e-mail
@@ -165,7 +165,7 @@ class EmailSendingTestCase(APITestCase):
         self.assertIn(crew_member2.email, mail.outbox[1].to)
         self.assertIn(responsible.email, mail.outbox[1].cc)
         self.assertIn(self.editor_in_chief.email, mail.outbox[1].cc)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[1].subject, f"{request.title} | Hozzászólás érkezett"
         )
 
@@ -191,7 +191,7 @@ class EmailSendingTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertNotIn(self.normal_user.email, mail.outbox[0].to)
         self.assertNotIn(self.normal_user.email, mail.outbox[0].cc)
         self.assertNotIn(self.normal_user.email, mail.outbox[0].bcc)
@@ -199,7 +199,7 @@ class EmailSendingTestCase(APITestCase):
         self.assertIn(crew_member2.email, mail.outbox[0].to)
         self.assertIn(responsible.email, mail.outbox[0].cc)
         self.assertIn(self.editor_in_chief.email, mail.outbox[0].cc)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[0].subject, f"{request.title} | Hozzászólás érkezett"
         )
 
@@ -219,7 +219,7 @@ class EmailSendingTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertNotIn(banned_user.email, mail.outbox[0].to)
         self.assertNotIn(banned_user.email, mail.outbox[0].cc)
         self.assertNotIn(banned_user.email, mail.outbox[0].bcc)
@@ -246,7 +246,7 @@ class EmailSendingTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertNotIn(self.normal_user.email, mail.outbox[0].to)
         self.assertNotIn(self.normal_user.email, mail.outbox[0].cc)
         self.assertNotIn(self.normal_user.email, mail.outbox[0].bcc)
@@ -254,7 +254,7 @@ class EmailSendingTestCase(APITestCase):
         self.assertIn(crew_member2.email, mail.outbox[0].to)
         self.assertIn(responsible.email, mail.outbox[0].cc)
         self.assertIn(self.editor_in_chief.email, mail.outbox[0].cc)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[0].subject, f"{request.title} | Hozzászólás érkezett"
         )
 
@@ -318,21 +318,21 @@ class EmailSendingTestCase(APITestCase):
         # Call management command
         with StringIO() as out:
             call_command("email_weekly_tasks", stdout=out)
-            self.assertEquals(
+            self.assertEqual(
                 out.getvalue(), "Weekly tasks email was sent successfully.\n"
             )
 
         # Check if fuction was called with correct parameters
         mock_email_staff_weekly_tasks.assert_called_once()
 
-        self.assertEquals(len(mock_email_staff_weekly_tasks.call_args.args[0]), 2)
+        self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[0]), 2)
         self.assertIn(rec1, mock_email_staff_weekly_tasks.call_args.args[0])
         self.assertIn(rec2, mock_email_staff_weekly_tasks.call_args.args[0])
         self.assertNotIn(rec3, mock_email_staff_weekly_tasks.call_args.args[0])
         self.assertNotIn(rec4, mock_email_staff_weekly_tasks.call_args.args[0])
         self.assertNotIn(rec5, mock_email_staff_weekly_tasks.call_args.args[0])
 
-        self.assertEquals(len(mock_email_staff_weekly_tasks.call_args.args[1]), 2)
+        self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[1]), 2)
         self.assertIn(edit1, mock_email_staff_weekly_tasks.call_args.args[1])
         self.assertIn(edit2, mock_email_staff_weekly_tasks.call_args.args[1])
         self.assertNotIn(edit3, mock_email_staff_weekly_tasks.call_args.args[1])
@@ -340,9 +340,9 @@ class EmailSendingTestCase(APITestCase):
         self.assertNotIn(edit5, mock_email_staff_weekly_tasks.call_args.args[1])
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertIn(settings.WEEKLY_TASK_EMAIL, mail.outbox[0].to)
-        self.assertEquals(mail.outbox[0].subject, "Eheti forgatások és vágandó anyagok")
+        self.assertEqual(mail.outbox[0].subject, "Eheti forgatások és vágandó anyagok")
 
         """
         Case 2: No Request for the week.
@@ -359,7 +359,7 @@ class EmailSendingTestCase(APITestCase):
         # Call management command
         with StringIO() as out:
             call_command("email_weekly_tasks", stdout=out)
-            self.assertEquals(out.getvalue(), "No tasks for this week.\n")
+            self.assertEqual(out.getvalue(), "No tasks for this week.\n")
 
     @freeze_time("2020-11-19 10:20:30", tz_offset=+1, as_kwarg="frozen_time")
     @patch(
@@ -385,7 +385,7 @@ class EmailSendingTestCase(APITestCase):
         # Call management command
         with StringIO() as out:
             call_command("email_daily_reminders", stdout=out)
-            self.assertEquals(
+            self.assertEqual(
                 out.getvalue(),
                 "1 reminders were sent to crew members. There are 2 request(s) today.\n",
             )
@@ -393,7 +393,7 @@ class EmailSendingTestCase(APITestCase):
         # Check if function was called with correct parameters
         mock_email_crew_daily_reminder.assert_called_once()
 
-        self.assertEquals(with_crew, mock_email_crew_daily_reminder.call_args.args[0])
+        self.assertEqual(with_crew, mock_email_crew_daily_reminder.call_args.args[0])
         self.assertNotEquals(
             without_crew, mock_email_crew_daily_reminder.call_args.args[0]
         )
@@ -402,10 +402,10 @@ class EmailSendingTestCase(APITestCase):
         self.assertIn(crew2, mock_email_crew_daily_reminder.call_args.args[1])
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertIn(crew1.member.email, mail.outbox[0].to)
         self.assertIn(crew2.member.email, mail.outbox[0].to)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[0].subject, f"Emlékeztető | {with_crew.title} | Mai forgatás"
         )
 
@@ -418,7 +418,7 @@ class EmailSendingTestCase(APITestCase):
         # Call management command
         with StringIO() as out:
             call_command("email_daily_reminders", stdout=out)
-            self.assertEquals(out.getvalue(), "No reminders for today.\n")
+            self.assertEqual(out.getvalue(), "No reminders for today.\n")
 
     @patch(
         "video_requests.emails.email_production_manager_unfinished_requests",
@@ -441,14 +441,14 @@ class EmailSendingTestCase(APITestCase):
         # Call management command
         with StringIO() as out:
             call_command("email_unfinished_requests", stdout=out)
-            self.assertEquals(
+            self.assertEqual(
                 out.getvalue(), "Unfinished requests email was sent successfully.\n"
             )
 
         # Check if function was called with correct parameters
         mock_email_production_manager_unfinished_requests.assert_called_once()
 
-        self.assertEquals(
+        self.assertEqual(
             len(mock_email_production_manager_unfinished_requests.call_args.args[0]), 2
         )
         self.assertIn(
@@ -471,9 +471,9 @@ class EmailSendingTestCase(APITestCase):
         )
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertIn(self.production_manager.email, mail.outbox[0].to)
-        self.assertEquals(mail.outbox[0].subject, "Lezáratlan anyagok")
+        self.assertEqual(mail.outbox[0].subject, "Lezáratlan anyagok")
 
         """
         Case 2: No unfinished Request
@@ -488,7 +488,7 @@ class EmailSendingTestCase(APITestCase):
         # Call management command
         with StringIO() as out:
             call_command("email_unfinished_requests", stdout=out)
-            self.assertEquals(out.getvalue(), "All requests are finished.\n")
+            self.assertEqual(out.getvalue(), "All requests are finished.\n")
 
         # Check if function was called with correct parameters
         mock_email_production_manager_unfinished_requests.assert_not_called()
@@ -537,28 +537,28 @@ class EmailSendingTestCase(APITestCase):
         # Call management command
         with StringIO() as out:
             call_command("email_overdue_requests", stdout=out)
-            self.assertEquals(
+            self.assertEqual(
                 out.getvalue(),
                 f"Overdue request email was sent successfully. ({overdue1.title})\nOverdue request email was sent successfully. ({overdue2.title})\n",
             )
 
         # Check if function was called with correct parameters
         mock_email_responsible_overdue_request.assert_called()
-        self.assertEquals(mock_email_responsible_overdue_request.call_count, 2)
+        self.assertEqual(mock_email_responsible_overdue_request.call_count, 2)
 
         # Check if e-mail was sent to the right people
-        self.assertEquals(len(mail.outbox), 2)
+        self.assertEqual(len(mail.outbox), 2)
         self.assertIn(self.staff_user.email, mail.outbox[0].to)
         self.assertIn(self.production_manager.email, mail.outbox[0].cc)
         self.assertIn(self.editor_in_chief.email, mail.outbox[0].cc)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[0].subject, f"Lejárt határidejű felkérés - {overdue1.title}"
         )
 
         self.assertIn(new_staff_member.email, mail.outbox[1].to)
         self.assertIn(self.production_manager.email, mail.outbox[1].cc)
         self.assertIn(self.editor_in_chief.email, mail.outbox[1].cc)
-        self.assertEquals(
+        self.assertEqual(
             mail.outbox[1].subject, f"Lejárt határidejű felkérés - {overdue2.title}"
         )
 
@@ -577,7 +577,7 @@ class EmailSendingTestCase(APITestCase):
         # Call management command
         with StringIO() as out:
             call_command("email_overdue_requests", stdout=out)
-            self.assertEquals(
+            self.assertEqual(
                 out.getvalue(),
                 "No overdue request was found.\n",
             )
