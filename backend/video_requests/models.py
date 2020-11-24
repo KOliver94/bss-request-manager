@@ -89,7 +89,7 @@ class Request(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.title} - {self.start_datetime}"
+        return f"{self.title} || {self.start_datetime.date()}"
 
 
 class CrewMember(models.Model):
@@ -98,7 +98,7 @@ class CrewMember(models.Model):
     position = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"{self.request.title} - {self.position} - {self.member.get_full_name()}"
+        return f"{self.request.title} || {self.member.last_name} {self.member.first_name} - {self.position}"
 
 
 class Video(models.Model):
@@ -142,7 +142,7 @@ class Video(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.request.title} - {self.title}"
+        return f"{self.request.title} || {self.title}"
 
 
 class Comment(AbstractComment):
@@ -151,11 +151,11 @@ class Comment(AbstractComment):
     )
 
     def __str__(self):
-        return f"{self.author.get_full_name()} - {self.text}"
+        return f"{self.request.title} || {self.text} - {self.author.last_name} {self.author.first_name}"
 
 
 class Rating(AbstractRating):
     video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="ratings")
 
     def __str__(self):
-        return f"{self.video.title} - {self.author.get_full_name()} ({self.rating})"
+        return f"{self.video.title} || {self.author.last_name} {self.author.first_name} ({self.rating})"

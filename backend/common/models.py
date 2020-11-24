@@ -19,7 +19,7 @@ class UserProfile(models.Model):
     phone_number = PhoneNumberField(blank=True)
 
     def __str__(self):
-        return f"{self.user.username} Profile"
+        return f"{self.user.first_name} {self.user.last_name}'s ({self.user.username}) profile"
 
 
 class AbstractComment(models.Model):

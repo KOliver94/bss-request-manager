@@ -3,7 +3,9 @@ from collections import abc
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event, update_calendar_event
 from django.contrib.auth.models import User
+from django.http import Http404
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, IntegerField
 from rest_framework.generics import get_object_or_404
 from video_requests.emails import email_crew_new_comment, email_user_new_comment
@@ -15,28 +17,37 @@ from video_requests.utilities import (
 )
 
 
-def get_user_by_id(user_id):
+def get_user_by_id(user_id, user_type):
     if user_id:
-        return get_object_or_404(User, pk=user_id)
+        try:
+            return get_object_or_404(User, pk=user_id)
+        except Http404:
+            raise ValidationError(
+                {f"{user_type}_id": "Not found user with the provided ID."}
+            )
     else:
         User.objects.none()
 
 
 def get_editor_from_id(validated_data):
     if "editor_id" in validated_data:
-        validated_data["editor"] = get_user_by_id(validated_data.pop("editor_id"))
+        validated_data["editor"] = get_user_by_id(
+            validated_data.pop("editor_id"), "editor"
+        )
 
 
 def get_responsible_from_id(validated_data):
     if "responsible_id" in validated_data:
         validated_data["responsible"] = get_user_by_id(
-            validated_data.pop("responsible_id")
+            validated_data.pop("responsible_id"), "responsible"
         )
 
 
 def get_member_from_id(validated_data):
     if "member_id" in validated_data:
-        validated_data["member"] = get_user_by_id(validated_data.pop("member_id"))
+        validated_data["member"] = get_user_by_id(
+            validated_data.pop("member_id"), "member"
+        )
 
 
 def check_and_remove_unauthorized_additional_data(additional_data, user, original_data):

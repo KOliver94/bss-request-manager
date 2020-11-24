@@ -255,6 +255,39 @@ class RequestsAPIAdminTestCase(APITestCase):
         self.should_not_found("PATCH", BASE_URL + str(NOT_EXISTING_ID), data_patch)
         self.should_not_found("PUT", BASE_URL + str(NOT_EXISTING_ID), data_put)
 
+    def test_request_add_modify_remove_responsible(self):
+        request = create_request(103, self.normal_user)
+        self.authorize_user(self.admin_user)
+
+        response = self.client.get(f"{BASE_URL}{request.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("responsible", response.data)
+        self.assertIsNone(response.data["responsible"])
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}", {"responsible_id": NOT_EXISTING_ID}
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["responsible_id"], "Not found user with the provided ID."
+        )
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}", {"responsible_id": self.staff_user.id}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("responsible", response.data)
+        self.assertEqual(
+            response.data["responsible"]["username"], self.staff_user.username
+        )
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}", {"responsible_id": None}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("responsible", response.data)
+        self.assertIsNone(response.data["responsible"])
+
     """
     POST /api/v1/admin/requests
     DELETE /api/v1/admin/requests/:id
@@ -1364,6 +1397,39 @@ class RequestsAPIAdminTestCase(APITestCase):
             data_put,
         )
 
+    def test_crew_add_modify_remove_member(self):
+        request = create_request(103, self.normal_user)
+        crew_member = create_crew(303, request, self.admin_user, "Test")
+        self.authorize_user(self.admin_user)
+
+        response = self.client.get(f"{BASE_URL}{request.id}/crew/{crew_member.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("member", response.data)
+        self.assertEqual(response.data["member"]["username"], self.admin_user.username)
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}/crew/{crew_member.id}",
+            {"member_id": NOT_EXISTING_ID},
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["member_id"], "Not found user with the provided ID."
+        )
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}/crew/{crew_member.id}",
+            {"member_id": self.staff_user.id},
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("member", response.data)
+        self.assertEqual(response.data["member"]["username"], self.staff_user.username)
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}/crew/{crew_member.id}", {"member_id": None}
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["member_id"][0], "This field may not be null.")
+
     """
     POST /api/v1/admin/requests/:id/crew
     DELETE /api/v1/admin/requests/:id/crew/:id
@@ -1830,6 +1896,39 @@ class RequestsAPIAdminTestCase(APITestCase):
             BASE_URL + str(NOT_EXISTING_ID) + "/videos/" + str(NOT_EXISTING_ID),
             data_put,
         )
+
+    def test_video_add_modify_remove_editor(self):
+        request = create_request(103, self.normal_user)
+        video = create_video(504, request)
+        self.authorize_user(self.admin_user)
+
+        response = self.client.get(f"{BASE_URL}{request.id}/videos/{video.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("editor", response.data)
+        self.assertIsNone(response.data["editor"])
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}/videos/{video.id}", {"editor_id": NOT_EXISTING_ID}
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["editor_id"], "Not found user with the provided ID."
+        )
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}/videos/{video.id}",
+            {"editor_id": self.staff_user.id},
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("editor", response.data)
+        self.assertEqual(response.data["editor"]["username"], self.staff_user.username)
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}/videos/{video.id}", {"editor_id": None}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("editor", response.data)
+        self.assertIsNone(response.data["editor"])
 
     """
     POST /api/v1/admin/requests/:id/videos

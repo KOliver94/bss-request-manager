@@ -498,3 +498,28 @@ class RequestsUtilitiesTestCase(APITestCase):
             response.data["deadline"],
             str((get_test_data()["end_datetime"] + timedelta(weeks=3)).date()),
         )
+
+    def test_request_additional_data_validation(self):
+        request = create_request(100, self.user)
+        response = self.client.patch(
+            f"{self.url}/{request.id}",
+            {"additional_data": {"randomKey": "randomValue"}},
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(
+            "Additional properties are not allowed ('randomKey' was unexpected)",
+            response.data["additional_data"][0],
+        )
+
+    def test_video_additional_data_validation(self):
+        request = create_request(100, self.user)
+        video = create_video(200, request)
+        response = self.client.patch(
+            f"{self.url}/{request.id}/videos/{video.id}",
+            {"additional_data": {"randomKey": "randomValue"}},
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(
+            "Additional properties are not allowed ('randomKey' was unexpected)",
+            response.data["additional_data"][0],
+        )
