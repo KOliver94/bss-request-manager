@@ -8,7 +8,7 @@ export const requestStatuses = [
   { id: 6, text: 'Archiválva' },
   { id: 7, text: 'Lezárva' },
   { id: 9, text: 'Szervezők által lemondva' },
-  { id: 10, text: 'Meghíusult' },
+  { id: 10, text: 'Meghíúsult' },
 ];
 
 export const videoStatuses = [
