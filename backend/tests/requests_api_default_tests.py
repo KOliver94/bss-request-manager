@@ -3,7 +3,6 @@ from datetime import timedelta
 from django.contrib.auth.models import User
 from django.utils.timezone import localtime
 from rest_framework import status
-from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from tests.helpers.users_test_utils import create_user, get_default_password
@@ -96,8 +95,6 @@ class RequestsAPIDefaultTestCase(APITestCase):
             response = self.client.patch(uri, data)
         elif method == "DELETE":
             response = self.client.delete(uri)
-        else:
-            raise MethodNotAllowed(method)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def assertUnauthorized(self, response):
@@ -110,8 +107,6 @@ class RequestsAPIDefaultTestCase(APITestCase):
             response = self.client.patch(uri, data)
         elif method == "DELETE":
             response = self.client.delete(uri)
-        else:
-            raise MethodNotAllowed(method)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     """
@@ -2875,7 +2870,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
             None,
         )
 
-    def anonymous_cannot_create_and_delete_rating(self):
+    def test_anonymous_cannot_create_and_delete_rating(self):
         data = {"rating": 5, "review": "Great video"}
 
         self.assertUnauthorized(

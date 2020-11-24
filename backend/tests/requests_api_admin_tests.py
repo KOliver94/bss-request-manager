@@ -2,7 +2,6 @@ from datetime import timedelta
 
 from django.utils.timezone import localtime
 from rest_framework import status
-from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from tests.helpers.users_test_utils import create_user, get_default_password
@@ -82,8 +81,6 @@ class RequestsAPIAdminTestCase(APITestCase):
             response = self.client.patch(uri, data)
         elif method == "DELETE":
             response = self.client.delete(uri)
-        else:
-            raise MethodNotAllowed(method)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def access_history(self, uri):
