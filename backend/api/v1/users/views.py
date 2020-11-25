@@ -7,6 +7,7 @@ from api.v1.users.serializers import (
     UserDetailSerializer,
     UserProfileSerializer,
     UserSerializer,
+    UserWorkedOnSerializer,
 )
 from common.pagination import ExtendedPagination
 from common.permissions import (
@@ -41,6 +42,8 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     - phone_number
     """
 
+    queryset = User.objects.all()
+
     def get_serializer_class(self):
         if self.request.method == "GET":
             return UserDetailSerializer
@@ -52,12 +55,6 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
         if self.request.method == "GET":
             return [IsSelfOrStaff()]
         return [IsSelfOrAdmin()]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return User.objects.none()
-        return User.objects.all()
 
     def get_object(self):
         if self.kwargs.get("pk", None) == "me":
@@ -85,9 +82,6 @@ class UserListView(generics.ListAPIView):
     pagination_class = ExtendedPagination
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return User.objects.none()
         queryset = User.objects.all()
         staff = self.request.query_params.get("staff", None)
         admin = self.request.query_params.get("admin", None)
@@ -124,12 +118,7 @@ class StaffUserListView(generics.ListAPIView):
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["id", "last_name", "first_name"]
     ordering = ["last_name"]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return User.objects.none()
-        return User.objects.filter(is_staff=True, is_active=True).cache()
+    queryset = User.objects.filter(is_staff=True, is_active=True).cache()
 
 
 class BanUserView(generics.UpdateAPIView):
@@ -143,12 +132,7 @@ class BanUserView(generics.UpdateAPIView):
 
     permission_classes = [IsAdminUser]
     serializer_class = BanUserSerializer
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return User.objects.none()
-        return User.objects.all()
+    queryset = User.objects.all()
 
     def update(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -166,7 +150,7 @@ class BanUserView(generics.UpdateAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
-class ConnectSocialProfileView(BaseSocialAuthView):
+class ConnectSocialProfileView(BaseSocialAuthView):  # pragma: no cover
     """
     Connect social profile to existing account.
     Works the same as social login but available only for authenticated users.
@@ -177,7 +161,7 @@ class ConnectSocialProfileView(BaseSocialAuthView):
     oauth2_serializer_class_in = ConnectOAuth2ProfileInputSerializer
 
 
-class DisconnectSocialProfileView(generics.DestroyAPIView):
+class DisconnectSocialProfileView(generics.DestroyAPIView):  # pragma: no cover
     """
     Disconnects user's social profile from given provider.
     """
@@ -213,6 +197,7 @@ class UserWorkedOnListView(generics.ListAPIView):
     """
 
     permission_classes = [IsStaffSelfOrAdmin]
+    serializer_class = UserWorkedOnSerializer
     queryset = User.objects.all()
 
     def get_object(self):
@@ -289,4 +274,5 @@ class UserWorkedOnListView(generics.ListAPIView):
                 }
             )
 
-        return Response(worked_on)
+        serializer = self.get_serializer(worked_on, many=True)
+        return Response(serializer.data)

@@ -6,9 +6,11 @@ from video_requests.models import Request, Video
 
 def update_request_status(request, called_from_video=False):
     # Check if the status is set by admin (overwrites everything)
-    if "status_by_admin" in request.additional_data:
-        if "status" in request.additional_data["status_by_admin"]:
-            request.status = request.additional_data["status_by_admin"]["status"]
+    if (
+        "status_by_admin" in request.additional_data
+        and "status" in request.additional_data["status_by_admin"]
+    ):
+        request.status = request.additional_data["status_by_admin"]["status"]
 
     # If status is not set by admin follow the flow and check if all required data are provided.
     else:
@@ -56,42 +58,46 @@ def update_request_status(request, called_from_video=False):
         if (
             Request.Statuses.ACCEPTED <= status <= Request.Statuses.DONE
             and "recording" in request.additional_data
+            and "path" in request.additional_data["recording"]
         ):
-            if "path" in request.additional_data["recording"]:
-                status = Request.Statuses.UPLOADED
-                for video in request.videos.all():
-                    update_video_status(video, True)
+            status = Request.Statuses.UPLOADED
+            for video in request.videos.all():
+                update_video_status(video, True)
 
         # If all videos are edited set the request status
-        if status == Request.Statuses.UPLOADED:
-            if request.videos.exists() and all(
+        if (
+            status == Request.Statuses.UPLOADED
+            and request.videos.exists()
+            and all(
                 video.status >= Video.Statuses.EDITED for video in request.videos.all()
-            ):
-                status = Request.Statuses.EDITED
+            )
+        ):
+            status = Request.Statuses.EDITED
 
         # If all videos are done and the recording is copied to Google Drive set the status
-        if status == Request.Statuses.EDITED:
-            if (
-                all(
-                    video.status == Video.Statuses.DONE
-                    for video in request.videos.all()
-                )
-                and "copied_to_gdrive" in request.additional_data["recording"]
-            ):
-                status = (
-                    Request.Statuses.ARCHIVED
-                    if request.additional_data["recording"]["copied_to_gdrive"] is True
-                    else status
-                )
+        if (
+            status == Request.Statuses.EDITED
+            and all(
+                video.status == Video.Statuses.DONE for video in request.videos.all()
+            )
+            and "copied_to_gdrive" in request.additional_data["recording"]
+        ):
+            status = (
+                Request.Statuses.ARCHIVED
+                if request.additional_data["recording"]["copied_to_gdrive"] is True
+                else status
+            )
 
         # If the recording is removed set the status
-        if status == Request.Statuses.ARCHIVED:
-            if "removed" in request.additional_data["recording"]:
-                status = (
-                    Request.Statuses.DONE
-                    if request.additional_data["recording"]["removed"] is True
-                    else status
-                )
+        if (
+            status == Request.Statuses.ARCHIVED
+            and "removed" in request.additional_data["recording"]
+        ):
+            status = (
+                Request.Statuses.DONE
+                if request.additional_data["recording"]["removed"] is True
+                else status
+            )
 
         # Set the request status to the final score
         request.status = status
@@ -101,9 +107,11 @@ def update_request_status(request, called_from_video=False):
 
 def update_video_status(video, called_from_request=False):
     # Check if the status is set by admin (overwrites everything)
-    if "status_by_admin" in video.additional_data:
-        if "status" in video.additional_data["status_by_admin"]:
-            video.status = video.additional_data["status_by_admin"]["status"]
+    if (
+        "status_by_admin" in video.additional_data
+        and "status" in video.additional_data["status_by_admin"]
+    ):
+        video.status = video.additional_data["status_by_admin"]["status"]
 
     # If status is not set by admin follow the flow and check if all required data are provided.
     else:
@@ -126,35 +134,41 @@ def update_video_status(video, called_from_request=False):
             )
 
         # Check if the video is coded on the website
-        if status == Video.Statuses.EDITED and "coding" in video.additional_data:
-            if "website" in video.additional_data["coding"]:
-                status = (
-                    Video.Statuses.CODED
-                    if video.additional_data["coding"]["website"] is True
-                    else status
-                )
+        if (
+            status == Video.Statuses.EDITED
+            and "coding" in video.additional_data
+            and "website" in video.additional_data["coding"]
+        ):
+            status = (
+                Video.Statuses.CODED
+                if video.additional_data["coding"]["website"] is True
+                else status
+            )
 
         # Check if the video is published on the website
-        if status == Video.Statuses.CODED and "publishing" in video.additional_data:
-            if video.additional_data["publishing"].get("website", None):
-                status = Video.Statuses.PUBLISHED
-                # If the current status of the video is before published send an e-mail to the requester
-                if (
-                    video.status < Video.Statuses.PUBLISHED
-                    and not video.additional_data["publishing"].get(
-                        "email_sent_to_user", False
-                    )
-                ):
-                    email_user_video_published.delay(video.id)
+        if (
+            status == Video.Statuses.CODED
+            and "publishing" in video.additional_data
+            and video.additional_data["publishing"].get("website", None)
+        ):
+            status = Video.Statuses.PUBLISHED
+            # If the current status of the video is before published send an e-mail to the requester
+            if video.status < Video.Statuses.PUBLISHED and not video.additional_data[
+                "publishing"
+            ].get("email_sent_to_user", False):
+                email_user_video_published.delay(video.id)
 
         # Check if the HQ export has been moved to its place
-        if status == Video.Statuses.PUBLISHED and "archiving" in video.additional_data:
-            if "hq_archive" in video.additional_data["archiving"]:
-                status = (
-                    Video.Statuses.DONE
-                    if video.additional_data["archiving"]["hq_archive"] is True
-                    else status
-                )
+        if (
+            status == Video.Statuses.PUBLISHED
+            and "archiving" in video.additional_data
+            and "hq_archive" in video.additional_data["archiving"]
+        ):
+            status = (
+                Video.Statuses.DONE
+                if video.additional_data["archiving"]["hq_archive"] is True
+                else status
+            )
 
         # Set the video status to the final score
         video.refresh_from_db()  # update object from DB because async task might have changed additional_data

@@ -84,3 +84,4 @@ jobs:
           pipenv run python manage.py migrate --no-input
           pipenv run python manage.py collectstatic --no-input --clear --link
           pipenv run python manage.py test --parallel --pattern="*tests.py"
+          pipenv run coverage run manage.py test --parallel --pattern="*tests.py"

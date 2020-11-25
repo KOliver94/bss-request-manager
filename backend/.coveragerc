@@ -1,0 +1,23 @@
+[run]
+branch = True
+source = .
+
+[report]
+fail_under = 90
+ignore_errors = True
+show_missing = True
+skip_covered = True
+omit =
+    api/v1/admin/management/*
+    core/*
+    common/authentication.py
+    common/permissions.py
+    common/social_pipeline.py
+    manage.py
+    tests/*
+    */tests.py
+exclude_lines =
+    pragma: no cover
+    if settings.DEBUG
+    if getattr.*"swagger_fake_view".*
+    return .*[.]none[(][)]

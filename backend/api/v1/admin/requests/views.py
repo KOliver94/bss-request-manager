@@ -67,17 +67,12 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
     filterset_class = RequestFilter
     ordering = ["created"]
     pagination_class = ExtendedPagination
+    queryset = Request.objects.all().cache()
 
     def get_serializer_class(self):
         if self.request.method == "POST":
             return RequestAdminSerializer
         return RequestAdminListSerializer
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Request.objects.none()
-        return Request.objects.all().cache()
 
     def perform_create(self, serializer):
         serializer.save(requester=self.request.user)
@@ -93,12 +88,7 @@ class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = RequestAdminSerializer
     permission_classes = [IsStaffUser]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Request.objects.none()
-        return Request.objects.all()
+    queryset = Request.objects.all()
 
     def destroy(self, request, *args, **kwargs):
         video_request = get_object_or_404(Request, pk=self.kwargs["pk"])
@@ -241,32 +231,28 @@ class VideoAdminListView(generics.ListAPIView):
     pagination_class = ExtendedPagination
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Video.objects.none()
-        else:
-            is_date = False
-            try:
-                last_aired = self.request.query_params.get("last_aired", None)
-                if last_aired and last_aired != "never":
-                    # Check date format only (do not convert to date type)
-                    datetime.strptime(last_aired, "%Y-%m-%d").date()
-                    is_date = True
-            except ValueError:
-                raise ValidationError("Invalid filter.")
+        is_date = False
+        try:
+            last_aired = self.request.query_params.get("last_aired", None)
+            if last_aired and last_aired != "never":
+                # Check date format only (do not convert to date type)
+                datetime.strptime(last_aired, "%Y-%m-%d").date()
+                is_date = True
+        except ValueError:
+            raise ValidationError("Invalid filter.")
 
-            """
-            Additional data's aired part is ordered descending when model instance is being saved.
-            That's why we can use the first element of the array because it will be the most recent date.
-            When aired first element does not exist it's an empty array so it was never aired.
-            The JSON validations are done by the json schema so we don't need to check.
-            """
-            if is_date:
-                return Video.objects.filter(additional_data__aired__0__lte=last_aired)
-            elif last_aired == "never":
-                return Video.objects.filter(additional_data__aired__0__isnull=True)
-            else:
-                return Video.objects.all()
+        """
+        Additional data's aired part is ordered descending when model instance is being saved.
+        That's why we can use the first element of the array because it will be the most recent date.
+        When aired first element does not exist it's an empty array so it was never aired.
+        The JSON validations are done by the json schema so we don't need to check.
+        """
+        if is_date:
+            return Video.objects.filter(additional_data__aired__0__lte=last_aired)
+        elif last_aired == "never":
+            return Video.objects.filter(additional_data__aired__0__isnull=True)
+        else:
+            return Video.objects.all()
 
 
 class VideoAdminListCreateView(generics.ListCreateAPIView):

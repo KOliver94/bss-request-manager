@@ -27,7 +27,7 @@ def get_pr_responsible():
 ##############################
 
 # https://github.com/googleapis/google-api-python-client/issues/325#issuecomment-274349841
-class MemoryCache(Cache):
+class MemoryCache(Cache):  # pragma: no cover
     _CACHE = {}
 
     def get(self, url):
@@ -37,7 +37,7 @@ class MemoryCache(Cache):
         MemoryCache._CACHE[url] = content
 
 
-def get_google_calendar_service():
+def get_google_calendar_service():  # pragma: no cover
     credentials = Credentials.from_service_account_file(
         filename=settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH,
         scopes=["https://www.googleapis.com/auth/calendar"],
@@ -45,7 +45,7 @@ def get_google_calendar_service():
     return build("calendar", "v3", credentials=credentials, cache=MemoryCache())
 
 
-def get_calendar_event_body(request):
+def get_calendar_event_body(request):  # pragma: no cover
     return {
         "summary": request.title,
         "location": request.place,
@@ -62,7 +62,7 @@ def get_calendar_event_body(request):
 
 
 @shared_task
-def create_calendar_event(request_id):
+def create_calendar_event(request_id):  # pragma: no cover
     if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
         return "Missing credentials file for Google Calendar"
     request = Request.objects.get(pk=request_id)
@@ -80,7 +80,7 @@ def create_calendar_event(request_id):
 
 
 @shared_task
-def update_calendar_event(request_id):
+def update_calendar_event(request_id):  # pragma: no cover
     if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
         return "Missing credentials file for Google Calendar"
     request = Request.objects.get(pk=request_id)
@@ -95,7 +95,7 @@ def update_calendar_event(request_id):
 
 
 @shared_task
-def remove_calendar_event(calendar_id):
+def remove_calendar_event(calendar_id):  # pragma: no cover
     if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
         return "Missing credentials file for Google Calendar"
     service = get_google_calendar_service()

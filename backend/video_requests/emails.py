@@ -15,7 +15,7 @@ BASE_URL = settings.BASE_URL
 
 # EmailMultiAlternatives object attributes detailed description
 # https://docs.djangoproject.com/en/3.0/topics/email/#emailmessage-objects
-def debug_email(subject, msg_plain):
+def debug_email(subject, msg_plain):  # pragma: no cover
     return EmailMultiAlternatives(
         subject=subject,
         body=msg_plain,

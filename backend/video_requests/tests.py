@@ -66,7 +66,7 @@ class VideoRequestsTestCase(TestCase):
         self.request.full_clean()
 
         with self.assertRaises(ValidationError) as context:
-            self.request.deadline = self.request.end_datetime
+            self.request.deadline = self.request.end_datetime.date()
             self.request.full_clean()
         self.assertEqual(
             context.exception.messages[0],

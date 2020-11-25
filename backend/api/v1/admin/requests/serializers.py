@@ -44,10 +44,8 @@ def get_responsible_from_id(validated_data):
 
 
 def get_member_from_id(validated_data):
-    if "member_id" in validated_data:
-        validated_data["member"] = get_user_by_id(
-            validated_data.pop("member_id"), "member"
-        )
+    # Member_id is a required field so no need to check if present
+    validated_data["member"] = get_user_by_id(validated_data.pop("member_id"), "member")
 
 
 def check_and_remove_unauthorized_additional_data(additional_data, user, original_data):

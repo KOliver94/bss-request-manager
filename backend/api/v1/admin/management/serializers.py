@@ -1,8 +1,13 @@
 from django_celery_results.models import TaskResult
 from rest_framework import serializers
+from rest_framework.fields import CharField
 
 
-class CeleryTasksSerializer(serializers.ModelSerializer):
+class CeleryTaskSerializer(serializers.Serializer):
+    task_id = CharField()
+
+
+class CeleryTasksResultsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskResult
         fields = (

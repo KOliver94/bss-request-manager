@@ -22,7 +22,7 @@ def create_comment(comment_text, request):
 
 
 class FilteredListSerializer(serializers.ListSerializer):
-    def to_representation(self, data):
+    def to_representation(self, data):  # pragma: no cover
         if data.model is Comment:
             data = data.filter(internal=False)
         elif data.model is Rating:
@@ -216,11 +216,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         user.username = user.email
         user.set_unusable_password()
         user.is_active = False
-        phone_number = (
-            validated_data.pop("requester_mobile")
-            if "requester_mobile" in validated_data
-            else None
-        )
+        phone_number = validated_data.pop("requester_mobile")
 
         if User.objects.filter(email__iexact=user.email).exists():
             # If user with given e-mail address already exist set it as requester but save the provided data.
@@ -229,17 +225,13 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
                 "requester": {
                     "first_name": user.first_name,
                     "last_name": user.last_name,
+                    "phone_number": phone_number.as_e164,
                 }
             }
-            if phone_number:
-                additional_data["requester"].update(
-                    {"phone_number": phone_number.as_e164}
-                )
             return User.objects.get(email__iexact=user.email), additional_data
         else:
             user.save()
-            if phone_number:
-                user.userprofile.phone_number = phone_number
+            user.userprofile.phone_number = phone_number
             user.save()
             return user, None
 

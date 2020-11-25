@@ -1,7 +1,7 @@
 from common.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.fields import BooleanField
+from rest_framework.fields import BooleanField, CharField, DateTimeField
 from rest_social_auth.serializers import OAuth2InputSerializer
 from social_django.models import UserSocialAuth
 
@@ -71,3 +71,10 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
 class ConnectOAuth2ProfileInputSerializer(OAuth2InputSerializer):
     force = serializers.BooleanField(required=False, default=False)
+
+
+class UserWorkedOnSerializer(serializers.Serializer):
+    title = CharField()
+    position = CharField()
+    start_datetime = DateTimeField()
+    end_datetime = DateTimeField()

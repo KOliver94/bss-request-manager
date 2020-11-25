@@ -32,7 +32,7 @@ class ExtendedTokenObtainPairSerializer(TokenObtainPairSerializer):
         return add_custom_claims(token, user)
 
 
-class ExtendedSocialJWTPairOnlyAuthSerializer(JWTPairSerializer):
+class ExtendedSocialJWTPairOnlyAuthSerializer(JWTPairSerializer):  # pragma: no cover
     """ Extended JWT Token serializer with user permissions and groups (Social) """
 
     def get_token(self, user):

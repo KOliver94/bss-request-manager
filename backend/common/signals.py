@@ -19,7 +19,9 @@ def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
 
 
-def populate_user_profile_from_ldap(sender, user=None, ldap_user=None, **kwargs):
+def populate_user_profile_from_ldap(
+    sender, user=None, ldap_user=None, **kwargs
+):  # pragma: no cover
     # Before doing anything check if the user is banned.
     if user and not user._state.adding and user.groups.filter(name="Banned").exists():
         raise AuthenticationFailed(detail="Your user account has been suspended.")
@@ -52,4 +54,6 @@ def populate_user_profile_from_ldap(sender, user=None, ldap_user=None, **kwargs)
     profile.save()  # Save the profile modifications
 
 
-django_auth_ldap.backend.populate_user.connect(populate_user_profile_from_ldap)
+django_auth_ldap.backend.populate_user.connect(
+    populate_user_profile_from_ldap
+)  # pragma: no cover

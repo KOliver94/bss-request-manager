@@ -1,4 +1,7 @@
-from api.v1.admin.management.serializers import CeleryTasksSerializer
+from api.v1.admin.management.serializers import (
+    CeleryTaskSerializer,
+    CeleryTasksResultsSerializer,
+)
 from common.permissions import IsAdminUser
 from core.tasks import scheduled_flush_expired_jwt_tokens, scheduled_sync_ldap_users
 from django_celery_results.models import TaskResult
@@ -15,10 +18,12 @@ class FlushExpiredTokensView(generics.DestroyAPIView):
     """
 
     permission_classes = [IsAdminUser]
+    serializer_class = CeleryTaskSerializer
 
     def delete(self, request, *args, **kwargs):
         task = scheduled_flush_expired_jwt_tokens.delay()
-        return Response(data={"task_id": task.id}, status=status.HTTP_200_OK)
+        serializer = self.get_serializer({"task_id": task.id})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class SyncLdapView(generics.ListAPIView):
@@ -30,10 +35,12 @@ class SyncLdapView(generics.ListAPIView):
     """
 
     permission_classes = [IsAdminUser]
+    serializer_class = CeleryTaskSerializer
 
     def list(self, request, *args, **kwargs):
         task = scheduled_sync_ldap_users.delay()
-        return Response(data={"task_id": task.id}, status=status.HTTP_200_OK)
+        serializer = self.get_serializer({"task_id": task.id})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CeleryTasksView(generics.ListAPIView):
@@ -43,5 +50,5 @@ class CeleryTasksView(generics.ListAPIView):
     """
 
     permission_classes = [IsAdminUser]
-    serializer_class = CeleryTasksSerializer
+    serializer_class = CeleryTasksResultsSerializer
     queryset = TaskResult.objects.all()
