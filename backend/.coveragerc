@@ -15,6 +15,7 @@ omit =
     common/social_pipeline.py
     manage.py
     tests/*
+    */admin.py
     */tests.py
 exclude_lines =
     pragma: no cover
