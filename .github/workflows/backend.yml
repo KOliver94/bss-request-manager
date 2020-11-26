@@ -8,6 +8,7 @@ on:
       - master
     paths:
       - 'backend/**'
+      - '.github/workflows/backend.yml'
 
 jobs:
   backend-test:
@@ -86,6 +87,7 @@ jobs:
           pipenv run coverage run manage.py test --parallel --pattern="*tests.py"
           pipenv run coverage html
       - name: Archive code coverage results
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: code-coverage-report
