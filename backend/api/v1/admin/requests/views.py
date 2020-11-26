@@ -92,11 +92,7 @@ class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         video_request = get_object_or_404(Request, pk=self.kwargs["pk"])
-        if (
-            video_request.additional_data
-            and "calendar_id" in video_request.additional_data
-        ):
-            remove_calendar_event.delay(video_request.additional_data["calendar_id"])
+        remove_calendar_event.delay(video_request.id)
         return super(RequestAdminDetailView, self).destroy(request, *args, **kwargs)
 
 
