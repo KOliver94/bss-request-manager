@@ -83,5 +83,9 @@ jobs:
           pipenv run python manage.py makemigrations --no-input
           pipenv run python manage.py migrate --no-input
           pipenv run python manage.py collectstatic --no-input --clear --link
-          pipenv run python manage.py test --parallel --pattern="*tests.py"
           pipenv run coverage run manage.py test --parallel --pattern="*tests.py"
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report
+          path: htmlcov/
