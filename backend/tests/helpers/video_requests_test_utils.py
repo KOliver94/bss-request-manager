@@ -58,12 +58,12 @@ def create_comment(comment_id, request, user, internal):
     return comment
 
 
-def create_rating(rating_id, video, user):
+def create_rating(rating_id, video, user, rating_num=None):
     rating = Rating()
     rating.id = rating_id
     rating.video = video
     rating.author = user
-    rating.rating = randint(1, 5)
+    rating.rating = rating_num if rating_num else randint(1, 5)
     rating.review = "Sample text - " + user.username
     rating.save()
     return rating

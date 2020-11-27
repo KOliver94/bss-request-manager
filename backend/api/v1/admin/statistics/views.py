@@ -52,7 +52,7 @@ class RequestStatisticView(generics.RetrieveAPIView):
 
         instance = {
             "new_requests": Request.objects.filter(
-                status=Request.Statuses.REQUESTED, start_datetime__date__lte=to_date
+                status=Request.Statuses.REQUESTED, start_datetime__date__gte=to_date
             ).cache(),
             "in_progress_requests": Request.objects.filter(
                 status__range=[Request.Statuses.ACCEPTED, Request.Statuses.ARCHIVED],
@@ -62,7 +62,7 @@ class RequestStatisticView(generics.RetrieveAPIView):
                 status=Request.Statuses.DONE, start_datetime__date__lte=to_date
             ).cache(),
             "upcoming_requests": Request.objects.filter(
-                status=Request.Statuses.ACCEPTED
+                status=Request.Statuses.ACCEPTED, start_datetime__date__gte=to_date
             )
             .order_by("start_datetime")
             .cache(),
@@ -73,9 +73,6 @@ class RequestStatisticView(generics.RetrieveAPIView):
 
         # If from date was specified as a query parameter filter the results
         if from_date:
-            instance["new_requests"] = instance["new_requests"].filter(
-                start_datetime__date__gte=from_date
-            )
             instance["in_progress_requests"] = instance["in_progress_requests"].filter(
                 start_datetime__date__gte=from_date
             )
