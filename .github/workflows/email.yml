@@ -69,6 +69,7 @@ jobs:
       - name: Run tests
         env:
           APP_SECRET_KEY: Sup3r!S3cr3t_R4nd0m/g3N3r4T3d.k3Y
+          BASE_URL_DOMAIN: felkeres.bsstudio.hu
           DATABASE_NAME: github_actions
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres

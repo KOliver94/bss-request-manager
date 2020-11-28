@@ -1,6 +1,7 @@
 from io import StringIO
 from unittest.mock import patch
 
+from decouple import config
 from django.conf import settings
 from django.core import mail
 from django.core.management import call_command
@@ -9,6 +10,7 @@ from django.urls import reverse
 from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.test import APITestCase
+from tests.helpers.test_utils import conditional_override_settings
 from tests.helpers.users_test_utils import create_user, get_default_password
 from tests.helpers.video_requests_test_utils import (
     create_crew,
@@ -23,8 +25,13 @@ from video_requests.emails import (
 )
 from video_requests.models import Request, Video
 
+EMAIL_FILE = config("EMAIL_FILE", default=False, cast=bool)
+
 
 @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+@conditional_override_settings(
+    EMAIL_BACKEND="tests.helpers.test_utils.CombinedEmailBackend", CONDITION=EMAIL_FILE
+)
 class EmailSendingTestCase(APITestCase):
     """
     IMPORTANT: You need to run "python manage.py collectstatic" before running this test case!

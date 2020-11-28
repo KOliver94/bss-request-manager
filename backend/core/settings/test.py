@@ -2,8 +2,6 @@ from datetime import timedelta
 
 from core.settings.common import *
 
-EMAIL_FILE = config("EMAIL_FILE", default=False, cast=bool)
-
 # Use the default Django authentication backend only
 AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
@@ -25,11 +23,11 @@ REST_FRAMEWORK.update(
 CACHEOPS_ENABLED = False
 
 # Do not send real e-mails
-if EMAIL_FILE:
-    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-    EMAIL_FILE_PATH = "logs/emails"
-else:
-    EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
+EMAIL_BACKEND_LIST = [
+    "django.core.mail.backends.filebased.EmailBackend",
+    "django.core.mail.backends.locmem.EmailBackend",
+]
+EMAIL_FILE_PATH = "logs/emails"
 DEBUG_EMAIL = None
 DEFAULT_REPLY_EMAIL = "reply@example.com"
 WEEKLY_TASK_EMAIL = "weekly@example.com"
