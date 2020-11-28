@@ -1,7 +1,7 @@
 {% extends 'email/html/email_base.html' %}
 {% load i18n %}
 {% block title %}Lejárt határidejű felkérés{% endblock %}
-{% block preheader %}Szia! A(z) {{ req.title }} felkérés határideje lejárt, de még nem készült el (minden) videó.{% endblock %}
+{% block preheader %}Szia! A(z) {{ request.title }} felkérés határideje lejárt, de még nem készült el (minden) videó.{% endblock %}
 {% block hero %}Szia!{% endblock %}
 {% block content %}
     <!-- start copy block -->
@@ -19,7 +19,7 @@
                     <td align="left" bgcolor="#ffffff"
                         style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
                         <p style="margin: 0;">
-                            A(z) <strong>{{ req.title }}</strong> felkérés határideje lejárt, de még nem készült el (minden) videó. A felkérés határideje <strong>{% language 'hu' %}{{ req.deadline|date:"N j l" }}{% endlanguage %}</strong> volt.
+                            A(z) <strong>{{ request.title }}</strong> felkérés határideje lejárt, de még nem készült el (minden) videó. A felkérés határideje <strong>{% language 'hu' %}{{ request.deadline|date:"N j l" }}{% endlanguage %}</strong> volt.
                         </p>
                     </td>
                 </tr>
