@@ -8,8 +8,6 @@ from api.v1.users.views import UserListView
 from django.conf import settings
 from django.conf.urls import url
 from django.urls import include, path
-from drf_yasg import openapi
-from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -30,6 +28,9 @@ urlpatterns = [
 ]
 
 if settings.DEBUG and "drf_yasg" in settings.INSTALLED_APPS:
+    from drf_yasg import openapi
+    from drf_yasg.views import get_schema_view
+
     schema_view = get_schema_view(
         openapi.Info(
             title="BSS Request Manager API",

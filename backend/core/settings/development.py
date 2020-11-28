@@ -7,6 +7,9 @@ from core.settings.production import *
 ################################################################################
 
 if DEBUG:
+    SWAGGER = config("SWAGGER", default=False, cast=bool)
+    BROWSABLE_API = config("BROWSABLE_API", default=False, cast=bool)
+
     # Enable local Django user based login
     AUTHENTICATION_BACKENDS += ("django.contrib.auth.backends.ModelBackend",)
 
@@ -23,24 +26,26 @@ if DEBUG:
     else:
         EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
-    # Enable Swagger/ReDoc
-    INSTALLED_APPS += [
-        "drf_yasg",
-    ]
-
-    # Enable Browsable API
-    REST_FRAMEWORK.setdefault("DEFAULT_RENDERER_CLASSES", []).append(
-        "rest_framework.renderers.BrowsableAPIRenderer"
-    )
-
     # Extend JWT access token lifetime
     SIMPLE_JWT.update({"ACCESS_TOKEN_LIFETIME": timedelta(days=5)})
 
-    # Swagger settings
-    # https://drf-yasg.readthedocs.io/en/stable/index.html
-    SWAGGER_SETTINGS = {
-        "USE_SESSION_AUTH": False,
-        "SECURITY_DEFINITIONS": {
-            "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
-        },
-    }
+    if BROWSABLE_API:
+        # Enable Browsable API
+        REST_FRAMEWORK.setdefault("DEFAULT_RENDERER_CLASSES", []).append(
+            "rest_framework.renderers.BrowsableAPIRenderer"
+        )
+
+    if SWAGGER:
+        # Enable Swagger/ReDoc
+        INSTALLED_APPS += [
+            "drf_yasg",
+        ]
+
+        # Swagger settings
+        # https://drf-yasg.readthedocs.io/en/stable/index.html
+        SWAGGER_SETTINGS = {
+            "USE_SESSION_AUTH": False,
+            "SECURITY_DEFINITIONS": {
+                "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
+            },
+        }
