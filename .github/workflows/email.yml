@@ -1,23 +1,16 @@
-name: Backend CI
+name: E-mail
 
 on:
   workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - master
-    paths:
-      - 'backend/**'
-      - '.github/workflows/backend.yml'
 
 jobs:
-  backend-test:
-    name: Backend tests
+  email-test:
+    name: Save sent e-mails as artifacts
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.8, 3.9]
+        python-version: [3.8]
     defaults:
       run:
         working-directory: backend
@@ -80,16 +73,15 @@ jobs:
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
           DJANGO_SETTINGS_MODULE: core.settings.test
+          EMAIL_FILE: True
         run: |
           pipenv run python manage.py makemigrations --no-input
           pipenv run python manage.py migrate --no-input
           pipenv run python manage.py collectstatic --no-input --clear --link
-          pipenv run coverage run manage.py test --pattern="*tests.py"
-          pipenv run coverage report
-          pipenv run coverage html
-      - name: Archive code coverage results
+          pipenv run python manage.py test tests.email_sending_tests
+      - name: Archive sent e-mails
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: code-coverage-report
-          path: backend/htmlcov/
+          name: emails
+          path: backend/logs/emails/
