@@ -57,7 +57,7 @@ class IsSelf(IsAuthenticated):
             return False
 
 
-class IsSelfOrStaff(IsAuthenticated):
+class IsSelfOrStaff(BasePermission):
     """
     Allows access only to admin members and if the authenticated user is
     - Requester of the request OR
@@ -66,6 +66,21 @@ class IsSelfOrStaff(IsAuthenticated):
     - Author of the rating
     - the requested user itself
     """
+
+    def has_permission(self, request, view):
+        """
+        For the User Details Endpoint return Not Authorized
+        for every case when the non-staff user tries to get other user's data.
+        """
+        from api.v1.users.views import UserDetailView
+
+        if isinstance(view, UserDetailView) and (
+            not request.user.is_staff
+            and (view.kwargs["pk"] != "me" and view.kwargs["pk"] != request.user.id)
+        ):
+            return False
+        else:
+            return bool(request.user and request.user.is_authenticated)
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Request):
@@ -80,7 +95,7 @@ class IsSelfOrStaff(IsAuthenticated):
             return False
 
 
-class IsSelfOrAdmin(IsAuthenticated):
+class IsSelfOrAdmin(IsSelfOrStaff):
     """
     Allows access only to admin members and if the authenticated user is
     - Requester of the request OR

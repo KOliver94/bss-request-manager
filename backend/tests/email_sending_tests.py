@@ -140,14 +140,12 @@ class EmailSendingTestCase(APITestCase):
 
     def test_new_comment_email_sent_to_user_and_crew_admin_endpoint_non_internal(self):
         # Setup data - Create a Request, add Crew members and Responsible
-        request = create_request(100, self.normal_user)
         crew_member1 = create_user(is_staff=True)
         crew_member2 = create_user(is_staff=True)
         responsible = create_user(is_staff=True)
+        request = create_request(100, self.normal_user, responsible=responsible)
         create_crew(200, request, crew_member1, "Cameraman")
         create_crew(201, request, crew_member2, "Reporter")
-        request.responsible = responsible
-        request.save()
 
         # New comment data
         data = {"text": "New comment", "internal": False}
@@ -178,14 +176,12 @@ class EmailSendingTestCase(APITestCase):
 
     def test_new_comment_email_sent_to_crew_admin_endpoint_internal(self):
         # Setup data - Create a Request, add Crew members and Responsible
-        request = create_request(100, self.normal_user)
         crew_member1 = create_user(is_staff=True)
         crew_member2 = create_user(is_staff=True)
         responsible = create_user(is_staff=True)
+        request = create_request(100, self.normal_user, responsible=responsible)
         create_crew(200, request, crew_member1, "Cameraman")
         create_crew(201, request, crew_member2, "Reporter")
-        request.responsible = responsible
-        request.save()
 
         # New comment data
         data = {"text": "New comment", "internal": True}
@@ -233,14 +229,12 @@ class EmailSendingTestCase(APITestCase):
 
     def test_new_comment_email_sent_to_crew_default_endpoint(self):
         # Setup data - Create a Request, add Crew members and Responsible
-        request = create_request(100, self.normal_user)
         crew_member1 = create_user(is_staff=True)
         crew_member2 = create_user(is_staff=True)
         responsible = create_user(is_staff=True)
+        request = create_request(100, self.normal_user, responsible=responsible)
         create_crew(200, request, crew_member1, "Cameraman")
         create_crew(201, request, crew_member2, "Reporter")
-        request.responsible = responsible
-        request.save()
 
         # New comment data
         data = {
@@ -511,13 +505,17 @@ class EmailSendingTestCase(APITestCase):
         # Setup test objects
         new_staff_member = create_user(is_staff=True)
         overdue1 = create_request(
-            100, self.normal_user, start="2020-10-05T18:00:00+0100"
+            100,
+            self.normal_user,
+            start="2020-10-05T18:00:00+0100",
+            responsible=self.staff_user,
         )
         overdue2 = create_request(
             101,
             self.normal_user,
             Request.Statuses.UPLOADED,
             start="2020-09-29T15:30:00+0100",
+            responsible=new_staff_member,
         )
         create_request(
             102,
@@ -531,12 +529,6 @@ class EmailSendingTestCase(APITestCase):
             Request.Statuses.UPLOADED,
             start="2020-11-05T21:00:00+0100",
         )
-
-        # Set responsible for overdue Requests
-        overdue1.responsible = self.staff_user
-        overdue1.save()
-        overdue2.responsible = new_staff_member
-        overdue2.save()
 
         """
         Case 1: Some overdue Requests

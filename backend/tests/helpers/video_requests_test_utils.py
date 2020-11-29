@@ -6,11 +6,16 @@ from video_requests.models import Comment, CrewMember, Rating, Request, Video
 
 
 def create_request(
-    request_id, user, status=Request.Statuses.REQUESTED, start=None, end=None
+    request_id,
+    requester,
+    status=Request.Statuses.REQUESTED,
+    start=None,
+    end=None,
+    responsible=None,
 ):
     request = Request()
     request.id = request_id
-    request.title = "Test Request " + str(request_id) + " - " + user.username
+    request.title = "Test Request " + str(request_id) + " - " + requester.username
     request.start_datetime = (
         datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z") if start else timezone.now()
     )
@@ -21,8 +26,10 @@ def create_request(
     )
     request.place = "Test place"
     request.type = "Test type"
-    request.requester = user
+    request.requester = requester
     request.status = status
+    if responsible:
+        request.responsible = responsible
     request.save()
     return request
 
@@ -37,12 +44,14 @@ def create_crew(crew_id, request, member, position):
     return crew
 
 
-def create_video(video_id, request, status=Video.Statuses.DONE):
+def create_video(video_id, request, status=Video.Statuses.DONE, editor=None):
     video = Video()
     video.id = video_id
     video.request = request
     video.title = "Test video - " + str(video_id)
     video.status = status
+    if editor:
+        video.editor = editor
     video.save()
     return video
 

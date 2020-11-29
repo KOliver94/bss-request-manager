@@ -1,17 +1,19 @@
 from common.models import UserProfile
+from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.fields import BooleanField, CharField, DateTimeField
 from rest_social_auth.serializers import OAuth2InputSerializer
-from social_django.models import UserSocialAuth
 
 
 class BanUserSerializer(serializers.Serializer):
-    ban = BooleanField()
+    ban = BooleanField(required=True)
 
 
 class UserSocialProfileSerializer(serializers.ModelSerializer):
     class Meta:
+        from social_django.models import UserSocialAuth
+
         model = UserSocialAuth
         fields = (
             "provider",
@@ -50,9 +52,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserDetailSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer(read_only=True, source="userprofile")
-    social_accounts = UserSocialProfileSerializer(
-        many=True, read_only=True, source="social_auth"
-    )
+    if all(
+        elem in settings.INSTALLED_APPS
+        for elem in ["rest_social_auth", "social_django"]
+    ):  # pragma: no cover
+        social_accounts = UserSocialProfileSerializer(
+            many=True, read_only=True, source="social_auth"
+        )
     groups = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
 
     class Meta:
@@ -64,9 +70,14 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "username",
             "email",
             "profile",
-            "social_accounts",
             "groups",
         )
+
+        if all(
+            elem in settings.INSTALLED_APPS
+            for elem in ["rest_social_auth", "social_django"]
+        ):  # pragma: no cover
+            fields += ("social_accounts",)
 
 
 class ConnectOAuth2ProfileInputSerializer(OAuth2InputSerializer):

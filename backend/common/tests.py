@@ -22,12 +22,8 @@ class CommonTestCase(TestCase):
 
     def test_sentinel_user_on_user_delete(self):
         user = create_user()
-        request = create_request(100, user)
-        request.responsible = user
-        request.save()
-        video = create_video(200, request)
-        video.editor = user
-        video.save()
+        request = create_request(100, user, responsible=user)
+        video = create_video(200, request, editor=user)
         create_crew(300, request, user, "Test")
         create_comment(400, request, user, False)
         create_rating(500, video, user)

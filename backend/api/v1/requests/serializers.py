@@ -22,10 +22,10 @@ def create_comment(comment_text, request):
 
 
 class FilteredListSerializer(serializers.ListSerializer):
-    def to_representation(self, data):  # pragma: no cover
+    def to_representation(self, data):
         if data.model is Comment:
             data = data.filter(internal=False)
-        elif data.model is Rating:
+        elif data.model is Rating:  # pragma: no cover
             data = data.filter(author=self.context["request"].user)
         return super(FilteredListSerializer, self).to_representation(data)
 
