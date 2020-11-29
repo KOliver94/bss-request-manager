@@ -1,7 +1,7 @@
 from time import sleep
 
-from django.urls import reverse
 from rest_framework import status
+from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken
 from tests.helpers.users_test_utils import create_user, get_default_password

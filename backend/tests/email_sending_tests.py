@@ -6,9 +6,9 @@ from django.conf import settings
 from django.core import mail
 from django.core.management import call_command
 from django.test import override_settings
-from django.urls import reverse
 from freezegun import freeze_time
 from rest_framework import status
+from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from tests.helpers.test_utils import conditional_override_settings
 from tests.helpers.users_test_utils import create_user, get_default_password
