@@ -15,11 +15,10 @@ class Command(BaseCommand):
     help = "Syncs LDAP users with Django DB"
 
     def handle(self, *args, **options):
-        # Disable LDAPS certificate checks
-        ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
+        for opt, value in settings.AUTH_LDAP_GLOBAL_OPTIONS.items():
+            ldap.set_option(opt, value)
 
         query = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)  # Set connection URI
-        query.set_option(ldap.OPT_REFERRALS, 0)
         query.bind_s(
             settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD
         )  # Define user credentials

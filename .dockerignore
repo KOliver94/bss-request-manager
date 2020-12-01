@@ -1,22 +1,26 @@
 # Items that don't need to be in a Docker image.
 # Anything not used by the build system should go here.
 .dockerignore
-.flake8
-.git
+.git/
+.github/
 .gitignore
-.idea
 .isort.cfg
 .pre-commit-config.yaml
-.vscode
 Dockerfile
 README.md
+*/.idea/
+*/.vscode/
 
 # Artifacts that will be built during image creation.
 # This should contain all files created during `npm run build`.
 
 # Django
 *.pyc
-__pycache__
+*/__pycache__/
+backend/.coveragerc
+backend/.flake8
+backend/.env
+backend/.env.sample
 
 # React
 */build/

@@ -27,6 +27,17 @@ urlpatterns = [
     path("requests/", include("api.v1.requests.urls")),
 ]
 
+if "health_check" in settings.INSTALLED_APPS:
+    token = (
+        f"/{settings.HEALTH_CHECK_URL_TOKEN}"
+        if hasattr(settings, "HEALTH_CHECK_URL_TOKEN")
+        and settings.HEALTH_CHECK_URL_TOKEN is not None
+        else ""
+    )
+    urlpatterns += [
+        path(f"health{token}", include("health_check.urls")),
+    ]
+
 if settings.DEBUG and "drf_yasg" in settings.INSTALLED_APPS:
     from drf_yasg import openapi
     from drf_yasg.views import get_schema_view

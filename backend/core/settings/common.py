@@ -138,10 +138,6 @@ CELERY_TIMEZONE = config("TIME_ZONE", default="Europe/Budapest")
 # https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html
 
 CELERY_BEAT_SCHEDULE = {
-    "sync_ldap_users": {
-        "task": "core.tasks.scheduled_sync_ldap_users",
-        "schedule": crontab(minute=15, hour=4),
-    },
     "update_request_status": {
         "task": "core.tasks.scheduled_update_request_status",
         "schedule": crontab(minute=10),
@@ -260,4 +256,21 @@ if DJANGO_ADMIN:
     # Enable Django admin
     INSTALLED_APPS += [
         "django.contrib.admin",
+    ]
+
+# Health check
+# https://django-health-check.readthedocs.io/en/stable/
+
+HEALTH_CHECK_ENABLED = config("HEALTH_CHECK", default=True, cast=bool)
+HEALTH_CHECK_URL_TOKEN = config("HEALTH_CHECK_URL_TOKEN", default=None)
+if HEALTH_CHECK_ENABLED:
+    INSTALLED_APPS += [
+        "health_check",
+        "health_check.db",
+        "health_check.cache",
+        "health_check.storage",
+        "health_check.contrib.migrations",
+        "health_check.contrib.celery",
+        "health_check.contrib.celery_ping",
+        "health_check.contrib.redis",
     ]

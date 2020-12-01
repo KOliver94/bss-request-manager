@@ -11,6 +11,7 @@ omit =
     api/v1/admin/management/*
     core/*
     common/authentication.py
+    common/health_checks.py
     common/permissions.py
     common/social_pipeline.py
     manage.py

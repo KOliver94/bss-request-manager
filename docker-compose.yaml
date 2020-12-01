@@ -23,6 +23,12 @@ services:
     depends_on:
       - postgres
       - redis
+    healthcheck:
+      test: ["CMD", "python", "manage.py", "health_check"]
+      interval: 5m
+      timeout: 50s
+      retries: 3
+      start_period: 1m30s
 
   celery-worker:
     restart: always

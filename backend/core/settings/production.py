@@ -68,6 +68,16 @@ AUTH_LDAP_FIND_GROUP_PERMS = True
 # LDAP traffic.
 AUTH_LDAP_CACHE_TIMEOUT = 3600
 
+# Add schedules task to sync users
+CELERY_BEAT_SCHEDULE.update(
+    {
+        "sync_ldap_users": {
+            "task": "core.tasks.scheduled_sync_ldap_users",
+            "schedule": crontab(minute=15, hour=4),
+        }
+    }
+)
+
 # Social (OAuth2) User authentication
 # https://github.com/st4lk/django-rest-social-auth
 # https://python-social-auth.readthedocs.io/en/latest/index.html
