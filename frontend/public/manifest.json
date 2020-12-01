@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "BSS Felkéréskezelő",
+  "name": "Budavári Schönherz Stúdió Felkéréskezelő alkalmazás",
   "icons": [
     {
       "src": "favicon.ico",
