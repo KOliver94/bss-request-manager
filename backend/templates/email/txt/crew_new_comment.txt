@@ -9,4 +9,4 @@ A {{ request_title }} felkéréshez új {% if comment_internal %}belső{% endif 
 Válaszolok: {{ comment_url }}
 
 Üdv:
-Felkérés kezelő robotka
+Felkéréskezelő robotka

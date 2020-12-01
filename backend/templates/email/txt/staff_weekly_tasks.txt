@@ -16,4 +16,4 @@ Anyag neve | Vágó
 {% endif %}
 
 Üdv:
-Felkérés kezelő robotka
+Felkéréskezelő robotka

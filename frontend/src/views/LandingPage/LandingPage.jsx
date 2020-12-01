@@ -26,7 +26,7 @@ export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
     <div>
       <Header
         color="transparent"
-        brand="BSS Felkérés kezelő"
+        brand="BSS Felkéréskezelő"
         rightLinks={
           <HeaderLinks
             isAuthenticated={isAuthenticated}

@@ -128,7 +128,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
       <Header
         absolute
         color="transparent"
-        brand="BSS Felkérés kezelő"
+        brand="BSS Felkéréskezelő"
         rightLinks={<HeaderLinks hideLogin />}
       />
       <div

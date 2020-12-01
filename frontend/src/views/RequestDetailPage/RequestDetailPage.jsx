@@ -122,7 +122,7 @@ export default function RequestDetailPage({
     <div>
       <Header
         color="transparent"
-        brand="BSS Felkérés kezelő"
+        brand="BSS Felkéréskezelő"
         rightLinks={
           <HeaderLinks
             isAuthenticated={isAuthenticated}

@@ -49,7 +49,7 @@ def get_calendar_event_body(request):  # pragma: no cover
     return {
         "summary": request.title,
         "location": request.place,
-        "description": f'További információk a <a href="{settings.BASE_URL}/admin/requests/{request.id}">felkérés kezelőben</a>.',
+        "description": f'További információk a <a href="{settings.BASE_URL}/admin/requests/{request.id}">felkéréskezelőben</a>.',
         "start": {
             "dateTime": request.start_datetime.isoformat(),
             "timeZone": settings.TIME_ZONE,

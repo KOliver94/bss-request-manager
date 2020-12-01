@@ -5,4 +5,4 @@ Ne felejtsd, ma lesz a {{ request_title }} forgatás. Egyeztess a többiekkel is
 Részletek: {{ request_url }}
 
 Üdv:
-Felkérés kezelő robotka
+Felkéréskezelő robotka

@@ -7,4 +7,4 @@ Esemény neve | Dátum
 {% endfor %}
 
 Üdv:
-Felkérés kezelő robotka
+Felkéréskezelő robotka
