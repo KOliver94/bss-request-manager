@@ -155,7 +155,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         color="transparent"
                         disabled={loading}
                       >
-                        <i className="icon-sch" />
+                        <i className="fab icon-sch" />
                       </Button>
                       <Button
                         justIcon
