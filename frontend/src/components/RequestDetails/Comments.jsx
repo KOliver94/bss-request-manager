@@ -31,6 +31,7 @@ import {
   updateCommentAdmin,
   deleteCommentAdmin,
 } from 'api/requestAdminApi';
+import { isAdmin as isAdminCheck } from 'api/loginApi';
 import compareValues from 'api/objectComperator';
 
 const useStyles = makeStyles(() => ({
@@ -287,7 +288,7 @@ export default function Comments({
                       </Tooltip>
                     </Grid>
 
-                    {((isAdmin && localStorage.getItem('role') === 'admin') ||
+                    {((isAdmin && isAdminCheck()) ||
                       comment.author.id.toString() ===
                         localStorage.getItem('user_id')) && (
                       <Grid item className={classes.commentButtons}>

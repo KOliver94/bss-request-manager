@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -11,6 +11,7 @@ import TheatersIcon from '@material-ui/icons/Theaters';
 // background
 import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
+import Badge from 'components/material-kit-react/Badge/Badge';
 import CustomTabs from 'components/material-kit-react/CustomTabs/CustomTabs';
 import Header from 'components/material-kit-react/Header/Header';
 import Footer from 'components/material-kit-react/Footer/Footer';
@@ -29,6 +30,8 @@ import Videos from 'components/RequestDetails/Videos';
 import { getRequest } from 'api/requestApi';
 import { getRequestAdmin } from 'api/requestAdminApi';
 import { listStaffUsers } from 'api/userApi';
+import { requestStatuses } from 'api/enumConstants';
+import { isAdminOrStaff } from 'api/loginApi';
 
 import styles from 'assets/jss/material-kit-react/views/requestDetailPage';
 
@@ -40,6 +43,7 @@ export default function RequestDetailPage({
   isAdmin,
 }) {
   const classes = useStyles();
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -108,15 +112,26 @@ export default function RequestDetailPage({
         setData(result.data);
         setLoading(false);
       } catch (e) {
-        enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
-          variant: 'error',
-          autoHideDuration: 5000,
-        });
+        if (e.response && e.response.status === 404) {
+          if (!isAdmin && isAdminOrStaff()) {
+            history.replace(`/admin/requests/${id}`);
+          } else {
+            history.replace('/404');
+          }
+        } else {
+          enqueueSnackbar(
+            'Nem várt hiba történt. Kérlek próbáld újra később.',
+            {
+              variant: 'error',
+              autoHideDuration: 5000,
+            }
+          );
+        }
       }
     }
 
     loadData(id);
-  }, [id, isAdmin, enqueueSnackbar]);
+  }, [id, isAdmin, enqueueSnackbar, history]);
 
   return (
     <div>
@@ -138,10 +153,19 @@ export default function RequestDetailPage({
       <Parallax small filter image={background}>
         <div className={classes.container}>
           <GridContainer justify="center">
-            <GridItem xs={12} sm={12} md={6} className={classes.textCenter}>
+            <GridItem xs={12} sm={12} md={12} className={classes.textCenter}>
               <h1 className={classes.title}>
                 {loading ? 'Betöltés...' : data.title}
               </h1>
+            </GridItem>
+            <GridItem xs={12} sm={12} md={6} className={classes.textCenter}>
+              <div className={classes.statusBadge}>
+                {!loading && (
+                  <Badge color="primary">
+                    {requestStatuses.find((x) => x.id === data.status).text}
+                  </Badge>
+                )}
+              </div>
             </GridItem>
           </GridContainer>
         </div>

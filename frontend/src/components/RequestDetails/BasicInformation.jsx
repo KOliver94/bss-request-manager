@@ -22,8 +22,6 @@ import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import MUITextField from '@material-ui/core/TextField';
-// Material React Kit components
-import Badge from 'components/material-kit-react/Badge/Badge';
 // Form components
 import { Formik, Form, Field } from 'formik';
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
@@ -39,7 +37,7 @@ import { hu } from 'date-fns/locale';
 import { useSnackbar } from 'notistack';
 // API calls
 import { updateRequestAdmin, deleteRequestAdmin } from 'api/requestAdminApi';
-import { requestStatuses } from 'api/enumConstants';
+import { isAdmin as isAdminCheck } from 'api/loginApi';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -170,11 +168,6 @@ export default function BasicInformation({
               Alapinformációk
             </Typography>
           </Grid>
-          <div className={classes.statusBadge}>
-            <Badge color="primary">
-              {requestStatuses.find((x) => x.id === requestData.status).text}
-            </Badge>
-          </div>
           {isAdmin && (
             <Grid item>
               <IconButton onClick={handleEditing} disabled={loading}>
@@ -207,7 +200,7 @@ export default function BasicInformation({
                 <Form className={classes.form}>
                   <div className={classes.formSectionFirst}>
                     <Typography variant="h6">Részletek</Typography>
-                    {localStorage.getItem('role') === 'admin' && (
+                    {isAdminCheck() && (
                       <>
                         <Field
                           name="additional_data.accepted"
