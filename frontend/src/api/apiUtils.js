@@ -25,9 +25,9 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.code === 'ECONNABORTED') {
-      console.error(`A timeout happend on url ${error.config.url}`);
+      // console.error(`A timeout happend on url ${error.config.url}`);
     } else if (!error.response) {
-      console.error(`${error.message}`);
+      // console.error(`${error.message}`);
     }
 
     // If requests fail with 401 Unauthorized because JWT token is not valid try to get new token with refresh token.
@@ -53,7 +53,7 @@ axiosInstance.interceptors.response.use(
 
           return axiosInstance(originalRequest);
         })
-        .catch((err) => {
+        .catch(() => {
           // If an error occures during token refresh log the user out.
           try {
             // Send the refresh token to the server to blacklist it.
@@ -64,7 +64,7 @@ axiosInstance.interceptors.response.use(
             // Remove tokens and auth header.
             axiosInstance.defaults.headers.Authorization = null;
             localStorage.clear();
-            console.error(`API call failed. User has been logged out. ${err}`);
+            // console.error(`API call failed. User has been logged out. ${err}`);
             window.location.href = '/';
           }
         });

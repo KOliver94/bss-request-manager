@@ -49,7 +49,6 @@ export async function logoutUser() {
       return response;
     })
     .catch((error) => {
-      console.error(`API call failed. ${error}`);
       throw error;
     })
     .finally(() => {
@@ -64,9 +63,7 @@ export function isAuthenticated() {
 
 export function isAdminOrStaff() {
   const role = localStorage.getItem('role');
-  return (
-    role && (role.toLowerCase() === 'admin' || role.toLowerCase() === 'staff')
-  );
+  return role && ['admin', 'staff'].includes(role.toLowerCase());
 }
 
 export function isAdmin() {
