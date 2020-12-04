@@ -25,6 +25,7 @@ import RequestCreatorForm from 'components/RequestCreatorForm/RequestCreatorForm
 // API calls
 import { getUserMe } from 'api/userApi';
 import { createRequest } from 'api/requestApi';
+import handleError from 'api/errorHandler';
 
 import styles from 'assets/jss/material-kit-react/views/requestCreatorPage';
 
@@ -84,7 +85,7 @@ export default function RequestCreatorPage({
         setLoading(false);
       });
     } catch (e) {
-      enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
+      enqueueSnackbar(handleError(e), {
         variant: 'error',
         autoHideDuration: 5000,
       });

@@ -32,6 +32,7 @@ import { getRequestAdmin } from 'api/requestAdminApi';
 import { listStaffUsers } from 'api/userApi';
 import { requestStatuses } from 'api/enumConstants';
 import { isAdminOrStaff } from 'api/loginApi';
+import handleError from 'api/errorHandler';
 
 import styles from 'assets/jss/material-kit-react/views/requestDetailPage';
 
@@ -119,13 +120,10 @@ export default function RequestDetailPage({
             history.replace('/404');
           }
         } else {
-          enqueueSnackbar(
-            'Nem várt hiba történt. Kérlek próbáld újra később.',
-            {
-              variant: 'error',
-              autoHideDuration: 5000,
-            }
-          );
+          enqueueSnackbar(handleError(e), {
+            variant: 'error',
+            autoHideDuration: 5000,
+          });
         }
       }
     }

@@ -65,7 +65,7 @@ axiosInstance.interceptors.response.use(
             axiosInstance.defaults.headers.Authorization = null;
             localStorage.clear();
             // console.error(`API call failed. User has been logged out. ${err}`);
-            window.location.href = '/';
+            window.location.replace('/');
           }
         });
     }

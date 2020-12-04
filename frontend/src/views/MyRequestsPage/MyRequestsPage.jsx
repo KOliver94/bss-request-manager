@@ -35,6 +35,7 @@ import { hu } from 'date-fns/locale';
 import { listRequests } from 'api/requestApi';
 import { listRequestsAdmin } from 'api/requestAdminApi';
 import { requestStatuses } from 'api/enumConstants';
+import handleError from 'api/errorHandler';
 
 import styles from 'assets/jss/material-kit-react/views/myRequestsPage';
 
@@ -64,7 +65,7 @@ export default function MyRequestsPage({
         setData(result.data);
         setLoading(false);
       } catch (e) {
-        enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
+        enqueueSnackbar(handleError(e), {
           variant: 'error',
           autoHideDuration: 5000,
         });

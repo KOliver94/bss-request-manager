@@ -38,6 +38,7 @@ import { useSnackbar } from 'notistack';
 // API calls
 import { updateRequestAdmin, deleteRequestAdmin } from 'api/requestAdminApi';
 import { isAdmin as isAdminCheck } from 'api/loginApi';
+import handleError from 'api/errorHandler';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -130,7 +131,7 @@ export default function BasicInformation({
         setEditing(!editing);
       });
     } catch (e) {
-      enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
+      enqueueSnackbar(handleError(e), {
         variant: 'error',
         autoHideDuration: 5000,
       });
@@ -145,7 +146,7 @@ export default function BasicInformation({
         history.replace('/admin/requests');
       });
     } catch (e) {
-      enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
+      enqueueSnackbar(handleError(e), {
         variant: 'error',
         autoHideDuration: 5000,
       });

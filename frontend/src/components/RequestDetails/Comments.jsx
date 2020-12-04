@@ -33,6 +33,7 @@ import {
 } from 'api/requestAdminApi';
 import { isAdmin as isAdminCheck } from 'api/loginApi';
 import compareValues from 'api/objectComperator';
+import handleError from 'api/errorHandler';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -76,8 +77,8 @@ export default function Comments({
   const [loading, setLoading] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(0);
 
-  const showError = () => {
-    enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
+  const showError = (e) => {
+    enqueueSnackbar(handleError(e), {
       variant: 'error',
       autoHideDuration: 5000,
     });
@@ -119,7 +120,7 @@ export default function Comments({
         resetForm();
       }
     } catch (e) {
-      showError();
+      showError(e);
     }
   };
 
@@ -138,7 +139,7 @@ export default function Comments({
         ),
       });
     } catch (e) {
-      showError();
+      showError(e);
     } finally {
       setLoading(false);
     }

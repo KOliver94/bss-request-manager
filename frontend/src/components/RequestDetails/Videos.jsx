@@ -50,6 +50,7 @@ import {
 import { createRating, updateRating, deleteRating } from 'api/requestApi';
 import { videoStatuses } from 'api/enumConstants';
 import compareValues from 'api/objectComperator';
+import handleError from 'api/errorHandler';
 // Review component
 import ReviewDialog from './ReviewDialog';
 
@@ -127,8 +128,8 @@ export default function Videos({
     return found || { rating: 0, review: '' };
   };
 
-  const showError = () => {
-    enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
+  const showError = (e) => {
+    enqueueSnackbar(handleError(e), {
       variant: 'error',
       autoHideDuration: 5000,
     });
@@ -178,7 +179,7 @@ export default function Videos({
         });
       }
     } catch (e) {
-      showError();
+      showError(e);
     }
   };
 
@@ -191,7 +192,7 @@ export default function Videos({
         videos: requestData.videos.filter((video) => video.id !== videoId),
       });
     } catch (e) {
-      showError();
+      showError(e);
     } finally {
       setVideoDeleteLoading(false);
     }
@@ -254,7 +255,7 @@ export default function Videos({
           });
         }
       } catch (e) {
-        showError();
+        showError(e);
       } finally {
         setRatingLoading(false);
       }
@@ -308,7 +309,7 @@ export default function Videos({
         loading: false,
       });
     } catch (e) {
-      showError();
+      showError(e);
       setRatingRemoveDialog({
         ...ratingRemoveDialog,
         loading: false,

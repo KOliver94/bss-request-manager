@@ -34,6 +34,7 @@ import {
   deleteCrewAdmin,
 } from 'api/requestAdminApi';
 import compareValues from 'api/objectComperator';
+import handleError from 'api/errorHandler';
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -66,8 +67,8 @@ export default function Crew({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [crewMemberDetails, setCrewMemberDetails] = useState({});
 
-  const showError = () => {
-    enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
+  const showError = (e) => {
+    enqueueSnackbar(handleError(e), {
       variant: 'error',
       autoHideDuration: 5000,
     });
@@ -92,7 +93,7 @@ export default function Crew({
       });
       setDialogOpen(false);
     } catch (e) {
-      showError();
+      showError(e);
     }
   };
 
@@ -122,7 +123,7 @@ export default function Crew({
         setCrewMemberDetails({});
       }
     } catch (e) {
-      showError();
+      showError(e);
     } finally {
       setLoading(false);
     }
@@ -137,7 +138,7 @@ export default function Crew({
         crew: requestData.crew.filter((crew) => crew.id !== crewId),
       });
     } catch (e) {
-      showError();
+      showError(e);
     } finally {
       setLoading(false);
     }

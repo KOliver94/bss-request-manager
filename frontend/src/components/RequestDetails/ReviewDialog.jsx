@@ -12,6 +12,7 @@ import { useSnackbar } from 'notistack';
 // API calls
 import { updateRatingAdmin } from 'api/requestAdminApi';
 import { updateRating } from 'api/requestApi';
+import handleError from 'api/errorHandler';
 
 export default function Videos({
   reviewDialogData,
@@ -28,8 +29,8 @@ export default function Videos({
     setReviewData({ review: reviewDialogData.rating.review });
   }, [reviewDialogData]);
 
-  const showError = () => {
-    enqueueSnackbar('Nem várt hiba történt. Kérlek próbáld újra később.', {
+  const showError = (e) => {
+    enqueueSnackbar(handleError(e), {
       variant: 'error',
       autoHideDuration: 5000,
     });
@@ -86,7 +87,7 @@ export default function Videos({
         }),
       });
     } catch (e) {
-      showError();
+      showError(e);
     } finally {
       setLoading(false);
     }
