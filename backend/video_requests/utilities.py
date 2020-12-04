@@ -56,13 +56,13 @@ def update_request_status(request, called_from_video=False):
 
         # If path in recording is specified consider as successful recording and update video status
         if (
-            Request.Statuses.ACCEPTED <= status <= Request.Statuses.DONE
+            status == Request.Statuses.RECORDED
             and "recording" in request.additional_data
             and "path" in request.additional_data["recording"]
         ):
             status = Request.Statuses.UPLOADED
             for video in request.videos.all():
-                update_video_status(video, True)
+                update_video_status(video, True, status)
 
         # If all videos are edited set the request status
         if (
@@ -103,9 +103,12 @@ def update_request_status(request, called_from_video=False):
         request.status = status
 
     request.save()
+    if not called_from_video:
+        for video in request.videos.all():
+            update_video_status(video, True)
 
 
-def update_video_status(video, called_from_request=False):
+def update_video_status(video, called_from_request=False, request_status=1):
     # Check if the status is set by admin (overwrites everything)
     if (
         "status_by_admin" in video.additional_data
@@ -119,7 +122,10 @@ def update_video_status(video, called_from_request=False):
         status = Video.Statuses.PENDING
 
         # If the the event was recorded and the video has an editor
-        if video.request.status >= Request.Statuses.UPLOADED and video.editor:
+        if (
+            max(video.request.status, request_status) >= Request.Statuses.UPLOADED
+            and video.editor
+        ):
             status = Video.Statuses.IN_PROGRESS
 
         # Check if the editing_done field is True
