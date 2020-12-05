@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.utils.timezone import localtime
 from rest_framework.exceptions import ValidationError
 from video_requests.emails import email_user_video_published
@@ -187,6 +189,7 @@ def update_video_status(video, called_from_request=False, request_status=1):
 
 
 def validate_request_date_correlations(instance, data):
+    data = recalculate_deadline(instance, data)
     start_datetime = data.get("start_datetime")
     end_datetime = data.get("end_datetime")
     deadline = data.get("deadline")
@@ -203,3 +206,22 @@ def validate_request_date_correlations(instance, data):
         raise ValidationError("Start time must be earlier than end.")
     if deadline and not (end_datetime.date() < deadline):
         raise ValidationError("Deadline must be later than end of the event.")
+    return data
+
+
+def recalculate_deadline(instance, data):
+    """
+    If we change the end_datetime of an existing video request but
+    - we did not include a deadline in the request body
+    - OR the deadline present is the same as the original
+    - AND the original equal seems to be an automatically calculated one
+    we recalculate the deadline and add 3 weeks to the new end_datetime
+    """
+    end_datetime = data.get("end_datetime")
+    if instance and end_datetime and end_datetime != instance.end_datetime:
+        deadline = data.get("deadline")
+        if (not deadline or deadline == instance.deadline) and (
+            instance.end_datetime + timedelta(weeks=3)
+        ).date() == instance.deadline:
+            data["deadline"] = (end_datetime + timedelta(weeks=3)).date()
+    return data

@@ -389,5 +389,5 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         return request
 
     def validate(self, data):
-        validate_request_date_correlations(self.instance, data)
+        data = validate_request_date_correlations(self.instance, data)
         return data

@@ -499,6 +499,67 @@ class RequestsUtilitiesTestCase(APITestCase):
             str((get_test_data()["end_datetime"] + timedelta(weeks=3)).date()),
         )
 
+    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    def test_request_deadline_recalculate_no_deadline_in_body(self):
+        request = create_request(100, self.user)
+        body = {"end_datetime": "2020-12-31T10:30:00+01:00"}
+        response = self.client.patch(f"{self.url}/{request.id}", body)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["deadline"], "2021-01-21")
+
+    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    def test_request_deadline_recalculate_old_deadline_in_body(self):
+        request = create_request(100, self.user)
+        body = {
+            "end_datetime": "2020-12-31T10:30:00+01:00",
+            "deadline": request.deadline,
+        }
+        response = self.client.patch(f"{self.url}/{request.id}", body)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["deadline"], "2021-01-21")
+
+    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    def test_request_no_deadline_recalculation_custom_original_deadline(self):
+        request = create_request(100, self.user)
+        request.deadline = (request.end_datetime + timedelta(days=5)).date()
+        request.save()
+        body = {"end_datetime": "2020-12-31T10:30:00+01:00"}
+        response = self.client.patch(f"{self.url}/{request.id}", body)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["non_field_errors"][0],
+            "Deadline must be later than end of the event.",
+        )
+        body = {
+            "end_datetime": "2020-12-31T10:30:00+01:00",
+            "deadline": request.deadline,
+        }
+        response = self.client.patch(f"{self.url}/{request.id}", body)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["non_field_errors"][0],
+            "Deadline must be later than end of the event.",
+        )
+
+    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    def test_request_no_deadline_recalculation_no_end_datetime_in_body(self):
+        request = create_request(100, self.user)
+        body = {"start_datetime": request.start_datetime + timedelta(hours=4)}
+        response = self.client.patch(f"{self.url}/{request.id}", body)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["deadline"], str(request.deadline))
+
+    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    def test_request_no_deadline_recalculation_old_end_datetime_in_body(self):
+        request = create_request(100, self.user)
+        body = {
+            "start_datetime": request.start_datetime + timedelta(hours=4),
+            "end_datetime": request.end_datetime,
+        }
+        response = self.client.patch(f"{self.url}/{request.id}", body)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["deadline"], str(request.deadline))
+
     def test_request_additional_data_validation(self):
         request = create_request(100, self.user)
         response = self.client.patch(
