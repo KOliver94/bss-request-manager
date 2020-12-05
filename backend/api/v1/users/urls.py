@@ -6,13 +6,12 @@ from api.v1.users.views import (
     UserDetailView,
     UserWorkedOnListView,
 )
-from django.conf.urls import url
-from django.urls import path
+from django.urls import path, re_path
 
 urlpatterns = [
     path("staff", StaffUserListView.as_view()),
     path("me", UserDetailView.as_view(), kwargs={"pk": "me"}),
-    url(
+    re_path(
         r"^me/connect/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$",
         ConnectSocialProfileView.as_view(),
     ),

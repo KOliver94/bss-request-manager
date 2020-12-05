@@ -5,8 +5,9 @@ verify_ssl = true
 
 [dev-packages]
 coverage = "*"
-pre-commit = "*"
 freezegun = "*"
+pre-commit = "*"
+pytest-django = "*"
 
 [packages]
 celery = {extras = ["redis"],version = "==5.0.3"}

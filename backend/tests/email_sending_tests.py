@@ -395,7 +395,7 @@ class EmailSendingTestCase(APITestCase):
         mock_email_crew_daily_reminder.assert_called_once()
 
         self.assertEqual(with_crew, mock_email_crew_daily_reminder.call_args.args[0])
-        self.assertNotEquals(
+        self.assertNotEqual(
             without_crew, mock_email_crew_daily_reminder.call_args.args[0]
         )
 

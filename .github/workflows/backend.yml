@@ -84,7 +84,7 @@ jobs:
           pipenv run python manage.py makemigrations --no-input
           pipenv run python manage.py migrate --no-input
           pipenv run python manage.py collectstatic --no-input --clear --link
-          pipenv run coverage run manage.py test --pattern="*tests.py"
+          pipenv run coverage pytest
           pipenv run coverage report
           pipenv run coverage html
       - name: Archive code coverage results
