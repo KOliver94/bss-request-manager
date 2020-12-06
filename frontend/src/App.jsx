@@ -10,6 +10,7 @@ import {
   successColor,
   grayColor,
 } from 'assets/jss/material-kit-react';
+import { checkRefreshTokenValid } from './api/loginApi';
 
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 import AdminRoute from './components/AdminRoute';
@@ -51,7 +52,7 @@ const theme = createMuiTheme({
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem('access_token')
+    !!localStorage.getItem('access_token') && checkRefreshTokenValid()
   );
   return (
     <ThemeProvider theme={theme}>

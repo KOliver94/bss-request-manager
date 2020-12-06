@@ -70,3 +70,18 @@ export function isAdmin() {
   const role = localStorage.getItem('role');
   return role && role.toLowerCase() === 'admin';
 }
+
+export function checkRefreshTokenValid() {
+  const refreshToken = localStorage.getItem('refresh_token');
+  if (refreshToken) {
+    const decoded = jwtDecode(refreshToken);
+    const now = Date.now() / 1000;
+    if (decoded && decoded.exp && decoded.exp < now) {
+      axiosInstance.defaults.headers.Authorization = null;
+      localStorage.clear();
+      return false;
+    }
+    return true;
+  }
+  return false;
+}
