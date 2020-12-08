@@ -4,7 +4,7 @@ function handleError(error) {
   }
   if (error.response) {
     if (error.response.status === 400) {
-      return `Hibás kérés. ${error.response.data}`;
+      return `Hibás kérés. ${JSON.stringify(error.response.data)}`;
     }
     if (error.response.status === 401) {
       return 'Hitelesítési hiba. Kérlek jelentkezz be!';
@@ -16,9 +16,11 @@ function handleError(error) {
       return 'A kért objektum nem található. Kérlek frissítsd az oldalt.';
     }
     if (error.response.status === 500) {
-      return 'Belső szerverhiba. Kérlek próbált újra később vagy értesítsd a rendszergazdát.';
+      return 'Belső szerverhiba. Kérlek próbáld újra később vagy értesítsd a rendszergazdát.';
     }
-    return `Nem várt hiba történt. Kérlek próbáld újra később. ${error.response.data}`;
+    return `Nem várt hiba történt. Kérlek próbáld újra később. ${
+      error.response.data && JSON.stringify(error.response.data)
+    }`;
   }
   return `Nem várt hiba történt. Kérlek próbáld újra később. ${error.message}`;
 }
