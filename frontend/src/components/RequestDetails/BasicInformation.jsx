@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 // Material UI components
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -36,8 +38,13 @@ import { hu } from 'date-fns/locale';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
-import { updateRequestAdmin, deleteRequestAdmin } from 'api/requestAdminApi';
-import { isAdmin as isAdminCheck } from 'api/loginApi';
+import {
+  getRequestAdmin,
+  updateRequestAdmin,
+  deleteRequestAdmin,
+} from 'api/requestAdminApi';
+import { getRequest } from 'api/requestApi';
+import { isAdmin as isAdminCheck, isAdminOrStaff } from 'api/loginApi';
 import handleError from 'api/errorHandler';
 
 const useStyles = makeStyles(() => ({
@@ -106,6 +113,29 @@ export default function BasicInformation({
       .required('A videó típusának megadása kötelező'),
   });
 
+  const handleReload = async () => {
+    setLoading(true);
+    try {
+      if (isAdmin) {
+        await getRequestAdmin(requestId).then((response) => {
+          setLoading(false);
+          setRequestData(response.data);
+        });
+      } else {
+        await getRequest(requestId).then((response) => {
+          setLoading(false);
+          setRequestData(response.data);
+        });
+      }
+    } catch (e) {
+      enqueueSnackbar(handleError(e), {
+        variant: 'error',
+        autoHideDuration: 5000,
+      });
+      setLoading(false);
+    }
+  };
+
   const handleEditing = () => {
     if (formRef.current && editing) {
       formRef.current.submitForm();
@@ -154,6 +184,14 @@ export default function BasicInformation({
     }
   };
 
+  const changeView = () => {
+    if (isAdmin) {
+      history.replace(`/my-requests/${requestId}`);
+    } else {
+      history.replace(`/admin/requests/${requestId}`);
+    }
+  };
+
   return (
     <div>
       <div>
@@ -169,22 +207,37 @@ export default function BasicInformation({
               Alapinformációk
             </Typography>
           </Grid>
-          {isAdmin && (
-            <Grid item>
-              <IconButton onClick={handleEditing} disabled={loading}>
-                {editing ? <CheckIcon /> : <EditIcon />}
-              </IconButton>
-              {editing ? (
-                <IconButton onClick={handleDiscard} disabled={loading}>
-                  <ClearIcon />
-                </IconButton>
-              ) : (
-                <IconButton onClick={handleDelete} disabled={loading}>
-                  <DeleteForeverIcon />
+          <Grid item>
+            {!editing &&
+              isAdminOrStaff() &&
+              requestData.requester.id.toString() ===
+                localStorage.getItem('user_id') && (
+                <IconButton onClick={changeView} disabled={loading}>
+                  <VisibilityIcon />
                 </IconButton>
               )}
-            </Grid>
-          )}
+            {!editing && (
+              <IconButton onClick={handleReload} disabled={loading}>
+                <RefreshIcon />
+              </IconButton>
+            )}
+            {isAdmin && (
+              <>
+                <IconButton onClick={handleEditing} disabled={loading}>
+                  {editing ? <CheckIcon /> : <EditIcon />}
+                </IconButton>
+                {editing ? (
+                  <IconButton onClick={handleDiscard} disabled={loading}>
+                    <ClearIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={handleDelete} disabled={loading}>
+                    <DeleteForeverIcon />
+                  </IconButton>
+                )}
+              </>
+            )}
+          </Grid>
         </Grid>
       </div>
       <Divider variant="middle" />
