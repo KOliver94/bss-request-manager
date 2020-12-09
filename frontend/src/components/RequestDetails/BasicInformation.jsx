@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // Material UI components
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -212,28 +213,50 @@ export default function BasicInformation({
               isAdminOrStaff() &&
               requestData.requester.id.toString() ===
                 localStorage.getItem('user_id') && (
-                <IconButton onClick={changeView} disabled={loading}>
-                  <VisibilityIcon />
-                </IconButton>
+                <Tooltip
+                  title={
+                    isAdmin
+                      ? 'Megtekintés felkérőként'
+                      : 'Megtekintés adminként'
+                  }
+                  placement="top"
+                  arrow
+                >
+                  <IconButton onClick={changeView} disabled={loading}>
+                    <VisibilityIcon />
+                  </IconButton>
+                </Tooltip>
               )}
             {!editing && (
-              <IconButton onClick={handleReload} disabled={loading}>
-                <RefreshIcon />
-              </IconButton>
+              <Tooltip title="Frissítés" placement="top" arrow>
+                <IconButton onClick={handleReload} disabled={loading}>
+                  <RefreshIcon />
+                </IconButton>
+              </Tooltip>
             )}
             {isAdmin && (
               <>
-                <IconButton onClick={handleEditing} disabled={loading}>
-                  {editing ? <CheckIcon /> : <EditIcon />}
-                </IconButton>
+                <Tooltip
+                  title={editing ? 'Mentés' : 'Szerkesztés'}
+                  placement="top"
+                  arrow
+                >
+                  <IconButton onClick={handleEditing} disabled={loading}>
+                    {editing ? <CheckIcon /> : <EditIcon />}
+                  </IconButton>
+                </Tooltip>
                 {editing ? (
-                  <IconButton onClick={handleDiscard} disabled={loading}>
-                    <ClearIcon />
-                  </IconButton>
+                  <Tooltip title="Elvetés" placement="top" arrow>
+                    <IconButton onClick={handleDiscard} disabled={loading}>
+                      <ClearIcon />
+                    </IconButton>
+                  </Tooltip>
                 ) : (
-                  <IconButton onClick={handleDelete} disabled={loading}>
-                    <DeleteForeverIcon />
-                  </IconButton>
+                  <Tooltip title="Törlés" placement="top" arrow>
+                    <IconButton onClick={handleDelete} disabled={loading}>
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Tooltip>
                 )}
               </>
             )}

@@ -93,6 +93,9 @@ const signupPageStyle = {
     padding: '8px 36px',
     margin: '5px 1px',
   },
+  tooltip: {
+    margin: 0,
+  },
 };
 
 export default signupPageStyle;

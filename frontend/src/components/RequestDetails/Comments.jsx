@@ -189,7 +189,7 @@ export default function Comments({
                       }
                       validationSchema={validationSchema}
                     >
-                      {({ isSubmitting, errors, touched }) => (
+                      {({ isSubmitting, values, errors, touched }) => (
                         <Form>
                           <Grid container wrap="nowrap" spacing={2}>
                             <Grid item>
@@ -217,31 +217,41 @@ export default function Comments({
                             </Grid>
                             <Grid item className={classes.commentButtons}>
                               {isAdmin && (
-                                <Grid item>
-                                  <Field
-                                    component={Checkbox}
-                                    type="checkbox"
-                                    name="internal"
-                                    icon={<LockOpenIcon />}
-                                    checkedIcon={<LockIcon />}
-                                  />
-                                </Grid>
+                                <Tooltip
+                                  title={values.internal ? 'Belső' : 'Publikus'}
+                                  placement="left"
+                                  arrow
+                                >
+                                  <Grid item>
+                                    <Field
+                                      component={Checkbox}
+                                      type="checkbox"
+                                      name="internal"
+                                      icon={<LockOpenIcon />}
+                                      checkedIcon={<LockIcon />}
+                                    />
+                                  </Grid>
+                                </Tooltip>
                               )}
                               <Grid item>
-                                <IconButton
-                                  onClick={handleCancel}
-                                  disabled={isSubmitting}
-                                >
-                                  <ClearIcon />
-                                </IconButton>
+                                <Tooltip title="Elvetés" placement="left" arrow>
+                                  <IconButton
+                                    onClick={handleCancel}
+                                    disabled={isSubmitting}
+                                  >
+                                    <ClearIcon />
+                                  </IconButton>
+                                </Tooltip>
                               </Grid>
                               <Grid item>
-                                <IconButton
-                                  type="submit"
-                                  disabled={isSubmitting}
-                                >
-                                  <SendIcon />
-                                </IconButton>
+                                <Tooltip title="Mentés" placement="left" arrow>
+                                  <IconButton
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                  >
+                                    <SendIcon />
+                                  </IconButton>
+                                </Tooltip>
                               </Grid>
                             </Grid>
                           </Grid>
@@ -295,20 +305,24 @@ export default function Comments({
                         localStorage.getItem('user_id')) && (
                       <Grid item className={classes.commentButtons}>
                         <Grid item>
-                          <IconButton
-                            onClick={() => handleDelete(comment.id)}
-                            disabled={loading}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
+                          <Tooltip title="Törlés" placement="left" arrow>
+                            <IconButton
+                              onClick={() => handleDelete(comment.id)}
+                              disabled={loading}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
                         </Grid>
                         <Grid item>
-                          <IconButton
-                            onClick={() => handleEdit(comment.id)}
-                            disabled={loading}
-                          >
-                            <EditIcon />
-                          </IconButton>
+                          <Tooltip title="Szerkesztés" placement="left" arrow>
+                            <IconButton
+                              onClick={() => handleEdit(comment.id)}
+                              disabled={loading}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
                         </Grid>
                       </Grid>
                     )}
@@ -332,7 +346,7 @@ export default function Comments({
           }
           validationSchema={validationSchema}
         >
-          {({ isSubmitting, errors, touched }) => (
+          {({ isSubmitting, values, errors, touched }) => (
             <Form>
               <Grid container wrap="nowrap" spacing={2}>
                 <Grid item>
@@ -357,20 +371,28 @@ export default function Comments({
                 </Grid>
                 <Grid item className={classes.commentButtons}>
                   {isAdmin && (
-                    <Grid item>
-                      <Field
-                        component={Checkbox}
-                        type="checkbox"
-                        name="internal"
-                        icon={<LockOpenIcon />}
-                        checkedIcon={<LockIcon />}
-                      />
-                    </Grid>
+                    <Tooltip
+                      title={values.internal ? 'Belső' : 'Publikus'}
+                      placement="left"
+                      arrow
+                    >
+                      <Grid item>
+                        <Field
+                          component={Checkbox}
+                          type="checkbox"
+                          name="internal"
+                          icon={<LockOpenIcon />}
+                          checkedIcon={<LockIcon />}
+                        />
+                      </Grid>
+                    </Tooltip>
                   )}
                   <Grid item>
-                    <IconButton type="submit" disabled={isSubmitting}>
-                      <SendIcon />
-                    </IconButton>
+                    <Tooltip title="Küldés" placement="left" arrow>
+                      <IconButton type="submit" disabled={isSubmitting}>
+                        <SendIcon />
+                      </IconButton>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </Grid>

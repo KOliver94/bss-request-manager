@@ -26,6 +26,7 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
+import Tooltip from '@material-ui/core/Tooltip';
 import { makeStyles } from '@material-ui/core/styles';
 import MUITextField from '@material-ui/core/TextField';
 // Material React Kit components
@@ -88,6 +89,9 @@ const useStyles = makeStyles((theme) => ({
   ratingLabel: {
     fontSize: 'inherit',
     color: 'inherit',
+  },
+  tooltip: {
+    marginRight: 5,
   },
 }));
 
@@ -476,13 +480,20 @@ export default function Videos({
                           video.status >= 3 ? classes.adminEditButtons : null
                         }
                       >
-                        <IconButton
-                          onClick={() => handleDelete(video.id)}
-                          disabled={isSubmitting || videoDeleteLoading}
-                          size="small"
+                        <Tooltip
+                          title="Törlés"
+                          classes={classes}
+                          placement="left"
+                          arrow
                         >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
+                          <IconButton
+                            onClick={() => handleDelete(video.id)}
+                            disabled={isSubmitting || videoDeleteLoading}
+                            size="small"
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
                         <Button
                           size="small"
                           onClick={resetForm}
@@ -526,13 +537,20 @@ export default function Videos({
                   {!isAdmin && <Divider />}
                   <AccordionActions>
                     {getOwnRatingForVideo(video).rating > 0 && (
-                      <IconButton
-                        onClick={() => handleReview(video)}
-                        disabled={reviewDialogData.open || ratingLoading}
-                        size="small"
+                      <Tooltip
+                        title="Szöveges értékelés írása"
+                        classes={classes}
+                        placement="left"
+                        arrow
                       >
-                        <RateReviewIcon fontSize="small" />
-                      </IconButton>
+                        <IconButton
+                          onClick={() => handleReview(video)}
+                          disabled={reviewDialogData.open || ratingLoading}
+                          size="small"
+                        >
+                          <RateReviewIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     )}
                     <Rating
                       name={`${video.id}-own-rating`}
@@ -562,13 +580,15 @@ export default function Videos({
       )}
       {isAdmin && (
         <>
-          <Fab
-            color="primary"
-            onClick={handleCreateVideoDialogOpen}
-            className={classes.fab}
-          >
-            <AddIcon />
-          </Fab>
+          <Tooltip title="Új videó hozzáadása" arrow>
+            <Fab
+              color="primary"
+              onClick={handleCreateVideoDialogOpen}
+              className={classes.fab}
+            >
+              <AddIcon />
+            </Fab>
+          </Tooltip>
           <Dialog
             open={createVideoDialogOpen}
             onClose={handleCreateVideoDialogClose}

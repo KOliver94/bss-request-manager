@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Icon from '@material-ui/core/Icon';
+import Tooltip from '@material-ui/core/Tooltip';
 // @material-ui/icons
 import People from '@material-ui/icons/People';
 // notistack (Material UI Snackbars)
@@ -147,36 +148,57 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Bejelentkezés felkérőknek</h4>
                     <div className={classes.socialLine}>
-                      <Button
-                        justIcon
-                        href={process.env.REACT_APP_AUTHSCH_OAUTH_URL}
-                        onClick={handleButtonClick}
-                        target="_self"
-                        color="transparent"
-                        disabled={loading}
+                      <Tooltip
+                        title="AuthSCH"
+                        classes={classes}
+                        placement="top"
+                        arrow
                       >
-                        <i className="fab icon-sch" />
-                      </Button>
-                      <Button
-                        justIcon
-                        href={process.env.REACT_APP_FACEBOOK_OAUTH_URL}
-                        onClick={handleButtonClick}
-                        target="_self"
-                        color="transparent"
-                        disabled={loading}
+                        <Button
+                          justIcon
+                          href={process.env.REACT_APP_AUTHSCH_OAUTH_URL}
+                          onClick={handleButtonClick}
+                          target="_self"
+                          color="transparent"
+                          disabled={loading}
+                        >
+                          <i className="fab icon-sch" />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip
+                        title="Facebook"
+                        classes={classes}
+                        placement="top"
+                        arrow
                       >
-                        <i className="fab fa-facebook" />
-                      </Button>
-                      <Button
-                        justIcon
-                        href={process.env.REACT_APP_GOOGLE_OAUTH_URL}
-                        onClick={handleButtonClick}
-                        target="_self"
-                        color="transparent"
-                        disabled={loading}
+                        <Button
+                          justIcon
+                          href={process.env.REACT_APP_FACEBOOK_OAUTH_URL}
+                          onClick={handleButtonClick}
+                          target="_self"
+                          color="transparent"
+                          disabled={loading}
+                        >
+                          <i className="fab fa-facebook" />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip
+                        title="Google"
+                        classes={classes}
+                        placement="top"
+                        arrow
                       >
-                        <i className="fab fa-google" />
-                      </Button>
+                        <Button
+                          justIcon
+                          href={process.env.REACT_APP_GOOGLE_OAUTH_URL}
+                          onClick={handleButtonClick}
+                          target="_self"
+                          color="transparent"
+                          disabled={loading}
+                        >
+                          <i className="fab fa-google" />
+                        </Button>
+                      </Tooltip>
                     </div>
                   </CardHeader>
                   <p className={classes.divider}>valamint BSS Tagoknak</p>

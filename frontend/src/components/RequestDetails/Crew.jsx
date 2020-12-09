@@ -19,6 +19,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 import { makeStyles } from '@material-ui/core/styles';
 // Form components
 import { Formik, Form, Field } from 'formik';
@@ -215,33 +216,41 @@ export default function Crew({
                       <TableCell align="right">
                         {editingCrewId === crewMember.id ? (
                           <>
-                            <IconButton
-                              onClick={() => handleEditSubmit()}
-                              disabled={loading}
-                            >
-                              <CheckIcon />
-                            </IconButton>
-                            <IconButton
-                              onClick={handleCancel}
-                              disabled={loading}
-                            >
-                              <ClearIcon />
-                            </IconButton>
+                            <Tooltip title="Mentés" arrow>
+                              <IconButton
+                                onClick={() => handleEditSubmit()}
+                                disabled={loading}
+                              >
+                                <CheckIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Elvetés" arrow>
+                              <IconButton
+                                onClick={handleCancel}
+                                disabled={loading}
+                              >
+                                <ClearIcon />
+                              </IconButton>
+                            </Tooltip>
                           </>
                         ) : (
                           <>
-                            <IconButton
-                              onClick={() => handleEdit(crewMember.id)}
-                              disabled={loading}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton
-                              onClick={() => handleDelete(crewMember.id)}
-                              disabled={loading}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
+                            <Tooltip title="Szerkesztés" arrow>
+                              <IconButton
+                                onClick={() => handleEdit(crewMember.id)}
+                                disabled={loading}
+                              >
+                                <EditIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Törlés" arrow>
+                              <IconButton
+                                onClick={() => handleDelete(crewMember.id)}
+                                disabled={loading}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </Tooltip>
                           </>
                         )}
                       </TableCell>
@@ -251,9 +260,15 @@ export default function Crew({
             </Table>
           </TableContainer>
         )}
-        <Fab color="primary" onClick={handleDialogOpen} className={classes.fab}>
-          <AddIcon />
-        </Fab>
+        <Tooltip title="Új stábtag hozzáadása" arrow>
+          <Fab
+            color="primary"
+            onClick={handleDialogOpen}
+            className={classes.fab}
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
         <Dialog
           open={dialogOpen}
           onClose={handleDialogClose}
