@@ -283,6 +283,7 @@ export default function Comments({
                             new Date(),
                             {
                               locale: hu,
+                              addSuffix: true,
                             }
                           )}
                         </p>
