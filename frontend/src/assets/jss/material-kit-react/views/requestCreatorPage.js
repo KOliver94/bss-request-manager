@@ -58,9 +58,7 @@ const requestCreatorPage = {
     textAlign: 'center',
   },
   contentBox: {
-    paddingTop: '15px',
     textAlign: 'center',
-    color: 'black',
   },
   circularProgress: {
     marginTop: '70px',
@@ -77,6 +75,9 @@ const requestCreatorPage = {
     left: '50%',
     marginTop: -12,
     marginLeft: '40px',
+  },
+  button: {
+    marginTop: '15px',
   },
 };
 

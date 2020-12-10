@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -59,11 +60,13 @@ export default function RequestCreatorPage({
   setIsAuthenticated,
 }) {
   const classes = useStyles();
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState(formInitialState);
   const [loading, setLoading] = useState(true);
+  const [requestId, setRequestId] = useState(0);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -77,12 +80,19 @@ export default function RequestCreatorPage({
     window.location.reload();
   };
 
+  const handleShowCreated = () => {
+    if (requestId) {
+      history.push(`/my-requests/${requestId}`);
+    }
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await createRequest(formData).then(() => {
+      await createRequest(formData).then((response) => {
         handleNext();
         setLoading(false);
+        setRequestId(response.data.id);
       });
     } catch (e) {
       enqueueSnackbar(handleError(e), {
@@ -189,23 +199,30 @@ export default function RequestCreatorPage({
                     setFormData={setFormData}
                     handleNext={handleNext}
                     handleBack={handleBack}
+                    setActiveStep={setActiveStep}
+                    isAuthenticated={isAuthenticated}
                   />
                 </GridItem>
               </GridContainer>
               <GridContainer justify="center">
-                <GridItem xs={12} sm={12} md={4} className={classes.textCenter}>
+                <GridItem xs={12} sm={12} className={classes.textCenter}>
                   {activeStep < steps.length ? (
                     <>
                       {activeStep === steps.length - 1 && (
                         <>
                           <div className={classes.wrapper}>
-                            <Button onClick={handleBack} disabled={loading}>
+                            <Button
+                              onClick={handleBack}
+                              disabled={loading}
+                              className={classes.button}
+                            >
                               Vissza
                             </Button>
                             <Button
                               onClick={handleSubmit}
                               color="success"
                               disabled={loading}
+                              className={classes.button}
                             >
                               Küldés
                             </Button>
@@ -224,6 +241,11 @@ export default function RequestCreatorPage({
                       <Button onClick={handleReset} color="primary">
                         Új felkérés beküldése
                       </Button>
+                      {isAuthenticated && (
+                        <Button onClick={handleShowCreated} color="info">
+                          Felkérés megtekintése
+                        </Button>
+                      )}
                     </>
                   )}
                 </GridItem>

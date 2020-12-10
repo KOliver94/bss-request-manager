@@ -12,6 +12,8 @@ const RequestCreatorForm = ({
   setFormData,
   handleNext,
   handleBack,
+  setActiveStep,
+  isAuthenticated,
 }) => {
   switch (step) {
     case 0:
@@ -41,7 +43,13 @@ const RequestCreatorForm = ({
         />
       );
     case 3:
-      return <Summary formData={formData} />;
+      return (
+        <Summary
+          formData={formData}
+          setActiveStep={setActiveStep}
+          isAuthenticated={isAuthenticated}
+        />
+      );
     default:
       return <Success />;
   }
@@ -53,6 +61,8 @@ RequestCreatorForm.propTypes = {
   setFormData: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
   handleBack: PropTypes.func.isRequired,
+  setActiveStep: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
 };
 
 export default RequestCreatorForm;
