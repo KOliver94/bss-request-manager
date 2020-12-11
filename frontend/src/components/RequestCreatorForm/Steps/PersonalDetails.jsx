@@ -32,7 +32,12 @@ const validationSchema = Yup.object({
     .required('A telefonszám megadása kötelező'),
 });
 
-const PersonalDetails = ({ formData, setFormData, handleNext }) => {
+const PersonalDetails = ({
+  formData,
+  setFormData,
+  handleNext,
+  isAuthenticated,
+}) => {
   const classes = useStyles();
   return (
     <Formik
@@ -54,6 +59,7 @@ const PersonalDetails = ({ formData, setFormData, handleNext }) => {
                 component={TextField}
                 variant="outlined"
                 fullWidth
+                disabled={isAuthenticated}
                 error={
                   touched.requester_last_name && !!errors.requester_last_name
                 }
@@ -70,6 +76,7 @@ const PersonalDetails = ({ formData, setFormData, handleNext }) => {
                 component={TextField}
                 variant="outlined"
                 fullWidth
+                disabled={isAuthenticated}
                 error={
                   touched.requester_first_name && !!errors.requester_first_name
                 }
@@ -87,6 +94,7 @@ const PersonalDetails = ({ formData, setFormData, handleNext }) => {
                 component={TextField}
                 variant="outlined"
                 fullWidth
+                disabled={isAuthenticated}
                 error={touched.requester_email && !!errors.requester_email}
                 helperText={touched.requester_email && errors.requester_email}
               />
@@ -99,6 +107,7 @@ const PersonalDetails = ({ formData, setFormData, handleNext }) => {
                 component={PhoneNumberInput}
                 variant="outlined"
                 fullWidth
+                disabled={isAuthenticated}
                 error={touched.requester_mobile && !!errors.requester_mobile}
                 helperText={touched.requester_mobile && errors.requester_mobile}
               />
@@ -121,6 +130,7 @@ PersonalDetails.propTypes = {
   formData: PropTypes.object.isRequired,
   setFormData: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
 };
 
 export default PersonalDetails;

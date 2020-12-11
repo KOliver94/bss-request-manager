@@ -114,6 +114,7 @@ export default function RequestCreatorPage({
             requester_mobile: result.data.profile.phone_number,
           };
           setFormData((prevState) => ({ ...prevState, ...newData }));
+          setActiveStep(1);
         });
       } finally {
         setLoading(false);

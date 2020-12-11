@@ -6,6 +6,7 @@ export default function PhoneNumberInput(props) {
   const {
     form: { setFieldValue },
     field: { name },
+    disabled,
   } = props;
 
   return (
@@ -15,6 +16,8 @@ export default function PhoneNumberInput(props) {
       preferredCountries={['hu']}
       defaultCountry="hu"
       regions="europe"
+      disableAreaCodes
+      disableDropdown={disabled}
       onChange={(value) => {
         setFieldValue(name, value);
       }}
@@ -25,4 +28,5 @@ export default function PhoneNumberInput(props) {
 PhoneNumberInput.propTypes = {
   form: PropTypes.object.isRequired,
   field: PropTypes.object.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };

@@ -22,6 +22,7 @@ const RequestCreatorForm = ({
           formData={formData}
           setFormData={setFormData}
           handleNext={handleNext}
+          isAuthenticated={isAuthenticated}
         />
       );
     case 1:
