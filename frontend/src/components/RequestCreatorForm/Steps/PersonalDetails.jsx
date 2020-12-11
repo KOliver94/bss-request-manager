@@ -1,3 +1,4 @@
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
@@ -5,6 +6,8 @@ import PhoneNumberInput from 'components/PhoneNumberInput';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import Button from 'components/material-kit-react/CustomButtons/Button';
+import MUIButton from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import * as Yup from 'yup';
 import 'yup-phone';
@@ -12,6 +15,12 @@ import 'yup-phone';
 const useStyles = makeStyles(() => ({
   button: {
     marginTop: '15px',
+  },
+  alert: {
+    marginTop: 8,
+    marginBottom: 2,
+    textAlign: 'left',
+    alignItems: 'center',
   },
 }));
 
@@ -39,6 +48,8 @@ const PersonalDetails = ({
   isAuthenticated,
 }) => {
   const classes = useStyles();
+  const history = useHistory();
+
   return (
     <Formik
       initialValues={formData}
@@ -51,6 +62,47 @@ const PersonalDetails = ({
       {({ errors, touched }) => (
         <Form>
           <GridContainer justify="center">
+            <GridItem>
+              {isAuthenticated ? (
+                <Alert
+                  severity="warning"
+                  className={classes.alert}
+                  action={
+                    <MUIButton
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        history.push('/profile');
+                      }}
+                    >
+                      Ugrás
+                    </MUIButton>
+                  }
+                >
+                  A telefonszámodat a profilodban módosíthatod.
+                </Alert>
+              ) : (
+                <Alert
+                  severity="info"
+                  className={classes.alert}
+                  action={
+                    <MUIButton
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        history.push('/login');
+                      }}
+                    >
+                      Ugrás
+                    </MUIButton>
+                  }
+                >
+                  Jelentkezz be az oldalra, hogy követhesd a felkérésed aktuális
+                  státuszát, írhass hozzászólást és értékelhesd az elkészült
+                  videót.
+                </Alert>
+              )}
+            </GridItem>
             <GridItem xs={10} sm={6}>
               <Field
                 name="requester_last_name"

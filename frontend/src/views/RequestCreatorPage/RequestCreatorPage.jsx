@@ -113,6 +113,13 @@ export default function RequestCreatorPage({
             requester_email: result.data.email,
             requester_mobile: result.data.profile.phone_number,
           };
+          if (!newData.requester_mobile) {
+            enqueueSnackbar('Kérlek add meg a telefonszámod!', {
+              variant: 'warning',
+              autoHideDuration: 5000,
+            });
+            history.push('/profile');
+          }
           setFormData((prevState) => ({ ...prevState, ...newData }));
           setActiveStep(1);
         });
@@ -127,7 +134,7 @@ export default function RequestCreatorPage({
     } else {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, enqueueSnackbar, history]);
 
   return (
     <div>
