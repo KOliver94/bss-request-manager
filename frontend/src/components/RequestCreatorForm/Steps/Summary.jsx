@@ -55,7 +55,7 @@ const Summary = ({ formData, setActiveStep, isAuthenticated }) => {
               {formData.title}
             </Typography>
             <Typography className={classes.pos} color="textSecondary">
-              {formData.type} - <i>{formData.place}</i>
+              {formData.type_obj.text} - <i>{formData.place}</i>
             </Typography>
             <Typography variant="caption" component="p">
               Kezdés:{' '}

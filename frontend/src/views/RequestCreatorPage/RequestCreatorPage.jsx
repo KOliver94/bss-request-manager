@@ -50,6 +50,7 @@ const formInitialState = {
   start_datetime: null,
   end_datetime: null,
   place: '',
+  type_obj: null,
   type: '',
   // Other Information
   comment_text: '',
@@ -89,6 +90,7 @@ export default function RequestCreatorPage({
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      formData.type = formData.type_obj.text;
       await createRequest(formData).then((response) => {
         handleNext();
         setLoading(false);

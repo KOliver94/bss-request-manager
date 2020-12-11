@@ -19,3 +19,10 @@ export const videoStatuses = [
   { id: 5, text: 'Közzétéve' },
   { id: 6, text: 'Lezárva' },
 ];
+
+export const requestTypes = [
+  { text: 'Zenés hangulatvideó' },
+  { text: 'Zenés hangulatvideó riportokkal' },
+  { text: 'Élő közvetítés' },
+  { text: 'Előadás/rendezvény dokumentálás jellegű rögzítése' },
+];
