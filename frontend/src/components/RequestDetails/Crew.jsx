@@ -306,7 +306,7 @@ export default function Crew({
                           {...params}
                           label="Stábtag"
                           margin="normal"
-                          error={touched.member_id && errors.member_id}
+                          error={touched.member_id && !!errors.member_id}
                           helperText={touched.member_id && errors.member_id}
                         />
                       )}
@@ -317,7 +317,7 @@ export default function Crew({
                       margin="normal"
                       component={TextField}
                       fullWidth
-                      error={touched.position && errors.position}
+                      error={touched.position && !!errors.position}
                       helperText={touched.position && errors.position}
                     />
                   </Form>

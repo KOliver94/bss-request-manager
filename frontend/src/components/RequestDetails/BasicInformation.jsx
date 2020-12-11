@@ -375,7 +375,7 @@ export default function BasicInformation({
                       component={TextField}
                       variant="outlined"
                       fullWidth
-                      error={touched.title && errors.title}
+                      error={touched.title && !!errors.title}
                       helperText={touched.title && errors.title}
                     />
                     <Field
@@ -387,7 +387,7 @@ export default function BasicInformation({
                       ampm={false}
                       format="yyyy. MMMM dd. HH:mm"
                       fullWidth
-                      error={touched.start_datetime && errors.start_datetime}
+                      error={touched.start_datetime && !!errors.start_datetime}
                       helperText={
                         touched.start_datetime && errors.start_datetime
                       }
@@ -401,7 +401,7 @@ export default function BasicInformation({
                       ampm={false}
                       format="yyyy. MMMM dd. HH:mm"
                       fullWidth
-                      error={touched.end_datetime && errors.end_datetime}
+                      error={touched.end_datetime && !!errors.end_datetime}
                       helperText={touched.end_datetime && errors.end_datetime}
                     />
                     <Field
@@ -411,7 +411,7 @@ export default function BasicInformation({
                       component={TextField}
                       variant="outlined"
                       fullWidth
-                      error={touched.place && errors.place}
+                      error={touched.place && !!errors.place}
                       helperText={touched.place && errors.place}
                     />
                     <Field
@@ -421,7 +421,7 @@ export default function BasicInformation({
                       component={TextField}
                       variant="outlined"
                       fullWidth
-                      error={touched.type && errors.type}
+                      error={touched.type && !!errors.type}
                       helperText={touched.type && errors.type}
                     />
                   </div>

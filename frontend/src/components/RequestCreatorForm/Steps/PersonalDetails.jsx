@@ -55,7 +55,7 @@ const PersonalDetails = ({ formData, setFormData, handleNext }) => {
                 variant="outlined"
                 fullWidth
                 error={
-                  touched.requester_last_name && errors.requester_last_name
+                  touched.requester_last_name && !!errors.requester_last_name
                 }
                 helperText={
                   touched.requester_last_name && errors.requester_last_name
@@ -71,7 +71,7 @@ const PersonalDetails = ({ formData, setFormData, handleNext }) => {
                 variant="outlined"
                 fullWidth
                 error={
-                  touched.requester_first_name && errors.requester_first_name
+                  touched.requester_first_name && !!errors.requester_first_name
                 }
                 helperText={
                   touched.requester_first_name && errors.requester_first_name
@@ -87,7 +87,7 @@ const PersonalDetails = ({ formData, setFormData, handleNext }) => {
                 component={TextField}
                 variant="outlined"
                 fullWidth
-                error={touched.requester_email && errors.requester_email}
+                error={touched.requester_email && !!errors.requester_email}
                 helperText={touched.requester_email && errors.requester_email}
               />
             </GridItem>
@@ -99,7 +99,7 @@ const PersonalDetails = ({ formData, setFormData, handleNext }) => {
                 component={TextField}
                 variant="outlined"
                 fullWidth
-                error={touched.requester_mobile && errors.requester_mobile}
+                error={touched.requester_mobile && !!errors.requester_mobile}
                 helperText={touched.requester_mobile && errors.requester_mobile}
               />
             </GridItem>

@@ -211,7 +211,7 @@ export default function Comments({
                                 fullWidth
                                 multiline
                                 rows={5}
-                                error={touched.text && errors.text}
+                                error={touched.text && !!errors.text}
                                 helperText={touched.text && errors.text}
                               />
                             </Grid>
@@ -365,7 +365,7 @@ export default function Comments({
                     fullWidth
                     multiline
                     rows={5}
-                    error={touched.text && errors.text}
+                    error={touched.text && !!errors.text}
                     helperText={touched.text && errors.text}
                   />
                 </Grid>

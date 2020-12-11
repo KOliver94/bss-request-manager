@@ -613,7 +613,7 @@ export default function Videos({
                         margin="normal"
                         component={TextField}
                         fullWidth
-                        error={touched.title && errors.title}
+                        error={touched.title && !!errors.title}
                         helperText={touched.title && errors.title}
                       />
                       <Field

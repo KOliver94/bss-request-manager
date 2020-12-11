@@ -66,7 +66,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   component={TextField}
                   variant="outlined"
                   fullWidth
-                  error={touched.title && errors.title}
+                  error={touched.title && !!errors.title}
                   helperText={touched.title && errors.title}
                 />
               </GridItem>
@@ -81,7 +81,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   ampm={false}
                   disablePast
                   fullWidth
-                  error={touched.start_datetime && errors.start_datetime}
+                  error={touched.start_datetime && !!errors.start_datetime}
                   helperText={touched.start_datetime && errors.start_datetime}
                 />
               </GridItem>
@@ -96,7 +96,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   ampm={false}
                   disablePast
                   fullWidth
-                  error={touched.end_datetime && errors.end_datetime}
+                  error={touched.end_datetime && !!errors.end_datetime}
                   helperText={touched.end_datetime && errors.end_datetime}
                 />
               </GridItem>
@@ -108,7 +108,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   component={TextField}
                   variant="outlined"
                   fullWidth
-                  error={touched.place && errors.place}
+                  error={touched.place && !!errors.place}
                   helperText={touched.place && errors.place}
                 />
               </GridItem>
@@ -120,7 +120,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   component={TextField}
                   variant="outlined"
                   fullWidth
-                  error={touched.type && errors.type}
+                  error={touched.type && !!errors.type}
                   helperText={touched.type && errors.type}
                 />
               </GridItem>
