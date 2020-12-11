@@ -1,19 +1,19 @@
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
+import PhoneNumberInput from 'components/PhoneNumberInput';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import Button from 'components/material-kit-react/CustomButtons/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import * as Yup from 'yup';
+import 'yup-phone';
 
 const useStyles = makeStyles(() => ({
   button: {
     marginTop: '15px',
   },
 }));
-
-const phoneRegExp = /((?:\+?3|0)6)(?:-|\()?(\d{1,2})(?:-|\))?(\d{3})-?(\d{3,4})/;
 
 const validationSchema = Yup.object({
   requester_first_name: Yup.string()
@@ -28,7 +28,7 @@ const validationSchema = Yup.object({
     .email('Érvénytelen e-mail cím')
     .required('Az e-mail cím megadása kötelező'),
   requester_mobile: Yup.string()
-    .matches(phoneRegExp, 'Érvénytelen telefonszám')
+    .phone('', false, 'Érvénytelen telefonszám')
     .required('A telefonszám megadása kötelező'),
 });
 
@@ -96,7 +96,7 @@ const PersonalDetails = ({ formData, setFormData, handleNext }) => {
                 name="requester_mobile"
                 label="Telefonszám"
                 margin="normal"
-                component={TextField}
+                component={PhoneNumberInput}
                 variant="outlined"
                 fullWidth
                 error={touched.requester_mobile && !!errors.requester_mobile}
