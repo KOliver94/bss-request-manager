@@ -36,7 +36,7 @@
     "eject": "react-scripts eject",
     "format": "prettier --write src/**/*.js src/**/*.jsx",
     "lint": "eslint src/**/*.js src/**/*.jsx",
-    "check-eslint-config": "eslint --print-config src/index.js | eslint-config-prettier-check",
+    "check-eslint-config": "eslint-config-prettier src/index.js",
     "check-code": "eslint src"
   },
   "eslintConfig": {
