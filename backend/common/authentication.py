@@ -7,9 +7,9 @@ class AuthSCHOAuth2(BaseOAuth2):
     name = "authsch"
     ID_KEY = "internal_id"
     AUTHORIZATION_URL = "https://auth.sch.bme.hu/site/login"
-    ACCESS_TOKEN_URL = "https://auth.sch.bme.hu/oauth2/token"
-    ACCESS_TOKEN_METHOD = "POST"
-    REFRESH_TOKEN_URL = "https://auth.sch.bme.hu/oauth2/token"
+    ACCESS_TOKEN_URL = "https://auth.sch.bme.hu/oauth2/token"  # nosec
+    ACCESS_TOKEN_METHOD = "POST"  # nosec
+    REFRESH_TOKEN_URL = "https://auth.sch.bme.hu/oauth2/token"  # nosec
     DEFAULT_SCOPE = [
         "basic",
         "mail",
