@@ -36,7 +36,7 @@
     "eject": "react-scripts eject",
     "format": "prettier --write src/**/*.js src/**/*.jsx",
     "lint": "eslint src/**/*.js src/**/*.jsx",
-    "check-eslint-config": "eslint --print-config src/index.js | eslint-config-prettier-check",
+    "check-eslint-config": "eslint-config-prettier src/index.js",
     "check-code": "eslint src"
   },
   "eslintConfig": {
@@ -57,7 +57,7 @@
   "devDependencies": {
     "eslint": "^7.15.0",
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.2.0",
