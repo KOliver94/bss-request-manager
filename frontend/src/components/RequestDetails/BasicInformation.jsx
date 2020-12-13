@@ -23,6 +23,7 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import MUITextField from '@material-ui/core/TextField';
 // Form components
@@ -48,7 +49,7 @@ import { getRequest } from 'api/requestApi';
 import { isAdmin as isAdminCheck, isAdminOrStaff } from 'api/loginApi';
 import handleError from 'api/errorHandler';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   title: {
     padding: '10px 15px',
   },
@@ -75,6 +76,11 @@ const useStyles = makeStyles(() => ({
   },
   afterDivider: {
     marginTop: 10,
+  },
+  smallAvatar: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    marginRight: 5,
   },
 }));
 
@@ -332,6 +338,18 @@ export default function BasicInformation({
                       getOptionLabel={(option) =>
                         `${option.last_name} ${option.first_name}`
                       }
+                      renderOption={(option) => {
+                        return (
+                          <>
+                            <Avatar
+                              alt={`${option.first_name} ${option.last_name}`}
+                              src={option.profile.avatar_url}
+                              className={classes.smallAvatar}
+                            />
+                            {`${option.last_name} ${option.first_name}`}
+                          </>
+                        );
+                      }}
                       getOptionSelected={(option, value) =>
                         option.id === value.id
                       }
@@ -537,12 +555,14 @@ export default function BasicInformation({
                     )}
                   </b>
                 </p>
-                {requestData.additional_data.recording.path && (
-                  <p>
-                    Nyersek helye:{' '}
-                    <b>{requestData.additional_data.recording.path}</b>
-                  </p>
-                )}
+                {requestData.additional_data &&
+                  requestData.additional_data.recording &&
+                  requestData.additional_data.recording.path && (
+                    <p>
+                      Nyersek helye:{' '}
+                      <b>{requestData.additional_data.recording.path}</b>
+                    </p>
+                  )}
               </>
             )}
           </>

@@ -20,6 +20,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 // Form components
 import { Formik, Form, Field } from 'formik';
@@ -37,7 +38,7 @@ import {
 import compareValues from 'api/objectComperator';
 import handleError from 'api/errorHandler';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   table: {
     marginBottom: '25px',
     width: 'auto',
@@ -51,6 +52,11 @@ const useStyles = makeStyles(() => ({
     bottom: '10px',
     left: 'auto',
     position: 'absolute',
+  },
+  smallAvatar: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    marginRight: 5,
   },
 }));
 
@@ -295,6 +301,18 @@ export default function Crew({
                       getOptionLabel={(option) =>
                         `${option.last_name} ${option.first_name}`
                       }
+                      renderOption={(option) => {
+                        return (
+                          <>
+                            <Avatar
+                              alt={`${option.first_name} ${option.last_name}`}
+                              src={option.profile.avatar_url}
+                              className={classes.smallAvatar}
+                            />
+                            {`${option.last_name} ${option.first_name}`}
+                          </>
+                        );
+                      }}
                       getOptionSelected={(option, value) =>
                         option.id === value.id
                       }
