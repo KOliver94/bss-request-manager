@@ -360,6 +360,7 @@ export default function Videos({
     title: Yup.string()
       .min(1, 'A videó címe túl rövid!')
       .max(200, 'A videó címe túl hosszú!')
+      .trim()
       .required('A videó címének megadása kötelező'),
   });
 

@@ -93,6 +93,7 @@ export default function BasicInformation({
     title: Yup.string()
       .min(1, 'Az esemény neve túl rövid!')
       .max(200, 'Az esemény neve túl hosszú!')
+      .trim()
       .required('Az esemény nevének megadása kötelező'),
     start_datetime: Yup.date()
       .required('A kezdés időpontjának megadása kötelező')
@@ -107,10 +108,12 @@ export default function BasicInformation({
     place: Yup.string()
       .min(1, 'Túl rövid helyszín!')
       .max(150, 'Túl hosszú helyszín!')
+      .trim()
       .required('A helyszín megadása kötelező'),
     type: Yup.string()
       .min(1, 'Túl rövid típus!')
       .max(50, 'Túl hosszú típus!')
+      .trim()
       .required('A videó típusának megadása kötelező'),
   });
 

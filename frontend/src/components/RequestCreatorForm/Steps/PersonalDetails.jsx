@@ -28,10 +28,12 @@ const validationSchema = Yup.object({
   requester_first_name: Yup.string()
     .min(2, 'Túl rövid keresztnév!')
     .max(30, 'Túl hosszú keresztnév!')
+    .trim()
     .required('A keresztnév megadása kötelező'),
   requester_last_name: Yup.string()
     .min(2, 'Túl rövid vezetéknév!')
     .max(150, 'Túl hosszú vezetéknév!')
+    .trim()
     .required('A vezetéknév megadása kötelező'),
   requester_email: Yup.string()
     .email('Érvénytelen e-mail cím')

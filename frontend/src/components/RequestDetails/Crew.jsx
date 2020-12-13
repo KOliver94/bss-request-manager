@@ -171,6 +171,7 @@ export default function Crew({
     position: Yup.string()
       .min(1, 'A pozíció túl rövid!')
       .max(20, 'A pozíció túl hosszú!')
+      .trim()
       .required('A pozíció megadása kötelező'),
   });
 

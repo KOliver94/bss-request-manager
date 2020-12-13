@@ -154,7 +154,7 @@ export default function Comments({
   };
 
   const validationSchema = Yup.object({
-    text: Yup.string().required('Üres hozzászólás nem küldhető be!'),
+    text: Yup.string().trim().required('Üres hozzászólás nem küldhető be!'),
   });
 
   return (
