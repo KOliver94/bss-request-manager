@@ -28,7 +28,7 @@ import MUITextField from '@material-ui/core/TextField';
 // Form components
 import { Formik, Form, Field } from 'formik';
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
-import { DateTimePicker } from 'formik-material-ui-pickers';
+import { DatePicker, DateTimePicker } from 'formik-material-ui-pickers';
 import { Autocomplete } from 'formik-material-ui-lab';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -73,6 +73,9 @@ const useStyles = makeStyles(() => ({
   formSectionLast: {
     paddingTop: '15px',
   },
+  afterDivider: {
+    marginTop: 10,
+  },
 }));
 
 export default function BasicInformation({
@@ -115,6 +118,13 @@ export default function BasicInformation({
       .max(50, 'Túl hosszú típus!')
       .trim()
       .required('A videó típusának megadása kötelező'),
+    deadline: Yup.date()
+      .min(
+        Yup.ref('end_datetime'),
+        'A határidőnek a felkérés várható befejezése után kell lennie!'
+      )
+      .required('A várható befejezés megadása kötelező')
+      .nullable(),
   });
 
   const handleReload = async () => {
@@ -154,8 +164,12 @@ export default function BasicInformation({
 
   const handleSubmit = async (val) => {
     const values = val;
-    if (values.responsible_id !== undefined) {
-      values.responsible_id = values.responsible_id && values.responsible_id.id;
+    if (values.responsible_id) {
+      values.responsible_id = values.responsible_id.id;
+    }
+    if (values.deadline && typeof values.deadline.getMonth === 'function') {
+      // eslint-disable-next-line prefer-destructuring
+      values.deadline = values.deadline.toISOString().split('T')[0];
     }
     setLoading(true);
     try {
@@ -337,6 +351,17 @@ export default function BasicInformation({
                         />
                       )}
                     />
+                    <Field
+                      name="deadline"
+                      label="Határidő"
+                      margin="normal"
+                      component={DatePicker}
+                      inputVariant="outlined"
+                      format="yyyy. MMMM dd."
+                      fullWidth
+                      error={touched.deadline && !!errors.deadline}
+                      helperText={touched.deadline && errors.deadline}
+                    />
                   </div>
                   <Divider />
                   <div className={classes.formSection}>
@@ -438,18 +463,6 @@ export default function BasicInformation({
               Esemény neve: <b>{requestData.title}</b>
             </p>
             <p>
-              Beküldve:{' '}
-              <b>
-                {format(
-                  new Date(requestData.created),
-                  'yyyy. MMMM d. (eeee) | H:mm',
-                  {
-                    locale: hu,
-                  }
-                )}
-              </b>
-            </p>
-            <p>
               Kezdés időpontja:{' '}
               <b>
                 {format(
@@ -499,35 +512,66 @@ export default function BasicInformation({
                 )
               </b>
             </p>
-            <p>
-              Felelős:{' '}
-              {requestData.responsible && (
-                <>
+            <Divider />
+            <p className={classes.afterDivider}>
+              Beküldve:{' '}
+              <b>
+                {format(
+                  new Date(requestData.created),
+                  'yyyy. MMMM d. (eeee) | H:mm',
+                  {
+                    locale: hu,
+                  }
+                )}
+              </b>
+            </p>
+            {isAdmin && (
+              <>
+                <p>
+                  Határidő:{' '}
                   <b>
-                    {`${requestData.responsible.last_name} ${requestData.responsible.first_name}`}
-                  </b>
-                  <br />
-                  <b>
-                    (
-                    <a href={`mailto:${requestData.responsible.email}`}>
-                      {requestData.responsible.email}
-                    </a>
-                    {requestData.responsible.profile.phone_number && (
-                      <>
-                        {', '}
-                        <a
-                          href={`tel:${requestData.responsible.profile.phone_number}`}
-                        >
-                          {requestData.responsible.profile.phone_number}
-                        </a>
-                      </>
+                    {format(
+                      new Date(requestData.deadline),
+                      'yyyy. MMMM d. (eeee)',
+                      { locale: hu }
                     )}
-                    )
                   </b>
+                </p>
+                {requestData.additional_data.recording.path && (
+                  <p>
+                    Nyersek helye:{' '}
+                    <b>{requestData.additional_data.recording.path}</b>
+                  </p>
+                )}
+              </>
+            )}
+          </>
+        )}
+        {requestData.responsible && (
+          <p>
+            Felelős:{' '}
+            <b>
+              {`${requestData.responsible.last_name} ${requestData.responsible.first_name}`}
+            </b>
+            <br />
+            <b>
+              (
+              <a href={`mailto:${requestData.responsible.email}`}>
+                {requestData.responsible.email}
+              </a>
+              {requestData.responsible.profile.phone_number && (
+                <>
+                  {', '}
+                  <a
+                    href={`tel:${requestData.responsible.profile.phone_number}`}
+                  >
+                    {requestData.responsible.profile.phone_number}
+                  </a>
                 </>
               )}
-            </p>
-          </>
+              )
+            </b>
+          </p>
         )}
       </Paper>
     </div>

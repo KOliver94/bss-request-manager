@@ -54,6 +54,7 @@ export default function RequestDetailPage({
     created: '',
     start_datetime: '',
     end_datetime: '',
+    deadline: '',
     type: '',
     place: '',
     status: 1,
