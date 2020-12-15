@@ -91,7 +91,7 @@ def update_additional_data(orig_dict, new_dict):
     for key, value in new_dict.items():
         if isinstance(value, abc.Mapping):
             orig_dict[key] = update_additional_data(orig_dict.get(key, {}), value)
-        elif isinstance(value, list):
+        elif isinstance(value, list) and key != "aired":
             orig_dict[key] = orig_dict.get(key, []) + value
         else:
             orig_dict[key] = new_dict[key]

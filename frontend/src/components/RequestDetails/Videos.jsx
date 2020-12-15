@@ -359,6 +359,12 @@ export default function Videos({
       publishing: Yup.object().shape({
         website: Yup.string().url('Nem megfelelő URL formátum'),
       }),
+      aired: Yup.array().of(
+        Yup.string().matches(
+          /(([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])))/,
+          'Kérlek a dátumot ÉÉÉÉ-HH-NN formában add meg!'
+        )
+      ),
     }),
   });
 
@@ -394,6 +400,7 @@ export default function Videos({
               </AccordionSummary>
               {isAdmin ? (
                 <Formik
+                  enableReinitialize
                   initialValues={video}
                   onSubmit={(values) => handleSubmit(values, video.id)}
                   validationSchema={validationSchema}
@@ -488,6 +495,43 @@ export default function Videos({
                                 {...params}
                                 label="Vágó"
                                 margin="normal"
+                              />
+                            )}
+                          />
+                          <Field
+                            name="additional_data.aired"
+                            component={Autocomplete}
+                            defaultValue={
+                              requestData.additional_data.aired
+                                ? requestData.additional_data.aired
+                                : []
+                            }
+                            options={[]}
+                            freeSolo
+                            multiple
+                            autoSelect
+                            limitTags={3}
+                            size="small"
+                            fullWidth
+                            renderInput={(params) => (
+                              <MUITextField
+                                // eslint-disable-next-line react/jsx-props-no-spreading
+                                {...params}
+                                name="additional_data.aired"
+                                label="Adásba kerülés"
+                                margin="normal"
+                                error={
+                                  touched.additional_data &&
+                                  touched.additional_data.aired &&
+                                  errors.additional_data &&
+                                  !!errors.additional_data.aired
+                                }
+                                helperText={
+                                  touched.additional_data &&
+                                  touched.additional_data.aired &&
+                                  errors.additional_data &&
+                                  errors.additional_data.aired
+                                }
                               />
                             )}
                           />
