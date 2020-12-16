@@ -36,7 +36,12 @@ import Badge from 'components/material-kit-react/Badge/Badge';
 import { Formik, Form, Field, getIn } from 'formik';
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
 import { Autocomplete } from 'formik-material-ui-lab';
+import { KeyboardTimePicker } from 'formik-material-ui-pickers';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import * as Yup from 'yup';
+// Date format
+import { hu } from 'date-fns/locale';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
@@ -166,6 +171,12 @@ export default function Videos({
     const values = val;
     if (values.editor_id) {
       values.editor_id = values.editor_id.id;
+    }
+    if (values.additional_data && values.additional_data.length) {
+      values.additional_data.length =
+        values.additional_data.length.getHours() * 60 * 60 +
+        values.additional_data.length.getMinutes() * 60 +
+        values.additional_data.length.getSeconds();
     }
     let result;
     try {
@@ -399,183 +410,202 @@ export default function Videos({
                 </div>
               </AccordionSummary>
               {isAdmin ? (
-                <Formik
-                  enableReinitialize
-                  initialValues={video}
-                  onSubmit={(values) => handleSubmit(values, video.id)}
-                  validationSchema={validationSchema}
-                >
-                  {({
-                    submitForm,
-                    resetForm,
-                    isSubmitting,
-                    errors,
-                    touched,
-                  }) => (
-                    <>
-                      <AccordionDetails>
-                        <Form>
-                          <Field
-                            name="additional_data.editing_done"
-                            Label={{ label: 'Vágás' }}
-                            component={CheckboxWithLabel}
-                            type="checkbox"
-                            icon={<PersonalVideoIcon />}
-                            checkedIcon={<OndemandVideoIcon />}
-                            indeterminateIcon={<PersonalVideoIcon />}
-                          />
-                          <Field
-                            name="additional_data.coding.website"
-                            Label={{ label: 'Kódolás webre' }}
-                            component={CheckboxWithLabel}
-                            type="checkbox"
-                            icon={<SyncDisabledIcon />}
-                            checkedIcon={<SyncIcon />}
-                            indeterminateIcon={<SyncDisabledIcon />}
-                          />
-                          <Field
-                            name="additional_data.archiving.hq_archive"
-                            Label={{ label: 'Archiválás' }}
-                            component={CheckboxWithLabel}
-                            type="checkbox"
-                            icon={<FolderOpenIcon />}
-                            checkedIcon={<FolderIcon />}
-                            indeterminateIcon={<FolderOpenIcon />}
-                          />
-                          <Field
-                            name="additional_data.publishing.website"
-                            label="Videó elérési útja a honlapon"
-                            margin="normal"
-                            component={TextField}
-                            size="small"
-                            fullWidth
-                            className={
-                              getIn(
-                                errors,
-                                'additional_data.publishing.website'
-                              ) &&
-                              getIn(
-                                touched,
-                                'additional_data.publishing.website'
-                              )
-                                ? 'text-input error'
-                                : 'text-input'
-                            }
-                          />
-                          <Field
-                            name="editor_id"
-                            component={Autocomplete}
-                            options={staffMembers}
-                            getOptionLabel={(option) =>
-                              `${option.last_name} ${option.first_name}`
-                            }
-                            renderOption={(option) => {
-                              return (
-                                <>
-                                  <Avatar
-                                    alt={`${option.first_name} ${option.last_name}`}
-                                    src={option.profile.avatar_url}
-                                    className={classes.smallAvatar}
-                                  />
-                                  {`${option.last_name} ${option.first_name}`}
-                                </>
-                              );
-                            }}
-                            getOptionSelected={(option, value) =>
-                              option.id === value.id
-                            }
-                            defaultValue={video.editor ? video.editor : null}
-                            size="small"
-                            autoHighlight
-                            clearOnEscape
-                            fullWidth
-                            renderInput={(params) => (
-                              <MUITextField
-                                // eslint-disable-next-line react/jsx-props-no-spreading
-                                {...params}
-                                label="Vágó"
-                                margin="normal"
-                              />
-                            )}
-                          />
-                          <Field
-                            name="additional_data.aired"
-                            component={Autocomplete}
-                            defaultValue={
-                              requestData.additional_data.aired
-                                ? requestData.additional_data.aired
-                                : []
-                            }
-                            options={[]}
-                            freeSolo
-                            multiple
-                            autoSelect
-                            limitTags={3}
-                            size="small"
-                            fullWidth
-                            renderInput={(params) => (
-                              <MUITextField
-                                // eslint-disable-next-line react/jsx-props-no-spreading
-                                {...params}
-                                name="additional_data.aired"
-                                label="Adásba kerülés"
-                                margin="normal"
-                                error={
-                                  touched.additional_data &&
-                                  touched.additional_data.aired &&
-                                  errors.additional_data &&
-                                  !!errors.additional_data.aired
-                                }
-                                helperText={
-                                  touched.additional_data &&
-                                  touched.additional_data.aired &&
-                                  errors.additional_data &&
-                                  errors.additional_data.aired
-                                }
-                              />
-                            )}
-                          />
-                        </Form>
-                      </AccordionDetails>
-                      <Divider />
-                      <AccordionActions
-                        className={
-                          video.status >= 3 ? classes.adminEditButtons : null
-                        }
-                      >
-                        <Tooltip
-                          title="Törlés"
-                          classes={classes}
-                          placement="left"
-                          arrow
+                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={hu}>
+                  <Formik
+                    enableReinitialize
+                    initialValues={{
+                      ...video,
+                      additional_data: {
+                        aired: [],
+                        ...video.additional_data,
+                        length: video.additional_data.length
+                          ? new Date('1970-01-01T00:00:00').setSeconds(
+                              video.additional_data.length
+                            )
+                          : null,
+                      },
+                    }}
+                    onSubmit={(values) => handleSubmit(values, video.id)}
+                    validationSchema={validationSchema}
+                  >
+                    {({
+                      submitForm,
+                      resetForm,
+                      isSubmitting,
+                      errors,
+                      touched,
+                    }) => (
+                      <>
+                        <AccordionDetails>
+                          <Form>
+                            <Field
+                              name="additional_data.editing_done"
+                              Label={{ label: 'Vágás' }}
+                              component={CheckboxWithLabel}
+                              type="checkbox"
+                              icon={<PersonalVideoIcon />}
+                              checkedIcon={<OndemandVideoIcon />}
+                              indeterminateIcon={<PersonalVideoIcon />}
+                            />
+                            <Field
+                              name="additional_data.coding.website"
+                              Label={{ label: 'Kódolás webre' }}
+                              component={CheckboxWithLabel}
+                              type="checkbox"
+                              icon={<SyncDisabledIcon />}
+                              checkedIcon={<SyncIcon />}
+                              indeterminateIcon={<SyncDisabledIcon />}
+                            />
+                            <Field
+                              name="additional_data.archiving.hq_archive"
+                              Label={{ label: 'Archiválás' }}
+                              component={CheckboxWithLabel}
+                              type="checkbox"
+                              icon={<FolderOpenIcon />}
+                              checkedIcon={<FolderIcon />}
+                              indeterminateIcon={<FolderOpenIcon />}
+                            />
+                            <Field
+                              name="additional_data.publishing.website"
+                              label="Videó elérési útja a honlapon"
+                              margin="normal"
+                              component={TextField}
+                              size="small"
+                              fullWidth
+                              className={
+                                getIn(
+                                  errors,
+                                  'additional_data.publishing.website'
+                                ) &&
+                                getIn(
+                                  touched,
+                                  'additional_data.publishing.website'
+                                )
+                                  ? 'text-input error'
+                                  : 'text-input'
+                              }
+                            />
+                            <Field
+                              name="editor_id"
+                              component={Autocomplete}
+                              options={staffMembers}
+                              getOptionLabel={(option) =>
+                                `${option.last_name} ${option.first_name}`
+                              }
+                              renderOption={(option) => {
+                                return (
+                                  <>
+                                    <Avatar
+                                      alt={`${option.first_name} ${option.last_name}`}
+                                      src={option.profile.avatar_url}
+                                      className={classes.smallAvatar}
+                                    />
+                                    {`${option.last_name} ${option.first_name}`}
+                                  </>
+                                );
+                              }}
+                              getOptionSelected={(option, value) =>
+                                option.id === value.id
+                              }
+                              defaultValue={video.editor ? video.editor : null}
+                              size="small"
+                              autoHighlight
+                              clearOnEscape
+                              fullWidth
+                              renderInput={(params) => (
+                                <MUITextField
+                                  // eslint-disable-next-line react/jsx-props-no-spreading
+                                  {...params}
+                                  label="Vágó"
+                                  margin="normal"
+                                />
+                              )}
+                            />
+                            <Field
+                              name="additional_data.length"
+                              label="Videó hossza"
+                              margin="normal"
+                              component={KeyboardTimePicker}
+                              fullWidth
+                              ampm={false}
+                              format="HH:mm:ss"
+                              openTo="minutes"
+                              views={['hours', 'minutes', 'seconds']}
+                            />
+                            <Field
+                              name="additional_data.aired"
+                              component={Autocomplete}
+                              options={[]}
+                              freeSolo
+                              multiple
+                              autoSelect
+                              limitTags={3}
+                              size="small"
+                              fullWidth
+                              renderInput={(params) => (
+                                <MUITextField
+                                  // eslint-disable-next-line react/jsx-props-no-spreading
+                                  {...params}
+                                  name="additional_data.aired"
+                                  label="Adásba kerülés"
+                                  margin="normal"
+                                  error={
+                                    touched.additional_data &&
+                                    touched.additional_data.aired &&
+                                    errors.additional_data &&
+                                    !!errors.additional_data.aired
+                                  }
+                                  helperText={
+                                    touched.additional_data &&
+                                    touched.additional_data.aired &&
+                                    errors.additional_data &&
+                                    errors.additional_data.aired
+                                  }
+                                />
+                              )}
+                            />
+                          </Form>
+                        </AccordionDetails>
+                        <Divider />
+                        <AccordionActions
+                          className={
+                            video.status >= 3 ? classes.adminEditButtons : null
+                          }
                         >
-                          <IconButton
-                            onClick={() => handleDelete(video.id)}
-                            disabled={isSubmitting || videoDeleteLoading}
-                            size="small"
+                          <Tooltip
+                            title="Törlés"
+                            classes={classes}
+                            placement="left"
+                            arrow
                           >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Button
-                          size="small"
-                          onClick={resetForm}
-                          disabled={isSubmitting || videoDeleteLoading}
-                        >
-                          Mégsem
-                        </Button>
-                        <Button
-                          size="small"
-                          color="primary"
-                          onClick={submitForm}
-                          disabled={isSubmitting || videoDeleteLoading}
-                        >
-                          Mentés
-                        </Button>
-                      </AccordionActions>
-                    </>
-                  )}
-                </Formik>
+                            <IconButton
+                              onClick={() => handleDelete(video.id)}
+                              disabled={isSubmitting || videoDeleteLoading}
+                              size="small"
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Button
+                            size="small"
+                            onClick={resetForm}
+                            disabled={isSubmitting || videoDeleteLoading}
+                          >
+                            Mégsem
+                          </Button>
+                          <Button
+                            size="small"
+                            color="primary"
+                            onClick={submitForm}
+                            disabled={isSubmitting || videoDeleteLoading}
+                          >
+                            Mentés
+                          </Button>
+                        </AccordionActions>
+                      </>
+                    )}
+                  </Formik>
+                </MuiPickersUtilsProvider>
               ) : (
                 <>
                   {video.video_url && (
