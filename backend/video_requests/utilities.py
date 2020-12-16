@@ -11,6 +11,7 @@ def update_request_status(request, called_from_video=False):
     if (
         "status_by_admin" in request.additional_data
         and "status" in request.additional_data["status_by_admin"]
+        and request.additional_data["status_by_admin"]["status"]
     ):
         request.status = request.additional_data["status_by_admin"]["status"]
 
@@ -115,6 +116,7 @@ def update_video_status(video, called_from_request=False, request_status=1):
     if (
         "status_by_admin" in video.additional_data
         and "status" in video.additional_data["status_by_admin"]
+        and video.additional_data["status_by_admin"]["status"]
     ):
         video.status = video.additional_data["status_by_admin"]["status"]
 

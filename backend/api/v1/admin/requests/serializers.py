@@ -83,6 +83,9 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
                 additional_data.pop("status_by_admin")
             else:
                 additional_data["status_by_admin"].update({"admin_id": user.id})
+                additional_data["status_by_admin"].update(
+                    {"admin_name": f"{user.last_name} {user.first_name}"}
+                )
     return additional_data
 
 

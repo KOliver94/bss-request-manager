@@ -24,11 +24,15 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import { makeStyles } from '@material-ui/core/styles';
 import MUITextField from '@material-ui/core/TextField';
 // Form components
 import { Formik, Form, Field } from 'formik';
-import { TextField, CheckboxWithLabel } from 'formik-material-ui';
+import { TextField, CheckboxWithLabel, Select } from 'formik-material-ui';
 import { DatePicker, DateTimePicker } from 'formik-material-ui-pickers';
 import { Autocomplete } from 'formik-material-ui-lab';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -47,6 +51,7 @@ import {
 } from 'api/requestAdminApi';
 import { getRequest } from 'api/requestApi';
 import { isAdmin as isAdminCheck, isAdminOrStaff } from 'api/loginApi';
+import { requestStatuses } from 'api/enumConstants';
 import handleError from 'api/errorHandler';
 
 const useStyles = makeStyles((theme) => ({
@@ -176,6 +181,18 @@ export default function BasicInformation({
     if (values.deadline && typeof values.deadline.getMonth === 'function') {
       // eslint-disable-next-line prefer-destructuring
       values.deadline = values.deadline.toISOString().split('T')[0];
+    }
+    if (
+      values.additional_data.status_by_admin &&
+      values.additional_data.status_by_admin.status !== undefined
+    ) {
+      values.additional_data.status_by_admin.admin_id = parseInt(
+        localStorage.getItem('user_id'),
+        10
+      );
+      values.additional_data.status_by_admin.admin_name = localStorage.getItem(
+        'name'
+      );
     }
     setLoading(true);
     try {
@@ -329,6 +346,45 @@ export default function BasicInformation({
                           checkedIcon={<ErrorOutlineIcon />}
                           indeterminateIcon={<RadioButtonUncheckedIcon />}
                         />
+                        <FormControl
+                          fullWidth
+                          variant="outlined"
+                          margin="normal"
+                        >
+                          <InputLabel htmlFor="additional_data.status_by_admin.status">
+                            Státusz felülírás
+                          </InputLabel>
+                          <Field
+                            labelId="additional_data.status_by_admin.status"
+                            label="Státusz felülírás"
+                            name="additional_data.status_by_admin.status"
+                            component={Select}
+                            defaultValue={null}
+                          >
+                            <MenuItem value={null}>
+                              <em>Nincs</em>
+                            </MenuItem>
+                            {requestStatuses.map((status) => {
+                              return (
+                                <MenuItem key={status.id} value={status.id}>
+                                  {status.text}
+                                </MenuItem>
+                              );
+                            })}
+                          </Field>
+                          {requestData.additional_data &&
+                            requestData.additional_data.status_by_admin &&
+                            requestData.additional_data.status_by_admin
+                              .admin_name && (
+                              <FormHelperText>
+                                Utoljára módosította:{' '}
+                                {
+                                  requestData.additional_data.status_by_admin
+                                    .admin_name
+                                }
+                              </FormHelperText>
+                            )}
+                        </FormControl>
                       </>
                     )}
                     <Field
@@ -565,33 +621,33 @@ export default function BasicInformation({
                   )}
               </>
             )}
-          </>
-        )}
-        {requestData.responsible && (
-          <p>
-            Felelős:{' '}
-            <b>
-              {`${requestData.responsible.last_name} ${requestData.responsible.first_name}`}
-            </b>
-            <br />
-            <b>
-              (
-              <a href={`mailto:${requestData.responsible.email}`}>
-                {requestData.responsible.email}
-              </a>
-              {requestData.responsible.profile.phone_number && (
-                <>
-                  {', '}
-                  <a
-                    href={`tel:${requestData.responsible.profile.phone_number}`}
-                  >
-                    {requestData.responsible.profile.phone_number}
+            {requestData.responsible && (
+              <p>
+                Felelős:{' '}
+                <b>
+                  {`${requestData.responsible.last_name} ${requestData.responsible.first_name}`}
+                </b>
+                <br />
+                <b>
+                  (
+                  <a href={`mailto:${requestData.responsible.email}`}>
+                    {requestData.responsible.email}
                   </a>
-                </>
-              )}
-              )
-            </b>
-          </p>
+                  {requestData.responsible.profile.phone_number && (
+                    <>
+                      {', '}
+                      <a
+                        href={`tel:${requestData.responsible.profile.phone_number}`}
+                      >
+                        {requestData.responsible.profile.phone_number}
+                      </a>
+                    </>
+                  )}
+                  )
+                </b>
+              </p>
+            )}
+          </>
         )}
       </Paper>
     </div>

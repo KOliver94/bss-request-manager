@@ -4,10 +4,11 @@ REQUEST_ADDITIONAL_DATA_SCHEMA = {
         "status_by_admin": {
             "type": "object",
             "properties": {
-                "status": {"enum": [0, 1, 2, 3, 4, 5, 6, 7, 9, 10]},
+                "status": {"enum": [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, None]},
                 "admin_id": {"type": "number"},
+                "admin_name": {"type": "string"},
             },
-            "required": ["status", "admin_id"],
+            "required": ["status", "admin_id", "admin_name"],
             "additionalProperties": False,
         },
         "accepted": {"type": "boolean"},
@@ -43,10 +44,11 @@ VIDEO_ADDITIONAL_DATA_SCHEMA = {
         "status_by_admin": {
             "type": "object",
             "properties": {
-                "status": {"enum": [1, 2, 3, 4, 5, 6]},
+                "status": {"enum": [1, 2, 3, 4, 5, 6, None]},
                 "admin_id": {"type": "number"},
+                "admin_name": {"type": "string"},
             },
-            "required": ["status", "admin_id"],
+            "required": ["status", "admin_id", "admin_name"],
             "additionalProperties": False,
         },
         "editing_done": {"type": "boolean"},

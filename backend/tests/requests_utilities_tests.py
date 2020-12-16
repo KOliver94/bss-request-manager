@@ -190,6 +190,7 @@ class RequestsUtilitiesTestCase(APITestCase):
                     "status_by_admin": {
                         "status": Request.Statuses.ARCHIVED,
                         "admin_id": 123,
+                        "admin_name": "Random Name",
                     }
                 }
             },
@@ -199,6 +200,10 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_id"],
             self.user.id,
+        )
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{self.user.last_name} {self.user.first_name}",
         )
 
         # 3. Add a video
@@ -214,7 +219,11 @@ class RequestsUtilitiesTestCase(APITestCase):
             f"{self.url}/{request_id}/videos/{video_id}",
             {
                 "additional_data": {
-                    "status_by_admin": {"status": Video.Statuses.DONE, "admin_id": 123}
+                    "status_by_admin": {
+                        "status": Video.Statuses.DONE,
+                        "admin_id": 123,
+                        "admin_name": "Random Name",
+                    }
                 }
             },
         )
@@ -223,6 +232,10 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_id"],
             self.user.id,
+        )
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{self.user.last_name} {self.user.first_name}",
         )
 
         # 5. Check the Request again
@@ -236,6 +249,7 @@ class RequestsUtilitiesTestCase(APITestCase):
                 "status_by_admin": {
                     "status": Request.Statuses.ARCHIVED,
                     "admin_id": 123,
+                    "admin_name": "Random Name",
                 },
                 "accepted": True,
                 "failed": True,
@@ -300,6 +314,11 @@ class RequestsUtilitiesTestCase(APITestCase):
             response.data["additional_data"]["status_by_admin"]["admin_id"],
             self.user.id,
         )
+        self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{self.user.last_name} {self.user.first_name}",
+        )
         self.assertIn("accepted", response.data["additional_data"])
         self.assertIn("canceled", response.data["additional_data"])
         self.assertIn("failed", response.data["additional_data"])
@@ -322,9 +341,16 @@ class RequestsUtilitiesTestCase(APITestCase):
             response.data["additional_data"]["status_by_admin"]["admin_id"],
             self.user.id,
         )
+        self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{self.user.last_name} {self.user.first_name}",
+        )
 
         # Create a new admin user
         new_admin = create_user(is_admin=True)
+        new_admin.first_name = "NewAdmin"
+        new_admin.save()
         self.authorize_user(new_admin)
 
         # Send a patch in with same data  --> admin_id should NOT change
@@ -344,6 +370,15 @@ class RequestsUtilitiesTestCase(APITestCase):
             response.data["additional_data"]["status_by_admin"]["admin_id"],
             new_admin.id,
         )
+        self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{self.user.last_name} {self.user.first_name}",
+        )
+        self.assertNotEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{new_admin.last_name} {new_admin.first_name}",
+        )
 
         # Change the status_by_admin with the new admin --> admin_id should change
         response = self.client.patch(
@@ -353,6 +388,7 @@ class RequestsUtilitiesTestCase(APITestCase):
                     "status_by_admin": {
                         "status": Request.Statuses.UPLOADED,
                         "admin_id": 123,
+                        "admin_name": "Random Name",
                     }
                 }
             },
@@ -372,6 +408,86 @@ class RequestsUtilitiesTestCase(APITestCase):
             response.data["additional_data"]["status_by_admin"]["admin_id"],
             new_admin.id,
         )
+        self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
+        self.assertNotEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{self.user.last_name} {self.user.first_name}",
+        )
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{new_admin.last_name} {new_admin.first_name}",
+        )
+
+    def test_status_by_admin_remove_status(self):
+        # Create Request
+        response = self.client.post(self.url, get_test_data())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
+        request_id = response.data["id"]
+
+        # Change the status by admin
+        response = self.patch_additional_data_to_request(request_id)
+        self.assertIn("status_by_admin", response.data["additional_data"])
+        self.assertIn("status", response.data["additional_data"]["status_by_admin"])
+        self.assertIn("admin_id", response.data["additional_data"]["status_by_admin"])
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_id"],
+            self.user.id,
+        )
+        self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{self.user.last_name} {self.user.first_name}",
+        )
+        self.assertEqual(
+            response.data["status"],
+            Request.Statuses.ARCHIVED,
+        )
+
+        # Create a new admin user
+        new_admin = create_user(is_admin=True)
+        new_admin.first_name = "NewAdmin"
+        new_admin.save()
+        self.authorize_user(new_admin)
+
+        # Change the status_by_admin with the new admin to None
+        response = self.client.patch(
+            f"{self.url}/{request_id}",
+            {
+                "additional_data": {
+                    "status_by_admin": {
+                        "status": None,
+                        "admin_id": 123,
+                        "admin_name": "Random Name",
+                    }
+                }
+            },
+        )
+        self.assertIn("status_by_admin", response.data["additional_data"])
+        self.assertIn("status", response.data["additional_data"]["status_by_admin"])
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["status"],
+            None,
+        )
+        self.assertIn("admin_id", response.data["additional_data"]["status_by_admin"])
+        self.assertNotEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_id"],
+            self.user.id,
+        )
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_id"],
+            new_admin.id,
+        )
+        self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
+        self.assertNotEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{self.user.last_name} {self.user.first_name}",
+        )
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            f"{new_admin.last_name} {new_admin.first_name}",
+        )
+        self.assertEqual(response.data["status"], Request.Statuses.CANCELED)
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_publishing_email_sent_to_user_in_video_additional_data_should_not_be_overwritten(

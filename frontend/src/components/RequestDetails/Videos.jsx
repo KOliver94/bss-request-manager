@@ -28,13 +28,17 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
 import Tooltip from '@material-ui/core/Tooltip';
 import Avatar from '@material-ui/core/Avatar';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import { makeStyles } from '@material-ui/core/styles';
 import MUITextField from '@material-ui/core/TextField';
 // Material React Kit components
 import Badge from 'components/material-kit-react/Badge/Badge';
 // Form components
 import { Formik, Form, Field, getIn } from 'formik';
-import { TextField, CheckboxWithLabel } from 'formik-material-ui';
+import { TextField, CheckboxWithLabel, Select } from 'formik-material-ui';
 import { Autocomplete } from 'formik-material-ui-lab';
 import { KeyboardTimePicker } from 'formik-material-ui-pickers';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -54,6 +58,7 @@ import {
   updateRatingAdmin,
   deleteRatingAdmin,
 } from 'api/requestAdminApi';
+import { isAdmin as isAdminCheck } from 'api/loginApi';
 import { createRating, updateRating, deleteRating } from 'api/requestApi';
 import { videoStatuses } from 'api/enumConstants';
 import compareValues from 'api/objectComperator';
@@ -177,6 +182,18 @@ export default function Videos({
         values.additional_data.length.getHours() * 60 * 60 +
         values.additional_data.length.getMinutes() * 60 +
         values.additional_data.length.getSeconds();
+    }
+    if (
+      values.additional_data.status_by_admin &&
+      values.additional_data.status_by_admin.status !== undefined
+    ) {
+      values.additional_data.status_by_admin.admin_id = parseInt(
+        localStorage.getItem('user_id'),
+        10
+      );
+      values.additional_data.status_by_admin.admin_name = localStorage.getItem(
+        'name'
+      );
     }
     let result;
     try {
@@ -420,8 +437,10 @@ export default function Videos({
                         aired: [],
                         ...video.additional_data,
                         length: video.additional_data.length
-                          ? new Date('1970-01-01T00:00:00').setSeconds(
-                              video.additional_data.length
+                          ? new Date(
+                              new Date('1970-01-01T00:00:00').setSeconds(
+                                video.additional_data.length
+                              )
                             )
                           : null,
                       },
@@ -577,6 +596,46 @@ export default function Videos({
                                 />
                               )}
                             />
+                            {isAdminCheck() && (
+                              <FormControl fullWidth margin="normal">
+                                <InputLabel htmlFor="additional_data.status_by_admin.status">
+                                  Státusz felülírás
+                                </InputLabel>
+                                <Field
+                                  labelId="additional_data.status_by_admin.status"
+                                  label="Státusz felülírás"
+                                  name="additional_data.status_by_admin.status"
+                                  component={Select}
+                                  defaultValue={null}
+                                >
+                                  <MenuItem value={null}>
+                                    <em>Nincs</em>
+                                  </MenuItem>
+                                  {videoStatuses.map((status) => {
+                                    return (
+                                      <MenuItem
+                                        key={status.id}
+                                        value={status.id}
+                                      >
+                                        {status.text}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Field>
+                                {video.additional_data &&
+                                  video.additional_data.status_by_admin &&
+                                  video.additional_data.status_by_admin
+                                    .admin_name && (
+                                    <FormHelperText>
+                                      Utoljára módosította:{' '}
+                                      {
+                                        video.additional_data.status_by_admin
+                                          .admin_name
+                                      }
+                                    </FormHelperText>
+                                  )}
+                              </FormControl>
+                            )}
                           </Form>
                         </AccordionDetails>
                         <Divider />
