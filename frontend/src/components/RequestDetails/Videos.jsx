@@ -376,6 +376,7 @@ export default function Videos({
           'Kérlek a dátumot ÉÉÉÉ-HH-NN formában add meg!'
         )
       ),
+      length: Yup.date().nullable(),
     }),
   });
 
@@ -531,6 +532,18 @@ export default function Videos({
                               format="HH:mm:ss"
                               openTo="minutes"
                               views={['hours', 'minutes', 'seconds']}
+                              error={
+                                touched.additional_data &&
+                                touched.additional_data.length &&
+                                errors.additional_data &&
+                                !!errors.additional_data.length
+                              }
+                              helperText={
+                                touched.additional_data &&
+                                touched.additional_data.length &&
+                                errors.additional_data &&
+                                errors.additional_data.length
+                              }
                             />
                             <Field
                               name="additional_data.aired"
