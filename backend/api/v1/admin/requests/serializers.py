@@ -94,8 +94,10 @@ def update_additional_data(orig_dict, new_dict):
     for key, value in new_dict.items():
         if isinstance(value, abc.Mapping):
             orig_dict[key] = update_additional_data(orig_dict.get(key, {}), value)
-        elif isinstance(value, list) and key != "aired":
-            orig_dict[key] = orig_dict.get(key, []) + value
+        # Currently there is only one list in additional_data which needs to be replaced every time
+        # to be able to delete from it. If there will be a list which will only be extended use this function.
+        # elif isinstance(value, list):
+        #     orig_dict[key] = orig_dict.get(key, []) + value
         else:
             orig_dict[key] = new_dict[key]
     return orig_dict
