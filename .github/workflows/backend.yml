@@ -71,12 +71,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache
-          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles('**/Pipfile.lock') }}-v-${{ secrets.CACHE_VERSION }}
       - name: Cache virtualenv
         uses: actions/cache@v2
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-py${{ matrix.python-version }}-venv-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-venv-${{ hashFiles('**/Pipfile.lock') }}-v-${{ secrets.CACHE_VERSION }}
       - name: Install dependencies
         if: steps.cache-dependencies.outputs.cache-hit != 'true' || steps.cache-virtualenv.outputs.cache-hit != 'true'
         run: pipenv install --dev
