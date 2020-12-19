@@ -61,7 +61,7 @@ export function isAuthenticated() {
   return !!localStorage.getItem('access_token');
 }
 
-export function isAdminOrStaff() {
+export function isPrivileged() {
   const role = localStorage.getItem('role');
   return role && ['admin', 'staff'].includes(role.toLowerCase());
 }

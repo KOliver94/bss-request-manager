@@ -1,17 +1,17 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { isAdminOrStaff } from '../api/loginApi';
+import { isPrivileged } from '../api/loginApi';
 
-export default function AdminRoute({ children, ...rest }) {
+export default function PrivilegedRoute({ children, ...rest }) {
   return (
     <Route
       {...rest}
-      render={() => (isAdminOrStaff() ? children : <Redirect to="/" />)}
+      render={() => (isPrivileged() ? children : <Redirect to="/" />)}
     />
   );
 }
 
-AdminRoute.propTypes = {
+PrivilegedRoute.propTypes = {
   children: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };

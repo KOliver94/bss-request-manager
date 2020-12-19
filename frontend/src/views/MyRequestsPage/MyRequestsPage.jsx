@@ -44,7 +44,7 @@ const useStyles = makeStyles(styles);
 export default function MyRequestsPage({
   isAuthenticated,
   setIsAuthenticated,
-  isAdmin,
+  isPrivileged,
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -57,7 +57,7 @@ export default function MyRequestsPage({
     async (pageNumber) => {
       try {
         let result;
-        if (isAdmin) {
+        if (isPrivileged) {
           result = await listRequestsAdmin(pageNumber, ordering);
         } else {
           result = await listRequests(pageNumber, ordering);
@@ -71,7 +71,7 @@ export default function MyRequestsPage({
         });
       }
     },
-    [enqueueSnackbar, isAdmin, ordering]
+    [enqueueSnackbar, isPrivileged, ordering]
   );
 
   const handlePageChange = (page) => {
@@ -79,7 +79,7 @@ export default function MyRequestsPage({
   };
 
   const handleRowClick = (id) => {
-    history.push(isAdmin ? `/admin/requests/${id}` : `/my-requests/${id}`);
+    history.push(isPrivileged ? `/admin/requests/${id}` : `/my-requests/${id}`);
   };
 
   const handleOrderingChange = (orderBy) => {
@@ -120,7 +120,7 @@ export default function MyRequestsPage({
           <GridContainer justify="center">
             <GridItem xs={12} sm={12} md={6} className={classes.textCenter}>
               <h1 className={classes.title}>
-                {isAdmin ? 'Felkérések' : 'Felkéréseim'}
+                {isPrivileged ? 'Felkérések' : 'Felkéréseim'}
               </h1>
             </GridItem>
           </GridContainer>
@@ -241,9 +241,9 @@ export default function MyRequestsPage({
 MyRequestsPage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   setIsAuthenticated: PropTypes.func.isRequired,
-  isAdmin: PropTypes.bool,
+  isPrivileged: PropTypes.bool,
 };
 
 MyRequestsPage.defaultProps = {
-  isAdmin: false,
+  isPrivileged: false,
 };

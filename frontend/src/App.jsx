@@ -13,7 +13,7 @@ import {
 import { checkRefreshTokenValid } from './api/loginApi';
 
 import AuthenticatedRoute from './components/AuthenticatedRoute';
-import AdminRoute from './components/AdminRoute';
+import PrivilegedRoute from './components/PrivilegedRoute';
 
 import PageNotFound from './views/PageNotFound/PageNotFound';
 import LandingPage from './views/LandingPage/LandingPage';
@@ -89,22 +89,22 @@ function App() {
             />
           </AuthenticatedRoute>
           <AuthenticatedRoute exact path="/admin/requests">
-            <AdminRoute>
+            <PrivilegedRoute>
               <MyRequestsPage
                 isAuthenticated={isAuthenticated}
                 setIsAuthenticated={setIsAuthenticated}
-                isAdmin
+                isPrivileged
               />
-            </AdminRoute>
+            </PrivilegedRoute>
           </AuthenticatedRoute>
           <AuthenticatedRoute exact path="/admin/requests/:id">
-            <AdminRoute>
+            <PrivilegedRoute>
               <RequestDetailPage
                 isAuthenticated={isAuthenticated}
                 setIsAuthenticated={setIsAuthenticated}
-                isAdmin
+                isPrivileged
               />
-            </AdminRoute>
+            </PrivilegedRoute>
           </AuthenticatedRoute>
           <Route component={PageNotFound} />
         </Switch>

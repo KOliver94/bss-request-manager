@@ -58,7 +58,7 @@ import {
   updateRatingAdmin,
   deleteRatingAdmin,
 } from 'api/requestAdminApi';
-import { isAdmin as isAdminCheck } from 'api/loginApi';
+import { isAdmin } from 'api/loginApi';
 import { createRating, updateRating, deleteRating } from 'api/requestApi';
 import { videoStatuses } from 'api/enumConstants';
 import compareValues from 'api/objectComperator';
@@ -116,7 +116,7 @@ export default function Videos({
   requestData,
   setRequestData,
   staffMembers,
-  isAdmin,
+  isPrivileged,
 }) {
   const classes = useStyles();
   const isInitialMount = useRef(true);
@@ -243,7 +243,7 @@ export default function Videos({
       setRatingLoading(true);
       try {
         if (rating.rating === 0) {
-          if (isAdmin) {
+          if (isPrivileged) {
             result = await createRatingAdmin(requestId, video.id, {
               rating: value,
             });
@@ -264,7 +264,7 @@ export default function Videos({
             }),
           });
         } else {
-          if (isAdmin) {
+          if (isPrivileged) {
             result = await updateRatingAdmin(requestId, video.id, rating.id, {
               rating: value,
             });
@@ -312,7 +312,7 @@ export default function Videos({
       loading: true,
     });
     try {
-      if (isAdmin) {
+      if (isPrivileged) {
         await deleteRatingAdmin(
           requestId,
           ratingRemoveDialog.videoId,
@@ -427,7 +427,7 @@ export default function Videos({
                   </Badge>
                 </div>
               </AccordionSummary>
-              {isAdmin ? (
+              {isPrivileged ? (
                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={hu}>
                   <Formik
                     enableReinitialize
@@ -596,7 +596,7 @@ export default function Videos({
                                 />
                               )}
                             />
-                            {isAdminCheck() && (
+                            {isAdmin() && (
                               <FormControl fullWidth margin="normal">
                                 <InputLabel htmlFor="additional_data.status_by_admin.status">
                                   Státusz felülírás
@@ -696,10 +696,10 @@ export default function Videos({
                   )}
                 </>
               )}
-              {((isAdmin && video.status >= 3) ||
-                (!isAdmin && video.status >= 5)) && (
+              {((isPrivileged && video.status >= 3) ||
+                (!isPrivileged && video.status >= 5)) && (
                 <>
-                  {!isAdmin && <Divider />}
+                  {!isPrivileged && <Divider />}
                   <AccordionActions>
                     {getOwnRatingForVideo(video).rating > 0 && (
                       <Tooltip
@@ -736,14 +736,14 @@ export default function Videos({
         </>
       ) : (
         <>
-          {!isAdmin && (
+          {!isPrivileged && (
             <p className={classes.noVideosYet}>
               Még nincsenek videók. <i className="far fa-pause-circle" />
             </p>
           )}
         </>
       )}
-      {isAdmin && (
+      {isPrivileged && (
         <>
           <Tooltip title="Új videó hozzáadása" arrow>
             <Fab
@@ -873,7 +873,7 @@ export default function Videos({
       <ReviewDialog
         reviewDialogData={reviewDialogData}
         setReviewDialogData={setReviewDialogData}
-        isAdmin={isAdmin}
+        isPrivileged={isPrivileged}
         requestData={requestData}
         setRequestData={setRequestData}
       />
@@ -886,5 +886,5 @@ Videos.propTypes = {
   requestData: PropTypes.object.isRequired,
   setRequestData: PropTypes.func.isRequired,
   staffMembers: PropTypes.array.isRequired,
-  isAdmin: PropTypes.bool.isRequired,
+  isPrivileged: PropTypes.bool.isRequired,
 };

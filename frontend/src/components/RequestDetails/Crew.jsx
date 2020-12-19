@@ -65,7 +65,7 @@ export default function Crew({
   requestData,
   setRequestData,
   staffMembers,
-  isAdmin,
+  isPrivileged,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -181,7 +181,7 @@ export default function Crew({
       .required('A pozíció megadása kötelező'),
   });
 
-  if (isAdmin) {
+  if (isPrivileged) {
     return (
       <div>
         {requestData.crew.length > 0 && (
@@ -372,5 +372,5 @@ Crew.propTypes = {
   requestData: PropTypes.object.isRequired,
   setRequestData: PropTypes.func.isRequired,
   staffMembers: PropTypes.array.isRequired,
-  isAdmin: PropTypes.bool.isRequired,
+  isPrivileged: PropTypes.bool.isRequired,
 };

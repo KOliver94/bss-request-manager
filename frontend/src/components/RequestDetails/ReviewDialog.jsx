@@ -17,7 +17,7 @@ import handleError from 'api/errorHandler';
 export default function Videos({
   reviewDialogData,
   setReviewDialogData,
-  isAdmin,
+  isPrivileged,
   requestData,
   setRequestData,
 }) {
@@ -52,7 +52,7 @@ export default function Videos({
     setLoading(true);
     let result;
     try {
-      if (isAdmin) {
+      if (isPrivileged) {
         result = await updateRatingAdmin(
           reviewDialogData.requestId,
           reviewDialogData.videoId,
@@ -136,7 +136,7 @@ export default function Videos({
 Videos.propTypes = {
   reviewDialogData: PropTypes.object.isRequired,
   setReviewDialogData: PropTypes.func.isRequired,
-  isAdmin: PropTypes.bool.isRequired,
+  isPrivileged: PropTypes.bool.isRequired,
   requestData: PropTypes.object.isRequired,
   setRequestData: PropTypes.func.isRequired,
 };

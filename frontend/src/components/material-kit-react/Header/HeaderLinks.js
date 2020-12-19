@@ -21,13 +21,13 @@ import CustomDropdown from 'components/material-kit-react/CustomDropdown/CustomD
 import styles from 'assets/jss/material-kit-react/components/headerLinksStyle.js';
 
 import { useSnackbar } from 'notistack';
-import { logoutUser, isAdminOrStaff } from 'api/loginApi';
+import { logoutUser, isPrivileged } from 'api/loginApi';
 
 const useStyles = makeStyles(styles);
 
 const AdminButton = () => {
   const classes = useStyles();
-  if (isAdminOrStaff()) {
+  if (isPrivileged()) {
     return (
       <Link to="/admin/requests" className={classes.dropdownLink}>
         <i className="fas fa-tools"></i> Admin
@@ -84,7 +84,7 @@ export default function HeaderLinks({
             }}
             dropdownList={[
               <AdminButton />,
-              { divider: isAdminOrStaff() },
+              { divider: isPrivileged() },
               <Link to="/profile" className={classes.dropdownLink}>
                 <i className="fas fa-user-circle"></i> Profilom
               </Link>,

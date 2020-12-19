@@ -31,7 +31,7 @@ import { getRequest } from 'api/requestApi';
 import { getRequestAdmin } from 'api/requestAdminApi';
 import { listStaffUsers } from 'api/userApi';
 import { requestStatuses } from 'api/enumConstants';
-import { isAdminOrStaff } from 'api/loginApi';
+import { isPrivileged as isPrivilegedCheck } from 'api/loginApi';
 import handleError from 'api/errorHandler';
 
 import styles from 'assets/jss/material-kit-react/views/requestDetailPage';
@@ -41,7 +41,7 @@ const useStyles = makeStyles(styles);
 export default function RequestDetailPage({
   isAuthenticated,
   setIsAuthenticated,
-  isAdmin,
+  isPrivileged,
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -76,12 +76,12 @@ export default function RequestDetailPage({
             requestData={data}
             setRequestData={setData}
             staffMembers={staffMembers}
-            isAdmin={isAdmin}
+            isPrivileged={isPrivileged}
           />
         ),
       },
     ];
-    if (isAdmin) {
+    if (isPrivileged) {
       content.unshift({
         tabName: 'Stáb',
         tabIcon: Face,
@@ -91,7 +91,7 @@ export default function RequestDetailPage({
             requestData={data}
             setRequestData={setData}
             staffMembers={staffMembers}
-            isAdmin={isAdmin}
+            isPrivileged={isPrivileged}
           />
         ),
       });
@@ -103,7 +103,7 @@ export default function RequestDetailPage({
     async function loadData(requestId) {
       try {
         let result;
-        if (isAdmin) {
+        if (isPrivileged) {
           result = await getRequestAdmin(requestId);
           await listStaffUsers().then((response) => {
             setStaffMembers(response.data);
@@ -115,7 +115,7 @@ export default function RequestDetailPage({
         setLoading(false);
       } catch (e) {
         if (e.response && e.response.status === 404) {
-          if (!isAdmin && isAdminOrStaff()) {
+          if (!isPrivileged && isPrivilegedCheck()) {
             history.replace(`/admin/requests/${id}`);
           } else {
             history.replace('/404');
@@ -130,7 +130,7 @@ export default function RequestDetailPage({
     }
 
     loadData(id);
-  }, [id, isAdmin, enqueueSnackbar, history]);
+  }, [id, isPrivileged, enqueueSnackbar, history]);
 
   return (
     <div>
@@ -187,14 +187,14 @@ export default function RequestDetailPage({
                     requestData={data}
                     setRequestData={setData}
                     staffMembers={staffMembers}
-                    isAdmin={isAdmin}
+                    isPrivileged={isPrivileged}
                   />
                 </GridItem>
                 <GridItem xs={12} sm={6} className={classes.textColor}>
                   <CustomTabs
                     headerColor="primary"
                     tabs={tabsContent()}
-                    activeTab={isAdmin && data.status >= 4 ? 1 : 0}
+                    activeTab={isPrivileged && data.status >= 4 ? 1 : 0}
                   />
                 </GridItem>
                 <GridItem xs={12} className={classes.textColor}>
@@ -202,7 +202,7 @@ export default function RequestDetailPage({
                     requestId={id}
                     requestData={data}
                     setRequestData={setData}
-                    isAdmin={isAdmin}
+                    isPrivileged={isPrivileged}
                   />
                 </GridItem>
               </GridContainer>
@@ -218,9 +218,9 @@ export default function RequestDetailPage({
 RequestDetailPage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   setIsAuthenticated: PropTypes.func.isRequired,
-  isAdmin: PropTypes.bool,
+  isPrivileged: PropTypes.bool,
 };
 
 RequestDetailPage.defaultProps = {
-  isAdmin: false,
+  isPrivileged: false,
 };

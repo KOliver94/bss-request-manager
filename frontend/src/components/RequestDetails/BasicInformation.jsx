@@ -50,7 +50,7 @@ import {
   deleteRequestAdmin,
 } from 'api/requestAdminApi';
 import { getRequest } from 'api/requestApi';
-import { isAdmin as isAdminCheck, isAdminOrStaff } from 'api/loginApi';
+import { isAdmin, isPrivileged as isPrivilegedCheck } from 'api/loginApi';
 import { requestStatuses } from 'api/enumConstants';
 import handleError from 'api/errorHandler';
 
@@ -94,7 +94,7 @@ export default function BasicInformation({
   requestData,
   setRequestData,
   staffMembers,
-  isAdmin,
+  isPrivileged,
 }) {
   const classes = useStyles();
   const formRef = useRef();
@@ -141,7 +141,7 @@ export default function BasicInformation({
   const handleReload = async () => {
     setLoading(true);
     try {
-      if (isAdmin) {
+      if (isPrivileged) {
         await getRequestAdmin(requestId).then((response) => {
           setLoading(false);
           setRequestData(response.data);
@@ -226,7 +226,7 @@ export default function BasicInformation({
   };
 
   const changeView = () => {
-    if (isAdmin) {
+    if (isPrivileged) {
       history.replace(`/my-requests/${requestId}`);
     } else {
       history.replace(`/admin/requests/${requestId}`);
@@ -250,12 +250,12 @@ export default function BasicInformation({
           </Grid>
           <Grid item>
             {!editing &&
-              isAdminOrStaff() &&
+              isPrivilegedCheck() &&
               requestData.requester.id.toString() ===
                 localStorage.getItem('user_id') && (
                 <Tooltip
                   title={
-                    isAdmin
+                    isPrivileged
                       ? 'Megtekintés felkérőként'
                       : 'Megtekintés adminként'
                   }
@@ -274,7 +274,7 @@ export default function BasicInformation({
                 </IconButton>
               </Tooltip>
             )}
-            {isAdmin && (
+            {isPrivileged && (
               <>
                 <Tooltip
                   title={editing ? 'Mentés' : 'Szerkesztés'}
@@ -317,7 +317,7 @@ export default function BasicInformation({
                 <Form className={classes.form}>
                   <div className={classes.formSectionFirst}>
                     <Typography variant="h6">Részletek</Typography>
-                    {isAdminCheck() && (
+                    {isAdmin() && (
                       <>
                         <Field
                           name="additional_data.accepted"
@@ -599,7 +599,7 @@ export default function BasicInformation({
                 )}
               </b>
             </p>
-            {isAdmin && (
+            {isPrivileged && (
               <>
                 <p>
                   Határidő:{' '}
@@ -659,5 +659,5 @@ BasicInformation.propTypes = {
   requestData: PropTypes.object.isRequired,
   setRequestData: PropTypes.func.isRequired,
   staffMembers: PropTypes.array.isRequired,
-  isAdmin: PropTypes.bool.isRequired,
+  isPrivileged: PropTypes.bool.isRequired,
 };

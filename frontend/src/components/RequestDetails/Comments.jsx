@@ -31,7 +31,7 @@ import {
   updateCommentAdmin,
   deleteCommentAdmin,
 } from 'api/requestAdminApi';
-import { isAdmin as isAdminCheck } from 'api/loginApi';
+import { isAdmin } from 'api/loginApi';
 import compareValues from 'api/objectComperator';
 import handleError from 'api/errorHandler';
 
@@ -70,7 +70,7 @@ export default function Comments({
   requestId,
   requestData,
   setRequestData,
-  isAdmin,
+  isPrivileged,
 }) {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -88,7 +88,7 @@ export default function Comments({
     let result;
     try {
       if (editingCommentId > 0 && !newComment) {
-        if (isAdmin) {
+        if (isPrivileged) {
           result = await updateCommentAdmin(
             requestId,
             editingCommentId,
@@ -108,7 +108,7 @@ export default function Comments({
           }),
         });
       } else {
-        if (isAdmin) {
+        if (isPrivileged) {
           result = await createCommentAdmin(requestId, values);
         } else {
           result = await createComment(requestId, values);
@@ -127,7 +127,7 @@ export default function Comments({
   const handleDelete = async (commentId) => {
     setLoading(true);
     try {
-      if (isAdmin) {
+      if (isPrivileged) {
         await deleteCommentAdmin(requestId, commentId);
       } else {
         await deleteComment(requestId, commentId);
@@ -216,7 +216,7 @@ export default function Comments({
                               />
                             </Grid>
                             <Grid item className={classes.commentButtons}>
-                              {isAdmin && (
+                              {isPrivileged && (
                                 <Tooltip
                                   title={values.internal ? 'Belső' : 'Publikus'}
                                   placement="left"
@@ -300,7 +300,7 @@ export default function Comments({
                       </Tooltip>
                     </Grid>
 
-                    {((isAdmin && isAdminCheck()) ||
+                    {((isPrivileged && isAdmin()) ||
                       comment.author.id.toString() ===
                         localStorage.getItem('user_id')) && (
                       <Grid item className={classes.commentButtons}>
@@ -370,7 +370,7 @@ export default function Comments({
                   />
                 </Grid>
                 <Grid item className={classes.commentButtons}>
-                  {isAdmin && (
+                  {isPrivileged && (
                     <Tooltip
                       title={values.internal ? 'Belső' : 'Publikus'}
                       placement="left"
@@ -408,5 +408,5 @@ Comments.propTypes = {
   requestId: PropTypes.string.isRequired,
   requestData: PropTypes.object.isRequired,
   setRequestData: PropTypes.func.isRequired,
-  isAdmin: PropTypes.bool.isRequired,
+  isPrivileged: PropTypes.bool.isRequired,
 };
