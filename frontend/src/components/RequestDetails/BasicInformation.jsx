@@ -317,76 +317,72 @@ export default function BasicInformation({
                 <Form className={classes.form}>
                   <div className={classes.formSectionFirst}>
                     <Typography variant="h6">Részletek</Typography>
-                    {isAdmin() && (
-                      <>
-                        <Field
-                          name="additional_data.accepted"
-                          Label={{ label: 'Elfogadva' }}
-                          component={CheckboxWithLabel}
-                          type="checkbox"
-                          icon={<SentimentVeryDissatisfiedIcon />}
-                          checkedIcon={<SentimentVerySatisfiedIcon />}
-                          indeterminateIcon={<RadioButtonUncheckedIcon />}
-                        />
-                        <Field
-                          name="additional_data.canceled"
-                          Label={{ label: 'Lemondva' }}
-                          component={CheckboxWithLabel}
-                          type="checkbox"
-                          icon={<RadioButtonUncheckedIcon />}
-                          checkedIcon={<NotInterestedIcon />}
-                          indeterminateIcon={<RadioButtonUncheckedIcon />}
-                        />
-                        <Field
-                          name="additional_data.failed"
-                          Label={{ label: 'Meghiúsult' }}
-                          component={CheckboxWithLabel}
-                          type="checkbox"
-                          icon={<RadioButtonUncheckedIcon />}
-                          checkedIcon={<ErrorOutlineIcon />}
-                          indeterminateIcon={<RadioButtonUncheckedIcon />}
-                        />
-                        <FormControl
-                          fullWidth
-                          variant="outlined"
-                          margin="normal"
-                        >
-                          <InputLabel htmlFor="additional_data.status_by_admin.status">
-                            Státusz felülírás
-                          </InputLabel>
-                          <Field
-                            labelId="additional_data.status_by_admin.status"
-                            label="Státusz felülírás"
-                            name="additional_data.status_by_admin.status"
-                            component={Select}
-                            defaultValue={null}
-                          >
-                            <MenuItem value={null}>
-                              <em>Nincs</em>
+                    <Field
+                      name="additional_data.accepted"
+                      Label={{ label: 'Elfogadva' }}
+                      component={CheckboxWithLabel}
+                      type="checkbox"
+                      icon={<SentimentVeryDissatisfiedIcon />}
+                      checkedIcon={<SentimentVerySatisfiedIcon />}
+                      indeterminateIcon={<RadioButtonUncheckedIcon />}
+                      disabled={!isAdmin()}
+                    />
+                    <Field
+                      name="additional_data.canceled"
+                      Label={{ label: 'Lemondva' }}
+                      component={CheckboxWithLabel}
+                      type="checkbox"
+                      icon={<RadioButtonUncheckedIcon />}
+                      checkedIcon={<NotInterestedIcon />}
+                      indeterminateIcon={<RadioButtonUncheckedIcon />}
+                      disabled={!isAdmin()}
+                    />
+                    <Field
+                      name="additional_data.failed"
+                      Label={{ label: 'Meghiúsult' }}
+                      component={CheckboxWithLabel}
+                      type="checkbox"
+                      icon={<RadioButtonUncheckedIcon />}
+                      checkedIcon={<ErrorOutlineIcon />}
+                      indeterminateIcon={<RadioButtonUncheckedIcon />}
+                      disabled={!isAdmin()}
+                    />
+                    <FormControl fullWidth variant="outlined" margin="normal">
+                      <InputLabel htmlFor="additional_data.status_by_admin.status">
+                        Státusz felülírás
+                      </InputLabel>
+                      <Field
+                        labelId="additional_data.status_by_admin.status"
+                        label="Státusz felülírás"
+                        name="additional_data.status_by_admin.status"
+                        component={Select}
+                        defaultValue={null}
+                        disabled={!isAdmin()}
+                      >
+                        <MenuItem value={null}>
+                          <em>Nincs</em>
+                        </MenuItem>
+                        {requestStatuses.map((status) => {
+                          return (
+                            <MenuItem key={status.id} value={status.id}>
+                              {status.text}
                             </MenuItem>
-                            {requestStatuses.map((status) => {
-                              return (
-                                <MenuItem key={status.id} value={status.id}>
-                                  {status.text}
-                                </MenuItem>
-                              );
-                            })}
-                          </Field>
-                          {requestData.additional_data &&
-                            requestData.additional_data.status_by_admin &&
-                            requestData.additional_data.status_by_admin
-                              .admin_name && (
-                              <FormHelperText>
-                                Utoljára módosította:{' '}
-                                {
-                                  requestData.additional_data.status_by_admin
-                                    .admin_name
-                                }
-                              </FormHelperText>
-                            )}
-                        </FormControl>
-                      </>
-                    )}
+                          );
+                        })}
+                      </Field>
+                      {requestData.additional_data &&
+                        requestData.additional_data.status_by_admin &&
+                        requestData.additional_data.status_by_admin
+                          .admin_name && (
+                          <FormHelperText>
+                            Utoljára módosította:{' '}
+                            {
+                              requestData.additional_data.status_by_admin
+                                .admin_name
+                            }
+                          </FormHelperText>
+                        )}
+                    </FormControl>
                     <Field
                       name="responsible_id"
                       component={Autocomplete}
