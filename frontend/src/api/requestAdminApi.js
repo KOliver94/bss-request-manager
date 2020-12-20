@@ -93,6 +93,12 @@ export async function createRatingAdmin(requestId, videoId, ratingData) {
   );
 }
 
+export async function listRatingsAdmin(requestId, videoId) {
+  return axiosInstance.get(
+    `/admin/requests/${requestId}/videos/${videoId}/ratings`
+  );
+}
+
 export async function updateRatingAdmin(
   requestId,
   videoId,

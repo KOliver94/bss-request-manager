@@ -32,6 +32,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import { makeStyles } from '@material-ui/core/styles';
 import MUITextField from '@material-ui/core/TextField';
 // Material React Kit components
@@ -65,6 +66,7 @@ import compareValues from 'api/objectComperator';
 import handleError from 'api/errorHandler';
 // Review component
 import ReviewDialog from './ReviewDialog';
+import RatingsDialog from './RatingsDialog';
 
 const useStyles = makeStyles((theme) => ({
   inputField: {
@@ -134,6 +136,11 @@ export default function Videos({
     requestId,
     videoId: 0,
     rating: {},
+    open: false,
+  });
+  const [ratingsDialogData, setRatingsDialogData] = useState({
+    requestId,
+    videoId: 0,
     open: false,
   });
 
@@ -697,6 +704,34 @@ export default function Videos({
                 <>
                   {!isPrivileged && <Divider />}
                   <AccordionActions>
+                    {isPrivileged && video.avg_rating && (
+                      <Tooltip
+                        title={`Összes értékelés. Átlag: ${
+                          Math.round(
+                            (video.avg_rating + Number.EPSILON) * 100
+                          ) / 100
+                        }`}
+                        classes={classes}
+                        placement="left"
+                        arrow
+                      >
+                        <IconButton
+                          onClick={() =>
+                            setRatingsDialogData({
+                              ...ratingsDialogData,
+                              ...{
+                                videoId: video.id,
+                                open: true,
+                              },
+                            })
+                          }
+                          disabled={ratingsDialogData.open}
+                          size="small"
+                        >
+                          <AssignmentIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
                     {getOwnRatingForVideo(video).rating > 0 && (
                       <Tooltip
                         title="Szöveges értékelés írása"
@@ -833,6 +868,12 @@ export default function Videos({
               )}
             </Formik>
           </Dialog>
+          <RatingsDialog
+            ratingsDialogData={ratingsDialogData}
+            setRatingsDialogData={setRatingsDialogData}
+            setRequestData={setRequestData}
+            isAdmin={isAdmin()}
+          />
         </>
       )}
       <Dialog

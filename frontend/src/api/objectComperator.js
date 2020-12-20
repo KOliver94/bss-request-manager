@@ -1,15 +1,29 @@
-function compareValues(key, order = 'asc') {
+function compareValues(key1, order = 'asc', key2 = null) {
   return function innerSort(a, b) {
     if (
-      !Object.prototype.hasOwnProperty.call(a, key) ||
-      !Object.prototype.hasOwnProperty.call(b, key)
+      !Object.prototype.hasOwnProperty.call(a, key1) ||
+      !Object.prototype.hasOwnProperty.call(b, key1)
     ) {
       // property doesn't exist on either object
       return 0;
     }
 
-    const varA = typeof a[key] === 'string' ? a[key].toUpperCase() : a[key];
-    const varB = typeof b[key] === 'string' ? b[key].toUpperCase() : b[key];
+    let varA;
+    let varB;
+
+    if (typeof a[key1] === 'object' && typeof b[key1] === 'object' && key2) {
+      varA =
+        typeof a[key1][key2] === 'string'
+          ? a[key1][key2].toUpperCase()
+          : a[key1][key2];
+      varB =
+        typeof b[key1][key2] === 'string'
+          ? b[key1][key2].toUpperCase()
+          : b[key1][key2];
+    } else {
+      varA = typeof a[key1] === 'string' ? a[key1].toUpperCase() : a[key1];
+      varB = typeof b[key1] === 'string' ? b[key1].toUpperCase() : b[key1];
+    }
 
     let comparison = 0;
     if (varA > varB) {
