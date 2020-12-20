@@ -596,46 +596,42 @@ export default function Videos({
                                 />
                               )}
                             />
-                            {isAdmin() && (
-                              <FormControl fullWidth margin="normal">
-                                <InputLabel htmlFor="additional_data.status_by_admin.status">
-                                  Státusz felülírás
-                                </InputLabel>
-                                <Field
-                                  labelId="additional_data.status_by_admin.status"
-                                  label="Státusz felülírás"
-                                  name="additional_data.status_by_admin.status"
-                                  component={Select}
-                                  defaultValue={null}
-                                >
-                                  <MenuItem value={null}>
-                                    <em>Nincs</em>
-                                  </MenuItem>
-                                  {videoStatuses.map((status) => {
-                                    return (
-                                      <MenuItem
-                                        key={status.id}
-                                        value={status.id}
-                                      >
-                                        {status.text}
-                                      </MenuItem>
-                                    );
-                                  })}
-                                </Field>
-                                {video.additional_data &&
-                                  video.additional_data.status_by_admin &&
-                                  video.additional_data.status_by_admin
-                                    .admin_name && (
-                                    <FormHelperText>
-                                      Utoljára módosította:{' '}
-                                      {
-                                        video.additional_data.status_by_admin
-                                          .admin_name
-                                      }
-                                    </FormHelperText>
-                                  )}
-                              </FormControl>
-                            )}
+                            <FormControl fullWidth margin="normal">
+                              <InputLabel htmlFor="additional_data.status_by_admin.status">
+                                Státusz felülírás
+                              </InputLabel>
+                              <Field
+                                labelId="additional_data.status_by_admin.status"
+                                label="Státusz felülírás"
+                                name="additional_data.status_by_admin.status"
+                                component={Select}
+                                defaultValue={null}
+                                disabled={!isAdmin()}
+                              >
+                                <MenuItem value={null}>
+                                  <em>Nincs</em>
+                                </MenuItem>
+                                {videoStatuses.map((status) => {
+                                  return (
+                                    <MenuItem key={status.id} value={status.id}>
+                                      {status.text}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Field>
+                              {video.additional_data &&
+                                video.additional_data.status_by_admin &&
+                                video.additional_data.status_by_admin
+                                  .admin_name && (
+                                  <FormHelperText>
+                                    Utoljára módosította:{' '}
+                                    {
+                                      video.additional_data.status_by_admin
+                                        .admin_name
+                                    }
+                                  </FormHelperText>
+                                )}
+                            </FormControl>
                           </Form>
                         </AccordionDetails>
                         <Divider />
