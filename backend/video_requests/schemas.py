@@ -52,7 +52,7 @@ VIDEO_ADDITIONAL_DATA_SCHEMA = {
             "additionalProperties": False,
         },
         "editing_done": {"type": "boolean"},
-        "length": {"type": "number"},
+        "length": {"anyOf": [{"type": "number"}, {"type": "null"}]},
         "coding": {
             "type": "object",
             "properties": {"website": {"type": "boolean"}},
