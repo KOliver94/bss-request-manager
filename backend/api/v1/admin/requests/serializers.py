@@ -197,7 +197,7 @@ class VideoAdminSerializer(serializers.ModelSerializer):
     ratings = RatingAdminSerializer(many=True, read_only=True)
     editor = UserSerializer(read_only=True)
     editor_id = IntegerField(write_only=True, required=False, allow_null=True)
-    avg_rating = serializers.IntegerField(read_only=True)
+    avg_rating = serializers.FloatField(read_only=True)
 
     class Meta:
         model = Video
