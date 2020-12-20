@@ -14,7 +14,7 @@ import { updateRatingAdmin } from 'api/requestAdminApi';
 import { updateRating } from 'api/requestApi';
 import handleError from 'api/errorHandler';
 
-export default function Videos({
+export default function ReviewDialog({
   reviewDialogData,
   setReviewDialogData,
   isPrivileged,
@@ -133,7 +133,7 @@ export default function Videos({
   );
 }
 
-Videos.propTypes = {
+ReviewDialog.propTypes = {
   reviewDialogData: PropTypes.object.isRequired,
   setReviewDialogData: PropTypes.func.isRequired,
   isPrivileged: PropTypes.bool.isRequired,
