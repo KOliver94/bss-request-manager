@@ -70,7 +70,7 @@ export default function Crew({
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
-  const [editingCrewId, setEditingCrewId] = useState(0);
+  const [editingCrewId, setEditingCrewId] = useState(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [crewMemberDetails, setCrewMemberDetails] = useState({});
 
@@ -126,7 +126,7 @@ export default function Crew({
             return crew;
           }),
         });
-        setEditingCrewId(0);
+        setEditingCrewId(-1);
         setCrewMemberDetails({});
       }
     } catch (e) {
@@ -157,7 +157,7 @@ export default function Crew({
   };
 
   const handleCancel = () => {
-    setEditingCrewId(0);
+    setEditingCrewId(-1);
     setCrewMemberDetails({});
   };
 

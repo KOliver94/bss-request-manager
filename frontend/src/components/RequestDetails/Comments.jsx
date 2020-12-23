@@ -75,7 +75,7 @@ export default function Comments({
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
-  const [editingCommentId, setEditingCommentId] = useState(0);
+  const [editingCommentId, setEditingCommentId] = useState(-1);
 
   const showError = (e) => {
     enqueueSnackbar(handleError(e), {
@@ -97,7 +97,7 @@ export default function Comments({
         } else {
           result = await updateComment(requestId, editingCommentId, values);
         }
-        setEditingCommentId(0);
+        setEditingCommentId(-1);
         setRequestData({
           ...requestData,
           comments: requestData.comments.map((comment) => {
@@ -150,7 +150,7 @@ export default function Comments({
   };
 
   const handleCancel = () => {
-    setEditingCommentId(0);
+    setEditingCommentId(-1);
   };
 
   const validationSchema = Yup.object({
