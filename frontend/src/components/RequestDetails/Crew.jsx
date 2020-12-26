@@ -22,9 +22,9 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
+import { createFilterOptions } from '@material-ui/lab/Autocomplete';
 // Form components
 import { Formik, Form, Field } from 'formik';
-import { TextField } from 'formik-material-ui';
 import { Autocomplete } from 'formik-material-ui-lab';
 import * as Yup from 'yup';
 // Notistack
@@ -37,6 +37,7 @@ import {
 } from 'api/requestAdminApi';
 import compareValues from 'api/objectComperator';
 import handleError from 'api/errorHandler';
+import { crewPositionTypes } from 'api/enumConstants';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -59,6 +60,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 5,
   },
 }));
+
+const filter = createFilterOptions();
 
 export default function Crew({
   requestId,
@@ -93,6 +96,7 @@ export default function Crew({
     const values = val;
     try {
       values.member_id = values.member_id.id;
+      values.position = values.position.position;
       const result = await createCrewAdmin(requestId, values);
       setRequestData({
         ...requestData,
@@ -174,11 +178,15 @@ export default function Crew({
     member_id: Yup.object()
       .required('A stábtag kiválasztása kötelező!')
       .nullable(),
-    position: Yup.string()
-      .min(1, 'A pozíció túl rövid!')
-      .max(20, 'A pozíció túl hosszú!')
-      .trim()
-      .required('A pozíció megadása kötelező'),
+    position: Yup.object()
+      .shape({
+        position: Yup.string()
+          .min(1, 'A pozíció túl rövid!')
+          .max(20, 'A pozíció túl hosszú!')
+          .trim(),
+      })
+      .required('A pozíció megadása kötelező')
+      .nullable(),
   });
 
   if (isPrivileged) {
@@ -284,7 +292,8 @@ export default function Crew({
         >
           <Formik
             initialValues={{
-              position: '',
+              member_id: null,
+              position: null,
             }}
             onSubmit={(values) => handleSubmit(values)}
             validationSchema={validationSchema}
@@ -332,12 +341,56 @@ export default function Crew({
                     />
                     <Field
                       name="position"
-                      label="Pozíció"
-                      margin="normal"
-                      component={TextField}
+                      component={Autocomplete}
+                      options={crewPositionTypes}
+                      filterOptions={(options, params) => {
+                        const filtered = filter(options, params);
+
+                        // Suggest the creation of a new value
+                        if (params.inputValue !== '') {
+                          filtered.push({
+                            position: params.inputValue,
+                            category: 'Egyéb',
+                            label: `Egyéb: "${params.inputValue}"`,
+                          });
+                        }
+
+                        return filtered;
+                      }}
+                      getOptionLabel={(option) => option.position}
+                      renderOption={(option) => {
+                        // Add "xxx" option created dynamically
+                        if (option.label) {
+                          return option.label;
+                        }
+                        // Regular option
+                        return option.position;
+                      }}
+                      groupBy={(option) => option.category}
                       fullWidth
-                      error={touched.position && !!errors.position}
-                      helperText={touched.position && errors.position}
+                      selectOnFocus
+                      clearOnBlur
+                      handleHomeEndKeys
+                      freeSolo
+                      autoComplete
+                      autoHighlight
+                      renderInput={(params) => (
+                        <MUITextField
+                          // eslint-disable-next-line react/jsx-props-no-spreading
+                          {...params}
+                          name="position"
+                          label="Pozíció"
+                          margin="normal"
+                          error={touched.position && !!errors.position}
+                          helperText={
+                            touched.position &&
+                            errors.position &&
+                            ((errors.position.position &&
+                              errors.position.position) ||
+                              errors.position)
+                          }
+                        />
+                      )}
                     />
                   </Form>
                 </DialogContent>
