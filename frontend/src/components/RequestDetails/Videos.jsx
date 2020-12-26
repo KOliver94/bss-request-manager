@@ -168,12 +168,13 @@ export default function Videos({
       setRequestData({
         ...requestData,
         status: result.data.status,
+        videos: result.data.videos,
       });
     };
 
     if (isInitialMount.current) {
       isInitialMount.current = false;
-    } else {
+    } else if (isPrivileged) {
       updateRequestStatus();
     }
     // eslint-disable-next-line
