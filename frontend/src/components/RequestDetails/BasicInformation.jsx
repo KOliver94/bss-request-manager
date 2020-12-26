@@ -262,16 +262,20 @@ export default function BasicInformation({
                   placement="top"
                   arrow
                 >
-                  <IconButton onClick={changeView} disabled={loading}>
-                    <VisibilityIcon />
-                  </IconButton>
+                  <span>
+                    <IconButton onClick={changeView} disabled={loading}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </span>
                 </Tooltip>
               )}
             {!editing && (
               <Tooltip title="Frissítés" placement="top" arrow>
-                <IconButton onClick={handleReload} disabled={loading}>
-                  <RefreshIcon />
-                </IconButton>
+                <span>
+                  <IconButton onClick={handleReload} disabled={loading}>
+                    <RefreshIcon />
+                  </IconButton>
+                </span>
               </Tooltip>
             )}
             {isPrivileged && (
@@ -281,21 +285,27 @@ export default function BasicInformation({
                   placement="top"
                   arrow
                 >
-                  <IconButton onClick={handleEditing} disabled={loading}>
-                    {editing ? <CheckIcon /> : <EditIcon />}
-                  </IconButton>
+                  <span>
+                    <IconButton onClick={handleEditing} disabled={loading}>
+                      {editing ? <CheckIcon /> : <EditIcon />}
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 {editing ? (
                   <Tooltip title="Elvetés" placement="top" arrow>
-                    <IconButton onClick={handleDiscard} disabled={loading}>
-                      <ClearIcon />
-                    </IconButton>
+                    <span>
+                      <IconButton onClick={handleDiscard} disabled={loading}>
+                        <ClearIcon />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 ) : (
                   <Tooltip title="Törlés" placement="top" arrow>
-                    <IconButton onClick={handleDelete} disabled={loading}>
-                      <DeleteForeverIcon />
-                    </IconButton>
+                    <span>
+                      <IconButton onClick={handleDelete} disabled={loading}>
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 )}
               </>

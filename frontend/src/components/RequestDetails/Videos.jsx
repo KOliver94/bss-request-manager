@@ -654,13 +654,15 @@ export default function Videos({
                             placement="left"
                             arrow
                           >
-                            <IconButton
-                              onClick={() => handleDelete(video.id)}
-                              disabled={isSubmitting || videoDeleteLoading}
-                              size="small"
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
+                            <span>
+                              <IconButton
+                                onClick={() => handleDelete(video.id)}
+                                disabled={isSubmitting || videoDeleteLoading}
+                                size="small"
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </span>
                           </Tooltip>
                           <Button
                             size="small"
@@ -716,21 +718,23 @@ export default function Videos({
                         placement="left"
                         arrow
                       >
-                        <IconButton
-                          onClick={() =>
-                            setRatingsDialogData({
-                              ...ratingsDialogData,
-                              ...{
-                                videoId: video.id,
-                                open: true,
-                              },
-                            })
-                          }
-                          disabled={ratingsDialogData.open}
-                          size="small"
-                        >
-                          <AssignmentIcon fontSize="small" />
-                        </IconButton>
+                        <span>
+                          <IconButton
+                            onClick={() =>
+                              setRatingsDialogData({
+                                ...ratingsDialogData,
+                                ...{
+                                  videoId: video.id,
+                                  open: true,
+                                },
+                              })
+                            }
+                            disabled={ratingsDialogData.open}
+                            size="small"
+                          >
+                            <AssignmentIcon fontSize="small" />
+                          </IconButton>
+                        </span>
                       </Tooltip>
                     )}
                     {getOwnRatingForVideo(video).rating > 0 && (
@@ -740,13 +744,15 @@ export default function Videos({
                         placement="left"
                         arrow
                       >
-                        <IconButton
-                          onClick={() => handleReview(video)}
-                          disabled={reviewDialogData.open || ratingLoading}
-                          size="small"
-                        >
-                          <RateReviewIcon fontSize="small" />
-                        </IconButton>
+                        <span>
+                          <IconButton
+                            onClick={() => handleReview(video)}
+                            disabled={reviewDialogData.open || ratingLoading}
+                            size="small"
+                          >
+                            <RateReviewIcon fontSize="small" />
+                          </IconButton>
+                        </span>
                       </Tooltip>
                     )}
                     <Rating

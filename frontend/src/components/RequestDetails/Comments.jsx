@@ -235,22 +235,26 @@ export default function Comments({
                               )}
                               <Grid item>
                                 <Tooltip title="Elvetés" placement="left" arrow>
-                                  <IconButton
-                                    onClick={handleCancel}
-                                    disabled={isSubmitting}
-                                  >
-                                    <ClearIcon />
-                                  </IconButton>
+                                  <span>
+                                    <IconButton
+                                      onClick={handleCancel}
+                                      disabled={isSubmitting}
+                                    >
+                                      <ClearIcon />
+                                    </IconButton>
+                                  </span>
                                 </Tooltip>
                               </Grid>
                               <Grid item>
                                 <Tooltip title="Mentés" placement="left" arrow>
-                                  <IconButton
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                  >
-                                    <SendIcon />
-                                  </IconButton>
+                                  <span>
+                                    <IconButton
+                                      type="submit"
+                                      disabled={isSubmitting}
+                                    >
+                                      <SendIcon />
+                                    </IconButton>
+                                  </span>
                                 </Tooltip>
                               </Grid>
                             </Grid>
@@ -306,22 +310,26 @@ export default function Comments({
                       <Grid item className={classes.commentButtons}>
                         <Grid item>
                           <Tooltip title="Törlés" placement="left" arrow>
-                            <IconButton
-                              onClick={() => handleDelete(comment.id)}
-                              disabled={loading}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
+                            <span>
+                              <IconButton
+                                onClick={() => handleDelete(comment.id)}
+                                disabled={loading}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </span>
                           </Tooltip>
                         </Grid>
                         <Grid item>
                           <Tooltip title="Szerkesztés" placement="left" arrow>
-                            <IconButton
-                              onClick={() => handleEdit(comment.id)}
-                              disabled={loading}
-                            >
-                              <EditIcon />
-                            </IconButton>
+                            <span>
+                              <IconButton
+                                onClick={() => handleEdit(comment.id)}
+                                disabled={loading}
+                              >
+                                <EditIcon />
+                              </IconButton>
+                            </span>
                           </Tooltip>
                         </Grid>
                       </Grid>
@@ -389,9 +397,11 @@ export default function Comments({
                   )}
                   <Grid item>
                     <Tooltip title="Küldés" placement="left" arrow>
-                      <IconButton type="submit" disabled={isSubmitting}>
-                        <SendIcon />
-                      </IconButton>
+                      <span>
+                        <IconButton type="submit" disabled={isSubmitting}>
+                          <SendIcon />
+                        </IconButton>
+                      </span>
                     </Tooltip>
                   </Grid>
                 </Grid>

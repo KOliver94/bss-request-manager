@@ -154,16 +154,18 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         placement="top"
                         arrow
                       >
-                        <Button
-                          justIcon
-                          href={process.env.REACT_APP_AUTHSCH_OAUTH_URL}
-                          onClick={handleButtonClick}
-                          target="_self"
-                          color="transparent"
-                          disabled={loading}
-                        >
-                          <i className="fab icon-sch" />
-                        </Button>
+                        <span>
+                          <Button
+                            justIcon
+                            href={process.env.REACT_APP_AUTHSCH_OAUTH_URL}
+                            onClick={handleButtonClick}
+                            target="_self"
+                            color="transparent"
+                            disabled={loading}
+                          >
+                            <i className="fab icon-sch" />
+                          </Button>
+                        </span>
                       </Tooltip>
                       <Tooltip
                         title="Facebook"
@@ -171,16 +173,18 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         placement="top"
                         arrow
                       >
-                        <Button
-                          justIcon
-                          href={process.env.REACT_APP_FACEBOOK_OAUTH_URL}
-                          onClick={handleButtonClick}
-                          target="_self"
-                          color="transparent"
-                          disabled={loading}
-                        >
-                          <i className="fab fa-facebook" />
-                        </Button>
+                        <span>
+                          <Button
+                            justIcon
+                            href={process.env.REACT_APP_FACEBOOK_OAUTH_URL}
+                            onClick={handleButtonClick}
+                            target="_self"
+                            color="transparent"
+                            disabled={loading}
+                          >
+                            <i className="fab fa-facebook" />
+                          </Button>
+                        </span>
                       </Tooltip>
                       <Tooltip
                         title="Google"
@@ -188,16 +192,18 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         placement="top"
                         arrow
                       >
-                        <Button
-                          justIcon
-                          href={process.env.REACT_APP_GOOGLE_OAUTH_URL}
-                          onClick={handleButtonClick}
-                          target="_self"
-                          color="transparent"
-                          disabled={loading}
-                        >
-                          <i className="fab fa-google" />
-                        </Button>
+                        <span>
+                          <Button
+                            justIcon
+                            href={process.env.REACT_APP_GOOGLE_OAUTH_URL}
+                            onClick={handleButtonClick}
+                            target="_self"
+                            color="transparent"
+                            disabled={loading}
+                          >
+                            <i className="fab fa-google" />
+                          </Button>
+                        </span>
                       </Tooltip>
                     </div>
                   </CardHeader>

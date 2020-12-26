@@ -232,39 +232,47 @@ export default function Crew({
                         {editingCrewId === crewMember.id ? (
                           <>
                             <Tooltip title="Mentés" arrow>
-                              <IconButton
-                                onClick={() => handleEditSubmit()}
-                                disabled={loading}
-                              >
-                                <CheckIcon />
-                              </IconButton>
+                              <span>
+                                <IconButton
+                                  onClick={() => handleEditSubmit()}
+                                  disabled={loading}
+                                >
+                                  <CheckIcon />
+                                </IconButton>
+                              </span>
                             </Tooltip>
                             <Tooltip title="Elvetés" arrow>
-                              <IconButton
-                                onClick={handleCancel}
-                                disabled={loading}
-                              >
-                                <ClearIcon />
-                              </IconButton>
+                              <span>
+                                <IconButton
+                                  onClick={handleCancel}
+                                  disabled={loading}
+                                >
+                                  <ClearIcon />
+                                </IconButton>
+                              </span>
                             </Tooltip>
                           </>
                         ) : (
                           <>
                             <Tooltip title="Szerkesztés" arrow>
-                              <IconButton
-                                onClick={() => handleEdit(crewMember.id)}
-                                disabled={loading}
-                              >
-                                <EditIcon />
-                              </IconButton>
+                              <span>
+                                <IconButton
+                                  onClick={() => handleEdit(crewMember.id)}
+                                  disabled={loading}
+                                >
+                                  <EditIcon />
+                                </IconButton>
+                              </span>
                             </Tooltip>
                             <Tooltip title="Törlés" arrow>
-                              <IconButton
-                                onClick={() => handleDelete(crewMember.id)}
-                                disabled={loading}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
+                              <span>
+                                <IconButton
+                                  onClick={() => handleDelete(crewMember.id)}
+                                  disabled={loading}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </span>
                             </Tooltip>
                           </>
                         )}
