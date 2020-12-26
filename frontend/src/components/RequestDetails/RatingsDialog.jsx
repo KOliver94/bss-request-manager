@@ -234,7 +234,7 @@ export default function RatingsDialog({
             <TableHead>
               <TableRow>
                 {headCells.map((item) => (
-                  <TableCell align="center" key={item.id}>
+                  <TableCell align="center" key={`${item.id}-headCell`}>
                     {item.label}
                     <TableSortLabel
                       active={orderBy.field === item.id}
@@ -252,17 +252,15 @@ export default function RatingsDialog({
                   {[...Array(5).keys()].map((x) => (
                     <TableRow key={`${x}-skeleton`} hover>
                       {headCells.map((item) => (
-                        <>
-                          <TableCell align="center" key={`${item.id}-${x}`}>
-                            <Skeleton variant="text" />
-                          </TableCell>
-                          {isAdmin && (
-                            <TableCell align="center" key={`buttons-${x}`}>
-                              <Skeleton variant="text" />
-                            </TableCell>
-                          )}
-                        </>
+                        <TableCell align="center" key={`${item.id}-${x}`}>
+                          <Skeleton variant="text" />
+                        </TableCell>
                       ))}
+                      {isAdmin && (
+                        <TableCell align="center" key={`${x}-buttons`}>
+                          <Skeleton variant="text" />
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </>
