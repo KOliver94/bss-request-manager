@@ -150,7 +150,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                     <div className={classes.socialLine}>
                       <Tooltip
                         title="AuthSCH"
-                        classes={classes}
+                        classes={{ tooltip: classes.tooltip }}
                         placement="top"
                         arrow
                       >
@@ -167,7 +167,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       </Tooltip>
                       <Tooltip
                         title="Facebook"
-                        classes={classes}
+                        classes={{ tooltip: classes.tooltip }}
                         placement="top"
                         arrow
                       >
@@ -184,7 +184,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       </Tooltip>
                       <Tooltip
                         title="Google"
-                        classes={classes}
+                        classes={{ tooltip: classes.tooltip }}
                         placement="top"
                         arrow
                       >

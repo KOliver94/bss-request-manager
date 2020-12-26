@@ -649,7 +649,7 @@ export default function Videos({
                         >
                           <Tooltip
                             title="Törlés"
-                            classes={classes}
+                            classes={{ tooltip: classes.tooltip }}
                             placement="left"
                             arrow
                           >
@@ -711,7 +711,7 @@ export default function Videos({
                             (video.avg_rating + Number.EPSILON) * 100
                           ) / 100
                         }`}
-                        classes={classes}
+                        classes={{ tooltip: classes.tooltip }}
                         placement="left"
                         arrow
                       >
@@ -735,7 +735,7 @@ export default function Videos({
                     {getOwnRatingForVideo(video).rating > 0 && (
                       <Tooltip
                         title="Szöveges értékelés írása"
-                        classes={classes}
+                        classes={{ tooltip: classes.tooltip }}
                         placement="left"
                         arrow
                       >
