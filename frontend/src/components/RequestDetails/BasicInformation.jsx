@@ -175,17 +175,20 @@ export default function BasicInformation({
 
   const handleSubmit = async (val) => {
     const values = val;
-    if (values.responsible_id) {
-      values.responsible_id = values.responsible_id.id;
+    if (values.responsible !== undefined) {
+      values.responsible_id = values.responsible ? values.responsible.id : null;
     }
     if (values.deadline && typeof values.deadline.getMonth === 'function') {
       // eslint-disable-next-line prefer-destructuring
       values.deadline = values.deadline.toISOString().split('T')[0];
     }
-    if (
-      values.additional_data.status_by_admin &&
-      values.additional_data.status_by_admin.status !== undefined
-    ) {
+    if (values.status_field !== undefined) {
+      values.additional_data.status_by_admin = {};
+      if (values.status_field === '') {
+        values.additional_data.status_by_admin.status = null;
+      } else {
+        values.additional_data.status_by_admin.status = values.status_field;
+      }
       values.additional_data.status_by_admin.admin_id = parseInt(
         localStorage.getItem('user_id'),
         10
@@ -318,7 +321,15 @@ export default function BasicInformation({
         {editing ? (
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={hu}>
             <Formik
-              initialValues={requestData}
+              initialValues={{
+                ...requestData,
+                status_field:
+                  requestData.additional_data &&
+                  requestData.additional_data.status_by_admin &&
+                  requestData.additional_data.status_by_admin.status
+                    ? requestData.additional_data.status_by_admin.status
+                    : '',
+              }}
               onSubmit={handleSubmit}
               validationSchema={validationSchema}
               innerRef={formRef}
@@ -358,18 +369,17 @@ export default function BasicInformation({
                       disabled={!isAdmin()}
                     />
                     <FormControl fullWidth variant="outlined" margin="normal">
-                      <InputLabel htmlFor="additional_data.status_by_admin.status">
+                      <InputLabel htmlFor="status_field">
                         Státusz felülírás
                       </InputLabel>
                       <Field
-                        labelId="additional_data.status_by_admin.status"
+                        labelId="status_field"
                         label="Státusz felülírás"
-                        name="additional_data.status_by_admin.status"
+                        name="status_field"
                         component={Select}
-                        defaultValue={null}
                         disabled={!isAdmin()}
                       >
-                        <MenuItem value={null}>
+                        <MenuItem value="">
                           <em>Nincs</em>
                         </MenuItem>
                         {requestStatuses.map((status) => {
@@ -394,7 +404,7 @@ export default function BasicInformation({
                         )}
                     </FormControl>
                     <Field
-                      name="responsible_id"
+                      name="responsible"
                       component={Autocomplete}
                       options={staffMembers}
                       getOptionLabel={(option) =>
@@ -415,9 +425,6 @@ export default function BasicInformation({
                       getOptionSelected={(option, value) =>
                         option.id === value.id
                       }
-                      defaultValue={
-                        requestData.responsible ? requestData.responsible : null
-                      }
                       autoHighlight
                       clearOnEscape
                       fullWidth
@@ -425,6 +432,7 @@ export default function BasicInformation({
                         <MUITextField
                           // eslint-disable-next-line react/jsx-props-no-spreading
                           {...params}
+                          name="responsible"
                           label="Felelős"
                           variant="outlined"
                           margin="normal"

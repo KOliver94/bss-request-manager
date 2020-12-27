@@ -175,6 +175,7 @@ export default function Videos({
     if (isInitialMount.current) {
       isInitialMount.current = false;
     } else if (isPrivileged) {
+      isInitialMount.current = true;
       updateRequestStatus();
     }
     // eslint-disable-next-line
@@ -182,8 +183,8 @@ export default function Videos({
 
   const handleSubmit = async (val, videoId = 0) => {
     const values = val;
-    if (values.editor_id) {
-      values.editor_id = values.editor_id.id;
+    if (values.editor !== undefined) {
+      values.editor_id = values.editor ? values.editor.id : null;
     }
     if (values.additional_data && values.additional_data.length) {
       values.additional_data.length =
@@ -191,10 +192,13 @@ export default function Videos({
         values.additional_data.length.getMinutes() * 60 +
         values.additional_data.length.getSeconds();
     }
-    if (
-      values.additional_data.status_by_admin &&
-      values.additional_data.status_by_admin.status !== undefined
-    ) {
+    if (values.status_field !== undefined) {
+      values.additional_data.status_by_admin = {};
+      if (values.status_field === '') {
+        values.additional_data.status_by_admin.status = null;
+      } else {
+        values.additional_data.status_by_admin.status = values.status_field;
+      }
       values.additional_data.status_by_admin.admin_id = parseInt(
         localStorage.getItem('user_id'),
         10
@@ -452,6 +456,12 @@ export default function Videos({
                             )
                           : null,
                       },
+                      status_field:
+                        video.additional_data &&
+                        video.additional_data.status_by_admin &&
+                        video.additional_data.status_by_admin.status
+                          ? video.additional_data.status_by_admin.status
+                          : '',
                     }}
                     onSubmit={(values) => handleSubmit(values, video.id)}
                     validationSchema={validationSchema}
@@ -514,7 +524,7 @@ export default function Videos({
                               }
                             />
                             <Field
-                              name="editor_id"
+                              name="editor"
                               component={Autocomplete}
                               options={staffMembers}
                               getOptionLabel={(option) =>
@@ -535,7 +545,6 @@ export default function Videos({
                               getOptionSelected={(option, value) =>
                                 option.id === value.id
                               }
-                              defaultValue={video.editor ? video.editor : null}
                               size="small"
                               autoHighlight
                               clearOnEscape
@@ -544,6 +553,7 @@ export default function Videos({
                                 <MUITextField
                                   // eslint-disable-next-line react/jsx-props-no-spreading
                                   {...params}
+                                  name="editor"
                                   label="Vágó"
                                   margin="normal"
                                 />
@@ -605,18 +615,17 @@ export default function Videos({
                               )}
                             />
                             <FormControl fullWidth margin="normal">
-                              <InputLabel htmlFor="additional_data.status_by_admin.status">
+                              <InputLabel htmlFor="status_field">
                                 Státusz felülírás
                               </InputLabel>
                               <Field
-                                labelId="additional_data.status_by_admin.status"
+                                labelId="status_field"
                                 label="Státusz felülírás"
-                                name="additional_data.status_by_admin.status"
+                                name="status_field"
                                 component={Select}
-                                defaultValue={null}
                                 disabled={!isAdmin()}
                               >
-                                <MenuItem value={null}>
+                                <MenuItem value="">
                                   <em>Nincs</em>
                                 </MenuItem>
                                 {videoStatuses.map((status) => {
@@ -820,7 +829,7 @@ export default function Videos({
                         helperText={touched.title && errors.title}
                       />
                       <Field
-                        name="editor_id"
+                        name="editor"
                         component={Autocomplete}
                         options={staffMembers}
                         getOptionLabel={(option) =>
@@ -848,6 +857,7 @@ export default function Videos({
                           <MUITextField
                             // eslint-disable-next-line react/jsx-props-no-spreading
                             {...params}
+                            name="editor"
                             label="Vágó"
                             margin="normal"
                           />
