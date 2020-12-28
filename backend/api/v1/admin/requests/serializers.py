@@ -44,8 +44,11 @@ def get_responsible_from_id(validated_data):
 
 
 def get_member_from_id(validated_data):
-    # Member_id is a required field so no need to check if present
-    validated_data["member"] = get_user_by_id(validated_data.pop("member_id"), "member")
+    # Member_id is required for creation but not for update, so this check is needed.
+    if "member_id" in validated_data:
+        validated_data["member"] = get_user_by_id(
+            validated_data.pop("member_id"), "member"
+        )
 
 
 def check_and_remove_unauthorized_additional_data(additional_data, user, original_data):
@@ -76,9 +79,15 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
             """
             if (
                 original_data
-                and "status_by_admin" in original_data.additional_data
-                and original_data.additional_data["status_by_admin"]["status"]
-                is additional_data["status_by_admin"]["status"]
+                and (
+                    "status_by_admin" in original_data.additional_data
+                    and original_data.additional_data["status_by_admin"]["status"]
+                    is additional_data["status_by_admin"]["status"]
+                )
+                or (
+                    "status_by_admin" not in original_data.additional_data
+                    and not additional_data["status_by_admin"]["status"]
+                )
             ):
                 additional_data.pop("status_by_admin")
             else:

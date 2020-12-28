@@ -76,9 +76,8 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
             horizontal: 'center',
           },
         });
-        history.replace('/login');
-      } finally {
         setLoading(false);
+        history.replace('/login');
       }
     },
     [enqueueSnackbar, history, setIsAuthenticated]
@@ -105,9 +104,12 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
     }
   };
 
-  setTimeout(() => {
-    setCardAnimation('');
-  }, 700);
+  useEffect(() => {
+    const timer = setTimeout(() => setCardAnimation(''), 700);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {

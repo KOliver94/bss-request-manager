@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, getIn } from 'formik';
 import { TextField } from 'formik-material-ui';
 import { DateTimePicker } from 'formik-material-ui-pickers';
 import { Autocomplete } from 'formik-material-ui-lab';
@@ -170,9 +170,8 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                       error={touched.type_obj && !!errors.type_obj}
                       helperText={
                         touched.type_obj &&
-                        errors.type_obj &&
-                        ((errors.type_obj.text && errors.type_obj.text) ||
-                          errors.type_obj)
+                        (getIn(errors, 'type_obj.text') ||
+                          getIn(errors, 'type_obj'))
                       }
                     />
                   )}

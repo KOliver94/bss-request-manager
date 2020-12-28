@@ -125,6 +125,9 @@ export default function Videos({
   const { enqueueSnackbar } = useSnackbar();
   const [videoDeleteLoading, setVideoDeleteLoading] = useState(false);
   const [ratingLoading, setRatingLoading] = useState(false);
+  const [videoAccordionOpen, setVideoAccordionOpen] = useState(
+    requestData.videos.length === 1 ? `${requestData.videos[0].id}-panel` : null
+  );
   const [createVideoDialogOpen, setCreateVideoDialogOpen] = useState(false);
   const [ratingRemoveDialog, setRatingRemoveDialog] = useState({
     videoId: 0,
@@ -143,6 +146,13 @@ export default function Videos({
     videoId: 0,
     open: false,
   });
+  const handleVideoAccordionChange = (panel) => {
+    if (videoAccordionOpen !== panel) {
+      setVideoAccordionOpen(panel);
+    } else {
+      setVideoAccordionOpen(null);
+    }
+  };
 
   const getOwnRatingForVideo = (video) => {
     let found = null;
@@ -192,20 +202,24 @@ export default function Videos({
         values.additional_data.length.getMinutes() * 60 +
         values.additional_data.length.getSeconds();
     }
-    if (values.status_field !== undefined) {
-      values.additional_data.status_by_admin = {};
-      if (values.status_field === '') {
-        values.additional_data.status_by_admin.status = null;
+    if (
+      values.status_field !== undefined &&
+      (values.additional_data.status_by_admin || values.status_field)
+    ) {
+      values.additional_data.status_by_admin = {
+        status: values.status_field ? values.status_field : null,
+        admin_id: parseInt(localStorage.getItem('user_id'), 10),
+        admin_name: localStorage.getItem('name'),
+      };
+    }
+    if (values.website_url !== undefined) {
+      if (values.additional_data.publishing) {
+        values.additional_data.publishing.website = values.website_url;
       } else {
-        values.additional_data.status_by_admin.status = values.status_field;
+        values.additional_data.publishing = {
+          website: values.website_url,
+        };
       }
-      values.additional_data.status_by_admin.admin_id = parseInt(
-        localStorage.getItem('user_id'),
-        10
-      );
-      values.additional_data.status_by_admin.admin_name = localStorage.getItem(
-        'name'
-      );
     }
     let result;
     try {
@@ -227,6 +241,7 @@ export default function Videos({
           ...requestData,
           videos: [...requestData.videos, result.data],
         });
+        setVideoAccordionOpen(`${result.data.id}-panel`);
       }
     } catch (e) {
       showError(e);
@@ -395,17 +410,14 @@ export default function Videos({
   };
 
   const validationSchema = Yup.object().shape({
+    website_url: Yup.string().url('Nem megfelelő URL formátum'),
     additional_data: Yup.object().shape({
-      publishing: Yup.object().shape({
-        website: Yup.string().url('Nem megfelelő URL formátum'),
-      }),
       aired: Yup.array().of(
         Yup.string().matches(
           /(([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])))/,
           'Kérlek a dátumot ÉÉÉÉ-HH-NN formában add meg!'
         )
       ),
-      length: Yup.date().nullable(),
     }),
   });
 
@@ -424,7 +436,10 @@ export default function Videos({
           {requestData.videos.sort(compareValues('id')).map((video) => (
             <Accordion
               key={`${video.id}-panel`}
-              defaultExpanded={requestData.videos.length === 1}
+              expanded={`${video.id}-panel` === videoAccordionOpen}
+              onChange={() => {
+                handleVideoAccordionChange(`${video.id}-panel`);
+              }}
             >
               <AccordionSummary
                 expandIcon={requestData.videos.length > 1 && <ExpandMoreIcon />}
@@ -461,6 +476,12 @@ export default function Videos({
                         video.additional_data.status_by_admin &&
                         video.additional_data.status_by_admin.status
                           ? video.additional_data.status_by_admin.status
+                          : '',
+                      website_url:
+                        video.additional_data &&
+                        video.additional_data.publishing &&
+                        video.additional_data.publishing.website
+                          ? video.additional_data.publishing.website
                           : '',
                     }}
                     onSubmit={(values) => handleSubmit(values, video.id)}
@@ -504,23 +525,17 @@ export default function Videos({
                               indeterminateIcon={<FolderOpenIcon />}
                             />
                             <Field
-                              name="additional_data.publishing.website"
+                              name="website_url"
                               label="Videó elérési útja a honlapon"
                               margin="normal"
                               component={TextField}
                               size="small"
                               fullWidth
-                              className={
-                                getIn(
-                                  errors,
-                                  'additional_data.publishing.website'
-                                ) &&
-                                getIn(
-                                  touched,
-                                  'additional_data.publishing.website'
-                                )
-                                  ? 'text-input error'
-                                  : 'text-input'
+                              error={
+                                touched.website_url && !!errors.website_url
+                              }
+                              helperText={
+                                touched.website_url && !!errors.website_url
                               }
                             />
                             <Field
@@ -569,17 +584,9 @@ export default function Videos({
                               format="HH:mm:ss"
                               openTo="minutes"
                               views={['hours', 'minutes', 'seconds']}
-                              error={
-                                touched.additional_data &&
-                                touched.additional_data.length &&
-                                errors.additional_data &&
-                                !!errors.additional_data.length
-                              }
-                              helperText={
-                                touched.additional_data &&
-                                touched.additional_data.length &&
-                                errors.additional_data &&
-                                errors.additional_data.length
+                              invalidDateMessage="Hibás dátum formátum"
+                              initialFocusedDate={
+                                new Date('1970-01-01T00:00:00')
                               }
                             />
                             <Field
@@ -600,16 +607,12 @@ export default function Videos({
                                   label="Adásba kerülés"
                                   margin="normal"
                                   error={
-                                    touched.additional_data &&
-                                    touched.additional_data.aired &&
-                                    errors.additional_data &&
-                                    !!errors.additional_data.aired
+                                    getIn(touched, 'additional_data.aired') &&
+                                    !!getIn(errors, 'additional_data.aired')
                                   }
                                   helperText={
-                                    touched.additional_data &&
-                                    touched.additional_data.aired &&
-                                    errors.additional_data &&
-                                    errors.additional_data.aired
+                                    getIn(touched, 'additional_data.aired') &&
+                                    getIn(errors, 'additional_data.aired')
                                   }
                                 />
                               )}
@@ -810,6 +813,7 @@ export default function Videos({
             <Formik
               initialValues={{
                 title: '',
+                editor: null,
               }}
               onSubmit={(values) => handleSubmit(values)}
               validationSchema={newVideoValidationSchema}

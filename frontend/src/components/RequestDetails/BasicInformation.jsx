@@ -182,27 +182,31 @@ export default function BasicInformation({
       // eslint-disable-next-line prefer-destructuring
       values.deadline = values.deadline.toISOString().split('T')[0];
     }
-    if (values.status_field !== undefined) {
-      values.additional_data.status_by_admin = {};
-      if (values.status_field === '') {
-        values.additional_data.status_by_admin.status = null;
+    if (
+      values.status_field !== undefined &&
+      (values.additional_data.status_by_admin || values.status_field)
+    ) {
+      values.additional_data.status_by_admin = {
+        status: values.status_field ? values.status_field : null,
+        admin_id: parseInt(localStorage.getItem('user_id'), 10),
+        admin_name: localStorage.getItem('name'),
+      };
+    }
+    if (values.recording_path !== undefined) {
+      if (values.additional_data.recording) {
+        values.additional_data.recording.path = values.recording_path;
       } else {
-        values.additional_data.status_by_admin.status = values.status_field;
+        values.additional_data.recording = {
+          path: values.recording_path,
+        };
       }
-      values.additional_data.status_by_admin.admin_id = parseInt(
-        localStorage.getItem('user_id'),
-        10
-      );
-      values.additional_data.status_by_admin.admin_name = localStorage.getItem(
-        'name'
-      );
     }
     setLoading(true);
     try {
       await updateRequestAdmin(requestId, values).then((response) => {
         setLoading(false);
-        setRequestData(response.data);
         setEditing(!editing);
+        setRequestData(response.data);
       });
     } catch (e) {
       enqueueSnackbar(handleError(e), {
@@ -328,6 +332,12 @@ export default function BasicInformation({
                   requestData.additional_data.status_by_admin &&
                   requestData.additional_data.status_by_admin.status
                     ? requestData.additional_data.status_by_admin.status
+                    : '',
+                recording_path:
+                  requestData.additional_data &&
+                  requestData.additional_data.recording &&
+                  requestData.additional_data.recording.path
+                    ? requestData.additional_data.recording.path
                     : '',
               }}
               onSubmit={handleSubmit}
@@ -473,7 +483,7 @@ export default function BasicInformation({
                       indeterminateIcon={<DeleteOutlineIcon />}
                     />
                     <Field
-                      name="additional_data.recording.path"
+                      name="recording_path"
                       label="Nyersek helye"
                       margin="normal"
                       component={TextField}

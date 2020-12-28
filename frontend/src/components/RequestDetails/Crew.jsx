@@ -24,7 +24,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import { createFilterOptions } from '@material-ui/lab/Autocomplete';
 // Form components
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, getIn } from 'formik';
 import { Autocomplete } from 'formik-material-ui-lab';
 import * as Yup from 'yup';
 // Notistack
@@ -95,8 +95,8 @@ export default function Crew({
   const handleSubmit = async (val) => {
     const values = val;
     try {
-      values.member_id = values.member_id.id;
-      values.position = values.position.position;
+      values.member_id = values.member ? values.member.id : null;
+      values.position = values.position_obj.position;
       const result = await createCrewAdmin(requestId, values);
       setRequestData({
         ...requestData,
@@ -175,10 +175,10 @@ export default function Crew({
   };
 
   const validationSchema = Yup.object({
-    member_id: Yup.object()
+    member: Yup.object()
       .required('A stábtag kiválasztása kötelező!')
       .nullable(),
-    position: Yup.object()
+    position_obj: Yup.object()
       .shape({
         position: Yup.string()
           .min(1, 'A pozíció túl rövid!')
@@ -300,8 +300,8 @@ export default function Crew({
         >
           <Formik
             initialValues={{
-              member_id: null,
-              position: null,
+              member: null,
+              position_obj: null,
             }}
             onSubmit={(values) => handleSubmit(values)}
             validationSchema={validationSchema}
@@ -312,7 +312,7 @@ export default function Crew({
                 <DialogContent>
                   <Form>
                     <Field
-                      name="member_id"
+                      name="member"
                       component={Autocomplete}
                       options={staffMembers}
                       getOptionLabel={(option) =>
@@ -343,19 +343,13 @@ export default function Crew({
                           name="member_id"
                           label="Stábtag"
                           margin="normal"
-                          error={touched.member_id && !!errors.member_id}
-                          helperText={
-                            touched.member_id &&
-                            errors.member_id &&
-                            ((errors.member_id.member_id &&
-                              errors.member_id.member_id) ||
-                              errors.member_id)
-                          }
+                          error={touched.member && !!errors.member}
+                          helperText={touched.member && errors.member}
                         />
                       )}
                     />
                     <Field
-                      name="position"
+                      name="position_obj"
                       component={Autocomplete}
                       options={crewPositionTypes}
                       filterOptions={(options, params) => {
@@ -393,16 +387,14 @@ export default function Crew({
                         <MUITextField
                           // eslint-disable-next-line react/jsx-props-no-spreading
                           {...params}
-                          name="position"
+                          name="position_obj"
                           label="Pozíció"
                           margin="normal"
-                          error={touched.position && !!errors.position}
+                          error={touched.position_obj && !!errors.position_obj}
                           helperText={
-                            touched.position &&
-                            errors.position &&
-                            ((errors.position.position &&
-                              errors.position.position) ||
-                              errors.position)
+                            touched.position_obj &&
+                            (getIn(errors, 'position_obj.position') ||
+                              getIn(errors, 'position_obj'))
                           }
                         />
                       )}
