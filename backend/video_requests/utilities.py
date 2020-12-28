@@ -61,7 +61,7 @@ def update_request_status(request, called_from_video=False):
         if (
             status == Request.Statuses.RECORDED
             and "recording" in request.additional_data
-            and "path" in request.additional_data["recording"]
+            and request.additional_data["recording"].get("path", None)
         ):
             status = Request.Statuses.UPLOADED
             for video in request.videos.all():
