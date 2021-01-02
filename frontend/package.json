@@ -27,7 +27,7 @@
     "react-scripts": "4.0.1",
     "react-swipeable-views": "^0.13.9",
     "yup": "^0.32.8",
-    "yup-phone": "^1.2.18"
+    "yup-phone": "^1.2.19"
   },
   "scripts": {
     "start": "set HTTPS=true&&react-scripts start",
