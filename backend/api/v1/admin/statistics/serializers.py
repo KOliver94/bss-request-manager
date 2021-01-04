@@ -24,7 +24,7 @@ class StatisticRequestSerializer(serializers.ModelSerializer):
 
 class StatisticVideoSerializer(serializers.ModelSerializer):
     request = StatisticRequestSerializer(read_only=True)
-    avg_rating = serializers.IntegerField(read_only=True)
+    avg_rating = serializers.FloatField(read_only=True)
 
     class Meta:
         model = Video
