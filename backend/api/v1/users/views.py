@@ -39,15 +39,14 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     - Admin user can get any user and modify them
 
     Modifiable attributes:
+    - first and lastname
+    - email address
     - phone_number
+    - avatar provider
     """
 
     queryset = User.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == "GET":
-            return UserDetailSerializer
-        return UserProfileSerializer
+    serializer_class = UserDetailSerializer
 
     def get_permissions(self):
         if self.request.user.is_anonymous:

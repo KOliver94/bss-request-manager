@@ -3,6 +3,7 @@ from io import StringIO
 
 from common.models import get_sentinel_user
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.test import TestCase
 from rest_framework import status
@@ -79,3 +80,45 @@ class CommonTestCase(TestCase):
             self.assertIn("DefaultFileStorageHealthCheck", out.getvalue())
             self.assertIn("MigrationsHealthCheck", out.getvalue())
             self.assertIn("RedisHealthCheck", out.getvalue())
+
+    def test_user_profile_avatar_json_validation(self):
+        self.user.refresh_from_db()
+        self.user.full_clean()
+
+        with self.assertRaises(ValidationError) as context:
+            self.user.userprofile.avatar = {"randomKey": "randomValue"}
+            self.user.userprofile.full_clean()
+        self.assertIn(
+            "'provider' is a required property",
+            context.exception.messages[0],
+        )
+
+        with self.assertRaises(ValidationError) as context:
+            self.user.userprofile.avatar = {"provider": "randomValue"}
+            self.user.userprofile.full_clean()
+        self.assertIn(
+            "'randomValue' is not one of ['facebook', 'google-oauth2', 'gravatar']",
+            context.exception.messages[0],
+        )
+
+        with self.assertRaises(ValidationError) as context:
+            self.user.userprofile.avatar = {
+                "provider": "facebook",
+                "randomKey": "randomValue",
+            }
+            self.user.userprofile.full_clean()
+        self.assertIn(
+            "Additional properties are not allowed ('randomKey' was unexpected)",
+            context.exception.messages[0],
+        )
+
+        with self.assertRaises(ValidationError) as context:
+            self.user.userprofile.avatar = {
+                "provider": "facebook",
+                "facebook": "randomValue",
+            }
+            self.user.userprofile.full_clean()
+        self.assertIn(
+            "'randomValue' is not a 'uri'",
+            context.exception.messages[0],
+        )

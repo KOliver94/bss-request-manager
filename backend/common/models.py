@@ -1,7 +1,14 @@
+from common.schemas import USER_PROFILE_AVATAR_SCHEMA
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import JSONField
+from jsonschema import FormatChecker
+from jsonschema import ValidationError as JsonValidationError
+from jsonschema import validate
 from phonenumber_field.modelfields import PhoneNumberField
 from simple_history.models import HistoricalRecords
 
@@ -13,13 +20,29 @@ def get_sentinel_user():
     )[0]
 
 
+def validate_profile_avatar(value):
+    try:
+        validate(value, USER_PROFILE_AVATAR_SCHEMA, format_checker=FormatChecker())
+    except JsonValidationError as e:
+        raise ValidationError(e)
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar_url = models.URLField(blank=True)
+    avatar = JSONField(
+        encoder=DjangoJSONEncoder,
+        validators=[validate_profile_avatar],
+        default=dict,
+        blank=True,
+    )
     phone_number = PhoneNumberField(blank=True)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}'s ({self.user.username}) profile"
+
+    @property
+    def avatar_url(self):
+        return self.avatar.get(self.avatar.get("provider", None), None)
 
 
 class AbstractComment(models.Model):

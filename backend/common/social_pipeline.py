@@ -172,18 +172,28 @@ def add_phone_number_to_profile(details, user, *args, **kwargs):
 
 def get_avatar(backend, response, user, *args, **kwargs):
     if backend.name == "facebook":
-        url = (
-            f"https://graph.facebook.com/{response['id']}/picture?width=500&height=500"
-        )
+        user.userprofile.avatar[
+            "facebook"
+        ] = f"https://graph.facebook.com/{response['id']}/picture?width=500&height=500"
     elif backend.name == "google-oauth2":
-        url = response["picture"]
-    else:
-        url = Gravatar(sanitize_email(user.email)).get_image(
-            size=500, use_ssl=True, default="404"
-        )
-        if requests.get(url).status_code == 404:
-            url = None
+        user.userprofile.avatar["google-oauth2"] = response["picture"]
 
-    if url and url != user.userprofile.avatar_url:
-        user.userprofile.avatar_url = url
-        user.save()
+    url = Gravatar(sanitize_email(user.email)).get_image(
+        size=500, use_ssl=True, default="404"
+    )
+    try:
+        resp = requests.get(url)
+        resp.raise_for_status()
+        user.userprofile.avatar["gravatar"] = url
+        if not user.userprofile.avatar.get("provider", None):
+            user.userprofile.avatar["provider"] = "gravatar"
+    except requests.exceptions.HTTPError:
+        pass
+
+    if not user.userprofile.avatar.get("provider", None) and backend.name in [
+        "facebook",
+        "google-oauth2",
+    ]:
+        user.userprofile.avatar["provider"] = backend.name
+
+    user.save()

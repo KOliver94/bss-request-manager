@@ -14,7 +14,7 @@ NOT_EXISTING_ID = 9000
 
 
 @freeze_time("2020-12-01 12:00:00", tz_offset=+1)
-class StatisticsAPITestCase(APITestCase):
+class UsersAPITestCase(APITestCase):
     def authorize_user(self, user):
         url = reverse("login_obtain_jwt_pair")
         resp = self.client.post(
@@ -167,6 +167,13 @@ class StatisticsAPITestCase(APITestCase):
     """
     PUT/PATCH /api/v1/users/me OR /api/v1/users/:id
     """
+    user_details_data = {
+        "first_name": "Test_123",
+        "last_name": "Test_456",
+        "email": "test.user@exmaple.com",
+        "phone_number": "+36501234567",
+        "avatar_provider": "facebook",
+    }
 
     def change_phone_number_and_assert_response(self, user):
         data1 = {"phone_number": "+36209876543"}
@@ -176,95 +183,219 @@ class StatisticsAPITestCase(APITestCase):
 
         response = self.client.patch(f"{self.url}/me", data1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["phone_number"], data1["phone_number"])
+        self.assertEqual(
+            response.data["profile"]["phone_number"], data1["phone_number"]
+        )
         response = self.client.patch(f"{self.url}/{user.id}", data2)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["phone_number"], data2["phone_number"])
+        self.assertEqual(
+            response.data["profile"]["phone_number"], data2["phone_number"]
+        )
 
         response = self.client.put(f"{self.url}/me", data3)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["phone_number"], data3["phone_number"])
+        self.assertEqual(
+            response.data["profile"]["phone_number"], data3["phone_number"]
+        )
         response = self.client.put(f"{self.url}/{user.id}", data4)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["phone_number"], data4["phone_number"])
+        self.assertEqual(
+            response.data["profile"]["phone_number"], data4["phone_number"]
+        )
 
-    def test_admin_can_change_own_phone_number(self):
-        self.authorize_user(self.admin)
-        self.change_phone_number_and_assert_response(self.admin)
+    def change_name_and_assert_response(self, user):
+        data1 = {"first_name": f"{user.first_name}_mod"}
+        data2 = {"last_name": f"{user.last_name}_mod"}
 
-    def test_staff_can_change_own_phone_number(self):
-        self.authorize_user(self.admin)
-        self.change_phone_number_and_assert_response(self.admin)
-
-    def test_user_can_change_own_phone_number(self):
-        self.authorize_user(self.admin)
-        self.change_phone_number_and_assert_response(self.admin)
-
-    def test_admin_can_change_other_users_phone_number(self):
-        self.authorize_user(self.admin)
-        data = {"phone_number": "+36201234567"}
-
-        response = self.client.patch(f"{self.url}/{self.user.id}", data)
+        response = self.client.patch(f"{self.url}/me", data1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["phone_number"], data["phone_number"])
+        self.assertEqual(response.data["first_name"], data1["first_name"])
 
-        response = self.client.put(f"{self.url}/{self.staff.id}", data)
+        response = self.client.put(f"{self.url}/{user.id}", data2)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["phone_number"], data["phone_number"])
+        self.assertEqual(response.data["last_name"], data2["last_name"])
 
-        response = self.client.patch(f"{self.url}/{NOT_EXISTING_ID}", data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def change_email_and_assert_response(self, user):
+        data1 = {"email": f"{user.username}234@example.com"}
+        data2 = {"email": f"{user.username}567@example.com"}
 
-        response = self.client.put(f"{self.url}/{NOT_EXISTING_ID}", data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.patch(f"{self.url}/me", data1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["email"], data1["email"])
 
-    def test_staff_should_not_change_other_users_phone_number(self):
+        response = self.client.put(f"{self.url}/{user.id}", data2)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["email"], data2["email"])
+
+    def change_avatar_provider_and_assert_response(self, user):
+        data1 = {"avatar_provider": "facebook"}
+        data2 = {"avatar_provider": "gravatar"}
+        data3 = {"avatar_provider": "google-oauth2"}
+        data4 = {"avatar_provider": "not_existing"}
+
+        response = self.client.patch(f"{self.url}/me", data1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data["profile"]["avatar_url"], user.userprofile.avatar["facebook"]
+        )
+        response_new = self.client.patch(f"{self.url}/{user.id}", data3)
+        self.assertEqual(response_new.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, response_new.data)
+        response = self.client.patch(f"{self.url}/{user.id}", data4)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["avatar_provider"][0].code, "invalid_choice")
+
+        response = self.client.put(f"{self.url}/me", data2)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data["profile"]["avatar_url"], user.userprofile.avatar["gravatar"]
+        )
+        response_new = self.client.put(f"{self.url}/{user.id}", data3)
+        self.assertEqual(response_new.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, response_new.data)
+        response = self.client.put(f"{self.url}/{user.id}", data4)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["avatar_provider"][0].code, "invalid_choice")
+
+    def test_admin_can_change_own_user_details(self):
+        self.authorize_user(self.admin)
+        self.change_phone_number_and_assert_response(self.admin)
+        self.change_name_and_assert_response(self.admin)
+        self.change_email_and_assert_response(self.admin)
+        self.change_avatar_provider_and_assert_response(self.admin)
+
+    def test_staff_can_change_own_user_details(self):
         self.authorize_user(self.staff)
-        data = {"phone_number": "+36201234567"}
+        self.change_phone_number_and_assert_response(self.staff)
+        self.change_name_and_assert_response(self.staff)
+        self.change_email_and_assert_response(self.staff)
+        self.change_avatar_provider_and_assert_response(self.staff)
 
-        response = self.client.patch(f"{self.url}/{self.user.id}", data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.put(f"{self.url}/{self.admin.id}", data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.patch(f"{self.url}/{NOT_EXISTING_ID}", data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-        response = self.client.put(f"{self.url}/{NOT_EXISTING_ID}", data)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_user_should_not_change_other_users_phone_number(self):
+    def test_user_can_change_own_user_details(self):
         self.authorize_user(self.user)
-        data = {"phone_number": "+36201234567"}
+        self.change_phone_number_and_assert_response(self.user)
+        self.change_name_and_assert_response(self.user)
+        self.change_email_and_assert_response(self.user)
+        self.change_avatar_provider_and_assert_response(self.user)
 
-        response = self.client.patch(f"{self.url}/{self.staff.id}", data)
+    def test_admin_can_change_other_users_user_details(self):
+        self.authorize_user(self.admin)
+
+        response = self.client.patch(
+            f"{self.url}/{self.user.id}", self.user_details_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data["first_name"], self.user_details_data["first_name"]
+        )
+        self.assertEqual(
+            response.data["last_name"], self.user_details_data["last_name"]
+        )
+        self.assertEqual(response.data["email"], self.user_details_data["email"])
+        self.assertEqual(
+            response.data["profile"]["phone_number"],
+            self.user_details_data["phone_number"],
+        )
+        self.assertEqual(
+            response.data["profile"]["avatar_url"],
+            self.user.userprofile.avatar["facebook"],
+        )
+
+        response = self.client.put(
+            f"{self.url}/{self.staff.id}", self.user_details_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data["first_name"], self.user_details_data["first_name"]
+        )
+        self.assertEqual(
+            response.data["last_name"], self.user_details_data["last_name"]
+        )
+        self.assertEqual(response.data["email"], self.user_details_data["email"])
+        self.assertEqual(
+            response.data["profile"]["phone_number"],
+            self.user_details_data["phone_number"],
+        )
+        self.assertEqual(
+            response.data["profile"]["avatar_url"],
+            self.staff.userprofile.avatar["facebook"],
+        )
+
+        response = self.client.patch(
+            f"{self.url}/{NOT_EXISTING_ID}", self.user_details_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        response = self.client.put(
+            f"{self.url}/{NOT_EXISTING_ID}", self.user_details_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_staff_should_not_change_other_users_user_details(self):
+        self.authorize_user(self.staff)
+
+        response = self.client.patch(
+            f"{self.url}/{self.user.id}", self.user_details_data
+        )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.client.put(f"{self.url}/{self.admin.id}", data)
+        response = self.client.put(
+            f"{self.url}/{self.admin.id}", self.user_details_data
+        )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.client.patch(f"{self.url}/{NOT_EXISTING_ID}", data)
+        response = self.client.patch(
+            f"{self.url}/{NOT_EXISTING_ID}", self.user_details_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        response = self.client.put(
+            f"{self.url}/{NOT_EXISTING_ID}", self.user_details_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_user_should_not_change_other_users_user_details(self):
+        self.authorize_user(self.user)
+
+        response = self.client.patch(
+            f"{self.url}/{self.staff.id}", self.user_details_data
+        )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.client.put(f"{self.url}/{NOT_EXISTING_ID}", data)
+        response = self.client.put(
+            f"{self.url}/{self.admin.id}", self.user_details_data
+        )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_anonymous_should_not_change_phone_number(self):
-        data = {"phone_number": "+36501234567"}
+        response = self.client.patch(
+            f"{self.url}/{NOT_EXISTING_ID}", self.user_details_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.client.patch(f"{self.url}/me", data)
+        response = self.client.put(
+            f"{self.url}/{NOT_EXISTING_ID}", self.user_details_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_anonymous_should_not_change_user_details(self):
+        response = self.client.patch(f"{self.url}/me", self.user_details_data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(f"{self.url}/{self.user.id}", data)
+        response = self.client.patch(
+            f"{self.url}/{self.user.id}", self.user_details_data
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.patch(f"{self.url}/{NOT_EXISTING_ID}", data)
+        response = self.client.patch(
+            f"{self.url}/{NOT_EXISTING_ID}", self.user_details_data
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        response = self.client.put(f"{self.url}/me", data)
+        response = self.client.put(f"{self.url}/me", self.user_details_data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(f"{self.url}/{self.user.id}", data)
+        response = self.client.put(f"{self.url}/{self.user.id}", self.user_details_data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        response = self.client.put(f"{self.url}/{NOT_EXISTING_ID}", data)
+        response = self.client.put(
+            f"{self.url}/{NOT_EXISTING_ID}", self.user_details_data
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """

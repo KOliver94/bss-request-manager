@@ -44,12 +44,18 @@ def populate_user_profile_from_ldap(
             setattr(user.userprofile, key, value[0])
 
     # Set profile picture from Gravatar
-    if not profile.avatar_url and user.email:
+    if user.email:
         url = Gravatar(sanitize_email(user.email)).get_image(
             size=500, use_ssl=True, default="404"
         )
-        if not requests.get(url).status_code == 404:
-            profile.avatar_url = url
+        try:
+            resp = requests.get(url)
+            resp.raise_for_status()
+            profile.avatar["gravatar"] = url
+            if not profile.avatar.get("provider", None):
+                profile.avatar["provider"] = "gravatar"
+        except requests.exceptions.HTTPError:
+            pass
 
     profile.save()  # Save the profile modifications
 

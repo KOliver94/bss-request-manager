@@ -38,7 +38,11 @@ def create_user(
     user.is_superuser = is_admin
 
     # Set user's profile
-    user.userprofile.avatar_url = "https://via.placeholder.com/150"
+    user.userprofile.avatar = {
+        "provider": "gravatar",
+        "facebook": "https://via.placeholder.com/150",
+        "gravatar": "https://via.placeholder.com/200",
+    }
     user.userprofile.phone_number = "+36701234567"
 
     # Get or create groups and add user to them
