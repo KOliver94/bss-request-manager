@@ -1208,18 +1208,23 @@ class RequestsAPIAdminTestCase(APITestCase):
     """
 
     def modify_crew(self):
-        data = {"position": "Modified position", "member_id": self.admin_user.id}
+        data = {"member_id": self.admin_user.id}
         response = self.client.patch(
             BASE_URL + str(self.request1.id) + "/crew/" + str(self.crew1.id), data
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["member"]["username"], self.admin_user.username)
 
+        data = {"position": "Modified position"}
+        response = self.client.patch(
+            BASE_URL + str(self.request1.id) + "/crew/" + str(self.crew1.id), data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual("Modified position", data["position"])
+
         data = self.client.get(
             BASE_URL + str(self.request1.id) + "/crew/" + str(self.crew1.id)
         ).json()
-        self.assertIn("Modified", data["position"])
-
         data["position"] = "PUT Modified"
         data.update(member_id=data["member"]["id"])
         response = self.client.put(
@@ -1230,7 +1235,7 @@ class RequestsAPIAdminTestCase(APITestCase):
         data = self.client.get(
             BASE_URL + str(self.request1.id) + "/crew/" + str(self.crew1.id)
         ).json()
-        self.assertIn("PUT Modified", data["position"])
+        self.assertEqual("PUT Modified", data["position"])
 
     def test_admin_can_modify_crew(self):
         self.authorize_user(self.admin_user)
