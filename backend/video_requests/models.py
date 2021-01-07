@@ -98,7 +98,7 @@ class CrewMember(models.Model):
     position = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"{self.request.title} || {self.member.last_name} {self.member.first_name} - {self.position}"
+        return f"{self.request.title} || {self.member.get_full_name_eastern_order()} - {self.position}"
 
 
 class Video(models.Model):
@@ -151,11 +151,11 @@ class Comment(AbstractComment):
     )
 
     def __str__(self):
-        return f"{self.request.title} || {self.text} - {self.author.last_name} {self.author.first_name}"
+        return f"{self.request.title} || {self.text} - {self.author.get_full_name_eastern_order()}"
 
 
 class Rating(AbstractRating):
     video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="ratings")
 
     def __str__(self):
-        return f"{self.video.title} || {self.author.last_name} {self.author.first_name} ({self.rating})"
+        return f"{self.video.title} || {self.author.get_full_name_eastern_order()} ({self.rating})"

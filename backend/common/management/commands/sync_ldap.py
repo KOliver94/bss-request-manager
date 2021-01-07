@@ -68,7 +68,7 @@ class Command(BaseCommand):
             user.save()  # Save modifications
             total_demoted += 1
             logging.warning(
-                f"{user.last_name} {user.first_name} ({user.username}) has been demoted."
+                f"{user.get_full_name()} ({user.username}) has been demoted."
             )
 
         self.stdout.write(

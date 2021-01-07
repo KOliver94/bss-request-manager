@@ -108,7 +108,7 @@ def email_user_new_comment(comment_id):
         "commenter_avatar": comment.author.userprofile.avatar_url
         if comment.author.userprofile.avatar_url
         else BASE_URL + "/static/images/default_avatar.png",
-        "commenter_name": f"{comment.author.last_name} {comment.author.first_name}",
+        "commenter_name": comment.author.get_full_name_eastern_order(),
         "comment_message": comment.text,
         "comment_created": comment.created,
         "comment_url": f"{BASE_URL}/my-requests/{comment.request.id}",
@@ -193,7 +193,7 @@ def email_crew_new_comment(comment_id):
         "commenter_avatar": comment.author.userprofile.avatar_url
         if comment.author.userprofile.avatar_url
         else BASE_URL + "/static/images/default_avatar.png",
-        "commenter_name": f"{comment.author.last_name} {comment.author.first_name}",
+        "commenter_name": comment.author.get_full_name_eastern_order(),
         "comment_message": comment.text,
         "comment_created": comment.created,
         "comment_url": f"{BASE_URL}/admin/requests/{comment.request.id}",

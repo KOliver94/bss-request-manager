@@ -30,7 +30,7 @@ class VideoRequestsTestCase(TestCase):
     def test_crew_member_to_str(self):
         self.assertEqual(
             str(self.crew_member),
-            f"{self.crew_member.request.title} || {self.crew_member.member.last_name} {self.crew_member.member.first_name} - {self.crew_member.position}",
+            f"{self.crew_member.request.title} || {self.crew_member.member.get_full_name_eastern_order()} - {self.crew_member.position}",
         )
 
     def test_video_to_str(self):
@@ -41,13 +41,13 @@ class VideoRequestsTestCase(TestCase):
     def test_comment_to_str(self):
         self.assertEqual(
             str(self.comment),
-            f"{self.comment.request.title} || {self.comment.text} - {self.comment.author.last_name} {self.comment.author.first_name}",
+            f"{self.comment.request.title} || {self.comment.text} - {self.comment.author.get_full_name_eastern_order()}",
         )
 
     def test_rating_to_str(self):
         self.assertEqual(
             str(self.rating),
-            f"{self.rating.video.title} || {self.rating.author.last_name} {self.rating.author.first_name} ({self.rating.rating})",
+            f"{self.rating.video.title} || {self.rating.author.get_full_name_eastern_order()} ({self.rating.rating})",
         )
 
     def test_request_date_validation(self):

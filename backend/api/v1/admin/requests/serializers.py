@@ -93,7 +93,7 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
             else:
                 additional_data["status_by_admin"].update({"admin_id": user.id})
                 additional_data["status_by_admin"].update(
-                    {"admin_name": f"{user.last_name} {user.first_name}"}
+                    {"admin_name": user.get_full_name_eastern_order()}
                 )
     return additional_data
 

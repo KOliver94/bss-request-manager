@@ -6,20 +6,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_social_auth.serializers import JWTPairSerializer
 
 
-def get_role(user):
-    if user.is_staff and user.is_superuser:
-        return "admin"
-    elif user.is_staff:
-        return "staff"
-    else:
-        return "user"
-
-
 def add_custom_claims(token, user):
     token["avatar"] = user.userprofile.avatar_url
     token["groups"] = list(user.groups.values_list("name", flat=True))
-    token["name"] = f"{user.last_name} {user.first_name}"
-    token["role"] = get_role(user)
+    token["name"] = user.get_full_name_eastern_order()
+    token["role"] = user.get_role()
     return token
 
 

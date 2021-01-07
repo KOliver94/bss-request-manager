@@ -118,7 +118,7 @@ def check_if_user_is_banned(strategy, user=None, *args, **kwargs):
             user.is_active = True
             user.save()
             logging.warning(
-                f"User account has been activated for {user.last_name} {user.first_name} ({user.username})"
+                f"User account has been activated for {user.get_full_name()} ({user.username})"
             )
 
 

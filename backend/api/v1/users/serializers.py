@@ -60,6 +60,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
             many=True, read_only=True, source="social_auth"
         )
     groups = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+    role = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -71,6 +72,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "email",
             "profile",
             "groups",
+            "role",
         )
 
         if all(
@@ -78,6 +80,10 @@ class UserDetailSerializer(serializers.ModelSerializer):
             for elem in ["rest_social_auth", "social_django"]
         ):  # pragma: no cover
             fields += ("social_accounts",)
+
+    @staticmethod
+    def get_role(user):
+        return user.get_role()
 
 
 class ConnectOAuth2ProfileInputSerializer(OAuth2InputSerializer):

@@ -203,7 +203,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         )
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{self.user.last_name} {self.user.first_name}",
+            self.user.get_full_name_eastern_order(),
         )
 
         # 3. Add a video
@@ -235,7 +235,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         )
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{self.user.last_name} {self.user.first_name}",
+            self.user.get_full_name_eastern_order(),
         )
 
         # 5. Check the Request again
@@ -317,7 +317,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{self.user.last_name} {self.user.first_name}",
+            self.user.get_full_name_eastern_order(),
         )
         self.assertIn("accepted", response.data["additional_data"])
         self.assertIn("canceled", response.data["additional_data"])
@@ -344,7 +344,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{self.user.last_name} {self.user.first_name}",
+            self.user.get_full_name_eastern_order(),
         )
 
         # Create a new admin user
@@ -373,11 +373,11 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{self.user.last_name} {self.user.first_name}",
+            self.user.get_full_name_eastern_order(),
         )
         self.assertNotEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{new_admin.last_name} {new_admin.first_name}",
+            new_admin.get_full_name_eastern_order(),
         )
 
         # Change the status_by_admin with the new admin --> admin_id should change
@@ -411,11 +411,11 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
         self.assertNotEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{self.user.last_name} {self.user.first_name}",
+            self.user.get_full_name_eastern_order(),
         )
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{new_admin.last_name} {new_admin.first_name}",
+            new_admin.get_full_name_eastern_order(),
         )
 
     def test_status_by_admin_remove_status(self):
@@ -437,7 +437,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{self.user.last_name} {self.user.first_name}",
+            self.user.get_full_name_eastern_order(),
         )
         self.assertEqual(
             response.data["status"],
@@ -481,11 +481,11 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
         self.assertNotEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{self.user.last_name} {self.user.first_name}",
+            self.user.get_full_name_eastern_order(),
         )
         self.assertEqual(
             response.data["additional_data"]["status_by_admin"]["admin_name"],
-            f"{new_admin.last_name} {new_admin.first_name}",
+            new_admin.get_full_name_eastern_order(),
         )
         self.assertEqual(response.data["status"], Request.Statuses.CANCELED)
 

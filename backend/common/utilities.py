@@ -8,6 +8,27 @@ from video_requests.models import Request
 
 
 ##############################
+#          Common            #
+##############################
+def get_role(self):
+    if self.is_staff and self.is_superuser:
+        return "admin"
+    elif self.is_staff:
+        return "staff"
+    else:
+        return "user"
+
+
+def get_full_name_eastern_order(self):
+    full_name = "%s %s" % (self.last_name, self.first_name)
+    return full_name.strip()
+
+
+User.add_to_class("get_role", get_role)
+User.add_to_class("get_full_name_eastern_order", get_full_name_eastern_order)
+
+
+##############################
 #           LDAP             #
 ##############################
 def get_editor_in_chief():
