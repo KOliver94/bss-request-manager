@@ -10,6 +10,7 @@ import PrivilegedRoute from './components/PrivilegedRoute';
 import ErrorPage from './views/ErrorPage/ErrorPage';
 import LandingPage from './views/LandingPage/LandingPage';
 import LoginPage from './views/LoginPage/LoginPage';
+import ProfilePage from './views/ProfilePage/ProfilePage';
 import RequestCreatorPage from './views/RequestCreatorPage/RequestCreatorPage';
 import MyRequestsPage from './views/MyRequestsPage/MyRequestsPage';
 import RequestDetailPage from './views/RequestDetailPage/RequestDetailPage';
@@ -42,6 +43,12 @@ function App() {
               setIsAuthenticated={setIsAuthenticated}
             />
           </Route>
+          <AuthenticatedRoute path="/profile">
+            <ProfilePage
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+            />
+          </AuthenticatedRoute>
           <Route exact path="/new-request">
             <RequestCreatorPage
               isAuthenticated={isAuthenticated}
@@ -75,6 +82,14 @@ function App() {
                 isAuthenticated={isAuthenticated}
                 setIsAuthenticated={setIsAuthenticated}
                 isPrivileged
+              />
+            </PrivilegedRoute>
+          </AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/admin/users/:id">
+            <PrivilegedRoute>
+              <ProfilePage
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
               />
             </PrivilegedRoute>
           </AuthenticatedRoute>

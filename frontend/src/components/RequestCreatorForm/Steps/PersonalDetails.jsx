@@ -81,7 +81,7 @@ const PersonalDetails = ({
                     </MUIButton>
                   }
                 >
-                  A telefonszámodat a profilodban módosíthatod.
+                  Adataidat a profilodban módosíthatod.
                 </Alert>
               ) : (
                 <Alert

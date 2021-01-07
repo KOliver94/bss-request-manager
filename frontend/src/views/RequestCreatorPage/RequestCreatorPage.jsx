@@ -26,7 +26,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 // Form
 import RequestCreatorForm from 'components/RequestCreatorForm/RequestCreatorForm';
 // API calls
-import { getUserMe } from 'api/userApi';
+import { getUser } from 'api/userApi';
 import { createRequest } from 'api/requestApi';
 import handleError from 'helpers/errorHandler';
 
@@ -114,7 +114,7 @@ export default function RequestCreatorPage({
   useEffect(() => {
     async function loadUserData() {
       try {
-        await getUserMe().then((result) => {
+        await getUser('me').then((result) => {
           const userData = {
             requester_first_name: result.data.first_name,
             requester_last_name: result.data.last_name,

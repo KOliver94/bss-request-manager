@@ -189,8 +189,8 @@ class UserWorkedOnListView(generics.ListAPIView):
 
     Example: /users/me/worked?from_date=2020-06-20&to_date=2020-05-20&responsible=False
     Params:
-    @from = Date from when we check the requests. By default: 20 weeks before today.
-    @to = Date until we check the requests. By default: today.
+    @from_date = Date from when we check the requests. By default: 20 weeks before today.
+    @to_date = Date until we check the requests. By default: today.
     @responsible = If True the requests where the user was the responsible will be shown as well.
     """
 
@@ -241,6 +241,7 @@ class UserWorkedOnListView(generics.ListAPIView):
             ):
                 worked_on.append(
                     {
+                        "id": request.id,
                         "title": request.title,
                         "position": "Felelős",
                         "start_datetime": request.start_datetime,
@@ -253,6 +254,7 @@ class UserWorkedOnListView(generics.ListAPIView):
         ):
             worked_on.append(
                 {
+                    "id": crew.request.id,
                     "title": crew.request.title,
                     "position": crew.position,
                     "start_datetime": crew.request.start_datetime,
@@ -265,6 +267,7 @@ class UserWorkedOnListView(generics.ListAPIView):
         ):
             worked_on.append(
                 {
+                    "id": video.request.id,
                     "title": video.request.title,
                     "position": "Vágó",
                     "start_datetime": video.request.start_datetime,

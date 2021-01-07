@@ -41,3 +41,25 @@ export const crewPositionTypes = [
   { position: 'Stream', category: 'Élő közvetítés' },
   { position: 'Videotechnikus', category: 'Élő közvetítés' },
 ];
+
+export const userRoles = (role) => {
+  switch (role) {
+    case 'admin':
+      return 'Adminisztrátor';
+    case 'staff':
+      return 'BSS Tag';
+    default:
+      return 'Felhasználó';
+  }
+};
+
+export const avatarProviders = (provider) => {
+  switch (provider) {
+    case 'google-oauth2':
+      return 'Google';
+    case 'facebook':
+      return 'Facebook';
+    default:
+      return 'Gravatar';
+  }
+};

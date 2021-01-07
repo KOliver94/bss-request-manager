@@ -2,16 +2,25 @@ from common.models import UserProfile
 from django.conf import settings
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
-from rest_framework import serializers
-from rest_framework.fields import BooleanField, CharField, DateTimeField, EmailField
+from rest_framework.fields import (
+    BooleanField,
+    CharField,
+    ChoiceField,
+    DateTimeField,
+    EmailField,
+    IntegerField,
+    SerializerMethodField,
+)
+from rest_framework.relations import SlugRelatedField
+from rest_framework.serializers import ModelSerializer, Serializer
 from rest_social_auth.serializers import OAuth2InputSerializer
 
 
-class BanUserSerializer(serializers.Serializer):
+class BanUserSerializer(Serializer):
     ban = BooleanField(required=True)
 
 
-class UserSocialProfileSerializer(serializers.ModelSerializer):
+class UserSocialProfileSerializer(ModelSerializer):
     class Meta:
         from social_django.models import UserSocialAuth
 
@@ -26,7 +35,7 @@ class UserSocialProfileSerializer(serializers.ModelSerializer):
         )
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(ModelSerializer):
     class Meta:
         model = UserProfile
         fields = (
@@ -36,7 +45,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ("phone_number", "avatar_url")
 
 
-class UserProfileSerializerWithAvatar(serializers.ModelSerializer):
+class UserProfileSerializerWithAvatar(ModelSerializer):
     class Meta:
         model = UserProfile
         fields = (
@@ -47,7 +56,7 @@ class UserProfileSerializerWithAvatar(serializers.ModelSerializer):
         read_only_fields = ("avatar_url", "avatar")
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(ModelSerializer):
     profile = UserProfileSerializer(read_only=True, source="userprofile")
 
     class Meta:
@@ -62,7 +71,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
+class UserDetailSerializer(ModelSerializer):
     AVATAR_PROVIDER_CHOICES = (
         ("facebook", "Facebook"),
         ("google-oauth2", "Google"),
@@ -80,10 +89,10 @@ class UserDetailSerializer(serializers.ModelSerializer):
         social_accounts = UserSocialProfileSerializer(
             many=True, read_only=True, source="social_auth"
         )
-    groups = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
-    role = serializers.SerializerMethodField(read_only=True)
+    groups = SlugRelatedField(many=True, read_only=True, slug_field="name")
+    role = SerializerMethodField(read_only=True)
     phone_number = PhoneNumberField(write_only=True, required=False)
-    avatar_provider = serializers.ChoiceField(
+    avatar_provider = ChoiceField(
         write_only=True, choices=AVATAR_PROVIDER_CHOICES, required=False
     )
 
@@ -128,10 +137,11 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
 
 class ConnectOAuth2ProfileInputSerializer(OAuth2InputSerializer):
-    force = serializers.BooleanField(required=False, default=False)
+    force = BooleanField(required=False, default=False)
 
 
-class UserWorkedOnSerializer(serializers.Serializer):
+class UserWorkedOnSerializer(Serializer):
+    id = IntegerField()
     title = CharField()
     position = CharField()
     start_datetime = DateTimeField()

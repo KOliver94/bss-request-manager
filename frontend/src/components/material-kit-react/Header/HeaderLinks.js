@@ -42,6 +42,7 @@ export default function HeaderLinks({
   setIsAuthenticated,
   hideNewRequest = false,
   hideLogin = false,
+  dataChangeTrigger = false,
 }) {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -145,4 +146,5 @@ HeaderLinks.propTypes = {
   setIsAuthenticated: PropTypes.func,
   hideNewRequest: PropTypes.bool,
   hideLogin: PropTypes.bool,
+  dataChangeTrigger: PropTypes.bool,
 };

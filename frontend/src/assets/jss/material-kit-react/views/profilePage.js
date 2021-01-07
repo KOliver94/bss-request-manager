@@ -1,23 +1,29 @@
-import { container, title } from 'assets/jss/material-kit-react';
+import {
+  container,
+  title,
+  primaryColor,
+  successColor,
+} from 'assets/jss/material-kit-react';
 
 import imagesStyle from 'assets/jss/material-kit-react/imagesStyles';
 
 const profilePageStyle = {
   container,
+  section: {
+    paddingBottom: '70px',
+  },
+  field: {
+    padding: '0 16px',
+  },
   profile: {
     textAlign: 'center',
-    '& img': {
-      maxWidth: '160px',
-      width: '100%',
-      margin: '0 auto',
-      transform: 'translate3d(0, -50%, 0)',
-    },
   },
-  description: {
-    margin: '1.071rem auto 0',
-    maxWidth: '600px',
-    color: '#999',
-    textAlign: 'center !important',
+  avatar: {
+    maxWidth: '160px',
+    width: '100%',
+    height: '160px',
+    margin: '0 auto',
+    transform: 'translate3d(0, -50%, 0)',
   },
   name: {
     marginTop: '-80px',
@@ -38,7 +44,8 @@ const profilePageStyle = {
     ...title,
     display: 'inline-block',
     position: 'relative',
-    marginTop: '30px',
+    marginTop: '15px',
+    marginBottom: '0px',
     minHeight: '32px',
     textDecoration: 'none',
   },
@@ -53,9 +60,64 @@ const profilePageStyle = {
     fontSize: '20px',
     color: '#999',
   },
-  navWrapper: {
-    margin: '20px auto 50px auto',
+  schButtonColor: {
+    background: '#0a3a66',
+  },
+  circularProgress: {
+    margin: '50px 30px',
+    color: primaryColor,
+  },
+  textCenter: {
     textAlign: 'center',
+  },
+  button: {
+    marginTop: '15px',
+  },
+  gridItemMobile: {
+    paddingTop: '15px',
+    paddingBottom: '15px',
+  },
+  gridItemMobileNoTopPadding: {
+    paddingBottom: '15px',
+  },
+  gridEnd: {
+    textAlign: 'end',
+  },
+  alertAd: {
+    marginTop: 18,
+    marginBottom: 2,
+    textAlign: 'left',
+    alignItems: 'center',
+  },
+  alertAdMobile: {
+    marginTop: 0,
+    marginBottom: 2,
+    textAlign: 'left',
+    alignItems: 'center',
+  },
+  accordionAvatar: {
+    display: 'inherit',
+  },
+  alertAvatar: {
+    textAlign: 'justify',
+  },
+  cardMediaAvatar: {
+    height: 'auto',
+  },
+  selectedIconAvatar: {
+    color: successColor,
+  },
+  smallAvatar: {
+    color: 'inherit',
+  },
+  textAvatar: {
+    fontSize: '0.9rem',
+    fontWeight: 450,
+  },
+  accordion: {
+    '&>:first-child': {
+      marginTop: '18px',
+    },
   },
 };
 
