@@ -38,7 +38,7 @@ class UserProfile(models.Model):
     phone_number = PhoneNumberField(blank=True)
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}'s ({self.user.username}) profile"
+        return f"{self.user.get_full_name()}'s ({self.user.username}) profile"
 
     @property
     def avatar_url(self):

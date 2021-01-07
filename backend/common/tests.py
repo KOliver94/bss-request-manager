@@ -24,7 +24,7 @@ class CommonTestCase(TestCase):
     def test_userprofile_to_str(self):
         self.assertEqual(
             str(self.user.userprofile),
-            f"{self.user.first_name} {self.user.last_name}'s ({self.user.username}) profile",
+            f"{self.user.get_full_name()}'s ({self.user.username}) profile",
         )
 
     def test_sentinel_user_on_user_delete(self):
