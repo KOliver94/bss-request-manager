@@ -91,37 +91,27 @@ SOCIAL_AUTH_PROTECTED_USER_FIELDS = ["first_name", "last_name"]
 # Facebook OAuth2 settings:
 SOCIAL_AUTH_FACEBOOK_KEY = config("AUTH_FACEBOOK_APP_ID")
 SOCIAL_AUTH_FACEBOOK_SECRET = config("AUTH_FACEBOOK_APP_SECRET")
-SOCIAL_AUTH_FACEBOOK_SCOPE = [
-    "email",
-]
+SOCIAL_AUTH_FACEBOOK_SCOPE = ["email"]
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    "fields": ",".join(
-        [
-            # public_profile
-            "id",
-            "cover",
-            "name",
-            "first_name",
-            "last_name",
-            "age_range",
-            "link",
-            "gender",
-            "locale",
-            "picture",
-            "timezone",
-            "updated_time",
-            "verified",
-            # extra fields
-            "email",
-        ]
-    ),
+    "fields": "id, name, email, picture.width(500)"
 }
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
+    ("name", "name"),
+    ("email", "email"),
+]
 
 # Google OAuth2 settings:
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("AUTH_GOOGLE_CLIENT_ID")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("AUTH_GOOGLE_CLIENT_SECRET")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    "email",
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/user.phonenumbers.read",
+]
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [
+    ("name", "name"),
+    ("email", "email"),
+    ("mobile", "mobile"),
 ]
 
 # AuthSCH OAuth2 settings:
@@ -168,15 +158,15 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.user.create_user",
     # Create the record that associates the social account with the user.
     "social_core.pipeline.social_auth.associate_user",
-    # Populate the extra_data field in the social record with the values
-    # specified by settings (and the default ones like access_token, etc).
-    "social_core.pipeline.social_auth.load_extra_data",
     # Update the user record with any changed info from the auth service.
     "social_core.pipeline.user.user_details",
     # Custom action: Add phone number to user's profile.
     "common.social_pipeline.add_phone_number_to_profile",
     # Custom action: Get user's avatar.
     "common.social_pipeline.get_avatar",
+    # Populate the extra_data field in the social record with the values
+    # specified by settings (and the default ones like access_token, etc).
+    "social_core.pipeline.social_auth.load_extra_data",
 )
 
 AUTHENTICATION_BACKENDS = (

@@ -26,7 +26,7 @@ import RequestCreatorForm from 'components/RequestCreatorForm/RequestCreatorForm
 // API calls
 import { getUserMe } from 'api/userApi';
 import { createRequest } from 'api/requestApi';
-import handleError from 'api/errorHandler';
+import handleError from 'helpers/errorHandler';
 
 import styles from 'assets/jss/material-kit-react/views/requestCreatorPage';
 

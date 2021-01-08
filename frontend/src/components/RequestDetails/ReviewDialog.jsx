@@ -12,7 +12,7 @@ import { useSnackbar } from 'notistack';
 // API calls
 import { updateRatingAdmin } from 'api/requestAdminApi';
 import { updateRating } from 'api/requestApi';
-import handleError from 'api/errorHandler';
+import handleError from 'helpers/errorHandler';
 
 export default function ReviewDialog({
   reviewDialogData,

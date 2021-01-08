@@ -12,17 +12,17 @@ class AuthSCHOAuth2(BaseOAuth2):
     REFRESH_TOKEN_URL = "https://auth.sch.bme.hu/oauth2/token"  # nosec
     DEFAULT_SCOPE = [
         "basic",
+        "displayName",
         "mail",
         "givenName",
         "sn",
-        "eduPersonEntitlement",
         "mobile",
     ]
     EXTRA_DATA = [
         ("internal_id", "id"),
         ("expires_in", "expires"),
-        ("refresh_token", "refresh_token"),
-        ("eduPersonEntitlement", "eduPersonEntitlement"),
+        ("displayName", "name"),
+        ("mail", "email"),
         ("mobile", "mobile"),
     ]
 

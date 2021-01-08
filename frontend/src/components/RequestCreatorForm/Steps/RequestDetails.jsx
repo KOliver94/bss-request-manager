@@ -13,7 +13,7 @@ import MUITextField from '@material-ui/core/TextField';
 import { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import * as Yup from 'yup';
-import { requestTypes } from 'api/enumConstants';
+import { requestTypes } from 'helpers/enumConstants';
 
 const useStyles = makeStyles(() => ({
   button: {

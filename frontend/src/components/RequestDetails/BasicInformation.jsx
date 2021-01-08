@@ -51,8 +51,8 @@ import {
 } from 'api/requestAdminApi';
 import { getRequest } from 'api/requestApi';
 import { isAdmin, isPrivileged as isPrivilegedCheck } from 'api/loginApi';
-import { requestStatuses } from 'api/enumConstants';
-import handleError from 'api/errorHandler';
+import { requestStatuses } from 'helpers/enumConstants';
+import handleError from 'helpers/errorHandler';
 
 const useStyles = makeStyles((theme) => ({
   title: {

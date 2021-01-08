@@ -35,9 +35,9 @@ import {
   updateCrewAdmin,
   deleteCrewAdmin,
 } from 'api/requestAdminApi';
-import compareValues from 'api/objectComperator';
-import handleError from 'api/errorHandler';
-import { crewPositionTypes } from 'api/enumConstants';
+import compareValues from 'helpers/objectComperator';
+import handleError from 'helpers/errorHandler';
+import { crewPositionTypes } from 'helpers/enumConstants';
 
 const useStyles = makeStyles((theme) => ({
   table: {

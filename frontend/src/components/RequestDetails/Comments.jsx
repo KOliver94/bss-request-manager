@@ -32,8 +32,8 @@ import {
   deleteCommentAdmin,
 } from 'api/requestAdminApi';
 import { isAdmin } from 'api/loginApi';
-import compareValues from 'api/objectComperator';
-import handleError from 'api/errorHandler';
+import compareValues from 'helpers/objectComperator';
+import handleError from 'helpers/errorHandler';
 
 const useStyles = makeStyles(() => ({
   title: {

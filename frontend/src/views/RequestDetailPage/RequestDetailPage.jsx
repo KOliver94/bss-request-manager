@@ -30,9 +30,9 @@ import Videos from 'components/RequestDetails/Videos';
 import { getRequest } from 'api/requestApi';
 import { getRequestAdmin } from 'api/requestAdminApi';
 import { listStaffUsers } from 'api/userApi';
-import { requestStatuses } from 'api/enumConstants';
+import { requestStatuses } from 'helpers/enumConstants';
 import { isPrivileged as isPrivilegedCheck } from 'api/loginApi';
-import handleError from 'api/errorHandler';
+import handleError from 'helpers/errorHandler';
 
 import styles from 'assets/jss/material-kit-react/views/requestDetailPage';
 

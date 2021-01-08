@@ -61,9 +61,9 @@ import {
 } from 'api/requestAdminApi';
 import { isAdmin } from 'api/loginApi';
 import { createRating, updateRating, deleteRating } from 'api/requestApi';
-import { videoStatuses } from 'api/enumConstants';
-import compareValues from 'api/objectComperator';
-import handleError from 'api/errorHandler';
+import { videoStatuses } from 'helpers/enumConstants';
+import compareValues from 'helpers/objectComperator';
+import handleError from 'helpers/errorHandler';
 // Review component
 import ReviewDialog from './ReviewDialog';
 import RatingsDialog from './RatingsDialog';

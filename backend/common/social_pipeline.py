@@ -164,19 +164,44 @@ def check_if_admin_or_staff_user_already_associated(
             )
 
 
-def add_phone_number_to_profile(details, user, *args, **kwargs):
+def add_phone_number_to_profile(backend, details, response, user, *args, **kwargs):
+    phone_number = None
+
+    # AuthSCH
     if details.get("mobile"):
-        user.userprofile.phone_number = details.get("mobile")
+        phone_number = details.get("mobile")
+
+    # Google
+    elif (
+        backend.name == "google-oauth2"
+        and "https://www.googleapis.com/auth/user.phonenumbers.read"
+        in response["scope"]
+    ):
+        resp = requests.get(
+            "https://people.googleapis.com/v1/people/me?personFields=phoneNumbers",
+            headers={"Authorization": f"Bearer {response['access_token']}"},
+        )
+        if resp.status_code == 200 and len(resp.json().get("phoneNumbers", [])) > 0:
+            phone_number = resp.json()["phoneNumbers"][0]["value"]
+            response["mobile"] = resp.json()["phoneNumbers"][0]["value"]
+
+    # Set phone number
+    if not user.userprofile.phone_number and phone_number:
+        user.userprofile.phone_number = phone_number
         user.save()
 
 
 def get_avatar(backend, response, user, *args, **kwargs):
     if backend.name == "facebook":
-        user.userprofile.avatar[
-            "facebook"
-        ] = f"https://graph.facebook.com/{response['id']}/picture?width=500&height=500"
-    elif backend.name == "google-oauth2":
-        user.userprofile.avatar["google-oauth2"] = response["picture"]
+        try:
+            if not response.get("picture").get("data").get("is_silhouette"):
+                user.userprofile.avatar["facebook"] = (
+                    response.get("picture").get("data").get("url")
+                )
+        except AttributeError:
+            pass
+    elif backend.name == "google-oauth2" and response.get("picture"):
+        user.userprofile.avatar["google-oauth2"] = response["picture"][:-6]
 
     url = Gravatar(sanitize_email(user.email)).get_image(
         size=500, use_ssl=True, default="404"

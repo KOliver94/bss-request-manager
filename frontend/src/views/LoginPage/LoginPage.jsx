@@ -29,6 +29,13 @@ import styles from 'assets/jss/material-kit-react/views/loginPage';
 import background from 'assets/img/bg7.jpg';
 
 import { loginLdap, loginSocial } from 'api/loginApi';
+import {
+  getOauthUrlAuthSch,
+  getOauthUrlFacebook,
+  getOauthUrlGoogle,
+  getOauthCode,
+  getOauthState,
+} from 'helpers/oauthConstants';
 
 const useStyles = makeStyles(styles);
 
@@ -118,13 +125,17 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   });
 
   useEffect(() => {
-    const code = (location.search.match(/code=([^&]+)/) || [])[1];
-    const state = (location.search.match(/state=([^&]+)/) || [])[1];
-    if (code && ['authsch', 'facebook', 'google-oauth2'].includes(state)) {
+    const code = getOauthCode(location);
+    const state = getOauthState(location);
+    if (
+      code &&
+      Array.isArray(state) &&
+      state.some((x) => ['authsch', 'facebook', 'google-oauth2'].includes(x))
+    ) {
       setLoading(true);
-      handleLogin(state, decodeURIComponent(code));
+      handleLogin(state, code);
     }
-  }, [location.search, handleLogin]);
+  }, [location, handleLogin]);
 
   return (
     <div>
@@ -159,7 +170,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         <span>
                           <Button
                             justIcon
-                            href={process.env.REACT_APP_AUTHSCH_OAUTH_URL}
+                            href={getOauthUrlAuthSch()}
                             onClick={handleButtonClick}
                             target="_self"
                             color="transparent"
@@ -178,7 +189,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         <span>
                           <Button
                             justIcon
-                            href={process.env.REACT_APP_FACEBOOK_OAUTH_URL}
+                            href={getOauthUrlFacebook('login')}
                             onClick={handleButtonClick}
                             target="_self"
                             color="transparent"
@@ -197,7 +208,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         <span>
                           <Button
                             justIcon
-                            href={process.env.REACT_APP_GOOGLE_OAUTH_URL}
+                            href={getOauthUrlGoogle('login')}
                             onClick={handleButtonClick}
                             target="_self"
                             color="transparent"

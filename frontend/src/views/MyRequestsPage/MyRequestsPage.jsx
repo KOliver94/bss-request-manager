@@ -34,8 +34,8 @@ import { hu } from 'date-fns/locale';
 // API calls
 import { listRequests } from 'api/requestApi';
 import { listRequestsAdmin } from 'api/requestAdminApi';
-import { requestStatuses } from 'api/enumConstants';
-import handleError from 'api/errorHandler';
+import { requestStatuses } from 'helpers/enumConstants';
+import handleError from 'helpers/errorHandler';
 
 import styles from 'assets/jss/material-kit-react/views/myRequestsPage';
 

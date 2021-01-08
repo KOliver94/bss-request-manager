@@ -35,8 +35,8 @@ import {
   updateRatingAdmin,
   deleteRatingAdmin,
 } from 'api/requestAdminApi';
-import compareValues from 'api/objectComperator';
-import handleError from 'api/errorHandler';
+import compareValues from 'helpers/objectComperator';
+import handleError from 'helpers/errorHandler';
 
 const useStyles = makeStyles(() => ({
   ratingLabel: {
