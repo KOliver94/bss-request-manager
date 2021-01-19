@@ -60,7 +60,7 @@ services:
     restart: always
     image: postgres:12-alpine
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=myprojectuser
       - POSTGRES_PASSWORD=password
@@ -69,7 +69,10 @@ services:
   redis:
     restart: always
     image: redis:6-alpine
+    volumes:
+      - redis_data:/data
 
 volumes:
   backend_logs:
   postgres_data:
+  redis_data:
