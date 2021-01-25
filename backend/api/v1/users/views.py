@@ -5,7 +5,6 @@ from api.v1.users.serializers import (
     BanUserSerializer,
     ConnectOAuth2ProfileInputSerializer,
     UserDetailSerializer,
-    UserProfileSerializer,
     UserSerializer,
     UserWorkedOnSerializer,
 )
