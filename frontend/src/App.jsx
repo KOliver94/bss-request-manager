@@ -1,15 +1,5 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import {
-  primaryColor,
-  roseColor as secondaryColor,
-  dangerColor as errorColor,
-  warningColor,
-  infoColor,
-  successColor,
-  grayColor,
-} from 'assets/jss/material-kit-react';
 import { checkRefreshTokenValid } from './api/loginApi';
 
 import AuthenticatedRoute from './components/AuthenticatedRoute';
@@ -24,92 +14,64 @@ import RequestDetailPage from './views/RequestDetailPage/RequestDetailPage';
 
 import 'assets/scss/material-kit-react.scss';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: primaryColor,
-    },
-    secondary: {
-      main: secondaryColor,
-    },
-    error: {
-      main: errorColor,
-    },
-    warning: {
-      main: warningColor,
-    },
-    info: {
-      main: infoColor,
-    },
-    success: {
-      main: successColor,
-    },
-    grey: {
-      main: grayColor,
-    },
-  },
-});
-
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem('access_token') && checkRefreshTokenValid()
   );
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <LandingPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </Route>
-          <Route path="/login">
-            <LoginPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </Route>
-          <Route exact path="/new-request">
-            <RequestCreatorPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </Route>
-          <AuthenticatedRoute exact path="/my-requests">
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <LandingPage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </Route>
+        <Route path="/login">
+          <LoginPage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </Route>
+        <Route exact path="/new-request">
+          <RequestCreatorPage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </Route>
+        <AuthenticatedRoute exact path="/my-requests">
+          <MyRequestsPage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </AuthenticatedRoute>
+        <AuthenticatedRoute exact path="/my-requests/:id">
+          <RequestDetailPage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </AuthenticatedRoute>
+        <AuthenticatedRoute exact path="/admin/requests">
+          <PrivilegedRoute>
             <MyRequestsPage
               isAuthenticated={isAuthenticated}
               setIsAuthenticated={setIsAuthenticated}
+              isPrivileged
             />
-          </AuthenticatedRoute>
-          <AuthenticatedRoute exact path="/my-requests/:id">
+          </PrivilegedRoute>
+        </AuthenticatedRoute>
+        <AuthenticatedRoute exact path="/admin/requests/:id">
+          <PrivilegedRoute>
             <RequestDetailPage
               isAuthenticated={isAuthenticated}
               setIsAuthenticated={setIsAuthenticated}
+              isPrivileged
             />
-          </AuthenticatedRoute>
-          <AuthenticatedRoute exact path="/admin/requests">
-            <PrivilegedRoute>
-              <MyRequestsPage
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-                isPrivileged
-              />
-            </PrivilegedRoute>
-          </AuthenticatedRoute>
-          <AuthenticatedRoute exact path="/admin/requests/:id">
-            <PrivilegedRoute>
-              <RequestDetailPage
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-                isPrivileged
-              />
-            </PrivilegedRoute>
-          </AuthenticatedRoute>
-          <Route component={PageNotFound} />
-        </Switch>
-      </Router>
-    </ThemeProvider>
+          </PrivilegedRoute>
+        </AuthenticatedRoute>
+        <Route component={PageNotFound} />
+      </Switch>
+    </Router>
   );
 }
 
