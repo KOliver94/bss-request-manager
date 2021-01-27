@@ -85,6 +85,9 @@ CELERY_BEAT_SCHEDULE.update(
 # When using PostgreSQL, it’s recommended to use the built-in JSONB field to store the extracted extra_data.
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
+# Use username, email, first and last name for user creation
+SOCIAL_AUTH_USER_FIELDS = ["username", "email", "first_name", "last_name"]
+
 # Do not let name to be changed by social profile.
 SOCIAL_AUTH_PROTECTED_USER_FIELDS = ["first_name", "last_name"]
 
