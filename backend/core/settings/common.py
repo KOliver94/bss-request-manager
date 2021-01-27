@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from re import match
 
 from celery.schedules import crontab
 from decouple import Csv, config
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -274,3 +276,7 @@ if HEALTH_CHECK_ENABLED:
         "health_check.contrib.celery_ping",
         "health_check.contrib.redis",
     ]
+    try:
+        REDIS_URL = match("^redis://[a-zA-Z0-9]+:[0-9]+", CACHEOPS_REDIS).group(0)
+    except AttributeError:
+        raise ImproperlyConfigured
