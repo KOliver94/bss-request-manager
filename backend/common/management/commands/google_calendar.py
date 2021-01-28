@@ -7,6 +7,7 @@ from common.utilities import (
     remove_calendar_event,
     update_calendar_event,
 )
+from django.conf import settings
 from django.core.management import BaseCommand
 from tests.helpers.video_requests_test_utils import create_request
 
@@ -94,6 +95,9 @@ class Command(BaseCommand):
         elif test:
             request = create_request(999999, get_sentinel_user())
             try:
+                # Which credential file are we using
+                self.stdout.write("----------- Key file path -----------")
+                self.stdout.write(settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH)
                 # Create the event
                 self.stdout.write("----------- Creating new event -----------")
                 self.stdout.write("The event will be created for today.")

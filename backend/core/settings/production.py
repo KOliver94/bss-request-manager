@@ -203,8 +203,15 @@ DEBUG_EMAIL = config(
 )  # if set all e-mails will be sent to this address only
 
 # Google Calendar settings:
-GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH = config("GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH")
-GOOGLE_CALENDAR_ID = config("GOOGLE_CALENDAR_ID")
+GOOGLE_SERVICE_ACCOUNT_KEY_FILE_NAME = config(
+    "GOOGLE_SERVICE_ACCOUNT_KEY_FILE_NAME", default=None
+)
+GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH = (
+    f"credentials/{GOOGLE_SERVICE_ACCOUNT_KEY_FILE_NAME}"
+    if GOOGLE_SERVICE_ACCOUNT_KEY_FILE_NAME
+    else None
+)
+GOOGLE_CALENDAR_ID = config("GOOGLE_CALENDAR_ID", default=None)
 
 # Sentry (collect unhandled errors and exceptions and sends reports)
 # https://sentry.io

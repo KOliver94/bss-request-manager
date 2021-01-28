@@ -211,3 +211,6 @@ dmypy.json
 
 # Whitenoise static files
 staticfiles/
+
+# Credential files
+credentials/
