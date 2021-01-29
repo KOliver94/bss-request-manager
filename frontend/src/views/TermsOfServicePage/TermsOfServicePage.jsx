@@ -18,7 +18,7 @@ import styles from 'assets/jss/material-kit-react/views/termsAndPrivacyPage';
 
 const useStyles = makeStyles(styles);
 
-export default function PrivacyPolicyPage({
+export default function TermsOfServicePage({
   isAuthenticated,
   setIsAuthenticated,
 }) {
@@ -181,7 +181,7 @@ export default function PrivacyPolicyPage({
   );
 }
 
-PrivacyPolicyPage.propTypes = {
+TermsOfServicePage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   setIsAuthenticated: PropTypes.func.isRequired,
 };
