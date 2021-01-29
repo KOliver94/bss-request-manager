@@ -11,6 +11,8 @@ import LoginPage from './views/LoginPage/LoginPage';
 import RequestCreatorPage from './views/RequestCreatorPage/RequestCreatorPage';
 import MyRequestsPage from './views/MyRequestsPage/MyRequestsPage';
 import RequestDetailPage from './views/RequestDetailPage/RequestDetailPage';
+import PrivacyPolicyPage from './views/PrivacyPolicyPage/PrivacyPolicyPage';
+import TermsOfServicePage from './views/TermsOfServicePage/TermsOfServicePage';
 
 import 'assets/scss/material-kit-react.scss';
 
@@ -69,6 +71,18 @@ function App() {
             />
           </PrivilegedRoute>
         </AuthenticatedRoute>
+        <Route exact path="/privacy">
+          <PrivacyPolicyPage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </Route>
+        <Route exact path="/terms">
+          <TermsOfServicePage
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
+        </Route>
         <Route component={PageNotFound} />
       </Switch>
     </Router>
