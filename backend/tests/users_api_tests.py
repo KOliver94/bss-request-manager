@@ -398,6 +398,31 @@ class UsersAPITestCase(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_user_should_not_provide_empty_name_or_email(self):
+        self.authorize_user(self.admin)
+        data1 = {"first_name": "", "last_name": "", "email": ""}
+        data2 = {"first_name": None, "last_name": None, "email": None}
+
+        response = self.client.patch(f"{self.url}/me", data1)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(response.data["first_name"][0]), "This field may not be blank."
+        )
+        self.assertEqual(
+            str(response.data["last_name"][0]), "This field may not be blank."
+        )
+        self.assertEqual(str(response.data["email"][0]), "This field may not be blank.")
+
+        response = self.client.put(f"{self.url}/me", data2)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(response.data["first_name"][0]), "This field may not be null."
+        )
+        self.assertEqual(
+            str(response.data["last_name"][0]), "This field may not be null."
+        )
+        self.assertEqual(str(response.data["email"][0]), "This field may not be null.")
+
     """
     GET /api/v1/users
     """

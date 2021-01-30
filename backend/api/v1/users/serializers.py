@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
-from rest_framework.fields import BooleanField, CharField, DateTimeField
+from rest_framework.fields import BooleanField, CharField, DateTimeField, EmailField
 from rest_social_auth.serializers import OAuth2InputSerializer
 
 
@@ -69,6 +69,9 @@ class UserDetailSerializer(serializers.ModelSerializer):
         ("gravatar", "Gravatar"),
     )
 
+    first_name = CharField(max_length=150, required=False)
+    last_name = CharField(max_length=150, required=False)
+    email = EmailField(required=False)
     profile = UserProfileSerializerWithAvatar(read_only=True, source="userprofile")
     if all(
         elem in settings.INSTALLED_APPS

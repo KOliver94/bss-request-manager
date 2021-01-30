@@ -115,11 +115,32 @@ export default function RequestCreatorPage({
             requester_email: result.data.email,
             requester_mobile: result.data.profile.phone_number,
           };
-          if (!newData.requester_mobile) {
-            enqueueSnackbar('Kérlek add meg a telefonszámod!', {
-              variant: 'warning',
-              autoHideDuration: 5000,
-            });
+          if (
+            !newData.first_name ||
+            !newData.last_name ||
+            !newData.email ||
+            !newData.phone_number
+          ) {
+            const missingData = [];
+            if (!newData.last_name) {
+              missingData.push('vezetéknév');
+            }
+            if (!newData.first_name) {
+              missingData.push('keresztnév');
+            }
+            if (!newData.email) {
+              missingData.push('e-mail cím');
+            }
+            if (!newData.phone_number) {
+              missingData.push('telefonszám');
+            }
+            enqueueSnackbar(
+              `Kérlek töltsd ki hiányzó adataidat (${missingData.join(', ')})!`,
+              {
+                variant: 'warning',
+                autoHideDuration: 5000,
+              }
+            );
             history.push('/profile');
           }
           setFormData((prevState) => ({ ...prevState, ...newData }));
