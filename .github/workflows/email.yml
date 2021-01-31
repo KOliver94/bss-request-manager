@@ -75,7 +75,6 @@ jobs:
           DJANGO_SETTINGS_MODULE: core.settings.test
           EMAIL_FILE: True
         run: |
-          pipenv run python manage.py makemigrations --no-input
           pipenv run python manage.py migrate --no-input
           pipenv run python manage.py collectstatic --no-input --clear --link
           pipenv run python manage.py test tests.email_sending_tests
