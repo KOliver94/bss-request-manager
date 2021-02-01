@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import * as Sentry from '@sentry/react';
+import dialogOptions from './helpers/sentryHelper';
 import { checkRefreshTokenValid } from './api/loginApi';
 
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 import PrivilegedRoute from './components/PrivilegedRoute';
 
-import PageNotFound from './views/PageNotFound/PageNotFound';
+import InternalErrorPage from './views/ErrorPages/InternalErrorPage';
+import NotFoundErrorPage from './views/ErrorPages/NotFoundErrorPage';
 import LandingPage from './views/LandingPage/LandingPage';
 import LoginPage from './views/LoginPage/LoginPage';
 import RequestCreatorPage from './views/RequestCreatorPage/RequestCreatorPage';
@@ -22,69 +25,75 @@ function App() {
   );
   return (
     <Router>
-      <Switch>
-        <Route exact path="/">
-          <LandingPage
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        </Route>
-        <Route path="/login">
-          <LoginPage
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        </Route>
-        <Route exact path="/new-request">
-          <RequestCreatorPage
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        </Route>
-        <AuthenticatedRoute exact path="/my-requests">
-          <MyRequestsPage
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        </AuthenticatedRoute>
-        <AuthenticatedRoute exact path="/my-requests/:id">
-          <RequestDetailPage
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        </AuthenticatedRoute>
-        <AuthenticatedRoute exact path="/admin/requests">
-          <PrivilegedRoute>
+      <Sentry.ErrorBoundary
+        fallback={InternalErrorPage}
+        showDialog
+        dialogOptions={dialogOptions}
+      >
+        <Switch>
+          <Route exact path="/">
+            <LandingPage
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+            />
+          </Route>
+          <Route path="/login">
+            <LoginPage
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+            />
+          </Route>
+          <Route exact path="/new-request">
+            <RequestCreatorPage
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+            />
+          </Route>
+          <AuthenticatedRoute exact path="/my-requests">
             <MyRequestsPage
               isAuthenticated={isAuthenticated}
               setIsAuthenticated={setIsAuthenticated}
-              isPrivileged
             />
-          </PrivilegedRoute>
-        </AuthenticatedRoute>
-        <AuthenticatedRoute exact path="/admin/requests/:id">
-          <PrivilegedRoute>
+          </AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/my-requests/:id">
             <RequestDetailPage
               isAuthenticated={isAuthenticated}
               setIsAuthenticated={setIsAuthenticated}
-              isPrivileged
             />
-          </PrivilegedRoute>
-        </AuthenticatedRoute>
-        <Route exact path="/privacy">
-          <PrivacyPolicyPage
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        </Route>
-        <Route exact path="/terms">
-          <TermsOfServicePage
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        </Route>
-        <Route component={PageNotFound} />
-      </Switch>
+          </AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/admin/requests">
+            <PrivilegedRoute>
+              <MyRequestsPage
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+                isPrivileged
+              />
+            </PrivilegedRoute>
+          </AuthenticatedRoute>
+          <AuthenticatedRoute exact path="/admin/requests/:id">
+            <PrivilegedRoute>
+              <RequestDetailPage
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+                isPrivileged
+              />
+            </PrivilegedRoute>
+          </AuthenticatedRoute>
+          <Route exact path="/privacy">
+            <PrivacyPolicyPage
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+            />
+          </Route>
+          <Route exact path="/terms">
+            <TermsOfServicePage
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+            />
+          </Route>
+          <Route component={NotFoundErrorPage} />
+        </Switch>
+      </Sentry.ErrorBoundary>
     </Router>
   );
 }

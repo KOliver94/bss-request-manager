@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import 'assets/css/page-not-found.css';
+import 'assets/css/error-pages.css';
 
-const PageNotFound = () => (
-  <div id="notfound">
-    <div className="notfound">
-      <div className="notfound-404">
+const NotFoundErrorPage = () => (
+  <div id="error">
+    <div className="error">
+      <div className="error-code">
         <h1>404</h1>
       </div>
       <h2>Az oldal nem található</h2>
@@ -13,7 +13,7 @@ const PageNotFound = () => (
         megváltozott a címe vagy ideiglenesen nem elérhető.{' '}
         <Link to="/">Vissza a főoldalra</Link>
       </p>
-      <div className="notfound-social">
+      <div className="error-social">
         <a href="https://bsstudio.hu">
           <i className="fa fa-globe-europe" />
         </a>
@@ -31,4 +31,4 @@ const PageNotFound = () => (
   </div>
 );
 
-export default PageNotFound;
+export default NotFoundErrorPage;
