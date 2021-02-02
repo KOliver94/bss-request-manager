@@ -7,8 +7,7 @@ import { checkRefreshTokenValid } from './api/loginApi';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 import PrivilegedRoute from './components/PrivilegedRoute';
 
-import InternalErrorPage from './views/ErrorPages/InternalErrorPage';
-import NotFoundErrorPage from './views/ErrorPages/NotFoundErrorPage';
+import ErrorPage from './views/ErrorPage/ErrorPage';
 import LandingPage from './views/LandingPage/LandingPage';
 import LoginPage from './views/LoginPage/LoginPage';
 import RequestCreatorPage from './views/RequestCreatorPage/RequestCreatorPage';
@@ -26,7 +25,7 @@ function App() {
   return (
     <Router>
       <Sentry.ErrorBoundary
-        fallback={InternalErrorPage}
+        fallback={() => <ErrorPage type="internal" />}
         showDialog
         dialogOptions={dialogOptions}
       >
@@ -91,7 +90,7 @@ function App() {
               setIsAuthenticated={setIsAuthenticated}
             />
           </Route>
-          <Route component={NotFoundErrorPage} />
+          <Route render={() => <ErrorPage type="notfound" />} />
         </Switch>
       </Sentry.ErrorBoundary>
     </Router>
