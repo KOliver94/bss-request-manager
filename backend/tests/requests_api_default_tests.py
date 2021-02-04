@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.test import override_settings
 from django.utils.timezone import localtime
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -288,6 +289,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
         )
         self.assertEqual(response.data["comments"][0]["text"], "Test comment")
 
+    @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
     def test_anonymous_can_create_requests(self):
         data = {
             "title": "Test Request",
@@ -300,6 +302,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
             "requester_email": "test.user@example.com",
             "requester_mobile": "+36509999999",
             "comment_text": "Additional information",
+            "recaptcha": "randomReCaptchaResponseToken",
         }
         self.assertEqual(
             User.objects.filter(email=data["requester_email"]).exists(), False
@@ -314,6 +317,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
         )
         self.assertEqual(response.data["comments"][0]["text"], "Additional information")
 
+    @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
     def test_anonymous_can_create_requests_and_get_connected_to_existing_user(self):
         data = {
             "title": "Anonymous Test Request",
@@ -325,6 +329,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
             "requester_last_name": "Tester",
             "requester_email": self.normal_user.email,
             "requester_mobile": "+36701234567",
+            "recaptcha": "randomReCaptchaResponseToken",
         }
         response = self.client.post("/api/v1/requests", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -365,6 +370,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
             response.data["non_field_errors"][0], "Start time must be earlier than end."
         )
 
+    @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
     def test_request_date_relation_validation_anonymous(self):
         data = {
             "title": "Test Request",
@@ -376,12 +382,35 @@ class RequestsAPIDefaultTestCase(APITestCase):
             "requester_email": "test.user@example.com",
             "requester_mobile": "+36509999999",
             "comment_text": "Additional information",
+            "recaptcha": "randomReCaptchaResponseToken",
         }
         data["end_datetime"] = data["start_datetime"] - timedelta(hours=2)
         response = self.client.post("/api/v1/requests", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.data["non_field_errors"][0], "Start time must be earlier than end."
+        )
+
+    @override_settings(DRF_RECAPTCHA_TESTING_PASS=False)
+    def test_anonymous_fail_to_create_request_invalid_captcha(self):
+        data = {
+            "title": "Test Request",
+            "start_datetime": "2020-03-05T10:30",
+            "end_datetime": "2020-03-06T10:30",
+            "place": "Test place",
+            "type": "Test type",
+            "requester_first_name": "Test",
+            "requester_last_name": "User",
+            "requester_email": "test.user@example.com",
+            "requester_mobile": "+36509999999",
+            "comment_text": "Additional information",
+            "recaptcha": "randomReCaptchaResponseToken",
+        }
+        response = self.client.post("/api/v1/requests", data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["recaptcha"][0],
+            "Error verifying reCAPTCHA, please try again.",
         )
 
     """

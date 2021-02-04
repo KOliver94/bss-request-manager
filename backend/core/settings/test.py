@@ -53,6 +53,11 @@ else:
         "health_check.contrib.redis",
     ]
 
+# Set DRF reCAPTCHA to test mode
+if "drf_recaptcha" not in INSTALLED_APPS:
+    INSTALLED_APPS += ["drf_recaptcha"]
+DRF_RECAPTCHA_TESTING = True
+
 # Disable file logging
 LOGGING = {
     "version": 1,

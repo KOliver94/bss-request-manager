@@ -81,6 +81,7 @@ class EmailSendingTestCase(APITestCase):
             mail.outbox[0].subject, f"{data['title']} | Forgatási felkérésedet fogadtuk"
         )
 
+    @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
     def test_new_request_confirmation_email_sent_to_anonymous(self):
         # Create a Request without login
         data = {
@@ -94,6 +95,7 @@ class EmailSendingTestCase(APITestCase):
             "requester_email": "test.user@example.com",
             "requester_mobile": "+36509999999",
             "comment_text": "Additional information",
+            "recaptcha": "randomReCaptchaResponseToken",
         }
         response = self.client.post("/api/v1/requests", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

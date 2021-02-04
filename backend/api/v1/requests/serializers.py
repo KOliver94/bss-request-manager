@@ -1,6 +1,8 @@
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event
+from django.conf import settings
 from django.contrib.auth.models import User
+from drf_recaptcha.fields import ReCaptchaV2Field
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework.fields import CharField, EmailField, SerializerMethodField
@@ -176,6 +178,8 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
     requester_last_name = CharField(write_only=True, required=True)
     requester_email = EmailField(write_only=True, required=True)
     requester_mobile = PhoneNumberField(write_only=True, required=True)
+    if settings.DRF_RECAPTCHA_ENABLED:
+        recaptcha = ReCaptchaV2Field(required=True)
 
     class Meta:
         model = Request
@@ -206,6 +210,10 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
             "requester_email",
             "requester_mobile",
         )
+
+        if settings.DRF_RECAPTCHA_ENABLED:
+            fields += ("recaptcha",)
+            write_only_fields += ("recaptcha",)
 
     @staticmethod
     def create_user(validated_data):
@@ -253,5 +261,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         return request
 
     def validate(self, data):
+        if "recaptcha" in data:
+            data.pop("recaptcha")
         validate_request_date_correlations(self.instance, data)
         return data

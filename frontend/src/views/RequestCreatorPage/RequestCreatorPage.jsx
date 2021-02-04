@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
@@ -21,6 +21,8 @@ import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'components/material-kit-react/Parallax/Parallax';
 // Notistack
 import { useSnackbar } from 'notistack';
+// ReCAPTCHA
+import ReCAPTCHA from 'react-google-recaptcha';
 // Form
 import RequestCreatorForm from 'components/RequestCreatorForm/RequestCreatorForm';
 // API calls
@@ -63,6 +65,7 @@ export default function RequestCreatorPage({
   const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const recaptchaRef = createRef();
 
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState(formInitialState);
@@ -91,6 +94,9 @@ export default function RequestCreatorPage({
     setLoading(true);
     try {
       formData.type = formData.type_obj.text;
+      if (!isAuthenticated) {
+        formData.recaptcha = await recaptchaRef.current.executeAsync();
+      }
       await createRequest(formData).then((response) => {
         handleNext();
         setLoading(false);
@@ -282,6 +288,13 @@ export default function RequestCreatorPage({
                 </GridItem>
               </GridContainer>
             </>
+          )}
+          {!isAuthenticated && (
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              size="invisible"
+              sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+            />
           )}
         </div>
       </div>
