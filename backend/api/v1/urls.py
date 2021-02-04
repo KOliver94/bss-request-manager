@@ -26,7 +26,7 @@ urlpatterns = [
     path("requests/", include("api.v1.requests.urls")),
 ]
 
-if "health_check" in settings.INSTALLED_APPS:
+if settings.HEALTH_CHECK_API_ENABLED:
     token = (
         f"/{settings.HEALTH_CHECK_URL_TOKEN}"
         if hasattr(settings, "HEALTH_CHECK_URL_TOKEN")

@@ -36,22 +36,13 @@ WEEKLY_TASK_EMAIL = "weekly@example.com"
 GOOGLE_CALENDAR_ID = "NOT_EXISTING"
 GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH = None
 
-# Enable health check without celery
-if HEALTH_CHECK_ENABLED:
-    try:
-        INSTALLED_APPS.remove("health_check.contrib.celery")
-        INSTALLED_APPS.remove("health_check.contrib.celery_ping")
-    except ValueError:
-        pass
-else:
-    INSTALLED_APPS += [
-        "health_check",
-        "health_check.db",
-        "health_check.cache",
-        "health_check.storage",
-        "health_check.contrib.migrations",
-        "health_check.contrib.redis",
-    ]
+# Enable health check endpoint and remove celery from checks
+HEALTH_CHECK_API_ENABLED = True
+try:
+    INSTALLED_APPS.remove("health_check.contrib.celery")
+    INSTALLED_APPS.remove("health_check.contrib.celery_ping")
+except ValueError:
+    pass
 
 # Set DRF reCAPTCHA to test mode
 if "drf_recaptcha" not in INSTALLED_APPS:

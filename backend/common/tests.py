@@ -55,7 +55,7 @@ class CommonTestCase(TestCase):
         self.assertEqual(request.comments.get().author, sentinel_user)
         self.assertEqual(request.videos.get().ratings.get().author, sentinel_user)
 
-    def test_health_check_endpoint_works(self):
+    def test_health_check_api_endpoint_works(self):
         token = (
             f"/{settings.HEALTH_CHECK_URL_TOKEN}"
             if hasattr(settings, "HEALTH_CHECK_URL_TOKEN")
