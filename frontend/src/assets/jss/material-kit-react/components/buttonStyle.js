@@ -69,6 +69,15 @@ const buttonStyle = {
         lineHeight: '41px',
         fontSize: '20px',
       },
+      '& svg': {
+        position: 'relative',
+        display: 'inline-block',
+        top: '0',
+        width: '20px',
+        height: '20px',
+        marginRight: '0px',
+        verticalAlign: 'middle',
+      },
     },
   },
   fullWidth: {

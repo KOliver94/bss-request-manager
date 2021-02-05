@@ -9,6 +9,9 @@ import Icon from '@material-ui/core/Icon';
 import Tooltip from '@material-ui/core/Tooltip';
 // @material-ui/icons
 import People from '@material-ui/icons/People';
+// Font Awesome icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 // notistack (Material UI Snackbars)
 import { useSnackbar } from 'notistack';
 // core components
@@ -195,7 +198,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                             color="transparent"
                             disabled={loading}
                           >
-                            <i className="fab fa-facebook" />
+                            <FontAwesomeIcon icon={faFacebook} />
                           </Button>
                         </span>
                       </Tooltip>
@@ -214,7 +217,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                             color="transparent"
                             disabled={loading}
                           >
-                            <i className="fab fa-google" />
+                            <FontAwesomeIcon icon={faGoogle} />
                           </Button>
                         </span>
                       </Tooltip>

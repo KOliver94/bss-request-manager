@@ -14,6 +14,15 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 
+// Font Awesome icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faTools,
+  faUserCircle,
+  faTasks,
+  faSignOutAlt,
+} from '@fortawesome/free-solid-svg-icons';
+
 // core components
 import Button from 'components/material-kit-react/CustomButtons/Button.js';
 import CustomDropdown from 'components/material-kit-react/CustomDropdown/CustomDropdown.js';
@@ -30,7 +39,7 @@ const AdminButton = () => {
   if (isPrivileged()) {
     return (
       <Link to="/admin/requests" className={classes.dropdownLink}>
-        <i className="fas fa-tools"></i> Admin
+        <FontAwesomeIcon icon={faTools} /> Admin
       </Link>
     );
   }
@@ -86,10 +95,10 @@ export default function HeaderLinks({
               <AdminButton />,
               { divider: isPrivileged() },
               <Link to="/profile" className={classes.dropdownLink}>
-                <i className="fas fa-user-circle"></i> Profilom
+                <FontAwesomeIcon icon={faUserCircle} /> Profilom
               </Link>,
               <Link to="/my-requests" className={classes.dropdownLink}>
-                <i className="fas fa-tasks"></i> Felkéréseim
+                <FontAwesomeIcon icon={faTasks} /> Felkéréseim
               </Link>,
               { divider: true },
               <Link
@@ -100,7 +109,7 @@ export default function HeaderLinks({
                 {loading ? (
                   <CircularProgress size={10} />
                 ) : (
-                  <i className="fas fa-sign-out-alt"></i>
+                  <FontAwesomeIcon icon={faSignOutAlt} />
                 )}{' '}
                 Kijelentkezés
               </Link>,
