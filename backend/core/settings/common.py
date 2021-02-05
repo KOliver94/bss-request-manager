@@ -283,15 +283,12 @@ INSTALLED_APPS += [
 try:
     REDIS_URL = match("^redis://[a-zA-Z0-9]+:[0-9]+", CACHEOPS_REDIS).group(0)
 except AttributeError:
-    raise ImproperlyConfigured
+    raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
 
 # Django REST reCAPTCHA
 # https://github.com/llybin/drf-recaptcha
 
 DRF_RECAPTCHA_ENABLED = config("RECAPTCHA", default=True, cast=bool)
 DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
-if DRF_RECAPTCHA_SECRET_KEY:
-    if DRF_RECAPTCHA_SECRET_KEY:
-        INSTALLED_APPS += ["drf_recaptcha"]
-    else:
-        raise ImproperlyConfigured
+if DRF_RECAPTCHA_ENABLED:
+    INSTALLED_APPS += ["drf_recaptcha"]
