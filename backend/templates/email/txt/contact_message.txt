@@ -1,0 +1,8 @@
+Kedves {{ name }}!
+
+Alábbi üzenetedet megkaptuk, rövidesen igyekszünk rá válaszolni.
+
+{{ message }}
+
+Üdvözlettel:
+a Budavári Schönherz Stúdió csapata

@@ -193,7 +193,11 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.AnonRateThrottle"],
-    "DEFAULT_THROTTLE_RATES": {"anon": "5/hour", "login": "5/minute"},
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "5/hour",
+        "contact": "2/hour",
+        "login": "5/minute",
+    },
 }
 
 # Simple JWT Settings

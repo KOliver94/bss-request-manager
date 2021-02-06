@@ -16,7 +16,13 @@ SIMPLE_JWT.update({"ACCESS_TOKEN_LIFETIME": timedelta(seconds=10)})
 
 # Increase the throttling rates
 REST_FRAMEWORK.update(
-    {"DEFAULT_THROTTLE_RATES": {"anon": "500000/second", "login": "500000/second"}}
+    {
+        "DEFAULT_THROTTLE_RATES": {
+            "anon": "500000/second",
+            "contact": "500000/second",
+            "login": "500000/second",
+        }
+    }
 )
 
 # Disable caching

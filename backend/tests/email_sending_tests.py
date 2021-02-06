@@ -585,3 +585,23 @@ class EmailSendingTestCase(APITestCase):
 
         # Check if function was called with correct parameters
         mock_email_responsible_overdue_request.assert_not_called()
+
+    @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
+    def test_contact_message_email_sent(self):
+        data = {
+            "name": "Joe Bloggs",
+            "email": "joe@example.com",
+            "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere tempus nibh et lobortis.",
+            "recaptcha": "randomReCaptchaResponseToken",
+        }
+        response = self.client.post("/api/v1/misc/contact", data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Check if e-mail was sent to the right people
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(data["email"], mail.outbox[0].to)
+        self.assertIn(settings.DEFAULT_REPLY_EMAIL, mail.outbox[0].cc)
+        self.assertIn(settings.DEFAULT_REPLY_EMAIL, mail.outbox[0].reply_to)
+        self.assertEqual(
+            mail.outbox[0].subject, "Kapcsolatfelvétel | Budavári Schönherz Stúdió"
+        )

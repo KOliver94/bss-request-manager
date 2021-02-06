@@ -1,4 +1,5 @@
 from celery import shared_task
+from common.emails import debug_email
 from common.utilities import (
     get_editor_in_chief,
     get_pr_responsible,
@@ -11,16 +12,6 @@ from video_requests.models import Comment, Request, Video
 
 TEXT_HTML = "text/html"
 BASE_URL = settings.BASE_URL
-
-
-# EmailMultiAlternatives object attributes detailed description
-# https://docs.djangoproject.com/en/3.0/topics/email/#emailmessage-objects
-def debug_email(subject, msg_plain):  # pragma: no cover
-    return EmailMultiAlternatives(
-        subject=subject,
-        body=msg_plain,
-        to=[settings.DEBUG_EMAIL],
-    )
 
 
 @shared_task
