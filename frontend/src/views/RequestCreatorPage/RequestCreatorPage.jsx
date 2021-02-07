@@ -115,29 +115,29 @@ export default function RequestCreatorPage({
     async function loadUserData() {
       try {
         await getUserMe().then((result) => {
-          const newData = {
+          const userData = {
             requester_first_name: result.data.first_name,
             requester_last_name: result.data.last_name,
             requester_email: result.data.email,
             requester_mobile: result.data.profile.phone_number,
           };
           if (
-            !newData.first_name ||
-            !newData.last_name ||
-            !newData.email ||
-            !newData.phone_number
+            !userData.requester_first_name ||
+            !userData.requester_last_name ||
+            !userData.requester_email ||
+            !userData.requester_mobile
           ) {
             const missingData = [];
-            if (!newData.last_name) {
+            if (!userData.requester_last_name) {
               missingData.push('vezetéknév');
             }
-            if (!newData.first_name) {
+            if (!userData.requester_first_name) {
               missingData.push('keresztnév');
             }
-            if (!newData.email) {
+            if (!userData.requester_email) {
               missingData.push('e-mail cím');
             }
-            if (!newData.phone_number) {
+            if (!userData.requester_mobile) {
               missingData.push('telefonszám');
             }
             enqueueSnackbar(
@@ -149,7 +149,7 @@ export default function RequestCreatorPage({
             );
             history.push('/profile');
           }
-          setFormData((prevState) => ({ ...prevState, ...newData }));
+          setFormData((prevState) => ({ ...prevState, ...userData }));
           setActiveStep(1);
         });
       } finally {
