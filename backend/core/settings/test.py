@@ -10,6 +10,7 @@ PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 
 # Do not search for frontend build for tests
 STATICFILES_DIRS.pop(0)
+WHITENOISE_ROOT = None
 
 # Use short lifetime on access tokens
 SIMPLE_JWT.update({"ACCESS_TOKEN_LIFETIME": timedelta(seconds=10)})
