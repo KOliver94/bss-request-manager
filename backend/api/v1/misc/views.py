@@ -13,4 +13,4 @@ class ContactView(generics.CreateAPIView):
         name = serializer.data["name"]
         email = serializer.data["email"]
         message = serializer.data["message"]
-        email_contact_message(name, email, message)
+        email_contact_message.delay(name, email, message)
