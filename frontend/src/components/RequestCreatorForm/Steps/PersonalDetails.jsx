@@ -105,7 +105,7 @@ const PersonalDetails = ({
                 </Alert>
               )}
             </GridItem>
-            <GridItem xs={10} sm={6}>
+            <GridItem xs={12} sm={6}>
               <Field
                 name="requester_last_name"
                 label="Vezetéknév"
@@ -122,7 +122,7 @@ const PersonalDetails = ({
                 }
               />
             </GridItem>
-            <GridItem xs={10} sm={6}>
+            <GridItem xs={12} sm={6}>
               <Field
                 name="requester_first_name"
                 label="Keresztnév"
@@ -139,7 +139,7 @@ const PersonalDetails = ({
                 }
               />
             </GridItem>
-            <GridItem xs={10} sm={12}>
+            <GridItem>
               <Field
                 type="email"
                 name="requester_email"
@@ -153,7 +153,7 @@ const PersonalDetails = ({
                 helperText={touched.requester_email && errors.requester_email}
               />
             </GridItem>
-            <GridItem xs={10} sm={12}>
+            <GridItem>
               <Field
                 name="requester_mobile"
                 label="Telefonszám"

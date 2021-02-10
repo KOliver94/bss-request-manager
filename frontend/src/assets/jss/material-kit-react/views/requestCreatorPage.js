@@ -12,7 +12,7 @@ const requestCreatorPage = {
     ...container,
   },
   section: {
-    padding: '70px 0',
+    padding: '70px 16px',
   },
   title: {
     ...title,

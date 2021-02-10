@@ -71,7 +71,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
         {({ errors, touched }) => (
           <Form>
             <GridContainer justify="center">
-              <GridItem xs={10} sm={12}>
+              <GridItem>
                 <Field
                   name="title"
                   label="Esemény neve"
@@ -83,7 +83,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   helperText={touched.title && errors.title}
                 />
               </GridItem>
-              <GridItem xs={10} sm={6}>
+              <GridItem xs={12} sm={6}>
                 <Field
                   name="start_datetime"
                   label="Kezdés időpontja"
@@ -98,7 +98,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   helperText={touched.start_datetime && errors.start_datetime}
                 />
               </GridItem>
-              <GridItem xs={10} sm={6}>
+              <GridItem xs={12} sm={6}>
                 <Field
                   name="end_datetime"
                   label="Várható befejezés"
@@ -113,7 +113,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   helperText={touched.end_datetime && errors.end_datetime}
                 />
               </GridItem>
-              <GridItem xs={10} sm={6}>
+              <GridItem xs={12} sm={6}>
                 <Field
                   name="place"
                   label="Helyszín"
@@ -125,7 +125,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                   helperText={touched.place && errors.place}
                 />
               </GridItem>
-              <GridItem xs={10} sm={6}>
+              <GridItem xs={12} sm={6}>
                 <Field
                   name="type_obj"
                   component={Autocomplete}
@@ -179,7 +179,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
               </GridItem>
             </GridContainer>
             <GridContainer justify="center">
-              <GridItem xs={12} sm={12}>
+              <GridItem>
                 <Button onClick={handleBack} className={classes.button}>
                   Vissza
                 </Button>

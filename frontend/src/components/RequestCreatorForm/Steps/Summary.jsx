@@ -41,7 +41,7 @@ const Summary = ({ formData, setActiveStep, isAuthenticated }) => {
   const classes = useStyles();
   return (
     <GridContainer justify="center">
-      <GridItem xs={10} sm={12}>
+      <GridItem>
         <Card className={classes.first} variant="outlined">
           <CardContent className={classes.content}>
             <Typography

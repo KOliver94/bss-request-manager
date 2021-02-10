@@ -152,7 +152,7 @@ export default function RequestDetailPage({
       <Parallax small filter image={background}>
         <div className={classes.container}>
           <GridContainer justify="center">
-            <GridItem xs={12} sm={12} md={12} className={classes.textCenter}>
+            <GridItem className={classes.textCenter}>
               <h1 className={classes.title}>
                 {loading ? 'Betöltés...' : data.title}
               </h1>
@@ -197,7 +197,7 @@ export default function RequestDetailPage({
                     activeTab={isPrivileged && data.status >= 4 ? 1 : 0}
                   />
                 </GridItem>
-                <GridItem xs={12} className={classes.textColor}>
+                <GridItem className={classes.textColor}>
                   <Comments
                     requestId={id}
                     requestData={data}

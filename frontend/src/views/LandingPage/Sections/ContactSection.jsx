@@ -126,7 +126,7 @@ export default function ContactSection() {
                   value: messageData.message,
                 }}
               />
-              <GridItem xs={12} sm={12}>
+              <GridItem>
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
