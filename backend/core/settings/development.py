@@ -27,7 +27,12 @@ if DEBUG:
         EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
     # Extend JWT access token lifetime
-    SIMPLE_JWT.update({"ACCESS_TOKEN_LIFETIME": timedelta(days=5)})
+    SIMPLE_JWT.update(
+        {
+            "ACCESS_TOKEN_LIFETIME": timedelta(days=5),
+            "REFRESH_TOKEN_LIFETIME": timedelta(days=10),
+        }
+    )
 
     if BROWSABLE_API:
         # Enable Browsable API
