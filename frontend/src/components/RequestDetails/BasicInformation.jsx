@@ -558,41 +558,41 @@ export default function BasicInformation({
         ) : (
           <>
             <p>
-              Esemény neve: <b>{requestData.title}</b>
+              Esemény neve: <strong>{requestData.title}</strong>
             </p>
             <p>
               Kezdés időpontja:{' '}
-              <b>
+              <strong>
                 {format(
                   new Date(requestData.start_datetime),
                   'yyyy. MMMM d. (eeee) | H:mm',
                   { locale: hu }
                 )}
-              </b>
+              </strong>
             </p>
             <p>
               Várható befejezés:{' '}
-              <b>
+              <strong>
                 {format(
                   new Date(requestData.end_datetime),
                   'yyyy. MMMM d. (eeee) | H:mm',
                   { locale: hu }
                 )}
-              </b>
+              </strong>
             </p>
             <p>
-              Helyszín: <b>{requestData.place}</b>
+              Helyszín: <strong>{requestData.place}</strong>
             </p>
             <p>
-              Videó típusa: <b>{requestData.type}</b>
+              Videó típusa: <strong>{requestData.type}</strong>
             </p>
             <p>
               Felkérő:{' '}
-              <b>
+              <strong>
                 {`${requestData.requester.last_name} ${requestData.requester.first_name}`}
-              </b>
+              </strong>
               <br />
-              <b>
+              <strong>
                 (
                 <a href={`mailto:${requestData.requester.email}`}>
                   {requestData.requester.email}
@@ -608,12 +608,12 @@ export default function BasicInformation({
                   </>
                 )}
                 )
-              </b>
+              </strong>
             </p>
             <Divider />
             <p className={classes.afterDivider}>
               Beküldve:{' '}
-              <b>
+              <strong>
                 {format(
                   new Date(requestData.created),
                   'yyyy. MMMM d. (eeee) | H:mm',
@@ -621,26 +621,28 @@ export default function BasicInformation({
                     locale: hu,
                   }
                 )}
-              </b>
+              </strong>
             </p>
             {isPrivileged && (
               <>
                 <p>
                   Határidő:{' '}
-                  <b>
+                  <strong>
                     {format(
                       new Date(requestData.deadline),
                       'yyyy. MMMM d. (eeee)',
                       { locale: hu }
                     )}
-                  </b>
+                  </strong>
                 </p>
                 {requestData.additional_data &&
                   requestData.additional_data.recording &&
                   requestData.additional_data.recording.path && (
                     <p>
                       Nyersek helye:{' '}
-                      <b>{requestData.additional_data.recording.path}</b>
+                      <strong>
+                        {requestData.additional_data.recording.path}
+                      </strong>
                     </p>
                   )}
               </>
@@ -648,11 +650,11 @@ export default function BasicInformation({
             {requestData.responsible && (
               <p>
                 Felelős:{' '}
-                <b>
+                <strong>
                   {`${requestData.responsible.last_name} ${requestData.responsible.first_name}`}
-                </b>
+                </strong>
                 <br />
-                <b>
+                <strong>
                   (
                   <a href={`mailto:${requestData.responsible.email}`}>
                     {requestData.responsible.email}
@@ -668,7 +670,7 @@ export default function BasicInformation({
                     </>
                   )}
                   )
-                </b>
+                </strong>
               </p>
             )}
           </>

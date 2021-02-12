@@ -59,7 +59,7 @@ const Summary = ({ formData, setActiveStep, isAuthenticated }) => {
             </Typography>
             <Typography variant="caption" component="p">
               Kezdés:{' '}
-              <b>
+              <strong>
                 {format(
                   new Date(formData.start_datetime),
                   'yyyy. MMMM d. (eee) @ H:mm',
@@ -67,10 +67,10 @@ const Summary = ({ formData, setActiveStep, isAuthenticated }) => {
                     locale: hu,
                   }
                 )}
-              </b>
+              </strong>
               <br />
               Befejezés:{' '}
-              <b>
+              <strong>
                 {format(
                   new Date(formData.end_datetime),
                   'yyyy. MMMM d. (eee) @ H:mm',
@@ -78,7 +78,7 @@ const Summary = ({ formData, setActiveStep, isAuthenticated }) => {
                     locale: hu,
                   }
                 )}
-              </b>
+              </strong>
               <br />
             </Typography>
           </CardContent>
