@@ -8,7 +8,9 @@ export async function createRequest(requestData) {
 }
 
 export async function listRequests(page, ordering = '-created') {
-  return axiosInstance.get(`/requests?page=${page}&ordering=${ordering}`);
+  return axiosInstance.get('/requests', {
+    params: { page, ordering },
+  });
 }
 
 export async function getRequest(requestId) {

@@ -8,7 +8,9 @@ export async function createRequestAdmin(requestData) {
 }
 
 export async function listRequestsAdmin(page, ordering = '-created') {
-  return axiosInstance.get(`admin/requests?page=${page}&ordering=${ordering}`);
+  return axiosInstance.get('admin/requests', {
+    params: { page, ordering },
+  });
 }
 
 export async function getRequestAdmin(requestId) {
