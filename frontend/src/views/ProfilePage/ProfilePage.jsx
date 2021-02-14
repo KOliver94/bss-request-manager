@@ -40,6 +40,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import sub from 'date-fns/sub';
 import { hu } from 'date-fns/locale';
 // Yup validations
 import * as Yup from 'yup';
@@ -79,7 +80,9 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const [loading, setLoading] = useState(true);
   const [workedOnDialogOpen, setWorkedOnDialogOpen] = useState(false);
   const [userData, setUserData] = useState({});
-  const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+  const [selectedStartDate, setSelectedStartDate] = useState(
+    sub(new Date(), { weeks: 20 })
+  );
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   const [includeResponsible, setIncludeResponsible] = useState(true);
   const [headerDataChange, setHeaderDataChange] = useState(false);
