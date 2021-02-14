@@ -206,6 +206,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
+    "USER_AUTHENTICATION_RULE": "common.authentication.default_user_authentication_rule",
 }
 
 # Internationalization

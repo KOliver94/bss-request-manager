@@ -23,6 +23,7 @@ from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_social_auth.views import BaseSocialAuthView
 from social_django.models import UserSocialAuth
 from video_requests.models import CrewMember, Request, Video
@@ -141,6 +142,9 @@ class BanUserView(generics.UpdateAPIView):
         if serializer.data["ban"]:
             user.groups.add(group)
             user.is_active = False
+            for token in user.outstandingtoken_set.all():
+                refresh_token = RefreshToken(token.token)
+                refresh_token.blacklist()
         else:
             user.groups.remove(group)
             user.is_active = True

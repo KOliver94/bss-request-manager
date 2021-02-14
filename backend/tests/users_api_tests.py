@@ -591,6 +591,19 @@ class UsersAPITestCase(APITestCase):
     PUT/PATCH /api/v1/users/:id/ban
     """
 
+    def check_login_failed_when_banned(self, user):
+        url = reverse("login_obtain_jwt_pair")
+        response = self.client.post(
+            url,
+            {"username": user.username, "password": get_default_password()},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(
+            str(response.data["detail"]),
+            "No active account found with the given credentials",
+        )
+
     def check_if_user_is_banned(self, user_id, banned):
         user = User.objects.get(pk=user_id)
         response = self.client.get(f"{self.url}/{user_id}")
@@ -598,6 +611,7 @@ class UsersAPITestCase(APITestCase):
         if banned:
             self.assertFalse(user.is_active)
             self.assertIn("Banned", response.data["groups"])
+            self.check_login_failed_when_banned(user)
         else:
             self.assertTrue(user.is_active)
             self.assertNotIn("Banned", response.data["groups"])
@@ -714,6 +728,33 @@ class UsersAPITestCase(APITestCase):
         response = self.client.put(f"{self.url}/{user.id}/ban", {})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data["ban"][0], "This field is required.")
+
+    def test_refresh_token_after_ban(self):
+        user = create_user()
+        login_url = reverse("login_obtain_jwt_pair")
+        refresh_url = reverse("login_refresh_jwt_token")
+
+        response = self.client.post(
+            login_url,
+            {"username": user.username, "password": get_default_password()},
+            format="json",
+        )
+        access_token = response.data["access"]
+        refresh_token = response.data["refresh"]
+
+        ban = {"ban": True}
+        self.authorize_user(self.admin)
+
+        response = self.client.patch(f"{self.url}/{user.id}/ban", ban)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        self.check_if_user_is_banned(user.id, True)
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        response = self.client.post(
+            refresh_url, {"refresh": refresh_token}, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(str(response.data["detail"]), "Token is blacklisted")
 
     """
     GET /api/v1/users/me/worked OR /api/v1/users/:id/worked
