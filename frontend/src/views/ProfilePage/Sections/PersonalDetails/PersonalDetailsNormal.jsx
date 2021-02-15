@@ -33,6 +33,10 @@ PersonalDetailsNormal.propTypes = {
     email: PropTypes.bool,
     phone_number: PropTypes.bool,
   }).isRequired,
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   isUser: PropTypes.bool.isRequired,
+};
+
+PersonalDetailsNormal.defaultProps = {
+  disabled: false,
 };
