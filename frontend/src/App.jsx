@@ -13,6 +13,7 @@ import LoginPage from './views/LoginPage/LoginPage';
 import ProfilePage from './views/ProfilePage/ProfilePage';
 import RequestCreatorPage from './views/RequestCreatorPage/RequestCreatorPage';
 import MyRequestsPage from './views/MyRequestsPage/MyRequestsPage';
+import RedirectPage from './views/RedirectPage/RedirectPage';
 import RequestDetailPage from './views/RequestDetailPage/RequestDetailPage';
 import PrivacyPolicyPage from './views/PrivacyPolicyPage/PrivacyPolicyPage';
 import TermsOfServicePage from './views/TermsOfServicePage/TermsOfServicePage';
@@ -104,6 +105,9 @@ function App() {
               isAuthenticated={isAuthenticated}
               setIsAuthenticated={setIsAuthenticated}
             />
+          </Route>
+          <Route exact path="/redirect">
+            <RedirectPage />
           </Route>
           <Route render={() => <ErrorPage type="notfound" />} />
         </Switch>

@@ -123,8 +123,7 @@ SOCIAL_AUTH_AUTHSCH_SECRET = config("AUTH_SCH_CLIENT_SECRET")
 
 # For most OAuth providers the redirect URL in frontend and backend should match (e.g.: Facebook)
 # More information: https://github.com/st4lk/django-rest-social-auth#settings
-REST_SOCIAL_OAUTH_REDIRECT_URI = "/login"
-REST_SOCIAL_DOMAIN_FROM_ORIGIN = DEBUG
+REST_SOCIAL_OAUTH_REDIRECT_URI = "/redirect"
 
 SOCIAL_AUTH_PIPELINE = (
     # Get the information we can about the user and return it in a simple

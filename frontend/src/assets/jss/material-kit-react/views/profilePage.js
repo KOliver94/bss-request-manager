@@ -60,9 +60,6 @@ const profilePageStyle = {
     fontSize: '20px',
     color: '#999',
   },
-  schButtonColor: {
-    background: '#0a3a66',
-  },
   circularProgress: {
     margin: '50px 30px',
     color: primaryColor,

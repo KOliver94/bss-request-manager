@@ -20,7 +20,7 @@ from django.contrib.auth.models import Group, User
 from django.utils.timezone import localdate
 from rest_framework import filters, generics, status
 from rest_framework.exceptions import NotAuthenticated, ValidationError
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import DestroyAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -152,23 +152,17 @@ class BanUserView(generics.UpdateAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
-class ConnectSocialProfileView(BaseSocialAuthView):  # pragma: no cover
+class ConnectDisconnectSocialProfileView(
+    BaseSocialAuthView, DestroyAPIView
+):  # pragma: no cover
     """
-    Connect social profile to existing account.
+    Connects and disconnects social profile to existing account.
     Works the same as social login but available only for authenticated users.
     """
 
     permission_classes = [IsAuthenticated]
     serializer_class = UserDetailSerializer
     oauth2_serializer_class_in = ConnectOAuth2ProfileInputSerializer
-
-
-class DisconnectSocialProfileView(generics.DestroyAPIView):  # pragma: no cover
-    """
-    Disconnects user's social profile from given provider.
-    """
-
-    permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
         provider = self.kwargs.get("provider", None)
@@ -180,6 +174,9 @@ class DisconnectSocialProfileView(generics.DestroyAPIView):  # pragma: no cover
             )
             if UserSocialAuth.objects.filter(user=self.request.user).count() > 1:
                 social_auth.delete()
+                if self.request.user.userprofile.avatar.pop(provider, None):
+                    self.request.user.save()
+                return Response(status=status.HTTP_204_NO_CONTENT)
             else:
                 raise ValidationError(
                     detail="You must have at least 1 remaining connected profile."

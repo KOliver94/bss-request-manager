@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -50,10 +50,20 @@ import { useSnackbar } from 'notistack';
 // background
 import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
 // API calls
-import { getUser, updateUser } from 'api/userApi';
+import {
+  getUser,
+  updateUser,
+  connectSocial,
+  disconnectSocial,
+} from 'api/userApi';
+import { isAdmin, isPrivileged } from 'api/loginApi';
 import handleError from 'helpers/errorHandler';
 import { userRoles, avatarProviders } from 'helpers/enumConstants';
-import { isAdmin, isPrivileged } from 'api/loginApi';
+import {
+  getOauthUrlAuthSch,
+  getOauthUrlFacebook,
+  getOauthUrlGoogle,
+} from 'helpers/oauthConstants';
 // Style
 import styles from 'assets/jss/material-kit-react/views/profilePage';
 // Sections
@@ -65,6 +75,8 @@ const useStyles = makeStyles(styles);
 
 export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const { id } = useParams();
+  const location = useLocation();
+  const { code, provider } = { ...location.state };
   const ownUserId = parseInt(localStorage.getItem('user_id'), 10);
   const classes = useStyles();
   const theme = useTheme();
@@ -78,6 +90,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState(true);
+  const [profileConnecting, setProfileConnecting] = useState(false);
   const [workedOnDialogOpen, setWorkedOnDialogOpen] = useState(false);
   const [userData, setUserData] = useState({});
   const [selectedStartDate, setSelectedStartDate] = useState(
@@ -114,6 +127,33 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     }
   };
 
+  const handleDisconnect = async (val) => {
+    setProfileConnecting(true);
+    try {
+      await disconnectSocial(val);
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        social_accounts: prevUserData.social_accounts.filter(
+          (account) => account.provider !== val
+        ),
+        profile: {
+          ...prevUserData.profile,
+          avatar: {
+            ...prevUserData.profile.avatar,
+            [val]: null,
+          },
+        },
+      }));
+    } catch (e) {
+      enqueueSnackbar(handleError(e), {
+        variant: 'error',
+        autoHideDuration: 5000,
+      });
+    } finally {
+      setProfileConnecting(false);
+    }
+  };
+
   useEffect(() => {
     async function loadData() {
       try {
@@ -129,6 +169,27 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     }
     loadData();
   }, [id, enqueueSnackbar]);
+
+  useEffect(() => {
+    async function connectSocialProfile() {
+      try {
+        const result = await connectSocial(provider, code);
+        setUserData(result.data);
+      } catch (e) {
+        enqueueSnackbar(handleError(e), {
+          variant: 'error',
+          autoHideDuration: 5000,
+        });
+      } finally {
+        setProfileConnecting(false);
+      }
+    }
+
+    if (code && provider) {
+      setProfileConnecting(true);
+      connectSocialProfile();
+    }
+  }, [code, provider, enqueueSnackbar]);
 
   const validationSchema = Yup.object({
     first_name: Yup.string()
@@ -363,7 +424,10 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                 alignItems="center"
                               >
                                 {Object.entries(userData.profile.avatar)
-                                  .filter((avatar) => avatar[0] !== 'provider')
+                                  .filter(
+                                    (avatar) =>
+                                      avatar[0] !== 'provider' && avatar[1]
+                                  )
                                   .map((avatar) => {
                                     return (
                                       <GridItem
@@ -442,25 +506,94 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                             <AccordionDetails>
                               <GridContainer>
                                 <GridItem>
-                                  <Button color="facebook" fullWidth>
-                                    <i className="fab fa-facebook" />{' '}
-                                    Bejelenetkezés
-                                  </Button>
+                                  {userData.social_accounts.some(
+                                    (x) => x.provider === 'facebook'
+                                  ) ? (
+                                    <Button
+                                      color="facebook"
+                                      fullWidth
+                                      disabled={profileConnecting}
+                                      onClick={() =>
+                                        handleDisconnect('facebook')
+                                      }
+                                    >
+                                      <i className="fab fa-facebook" />{' '}
+                                      Kijelentkezés
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      color="facebook"
+                                      fullWidth
+                                      href={getOauthUrlFacebook({
+                                        operation: 'profile',
+                                      })}
+                                      target="_self"
+                                      disabled={profileConnecting}
+                                    >
+                                      <i className="fab fa-facebook" />{' '}
+                                      Bejelenetkezés
+                                    </Button>
+                                  )}
                                 </GridItem>
                                 <GridItem>
-                                  <Button color="google" fullWidth>
-                                    <i className="fab fa-google" />{' '}
-                                    Bejelenetkezés
-                                  </Button>
+                                  {userData.social_accounts.some(
+                                    (x) => x.provider === 'google-oauth2'
+                                  ) ? (
+                                    <Button
+                                      color="google"
+                                      fullWidth
+                                      disabled={profileConnecting}
+                                      onClick={() =>
+                                        handleDisconnect('google-oauth2')
+                                      }
+                                    >
+                                      <i className="fab fa-google" />{' '}
+                                      Kijelentkezés
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      color="google"
+                                      fullWidth
+                                      href={getOauthUrlGoogle({
+                                        operation: 'profile',
+                                      })}
+                                      target="_self"
+                                      disabled={profileConnecting}
+                                    >
+                                      <i className="fab fa-google" />{' '}
+                                      Bejelenetkezés
+                                    </Button>
+                                  )}
                                 </GridItem>
                                 <GridItem>
-                                  <Button
-                                    className={classes.schButtonColor}
-                                    fullWidth
-                                  >
-                                    <i className="fab icon-sch" />{' '}
-                                    Bejelenetkezés
-                                  </Button>
+                                  {userData.social_accounts.some(
+                                    (x) => x.provider === 'authsch'
+                                  ) ? (
+                                    <Button
+                                      color="authsch"
+                                      fullWidth
+                                      disabled={profileConnecting}
+                                      onClick={() =>
+                                        handleDisconnect('authsch')
+                                      }
+                                    >
+                                      <i className="fab icon-sch" />{' '}
+                                      Kijelentkezés
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      color="authsch"
+                                      fullWidth
+                                      href={getOauthUrlAuthSch({
+                                        operation: 'profile',
+                                      })}
+                                      target="_self"
+                                      disabled={profileConnecting}
+                                    >
+                                      <i className="fab icon-sch" />{' '}
+                                      Bejelenetkezés
+                                    </Button>
+                                  )}
                                 </GridItem>
                               </GridContainer>
                             </AccordionDetails>

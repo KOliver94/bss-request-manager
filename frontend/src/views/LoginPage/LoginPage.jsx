@@ -23,19 +23,16 @@ import CardBody from 'components/material-kit-react/Card/CardBody';
 import CardHeader from 'components/material-kit-react/Card/CardHeader';
 import CardFooter from 'components/material-kit-react/Card/CardFooter';
 import CustomInput from 'components/material-kit-react/CustomInput/CustomInput';
-
-import styles from 'assets/jss/material-kit-react/views/loginPage';
-
-import background from 'assets/img/bg7.jpg';
-
+// API calls and helpers
 import { loginLdap, loginSocial } from 'api/loginApi';
 import {
   getOauthUrlAuthSch,
   getOauthUrlFacebook,
   getOauthUrlGoogle,
-  getOauthCode,
-  getOauthState,
 } from 'helpers/oauthConstants';
+
+import styles from 'assets/jss/material-kit-react/views/loginPage';
+import background from 'assets/img/bg7.jpg';
 
 const useStyles = makeStyles(styles);
 
@@ -52,6 +49,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   const { from } = location.state || {
     from: { pathname: localStorage.getItem('redirectedFrom') || '/' },
   };
+  const { code, provider } = { ...location.state };
 
   const handleLogin = useCallback(
     async (type, data) => {
@@ -125,17 +123,11 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   });
 
   useEffect(() => {
-    const code = getOauthCode(location);
-    const state = getOauthState(location);
-    if (
-      code &&
-      Array.isArray(state) &&
-      state.some((x) => ['authsch', 'facebook', 'google-oauth2'].includes(x))
-    ) {
+    if (code && provider) {
       setLoading(true);
-      handleLogin(state, code);
+      handleLogin(provider, code);
     }
-  }, [location, handleLogin]);
+  }, [code, provider, handleLogin]);
 
   return (
     <div>
@@ -170,7 +162,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         <span>
                           <Button
                             justIcon
-                            href={getOauthUrlAuthSch()}
+                            href={getOauthUrlAuthSch({ operation: 'login' })}
                             onClick={handleButtonClick}
                             target="_self"
                             color="transparent"
@@ -189,7 +181,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         <span>
                           <Button
                             justIcon
-                            href={getOauthUrlFacebook('login')}
+                            href={getOauthUrlFacebook({ operation: 'login' })}
                             onClick={handleButtonClick}
                             target="_self"
                             color="transparent"
@@ -208,7 +200,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         <span>
                           <Button
                             justIcon
-                            href={getOauthUrlGoogle('login')}
+                            href={getOauthUrlGoogle({ operation: 'login' })}
                             onClick={handleButtonClick}
                             target="_self"
                             color="transparent"

@@ -14,6 +14,14 @@ export async function getUserWorkedOn(userId, fromDate, toDate, responsible) {
   });
 }
 
+export async function connectSocial(provider, code, force = false) {
+  return axiosInstance.post(`/users/me/social/${provider}`, { code, force });
+}
+
+export async function disconnectSocial(provider) {
+  return axiosInstance.delete(`/users/me/social/${provider}`);
+}
+
 export async function listStaffUsers() {
   return axiosInstance.get(`/users/staff`);
 }
