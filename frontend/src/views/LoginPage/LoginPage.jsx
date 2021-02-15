@@ -82,7 +82,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
           },
         });
         setLoading(false);
-        history.replace('/login');
+        history.replace();
       }
     },
     [enqueueSnackbar, history, setIsAuthenticated]
