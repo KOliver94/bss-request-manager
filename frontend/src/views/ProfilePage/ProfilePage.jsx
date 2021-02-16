@@ -192,7 +192,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       setProfileConnecting(true);
       connectSocialProfile();
     }
-  }, [code, provider, enqueueSnackbar]);
+  }, [code, provider, history, enqueueSnackbar]);
 
   const validationSchema = Yup.object({
     first_name: Yup.string()
