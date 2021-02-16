@@ -17,6 +17,7 @@ import styles from 'assets/jss/material-kit-react/views/landingPage';
 // Sections for this page
 import RulesPoliciesSection from './Sections/RulesPoliciesSection';
 import ContactSection from './Sections/ContactSection';
+import PostscriptSection from './Sections/PostscriptSection';
 
 const useStyles = makeStyles(styles);
 
@@ -70,6 +71,7 @@ export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
         <div className={classes.container}>
           <RulesPoliciesSection />
           <ContactSection />
+          <PostscriptSection />
         </div>
       </div>
       <Footer />
