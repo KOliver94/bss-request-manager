@@ -90,6 +90,73 @@ export default function PrivacyPolicyPage({
                 have any questions about how we handle user data and personal
                 information, feel free to contact us.
               </p>
+              <h3>Types of Data Collected</h3>
+              <p>
+                While using Our Service, We may ask You to provide Us with
+                certain personally identifiable information that can be used to
+                contact or identify You. Personally identifiable information may
+                include, but is not limited to:
+              </p>
+              <ul>
+                <li>
+                  <p>Email address</p>
+                </li>
+                <li>
+                  <p>First name and last name</p>
+                </li>
+                <li>
+                  <p>Phone number</p>
+                </li>
+              </ul>
+              <p>
+                If you sign in using Google, Facebook or AuthSCH, we collect
+                these data with your consent from the selected provider. We also
+                store a link to your profile picture from the selected provider
+                if available.
+              </p>
+              <h3>Use of Your Personal Data</h3>
+              <p>We may use Personal Data for the following purposes:</p>
+              <ul>
+                <li>
+                  <p>
+                    <strong>To provide and maintain our Service</strong>,
+                    including to monitor the usage of our Service.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>To manage Your Account:</strong> to manage Your
+                    registration as a user of the Service. The Personal Data You
+                    provide can give You access to different functionalities of
+                    the Service that are available to You as a registered user.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>To contact You:</strong> To contact You by email,
+                    telephone calls, SMS, or other equivalent forms of
+                    electronic communication, such as a mobile
+                    application&apos;s push notifications regarding updates or
+                    informative communications related to the functionalities or
+                    contracted services, including the security updates, when
+                    necessary or reasonable for their implementation.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>To manage Your requests:</strong> To attend and
+                    manage Your requests to Us.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <strong>For other purposes</strong>: We may use Your
+                    information for other purposes, such as data analysis,
+                    identifying usage trends and to evaluate and improve our
+                    Service and your experience.
+                  </p>
+                </li>
+              </ul>
               <p>This policy is effective as of 1 January 2021.</p>
               <h2>Data Deletion Policy</h2>
               <p>
