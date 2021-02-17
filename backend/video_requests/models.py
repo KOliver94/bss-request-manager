@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from common.models import AbstractComment, AbstractRating
+from common.models import AbstractComment, AbstractRating, get_sentinel_user
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
@@ -66,7 +66,7 @@ class Request(models.Model):
         null=True,
     )
     requester = models.ForeignKey(
-        User, related_name="requester_user", on_delete=models.SET_NULL, null=True
+        User, related_name="requester_user", on_delete=models.SET(get_sentinel_user)
     )
     additional_data = JSONField(
         encoder=DjangoJSONEncoder,
