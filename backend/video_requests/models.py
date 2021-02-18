@@ -61,7 +61,7 @@ class Request(models.Model):
     responsible = models.ForeignKey(
         User,
         related_name="responsible_user",
-        on_delete=models.SET_NULL,
+        on_delete=models.SET(get_sentinel_user),
         blank=True,
         null=True,
     )
