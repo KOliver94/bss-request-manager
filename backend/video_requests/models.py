@@ -114,7 +114,9 @@ class Video(models.Model):
     request = models.ForeignKey(
         Request, on_delete=models.CASCADE, related_name="videos"
     )
-    editor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    editor = models.ForeignKey(
+        User, on_delete=models.SET(get_sentinel_user), blank=True, null=True
+    )
     status = models.PositiveSmallIntegerField(
         choices=Statuses.choices, default=Statuses.PENDING
     )

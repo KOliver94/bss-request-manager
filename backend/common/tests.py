@@ -48,9 +48,9 @@ class CommonTestCase(TestCase):
         request.refresh_from_db()
 
         sentinel_user = get_sentinel_user()
-        self.assertIsNone(request.requester)
+        self.assertEqual(request.requester, sentinel_user)
         self.assertIsNone(request.responsible)
-        self.assertIsNone(request.videos.get().editor)
+        self.assertEqual(request.videos.get().editor, sentinel_user)
         self.assertFalse(request.crew.exists())
         self.assertEqual(request.comments.get().author, sentinel_user)
         self.assertEqual(request.videos.get().ratings.get().author, sentinel_user)
