@@ -3,6 +3,7 @@ from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITransactionTestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 from tests.helpers.users_test_utils import create_user, get_default_password
 from tests.helpers.video_requests_test_utils import (
     create_crew,
@@ -691,21 +692,18 @@ class UsersAPITestCase(APITransactionTestCase):
         user = create_user()
         login_url = reverse("login_obtain_jwt_pair")
         refresh_url = reverse("login_refresh_jwt_token")
-        logout_url = reverse("logout")
 
-        # Login and logout to create an already blacklisted token
+        # Login and blacklisted the refresh token
         # to test exception handling in signals.py
         response = self.client.post(
             login_url,
             {"username": user.username, "password": get_default_password()},
             format="json",
         )
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['access']}")
-        response = self.client.post(
-            logout_url, {"refresh": response.data["refresh"]}, format="json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_205_RESET_CONTENT)
+        token = RefreshToken(response.data["refresh"])
+        token.blacklist()
 
+        # Login again and try the main flow
         response = self.client.post(
             login_url,
             {"username": user.username, "password": get_default_password()},
