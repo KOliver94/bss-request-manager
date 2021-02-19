@@ -39,10 +39,7 @@ class Command(BaseCommand):
             username = r["sAMAccountName"][0].decode(
                 "utf-8"
             )  # returns bytes by default so we need to decode to string
-            try:
-                user = LDAPBackend().populate_user(username)
-            except AuthenticationFailed:  # This exception is being raised when a user is banned.
-                continue  # Continue with the next iteration
+            user = LDAPBackend().populate_user(username)
 
             # If the user was created in the last minute count it as new user.
             if user is None:
@@ -58,13 +55,6 @@ class Command(BaseCommand):
         ).exclude(username__in=users_found):
             user.is_superuser = False
             user.is_staff = False
-            user.is_active = False
-            group = user.groups.filter(
-                name="Banned"
-            ).first()  # If the user was in Banned group get the group
-            user.groups.clear()  # Remove all group membership
-            if group:  # If user was banned add again to the banned group
-                user.groups.add(group)
             user.save()  # Save modifications
             total_demoted += 1
             logging.warning(

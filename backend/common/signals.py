@@ -1,11 +1,12 @@
 import django_auth_ldap.backend
 import requests
-from common.models import UserProfile
+from common.models import Ban, UserProfile
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from libgravatar import Gravatar, sanitize_email
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 @receiver(post_save, sender=User)
@@ -19,13 +20,29 @@ def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
 
 
+@receiver(post_save, sender=Ban)
+def post_save_ban(sender, instance, **kwargs):
+    instance.receiver.is_active = False
+    instance.receiver.is_staff = False
+    instance.receiver.is_superuser = False
+    for token in instance.receiver.outstandingtoken_set.all():
+        try:
+            refresh_token = RefreshToken(token.token)
+            refresh_token.blacklist()
+        except TokenError:
+            continue
+    instance.receiver.save()
+
+
+@receiver(post_delete, sender=Ban)
+def post_delete_ban(sender, instance, **kwargs):
+    instance.receiver.is_active = True
+    instance.receiver.save()
+
+
 def populate_user_profile_from_ldap(
     sender, user=None, ldap_user=None, **kwargs
 ):  # pragma: no cover
-    # Before doing anything check if the user is banned.
-    if user and not user._state.adding and user.groups.filter(name="Banned").exists():
-        raise AuthenticationFailed(detail="Your user account has been suspended.")
-
     user.save()  # Create the user which will create the profile as well
 
     try:

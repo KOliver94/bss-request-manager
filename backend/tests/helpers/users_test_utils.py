@@ -1,5 +1,6 @@
 import uuid
 
+from common.models import Ban
 from django.contrib.auth.models import Group, User
 from django.utils.timezone import localtime
 
@@ -11,7 +12,12 @@ def get_default_password():
 
 
 def create_user(
-    username=None, password=PASSWORD, is_staff=False, is_admin=False, groups=None
+    username=None,
+    password=PASSWORD,
+    is_staff=False,
+    is_admin=False,
+    groups=None,
+    banned=False,
 ):
     # Initial parameters
     if groups is None:
@@ -52,4 +58,9 @@ def create_user(
 
     # Save user and return
     user.save()
+
+    # Add user ban
+    if banned:
+        Ban.objects.create(receiver=user)
+
     return user

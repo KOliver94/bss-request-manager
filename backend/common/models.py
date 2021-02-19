@@ -45,6 +45,21 @@ class UserProfile(models.Model):
         return self.avatar.get(self.avatar.get("provider", None), None)
 
 
+class Ban(models.Model):
+    receiver = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True, unique=True
+    )
+    creator = models.ForeignKey(
+        User,
+        related_name="ban_creator",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    reason = models.CharField(max_length=100, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+
 class AbstractComment(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
     created = models.DateTimeField(auto_now_add=True)

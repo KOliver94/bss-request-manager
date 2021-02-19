@@ -1,5 +1,5 @@
 from api.v1.users.views import (
-    BanUserView,
+    BanUserCreateDeleteView,
     ConnectDisconnectSocialProfileView,
     StaffUserListView,
     UserDetailView,
@@ -16,6 +16,6 @@ urlpatterns = [
     ),
     path("me/worked", UserWorkedOnListView.as_view(), kwargs={"pk": "me"}),
     path("<int:pk>", UserDetailView.as_view()),
-    path("<int:pk>/ban", BanUserView.as_view()),
+    path("<int:pk>/ban", BanUserCreateDeleteView.as_view()),
     path("<int:pk>/worked", UserWorkedOnListView.as_view()),
 ]

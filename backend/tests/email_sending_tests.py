@@ -210,7 +210,7 @@ class EmailSendingTestCase(APITestCase):
 
     def test_new_comment_email_not_sent_to_banned_user_admin_endpoint(self):
         # Setup data - Create a Request, add Crew members and Responsible
-        banned_user = create_user(groups=["Banned"])
+        banned_user = create_user(banned=True)
         request = create_request(100, banned_user)
 
         # New comment data

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
+from rest_framework.test import APITransactionTestCase
 from tests.helpers.users_test_utils import create_user, get_default_password
 from tests.helpers.video_requests_test_utils import (
     create_crew,
@@ -14,7 +14,7 @@ NOT_EXISTING_ID = 9000
 
 
 @freeze_time("2020-12-01 12:00:00", tz_offset=+1)
-class UsersAPITestCase(APITestCase):
+class UsersAPITestCase(APITransactionTestCase):
     def authorize_user(self, user):
         url = reverse("login_obtain_jwt_pair")
         resp = self.client.post(
@@ -588,7 +588,7 @@ class UsersAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     """
-    PUT/PATCH /api/v1/users/:id/ban
+    CREATE/DELETE /api/v1/users/:id/ban
     """
 
     def check_login_failed_when_banned(self, user):
@@ -604,135 +604,107 @@ class UsersAPITestCase(APITestCase):
             "No active account found with the given credentials",
         )
 
-    def check_if_user_is_banned(self, user_id, banned):
+    def check_if_user_is_banned(self, user_id, banned, reason=None):
         user = User.objects.get(pk=user_id)
         response = self.client.get(f"{self.url}/{user_id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         if banned:
             self.assertFalse(user.is_active)
-            self.assertIn("Banned", response.data["groups"])
+            self.assertTrue(hasattr(user, "ban"))
+            self.assertEqual(user.ban.creator, self.admin)
             self.check_login_failed_when_banned(user)
+            if reason:
+                self.assertEqual(user.ban.reason, reason)
         else:
             self.assertTrue(user.is_active)
-            self.assertNotIn("Banned", response.data["groups"])
+            self.assertFalse(hasattr(user, "ban"))
 
     def test_admin_can_ban_and_unban_user(self):
         user = create_user()
-        ban = {"ban": True}
-        unban = {"ban": False}
         self.authorize_user(self.admin)
 
-        response = self.client.patch(f"{self.url}/{user.id}/ban", ban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        response = self.client.post(f"{self.url}/{user.id}/ban")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.check_if_user_is_banned(user.id, True)
 
-        response = self.client.patch(f"{self.url}/{user.id}/ban", unban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        response = self.client.delete(f"{self.url}/{user.id}/ban")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.check_if_user_is_banned(user.id, False)
 
-        response = self.client.put(f"{self.url}/{user.id}/ban", ban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        self.check_if_user_is_banned(user.id, True)
+        response = self.client.post(f"{self.url}/{user.id}/ban", {"reason": "test"})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.check_if_user_is_banned(user.id, True, "test")
 
-        response = self.client.put(f"{self.url}/{user.id}/ban", unban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        response = self.client.delete(f"{self.url}/{user.id}/ban")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.check_if_user_is_banned(user.id, False)
 
     def test_staff_should_not_ban_and_unban_user(self):
-        ban = {"ban": True}
-        unban = {"ban": False}
         self.authorize_user(self.staff)
 
-        response = self.client.patch(f"{self.url}/{self.staff.id}/ban", ban)
+        response = self.client.post(f"{self.url}/{self.staff.id}/ban")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.client.patch(f"{self.url}/{self.admin.id}/ban", unban)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.put(f"{self.url}/{self.user.id}/ban", ban)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.put(f"{self.url}/{NOT_EXISTING_ID}/ban", unban)
+        response = self.client.delete(f"{self.url}/{self.admin.id}/ban")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_user_should_not_ban_and_unban_user(self):
-        ban = {"ban": True}
-        unban = {"ban": False}
         self.authorize_user(self.user)
 
-        response = self.client.patch(f"{self.url}/{self.staff.id}/ban", ban)
+        response = self.client.post(f"{self.url}/{self.staff.id}/ban")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = self.client.patch(f"{self.url}/{self.admin.id}/ban", unban)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.put(f"{self.url}/{self.user.id}/ban", ban)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        response = self.client.put(f"{self.url}/{NOT_EXISTING_ID}/ban", unban)
+        response = self.client.delete(f"{self.url}/{self.admin.id}/ban")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_anonymous_should_not_ban_and_unban_user(self):
-        ban = {"ban": True}
-        unban = {"ban": False}
-
-        response = self.client.patch(f"{self.url}/{self.staff.id}/ban", ban)
+        response = self.client.post(f"{self.url}/{self.staff.id}/ban")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        response = self.client.patch(f"{self.url}/{self.admin.id}/ban", unban)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-        response = self.client.put(f"{self.url}/{self.user.id}/ban", ban)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-        response = self.client.put(f"{self.url}/{NOT_EXISTING_ID}/ban", unban)
+        response = self.client.delete(f"{self.url}/{self.admin.id}/ban")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_ban_unban_edge_cases(self):
         user = create_user()
-        ban = {"ban": True}
-        unban = {"ban": False}
         self.authorize_user(self.admin)
 
         # Call ban multiple times
-        response = self.client.patch(f"{self.url}/{user.id}/ban", ban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        response = self.client.post(f"{self.url}/{user.id}/ban")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.check_if_user_is_banned(user.id, True)
 
-        response = self.client.put(f"{self.url}/{user.id}/ban", ban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        self.check_if_user_is_banned(user.id, True)
-
-        response = self.client.patch(f"{self.url}/{user.id}/ban", ban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        response = self.client.post(f"{self.url}/{user.id}/ban")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(str(response.data[0]), "User is already banned.")
         self.check_if_user_is_banned(user.id, True)
 
         # Call unban multiple times
-        response = self.client.put(f"{self.url}/{user.id}/ban", unban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        response = self.client.delete(f"{self.url}/{user.id}/ban")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.check_if_user_is_banned(user.id, False)
 
-        response = self.client.patch(f"{self.url}/{user.id}/ban", unban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        response = self.client.delete(f"{self.url}/{user.id}/ban")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.check_if_user_is_banned(user.id, False)
-
-        response = self.client.put(f"{self.url}/{user.id}/ban", unban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        self.check_if_user_is_banned(user.id, False)
-
-        # Call endpoint with empty body
-        response = self.client.patch(f"{self.url}/{user.id}/ban", {})
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["ban"][0], "This field is required.")
-
-        response = self.client.put(f"{self.url}/{user.id}/ban", {})
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data["ban"][0], "This field is required.")
 
     def test_refresh_token_after_ban(self):
         user = create_user()
         login_url = reverse("login_obtain_jwt_pair")
         refresh_url = reverse("login_refresh_jwt_token")
+        logout_url = reverse("logout")
+
+        # Login and logout to create an already blacklisted token
+        # to test exception handling in signals.py
+        response = self.client.post(
+            login_url,
+            {"username": user.username, "password": get_default_password()},
+            format="json",
+        )
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['access']}")
+        response = self.client.post(
+            logout_url, {"refresh": response.data["refresh"]}, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_205_RESET_CONTENT)
 
         response = self.client.post(
             login_url,
@@ -742,11 +714,10 @@ class UsersAPITestCase(APITestCase):
         access_token = response.data["access"]
         refresh_token = response.data["refresh"]
 
-        ban = {"ban": True}
         self.authorize_user(self.admin)
 
-        response = self.client.patch(f"{self.url}/{user.id}/ban", ban)
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        response = self.client.post(f"{self.url}/{user.id}/ban")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.check_if_user_is_banned(user.id, True)
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")

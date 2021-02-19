@@ -8,6 +8,7 @@ from api.v1.users.serializers import (
     UserSerializer,
     UserWorkedOnSerializer,
 )
+from common.models import Ban
 from common.pagination import ExtendedPagination
 from common.permissions import (
     IsAdminUser,
@@ -17,6 +18,7 @@ from common.permissions import (
     IsStaffUser,
 )
 from django.contrib.auth.models import Group, User
+from django.db import IntegrityError
 from django.utils.timezone import localdate
 from rest_framework import filters, generics, status
 from rest_framework.exceptions import NotAuthenticated, ValidationError
@@ -120,36 +122,34 @@ class StaffUserListView(generics.ListAPIView):
     queryset = User.objects.filter(is_staff=True, is_active=True).cache()
 
 
-class BanUserView(generics.UpdateAPIView):
+class BanUserCreateDeleteView(generics.CreateAPIView, generics.DestroyAPIView):
     """
-    Ban/Unban a user - Add to group "Banned" and set the user inactive.
-    The Banned group is needed to disable authentication with social provider
-    and the inactive status is due to avoid LDAP login
+    Create and Delete endpoint for User Ban objects
 
-    Only Admin members can call this endpoint with PUT/PATCH. The body must be {"ban": True/False}
+    Only Admin members can call this endpoint.
     """
 
     permission_classes = [IsAdminUser]
     serializer_class = BanUserSerializer
-    queryset = User.objects.all()
+    queryset = Ban.objects.all()
 
-    def update(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        try:
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
+        except IntegrityError:
+            raise ValidationError("User is already banned.")
 
-        user = self.get_object()
-        group = Group.objects.get_or_create(name="Banned")[0]
-        if serializer.data["ban"]:
-            user.groups.add(group)
-            user.is_active = False
-            for token in user.outstandingtoken_set.all():
-                refresh_token = RefreshToken(token.token)
-                refresh_token.blacklist()
-        else:
-            user.groups.remove(group)
-            user.is_active = True
-        user.save()
-        return Response(status=status.HTTP_202_ACCEPTED)
+    def perform_create(self, serializer):
+        serializer.save(
+            receiver=get_object_or_404(User, pk=self.kwargs["pk"]),
+            creator=self.request.user,
+        )
 
 
 class ConnectDisconnectSocialProfileView(

@@ -104,22 +104,13 @@ def check_if_only_one_association_from_a_provider(
         raise AuthAlreadyAssociated(backend, msg)
 
 
-def check_if_user_is_banned(strategy, user=None, *args, **kwargs):
-    """
-    Check if user is banned.
-    If the user existed but was not active (most likely to be created when (s)he sent a request without logging in)
-    set the user to active.
-    Runs only at login process. (Request sender user is anonymous).
-    """
-    if strategy.request.user.is_anonymous:
-        if user and user.groups.filter(name="Banned").exists():
-            raise AuthenticationFailed(detail="Your user account has been suspended.")
-        elif user and not user.is_active:
-            user.is_active = True
-            user.save()
-            logging.warning(
-                f"User account has been activated for {user.get_full_name()} ({user.username})"
-            )
+def set_user_active_when_first_logs_in(backend, user=None, *args, **kwargs):
+    if user and not backend.strategy.storage.user.get_social_auth_for_user(user):
+        user.is_active = True
+        user.save()
+        logging.warning(
+            f"User account has been activated for {user.get_full_name()} ({user.username})"
+        )
 
 
 def check_if_admin_or_staff_user_is_still_privileged(

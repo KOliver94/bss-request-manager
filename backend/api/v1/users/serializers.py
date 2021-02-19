@@ -1,4 +1,4 @@
-from common.models import UserProfile
+from common.models import Ban, UserProfile
 from django.conf import settings
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
@@ -16,8 +16,14 @@ from rest_framework.serializers import ModelSerializer, Serializer
 from rest_social_auth.serializers import OAuth2InputSerializer
 
 
-class BanUserSerializer(Serializer):
-    ban = BooleanField(required=True)
+class BanUserSerializer(ModelSerializer):
+    class Meta:
+        model = Ban
+        fields = (
+            "reason",
+            "created",
+        )
+        read_only_fields = ("created",)
 
 
 class UserSocialProfileSerializer(ModelSerializer):
@@ -58,6 +64,7 @@ class UserProfileSerializerWithAvatar(ModelSerializer):
 
 class UserSerializer(ModelSerializer):
     profile = UserProfileSerializer(read_only=True, source="userprofile")
+    banned = SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -68,7 +75,12 @@ class UserSerializer(ModelSerializer):
             "username",
             "email",
             "profile",
+            "banned",
         )
+
+    @staticmethod
+    def get_banned(user):
+        return hasattr(user, "ban")
 
 
 class UserDetailSerializer(ModelSerializer):
@@ -82,6 +94,7 @@ class UserDetailSerializer(ModelSerializer):
     last_name = CharField(max_length=150, required=False)
     email = EmailField(required=False)
     profile = UserProfileSerializerWithAvatar(read_only=True, source="userprofile")
+    ban = BanUserSerializer(read_only=True)
     if all(
         elem in settings.INSTALLED_APPS
         for elem in ["rest_social_auth", "social_django"]
@@ -105,12 +118,13 @@ class UserDetailSerializer(ModelSerializer):
             "username",
             "email",
             "profile",
+            "ban",
             "groups",
             "role",
             "phone_number",
             "avatar_provider",
         )
-        read_only_fields = ("id", "username", "profile", "groups", "role")
+        read_only_fields = ("id", "username", "profile", "ban", "groups", "role")
         write_only_fields = ("phone_number", "avatar_provider")
 
         if all(
