@@ -95,6 +95,12 @@ jobs:
           pipenv run coverage run -a -m pytest tests/no_recaptcha_pytest.py
           pipenv run coverage report
           pipenv run coverage html
+          pipenv run coverage xml
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v1
+        with:
+          directory: backend/
       - name: Archive code coverage results
         if: always()
         uses: actions/upload-artifact@v2
