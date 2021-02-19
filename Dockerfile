@@ -57,7 +57,8 @@ COPY ./backend/Pipfile* /app/backend/
 # Install dependencies
 RUN apk update \
     && apk add --no-cache --virtual .build-deps \
-    postgresql-dev gcc python3-dev musl-dev openldap-dev build-base libffi-dev \
+    postgresql-dev gcc python3-dev musl-dev libffi-dev openssl-dev cargo openldap-dev build-base \
+    && python -m pip install --upgrade pip \
     && pip install --no-cache-dir pipenv \
     && pipenv install --system --deploy --clear \
     && find /usr/local \
