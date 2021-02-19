@@ -28,7 +28,7 @@ def validate_profile_avatar(value):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     avatar = JSONField(
         encoder=DjangoJSONEncoder,
         validators=[validate_profile_avatar],
