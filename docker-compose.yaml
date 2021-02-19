@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
@@ -16,10 +16,11 @@ services:
     image: bss-request-manager
     command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 core.wsgi
     volumes:
-      - backend_logs:/app/backend/logs
-      - backend_credentials:/app/backend/credentials
+      - credentials:/app/backend/credentials
+      - logs:/app/backend/logs
+      - static:/app/backend/staticfiles
     ports:
-      - 80:8000
+      - 8000:8000
     env_file:
       - ./backend/.env
     depends_on:
@@ -33,20 +34,23 @@ services:
       start_period: 1m30s
 
   celery-worker:
-    restart: always
+    restart: unless-stopped
     image: bss-request-manager
     command: celery -A core worker
     env_file:
       - ./backend/.env
     environment:
       - DJANGO_CONTAINER=false
+    volumes:
+      - credentials:/app/backend/credentials/:ro
+      - static:/app/backend/staticfiles/:ro
     depends_on:
       - web
       - postgres
       - redis
 
   celery-beat:
-    restart: always
+    restart: unless-stopped
     image: bss-request-manager
     command: celery -A core beat
     env_file:
@@ -59,23 +63,24 @@ services:
       - redis
 
   postgres:
-    restart: always
+    restart: unless-stopped
     image: postgres:12-alpine
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=myprojectuser
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=myproject
 
   redis:
-    restart: always
+    restart: unless-stopped
     image: redis:6-alpine
     volumes:
-      - redis_data:/data
+      - redis:/data
 
 volumes:
-  backend_logs:
-  backend_credentials:
-  postgres_data:
-  redis_data:
+  credentials:
+  logs:
+  postgres:
+  redis:
+  static:
