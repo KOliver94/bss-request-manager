@@ -85,7 +85,7 @@ COPY --from=react-build /app/frontend/build /app/frontend/build
 
 # Have to move all static files other than index.html to root/ for whitenoise middleware
 WORKDIR /app/frontend/build
-RUN mkdir root && mv *.ico *.json *.txt root || :
+RUN mkdir root && mv *.ico *.json *.js *.txt root || :
 
 # Change the owner of all files to the app user
 RUN chown -R appuser:appgroup /app
