@@ -36,6 +36,14 @@ registerRoute(
 
     if (url.pathname.startsWith('/_')) {
       return false;
+    } // If this is a URL that starts with /api/, skip.
+
+    if (url.pathname.startsWith('/api/')) {
+      return false;
+    } // If this is a URL that starts with /django-admin/, skip.
+
+    if (url.pathname.startsWith('/django-admin/')) {
+      return false;
     } // If this looks like a URL for a resource, because it contains // a file extension, skip.
 
     if (url.pathname.match(fileExtensionRegexp)) {
