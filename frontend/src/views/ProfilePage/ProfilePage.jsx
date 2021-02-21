@@ -274,21 +274,17 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                         <Badge color="primary">
                           {userRoles(userData.role)}
                         </Badge>
-                        {userData.groups.includes('Banned') && (
-                          <Badge color="danger">Kitiltva</Badge>
-                        )}
+                        {userData.ban && <Badge color="danger">Kitiltva</Badge>}
                       </h6>
                       {userData.groups && (
                         <h6>
-                          {userData.groups
-                            .filter((x) => x !== 'Banned')
-                            .map((group) => {
-                              return (
-                                <Badge color="rose" key={group}>
-                                  {group}
-                                </Badge>
-                              );
-                            })}
+                          {userData.groups.map((group) => {
+                            return (
+                              <Badge color="rose" key={group}>
+                                {group}
+                              </Badge>
+                            );
+                          })}
                         </h6>
                       )}
                       {userData.social_accounts.map((account) => {
