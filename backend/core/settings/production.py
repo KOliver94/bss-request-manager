@@ -56,7 +56,9 @@ AUTH_LDAP_USER_ATTR_MAP = {
 
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
     "is_staff": config("LDAP_STAFF_GROUP"),
-    "is_superuser": config("LDAP_ADMIN_GROUP"),
+    "is_superuser": config(
+        "LDAP_ADMIN_GROUP", cast=lambda v: [s.strip() for s in v.split(";")]
+    ),
 }
 
 # This is the default, but I like to be explicit.
