@@ -3,6 +3,7 @@ import sentry_sdk
 from core.settings.common import *
 from django_auth_ldap.config import GroupOfNamesType, LDAPSearch
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 INSTALLED_APPS += [
     "social_django",
@@ -218,7 +219,7 @@ GOOGLE_CALENDAR_ID = config("GOOGLE_CALENDAR_ID", default=None)
 if not DEBUG:
     sentry_sdk.init(
         dsn=config("SENTRY_URL"),
-        integrations=[DjangoIntegration()],
+        integrations=[DjangoIntegration(), RedisIntegration()],
         # If you wish to associate users to errors (assuming you are using
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True,
