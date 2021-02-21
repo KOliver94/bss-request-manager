@@ -58,7 +58,7 @@ import {
 } from 'api/userApi';
 import { isAdmin, isPrivileged } from 'api/loginApi';
 import handleError from 'helpers/errorHandler';
-import { userRoles, avatarProviders } from 'helpers/enumConstants';
+import { userRoles, avatarProviders, groups } from 'helpers/enumConstants';
 import {
   getOauthUrlAuthSch,
   getOauthUrlFacebook,
@@ -281,7 +281,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                           {userData.groups.map((group) => {
                             return (
                               <Badge color="rose" key={group}>
-                                {group}
+                                {groups(group)}
                               </Badge>
                             );
                           })}
