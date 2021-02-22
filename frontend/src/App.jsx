@@ -6,6 +6,7 @@ import { checkRefreshTokenValid } from './api/loginApi';
 
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 import PrivilegedRoute from './components/PrivilegedRoute';
+import ScrollToTop from './components/ScrollToTop';
 
 import ErrorPage from './views/ErrorPage/ErrorPage';
 import LandingPage from './views/LandingPage/LandingPage';
@@ -26,6 +27,7 @@ function App() {
   );
   return (
     <Router>
+      <ScrollToTop />
       <Sentry.ErrorBoundary
         fallback={() => <ErrorPage type="internal" />}
         showDialog
