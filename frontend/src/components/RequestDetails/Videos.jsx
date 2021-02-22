@@ -196,7 +196,12 @@ export default function Videos({
     if (values.editor !== undefined) {
       values.editor_id = values.editor ? values.editor.id : null;
     }
-    if (values.additional_data && values.additional_data.length) {
+    if (
+      values.additional_data &&
+      values.additional_data.length &&
+      typeof values.additional_data.length.getHours === 'function' &&
+      !Number.isNaN(values.additional_data.length.getHours())
+    ) {
       values.additional_data.length =
         values.additional_data.length.getHours() * 60 * 60 +
         values.additional_data.length.getMinutes() * 60 +
