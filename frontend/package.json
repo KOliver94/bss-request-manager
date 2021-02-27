@@ -29,7 +29,7 @@
     "react-swipeable-views": "^0.13.9",
     "workbox-background-sync": "^6.1.1",
     "workbox-broadcast-update": "^6.1.1",
-    "workbox-cacheable-response": "^6.1.0",
+    "workbox-cacheable-response": "^6.1.1",
     "workbox-core": "^6.1.1",
     "workbox-expiration": "^6.1.1",
     "workbox-google-analytics": "^6.1.0",
