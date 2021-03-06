@@ -3,11 +3,11 @@ env:
   es6: true
 extends:
   - airbnb
-  - 'prettier/react'
-  - 'eslint:recommended'
-  - 'plugin:react/recommended'
-  - 'plugin:react-hooks/recommended'
-  - 'plugin:prettier/recommended'
+  - prettier
+  - eslint:recommended
+  - plugin:react/recommended
+  - plugin:react-hooks/recommended
+  - plugin:prettier/recommended
 settings:
   import/resolver:
     node:
@@ -30,5 +30,5 @@ rules:
     'prettier/prettier': ['error', { 'endOfLine': 'auto' }],
     'react/forbid-prop-types': 0,
     'react/jsx-uses-react': 'off',
-    'react/react-in-jsx-scope': 'off'
+    'react/react-in-jsx-scope': 'off',
   }
