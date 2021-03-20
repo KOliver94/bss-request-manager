@@ -29,7 +29,7 @@ google-auth-httplib2 = "==0.1.0"
 google-auth-oauthlib = "==0.4.3"
 gunicorn = "==20.0.4"
 jsonschema = {extras = ["format"],version = "==3.2.0"}
-libgravatar = "==0.2.4"
+libgravatar = "==0.2.5"
 psycopg2-binary = "==2.8.6"
 python-decouple = "==3.4"
 python-ldap = ">=3.1"
