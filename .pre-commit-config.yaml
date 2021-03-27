@@ -5,7 +5,7 @@ repos:
     -   id: detect-private-key
     -   id: check-merge-conflict
 -   repo: https://github.com/PyCQA/isort
-    rev: 5.7.0
+    rev: 5.8.0
     hooks:
     - id: isort
 -   repo: https://github.com/psf/black
