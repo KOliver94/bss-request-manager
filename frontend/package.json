@@ -11,7 +11,7 @@
     "@sentry/react": "^6.2.5",
     "axios": "^0.21.1",
     "classnames": "^2.3.1",
-    "date-fns": "^2.19.0",
+    "date-fns": "^2.20.1",
     "formik": "^2.2.6",
     "formik-material-ui": "^3.0.1",
     "formik-material-ui-lab": "0.0.8",
