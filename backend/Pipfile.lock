@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "730234e61f6b52e0885f72e511358e3120a18debb7c9d9a97f3bf345d173ac25"
+            "sha256": "9f89de56f93e26aa6b514e72dabf0670d01c19e3573eb49cc6d63fc561346ea1"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -452,11 +452,11 @@
         },
         "libgravatar": {
             "hashes": [
-                "sha256:4e479cc024ab051eb7036753c17bd6c1329d4eca089acda35b9a89ef186d5183",
-                "sha256:b46cb34946df41fffecdaf0f9e5b32a8e6a1b87cd104d58f0af324f2ba5ae937"
+                "sha256:564df8ed1bb8df378a2db0d05e44033f4671902ab34ebfe108105fa8fdbc8392",
+                "sha256:b86a66f37ef5ed37953942bf4d4c9006acc4184aacc746dcc6e8d65957fa7f46"
             ],
             "index": "pypi",
-            "version": "==0.2.5"
+            "version": "==1.0.0"
         },
         "markupsafe": {
             "hashes": [
