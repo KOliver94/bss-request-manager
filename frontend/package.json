@@ -38,7 +38,7 @@
     "workbox-range-requests": "^6.1.2",
     "workbox-routing": "^6.1.2",
     "workbox-strategies": "^6.1.2",
-    "workbox-streams": "^6.1.2",
+    "workbox-streams": "^6.1.5",
     "yup": "^0.32.9",
     "yup-phone": "^1.2.19"
   },
