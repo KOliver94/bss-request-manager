@@ -19,7 +19,7 @@ django-cacheops = "==5.1"
 django-celery-results = "==2.0.1"
 django-cors-headers = "==3.7.0"
 django-filter = "==2.4.0"
-django-health-check = "==3.16.3"
+django-health-check = "==3.16.4"
 django-phonenumber-field = {extras = ["phonenumbers"],version = "==5.1.0"}
 django-simple-history = "==3.0.0"
 drf-recaptcha = "==2.0.4"
