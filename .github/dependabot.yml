@@ -6,7 +6,6 @@ updates:
     interval: weekly
     day: saturday
     time: "04:00"
-  open-pull-requests-limit: 10
   ignore:
   - dependency-name: node
     versions:
@@ -21,7 +20,6 @@ updates:
     interval: weekly
     day: saturday
     time: "04:00"
-  open-pull-requests-limit: 10
   ignore:
   - dependency-name: "@date-io/date-fns"
     versions:
@@ -29,27 +27,6 @@ updates:
   - dependency-name: node-sass
     versions:
     - "> 4.14.1"
-  - dependency-name: workbox-expiration
-    versions:
-    - 6.1.5
-  - dependency-name: workbox-streams
-    versions:
-    - 6.1.5
-  - dependency-name: workbox-cacheable-response
-    versions:
-    - 6.1.5
-  - dependency-name: workbox-google-analytics
-    versions:
-    - 6.1.5
-  - dependency-name: workbox-range-requests
-    versions:
-    - 6.1.5
-  - dependency-name: workbox-routing
-    versions:
-    - 6.1.5
-  - dependency-name: workbox-background-sync
-    versions:
-    - 6.1.5
   rebase-strategy: disabled
 - package-ecosystem: pip
   directory: "/backend"
@@ -57,12 +34,8 @@ updates:
     interval: weekly
     day: saturday
     time: "04:00"
-  open-pull-requests-limit: 10
   ignore:
   - dependency-name: django
     versions:
     - ">= 3.2.a, < 3.3"
-  - dependency-name: djangorestframework
-    versions:
-    - 3.12.1
   rebase-strategy: disabled
