@@ -15,7 +15,7 @@ def add_custom_claims(token, user):
 
 
 class ExtendedTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """ Extended JWT Token serializer with user permissions and groups """
+    """Extended JWT Token serializer with user permissions and groups"""
 
     @classmethod
     def get_token(cls, user):
@@ -24,7 +24,7 @@ class ExtendedTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class ExtendedSocialJWTPairOnlyAuthSerializer(JWTPairSerializer):  # pragma: no cover
-    """ Extended JWT Token serializer with user permissions and groups (Social) """
+    """Extended JWT Token serializer with user permissions and groups (Social)"""
 
     def get_token(self, user):
         if not user.is_active:

@@ -13,7 +13,7 @@ from rest_social_auth.views import SocialJWTPairOnlyAuthView
 
 
 class ExtendedTokenObtainPairView(TokenObtainPairView):
-    """ View for extended JWT serializer """
+    """View for extended JWT serializer"""
 
     permission_classes = [IsNotAuthenticated]
     serializer_class = ExtendedTokenObtainPairSerializer
@@ -22,7 +22,7 @@ class ExtendedTokenObtainPairView(TokenObtainPairView):
 
 
 class ExtendedSocialJWTPairOnlyAuthView(SocialJWTPairOnlyAuthView):
-    """ View for extended JWT serializer (Social) """
+    """View for extended JWT serializer (Social)"""
 
     permission_classes = [IsNotAuthenticated]
     serializer_class = ExtendedSocialJWTPairOnlyAuthSerializer
