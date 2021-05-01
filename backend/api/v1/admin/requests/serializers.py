@@ -52,7 +52,7 @@ def get_member_from_id(validated_data):
 
 
 def check_and_remove_unauthorized_additional_data(additional_data, user, original_data):
-    """ Remove keys and values which are used by other functions and should be changed only by authorized users """
+    """Remove keys and values which are used by other functions and should be changed only by authorized users"""
     if "requester" in additional_data:
         additional_data.pop("requester")
     if (
@@ -99,7 +99,7 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
 
 
 def update_additional_data(orig_dict, new_dict):
-    """ Update existing additional data. Only replaces/extends changed keys. Takes care of nested dictionaries. """
+    """Update existing additional data. Only replaces/extends changed keys. Takes care of nested dictionaries."""
     for key, value in new_dict.items():
         if isinstance(value, abc.Mapping):
             orig_dict[key] = update_additional_data(orig_dict.get(key, {}), value)
@@ -127,7 +127,7 @@ def handle_additional_data(validated_data, user, original_data=None):
 
 
 class FilteredListSerializer(serializers.ListSerializer):
-    """ For VideoAdminSerializer return only own rating """
+    """For VideoAdminSerializer return only own rating"""
 
     def to_representation(self, data):
         if isinstance(self.parent, VideoAdminSerializer):
