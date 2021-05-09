@@ -57,8 +57,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "phonenumber_field",
     "simple_history",
-    "common.apps.CommonConfig",
-    "video_requests.apps.VideoRequestsConfig",
+    "common",
+    "video_requests",
 ]
 
 MIDDLEWARE = [
