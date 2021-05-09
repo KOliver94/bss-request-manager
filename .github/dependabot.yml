@@ -10,9 +10,6 @@ updates:
   - dependency-name: node
     versions:
     - ">= 15.pre.alpine.a, < 16"
-  - dependency-name: python
-    versions:
-    - ">= 3.9.a, < 3.10"
   rebase-strategy: disabled
 - package-ecosystem: npm
   directory: "/frontend"
