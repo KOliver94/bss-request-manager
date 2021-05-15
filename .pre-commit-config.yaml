@@ -9,12 +9,12 @@ repos:
     hooks:
     - id: isort
 -   repo: https://github.com/psf/black
-    rev: 21.5b0
+    rev: 21.5b1
     hooks:
     - id: black
       language_version: python3.9
 -   repo: https://gitlab.com/pycqa/flake8
-    rev: 3.9.1
+    rev: 3.9.2
     hooks:
     - id: flake8
       args: [--config=./backend/.flake8]
@@ -24,7 +24,7 @@ repos:
     - id: bandit
       exclude: ^backend/tests/
 -   repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v7.25.0
+    rev: v7.26.0
     hooks:
     - id: eslint
       types: [file]
