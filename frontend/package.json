@@ -19,7 +19,7 @@
     "jwt-decode": "^3.1.2",
     "material-ui-phone-number": "^2.2.6",
     "node-sass": "^4.14.1",
-    "notistack": "^1.0.7",
+    "notistack": "^1.0.9",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
