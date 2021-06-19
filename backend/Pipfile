@@ -24,7 +24,7 @@ google-auth-oauthlib = "==0.4.4"
 gunicorn = "==20.1.0"
 jsonschema = {extras = ["format"],version = "==3.2.0"}
 libgravatar = "==1.0.0"
-psycopg2-binary = "==2.8.6"
+psycopg2-binary = "==2.9.1"
 python-decouple = "==3.4"
 python-ldap = ">=3.1"
 rest-social-auth = "==6.0.1"
