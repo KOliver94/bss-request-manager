@@ -9,7 +9,7 @@ repos:
     hooks:
     - id: isort
 -   repo: https://github.com/psf/black
-    rev: 21.5b2
+    rev: 21.6b0
     hooks:
     - id: black
       language_version: python3.9
@@ -24,7 +24,7 @@ repos:
     - id: bandit
       exclude: ^backend/tests/
 -   repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v7.27.0
+    rev: v7.28.0
     hooks:
     - id: eslint
       types: [file]
