@@ -5,7 +5,7 @@ repos:
     -   id: detect-private-key
     -   id: check-merge-conflict
 -   repo: https://github.com/PyCQA/isort
-    rev: 5.8.0
+    rev: 5.9.1
     hooks:
     - id: isort
 -   repo: https://github.com/psf/black
@@ -24,7 +24,7 @@ repos:
     - id: bandit
       exclude: ^backend/tests/
 -   repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v7.28.0
+    rev: v7.29.0
     hooks:
     - id: eslint
       types: [file]
