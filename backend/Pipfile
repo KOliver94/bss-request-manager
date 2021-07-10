@@ -5,7 +5,7 @@ verify_ssl = true
 
 [packages]
 celery = {extras = ["redis"],version = "==5.1.2"}
-django = "==3.1.12"
+django = "==3.1.13"
 djangorestframework = "==3.12.4"
 djangorestframework_simplejwt = "==4.7.1"
 django-auth-ldap = "==2.4.0"
