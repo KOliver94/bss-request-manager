@@ -20,7 +20,7 @@ drf-recaptcha = "==2.0.4"
 drf-yasg = "==1.20.0"
 google-api-python-client = "==2.19.1"
 google-auth-httplib2 = "==0.1.0"
-google-auth-oauthlib = "==0.4.5"
+google-auth-oauthlib = "==0.4.6"
 gunicorn = "==20.1.0"
 jsonschema = {extras = ["format"],version = "==3.2.0"}
 libgravatar = "==1.0.0"
