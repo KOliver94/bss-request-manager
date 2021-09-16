@@ -19,7 +19,7 @@ const paginationStyle = {
   },
   paginationLink: {
     ':first-of-type': {
-      marginleft: '0',
+      marginLeft: '0',
     },
     letterSpacing: 'unset',
     border: '0',

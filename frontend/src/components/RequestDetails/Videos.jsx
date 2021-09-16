@@ -419,7 +419,7 @@ export default function Videos({
     additional_data: Yup.object().shape({
       aired: Yup.array().of(
         Yup.string().matches(
-          /(([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])))/,
+          /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/,
           'Kérlek a dátumot ÉÉÉÉ-HH-NN formában add meg!'
         )
       ),

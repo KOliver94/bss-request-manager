@@ -55,15 +55,15 @@ export async function createCrewAdmin(requestId, crewData) {
   return axiosInstance.post(`/admin/requests/${requestId}/crew`, crewData);
 }
 
-export async function updateCrewAdmin(requestId, crewtId, crewData) {
+export async function updateCrewAdmin(requestId, crewId, crewData) {
   return axiosInstance.patch(
-    `/admin/requests/${requestId}/crew/${crewtId}`,
+    `/admin/requests/${requestId}/crew/${crewId}`,
     crewData
   );
 }
 
-export async function deleteCrewAdmin(requestId, crewtId) {
-  return axiosInstance.delete(`/admin/requests/${requestId}/crew/${crewtId}`);
+export async function deleteCrewAdmin(requestId, crewId) {
+  return axiosInstance.delete(`/admin/requests/${requestId}/crew/${crewId}`);
 }
 
 /*

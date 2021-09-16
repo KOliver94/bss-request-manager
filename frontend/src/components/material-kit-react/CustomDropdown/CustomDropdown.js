@@ -69,7 +69,7 @@ export default function CustomDropdown(props) {
     [classes.noLiPadding]: noLiPadding,
     [classes.dropdownItemRTL]: rtlActive,
   });
-  let icon = null;
+  let icon;
   switch (typeof buttonIcon) {
     case 'object':
       if (buttonIcon.type === 'Avatar') {
@@ -200,6 +200,6 @@ CustomDropdown.propTypes = {
   caret: PropTypes.bool,
   left: PropTypes.bool,
   noLiPadding: PropTypes.bool,
-  // function that retuns the selected item
+  // function that returns the selected item
   onClick: PropTypes.func,
 };

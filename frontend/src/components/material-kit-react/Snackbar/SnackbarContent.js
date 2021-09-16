@@ -17,7 +17,7 @@ const useStyles = makeStyles(styles);
 export default function SnackbarContent(props) {
   const { message, color, close, icon } = props;
   const classes = useStyles();
-  var action = [];
+  let action = [];
   const closeAlert = () => {
     setAlert(null);
   };
@@ -34,7 +34,7 @@ export default function SnackbarContent(props) {
       </IconButton>,
     ];
   }
-  let snackIcon = null;
+  let snackIcon;
   switch (typeof icon) {
     case 'object':
       snackIcon = <props.icon className={classes.icon} />;

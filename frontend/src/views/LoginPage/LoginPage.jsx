@@ -37,8 +37,8 @@ import background from 'assets/img/bg7.jpg';
 const useStyles = makeStyles(styles);
 
 export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
-  const [cardAnimaton, setCardAnimation] = useState('cardHidden');
-  const [loginDetails, setloginDetails] = useState({});
+  const [cardAnimation, setCardAnimation] = useState('cardHidden');
+  const [loginDetails, setLoginDetails] = useState({});
   const [loading, setLoading] = useState(false);
 
   const classes = useStyles();
@@ -95,7 +95,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setloginDetails((prevLoginDetails) => ({
+    setLoginDetails((prevLoginDetails) => ({
       ...prevLoginDetails,
       [name]: value,
     }));
@@ -148,7 +148,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
         <div className={classes.container}>
           <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={4}>
-              <Card className={classes[cardAnimaton]}>
+              <Card className={classes[cardAnimation]}>
                 <form className={classes.form} onSubmit={handleSubmit}>
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Bejelentkezés felkérőknek</h4>
