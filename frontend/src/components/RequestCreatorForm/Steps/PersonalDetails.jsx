@@ -63,7 +63,7 @@ const PersonalDetails = ({
     >
       {({ errors, touched }) => (
         <Form>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem>
               {isAuthenticated ? (
                 <Alert
@@ -167,7 +167,7 @@ const PersonalDetails = ({
               />
             </GridItem>
           </GridContainer>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={4}>
               <Button type="submit" color="primary" className={classes.button}>
                 Következő

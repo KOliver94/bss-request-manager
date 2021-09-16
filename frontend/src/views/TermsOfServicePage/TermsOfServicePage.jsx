@@ -44,7 +44,7 @@ export default function TermsOfServicePage({
       <Parallax small filter image={background} />
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classNames(classes.container, classes.section)}>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6} className={classes.text}>
               <h2 className={classes.title}>Terms of Service</h2>
               <h3>1. Terms</h3>

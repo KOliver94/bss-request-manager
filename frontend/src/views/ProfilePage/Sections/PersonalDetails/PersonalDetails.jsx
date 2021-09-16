@@ -21,7 +21,7 @@ export default function PersonalDetails({ errors, touched, disabled, isUser }) {
   const isMobileView = !useMediaQuery(theme.breakpoints.up('md'));
 
   return (
-    <GridContainer justify="center">
+    <GridContainer justifyContent="center">
       <GridItem>
         {!isUser && (
           <Alert

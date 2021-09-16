@@ -15,7 +15,7 @@ export default function Postscript() {
   const classes = useStyles();
   return (
     <div className={classes.section}>
-      <GridContainer justify="center">
+      <GridContainer justifyContent="center">
         <GridItem xs={12} sm={12} md={8}>
           <h5 className={classes.description}>
             Az oldal használatával elfogadod a{' '}

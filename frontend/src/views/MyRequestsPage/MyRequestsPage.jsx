@@ -117,7 +117,7 @@ export default function MyRequestsPage({
       />
       <Parallax small filter image={background}>
         <div className={classes.container}>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6} className={classes.textCenter}>
               <h1 className={classes.title}>
                 {isPrivileged ? 'Felkérések' : 'Felkéréseim'}
@@ -129,7 +129,7 @@ export default function MyRequestsPage({
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classNames(classes.container, classes.section)}>
           {loading ? (
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <CircularProgress
                 className={classes.circularProgress}
                 size={60}
@@ -139,7 +139,7 @@ export default function MyRequestsPage({
             <>
               {data.results.length > 0 ? (
                 <>
-                  <GridContainer justify="center">
+                  <GridContainer justifyContent="center">
                     <TableContainer component={Paper} className={classes.table}>
                       <Table aria-label="simple table">
                         <TableHead>
@@ -210,7 +210,7 @@ export default function MyRequestsPage({
                       </Table>
                     </TableContainer>
                   </GridContainer>
-                  <GridContainer justify="center">
+                  <GridContainer justifyContent="center">
                     <Pagination
                       count={data.total_pages}
                       onChange={handlePageChange}
@@ -219,7 +219,7 @@ export default function MyRequestsPage({
                   </GridContainer>
                 </>
               ) : (
-                <GridContainer justify="center">
+                <GridContainer justifyContent="center">
                   <Typography
                     variant="h5"
                     className={classes.notFound}

@@ -29,7 +29,7 @@ const OtherInformation = ({
     >
       {() => (
         <Form>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem>
               <Field
                 name="comment_text"
@@ -44,7 +44,7 @@ const OtherInformation = ({
               />
             </GridItem>
           </GridContainer>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem>
               <Button onClick={handleBack} className={classes.button}>
                 Vissza

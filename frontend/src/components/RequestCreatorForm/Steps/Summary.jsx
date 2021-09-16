@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
 const Summary = ({ formData, setActiveStep, isAuthenticated }) => {
   const classes = useStyles();
   return (
-    <GridContainer justify="center">
+    <GridContainer justifyContent="center">
       <GridItem>
         <Card className={classes.first} variant="outlined">
           <CardContent className={classes.content}>

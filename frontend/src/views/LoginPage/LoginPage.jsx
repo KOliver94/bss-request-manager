@@ -146,7 +146,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
         }}
       >
         <div className={classes.container}>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={4}>
               <Card className={classes[cardAnimaton]}>
                 <form className={classes.form} onSubmit={handleSubmit}>

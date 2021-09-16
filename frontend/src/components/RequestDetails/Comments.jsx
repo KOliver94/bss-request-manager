@@ -164,7 +164,7 @@ export default function Comments({
           container
           spacing={1}
           direction="row"
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="center"
         >
           <Grid item>

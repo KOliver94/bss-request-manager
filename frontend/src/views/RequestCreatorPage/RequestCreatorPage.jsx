@@ -185,7 +185,7 @@ export default function RequestCreatorPage({
       />
       <Parallax small filter image={background}>
         <div className={classes.container}>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6}>
               <h1 className={classes.title}>Új felkérés beküldése</h1>
             </GridItem>
@@ -194,7 +194,7 @@ export default function RequestCreatorPage({
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classNames(classes.container, classes.section)}>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6}>
               <Stepper
                 activeStep={activeStep}
@@ -220,7 +220,7 @@ export default function RequestCreatorPage({
             </GridItem>
           </GridContainer>
           {loading && activeStep === 0 ? (
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <CircularProgress
                 className={classes.circularProgress}
                 size={60}
@@ -228,7 +228,7 @@ export default function RequestCreatorPage({
             </GridContainer>
           ) : (
             <>
-              <GridContainer justify="center">
+              <GridContainer justifyContent="center">
                 <GridItem xs={12} sm={12} md={6} className={classes.contentBox}>
                   <RequestCreatorForm
                     step={activeStep}
@@ -241,7 +241,7 @@ export default function RequestCreatorPage({
                   />
                 </GridItem>
               </GridContainer>
-              <GridContainer justify="center">
+              <GridContainer justifyContent="center">
                 <GridItem xs={12} sm={12} className={classes.textCenter}>
                   {activeStep < steps.length ? (
                     <>

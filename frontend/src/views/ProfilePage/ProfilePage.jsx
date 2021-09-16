@@ -234,7 +234,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       <Parallax small filter image={background} />
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classNames(classes.container, classes.section)}>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6}>
               <div className={classes.profile}>
                 <div>
@@ -342,7 +342,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
               </div>
             </GridItem>
           </GridContainer>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             {loading ? (
               <CircularProgress
                 className={classes.circularProgress}
@@ -360,7 +360,10 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
               >
                 {({ submitForm, resetForm, isSubmitting, errors, touched }) => (
                   <Form>
-                    <GridContainer justify="center" className={classes.field}>
+                    <GridContainer
+                      justifyContent="center"
+                      className={classes.field}
+                    >
                       {!isMobileView && (
                         <PersonalDetailsNormal
                           errors={errors}
@@ -419,7 +422,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                               </Alert>
                             ) : (
                               <GridContainer
-                                justify="center"
+                                justifyContent="center"
                                 alignItems="center"
                               >
                                 {Object.entries(userData.profile.avatar)
@@ -611,7 +614,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                               </AccordionSummary>
                               <AccordionDetails>
                                 <GridContainer
-                                  justify="center"
+                                  justifyContent="center"
                                   alignItems="center"
                                 >
                                   <MuiPickersUtilsProvider
@@ -661,7 +664,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                       }
                                     >
                                       <GridContainer
-                                        justify="space-between"
+                                        justifyContent="space-between"
                                         alignItems="center"
                                       >
                                         <GridItem xs={6}>
@@ -713,7 +716,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                       </GridItem>
                     </GridContainer>
                     {userData.role === 'user' && (!id || isAdmin()) && (
-                      <GridContainer justify="center">
+                      <GridContainer justifyContent="center">
                         <GridItem className={classes.textCenter}>
                           <Button
                             color="danger"

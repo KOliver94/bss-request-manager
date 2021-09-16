@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import {
   primaryColor,
   roseColor as secondaryColor,
@@ -9,7 +9,7 @@ import {
   grayColor,
 } from 'assets/jss/material-kit-react';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: primaryColor,

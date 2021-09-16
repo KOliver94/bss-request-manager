@@ -70,7 +70,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
       >
         {({ errors, touched }) => (
           <Form>
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <GridItem>
                 <Field
                   name="title"
@@ -178,7 +178,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
                 />
               </GridItem>
             </GridContainer>
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <GridItem>
                 <Button onClick={handleBack} className={classes.button}>
                   Vissza

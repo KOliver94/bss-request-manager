@@ -247,7 +247,7 @@ export default function BasicInformation({
           container
           spacing={1}
           direction="row"
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="center"
         >
           <Grid item>

@@ -151,7 +151,7 @@ export default function RequestDetailPage({
       />
       <Parallax small filter image={background}>
         <div className={classes.container}>
-          <GridContainer justify="center">
+          <GridContainer justifyContent="center">
             <GridItem className={classes.textCenter}>
               <h1 className={classes.title}>
                 {loading ? 'Betöltés...' : data.title}
@@ -172,7 +172,7 @@ export default function RequestDetailPage({
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classNames(classes.container, classes.section)}>
           {loading ? (
-            <GridContainer justify="center">
+            <GridContainer justifyContent="center">
               <CircularProgress
                 className={classes.circularProgress}
                 size={60}
@@ -180,7 +180,10 @@ export default function RequestDetailPage({
             </GridContainer>
           ) : (
             <>
-              <GridContainer justify="center" className={classes.content}>
+              <GridContainer
+                justifyContent="center"
+                className={classes.content}
+              >
                 <GridItem xs={12} sm={6}>
                   <BasicInformation
                     requestId={id}

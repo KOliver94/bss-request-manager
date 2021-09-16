@@ -67,7 +67,7 @@ export default function ContactSection() {
 
   return (
     <div className={classes.section}>
-      <GridContainer justify="center">
+      <GridContainer justifyContent="center">
         <GridItem cs={12} sm={12} md={8}>
           <h2 className={classes.title}>Egyéb kérdések esetén</h2>
           <h4 className={classes.description}>
