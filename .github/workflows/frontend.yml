@@ -39,10 +39,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
+          key: ${{ runner.OS }}-node${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}-v-${{ secrets.CACHE_VERSION }}
       - name: Install frontend dependencies
         run: npm install
       - name: Run ESLint config and code check
