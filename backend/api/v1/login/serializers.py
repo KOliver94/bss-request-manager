@@ -10,7 +10,7 @@ def add_custom_claims(token, user):
     token["avatar"] = user.userprofile.avatar_url
     token["groups"] = list(user.groups.values_list("name", flat=True))
     token["name"] = user.get_full_name_eastern_order()
-    token["role"] = user.get_role()
+    token["role"] = user.role
     return token
 
 

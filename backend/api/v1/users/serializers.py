@@ -147,7 +147,7 @@ class UserDetailSerializer(ModelSerializer):
 
     @staticmethod
     def get_role(user):
-        return user.get_role()
+        return user.role
 
 
 class ConnectOAuth2ProfileInputSerializer(OAuth2InputSerializer):

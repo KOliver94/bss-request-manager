@@ -1,5 +1,6 @@
 from time import sleep
 
+from django.contrib.auth.models import Group
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -211,7 +212,8 @@ class LoginAPITestCase(APITestCase):
         self.assertEqual(token.payload["role"], "staff")
 
         # Set user admin
-        u.is_superuser = True
+        grp = Group.objects.get_or_create(name="Administrators")[0]
+        u.groups.add(grp)
         u.save()
 
         # Get new token with new role

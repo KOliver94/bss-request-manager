@@ -3,8 +3,8 @@ from rest_framework.permissions import BasePermission, IsAuthenticated
 from video_requests.models import Comment, Rating, Request, Video
 
 
-def is_staff(user):
-    return bool(user.is_staff or user.is_superuser)
+def is_admin(user):
+    return bool(not user.is_anonymous and user.is_admin)
 
 
 class IsNotAuthenticated(BasePermission):
@@ -22,7 +22,7 @@ class IsStaffUser(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return bool(request.user and is_staff(request.user))
+        return bool(request.user and request.user.is_staff)
 
 
 class IsAdminUser(BasePermission):
@@ -31,7 +31,7 @@ class IsAdminUser(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_superuser)
+        return bool(request.user and is_admin(request.user))
 
 
 class IsSelf(IsAuthenticated):
@@ -84,13 +84,13 @@ class IsSelfOrStaff(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Request):
-            return bool(obj.requester == request.user or is_staff(request.user))
+            return bool(obj.requester == request.user or request.user.is_staff)
         elif isinstance(obj, Video):
-            return bool(obj.request.requester == request.user or is_staff(request.user))
+            return bool(obj.request.requester == request.user or request.user.is_staff)
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
-            return bool(obj.author == request.user or is_staff(request.user))
+            return bool(obj.author == request.user or request.user.is_staff)
         elif isinstance(obj, User):
-            return bool(obj == request.user or is_staff(request.user))
+            return bool(obj == request.user or request.user.is_staff)
         else:
             return False
 
@@ -107,15 +107,13 @@ class IsSelfOrAdmin(IsSelfOrStaff):
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Request):
-            return bool(obj.requester == request.user or request.user.is_superuser)
+            return bool(obj.requester == request.user or is_admin(request.user))
         elif isinstance(obj, Video):
-            return bool(
-                obj.request.requester == request.user or request.user.is_superuser
-            )
+            return bool(obj.request.requester == request.user or is_admin(request.user))
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
-            return bool(obj.author == request.user or request.user.is_superuser)
+            return bool(obj.author == request.user or is_admin(request.user))
         elif isinstance(obj, User):
-            return bool(obj == request.user or request.user.is_superuser)
+            return bool(obj == request.user or is_admin(request.user))
         else:
             return False
 

@@ -129,6 +129,7 @@ def check_if_admin_or_staff_user_is_still_privileged(
         if ldap_user is None:
             user.is_superuser = False
             user.is_staff = False
+            user.groups.clear()
             user.save()
 
 

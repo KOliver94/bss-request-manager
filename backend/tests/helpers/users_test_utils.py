@@ -41,7 +41,8 @@ def create_user(
 
     # Set permissions
     user.is_staff = is_staff or is_admin
-    user.is_superuser = is_admin
+    if is_admin:
+        groups.append("Administrators")
 
     # Set user's profile
     user.userprofile.avatar = {

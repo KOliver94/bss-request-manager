@@ -17,6 +17,7 @@ from common.permissions import (
     IsStaffSelfOrAdmin,
     IsStaffUser,
 )
+from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.db import IntegrityError
 from django.utils.timezone import localdate
@@ -98,9 +99,22 @@ class UserListView(generics.ListAPIView):
         if staff is not None and admin is None:
             queryset = queryset.filter(is_staff=staff).cache()
         elif admin is not None and staff is None:
-            queryset = queryset.filter(is_superuser=admin).cache()
+            qs1 = queryset.filter(
+                groups__name=settings.ADMIN_GROUP, is_staff=True
+            ).cache()
+            qs2 = queryset.filter(is_superuser=admin).cache()
+            queryset = qs2.union(qs1) if admin else qs2.difference(qs1)
         elif staff is not None and admin is not None:
-            queryset = queryset.filter(is_staff=staff, is_superuser=admin).cache()
+            qs1 = queryset.filter(
+                groups__name=settings.ADMIN_GROUP, is_staff=True
+            ).cache()
+            qs2 = queryset.filter(is_staff=staff, is_superuser=admin).cache()
+            if staff and not admin:
+                queryset = qs2.difference(qs1)
+            elif staff and admin:
+                queryset = qs2.union(qs1)
+            else:
+                queryset = qs2
 
         return queryset
 

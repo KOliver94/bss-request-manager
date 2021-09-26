@@ -55,6 +55,7 @@ class Command(BaseCommand):
         ).exclude(username__in=users_found):
             user.is_superuser = False
             user.is_staff = False
+            user.groups.clear()
             user.save()  # Save modifications
             total_demoted += 1
             logging.warning(

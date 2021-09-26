@@ -10,8 +10,9 @@ from video_requests.models import Request
 ##############################
 #          Common            #
 ##############################
-def get_role(self):
-    if self.is_staff and self.is_superuser:
+@property
+def role(self):
+    if self.is_admin:
         return "admin"
     elif self.is_staff:
         return "staff"
@@ -24,8 +25,16 @@ def get_full_name_eastern_order(self):
     return full_name.strip()
 
 
-User.add_to_class("get_role", get_role)
+@property
+def is_admin(self):
+    return self.is_staff and (
+        self.groups.filter(name=settings.ADMIN_GROUP).exists() or self.is_superuser
+    )
+
+
+User.add_to_class("role", role)
 User.add_to_class("get_full_name_eastern_order", get_full_name_eastern_order)
+User.add_to_class("is_admin", is_admin)
 
 
 ##############################

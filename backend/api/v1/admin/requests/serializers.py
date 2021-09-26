@@ -60,7 +60,7 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
         and "email_sent_to_user" in additional_data["publishing"]
     ):
         additional_data["publishing"].pop("email_sent_to_user")
-    if not user.is_superuser:
+    if not user.is_admin:
         if "status_by_admin" in additional_data:
             additional_data.pop("status_by_admin")
         if "accepted" in additional_data:
