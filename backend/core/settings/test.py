@@ -12,9 +12,6 @@ PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 STATICFILES_DIRS.pop(0)
 WHITENOISE_ROOT = None
 
-# Set admin group
-ADMIN_GROUP = "Administrators"
-
 # Use short lifetime on access tokens
 SIMPLE_JWT.update({"ACCESS_TOKEN_LIFETIME": timedelta(seconds=10)})
 
