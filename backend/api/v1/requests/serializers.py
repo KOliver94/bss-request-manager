@@ -1,7 +1,7 @@
+from api.v1.requests.utilities import create_user
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event
 from django.conf import settings
-from django.contrib.auth.models import User
 from drf_recaptcha.fields import ReCaptchaV2Field
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
@@ -121,6 +121,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
     videos = VideoDefaultSerializer(many=True, read_only=True)
     comments = CommentDefaultSerializer(many=True, read_only=True)
     requester = UserSerializer(read_only=True)
+    requested_by = UserSerializer(read_only=True)
     responsible = UserSerializer(read_only=True)
     comment_text = CharField(write_only=True, required=False, allow_blank=True)
 
@@ -137,6 +138,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
             "status",
             "responsible",
             "requester",
+            "requested_by",
             "videos",
             "comments",
             "comment_text",
@@ -147,6 +149,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
             "status",
             "responsible",
             "requester",
+            "requested_by",
             "videos",
             "comments",
         )
@@ -159,6 +162,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
             else None
         )
         validated_data["requester"] = self.context["request"].user
+        validated_data["requested_by"] = self.context["request"].user
         request = super(RequestDefaultSerializer, self).create(validated_data)
         if comment_text:
             request.comments.add(create_comment(comment_text, request))
@@ -215,41 +219,13 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
             fields += ("recaptcha",)
             write_only_fields += ("recaptcha",)
 
-    @staticmethod
-    def create_user(validated_data):
-        user = User()
-        user.first_name = validated_data.pop("requester_first_name")
-        user.last_name = validated_data.pop("requester_last_name")
-        user.email = validated_data.pop("requester_email").lower()
-        user.username = user.email
-        user.set_unusable_password()
-        user.is_active = False
-        phone_number = validated_data.pop("requester_mobile")
-
-        if User.objects.filter(email__iexact=user.email).exists():
-            # If user with given e-mail address already exist set it as requester but save the provided data.
-            # The user's data will be not overwritten so useful to check phone number or anything else.
-            additional_data = {
-                "requester": {
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "phone_number": phone_number.as_e164,
-                }
-            }
-            return User.objects.get(email__iexact=user.email), additional_data
-        else:
-            user.save()
-            user.userprofile.phone_number = phone_number
-            user.save()
-            return user, None
-
     def create(self, validated_data):
         comment_text = (
             validated_data.pop("comment_text")
             if "comment_text" in validated_data
             else None
         )
-        validated_data["requester"], additional_data = self.create_user(validated_data)
+        validated_data["requester"], additional_data = create_user(validated_data)
         request = super(RequestAnonymousSerializer, self).create(validated_data)
         if additional_data:
             request.additional_data = additional_data

@@ -1,12 +1,14 @@
 from collections import abc
 
+from api.v1.requests.utilities import create_user
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event, update_calendar_event
 from django.contrib.auth.models import User
 from django.http import Http404
+from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import CharField, IntegerField
+from rest_framework.fields import CharField, EmailField, IntegerField
 from rest_framework.generics import get_object_or_404
 from video_requests.emails import email_crew_new_comment, email_user_new_comment
 from video_requests.models import Comment, CrewMember, Rating, Request, Video
@@ -49,6 +51,37 @@ def get_member_from_id(validated_data):
         validated_data["member"] = get_user_by_id(
             validated_data.pop("member_id"), "member"
         )
+
+
+def get_requester(validated_data, requested_by_user, instance=None):
+    requester_data = [
+        validated_data.get("requester_first_name"),
+        validated_data.get("requester_last_name"),
+        validated_data.get("requester_email"),
+        validated_data.get("requester_mobile"),
+    ]
+    if "requester_id" in validated_data:
+        validated_data["requester"] = get_user_by_id(
+            validated_data.pop("requester_id"), "requester"
+        )
+    elif all(requester_data):
+        validated_data["requester"], additional_data = create_user(validated_data)
+        if additional_data:
+            # handle_additional_data() is always called before this function,
+            # so if there is additional_data in validated_data we should update that.
+            # Otherwise check if it is an existing object and update the original additional_data
+            if validated_data.get("additional_data"):
+                validated_data["additional_data"] = update_additional_data(
+                    validated_data["additional_data"], additional_data
+                )
+            elif instance:
+                validated_data["additional_data"] = update_additional_data(
+                    instance.additional_data, additional_data
+                )
+            else:
+                validated_data["additional_data"] = additional_data
+    else:
+        validated_data["requester"] = requested_by_user
 
 
 def check_and_remove_unauthorized_additional_data(additional_data, user, original_data):
@@ -327,9 +360,15 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     videos = VideoAdminSerializer(many=True, read_only=True)
     comments = CommentAdminSerializer(many=True, read_only=True)
     requester = UserSerializer(read_only=True)
+    requester_id = IntegerField(write_only=True, required=False)
+    requested_by = UserSerializer(read_only=True)
     responsible = UserSerializer(read_only=True)
     responsible_id = IntegerField(write_only=True, required=False, allow_null=True)
     comment_text = CharField(write_only=True, required=False)
+    requester_first_name = CharField(write_only=True, required=False)
+    requester_last_name = CharField(write_only=True, required=False)
+    requester_email = EmailField(write_only=True, required=False)
+    requester_mobile = PhoneNumberField(write_only=True, required=False)
 
     class Meta:
         model = Request
@@ -345,12 +384,18 @@ class RequestAdminSerializer(serializers.ModelSerializer):
             "status",
             "responsible",
             "requester",
+            "requested_by",
             "additional_data",
             "crew",
             "videos",
             "comments",
             "responsible_id",
+            "requester_id",
             "comment_text",
+            "requester_first_name",
+            "requester_last_name",
+            "requester_email",
+            "requester_mobile",
         )
         read_only_fields = (
             "id",
@@ -358,13 +403,19 @@ class RequestAdminSerializer(serializers.ModelSerializer):
             "status",
             "responsible",
             "requester",
+            "requested_by",
             "crew",
             "videos",
             "comments",
         )
         write_only_fields = (
             "responsible_id",
+            "requester_id",
             "comment_text",
+            "requester_first_name",
+            "requester_last_name",
+            "requester_email",
+            "requester_mobile",
         )
 
     def create_comment(self, comment_text, request):
@@ -383,6 +434,8 @@ class RequestAdminSerializer(serializers.ModelSerializer):
             else None
         )
         handle_additional_data(validated_data, self.context["request"].user)
+        get_requester(validated_data, self.context["request"].user)
+        validated_data["requested_by"] = self.context["request"].user
         request = super(RequestAdminSerializer, self).create(validated_data)
         if comment_text:
             request.comments.add(self.create_comment(comment_text, request))
@@ -394,6 +447,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         get_responsible_from_id(validated_data)
         validated_data.pop("comment_text") if "comment_text" in validated_data else None
         handle_additional_data(validated_data, self.context["request"].user, instance)
+        get_requester(validated_data, instance.requester, instance)
         request = super(RequestAdminSerializer, self).update(instance, validated_data)
         update_request_status(request)
         update_calendar_event.delay(request.id)
@@ -401,4 +455,18 @@ class RequestAdminSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         data = validate_request_date_correlations(self.instance, data)
+        requester_data = [
+            data.get("requester_first_name"),
+            data.get("requester_last_name"),
+            data.get("requester_email"),
+            data.get("requester_mobile"),
+        ]
+        if any(requester_data) and data.get("requester_id"):
+            raise ValidationError(
+                "Either define the requester by its id or its details but not both."
+            )
+        if any(requester_data) and not all(requester_data):
+            raise ValidationError(
+                "All requester data fields must be present if one is present."
+            )
         return data

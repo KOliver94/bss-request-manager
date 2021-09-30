@@ -68,6 +68,13 @@ class Request(models.Model):
     requester = models.ForeignKey(
         User, related_name="requester_user", on_delete=models.SET(get_sentinel_user)
     )
+    requested_by = models.ForeignKey(
+        User,
+        related_name="requested_by_user",
+        on_delete=models.SET(get_sentinel_user),
+        blank=True,
+        null=True,
+    )
     additional_data = JSONField(
         encoder=DjangoJSONEncoder,
         validators=[validate_request_additional_data],

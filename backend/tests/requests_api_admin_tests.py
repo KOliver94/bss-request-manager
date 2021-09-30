@@ -1,5 +1,7 @@
+import itertools
 from datetime import timedelta
 
+from django.contrib.auth.models import User
 from django.utils.timezone import localtime
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -255,7 +257,7 @@ class RequestsAPIAdminTestCase(APITestCase):
         self.should_not_found("PATCH", BASE_URL + str(NOT_EXISTING_ID), data_patch)
         self.should_not_found("PUT", BASE_URL + str(NOT_EXISTING_ID), data_put)
 
-    def test_request_add_modify_remove_responsible(self):
+    def test_add_modify_remove_responsible(self):
         request = create_request(103, self.normal_user)
         self.authorize_user(self.admin_user)
 
@@ -288,12 +290,98 @@ class RequestsAPIAdminTestCase(APITestCase):
         self.assertIn("responsible", response.data)
         self.assertIsNone(response.data["responsible"])
 
+    def test_modify_requester(self):
+        request = create_request(104, self.admin_user)
+        self.authorize_user(self.admin_user)
+
+        response = self.client.get(f"{BASE_URL}{request.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data["requester"]["username"], self.admin_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}", {"requester_id": NOT_EXISTING_ID}
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["requester_id"], "Not found user with the provided ID."
+        )
+
+        response = self.client.patch(
+            f"{BASE_URL}{request.id}", {"requester_id": self.staff_user.id}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data["requester"]["username"], self.staff_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+
+        new_user_data = {
+            "requester_first_name": "Test",
+            "requester_last_name": "User",
+            "requester_email": "test.user@example.com",
+            "requester_mobile": "+36509999999",
+        }
+
+        self.assertEqual(
+            User.objects.filter(email=new_user_data["requester_email"]).exists(), False
+        )
+        response = self.client.patch(f"{BASE_URL}{request.id}", new_user_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            User.objects.filter(email=new_user_data["requester_email"]).exists(), True
+        )
+        self.assertEqual(
+            response.data["requester"]["username"], "test.user@example.com"
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+
+        existing_user_data = {
+            "requester_first_name": "Anonymous",
+            "requester_last_name": "Tester",
+            "requester_email": self.normal_user.email,
+            "requester_mobile": "+36701234567",
+        }
+
+        response = self.client.patch(f"{BASE_URL}{request.id}", existing_user_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data["requester"]["username"], self.normal_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+
+        # Check if data was saved to additional_data
+        self.assertEqual(
+            response.data["additional_data"]["requester"]["first_name"],
+            existing_user_data["requester_first_name"],
+        )
+        self.assertEqual(
+            response.data["additional_data"]["requester"]["last_name"],
+            existing_user_data["requester_last_name"],
+        )
+        self.assertEqual(
+            response.data["additional_data"]["requester"]["phone_number"],
+            existing_user_data["requester_mobile"],
+        )
+
     """
     POST /api/v1/admin/requests
     DELETE /api/v1/admin/requests/:id
     """
 
-    def create_request(self):
+    def create_request(self, extra_data=None):
+        if extra_data is None:
+            extra_data = {}
         data = {
             "title": "Test Request",
             "start_datetime": "2020-03-05T10:30:00+01:00",
@@ -301,7 +389,7 @@ class RequestsAPIAdminTestCase(APITestCase):
             "place": "Test place",
             "type": "Test type",
             "responsible_id": self.admin_user.id,
-        }
+        } | extra_data
         return self.client.post("/api/v1/admin/requests", data)
 
     def test_admin_can_create_and_delete_requests(self):
@@ -417,6 +505,107 @@ class RequestsAPIAdminTestCase(APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["deadline"], str(data["deadline"]))
+
+    def test_create_request_with_different_requester(self):
+        self.authorize_user(self.admin_user)
+
+        response = self.create_request({"requester_id": NOT_EXISTING_ID})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["requester_id"], "Not found user with the provided ID."
+        )
+
+        response = self.create_request({"requester_id": self.staff_user.id})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            response.data["requester"]["username"], self.staff_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+
+        new_user_data = {
+            "requester_first_name": "Test",
+            "requester_last_name": "User",
+            "requester_email": "test.user@example.com",
+            "requester_mobile": "+36509999999",
+        }
+
+        self.assertEqual(
+            User.objects.filter(email=new_user_data["requester_email"]).exists(), False
+        )
+        response = self.create_request(new_user_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            User.objects.filter(email=new_user_data["requester_email"]).exists(), True
+        )
+        self.assertEqual(
+            response.data["requester"]["username"], "test.user@example.com"
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+
+        existing_user_data = {
+            "requester_first_name": "Anonymous",
+            "requester_last_name": "Tester",
+            "requester_email": self.normal_user.email,
+            "requester_mobile": "+36701234567",
+        }
+
+        response = self.create_request(existing_user_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            response.data["requester"]["username"], self.normal_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+
+        # Check if data was saved to additional_data
+        self.assertEqual(
+            response.data["additional_data"]["requester"]["first_name"],
+            existing_user_data["requester_first_name"],
+        )
+        self.assertEqual(
+            response.data["additional_data"]["requester"]["last_name"],
+            existing_user_data["requester_last_name"],
+        )
+        self.assertEqual(
+            response.data["additional_data"]["requester"]["phone_number"],
+            existing_user_data["requester_mobile"],
+        )
+
+    def test_requester_validation(self):
+        self.authorize_user(self.admin_user)
+        url = "/api/v1/admin/requests"
+        user_data = [
+            {"requester_first_name": "Test"},
+            {"requester_last_name": "User"},
+            {"requester_email": "test.user@example.com"},
+            {"requester_mobile": "+36509999999"},
+        ]
+
+        for r in range(1, len(user_data) + 1):
+            for selected in list(itertools.combinations(user_data, r)):
+                data = self.get_test_data()
+                for item in selected:
+                    data |= item
+                if r == len(user_data):
+                    data |= {"requester_id": self.staff_user.id}
+                    response = self.client.post(url, data)
+                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                    self.assertEqual(
+                        response.data["non_field_errors"][0],
+                        "Either define the requester by its id or its details but not both.",
+                    )
+                else:
+                    response = self.client.post(url, data)
+                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                    self.assertEqual(
+                        response.data["non_field_errors"][0],
+                        "All requester data fields must be present if one is present.",
+                    )
 
     """
     --------------------------------------------------

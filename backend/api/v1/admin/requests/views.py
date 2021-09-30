@@ -74,9 +74,6 @@ class RequestAdminListCreateView(generics.ListCreateAPIView):
             return RequestAdminSerializer
         return RequestAdminListSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(requester=self.request.user)
-
 
 class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     """

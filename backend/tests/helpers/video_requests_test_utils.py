@@ -27,6 +27,7 @@ def create_request(
     request.place = "Test place"
     request.type = "Test type"
     request.requester = requester
+    request.requested_by = requester
     request.status = status
     if responsible:
         request.responsible = responsible

@@ -251,6 +251,9 @@ class RequestsAPIDefaultTestCase(APITestCase):
         self.assertEqual(
             response.data["requester"]["username"], self.admin_user.username
         )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
         self.check_request_created_and_remove(response.data["id"])
 
     def test_staff_can_create_requests(self):
@@ -260,6 +263,9 @@ class RequestsAPIDefaultTestCase(APITestCase):
         self.assertEqual(
             response.data["requester"]["username"], self.staff_user.username
         )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.staff_user.username
+        )
         self.check_request_created_and_remove(response.data["id"])
 
     def test_user_can_create_requests(self):
@@ -268,6 +274,9 @@ class RequestsAPIDefaultTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(
             response.data["requester"]["username"], self.normal_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.normal_user.username
         )
         self.check_request_created_and_remove(response.data["id"])
 
@@ -316,6 +325,8 @@ class RequestsAPIDefaultTestCase(APITestCase):
             response.data["comments"][0]["author"]["username"], "test.user@example.com"
         )
         self.assertEqual(response.data["comments"][0]["text"], "Additional information")
+        # Requested_by should be none because the request was sent in by anonymous
+        self.assertIsNone(Request.objects.get(id=response.data["id"]).requested_by)
 
     @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
     def test_anonymous_can_create_requests_and_get_connected_to_existing_user(self):
@@ -341,6 +352,9 @@ class RequestsAPIDefaultTestCase(APITestCase):
         self.assertEqual(
             response.data["requester"]["username"], self.normal_user.username
         )
+
+        # Requested_by should be none because the request was sent in by anonymous
+        self.assertIsNone(Request.objects.get(id=response.data["id"]).requested_by)
 
         # Check if data was saved to additional_data
         req = Request.objects.get(pk=response.data["id"])
