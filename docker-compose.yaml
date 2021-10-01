@@ -12,7 +12,7 @@ services:
         - FACEBOOK_CLIENT_ID=817759665400170
         - GOOGLE_CLIENT_ID=593937386712-8pu2vh1ukq17oidh9f4snkjf9oa88tvb.apps.googleusercontent.com
         - RECAPTCHA_SITE_KEY=6LfoyF4aAAAAAN1m2mr_A7inOhPD428_y8pYKKr7
-        - SENTRY_URL=https://edb4ef88f6134436bf8f2a9a139fe611@o354977.ingest.sentry.io/5197991
+        - SENTRY_URL=https://5d84e5aa35114e5bbe49ca9b8a013440@o354977.ingest.sentry.io/5989036
     image: bss-request-manager
     command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 core.wsgi
     volumes:
