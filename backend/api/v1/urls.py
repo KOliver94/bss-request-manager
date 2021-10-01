@@ -12,6 +12,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path("admin/", include("api.v1.admin.urls")),
+    path("external/", include("api.v1.external.urls")),
     path("login", ExtendedTokenObtainPairView.as_view(), name="login_obtain_jwt_pair"),
     path("login/refresh", TokenRefreshView.as_view(), name="login_refresh_jwt_token"),
     re_path(

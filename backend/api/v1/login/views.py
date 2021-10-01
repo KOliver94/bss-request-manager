@@ -3,9 +3,8 @@ from api.v1.login.serializers import (
     ExtendedTokenObtainPairSerializer,
     LogoutAndBlacklistRefreshTokenSerializer,
 )
-from common.permissions import IsNotAuthenticated
+from common.permissions import IsAuthenticated, IsNotAuthenticated
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework_simplejwt.views import TokenObtainPairView

@@ -12,21 +12,20 @@ from common.models import Ban
 from common.pagination import ExtendedPagination
 from common.permissions import (
     IsAdminUser,
+    IsAuthenticated,
     IsSelfOrAdmin,
     IsSelfOrStaff,
     IsStaffSelfOrAdmin,
     IsStaffUser,
 )
 from django.conf import settings
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.utils.timezone import localdate
 from rest_framework import filters, generics, status
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.generics import DestroyAPIView, get_object_or_404
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_social_auth.views import BaseSocialAuthView
 from social_django.models import UserSocialAuth
 from video_requests.models import CrewMember, Request, Video

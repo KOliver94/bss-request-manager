@@ -1,6 +1,10 @@
 from datetime import timedelta
 
+import requests
+from celery import shared_task
+from django.conf import settings
 from django.utils.timezone import localtime
+from requests import RequestException
 from rest_framework.exceptions import ValidationError
 from video_requests.emails import email_user_video_published
 from video_requests.models import Request, Video
@@ -27,6 +31,25 @@ def update_request_status(request, called_from_video=False):
                 if request.additional_data["accepted"] is True
                 else Request.Statuses.DENIED
             )
+            if (
+                request.additional_data.get("external")
+                and request.additional_data["external"].get("sch_events_callback_url")
+                and (
+                    request.status == Request.Statuses.REQUESTED
+                    or (
+                        request.status == Request.Statuses.DENIED
+                        and status == Request.Statuses.ACCEPTED
+                    )
+                    or (
+                        request.status >= Request.Statuses.ACCEPTED
+                        and status == Request.Statuses.DENIED
+                    )
+                )
+            ):
+                notify_sch_event_management_system.delay(
+                    request.additional_data["external"]["sch_events_callback_url"],
+                    request.additional_data["accepted"],
+                )
 
         # If the request is accepted but canceled by requester set the status
         if (
@@ -227,3 +250,16 @@ def recalculate_deadline(instance, data):
         ).date() == instance.deadline:
             data["deadline"] = (end_datetime + timedelta(weeks=3)).date()
     return data
+
+
+@shared_task(
+    bind=True,
+    autoretry_for=(RequestException,),
+    retry_backoff=True,
+    retry_kwargs={"max_retries": 10},
+)
+def notify_sch_event_management_system(self, url, accepted):
+    headers = {"Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}"}
+    data = {"accepted": accepted}
+    response = requests.post(url, data=data, headers=headers)
+    response.raise_for_status()

@@ -203,6 +203,9 @@ DEBUG_EMAIL = config(
     "DEBUG_EMAIL", default=None
 )  # if set all e-mails will be sent to this address only
 
+# External services:
+SCH_EVENTS_TOKEN = config("SCH_EVENTS_TOKEN")
+
 # Google Calendar settings:
 GOOGLE_SERVICE_ACCOUNT_KEY_FILE_NAME = config(
     "GOOGLE_SERVICE_ACCOUNT_KEY_FILE_NAME", default=None

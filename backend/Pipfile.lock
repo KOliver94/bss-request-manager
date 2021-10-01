@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "22dba11385501eecce2a12b148c1021be72ed0963d2d6936b8c3d19910842ed7"
+            "sha256": "2cf6ffe91f470d26374256b9dcaf6fdd57c93f7d6d24d8f64f49fe14e027647e"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -99,11 +99,11 @@
         },
         "cachetools": {
             "hashes": [
-                "sha256:2cc0b89715337ab6dbba85b5b50effe2b0c74e035d83ee8ed637cf52f12ae001",
-                "sha256:61b5ed1e22a0924aed1d23b478f37e8d52549ff8a961de2909c69bf950020cff"
+                "sha256:0a3d3556c2c3befdbba2f93b78792c199c66201c999e97947ea0b7437758246b",
+                "sha256:6a6fa6802188ab7e77bab2db001d676e854499552b0037d999d5b9f211db5250"
             ],
             "markers": "python_version ~= '3.5'",
-            "version": "==4.2.2"
+            "version": "==4.2.3"
         },
         "celery": {
             "extras": [
@@ -191,9 +191,11 @@
         },
         "click-didyoumean": {
             "hashes": [
-                "sha256:112229485c9704ff51362fe34b2d4f0b12fc71cc20f6d2b3afabed4b8bfa6aeb"
+                "sha256:a0713dc7a1de3f06bc0df5a9567ad19ead2d3d5689b434768a6145bff77c0667",
+                "sha256:f184f0d851d96b6d29297354ed981b7dd71df7ff500d82fa6d11f0856bee8035"
             ],
-            "version": "==0.0.3"
+            "markers": "python_version < '4' and python_full_version >= '3.6.2'",
+            "version": "==0.3.0"
         },
         "click-plugins": {
             "hashes": [
@@ -396,11 +398,11 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:7ae5eda089d393ca01658b550df24913cbbbdd34e9e6dedc1cea747485ae0c04",
-                "sha256:bde03220ed56e4e147dec92339c90ce95159dce657e2cccd0ac1fe82f6a96284"
+                "sha256:2a92b485afed5292946b324e91fcbe03db277ee4cb64c998c6cfa66d4af01dee",
+                "sha256:6dc8173abd50f25b6e62fc5b42802c96fc7cd9deb9bfeeb10a79f5606225cdf4"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==2.1.0"
+            "version": "==2.2.1"
         },
         "google-auth-httplib2": {
             "hashes": [
@@ -785,7 +787,7 @@
                 "sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24",
                 "sha256:b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'",
+            "index": "pypi",
             "version": "==2.26.0"
         },
         "requests-oauthlib": {
@@ -1043,10 +1045,11 @@
         },
         "filelock": {
             "hashes": [
-                "sha256:18d82244ee114f543149c66a6e0c14e9c4f8a1044b5cdaadd0f82159d6a6ff59",
-                "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"
+                "sha256:78925788ce8c8945fac28a68c1d05cf33a6a6c4fba14fe02835122c53268ceef",
+                "sha256:d9e9c7d8191e915339843c81c90d3e44f7c84e5fb03bdc6b1b4d019025cf953b"
             ],
-            "version": "==3.0.12"
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
+            "version": "==3.1.0"
         },
         "freezegun": {
             "hashes": [
@@ -1088,11 +1091,11 @@
         },
         "platformdirs": {
             "hashes": [
-                "sha256:15b056538719b1c94bdaccb29e5f81879c7f7f0f4a153f46086d155dffcd4f0f",
-                "sha256:8003ac87717ae2c7ee1ea5a84a1a61e87f3fbd16eb5aadba194ea30a9019f648"
+                "sha256:367a5e80b3d04d2428ffa76d33f124cf11e8fff2acdaa9b43d545f5c7d661ef2",
+                "sha256:8868bbe3c3c80d42f20156f22e7131d2fb321f5bc86a2a345375c6481a67021d"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==2.3.0"
+            "version": "==2.4.0"
         },
         "pluggy": {
             "hashes": [

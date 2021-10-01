@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "cacheops",
     "rest_framework",
+    "rest_framework.authtoken",
     "django_filters",
     "corsheaders",
     "rest_framework_simplejwt.token_blacklist",
@@ -190,6 +191,7 @@ ADMIN_GROUP = config("ADMIN_GROUP", default="Administrators")
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",

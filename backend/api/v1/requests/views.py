@@ -8,12 +8,11 @@ from api.v1.requests.serializers import (
     VideoDefaultSerializer,
 )
 from common.pagination import ExtendedPagination
-from common.permissions import IsSelf
+from common.permissions import IsAuthenticated, IsNotAuthenticated, IsSelf
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from video_requests.models import Comment, Rating, Request, Video
 
 
@@ -40,7 +39,9 @@ class RequestDefaultListCreateView(generics.ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "POST":
-            return [AllowAny()]
+            return [
+                permission() for permission in [IsAuthenticated | IsNotAuthenticated]
+            ]
         else:
             return [IsAuthenticated()]
 

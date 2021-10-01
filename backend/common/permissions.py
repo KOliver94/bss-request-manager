@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework.permissions import BasePermission, IsAuthenticated
+from rest_framework.permissions import BasePermission
 from video_requests.models import Comment, Rating, Request, Video
 
 
@@ -16,13 +16,31 @@ class IsNotAuthenticated(BasePermission):
         return not request.user.is_authenticated
 
 
+class IsAuthenticated(BasePermission):
+    """
+    Allows access only to authenticated users except service accounts.
+    """
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and not request.user.groups.filter(name="Service Accounts").exists()
+        )
+
+
 class IsStaffUser(BasePermission):
     """
     Allows access only to staff members and admins.
     """
 
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_staff)
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and request.user.is_staff
+            and not request.user.groups.filter(name="Service Accounts").exists()
+        )
 
 
 class IsAdminUser(BasePermission):
@@ -31,7 +49,31 @@ class IsAdminUser(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return bool(request.user and is_admin(request.user))
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and is_admin(request.user)
+            and not request.user.groups.filter(name="Service Accounts").exists()
+        )
+
+
+class IsServiceAccount(BasePermission):
+    """
+    Allows access only to service accounts.
+    """
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and request.user.groups.filter(name="Service Accounts").exists()
+        )
+
+    def has_object_permission(self, request, view, obj):
+        if isinstance(obj, Request):
+            return bool(obj.requested_by == request.user)
+        else:
+            return False
 
 
 class IsSelf(IsAuthenticated):
@@ -80,7 +122,11 @@ class IsSelfOrStaff(BasePermission):
         ):
             return False
         else:
-            return bool(request.user and request.user.is_authenticated)
+            return bool(
+                request.user
+                and request.user.is_authenticated
+                and not request.user.groups.filter(name="Service Accounts").exists()
+            )
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Request):

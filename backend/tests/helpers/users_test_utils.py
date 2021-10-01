@@ -39,6 +39,10 @@ def create_user(
     else:
         user.first_name = "User"
 
+    # Set unusable password
+    if password == "unusable":
+        user.set_unusable_password()
+
     # Set permissions
     user.is_staff = is_staff or is_admin
     if is_admin:

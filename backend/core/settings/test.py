@@ -46,6 +46,9 @@ WEEKLY_TASK_EMAIL = "weekly@example.com"
 GOOGLE_CALENDAR_ID = "NOT_EXISTING"
 GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH = None
 
+# Random external token
+SCH_EVENTS_TOKEN = "123456789abcdef"  # nosec
+
 # Enable health check endpoint and remove celery from checks
 HEALTH_CHECK_API_ENABLED = True
 try:

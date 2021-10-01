@@ -12,6 +12,7 @@ def create_request(
     start=None,
     end=None,
     responsible=None,
+    requested_by=None,
 ):
     request = Request()
     request.id = request_id
@@ -27,7 +28,7 @@ def create_request(
     request.place = "Test place"
     request.type = "Test type"
     request.requester = requester
-    request.requested_by = requester
+    request.requested_by = requested_by if requested_by else requester
     request.status = status
     if responsible:
         request.responsible = responsible

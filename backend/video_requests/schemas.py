@@ -33,6 +33,13 @@ REQUEST_ADDITIONAL_DATA_SCHEMA = {
             },
             "additionalProperties": False,
         },
+        "external": {
+            "type": "object",
+            "properties": {
+                "sch_events_callback_url": {"type": "string", "format": "uri"},
+            },
+            "additionalProperties": False,
+        },
     },
     "additionalProperties": False,
 }
