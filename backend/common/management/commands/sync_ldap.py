@@ -8,7 +8,6 @@ from django.core.management.base import BaseCommand
 from django.db.models import Q
 from django.utils.timezone import localtime
 from django_auth_ldap.backend import LDAPBackend
-from rest_framework.exceptions import AuthenticationFailed
 
 
 class Command(BaseCommand):

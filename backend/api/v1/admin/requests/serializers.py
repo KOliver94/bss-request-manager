@@ -301,7 +301,7 @@ class VideoAdminListSerializer(VideoAdminSerializer):
 
 class CrewMemberAdminSerializer(serializers.ModelSerializer):
     member = UserSerializer(read_only=True)
-    member_id = IntegerField(write_only=True, required=True)
+    member_id = IntegerField(write_only=True)
 
     class Meta:
         model = CrewMember

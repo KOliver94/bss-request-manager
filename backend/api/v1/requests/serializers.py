@@ -178,12 +178,12 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
 class RequestAnonymousSerializer(serializers.ModelSerializer):
     comments = CommentDefaultSerializer(many=True, read_only=True)
     comment_text = CharField(write_only=True, required=False, allow_blank=True)
-    requester_first_name = CharField(write_only=True, required=True)
-    requester_last_name = CharField(write_only=True, required=True)
-    requester_email = EmailField(write_only=True, required=True)
-    requester_mobile = PhoneNumberField(write_only=True, required=True)
+    requester_first_name = CharField(write_only=True)
+    requester_last_name = CharField(write_only=True)
+    requester_email = EmailField(write_only=True)
+    requester_mobile = PhoneNumberField(write_only=True)
     if settings.DRF_RECAPTCHA_ENABLED:
-        recaptcha = ReCaptchaV2Field(required=True)
+        recaptcha = ReCaptchaV2Field()
 
     class Meta:
         model = Request
