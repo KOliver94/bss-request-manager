@@ -9,7 +9,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/pickers": "^3.3.10",
     "@sentry/react": "^6.13.2",
-    "axios": "^0.21.1",
+    "axios": "^0.22.0",
     "classnames": "^2.3.1",
     "date-fns": "^2.24.0",
     "formik": "^2.2.9",
@@ -74,7 +74,7 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.26.0",
+    "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.3.2",
     "react-codemod": "^5.4.3"
