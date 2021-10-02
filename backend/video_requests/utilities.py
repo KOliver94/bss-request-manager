@@ -259,7 +259,12 @@ def recalculate_deadline(instance, data):
     retry_kwargs={"max_retries": 10},
 )
 def notify_sch_event_management_system(self, url, accepted):
-    headers = {"Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}"}
+    headers = {
+        "Accept": "application/json",
+        "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
+    }
     data = {"accepted": accepted}
-    response = requests.post(url, data=data, headers=headers)
+    url = requests.head(url, headers=headers, allow_redirects=True).url
+    response = requests.post(url, data=data, headers=headers, allow_redirects=False)
     response.raise_for_status()
+    return response
