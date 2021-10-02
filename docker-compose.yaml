@@ -20,7 +20,9 @@ services:
       - logs:/app/backend/logs
       - static:/app/backend/staticfiles
     ports:
-      - 8000:8000
+      - "127.0.0.1:8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - ./backend/.env
     depends_on:
@@ -44,6 +46,8 @@ services:
     volumes:
       - credentials:/app/backend/credentials/:ro
       - static:/app/backend/staticfiles/:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - web
       - postgres
