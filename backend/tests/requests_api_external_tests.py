@@ -1,8 +1,11 @@
+import json
 from unittest.mock import patch
 
 import requests
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import override_settings
+from django_celery_results.models import TaskResult
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
@@ -263,6 +266,56 @@ class RequestsAPIExternalTestCase(APITestCase):
         )
         mock_notify_sch_event_management_system.assert_called()
         self.assertTrue(mock_notify_sch_event_management_system.call_args.args[1])
+
+    @override_settings(task_always_eager=True, task_store_eager_result=True)
+    @patch("video_requests.utilities.requests.post")
+    @patch("video_requests.utilities.requests.head")
+    def test_external_callback_for_status_change_redirect_and_result_works(
+        self, mock_requests_head, mock_requests_post
+    ):
+        data = self._create_request_test_data
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        request_id = response.data["id"]
+
+        def mock_head_redirect_response():
+            r = requests.Response()
+            r.status_code = 504
+            r.url = "https://redirected.example.com/api/callback/123"
+            return r
+
+        def mock_post_response():
+            r = requests.Response()
+            r.status_code = 200
+            r.json = lambda: {"status": "ok"}
+            return r
+
+        mock_requests_head.return_value = mock_head_redirect_response()
+        mock_requests_post.return_value = mock_post_response()
+
+        admin_user = create_user(is_admin=True)
+        self.authorize_user(admin_user)
+        self.client.patch(
+            f"{self.admin_url}/{request_id}", {"additional_data": {"accepted": True}}
+        )
+
+        mock_requests_head.assert_called_once()
+        mock_requests_post.assert_called_once()
+        mock_requests_post.assert_called_with(
+            mock_head_redirect_response().url,
+            data={"accept": True},
+            headers={
+                "Accept": "application/json",
+                "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
+            },
+            allow_redirects=False,
+        )
+        self.assertDictEqual(
+            json.loads(
+                TaskResult.objects.get(task_args__contains="api/callback/123").result
+            ),
+            {"status": "ok"},
+        )
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     @patch("video_requests.utilities.requests.post")
