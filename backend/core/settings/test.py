@@ -32,6 +32,9 @@ REST_FRAMEWORK.update(
 # Disable caching
 CACHEOPS_ENABLED = False
 
+# Save celery result to database when running in eager mode
+CELERY_TASK_STORE_EAGER_RESULT = True
+
 # Do not send real e-mails
 EMAIL_BACKEND_LIST = [
     "django.core.mail.backends.filebased.EmailBackend",
