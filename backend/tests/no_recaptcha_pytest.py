@@ -46,6 +46,7 @@ def test_anonymous_can_create_requests_without_captcha(api_client, disable_recap
 @conditional_override_settings(
     EMAIL_BACKEND="tests.helpers.test_utils.CombinedEmailBackend", CONDITION=EMAIL_FILE
 )
+@pytest.mark.django_db
 def test_contact_message_email_sent_without_captcha(api_client, disable_recaptcha):
     data = {
         "name": "Joe Bloggs",
