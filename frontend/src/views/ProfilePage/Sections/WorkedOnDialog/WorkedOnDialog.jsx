@@ -118,7 +118,7 @@ export default function WorkedOnDialog({
     >
       <DialogTitle id="ratings-dialog">
         <Box display="flex" alignItems="center">
-          <Box flexGrow={1}>Keszített anyagok</Box>
+          <Box flexGrow={1}>Készített anyagok</Box>
           <Box>
             <IconButton onClick={closeDialog}>
               <CloseIcon />
