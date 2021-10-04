@@ -23,6 +23,7 @@ export const videoStatuses = [
 export const requestTypes = [
   { text: 'Zenés hangulatvideó' },
   { text: 'Zenés hangulatvideó riportokkal' },
+  { text: 'Promóciós videó' },
   { text: 'Élő közvetítés' },
   { text: 'Előadás/rendezvény dokumentálás jellegű rögzítése' },
 ];
