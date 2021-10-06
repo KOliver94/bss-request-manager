@@ -16,6 +16,7 @@ from re import match
 from celery.schedules import crontab
 from decouple import Csv, config
 from django.core.exceptions import ImproperlyConfigured
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -31,7 +32,7 @@ BASE_URL = f'{"https://" if BASE_URL_HTTPS else "http://"}{BASE_URL_DOMAIN}'
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("APP_SECRET_KEY")
+SECRET_KEY = config("APP_SECRET_KEY", default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("APP_DEBUG", default=False, cast=bool)

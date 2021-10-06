@@ -78,7 +78,6 @@ jobs:
         run: pipenv install --dev
       - name: Run tests
         env:
-          APP_SECRET_KEY: Sup3r!S3cr3t_R4nd0m/g3N3r4T3d.k3Y
           DATABASE_NAME: github_actions
           DATABASE_USER: postgres
           DATABASE_PASSWORD: postgres
