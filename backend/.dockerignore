@@ -1,0 +1,28 @@
+# ide configs
+.idea
+.vscode
+
+# testing
+.coverage
+.pytest_cache
+health_check_storage_test
+htmlcov
+
+# cache
+**/*.pyc
+**/__pycache__
+
+# logs
+logs/**/*.log
+logs/**/*.err
+
+# static
+staticfiles
+
+# misc
+.DS_Store
+.dockerignore
+.env*
+.git
+.gitignore
+Dockerfile

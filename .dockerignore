@@ -1,27 +1,48 @@
 # Items that don't need to be in a Docker image.
 # Anything not used by the build system should go here.
+
+# Root directory
+.DS_Store
 .dockerignore
-.git/
-.github/
+.git
+.github
 .gitignore
+.idea
 .isort.cfg
 .pre-commit-config.yaml
+.vscode
+docker-compose*.yaml
 Dockerfile
-README.md
-*/.idea/
-*/.vscode/
 
-# Artifacts that will be built during image creation.
-# This should contain all files created during `npm run build`.
+# Common
+*/.DS_Store
+*/.dockerignore
+*/.env*
+*/.git
+*/.gitignore
+*/.idea
+*/.vscode
+*/Dockerfile
 
 # Django
-*.pyc
-*/__pycache__/
+backend/**/*.pyc
+backend/**/__pycache__
+backend/.coverage
 backend/.coveragerc
 backend/.flake8
-backend/.env
-backend/.env.sample
+backend/.pytest_cache
+backend/health_check_storage_test
+backend/htmlcov
+backend/logs/**/*.log
+backend/logs/**/*.err
+backend/staticfiles
+backend/pytest.ini
 
 # React
-*/build/
-*/node_modules/
+frontend/.eslintcache
+frontend/.pnp
+frontend/.pnp.js
+frontend/build
+frontend/coverage
+frontend/node_modules
+frontend/*.log*
