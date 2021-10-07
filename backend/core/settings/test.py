@@ -55,7 +55,6 @@ SCH_EVENTS_TOKEN = "123456789abcdef"  # nosec
 # Enable health check endpoint and remove celery from checks
 HEALTH_CHECK_API_ENABLED = True
 try:
-    INSTALLED_APPS.remove("health_check.contrib.celery")
     INSTALLED_APPS.remove("health_check.contrib.celery_ping")
 except ValueError:
     pass
