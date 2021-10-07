@@ -2,6 +2,15 @@ from datetime import timedelta
 
 from core.settings.common import *
 
+# Use localhost as default instead of docker container hostnames
+DATABASES["default"].update({"HOST": config("DATABASE_HOST", default="localhost")})
+CACHEOPS_REDIS = config("CACHE_REDIS", default="redis://localhost:6379/0")
+CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://localhost:6379/1")
+try:
+    REDIS_URL = match("^redis://[a-zA-Z0-9]+:[0-9]+", CACHEOPS_REDIS).group(0)
+except AttributeError:
+    raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
+
 # Use the default Django authentication backend only
 AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
