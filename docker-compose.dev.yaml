@@ -9,9 +9,9 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=myprojectuser
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=myproject
+      - POSTGRES_DB=request_manager_db
+      - POSTGRES_USER=request_manager
+      - POSTGRES_PASSWORD=change_me
 
   redis:
     restart: unless-stopped
