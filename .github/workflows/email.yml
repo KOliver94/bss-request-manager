@@ -68,10 +68,7 @@ jobs:
       - name: Run tests
         env:
           BASE_URL_DOMAIN: felkeres.bsstudio.hu
-          DATABASE_NAME: github_actions
-          DATABASE_USER: postgres
-          DATABASE_PASSWORD: postgres
-          DJANGO_SETTINGS_MODULE: core.settings.test
+          DJANGO_SETTINGS_MODULE: core.settings.ci
           EMAIL_FILE: True
         run: |
           pipenv run python manage.py migrate --no-input
