@@ -39,7 +39,7 @@ RUN npm run build
 # Stage 2 - The Production Environment
 
 # Pull base image
-FROM python:3.9-alpine
+FROM python:3.9-alpine AS request-manager
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -93,6 +93,10 @@ RUN chown -R appuser:appgroup /app
 # Change to the app user
 USER appuser
 
+# Collect static files
+WORKDIR /app/backend
+RUN python manage.py collectstatic --no-input --clear --settings=core.settings.common
+
 # Open port
 EXPOSE 8000
 
@@ -101,6 +105,9 @@ COPY --chown=appuser:appgroup ./docker-entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["/app/entrypoint.sh"]
 
+# Set health check
+HEALTHCHECK --start-period=30s --interval=5m \
+    CMD python manage.py health_check
+
 # Start the server
-WORKDIR /app/backend
 CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=5", "--threads=2", "core.wsgi"]

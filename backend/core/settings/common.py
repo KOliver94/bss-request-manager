@@ -105,10 +105,10 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DATABASE_NAME"),
-        "USER": config("DATABASE_USER"),
-        "PASSWORD": config("DATABASE_PASSWORD"),
-        "HOST": config("DATABASE_HOST", default="localhost"),
+        "NAME": config("DATABASE_NAME", default="request_manager_db"),
+        "USER": config("DATABASE_USER", default="request_manager"),
+        "PASSWORD": config("DATABASE_PASSWORD", default="change_me"),
+        "HOST": config("DATABASE_HOST", default="postgres"),
         "PORT": config("DATABASE_PORT", default=5432, cast=int),
     }
 }
@@ -116,7 +116,7 @@ DATABASES = {
 # Cacheops
 # https://github.com/Suor/django-cacheops
 
-CACHEOPS_REDIS = config("CACHE_REDIS", default="redis://localhost:6379/0")
+CACHEOPS_REDIS = config("CACHE_REDIS", default="redis://redis:6379/0")
 CACHEOPS_DEGRADE_ON_FAILURE = True
 CACHEOPS = {
     # Automatically cache all gets and queryset fetches
@@ -133,9 +133,15 @@ CACHEOPS = {
 # Celery
 # https://docs.celeryproject.org/en/stable/userguide/configuration.html
 
-CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://localhost:6379/1")
+CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://redis:6379/1")
 CELERY_RESULT_BACKEND = "django-db"
-CELERY_IMPORTS = ["common.utilities", "core.tasks", "video_requests.emails"]
+CELERY_IMPORTS = [
+    "common.emails",
+    "common.utilities",
+    "core.tasks",
+    "video_requests.emails",
+    "video_requests.utilities",
+]
 CELERY_TIMEZONE = config("TIME_ZONE", default="Europe/Budapest")
 
 # Scheduled tasks
@@ -285,7 +291,6 @@ INSTALLED_APPS += [
     "health_check.cache",
     "health_check.storage",
     "health_check.contrib.migrations",
-    "health_check.contrib.celery",
     "health_check.contrib.celery_ping",
     "health_check.contrib.redis",
 ]
