@@ -33,6 +33,7 @@ import { listStaffUsers } from 'api/userApi';
 import { requestStatuses } from 'helpers/enumConstants';
 import { isPrivileged as isPrivilegedCheck } from 'api/loginApi';
 import handleError from 'helpers/errorHandler';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import styles from 'assets/jss/material-kit-react/views/requestDetailPage';
 
@@ -129,8 +130,13 @@ export default function RequestDetailPage({
       }
     }
 
+    setLoading(true);
     loadData(id);
   }, [id, isPrivileged, enqueueSnackbar, history]);
+
+  useEffect(() => {
+    changePageTitle(!loading && data.title);
+  }, [loading, data]);
 
   return (
     <div>

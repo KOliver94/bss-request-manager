@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
@@ -13,6 +14,8 @@ import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'components/material-kit-react/Parallax/Parallax';
+// helpers
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import styles from 'assets/jss/material-kit-react/views/termsAndPrivacyPage';
 
@@ -23,6 +26,10 @@ export default function TermsOfServicePage({
   setIsAuthenticated,
 }) {
   const classes = useStyles();
+
+  useEffect(() => {
+    changePageTitle('Szolgáltatási feltételek');
+  }, []);
 
   return (
     <div>

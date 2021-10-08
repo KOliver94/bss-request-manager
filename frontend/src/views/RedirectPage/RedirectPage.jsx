@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { getOauthCode, getOauthState } from 'helpers/oauthConstants';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 export default function RedirectPage() {
   const location = useLocation();
@@ -11,6 +13,10 @@ export default function RedirectPage() {
     state &&
     ['authsch', 'facebook', 'google-oauth2'].includes(state.provider) &&
     ['login', 'profile'].includes(state.operation);
+
+  useEffect(() => {
+    changePageTitle('Átirányítás...');
+  }, []);
 
   return (
     <>

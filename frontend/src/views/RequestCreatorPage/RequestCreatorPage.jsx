@@ -29,6 +29,7 @@ import RequestCreatorForm from 'components/RequestCreatorForm/RequestCreatorForm
 import { getUser } from 'api/userApi';
 import { createRequest } from 'api/requestApi';
 import handleError from 'helpers/errorHandler';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import styles from 'assets/jss/material-kit-react/views/requestCreatorPage';
 
@@ -164,6 +165,10 @@ export default function RequestCreatorPage({
       setLoading(false);
     }
   }, [isAuthenticated, enqueueSnackbar, history]);
+
+  useEffect(() => {
+    changePageTitle('Felkérés beküldése');
+  }, []);
 
   return (
     <div>

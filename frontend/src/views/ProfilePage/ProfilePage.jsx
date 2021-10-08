@@ -64,6 +64,7 @@ import {
   getOauthUrlFacebook,
   getOauthUrlGoogle,
 } from 'helpers/oauthConstants';
+import changePageTitle from 'helpers/pageTitleHelper';
 // Style
 import styles from 'assets/jss/material-kit-react/views/profilePage';
 // Sections
@@ -169,8 +170,13 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
         });
       }
     }
+    setLoading(true);
     loadData();
   }, [id, enqueueSnackbar]);
+
+  useEffect(() => {
+    changePageTitle(!loading && `${userData.last_name} ${userData.first_name}`);
+  }, [loading, userData]);
 
   useEffect(() => {
     async function connectSocialProfile() {

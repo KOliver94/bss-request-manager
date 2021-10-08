@@ -30,6 +30,7 @@ import {
   getOauthUrlFacebook,
   getOauthUrlGoogle,
 } from 'helpers/oauthConstants';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import styles from 'assets/jss/material-kit-react/views/loginPage';
 import background from 'assets/img/bg7.jpg';
@@ -110,6 +111,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   };
 
   useEffect(() => {
+    changePageTitle('Bejelentkezés');
     const timer = setTimeout(() => setCardAnimation(''), 700);
     return () => {
       clearTimeout(timer);

@@ -1,10 +1,16 @@
-import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import changePageTitle from 'helpers/pageTitleHelper';
 import getErrorDetails from 'helpers/errorPageConstants';
 import 'assets/css/error-page.css';
 
 export default function ErrorPage({ type }) {
   const errorDetails = getErrorDetails(type);
+
+  useEffect(() => {
+    changePageTitle('Hoppá! Hiba történt');
+  }, []);
 
   return (
     <div id="error">

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -14,6 +15,8 @@ import Button from 'components/material-kit-react/CustomButtons/Button';
 import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'components/material-kit-react/Parallax/Parallax';
 import styles from 'assets/jss/material-kit-react/views/landingPage';
+// helpers
+import changePageTitle from 'helpers/pageTitleHelper';
 // Sections for this page
 import RulesPoliciesSection from './Sections/RulesPoliciesSection';
 import ContactSection from './Sections/ContactSection';
@@ -23,6 +26,11 @@ const useStyles = makeStyles(styles);
 
 export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
   const classes = useStyles();
+
+  useEffect(() => {
+    changePageTitle('Kezdőlap');
+  }, []);
+
   return (
     <div>
       <Header

@@ -36,6 +36,7 @@ import { listRequests } from 'api/requestApi';
 import { listRequestsAdmin } from 'api/requestAdminApi';
 import { requestStatuses } from 'helpers/enumConstants';
 import handleError from 'helpers/errorHandler';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import styles from 'assets/jss/material-kit-react/views/myRequestsPage';
 
@@ -95,8 +96,9 @@ export default function MyRequestsPage({
   };
 
   useEffect(() => {
+    changePageTitle(isPrivileged ? 'Beküldött felkérések' : 'Felkéréseim');
     loadData(1);
-  }, [loadData]);
+  }, [loadData, isPrivileged]);
 
   return (
     <div>
