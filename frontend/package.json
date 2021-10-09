@@ -76,7 +76,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "prettier": "^2.3.2",
-    "react-codemod": "^5.4.3"
+    "prettier": "^2.3.2"
   }
 }
