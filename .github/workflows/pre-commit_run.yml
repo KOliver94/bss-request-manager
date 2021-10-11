@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.9'
       - name: Use Node.js 14
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: '14.8.0'
       - name: Cache Node.js modules
