@@ -20,6 +20,12 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
@@ -102,6 +108,7 @@ export default function BasicInformation({
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
 
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -309,7 +316,10 @@ export default function BasicInformation({
                 ) : (
                   <Tooltip title="Törlés" placement="top" arrow>
                     <span>
-                      <IconButton onClick={handleDelete} disabled={loading}>
+                      <IconButton
+                        onClick={() => setRemoveDialogOpen(true)}
+                        disabled={loading}
+                      >
                         <DeleteForeverIcon />
                       </IconButton>
                     </span>
@@ -676,6 +686,36 @@ export default function BasicInformation({
           </>
         )}
       </Paper>
+      {isPrivileged && (
+        <Dialog
+          open={removeDialogOpen}
+          onClose={() => setRemoveDialogOpen(false)}
+          fullWidth
+          maxWidth="xs"
+        >
+          <DialogTitle id="request-delete-confirmation">
+            Biztosan törölni akarod a felkérést?
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="request-delete-confirmation-description">
+              A felkérés törlésével az összes videó, stábtag, hozzászólás és
+              értékelés is törlésre kerül. A művelet visszavonhatatlan!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => setRemoveDialogOpen(false)}
+              autoFocus
+              disabled={loading}
+            >
+              Mégsem
+            </Button>
+            <Button onClick={handleDelete} color="primary" disabled={loading}>
+              Törlés
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 }
