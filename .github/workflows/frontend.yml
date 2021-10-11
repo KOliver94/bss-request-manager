@@ -35,11 +35,8 @@ jobs:
         uses: actions/setup-node@v2.4.1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}-v-${{ secrets.CACHE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
       - name: Install frontend dependencies
         run: npm install
       - name: Run ESLint config and code check
