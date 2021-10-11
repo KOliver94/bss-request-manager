@@ -3,17 +3,7 @@ version: '3.8'
 services:
   web:
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - API_URL=https://felkeres.bsstudio.hu/api/v1/
-        - AUTHSCH_CLIENT_ID=60451969490994503646
-        - FACEBOOK_CLIENT_ID=817759665400170
-        - GOOGLE_CLIENT_ID=593937386712-8pu2vh1ukq17oidh9f4snkjf9oa88tvb.apps.googleusercontent.com
-        - RECAPTCHA_SITE_KEY=6LfoyF4aAAAAAN1m2mr_A7inOhPD428_y8pYKKr7
-        - SENTRY_URL=https://5d84e5aa35114e5bbe49ca9b8a013440@o354977.ingest.sentry.io/5989036
-    image: bss-request-manager
+    image: ghcr.io/koliver94/bss-request-manager:master
     command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 core.wsgi
     volumes:
       - credentials:/app/backend/credentials
@@ -30,7 +20,7 @@ services:
 
   celery-worker:
     restart: unless-stopped
-    image: bss-request-manager
+    image: ghcr.io/koliver94/bss-request-manager:master
     command: celery -A core worker
     env_file:
       - ./backend/.env
@@ -49,7 +39,7 @@ services:
 
   celery-beat:
     restart: unless-stopped
-    image: bss-request-manager
+    image: ghcr.io/koliver94/bss-request-manager:master
     command: celery -A core beat
     env_file:
       - ./backend/.env
