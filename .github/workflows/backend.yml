@@ -90,7 +90,7 @@ jobs:
           pipenv run coverage xml
       - name: Upload coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2.1.0
         with:
           directory: backend/
       - name: Archive code coverage results
