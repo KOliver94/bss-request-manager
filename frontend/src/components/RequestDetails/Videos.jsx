@@ -188,7 +188,7 @@ export default function Videos({
       isInitialMount.current = true;
       updateRequestStatus();
     }
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestData.videos]);
 
   const handleSubmit = async (val, videoId = 0) => {
