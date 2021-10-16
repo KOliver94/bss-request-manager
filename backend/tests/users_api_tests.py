@@ -14,7 +14,7 @@ from tests.helpers.video_requests_test_utils import (
 NOT_EXISTING_ID = 9000
 
 
-@freeze_time("2020-12-01 12:00:00", tz_offset=+1)
+@freeze_time("2020-12-01 12:00:00")
 class UsersAPITestCase(APITransactionTestCase):
     def authorize_user(self, user):
         url = reverse("login_obtain_jwt_pair")
