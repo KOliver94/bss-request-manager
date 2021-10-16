@@ -11,7 +11,7 @@ from tests.helpers.video_requests_test_utils import (
 from video_requests.models import Request
 
 
-@freeze_time("2020-11-21 18:30:00", tz_offset=+1)
+@freeze_time("2020-11-21 18:30:00")
 class StatisticsAPITestCase(APITestCase):
     def authorize_user(self, user):
         url = reverse("login_obtain_jwt_pair")
