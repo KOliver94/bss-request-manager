@@ -10,8 +10,12 @@ on:
     branches: [ master ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
+    paths-ignore:
+      - '.github/**'
   pull_request:
     branches: [ master ]
+    paths-ignore:
+      - '.github/**'
   workflow_dispatch:
 
 env:
