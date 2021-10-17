@@ -29,7 +29,7 @@ import Badge from 'components/material-kit-react/Badge/Badge';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Date format
-import { format } from 'date-fns';
+import { format, isAfter, sub } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // API calls
 import { listRequests } from 'api/requestApi';
@@ -52,7 +52,7 @@ export default function MyRequestsPage({
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ results: [], total_pages: 0 });
-  const [ordering, setOrdering] = useState('-created');
+  const [ordering, setOrdering] = useState('-start_datetime');
 
   const loadData = useCallback(
     async (pageNumber) => {
@@ -188,7 +188,11 @@ export default function MyRequestsPage({
                               hover
                             >
                               <TableCell component="th" scope="row">
-                                {item.title}
+                                {`${item.title} `}
+                                {isAfter(
+                                  new Date(item.created),
+                                  sub(new Date(), { days: 5 })
+                                ) && <Badge color="info">Új</Badge>}
                               </TableCell>
                               <TableCell align="center">
                                 {format(
