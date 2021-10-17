@@ -61,6 +61,7 @@ export default function RequestDetailPage({
     status: 1,
     reponsible: {},
     requester: {},
+    requested_by: {},
     videos: [],
     comments: [],
   });
