@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // Material UI components
 import Tooltip from '@material-ui/core/Tooltip';
+import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -89,6 +90,9 @@ const useStyles = makeStyles((theme) => ({
   },
   afterDivider: {
     marginTop: 10,
+  },
+  chip: {
+    marginBottom: 10,
   },
   smallAvatar: {
     width: theme.spacing(4),
@@ -618,6 +622,28 @@ export default function BasicInformation({
             <p>
               Videó típusa: <strong>{requestData.type}</strong>
             </p>
+            {isPrivileged &&
+              requestData.additional_data &&
+              requestData.additional_data.requester &&
+              (requestData.requester.first_name !==
+                requestData.additional_data.requester.first_name ||
+                requestData.requester.last_name !==
+                  requestData.additional_data.requester.last_name ||
+                requestData.requester.profile.phone_number !==
+                  requestData.additional_data.requester.phone_number) && (
+                <Tooltip
+                  title={`${requestData.additional_data.requester.last_name} ${requestData.additional_data.requester.first_name} (${requestData.additional_data.requester.phone_number})`}
+                  placement="top"
+                  arrow
+                >
+                  <Chip
+                    color="secondary"
+                    size="small"
+                    label="A felhasználó adatai és a felkéréskor beküldött adatok nem egyeznek!"
+                    className={classes.chip}
+                  />
+                </Tooltip>
+              )}
             <p>
               Felkérő:{' '}
               <ConditionalWrapper
