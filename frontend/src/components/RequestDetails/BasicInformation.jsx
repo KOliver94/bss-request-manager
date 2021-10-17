@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // Material UI components
 import Tooltip from '@material-ui/core/Tooltip';
@@ -60,6 +60,7 @@ import { getRequest } from 'api/requestApi';
 import { isAdmin, isPrivileged as isPrivilegedCheck } from 'api/loginApi';
 import { requestStatuses } from 'helpers/enumConstants';
 import handleError from 'helpers/errorHandler';
+import ConditionalWrapper from 'components/ConditionalWrapper';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -619,9 +620,18 @@ export default function BasicInformation({
             </p>
             <p>
               Felkérő:{' '}
-              <strong>
-                {`${requestData.requester.last_name} ${requestData.requester.first_name}`}
-              </strong>
+              <ConditionalWrapper
+                condition={isPrivileged}
+                wrapper={(children) => (
+                  <Link to={`/admin/users/${requestData.requester.id}`}>
+                    {children}
+                  </Link>
+                )}
+              >
+                <strong>
+                  {`${requestData.requester.last_name} ${requestData.requester.first_name}`}
+                </strong>
+              </ConditionalWrapper>
               <br />
               <strong>
                 (
@@ -641,6 +651,24 @@ export default function BasicInformation({
                 )
               </strong>
             </p>
+            {requestData.requested_by &&
+              requestData.requested_by.id !== requestData.requester.id && (
+                <p>
+                  Beküldő:{' '}
+                  <ConditionalWrapper
+                    condition={isPrivileged}
+                    wrapper={(children) => (
+                      <Link to={`/admin/users/${requestData.requested_by.id}`}>
+                        {children}
+                      </Link>
+                    )}
+                  >
+                    <strong>
+                      {`${requestData.requested_by.last_name} ${requestData.requested_by.first_name}`}
+                    </strong>
+                  </ConditionalWrapper>
+                </p>
+              )}
             <Divider />
             <p className={classes.afterDivider}>
               Beküldve:{' '}
@@ -681,9 +709,18 @@ export default function BasicInformation({
             {requestData.responsible && (
               <p>
                 Felelős:{' '}
-                <strong>
-                  {`${requestData.responsible.last_name} ${requestData.responsible.first_name}`}
-                </strong>
+                <ConditionalWrapper
+                  condition={isPrivileged}
+                  wrapper={(children) => (
+                    <Link to={`/admin/users/${requestData.responsible.id}`}>
+                      {children}
+                    </Link>
+                  )}
+                >
+                  <strong>
+                    {`${requestData.responsible.last_name} ${requestData.responsible.first_name}`}
+                  </strong>
+                </ConditionalWrapper>
                 <br />
                 <strong>
                   (
