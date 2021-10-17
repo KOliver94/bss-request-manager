@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import EditIcon from '@material-ui/icons/Edit';
@@ -263,6 +264,26 @@ export default function BasicInformation({
             </Typography>
           </Grid>
           <Grid item>
+            {!editing && (
+              <Tooltip
+                title="Vissza a felkérések listájához"
+                placement="top"
+                arrow
+              >
+                <span>
+                  <IconButton
+                    onClick={() =>
+                      history.replace(
+                        isPrivileged ? '/admin/requests' : '/my-requests'
+                      )
+                    }
+                    disabled={loading}
+                  >
+                    <ArrowBackIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )}
             {!editing &&
               isPrivilegedCheck() &&
               requestData.requester.id.toString() ===
