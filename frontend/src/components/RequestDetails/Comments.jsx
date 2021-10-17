@@ -20,7 +20,7 @@ import { Formik, Form, Field } from 'formik';
 import { TextField, Checkbox } from 'formik-material-ui';
 import * as Yup from 'yup';
 // Date format
-import { format, formatDistance } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // Notistack
 import { useSnackbar } from 'notistack';
@@ -292,14 +292,10 @@ export default function Comments({
                         placement="bottom-start"
                       >
                         <p className={classes.commentCreated}>
-                          {formatDistance(
-                            new Date(comment.created),
-                            new Date(),
-                            {
-                              locale: hu,
-                              addSuffix: true,
-                            }
-                          )}
+                          {formatDistanceToNow(new Date(comment.created), {
+                            locale: hu,
+                            addSuffix: true,
+                          })}
                         </p>
                       </Tooltip>
                     </Grid>
