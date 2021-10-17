@@ -3,7 +3,6 @@ from distutils import util
 
 from api.v1.users.serializers import (
     BanUserSerializer,
-    ConnectOAuth2ProfileInputSerializer,
     UserDetailSerializer,
     UserSerializer,
     UserWorkedOnSerializer,
@@ -175,7 +174,6 @@ class ConnectDisconnectSocialProfileView(
 
     permission_classes = [IsAuthenticated]
     serializer_class = UserDetailSerializer
-    oauth2_serializer_class_in = ConnectOAuth2ProfileInputSerializer
 
     def delete(self, request, *args, **kwargs):
         provider = self.kwargs.get("provider", None)
@@ -185,7 +183,10 @@ class ConnectDisconnectSocialProfileView(
             social_auth = get_object_or_404(
                 UserSocialAuth, user=self.request.user, provider=provider
             )
-            if UserSocialAuth.objects.filter(user=self.request.user).count() > 1:
+            if (
+                UserSocialAuth.objects.filter(user=self.request.user).count() > 1
+                or self.request.user.is_staff
+            ):
                 social_auth.delete()
                 if self.request.user.userprofile.avatar.pop(provider, None):
                     self.request.user.save()

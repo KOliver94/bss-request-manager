@@ -3,7 +3,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.fields import (
-    BooleanField,
     CharField,
     ChoiceField,
     DateTimeField,
@@ -13,7 +12,6 @@ from rest_framework.fields import (
 )
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, Serializer
-from rest_social_auth.serializers import OAuth2InputSerializer
 
 
 class BanUserSerializer(ModelSerializer):
@@ -148,10 +146,6 @@ class UserDetailSerializer(ModelSerializer):
     @staticmethod
     def get_role(user):
         return user.role
-
-
-class ConnectOAuth2ProfileInputSerializer(OAuth2InputSerializer):
-    force = BooleanField(required=False, default=False)
 
 
 class UserWorkedOnSerializer(Serializer):
