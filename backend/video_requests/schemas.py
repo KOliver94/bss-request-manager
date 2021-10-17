@@ -31,6 +31,7 @@ REQUEST_ADDITIONAL_DATA_SCHEMA = {
                 "last_name": {"type": "string"},
                 "phone_number": {"type": "string"},
             },
+            "required": ["first_name", "last_name", "phone_number"],
             "additionalProperties": False,
         },
         "external": {
