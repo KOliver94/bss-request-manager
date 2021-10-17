@@ -143,7 +143,7 @@ SOCIAL_AUTH_PIPELINE = (
     # Custom action: Return error if e-mail was not provided by OAuth.
     "common.social_pipeline.check_for_email",
     # Checks if the current social-account is already associated in the site.
-    "common.social_pipeline.social_user",
+    "social_core.pipeline.social_auth.social_user",
     # Make up a username for this person, appends a random string at the end if
     # there's any collision.
     "social_core.pipeline.user.get_username",
