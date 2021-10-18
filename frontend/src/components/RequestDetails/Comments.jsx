@@ -50,6 +50,7 @@ const useStyles = makeStyles(() => ({
   },
   commentText: {
     textAlign: 'left',
+    whiteSpace: 'pre-wrap',
   },
   commentDivider: {
     margin: '30px 0',
