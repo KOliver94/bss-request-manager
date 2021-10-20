@@ -36,7 +36,7 @@ SECRET_KEY = config("APP_SECRET_KEY", default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("APP_DEBUG", default=False, cast=bool)
-DJANGO_ADMIN = config("DJANGO_ADMIN", default=False, cast=bool)
+DJANGO_ADMIN = config("DJANGO_ADMIN", default=True, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost", cast=Csv())
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
