@@ -1,5 +1,4 @@
-{% load i18n %}
-Sziasztok!
+{% load i18n %}Sziasztok!
 
 {% if recording %}
 Közetkező heti forgatások:

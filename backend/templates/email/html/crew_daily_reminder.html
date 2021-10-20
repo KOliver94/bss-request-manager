@@ -1,6 +1,6 @@
 {% extends 'email/html/email_base.html' %}
 {% block title %}Mai forgatás emlékeztető{% endblock %}
-{% block preheader %}Szia! Ne felejtsd, ma lesz a {{ request.title }} forgatás.{% endblock %}
+{% block preheader %}Szia! Ne felejtsd, ma lesz a(z) {{ request.title }} forgatás.{% endblock %}
 {% block hero %}Szia!{% endblock %}
 {% block content %}
     <!-- start copy block -->
@@ -17,7 +17,7 @@
                 <tr>
                     <td align="left" bgcolor="#ffffff"
                         style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                        <p style="margin: 0;">Ne felejtsd, ma lesz a <strong>{{ request.title }}</strong> forgatás.
+                        <p style="margin: 0;">Ne felejtsd, ma lesz a(z) <strong>{{ request.title }}</strong> forgatás.
                             Egyeztess a többiekkel is.</p>
                     </td>
                 </tr>
@@ -32,9 +32,9 @@
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                                                <a href="{{ request.admin_url }}" target="_blank" rel="noopener noreferrer"
-                                                   style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">
-                                                    Részletek</a>
+                                                <a href="{{ request.admin_url }}" target="_blank"
+                                                   rel="noopener noreferrer"
+                                                   style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Részletek</a>
                                             </td>
                                         </tr>
                                     </table>

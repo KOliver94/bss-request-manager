@@ -1,5 +1,4 @@
-{% load i18n %}
-Kedves {{ request.requester.first_name }}!
+{% load i18n %}Kedves {{ request.requester.first_name }}!
 
 Köszönjük, hogy felkerestél minket!
 
