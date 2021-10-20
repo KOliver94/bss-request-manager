@@ -3,8 +3,7 @@
 {% load static %}
 {% load settings %}
 {% block title %}Új hozzászólás érkezett{% endblock %}
-{% block preheader %}Szia! A {{ comment.request.title }} felkéréshez új {% if comment.internal %}belső{% endif %} hozzászólás
-    érkezett.{% endblock %}
+{% block preheader %}Szia! A(z) {{ comment.request.title }} felkéréshez új {% if comment.internal %}belső {% endif %}hozzászólás érkezett.{% endblock %}
 {% block hero %}Szia!{% endblock %}
 {% block content %}
     <!-- start copy block -->
@@ -21,8 +20,8 @@
                 <tr>
                     <td align="left" bgcolor="#ffffff"
                         style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                        <p style="margin: 0;">A <strong>{{ comment.request.title }}</strong> felkéréshez új
-                            {% if comment.internal %}<strong>belső</strong>{% endif %} hozzászólás érkezett:</p>
+                        <p style="margin: 0;">A(z) <strong>{{ comment.request.title }}</strong> felkéréshez új
+                            {% if comment.internal %}<strong>belső</strong> {% endif %}hozzászólás érkezett:</p>
                     </td>
                 </tr>
                 <!-- end copy -->
@@ -38,8 +37,7 @@
                                         <img src="{{ comment.author.userprofile.avatar_url }}" height="100" width="100"
                                              style="display: block; border-radius: 50%;">
                                     {% else %}
-                                        <img src="{% settings_value "BASE_URL" %}{% static "images/default_avatar.png" %}" height="100" width="100"
-                                             style="display: block; border-radius: 50%;">
+                                        <img src="{% settings_value "BASE_URL" %}{% static "images/default_avatar.png" %}" height="100" width="100" style="display: block; border-radius: 50%;">
                                     {% endif %}
                                 </td>
                                 <td align="left" bgcolor="#ffffff" valign="top" style="padding-left: 15px;">
@@ -68,9 +66,9 @@
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                                                <a href="{{ comment.request.admin_url }}" target="_blank" rel="noopener noreferrer"
-                                                   style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">
-                                                    Válaszolok</a>
+                                                <a href="{{ comment.request.admin_url }}" target="_blank"
+                                                   rel="noopener noreferrer"
+                                                   style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Válaszolok</a>
                                             </td>
                                         </tr>
                                     </table>

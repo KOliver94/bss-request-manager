@@ -1,5 +1,4 @@
-{% load i18n %}
-Kedves {{ comment.request.requester.first_name }}!
+{% load i18n %}Kedves {{ comment.request.requester.first_name }}!
 
 {{ comment.request.title }} forgatási felkérésedhez új hozzászólás érkezett:
 {% language 'hu' %}{{ comment.created|date:"DATETIME_FORMAT" }}{% endlanguage %}

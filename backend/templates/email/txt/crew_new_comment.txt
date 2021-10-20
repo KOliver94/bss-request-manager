@@ -1,7 +1,6 @@
-{% load i18n %}
-Szia!
+{% load i18n %}Szia!
 
-A {{ comment.request.title }} felkéréshez új {% if comment.internal %}belső{% endif %} hozzászólás érkezett:
+A(z) {{ comment.request.title }} felkéréshez új {% if comment.internal %}belső {% endif %}hozzászólás érkezett:
 {% language 'hu' %}{{ comment.created|date:"DATETIME_FORMAT" }}{% endlanguage %}
 {{ commenter_name }}:
 {{ comment.text }}

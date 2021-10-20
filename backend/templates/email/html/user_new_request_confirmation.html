@@ -1,8 +1,7 @@
 {% extends 'email/html/email_base.html' %}
 {% load i18n %}
 {% block title %}Forgatási felkérésedet fogadtuk{% endblock %}
-{% block preheader %}Kedves {{ request.requester.first_name }}! Köszönjük, hogy felkerestél minket! Forgatási felkérésedet
-    fogadtuk.{% endblock %}
+{% block preheader %}Kedves {{ request.requester.first_name }}! Köszönjük, hogy felkerestél minket! Forgatási felkérésedet fogadtuk.{% endblock %}
 {% block hero %}Kedves {{ request.requester.first_name }}!{% endblock %}
 {% block content %}
     <!-- start copy block -->

@@ -1,5 +1,4 @@
-{% load i18n %}
-Szia!
+{% load i18n %}Szia!
 
 Az alábbi anyagok elkészültek, de még nincsenek lezárva:
 Esemény neve | Dátum | URL
