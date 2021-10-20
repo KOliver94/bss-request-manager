@@ -301,7 +301,10 @@ class EmailSendingTestCase(APITestCase):
         # Should be included
         edit1 = create_request(110, self.normal_user, Request.Statuses.RECORDED)
         edit2 = create_request(111, self.normal_user, Request.Statuses.UPLOADED)
-        create_video(211, edit2, Video.Statuses.PENDING)
+        edit_vid21 = create_video(211, edit2, Video.Statuses.PENDING)
+        edit_vid22 = create_video(
+            212, edit2, Video.Statuses.IN_PROGRESS, self.staff_user
+        )
         # Should not be included
         edit3 = create_request(
             112, self.normal_user, Request.Statuses.EDITED
@@ -309,11 +312,11 @@ class EmailSendingTestCase(APITestCase):
         edit4 = create_request(
             113, self.normal_user, Request.Statuses.RECORDED
         )  # good status but wrong status video
-        create_video(213, edit4, Video.Statuses.EDITED)
+        edit_vid41 = create_video(213, edit4, Video.Statuses.EDITED)
         edit5 = create_request(
             114, self.normal_user, Request.Statuses.EDITED
         )  # wrong status but good status video
-        create_video(214, edit5, Video.Statuses.PENDING)
+        edit_vid51 = create_video(214, edit5, Video.Statuses.PENDING)
 
         """
         Case 1: Successful e-mail sending
@@ -335,12 +338,18 @@ class EmailSendingTestCase(APITestCase):
         self.assertNotIn(rec4, mock_email_staff_weekly_tasks.call_args.args[0])
         self.assertNotIn(rec5, mock_email_staff_weekly_tasks.call_args.args[0])
 
-        self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[1]), 2)
+        self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[1]), 1)
         self.assertIn(edit1, mock_email_staff_weekly_tasks.call_args.args[1])
-        self.assertIn(edit2, mock_email_staff_weekly_tasks.call_args.args[1])
+        self.assertNotIn(edit2, mock_email_staff_weekly_tasks.call_args.args[1])
         self.assertNotIn(edit3, mock_email_staff_weekly_tasks.call_args.args[1])
         self.assertNotIn(edit4, mock_email_staff_weekly_tasks.call_args.args[1])
         self.assertNotIn(edit5, mock_email_staff_weekly_tasks.call_args.args[1])
+
+        self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[2]), 2)
+        self.assertIn(edit_vid21, mock_email_staff_weekly_tasks.call_args.args[2])
+        self.assertIn(edit_vid22, mock_email_staff_weekly_tasks.call_args.args[2])
+        self.assertNotIn(edit_vid41, mock_email_staff_weekly_tasks.call_args.args[2])
+        self.assertNotIn(edit_vid51, mock_email_staff_weekly_tasks.call_args.args[2])
 
         # Check if e-mail was sent to the right people
         self.assertEqual(len(mail.outbox), 1)

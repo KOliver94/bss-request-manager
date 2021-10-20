@@ -7,10 +7,12 @@ Esemény neve | Dátum | URL
 {% endfor %}
 {% endif %}
 
-{% if editing %}
+{% if editing_no_vids or editing_unedited_vids %}
 Vágandó anyagok:
-Anyag neve | Vágó | URL
-{% for video in editing %}{{ video.title }} | {{ video.editor }} | {{ video.request.admin_url }}
+Esemény/Videó neve | Vágó | URL
+{% for request in editing_no_vids %}{{ request.title }} | | {{ request.admin_url }}
+{% endfor %}
+{% for video in editing_unedited_vids %}{{ video.title }} | {{ video.editor.last_name }} {{ video.editor.first_name }} | {{ video.request.admin_url }}
 {% endfor %}
 {% endif %}
 
