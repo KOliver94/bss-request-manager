@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from common.models import AbstractComment, AbstractRating, get_sentinel_user
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
@@ -83,6 +84,14 @@ class Request(models.Model):
     )
     history = HistoricalRecords()
 
+    @property
+    def url(self):
+        return f"{settings.BASE_URL}/my-requests/{self.id}"
+
+    @property
+    def admin_url(self):
+        return f"{settings.BASE_URL}/admin/requests/{self.id}"
+
     def clean(self):
         super().clean()
         if not (self.start_datetime <= self.end_datetime):
@@ -137,6 +146,11 @@ class Video(models.Model):
     objects = AnnotatedManager()
 
     __original_aired = None
+
+    @property
+    def published_url(self):
+        published_url = self.additional_data.get("publishing", {}).get("website")
+        return published_url
 
     def __init__(self, *args, **kwargs):
         super(Video, self).__init__(*args, **kwargs)

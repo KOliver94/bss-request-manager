@@ -18,11 +18,8 @@ BASE_URL = settings.BASE_URL
 def email_user_new_request_confirmation(request_id):
     request = Request.objects.get(pk=request_id)
     context = {
-        "base_url": BASE_URL,
-        "first_name": request.requester.first_name,
         "request": request,
         "is_registered": request.requester.is_active,
-        "details_url": f"{BASE_URL}/my-requests/{request.id}",
     }
 
     msg_plain = render_to_string("email/txt/user_new_request_confirmation.txt", context)
@@ -55,12 +52,8 @@ def email_user_new_request_confirmation(request_id):
 def email_user_video_published(video_id):
     video = Video.objects.get(pk=video_id)
     context = {
-        "base_url": BASE_URL,
-        "first_name": video.request.requester.first_name,
+        "video": video,
         "is_registered": video.request.requester.is_active,
-        "video_title": video.title,
-        "video_url": video.additional_data["publishing"]["website"],
-        "rating_url": f"{BASE_URL}/my-requests/{video.request.id}",
     }
 
     msg_plain = render_to_string("email/txt/user_video_published.txt", context)
@@ -93,16 +86,8 @@ def email_user_video_published(video_id):
 def email_user_new_comment(comment_id):
     comment = Comment.objects.get(pk=comment_id)
     context = {
-        "base_url": BASE_URL,
-        "first_name": comment.request.requester.first_name,
-        "request_title": comment.request.title,
-        "commenter_avatar": comment.author.userprofile.avatar_url
-        if comment.author.userprofile.avatar_url
-        else BASE_URL + "/static/images/default_avatar.png",
+        "comment": comment,
         "commenter_name": comment.author.get_full_name_eastern_order(),
-        "comment_message": comment.text,
-        "comment_created": comment.created,
-        "comment_url": f"{BASE_URL}/my-requests/{comment.request.id}",
     }
 
     msg_plain = render_to_string("email/txt/user_new_comment.txt", context)
@@ -127,7 +112,7 @@ def email_user_new_comment(comment_id):
 
 
 def email_staff_weekly_tasks(recording, editing):
-    context = {"base_url": BASE_URL, "recording": recording, "editing": editing}
+    context = {"recording": recording, "editing": editing}
 
     msg_plain = render_to_string("email/txt/staff_weekly_tasks.txt", context)
     msg_html = render_to_string("email/html/staff_weekly_tasks.html", context)
@@ -151,9 +136,7 @@ def email_staff_weekly_tasks(recording, editing):
 
 def email_crew_daily_reminder(request, crew_members):
     context = {
-        "base_url": BASE_URL,
-        "request_title": request.title,
-        "request_url": f"{BASE_URL}/admin/requests/{request.id}",
+        "request": request,
     }
     msg_plain = render_to_string("email/txt/crew_daily_reminder.txt", context)
     msg_html = render_to_string("email/html/crew_daily_reminder.html", context)
@@ -178,16 +161,8 @@ def email_crew_daily_reminder(request, crew_members):
 def email_crew_new_comment(comment_id):
     comment = Comment.objects.get(pk=comment_id)
     context = {
-        "base_url": BASE_URL,
-        "request_title": comment.request.title,
-        "comment_internal": comment.internal,
-        "commenter_avatar": comment.author.userprofile.avatar_url
-        if comment.author.userprofile.avatar_url
-        else BASE_URL + "/static/images/default_avatar.png",
+        "comment": comment,
         "commenter_name": comment.author.get_full_name_eastern_order(),
-        "comment_message": comment.text,
-        "comment_created": comment.created,
-        "comment_url": f"{BASE_URL}/admin/requests/{comment.request.id}",
     }
 
     msg_plain = render_to_string("email/txt/crew_new_comment.txt", context)
@@ -223,7 +198,7 @@ def email_crew_new_comment(comment_id):
 
 
 def email_production_manager_unfinished_requests(requests):
-    context = {"base_url": BASE_URL, "requests": requests}
+    context = {"requests": requests}
 
     msg_plain = render_to_string(
         "email/txt/production_manager_unfinished_requests.txt", context
@@ -250,7 +225,7 @@ def email_production_manager_unfinished_requests(requests):
 
 
 def email_responsible_overdue_request(request):
-    context = {"base_url": BASE_URL, "request": request}
+    context = {"request": request}
 
     msg_plain = render_to_string("email/txt/responsible_overdue_request.txt", context)
     msg_html = render_to_string("email/html/responsible_overdue_request.html", context)

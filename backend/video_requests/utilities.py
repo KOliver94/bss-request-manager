@@ -31,19 +31,17 @@ def update_request_status(request, called_from_video=False):
                 if request.additional_data["accepted"] is True
                 else Request.Statuses.DENIED
             )
-            if (
-                request.additional_data.get("external")
-                and request.additional_data["external"].get("sch_events_callback_url")
-                and (
-                    request.status == Request.Statuses.REQUESTED
-                    or (
-                        request.status == Request.Statuses.DENIED
-                        and status == Request.Statuses.ACCEPTED
-                    )
-                    or (
-                        request.status >= Request.Statuses.ACCEPTED
-                        and status == Request.Statuses.DENIED
-                    )
+            if request.additional_data.get("external", {}).get(
+                "sch_events_callback_url"
+            ) and (
+                request.status == Request.Statuses.REQUESTED
+                or (
+                    request.status == Request.Statuses.DENIED
+                    and status == Request.Statuses.ACCEPTED
+                )
+                or (
+                    request.status >= Request.Statuses.ACCEPTED
+                    and status == Request.Statuses.DENIED
                 )
             ):
                 notify_sch_event_management_system.delay(
@@ -81,11 +79,9 @@ def update_request_status(request, called_from_video=False):
             status = Request.Statuses.RECORDED
 
         # If path in recording is specified consider as successful recording and update video status
-        if (
-            status == Request.Statuses.RECORDED
-            and "recording" in request.additional_data
-            and request.additional_data["recording"].get("path", None)
-        ):
+        if status == Request.Statuses.RECORDED and request.additional_data.get(
+            "recording", {}
+        ).get("path"):
             status = Request.Statuses.UPLOADED
             for video in request.videos.all():
                 update_video_status(video, True, status)
@@ -179,11 +175,9 @@ def update_video_status(video, called_from_request=False, request_status=1):
             )
 
         # Check if the video is published on the website
-        if (
-            status == Video.Statuses.CODED
-            and "publishing" in video.additional_data
-            and video.additional_data["publishing"].get("website", None)
-        ):
+        if status == Video.Statuses.CODED and video.additional_data.get(
+            "publishing", {}
+        ).get("website"):
             status = Video.Statuses.PUBLISHED
             # If the current status of the video is before published send an e-mail to the requester
             if video.status < Video.Statuses.PUBLISHED and not video.additional_data[

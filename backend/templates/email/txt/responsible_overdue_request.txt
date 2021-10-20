@@ -5,5 +5,7 @@ A(z) {{ request.title }} felkérés határideje lejárt, de még nem készült e
 
 Kérlek nézz rá és intézkedj, hogy minél hamarabb le lehessen zárni.
 
+A felkérést itt találod: {{ request.admin_url }}
+
 Üdv:
 Felkéréskezelő robotka

@@ -30,16 +30,17 @@
                                         style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; color: white;">
                                         <strong>Dátum</strong></td>
                                 </tr>
-                                {% for req in recording %}
+                                {% for request in recording %}
                                     <tr style="border: solid; border-width: 1px 0; border-color:#e3e6e4">
                                         <td align="left" width="60%"
                                             style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                            {{ req.title }}
+                                            <a href="{{ request.admin_url }}" target="_blank"
+                                               rel="noopener noreferrer">{{ request.title }}</a>
                                         </td>
                                         <td align="left" width="40%"
                                             style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
                                             {% language 'hu' %}
-                                                {{ req.start_datetime|date:"N j l, H:i" }}{% endlanguage %}
+                                                {{ request.start_datetime|date:"N j l, H:i" }}{% endlanguage %}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -65,15 +66,16 @@
                                         style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; color: white;">
                                         <strong>Vágó</strong></td>
                                 </tr>
-                                {% for req in editing %}
+                                {% for video in editing %}
                                     <tr style="border: solid; border-width: 1px 0; border-color:#e3e6e4">
                                         <td align="left" width="60%"
                                             style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                            {{ req.title }}
+                                            <a href="{{ video.request.admin_url }}" target="_blank"
+                                               rel="noopener noreferrer">{{ video.title }}</a>
                                         </td>
                                         <td align="left" width="40%"
                                             style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                            {{ req.editor }}
+                                            {{ video.editor }}
                                         </td>
                                     </tr>
                                 {% endfor %}

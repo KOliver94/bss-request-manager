@@ -1,8 +1,8 @@
 Szia!
 
-Ne felejtsd, ma lesz a {{ request_title }} forgatás. Egyeztess a többiekkel is.
+Ne felejtsd, ma lesz a {{ request.title }} forgatás. Egyeztess a többiekkel is.
 
-Részletek: {{ request_url }}
+Részletek: {{ request.admin_url }}
 
 Üdv:
 Felkéréskezelő robotka

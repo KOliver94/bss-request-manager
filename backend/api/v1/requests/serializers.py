@@ -82,11 +82,9 @@ class VideoDefaultSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_video_url(obj):
-        if (
-            obj.status >= Video.Statuses.PUBLISHED
-            and obj.additional_data.get("publishing", None)
-            and obj.additional_data["publishing"].get("website", None)
-        ):
+        if obj.status >= Video.Statuses.PUBLISHED and obj.additional_data.get(
+            "publishing", {}
+        ).get("website"):
             return obj.additional_data["publishing"]["website"]
         return None
 

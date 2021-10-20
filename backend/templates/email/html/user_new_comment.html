@@ -1,8 +1,10 @@
 {% extends 'email/html/email_base.html' %}
 {% load i18n %}
+{% load static %}
+{% load settings %}
 {% block title %}Felkérésedhez új hozzászólás érkezett{% endblock %}
-{% block preheader %}Kedves {{ first_name }}! Forgatási felkérésedhez új hozzászólás érkezett.{% endblock %}
-{% block hero %}Kedves {{ first_name }}!{% endblock %}
+{% block preheader %}Kedves {{ comment.request.requester.first_name }}! Forgatási felkérésedhez új hozzászólás érkezett.{% endblock %}
+{% block hero %}Kedves {{ comment.request.requester.first_name }}!{% endblock %}
 {% block content %}
     <!-- start copy block -->
     <tr>
@@ -18,7 +20,7 @@
                 <tr>
                     <td align="left" bgcolor="#ffffff"
                         style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                        <p style="margin: 0;"><strong>{{ request_title }}</strong> forgatási felkérésedhez új
+                        <p style="margin: 0;"><strong>{{ comment.request.title }}</strong> forgatási felkérésedhez új
                             hozzászólás érkezett:</p>
                     </td>
                 </tr>
@@ -31,19 +33,24 @@
                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                             <tr>
                                 <td align="left" bgcolor="#ffffff" valign="center" rowspan="2" style="width:1%;">
-                                    <img src="{{ commenter_avatar }}" height="100" width="100"
-                                         style="display: block; border-radius: 50%;">
+                                    {% if comment.author.userprofile.avatar_url %}
+                                        <img src="{{ comment.author.userprofile.avatar_url }}" height="100" width="100"
+                                             style="display: block; border-radius: 50%;">
+                                    {% else %}
+                                        <img src="{% settings_value "BASE_URL" %}{% static "images/default_avatar.png" %}" height="100" width="100"
+                                             style="display: block; border-radius: 50%;">
+                                    {% endif %}
                                 </td>
                                 <td align="left" bgcolor="#ffffff" valign="top" style="padding-left: 15px;">
                                     <p style="margin: 0;"><strong>{{ commenter_name }}</strong></p>
                                     <p style="margin: 0; padding-top: 2px"><small>{% language 'hu' %}
-                                        {{ comment_created|date:"DATETIME_FORMAT" }}{% endlanguage %}</small></p>
+                                        {{ comment.created|date:"DATETIME_FORMAT" }}{% endlanguage %}</small></p>
                                 </td>
                             </tr>
                             <tr style="padding: 10px">
                                 <td align="left" bgcolor="#ffffff" valign="top"
                                     style="padding-left: 15px; padding-top: 10px">
-                                    <p style="margin: 0;">{{ comment_message }}</p>
+                                    <p style="margin: 0;">{{ comment.text }}</p>
                                 </td>
                             </tr>
                         </table>
@@ -60,7 +67,7 @@
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                                                <a href="{{ comment_url }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ comment.request.url }}" target="_blank" rel="noopener noreferrer"
                                                    style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">
                                                     Válaszolok</a>
                                             </td>

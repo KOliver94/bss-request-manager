@@ -2,6 +2,7 @@ import json
 from io import StringIO
 
 from common.models import get_sentinel_user
+from common.templatetags.settings import settings_value
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
@@ -122,3 +123,6 @@ class CommonTestCase(TestCase):
             "'randomValue' is not a 'uri'",
             context.exception.messages[0],
         )
+
+    def test_settings_template_tag(self):
+        self.assertEqual(settings_value("BASE_URL"), settings.BASE_URL)
