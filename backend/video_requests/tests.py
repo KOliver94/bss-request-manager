@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from tests.helpers.users_test_utils import create_user
@@ -27,6 +28,17 @@ class VideoRequestsTestCase(TestCase):
             f"{self.request.title} || {self.request.start_datetime.date()}",
         )
 
+    def test_request_get_url(self):
+        self.assertEqual(
+            self.request.url, f"{settings.BASE_URL}/my-requests/{self.request.id}"
+        )
+
+    def test_request_get_admin_url(self):
+        self.assertEqual(
+            self.request.admin_url,
+            f"{settings.BASE_URL}/admin/requests/{self.request.id}",
+        )
+
     def test_crew_member_to_str(self):
         self.assertEqual(
             str(self.crew_member),
@@ -37,6 +49,15 @@ class VideoRequestsTestCase(TestCase):
         self.assertEqual(
             str(self.video), f"{self.video.request.title} || {self.video.title}"
         )
+
+    def test_video_get_published_url_none(self):
+        self.assertIsNone(self.video.published_url)
+
+    def test_video_get_published_url(self):
+        test_url = "https://example.com"
+        self.video.additional_data["publishing"] = {"website": test_url}
+        self.video.save()
+        self.assertEqual(self.video.published_url, test_url)
 
     def test_comment_to_str(self):
         self.assertEqual(

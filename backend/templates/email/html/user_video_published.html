@@ -1,8 +1,8 @@
 {% extends 'email/html/email_base.html' %}
 {% block title %}Felkérésedhez új videót publikáltunk{% endblock %}
-{% block preheader %}Kedves {{ first_name }}! Felkérsedhez új videót publikáltunk {{ video_title }}
+{% block preheader %}Kedves {{ video.request.requester.first_name }}! Felkérsedhez új videót publikáltunk {{ video.title }}
     címmel.{% endblock %}
-{% block hero %}Kedves {{ first_name }}!{% endblock %}
+{% block hero %}Kedves {{ video.request.requester.first_name }}!{% endblock %}
 {% block content %}
     <!-- start copy block -->
     <tr>
@@ -18,7 +18,7 @@
                 <tr>
                     <td align="left" bgcolor="#ffffff"
                         style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                        <p style="margin: 0;">Felkérsedhez új videót publikáltunk <strong>{{ video_title }}</strong>
+                        <p style="margin: 0;">Felkérsedhez új videót publikáltunk <strong>{{ video.title }}</strong>
                             címmel, melyet az alábbi gombra kattintva tekinthetsz meg.</p>
                     </td>
                 </tr>
@@ -33,7 +33,7 @@
                                     <table border="0" cellpadding="0" cellspacing="0">
                                         <tr>
                                             <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                                                <a href="{{ video_url }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ video.published_url }}" target="_blank" rel="noopener noreferrer"
                                                    style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">
                                                     Videó megtekintése</a>
                                             </td>
@@ -69,7 +69,7 @@
                                         <table border="0" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td align="center" bgcolor="#f7a00a" style="border-radius: 6px;">
-                                                    <a href="{{ ratings_url }}" target="_blank"
+                                                    <a href="{{ video.request.url }}" target="_blank"
                                                        rel="noopener noreferrer"
                                                        style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">
                                                         Értékelés</a>

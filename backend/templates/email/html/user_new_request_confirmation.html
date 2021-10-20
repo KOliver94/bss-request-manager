@@ -1,9 +1,9 @@
 {% extends 'email/html/email_base.html' %}
 {% load i18n %}
 {% block title %}Forgatási felkérésedet fogadtuk{% endblock %}
-{% block preheader %}Kedves {{ first_name }}! Köszönjük, hogy felkerestél minket! Forgatási felkérésedet
+{% block preheader %}Kedves {{ request.requester.first_name }}! Köszönjük, hogy felkerestél minket! Forgatási felkérésedet
     fogadtuk.{% endblock %}
-{% block hero %}Kedves {{ first_name }}!{% endblock %}
+{% block hero %}Kedves {{ request.requester.first_name }}!{% endblock %}
 {% block content %}
     <!-- start copy block -->
     <tr>
@@ -80,7 +80,7 @@
                                         <table border="0" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                                                    <a href="{{ details_url }}" target="_blank"
+                                                    <a href="{{ request.url }}" target="_blank"
                                                        rel="noopener noreferrer"
                                                        style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">
                                                         További részletek</a>
@@ -100,8 +100,8 @@
                             style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
                             <p style="margin: 0;">
                                 Ha a gomb nem működik másold a következő linket a böngésződ címsorába:
-                                <br><a href="{{ details_url }}" target="_blank"
-                                       rel="noopener noreferrer">{{ details_url }}</a>
+                                <br><a href="{{ request.url }}" target="_blank"
+                                       rel="noopener noreferrer">{{ request.url }}</a>
                                 <br><br><strong>Hamarosan keresni fogunk, hogy el tudjuk-e vállalni az esemény
                                 rögzítését.</strong>
                             </p>
