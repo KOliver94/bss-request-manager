@@ -51,7 +51,7 @@
                 <!-- end recording -->
 
                 <!-- start editing -->
-                {% if editing %}
+                {% if editing_no_vids or editing_unedited_vids %}
                     <tr>
                         <td align="left" bgcolor="#ffffff"
                             style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
@@ -61,12 +61,23 @@
                                 <tr>
                                     <td align="left" bgcolor="#f7a00a" width="60%"
                                         style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; color: white;">
-                                        <strong>Esemény neve</strong></td>
+                                        <strong>Esemény/Videó neve</strong></td>
                                     <td align="left" bgcolor="#f7a00a" width="40%"
                                         style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; color: white;">
                                         <strong>Vágó</strong></td>
                                 </tr>
-                                {% for video in editing %}
+                                {% for request in editing_no_vids %}
+                                    <tr style="border: solid; border-width: 1px 0; border-color:#e3e6e4">
+                                        <td align="left" width="60%"
+                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+                                            <a href="{{ request.admin_url }}" target="_blank"
+                                               rel="noopener noreferrer">{{ request.title }}</a>
+                                        </td>
+                                        <td align="left" width="40%"
+                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;"></td>
+                                    </tr>
+                                {% endfor %}
+                                {% for video in editing_unedited_vids %}
                                     <tr style="border: solid; border-width: 1px 0; border-color:#e3e6e4">
                                         <td align="left" width="60%"
                                             style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
@@ -74,9 +85,7 @@
                                                rel="noopener noreferrer">{{ video.title }}</a>
                                         </td>
                                         <td align="left" width="40%"
-                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                            {{ video.editor }}
-                                        </td>
+                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">{{ video.editor.last_name }} {{ video.editor.first_name }}</td>
                                     </tr>
                                 {% endfor %}
                             </table>

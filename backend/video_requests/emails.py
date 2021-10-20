@@ -111,8 +111,12 @@ def email_user_new_comment(comment_id):
     return f"New comment e-mail was sent to {comment.request.requester.email} successfully."
 
 
-def email_staff_weekly_tasks(recording, editing):
-    context = {"recording": recording, "editing": editing}
+def email_staff_weekly_tasks(recording, editing_no_vids, editing_unedited_vids):
+    context = {
+        "recording": recording,
+        "editing_no_vids": editing_no_vids,
+        "editing_unedited_vids": editing_unedited_vids,
+    }
 
     msg_plain = render_to_string("email/txt/staff_weekly_tasks.txt", context)
     msg_html = render_to_string("email/html/staff_weekly_tasks.html", context)
