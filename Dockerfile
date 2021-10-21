@@ -106,7 +106,7 @@ RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Set health check
-HEALTHCHECK --start-period=30s --interval=5m \
+HEALTHCHECK --start-period=10s --interval=5m \
     CMD python manage.py health_check
 
 # Start the server
