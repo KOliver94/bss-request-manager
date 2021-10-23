@@ -150,7 +150,10 @@ class EmailSendingTestCase(APITestCase):
         create_crew(201, request, crew_member2, "Reporter")
 
         # New comment data
-        data = {"text": "New comment", "internal": False}
+        data = {
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut ex erat. Nunc rutrum ac odio nec accumsan. Integer tristique nibh mollis nunc rhoncus, at dictum dui pellentesque. Integer ut tortor libero. Maecenas nec sollicitudin neque, a laoreet quam. Duis eu enim enim. Vestibulum porta commodo dictum.\nSuspendisse condimentum, nisl ut elementum mattis, felis mauris dictum enim, at viverra elit felis eget elit. Nam finibus quis neque id varius. Aenean vel metus et ipsum feugiat consectetur nec at elit. In malesuada scelerisque quam ac blandit. Donec venenatis aliquam ex ac dignissim. Pellentesque eleifend tortor a purus egestas, eget pretium mi egestas. Sed non neque maximus, iaculis ex at, egestas augue. Maecenas non enim eu libero facilisis cursus at sed quam. Duis at tortor sapien. Duis congue turpis libero, ut dapibus eros efficitur vel. Curabitur aliquam eros eget gravida congue. Donec et libero egestas, hendrerit elit sed, fermentum sapien. Nunc placerat tempor metus vel efficitur. In eget tortor id est mattis blandit vitae vel mi. Integer aliquet at odio ac dictum.\nUt eros nibh, tincidunt sit amet felis vitae, vehicula posuere diam. Nunc a aliquam enim, eget scelerisque lectus. Maecenas et risus in leo luctus sodales eu venenatis mauris. Vivamus quis metus finibus, vehicula tellus nec, placerat tortor. Quisque vel felis auctor, scelerisque massa sit amet, gravida ex. Phasellus orci dolor, faucibus placerat purus nec, iaculis faucibus tortor. Aenean fringilla justo a metus placerat, ut volutpat quam scelerisque. Ut laoreet ullamcorper quam. Aenean sed sodales sem. Nulla dolor tortor, sagittis quis dui non, dapibus hendrerit ligula. Fusce consectetur sapien arcu. Nunc accumsan leo et turpis convallis sagittis. Sed tincidunt nunc ut vehicula cursus. Sed facilisis tortor ac ex dapibus interdum.",
+            "internal": False,
+        }
 
         # Authorized staff user and create new comment
         self.authorize_user(self.staff_user)
