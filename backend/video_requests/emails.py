@@ -11,7 +11,6 @@ from django.template.loader import render_to_string
 from video_requests.models import Comment, Request, Video
 
 TEXT_HTML = "text/html"
-BASE_URL = settings.BASE_URL
 
 
 @shared_task
