@@ -34,6 +34,7 @@ import { requestStatuses } from 'helpers/enumConstants';
 import { isPrivileged as isPrivilegedCheck } from 'api/loginApi';
 import handleError from 'helpers/errorHandler';
 import changePageTitle from 'helpers/pageTitleHelper';
+import moveOwnUserToTop from 'helpers/sortingHelper';
 
 import styles from 'assets/jss/material-kit-react/views/requestDetailPage';
 
@@ -108,7 +109,7 @@ export default function RequestDetailPage({
         if (isPrivileged) {
           result = await getRequestAdmin(requestId);
           await listStaffUsers().then((response) => {
-            setStaffMembers(response.data);
+            setStaffMembers(moveOwnUserToTop(response.data));
           });
         } else {
           result = await getRequest(requestId);
