@@ -85,7 +85,7 @@ CELERY_BEAT_SCHEDULE.update(
 # https://python-social-auth.readthedocs.io/en/latest/index.html
 
 # When using PostgreSQL, it’s recommended to use the built-in JSONB field to store the extracted extra_data.
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 # Use username, email, first and last name for user creation
 SOCIAL_AUTH_USER_FIELDS = ["username", "email", "first_name", "last_name"]
