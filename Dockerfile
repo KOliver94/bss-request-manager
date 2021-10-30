@@ -1,7 +1,7 @@
 # Stage 1 - Build Frontend
 
 # Pull base image
-FROM node:14-alpine AS react-build
+FROM node:17-alpine AS react-build
 
 # Build args
 ARG API_URL
