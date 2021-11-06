@@ -39,7 +39,7 @@ RUN npm run build
 # Stage 2 - The Production Environment
 
 # Pull base image
-FROM python:3.9-alpine AS request-manager
+FROM python:3.10.0-alpine AS request-manager
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
