@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [packages]
-celery = {extras = ["redis"],version = "==5.1.2"}
+celery = {extras = ["redis"],version = "==5.2.0"}
 django = "==3.1.13"
 djangorestframework = "==3.12.4"
 djangorestframework_simplejwt = "==5.0.0"
