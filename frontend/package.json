@@ -40,7 +40,7 @@
     "workbox-strategies": "^6.3.0",
     "workbox-streams": "^6.3.0",
     "yup": "^0.32.11",
-    "yup-phone": "^1.2.19"
+    "yup-phone": "^1.3.2"
   },
   "scripts": {
     "start": "set HTTPS=true&&react-scripts start",
