@@ -1,6 +1,6 @@
 Kedves {{ video.request.requester.first_name }}!
 
-Felkérsedhez új videót publikáltunk {{ video.title }} címmel, melyet az alábbi linken tekinthetsz meg: {{ video.published_url }}
+Felkérésedhez új videót publikáltunk {{ video.title }} címmel, melyet az alábbi linken tekinthetsz meg: {{ video.published_url }}
 
 {% if registered %}
 Kiváncsiak vagyunk a véleményedre. Kérjük a következő linken értékeld az elkészült videót és a munkánkat: {{ video.request.url }}

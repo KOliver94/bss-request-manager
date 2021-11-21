@@ -1,6 +1,6 @@
 {% extends 'email/html/email_base.html' %}
 {% block title %}Felkérésedhez új videót publikáltunk{% endblock %}
-{% block preheader %}Kedves {{ video.request.requester.first_name }}! Felkérsedhez új videót publikáltunk {{ video.title }} címmel.{% endblock %}
+{% block preheader %}Kedves {{ video.request.requester.first_name }}! Felkérésedhez új videót publikáltunk {{ video.title }} címmel.{% endblock %}
 {% block hero %}Kedves {{ video.request.requester.first_name }}!{% endblock %}
 {% block content %}
     <!-- start copy block -->
@@ -17,7 +17,7 @@
                 <tr>
                     <td align="left" bgcolor="#ffffff"
                         style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                        <p style="margin: 0;">Felkérsedhez új videót publikáltunk <strong>{{ video.title }}</strong>
+                        <p style="margin: 0;">Felkérésedhez új videót publikáltunk <strong>{{ video.title }}</strong>
                             címmel, melyet az alábbi gombra kattintva tekinthetsz meg.</p>
                     </td>
                 </tr>
