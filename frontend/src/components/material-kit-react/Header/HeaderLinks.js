@@ -30,7 +30,7 @@ const AdminButton = () => {
   if (isPrivileged()) {
     return (
       <Link to="/admin/requests" className={classes.dropdownLink}>
-        <i className='fas fa-tools'/> Admin
+        <i className="fas fa-tools" /> Admin
       </Link>
     );
   }
@@ -87,10 +87,10 @@ export default function HeaderLinks({
               <AdminButton />,
               { divider: isPrivileged() },
               <Link to="/profile" className={classes.dropdownLink}>
-                <i className='fas fa-user-circle'/> Profilom
+                <i className="fas fa-user-circle" /> Profilom
               </Link>,
               <Link to="/my-requests" className={classes.dropdownLink}>
-                <i className='fas fa-tasks'/> Felkéréseim
+                <i className="fas fa-tasks" /> Felkéréseim
               </Link>,
               { divider: true },
               <Link
@@ -101,7 +101,7 @@ export default function HeaderLinks({
                 {loading ? (
                   <CircularProgress size={10} />
                 ) : (
-                  <i className='fas fa-sign-out-alt'/>
+                  <i className="fas fa-sign-out-alt" />
                 )}{' '}
                 Kijelentkezés
               </Link>,
