@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // Material UI components
 import Tooltip from '@material-ui/core/Tooltip';
@@ -110,7 +110,7 @@ export default function BasicInformation({
 }) {
   const classes = useStyles();
   const formRef = useRef();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -234,7 +234,7 @@ export default function BasicInformation({
     setLoading(true);
     try {
       await deleteRequestAdmin(requestId).then(() => {
-        history.replace('/admin/requests');
+        navigate('/admin/requests', { replace: true });
       });
     } catch (e) {
       enqueueSnackbar(handleError(e), {
@@ -247,9 +247,9 @@ export default function BasicInformation({
 
   const changeView = () => {
     if (isPrivileged) {
-      history.replace(`/my-requests/${requestId}`);
+      navigate(`/my-requests/${requestId}`, { replace: true });
     } else {
-      history.replace(`/admin/requests/${requestId}`);
+      navigate(`/admin/requests/${requestId}`, { replace: true });
     }
   };
 
@@ -278,8 +278,9 @@ export default function BasicInformation({
                 <span>
                   <IconButton
                     onClick={() =>
-                      history.replace(
-                        isPrivileged ? '/admin/requests' : '/my-requests'
+                      navigate(
+                        isPrivileged ? '/admin/requests' : '/my-requests',
+                        { replace: true }
                       )
                     }
                     disabled={loading}

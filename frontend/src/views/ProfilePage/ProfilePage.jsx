@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useLocation, useHistory } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -77,7 +77,7 @@ const useStyles = makeStyles(styles);
 export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const { id } = useParams();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { code, provider } = { ...location.state };
   const ownUserId = parseInt(localStorage.getItem('user_id'), 10);
   const classes = useStyles();
@@ -153,7 +153,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       });
     } finally {
       setProfileConnecting(false);
-      history.replace();
+      navigate({ replace: true });
     }
   };
 
@@ -190,7 +190,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
         });
       } finally {
         setProfileConnecting(false);
-        history.replace();
+        navigate({ replace: true });
       }
     }
 
@@ -198,7 +198,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       setProfileConnecting(true);
       connectSocialProfile();
     }
-  }, [code, provider, history, enqueueSnackbar]);
+  }, [code, provider, navigate, enqueueSnackbar]);
 
   const validationSchema = Yup.object({
     first_name: Yup.string()

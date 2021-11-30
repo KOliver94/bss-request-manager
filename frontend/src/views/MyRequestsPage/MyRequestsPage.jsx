@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -48,7 +48,7 @@ export default function MyRequestsPage({
   isPrivileged,
 }) {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ results: [], total_pages: 0 });
@@ -80,7 +80,7 @@ export default function MyRequestsPage({
   };
 
   const handleRowClick = (id) => {
-    history.push(isPrivileged ? `/admin/requests/${id}` : `/my-requests/${id}`);
+    navigate(isPrivileged ? `/admin/requests/${id}` : `/my-requests/${id}`);
   };
 
   const handleOrderingChange = (orderBy) => {
