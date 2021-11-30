@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -46,7 +46,7 @@ export default function RequestDetailPage({
   isPrivileged,
 }) {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -119,9 +119,9 @@ export default function RequestDetailPage({
       } catch (e) {
         if (e.response && e.response.status === 404) {
           if (!isPrivileged && isPrivilegedCheck()) {
-            history.replace(`/admin/requests/${id}`);
+            navigate(`/admin/requests/${id}`, { replace: true });
           } else {
-            history.replace('/404');
+            navigate('/404', { replace: true });
           }
         } else {
           enqueueSnackbar(handleError(e), {
@@ -134,7 +134,7 @@ export default function RequestDetailPage({
 
     setLoading(true);
     loadData(id);
-  }, [id, isPrivileged, enqueueSnackbar, history]);
+  }, [id, isPrivileged, enqueueSnackbar, navigate]);
 
   useEffect(() => {
     changePageTitle(!loading && data.title);

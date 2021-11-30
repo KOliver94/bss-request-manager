@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
 import dialogOptions from './helpers/sentryHelper';
 import { checkRefreshTokenValid } from './api/loginApi';
@@ -33,7 +33,7 @@ function App() {
         showDialog
         dialogOptions={dialogOptions}
       >
-        <Switch>
+        <Routes>
           <Route exact path="/">
             <LandingPage
               isAuthenticated={isAuthenticated}
@@ -112,7 +112,7 @@ function App() {
             <RedirectPage />
           </Route>
           <Route render={() => <ErrorPage type="notfound" />} />
-        </Switch>
+        </Routes>
       </Sentry.ErrorBoundary>
     </Router>
   );
