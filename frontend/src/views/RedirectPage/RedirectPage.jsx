@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { getOauthCode, getOauthState } from 'helpers/oauthConstants';
 import changePageTitle from 'helpers/pageTitleHelper';
 
@@ -21,14 +21,15 @@ export default function RedirectPage() {
   return (
     <>
       {isValidOauthRedirect() ? (
-        <Redirect
+        <Navigate
           to={{
             pathname: state.operation,
             state: { code, provider: state.provider },
           }}
+          replace
         />
       ) : (
-        <Redirect to="/" />
+        <Navigate to="/" replace />
       )}
     </>
   );

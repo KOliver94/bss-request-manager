@@ -1,5 +1,5 @@
 import { useState, useEffect, createRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -64,7 +64,7 @@ export default function RequestCreatorPage({
   setIsAuthenticated,
 }) {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const recaptchaRef = createRef();
 
@@ -87,7 +87,7 @@ export default function RequestCreatorPage({
 
   const handleShowCreated = () => {
     if (requestId) {
-      history.push(`/my-requests/${requestId}`);
+      navigate(`/my-requests/${requestId}`);
     }
   };
 
@@ -148,7 +148,7 @@ export default function RequestCreatorPage({
                 autoHideDuration: 5000,
               }
             );
-            history.push('/profile');
+            navigate('/profile');
           }
           setFormData((prevState) => ({ ...prevState, ...userData }));
           setActiveStep(1);
@@ -164,7 +164,7 @@ export default function RequestCreatorPage({
     } else {
       setLoading(false);
     }
-  }, [isAuthenticated, enqueueSnackbar, history]);
+  }, [isAuthenticated, enqueueSnackbar, navigate]);
 
   useEffect(() => {
     changePageTitle('Felkérés beküldése');

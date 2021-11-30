@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
@@ -50,7 +50,7 @@ const PersonalDetails = ({
   isAuthenticated,
 }) => {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <Formik
@@ -74,7 +74,7 @@ const PersonalDetails = ({
                       color="inherit"
                       size="small"
                       onClick={() => {
-                        history.push('/profile');
+                        navigate('/profile');
                       }}
                     >
                       Ugrás
@@ -92,7 +92,7 @@ const PersonalDetails = ({
                       color="inherit"
                       size="small"
                       onClick={() => {
-                        history.push('/login');
+                        navigate('/login');
                       }}
                     >
                       Ugrás

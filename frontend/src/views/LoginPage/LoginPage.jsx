@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
@@ -43,7 +43,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   const [loading, setLoading] = useState(false);
 
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -83,10 +83,10 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
           },
         });
         setLoading(false);
-        history.replace();
+        navigate({ replace: true });
       }
     },
-    [enqueueSnackbar, history, setIsAuthenticated]
+    [enqueueSnackbar, navigate, setIsAuthenticated]
   );
 
   const handleSubmit = (event) => {
@@ -120,7 +120,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
 
   useEffect(() => {
     if (isAuthenticated) {
-      history.replace(from);
+      navigate(from, { replace: true });
     }
   });
 

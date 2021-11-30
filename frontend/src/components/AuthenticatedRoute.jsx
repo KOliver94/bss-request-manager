@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { isAuthenticated } from '../api/loginApi';
 
@@ -11,11 +11,12 @@ export default function AuthenticatedRoute({ children, ...rest }) {
         isAuthenticated() ? (
           children
         ) : (
-          <Redirect
+          <Navigate
             to={{
               pathname: '/login',
               state: { from: location },
             }}
+            replace
           />
         )
       }
