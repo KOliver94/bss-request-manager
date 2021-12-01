@@ -38,3 +38,6 @@ coverage = "*"
 freezegun = "*"
 pre-commit = "*"
 pytest-django = "*"
+
+[requires]
+python_version = "3.9"
