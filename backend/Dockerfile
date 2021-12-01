@@ -1,7 +1,7 @@
 ###################################
 #  FOR DEVELOPMENT PURPOSES ONLY  #
 ###################################
-FROM python:3.9-alpine
+FROM python:3.9-alpine3.14
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
