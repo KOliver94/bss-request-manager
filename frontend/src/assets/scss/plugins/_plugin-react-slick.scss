@@ -89,7 +89,7 @@
 .slick-track:after {
   display: table;
 
-  content: "";
+  content: '';
 }
 .slick-track:after {
   clear: both;
@@ -105,7 +105,7 @@
   height: 100%;
   min-height: 1px;
 }
-[dir="rtl"] .slick-slide {
+[dir='rtl'] .slick-slide {
   float: right;
 }
 .slick-slide img {
@@ -157,9 +157,9 @@ button.slick-arrow.slick-next {
 .slick-prev {
   left: 0;
   &::before {
-    content: "\f053";
+    content: '\f053';
     font-weight: 600;
-    font-family: Font Awesome\ 5 Free;
+    font-family: Font Awesome\5 Free;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     display: inline-block;
@@ -175,9 +175,9 @@ button.slick-arrow.slick-next {
 .slick-next {
   right: 0;
   &::before {
-    content: "\f054";
+    content: '\f054';
     font-weight: 600;
-    font-family: Font Awesome\ 5 Free;
+    font-family: Font Awesome\5 Free;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     display: inline-block;
@@ -233,7 +233,7 @@ button.slick-arrow.slick-next {
     left: 0;
     width: 10px;
     height: 10px;
-    content: "\2022";
+    content: '\2022';
     text-align: center;
     opacity: 1;
     background-color: #fff;
