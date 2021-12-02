@@ -1,7 +1,7 @@
 ###################################
 #  FOR DEVELOPMENT PURPOSES ONLY  #
 ###################################
-FROM node:14-alpine
+FROM node:16-alpine
 
 # Set work directory
 WORKDIR /app/frontend

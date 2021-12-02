@@ -9,10 +9,6 @@ updates:
     interval: weekly
     day: saturday
     time: "04:00"
-  ignore:
-  - dependency-name: node
-    versions:
-    - ">= 15.pre.alpine.a, < 16"
   rebase-strategy: disabled
 
 # Javascript
