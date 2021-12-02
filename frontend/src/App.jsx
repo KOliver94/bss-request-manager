@@ -34,84 +34,127 @@ function App() {
         dialogOptions={dialogOptions}
       >
         <Routes>
-          <Route exact path="/">
-            <LandingPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </Route>
-          <Route path="/login">
-            <LoginPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </Route>
-          <AuthenticatedRoute path="/profile">
-            <ProfilePage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </AuthenticatedRoute>
-          <Route exact path="/new-request">
-            <RequestCreatorPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </Route>
-          <AuthenticatedRoute exact path="/my-requests">
-            <MyRequestsPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </AuthenticatedRoute>
-          <AuthenticatedRoute exact path="/my-requests/:id">
-            <RequestDetailPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </AuthenticatedRoute>
-          <AuthenticatedRoute exact path="/admin/requests">
-            <PrivilegedRoute>
-              <MyRequestsPage
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-                isPrivileged
-              />
-            </PrivilegedRoute>
-          </AuthenticatedRoute>
-          <AuthenticatedRoute exact path="/admin/requests/:id">
-            <PrivilegedRoute>
-              <RequestDetailPage
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-                isPrivileged
-              />
-            </PrivilegedRoute>
-          </AuthenticatedRoute>
-          <AuthenticatedRoute exact path="/admin/users/:id">
-            <PrivilegedRoute>
-              <ProfilePage
+          <Route
+            path="/"
+            element={
+              <LandingPage
                 isAuthenticated={isAuthenticated}
                 setIsAuthenticated={setIsAuthenticated}
               />
-            </PrivilegedRoute>
-          </AuthenticatedRoute>
-          <Route exact path="/privacy">
-            <PrivacyPolicyPage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </Route>
-          <Route exact path="/terms">
-            <TermsOfServicePage
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </Route>
-          <Route exact path="/redirect">
-            <RedirectPage />
-          </Route>
-          <Route render={() => <ErrorPage type="notfound" />} />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <LoginPage
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <AuthenticatedRoute>
+                <ProfilePage
+                  isAuthenticated={isAuthenticated}
+                  setIsAuthenticated={setIsAuthenticated}
+                />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/new-request"
+            element={
+              <RequestCreatorPage
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          />
+          <Route
+            path="/my-requests"
+            element={
+              <AuthenticatedRoute>
+                <MyRequestsPage
+                  isAuthenticated={isAuthenticated}
+                  setIsAuthenticated={setIsAuthenticated}
+                />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/my-requests/:id"
+            element={
+              <AuthenticatedRoute>
+                <RequestDetailPage
+                  isAuthenticated={isAuthenticated}
+                  setIsAuthenticated={setIsAuthenticated}
+                />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/admin/requests"
+            element={
+              <AuthenticatedRoute>
+                <PrivilegedRoute>
+                  <MyRequestsPage
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                    isPrivileged
+                  />
+                </PrivilegedRoute>
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/admin/requests/:id"
+            element={
+              <AuthenticatedRoute>
+                <PrivilegedRoute>
+                  <RequestDetailPage
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                    isPrivileged
+                  />
+                </PrivilegedRoute>
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/admin/users/:id"
+            element={
+              <AuthenticatedRoute>
+                <PrivilegedRoute>
+                  <ProfilePage
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                  />
+                </PrivilegedRoute>
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/privacy"
+            element={
+              <PrivacyPolicyPage
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          />
+          <Route
+            path="/terms"
+            element={
+              <TermsOfServicePage
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          />
+          <Route path="/redirect" element={<RedirectPage />} />
+          <Route path="*" element={<ErrorPage type="notfound" />} />
         </Routes>
       </Sentry.ErrorBoundary>
     </Router>

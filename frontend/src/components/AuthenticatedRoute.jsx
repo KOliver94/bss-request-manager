@@ -1,26 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { isAuthenticated } from '../api/loginApi';
 
-export default function AuthenticatedRoute({ children, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        isAuthenticated() ? (
-          children
-        ) : (
-          <Navigate
-            to={{
-              pathname: '/login',
-              state: { from: location },
-            }}
-            replace
-          />
-        )
-      }
-    />
+export default function AuthenticatedRoute({ children }) {
+  const location = useLocation();
+  return isAuthenticated() ? (
+    children
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
   );
 }
 
