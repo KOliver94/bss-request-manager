@@ -20,10 +20,12 @@ jobs:
         node-version: ['16']
         os: [ubuntu-latest]
         experimental: [false]
+        node-options: ""
         include:
           - node-version: '17'
             os: ubuntu-latest
             experimental: true
+            node-options: "--openssl-legacy-provider"
     defaults:
       run:
         working-directory: frontend
@@ -47,6 +49,6 @@ jobs:
         run: npm run build --if-present
         env:
           CI: ""
-          NODE_OPTIONS: "--openssl-legacy-provider"
+          NODE_OPTIONS: ${{ matrix.node-options }}
       - name: Run frontend tests
         run: npm test
