@@ -28,7 +28,7 @@
     "react-scripts": "4.0.3",
     "react-swipeable-views": "^0.14.0",
     "workbox-background-sync": "^6.4.1",
-    "workbox-broadcast-update": "^6.4.1",
+    "workbox-broadcast-update": "^6.4.2",
     "workbox-cacheable-response": "^6.4.1",
     "workbox-core": "^6.4.1",
     "workbox-expiration": "^6.4.1",
@@ -76,6 +76,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "prettier": "^2.5.0"
+    "prettier": "^2.5.1"
   }
 }
