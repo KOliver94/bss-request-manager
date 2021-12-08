@@ -12,18 +12,16 @@ on:
 jobs:
   frontend-test:
     name: Frontend tests
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['16']
-        os: [ubuntu-latest]
-        experimental: [false]
-        node-options: ""
         include:
+          - node-version: '16'
+            experimental: false
+            node-options: ""
           - node-version: '17'
-            os: ubuntu-latest
             experimental: true
             node-options: "--openssl-legacy-provider"
     defaults:
