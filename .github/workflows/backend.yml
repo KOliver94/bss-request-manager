@@ -13,14 +13,14 @@ on:
 jobs:
   backend-test:
     name: Backend tests
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9']
-        os: [ubuntu-latest]
-        experimental: [false]
+        include:
+          - python-version: '3.9'
+            experimental: false
     defaults:
       run:
         working-directory: backend
