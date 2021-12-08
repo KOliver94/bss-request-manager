@@ -18,7 +18,7 @@
     "formik-material-ui-pickers": "0.0.12",
     "jwt-decode": "^3.1.2",
     "material-ui-phone-number": "^2.2.6",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "notistack": "^1.0.10",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
