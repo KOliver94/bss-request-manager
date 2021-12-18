@@ -251,31 +251,29 @@ export default function RequestCreatorPage({
                   {activeStep < steps.length ? (
                     <>
                       {activeStep === steps.length - 1 && (
-                        <>
-                          <div className={classes.wrapper}>
-                            <Button
-                              onClick={handleBack}
-                              disabled={loading}
-                              className={classes.button}
-                            >
-                              Vissza
-                            </Button>
-                            <Button
-                              onClick={handleSubmit}
-                              color="success"
-                              disabled={loading}
-                              className={classes.button}
-                            >
-                              Küldés
-                            </Button>
-                            {loading && (
-                              <CircularProgress
-                                size={24}
-                                className={classes.buttonProgress}
-                              />
-                            )}
-                          </div>
-                        </>
+                        <div className={classes.wrapper}>
+                          <Button
+                            onClick={handleBack}
+                            disabled={loading}
+                            className={classes.button}
+                          >
+                            Vissza
+                          </Button>
+                          <Button
+                            onClick={handleSubmit}
+                            color="success"
+                            disabled={loading}
+                            className={classes.button}
+                          >
+                            Küldés
+                          </Button>
+                          {loading && (
+                            <CircularProgress
+                              size={24}
+                              className={classes.buttonProgress}
+                            />
+                          )}
+                        </div>
                       )}
                     </>
                   ) : (

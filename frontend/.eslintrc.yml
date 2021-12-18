@@ -25,10 +25,11 @@ parserOptions:
 plugins:
   - react
   - prettier
-rules:
-  {
+rules: {
     'prettier/prettier': ['error', { 'endOfLine': 'auto' }],
-    'react/forbid-prop-types': 0,
-    'react/jsx-uses-react': 'off',
+    'react/forbid-prop-types': 'off',
+    'react/function-component-definition': 'off', # https://github.com/airbnb/javascript/issues/2505
+    'react/jsx-no-useless-fragment': ['error', { 'allowExpressions': true }],
+    'react/no-unstable-nested-components': ['error', { 'allowAsProps': true }],
     'react/react-in-jsx-scope': 'off',
   }

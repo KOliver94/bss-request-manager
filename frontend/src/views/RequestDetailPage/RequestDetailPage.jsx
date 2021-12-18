@@ -187,37 +187,32 @@ export default function RequestDetailPage({
               />
             </GridContainer>
           ) : (
-            <>
-              <GridContainer
-                justifyContent="center"
-                className={classes.content}
-              >
-                <GridItem xs={12} sm={6}>
-                  <BasicInformation
-                    requestId={id}
-                    requestData={data}
-                    setRequestData={setData}
-                    staffMembers={staffMembers}
-                    isPrivileged={isPrivileged}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={6} className={classes.textColor}>
-                  <CustomTabs
-                    headerColor="primary"
-                    tabs={tabsContent()}
-                    activeTab={isPrivileged && data.status >= 4 ? 1 : 0}
-                  />
-                </GridItem>
-                <GridItem className={classes.textColor}>
-                  <Comments
-                    requestId={id}
-                    requestData={data}
-                    setRequestData={setData}
-                    isPrivileged={isPrivileged}
-                  />
-                </GridItem>
-              </GridContainer>
-            </>
+            <GridContainer justifyContent="center" className={classes.content}>
+              <GridItem xs={12} sm={6}>
+                <BasicInformation
+                  requestId={id}
+                  requestData={data}
+                  setRequestData={setData}
+                  staffMembers={staffMembers}
+                  isPrivileged={isPrivileged}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={6} className={classes.textColor}>
+                <CustomTabs
+                  headerColor="primary"
+                  tabs={tabsContent()}
+                  activeTab={isPrivileged && data.status >= 4 ? 1 : 0}
+                />
+              </GridItem>
+              <GridItem className={classes.textColor}>
+                <Comments
+                  requestId={id}
+                  requestData={data}
+                  setRequestData={setData}
+                  isPrivileged={isPrivileged}
+                />
+              </GridItem>
+            </GridContainer>
           )}
         </div>
       </div>

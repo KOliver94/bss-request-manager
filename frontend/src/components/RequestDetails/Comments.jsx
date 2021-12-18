@@ -85,7 +85,7 @@ export default function Comments({
     });
   };
 
-  const handleSubmit = async (values, newComment = false, { resetForm }) => {
+  const handleSubmit = async (values, newComment, { resetForm }) => {
     let result;
     try {
       if (editingCommentId > 0 && !newComment) {
