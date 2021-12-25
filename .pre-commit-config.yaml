@@ -1,42 +1,49 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
-    -   id: detect-private-key
-    -   id: check-merge-conflict
--   repo: https://github.com/PyCQA/isort
+      - id: detect-private-key
+      - id: check-merge-conflict
+  - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
-    - id: isort
--   repo: https://github.com/psf/black
+      - id: isort
+  - repo: https://github.com/psf/black
     rev: 21.12b0
     hooks:
-    - id: black
-      language_version: python3.9
--   repo: https://github.com/PyCQA/flake8
+      - id: black
+        language_version: python3.9
+  - repo: https://github.com/PyCQA/flake8
     rev: 4.0.1
     hooks:
-    - id: flake8
-      args: [--config=./backend/.flake8]
--   repo: https://github.com/PyCQA/bandit
+      - id: flake8
+        args: [--config=./backend/.flake8]
+  - repo: https://github.com/PyCQA/bandit
     rev: 1.7.1
     hooks:
-    - id: bandit
-      exclude: ^backend/tests/
--   repo: https://github.com/pre-commit/mirrors-eslint
+      - id: bandit
+        exclude: ^backend/tests/
+  - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.5.0
     hooks:
-    - id: eslint
-      types: [file]
-      files: \.jsx?$
-      args: [-c, ./frontend/.eslintrc.yml, --ignore-pattern, 'frontend/src/components/material-kit-react/*', --fix]
-      additional_dependencies:
-        - eslint@8.5.0
-        - eslint-config-airbnb@19.0.2
-        - eslint-config-prettier@8.3.0
-        - eslint-plugin-import@2.25.3
-        - eslint-plugin-jsx-a11y@6.5.1
-        - eslint-plugin-prettier@4.0.0
-        - eslint-plugin-react@7.27.1
-        - eslint-plugin-react-hooks@4.3.0
-        - prettier@2.5.1
+      - id: eslint
+        types: [file]
+        files: \.jsx?$
+        args:
+          [
+            -c,
+            ./frontend/.eslintrc.yml,
+            --ignore-pattern,
+            'frontend/src/components/material-kit-react/*',
+            --fix,
+          ]
+        additional_dependencies:
+          - eslint@8.5.0
+          - eslint-config-airbnb@19.0.4
+          - eslint-config-prettier@8.3.0
+          - eslint-plugin-import@2.25.3
+          - eslint-plugin-jsx-a11y@6.5.1
+          - eslint-plugin-prettier@4.0.0
+          - eslint-plugin-react@7.28.0
+          - eslint-plugin-react-hooks@4.3.0
+          - prettier@2.5.1
