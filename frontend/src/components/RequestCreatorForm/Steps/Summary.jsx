@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Summary = ({ formData, setActiveStep, isAuthenticated }) => {
+function Summary({ formData, setActiveStep, isAuthenticated }) {
   const classes = useStyles();
   return (
     <GridContainer justifyContent="center">
@@ -138,7 +138,7 @@ const Summary = ({ formData, setActiveStep, isAuthenticated }) => {
       </GridItem>
     </GridContainer>
   );
-};
+}
 
 Summary.propTypes = {
   formData: PropTypes.object.isRequired,

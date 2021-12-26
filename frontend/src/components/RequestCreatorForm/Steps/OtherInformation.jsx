@@ -12,12 +12,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const OtherInformation = ({
-  formData,
-  setFormData,
-  handleNext,
-  handleBack,
-}) => {
+function OtherInformation({ formData, setFormData, handleNext, handleBack }) {
   const classes = useStyles();
   return (
     <Formik
@@ -58,7 +53,7 @@ const OtherInformation = ({
       )}
     </Formik>
   );
-};
+}
 
 OtherInformation.propTypes = {
   formData: PropTypes.object.isRequired,
