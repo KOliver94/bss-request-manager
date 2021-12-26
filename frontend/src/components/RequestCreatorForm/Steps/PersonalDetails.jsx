@@ -43,12 +43,12 @@ const validationSchema = Yup.object({
     .required('A telefonszám megadása kötelező'),
 });
 
-const PersonalDetails = ({
+function PersonalDetails({
   formData,
   setFormData,
   handleNext,
   isAuthenticated,
-}) => {
+}) {
   const classes = useStyles();
   const navigate = useNavigate();
 
@@ -178,7 +178,7 @@ const PersonalDetails = ({
       )}
     </Formik>
   );
-};
+}
 
 PersonalDetails.propTypes = {
   formData: PropTypes.object.isRequired,

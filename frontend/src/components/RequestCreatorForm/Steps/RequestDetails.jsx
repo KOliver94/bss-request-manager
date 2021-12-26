@@ -56,7 +56,7 @@ const validationSchema = Yup.object({
     .nullable(),
 });
 
-const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
+function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
   const classes = useStyles();
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={hu}>
@@ -197,7 +197,7 @@ const RequestDetails = ({ formData, setFormData, handleNext, handleBack }) => {
       </Formik>
     </MuiPickersUtilsProvider>
   );
-};
+}
 
 RequestDetails.propTypes = {
   formData: PropTypes.object.isRequired,
