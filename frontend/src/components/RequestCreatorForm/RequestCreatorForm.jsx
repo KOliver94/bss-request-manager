@@ -6,7 +6,7 @@ import OtherInformation from './Steps/OtherInformation';
 import Summary from './Steps/Summary';
 import Success from './Steps/Success';
 
-const RequestCreatorForm = ({
+function RequestCreatorForm({
   step,
   formData,
   setFormData,
@@ -14,7 +14,7 @@ const RequestCreatorForm = ({
   handleBack,
   setActiveStep,
   isAuthenticated,
-}) => {
+}) {
   switch (step) {
     case 0:
       return (
@@ -54,7 +54,7 @@ const RequestCreatorForm = ({
     default:
       return <Success />;
   }
-};
+}
 
 RequestCreatorForm.propTypes = {
   step: PropTypes.number.isRequired,
