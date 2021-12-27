@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { TextField } from 'formik-mui';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import Button from 'components/material-kit-react/CustomButtons/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -31,7 +31,6 @@ function OtherInformation({ formData, setFormData, handleNext, handleBack }) {
                 label="Megjegyzések"
                 margin="normal"
                 component={TextField}
-                variant="outlined"
                 fullWidth
                 multiline
                 rows={10}

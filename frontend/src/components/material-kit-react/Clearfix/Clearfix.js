@@ -1,5 +1,5 @@
-// material-ui components
-import { makeStyles } from '@material-ui/core/styles';
+// @mui components
+import makeStyles from '@mui/styles/makeStyles';
 
 const styles = {
   clearfix: {

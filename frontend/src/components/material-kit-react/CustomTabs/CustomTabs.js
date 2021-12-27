@@ -4,11 +4,11 @@ import classNames from 'classnames';
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
 
-// material-ui components
-import { makeStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Icon from '@material-ui/core/Icon';
+// @mui components
+import makeStyles from '@mui/styles/makeStyles';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Icon from '@mui/material/Icon';
 // core components
 import Card from 'components/material-kit-react/Card/Card.js';
 import CardBody from 'components/material-kit-react/Card/CardBody.js';
@@ -41,6 +41,7 @@ export default function CustomTabs(props) {
             root: classes.tabsRoot,
             indicator: classes.displayNone,
           }}
+          textColor="inherit"
         >
           {tabs.map((prop, key) => {
             let icon = {};
@@ -58,12 +59,14 @@ export default function CustomTabs(props) {
               <Tab
                 classes={{
                   root: classes.tabRootButton,
-                  label: classes.tabLabel,
                   selected: classes.tabSelected,
                   wrapper: classes.tabWrapper,
+                  iconWrapper: classes.tabIconWrapper,
+                  textColorInherit: classes.tabTextColorInherit,
                 }}
                 key={key}
                 label={prop.tabName}
+                iconPosition="start"
                 {...icon}
               />
             );

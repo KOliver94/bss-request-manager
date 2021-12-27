@@ -1,49 +1,45 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-// Material UI components
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
-import RateReviewIcon from '@material-ui/icons/RateReview';
-import Fab from '@material-ui/core/Fab';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import PersonalVideoIcon from '@material-ui/icons/PersonalVideo';
-import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
-import SyncIcon from '@material-ui/icons/Sync';
-import SyncDisabledIcon from '@material-ui/icons/SyncDisabled';
-import FolderIcon from '@material-ui/icons/Folder';
-import FolderOpenIcon from '@material-ui/icons/FolderOpen';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionActions from '@material-ui/core/AccordionActions';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Rating from '@material-ui/lab/Rating';
-import Tooltip from '@material-ui/core/Tooltip';
-import Avatar from '@material-ui/core/Avatar';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import { makeStyles } from '@material-ui/core/styles';
-import MUITextField from '@material-ui/core/TextField';
+// MUI components
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import Fab from '@mui/material/Fab';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import PersonalVideoIcon from '@mui/icons-material/PersonalVideo';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+import SyncIcon from '@mui/icons-material/Sync';
+import SyncDisabledIcon from '@mui/icons-material/SyncDisabled';
+import FolderIcon from '@mui/icons-material/Folder';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionActions from '@mui/material/AccordionActions';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Rating from '@mui/material/Rating';
+import Tooltip from '@mui/material/Tooltip';
+import Avatar from '@mui/material/Avatar';
+import MenuItem from '@mui/material/MenuItem';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import makeStyles from '@mui/styles/makeStyles';
+import MUITextField from '@mui/material/TextField';
 // Material React Kit components
 import Badge from 'components/material-kit-react/Badge/Badge';
 // Form components
 import { Formik, Form, Field, getIn } from 'formik';
-import { TextField, CheckboxWithLabel, Select } from 'formik-material-ui';
-import { Autocomplete } from 'formik-material-ui-lab';
-import { KeyboardTimePicker } from 'formik-material-ui-pickers';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import { Autocomplete, TextField, CheckboxWithLabel, Select } from 'formik-mui';
+import { TimePicker } from 'formik-mui-lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import * as Yup from 'yup';
 // Date format
 import { hu } from 'date-fns/locale';
@@ -98,10 +94,6 @@ const useStyles = makeStyles((theme) => ({
   },
   adminEditButtons: {
     paddingBottom: '0px',
-  },
-  ratingLabel: {
-    fontSize: 'inherit',
-    color: 'inherit',
   },
   tooltip: {
     marginRight: 5,
@@ -212,7 +204,7 @@ export default function Videos({
       (values.additional_data.status_by_admin || values.status_field)
     ) {
       values.additional_data.status_by_admin = {
-        status: values.status_field ? values.status_field : null,
+        status: values.status_field ? parseInt(values.status_field, 10) : null,
         admin_id: parseInt(localStorage.getItem('user_id'), 10),
         admin_name: localStorage.getItem('name'),
       };
@@ -268,6 +260,17 @@ export default function Videos({
     }
   };
 
+  const handleReview = (video, rating = getOwnRatingForVideo(video)) => {
+    setReviewDialogData({
+      ...reviewDialogData,
+      ...{
+        videoId: video.id,
+        rating,
+        open: true,
+      },
+    });
+  };
+
   const handleRatingCreateUpdate = async (value, video) => {
     const rating = getOwnRatingForVideo(video);
     let result;
@@ -281,6 +284,7 @@ export default function Videos({
             });
           } else {
             result = await createRating(requestId, video.id, { rating: value });
+            handleReview(video, result.data);
           }
           setRequestData({
             ...requestData,
@@ -387,17 +391,6 @@ export default function Videos({
     }
   };
 
-  const handleReview = (video) => {
-    setReviewDialogData({
-      ...reviewDialogData,
-      ...{
-        videoId: video.id,
-        rating: getOwnRatingForVideo(video),
-        open: true,
-      },
-    });
-  };
-
   const handleCreateVideoDialogOpen = () => {
     setCreateVideoDialogOpen(true);
   };
@@ -415,7 +408,7 @@ export default function Videos({
   };
 
   const validationSchema = Yup.object().shape({
-    website_url: Yup.string().url('Nem megfelelő URL formátum'),
+    website_url: Yup.string().url('Nem megfelelő URL formátum!'),
     additional_data: Yup.object().shape({
       aired: Yup.array().of(
         Yup.string().matches(
@@ -423,6 +416,7 @@ export default function Videos({
           'Kérlek a dátumot ÉÉÉÉ-HH-NN formában add meg!'
         )
       ),
+      length: Yup.date().nullable().typeError('Hibás formátum!'),
     }),
   });
 
@@ -431,7 +425,7 @@ export default function Videos({
       .min(1, 'A videó címe túl rövid!')
       .max(200, 'A videó címe túl hosszú!')
       .trim()
-      .required('A videó címének megadása kötelező'),
+      .required('A videó címének megadása kötelező!'),
   });
 
   return (
@@ -460,13 +454,14 @@ export default function Videos({
                 </div>
               </AccordionSummary>
               {isPrivileged ? (
-                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={hu}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} locale={hu}>
                   <Formik
                     enableReinitialize
                     initialValues={{
                       ...video,
                       additional_data: {
                         aired: [],
+                        editing_done: false,
                         ...video.additional_data,
                         length: video.additional_data.length
                           ? new Date(
@@ -475,6 +470,14 @@ export default function Videos({
                               )
                             )
                           : null,
+                        coding: {
+                          website: false,
+                          ...video.additional_data.coding,
+                        },
+                        archiving: {
+                          hq_archive: false,
+                          ...video.additional_data.archiving,
+                        },
                       },
                       status_field:
                         video.additional_data &&
@@ -507,27 +510,27 @@ export default function Videos({
                               Label={{ label: 'Vágás' }}
                               component={CheckboxWithLabel}
                               type="checkbox"
+                              color="secondary"
                               icon={<PersonalVideoIcon />}
                               checkedIcon={<OndemandVideoIcon />}
-                              indeterminateIcon={<PersonalVideoIcon />}
                             />
                             <Field
                               name="additional_data.coding.website"
                               Label={{ label: 'Kódolás webre' }}
                               component={CheckboxWithLabel}
                               type="checkbox"
+                              color="secondary"
                               icon={<SyncDisabledIcon />}
                               checkedIcon={<SyncIcon />}
-                              indeterminateIcon={<SyncDisabledIcon />}
                             />
                             <Field
                               name="additional_data.archiving.hq_archive"
                               Label={{ label: 'Archiválás' }}
                               component={CheckboxWithLabel}
                               type="checkbox"
+                              color="secondary"
                               icon={<FolderOpenIcon />}
                               checkedIcon={<FolderIcon />}
-                              indeterminateIcon={<FolderOpenIcon />}
                             />
                             <Field
                               name="website_url"
@@ -535,6 +538,7 @@ export default function Videos({
                               margin="normal"
                               component={TextField}
                               size="small"
+                              variant="standard"
                               fullWidth
                               error={
                                 touched.website_url && !!errors.website_url
@@ -550,19 +554,20 @@ export default function Videos({
                               getOptionLabel={(option) =>
                                 `${option.last_name} ${option.first_name}`
                               }
-                              renderOption={(option) => {
+                              renderOption={(props, option) => {
                                 return (
-                                  <>
+                                  // eslint-disable-next-line react/jsx-props-no-spreading
+                                  <li {...props}>
                                     <Avatar
                                       alt={`${option.first_name} ${option.last_name}`}
                                       src={option.profile.avatar_url}
                                       className={classes.smallAvatar}
                                     />
                                     {`${option.last_name} ${option.first_name}`}
-                                  </>
+                                  </li>
                                 );
                               }}
-                              getOptionSelected={(option, value) =>
+                              isOptionEqualToValue={(option, value) =>
                                 option.id === value.id
                               }
                               size="small"
@@ -575,23 +580,38 @@ export default function Videos({
                                   name="editor"
                                   label="Vágó"
                                   margin="normal"
+                                  variant="standard"
                                 />
                               )}
                             />
                             <Field
                               name="additional_data.length"
                               label="Videó hossza"
-                              margin="normal"
-                              component={KeyboardTimePicker}
-                              fullWidth
-                              ampm={false}
-                              format="HH:mm:ss"
+                              component={TimePicker}
+                              toolbarTitle="Videó hossza"
+                              okText="Rendben"
+                              cancelText="Mégsem"
+                              clearText="Törlés"
+                              clearable
+                              inputFormat="HH:mm:ss"
+                              mask="__:__:__"
                               openTo="minutes"
                               views={['hours', 'minutes', 'seconds']}
-                              invalidDateMessage="Hibás dátum formátum"
-                              initialFocusedDate={
-                                new Date('1970-01-01T00:00:00')
-                              }
+                              textField={{
+                                margin: 'normal',
+                                fullWidth: true,
+                                variant: 'standard',
+                                error:
+                                  touched.additional_data &&
+                                  touched.additional_data.length &&
+                                  errors.additional_data &&
+                                  !!errors.additional_data.length,
+                                helperText:
+                                  touched.additional_data &&
+                                  touched.additional_data.length &&
+                                  errors.additional_data &&
+                                  errors.additional_data.length,
+                              }}
                             />
                             <Field
                               name="additional_data.aired"
@@ -609,6 +629,7 @@ export default function Videos({
                                   name="additional_data.aired"
                                   label="Adásba kerülés"
                                   margin="normal"
+                                  variant="standard"
                                   error={
                                     getIn(touched, 'additional_data.aired') &&
                                     !!getIn(errors, 'additional_data.aired')
@@ -620,41 +641,38 @@ export default function Videos({
                                 />
                               )}
                             />
-                            <FormControl fullWidth margin="normal">
-                              <InputLabel htmlFor="status_field">
-                                Státusz felülírás
-                              </InputLabel>
-                              <Field
-                                labelId="status_field"
-                                label="Státusz felülírás"
-                                name="status_field"
-                                component={Select}
-                                disabled={!isAdmin()}
-                              >
-                                <MenuItem value="">
-                                  <em>Nincs</em>
-                                </MenuItem>
-                                {videoStatuses.map((status) => {
-                                  return (
-                                    <MenuItem key={status.id} value={status.id}>
-                                      {status.text}
-                                    </MenuItem>
-                                  );
-                                })}
-                              </Field>
-                              {video.additional_data &&
-                                video.additional_data.status_by_admin &&
-                                video.additional_data.status_by_admin
-                                  .admin_name && (
-                                  <FormHelperText>
-                                    Utoljára módosította:{' '}
-                                    {
-                                      video.additional_data.status_by_admin
-                                        .admin_name
-                                    }
-                                  </FormHelperText>
-                                )}
-                            </FormControl>
+                            <Field
+                              name="status_field"
+                              component={Select}
+                              variant="standard"
+                              labelId="status_field"
+                              label="Státusz felülírás"
+                              disabled={!isAdmin()}
+                              formControl={{
+                                fullWidth: true,
+                                margin: 'normal',
+                                variant: 'standard',
+                              }}
+                              formHelperText={{
+                                children:
+                                  video.additional_data &&
+                                  video.additional_data.status_by_admin &&
+                                  video.additional_data.status_by_admin
+                                    .admin_name &&
+                                  `Utoljára módosította: ${video.additional_data.status_by_admin.admin_name}`,
+                              }}
+                            >
+                              <MenuItem value="">
+                                <em>Nincs</em>
+                              </MenuItem>
+                              {videoStatuses.map((status) => {
+                                return (
+                                  <MenuItem key={status.id} value={status.id}>
+                                    {status.text}
+                                  </MenuItem>
+                                );
+                              })}
+                            </Field>
                           </Form>
                         </AccordionDetails>
                         <Divider />
@@ -681,6 +699,7 @@ export default function Videos({
                           </Tooltip>
                           <Button
                             size="small"
+                            color="inherit"
                             onClick={resetForm}
                             disabled={isSubmitting || videoDeleteLoading}
                           >
@@ -698,7 +717,7 @@ export default function Videos({
                       </>
                     )}
                   </Formik>
-                </MuiPickersUtilsProvider>
+                </LocalizationProvider>
               ) : (
                 <>
                   {video.video_url && (
@@ -772,9 +791,6 @@ export default function Videos({
                     )}
                     <Rating
                       name={`${video.id}-own-rating`}
-                      classes={{
-                        label: classes.ratingLabel,
-                      }}
                       value={getOwnRatingForVideo(video).rating}
                       onChange={(event, value) =>
                         handleRatingCreateUpdate(value, video)
@@ -831,6 +847,7 @@ export default function Videos({
                         label="Videó címe"
                         margin="normal"
                         component={TextField}
+                        variant="standard"
                         fullWidth
                         error={touched.title && !!errors.title}
                         helperText={touched.title && errors.title}
@@ -842,19 +859,20 @@ export default function Videos({
                         getOptionLabel={(option) =>
                           `${option.last_name} ${option.first_name}`
                         }
-                        renderOption={(option) => {
+                        renderOption={(props, option) => {
                           return (
-                            <>
+                            // eslint-disable-next-line react/jsx-props-no-spreading
+                            <li {...props}>
                               <Avatar
                                 alt={`${option.first_name} ${option.last_name}`}
                                 src={option.profile.avatar_url}
                                 className={classes.smallAvatar}
                               />
                               {`${option.last_name} ${option.first_name}`}
-                            </>
+                            </li>
                           );
                         }}
-                        getOptionSelected={(option, value) =>
+                        isOptionEqualToValue={(option, value) =>
                           option.id === value.id
                         }
                         autoHighlight
@@ -866,6 +884,7 @@ export default function Videos({
                             name="editor"
                             label="Vágó"
                             margin="normal"
+                            variant="standard"
                           />
                         )}
                       />
@@ -874,7 +893,7 @@ export default function Videos({
                   <DialogActions>
                     <Button
                       onClick={handleCreateVideoDialogClose}
-                      color="primary"
+                      color="inherit"
                       disabled={isSubmitting}
                     >
                       Mégsem
@@ -882,6 +901,7 @@ export default function Videos({
                     <Button
                       onClick={submitForm}
                       color="primary"
+                      autoFocus
                       disabled={isSubmitting}
                     >
                       Hozzáadás
@@ -916,6 +936,7 @@ export default function Videos({
         <DialogActions>
           <Button
             onClick={handleRatingRemoveDialogClose}
+            color="inherit"
             autoFocus
             disabled={ratingRemoveDialog.loading}
           >

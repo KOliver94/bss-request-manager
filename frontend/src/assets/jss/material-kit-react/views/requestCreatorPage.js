@@ -5,7 +5,7 @@ import {
   successColor,
 } from 'assets/jss/material-kit-react';
 
-const requestCreatorPage = {
+const requestCreatorPageStyle = {
   container: {
     zIndex: '12',
     color: '#FFFFFF',
@@ -81,4 +81,4 @@ const requestCreatorPage = {
   },
 };
 
-export default requestCreatorPage;
+export default requestCreatorPageStyle;

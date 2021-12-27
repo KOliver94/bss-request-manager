@@ -1,30 +1,30 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-// Material UI components
-import Box from '@material-ui/core/Box';
-import CloseIcon from '@material-ui/icons/Close';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import Rating from '@material-ui/lab/Rating';
-import Skeleton from '@material-ui/lab/Skeleton';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import TextField from '@material-ui/core/TextField';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+// MUI components
+import Box from '@mui/material/Box';
+import CloseIcon from '@mui/icons-material/Close';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import Rating from '@mui/material/Rating';
+import Skeleton from '@mui/material/Skeleton';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import TextField from '@mui/material/TextField';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 // Icons
-import CheckIcon from '@material-ui/icons/Check';
-import ClearIcon from '@material-ui/icons/Clear';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Date format
@@ -38,20 +38,12 @@ import {
 import compareValues from 'helpers/objectComperator';
 import handleError from 'helpers/errorHandler';
 
-const useStyles = makeStyles(() => ({
-  ratingLabel: {
-    fontSize: 'inherit',
-    color: 'inherit',
-  },
-}));
-
 export default function RatingsDialog({
   ratingsDialogData,
   setRatingsDialogData,
   setRequestData,
   isAdmin,
 }) {
-  const classes = useStyles();
   const userId = parseInt(localStorage.getItem('user_id'), 10);
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
@@ -68,7 +60,7 @@ export default function RatingsDialog({
     field2: null,
   });
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const headCells = [
     { id: 'rating', label: 'Értékelés' },
@@ -222,7 +214,7 @@ export default function RatingsDialog({
         <Box display="flex" alignItems="center">
           <Box flexGrow={1}>Értékelések</Box>
           <Box>
-            <IconButton onClick={closeDialog}>
+            <IconButton onClick={closeDialog} size="large">
               <CloseIcon />
             </IconButton>
           </Box>
@@ -284,9 +276,6 @@ export default function RatingsDialog({
                                 ? editingRating.rating
                                 : rating.rating
                             }
-                            classes={{
-                              label: classes.ratingLabel,
-                            }}
                             readOnly={editingRating.id !== rating.id}
                             onChange={handleChange}
                             disabled={inProgress}
@@ -322,6 +311,7 @@ export default function RatingsDialog({
                                 <IconButton
                                   onClick={handleSubmit}
                                   disabled={inProgress}
+                                  size="large"
                                 >
                                   <CheckIcon />
                                 </IconButton>
@@ -334,6 +324,7 @@ export default function RatingsDialog({
                                     })
                                   }
                                   disabled={inProgress}
+                                  size="large"
                                 >
                                   <ClearIcon />
                                 </IconButton>
@@ -349,6 +340,7 @@ export default function RatingsDialog({
                                     })
                                   }
                                   disabled={inProgress}
+                                  size="large"
                                 >
                                   <EditIcon />
                                 </IconButton>
@@ -357,6 +349,7 @@ export default function RatingsDialog({
                                     handleDelete(rating.id, rating.author.id)
                                   }
                                   disabled={inProgress}
+                                  size="large"
                                 >
                                   <DeleteIcon />
                                 </IconButton>

@@ -3,26 +3,28 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
-// @material-ui/core components
-import Accordion from '@material-ui/core/Accordion';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Skeleton from '@material-ui/lab/Skeleton';
-import Switch from '@material-ui/core/Switch';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+// @mui components
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Avatar from '@mui/material/Avatar';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import CircularProgress from '@mui/material/CircularProgress';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Skeleton from '@mui/material/Skeleton';
+import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 // core components
 import Header from 'components/material-kit-react/Header/Header';
 import Footer from 'components/material-kit-react/Footer/Footer';
@@ -35,11 +37,9 @@ import Badge from 'components/material-kit-react/Badge/Badge';
 // Formik
 import { Formik, Form } from 'formik';
 // Date fields
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import DateRangePicker from '@mui/lab/DateRangePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import sub from 'date-fns/sub';
 import { hu } from 'date-fns/locale';
 // Yup validations
@@ -95,10 +95,10 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const [profileConnecting, setProfileConnecting] = useState(false);
   const [workedOnDialogOpen, setWorkedOnDialogOpen] = useState(false);
   const [userData, setUserData] = useState({});
-  const [selectedStartDate, setSelectedStartDate] = useState(
-    sub(new Date(), { weeks: 20 })
-  );
-  const [selectedEndDate, setSelectedEndDate] = useState(new Date());
+  const [selectedDateRange, setSelectedDateRange] = useState([
+    sub(new Date(), { weeks: 20 }),
+    new Date(),
+  ]);
   const [includeResponsible, setIncludeResponsible] = useState(true);
   const [headerDataChange, setHeaderDataChange] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(null);
@@ -205,18 +205,18 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       .min(2, 'Túl rövid keresztnév!')
       .max(30, 'Túl hosszú keresztnév!')
       .trim()
-      .required('A keresztnév megadása kötelező'),
+      .required('A keresztnév megadása kötelező!'),
     last_name: Yup.string()
       .min(2, 'Túl rövid vezetéknév!')
       .max(150, 'Túl hosszú vezetéknév!')
       .trim()
-      .required('A vezetéknév megadása kötelező'),
+      .required('A vezetéknév megadása kötelező!'),
     email: Yup.string()
-      .email('Érvénytelen e-mail cím')
-      .required('Az e-mail cím megadása kötelező'),
+      .email('Érvénytelen e-mail cím!')
+      .required('Az e-mail cím megadása kötelező!'),
     phone_number: Yup.string()
-      .phone('', false, 'Érvénytelen telefonszám')
-      .required('A telefonszám megadása kötelező'),
+      .phone('', false, 'Érvénytelen telefonszám!')
+      .required('A telefonszám megadása kötelező!'),
   });
 
   return (
@@ -246,7 +246,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                 <div>
                   {loading && id ? (
                     <Skeleton
-                      variant="circle"
+                      variant="circular"
                       className={avatarClasses}
                       width={160}
                       height={160}
@@ -625,89 +625,98 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                   justifyContent="center"
                                   alignItems="center"
                                 >
-                                  <MuiPickersUtilsProvider
-                                    utils={DateFnsUtils}
+                                  <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}
                                     locale={hu}
                                   >
-                                    <GridItem
-                                      xs={12}
-                                      sm={6}
-                                      className={
-                                        isXsView ? classes.gridItemMobile : ''
-                                      }
-                                    >
-                                      <KeyboardDatePicker
-                                        label="Kezdő dátum"
-                                        value={selectedStartDate}
-                                        onChange={setSelectedStartDate}
-                                        format="yyyy.MM.dd"
-                                        disableFuture
-                                        maxDate={selectedEndDate}
-                                        inputVariant="outlined"
-                                        fullWidth
-                                      />
-                                    </GridItem>
-                                    <GridItem
-                                      xs={12}
-                                      sm={6}
-                                      className={
-                                        isXsView ? classes.gridItemMobile : ''
-                                      }
-                                    >
-                                      <KeyboardDatePicker
-                                        label="Vége dátum"
-                                        value={selectedEndDate}
-                                        onChange={setSelectedEndDate}
-                                        format="yyyy.MM.dd"
-                                        disableFuture
-                                        inputVariant="outlined"
-                                        fullWidth
-                                      />
-                                    </GridItem>
-                                    <GridItem
-                                      className={
-                                        isXsView
-                                          ? classes.gridItemMobileNoTopPadding
-                                          : classes.gridItemMobile
-                                      }
-                                    >
-                                      <GridContainer
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                      >
-                                        <GridItem xs={6}>
-                                          <Typography variant="body2">
-                                            Felelős pozíciók
-                                          </Typography>
-                                        </GridItem>
-                                        <GridItem
-                                          xs={6}
-                                          className={classes.gridEnd}
-                                        >
-                                          <Switch
-                                            checked={includeResponsible}
-                                            onChange={(event) =>
-                                              setIncludeResponsible(
-                                                event.target.checked
-                                              )
+                                    <DateRangePicker
+                                      startText="Kezdő dátum"
+                                      endText="Vége dátum"
+                                      toolbarTitle="Válaszd ki az időszakot"
+                                      okText="Rendben"
+                                      cancelText="Mégsem"
+                                      calendars={3}
+                                      mask="____. __. __."
+                                      value={selectedDateRange}
+                                      onChange={setSelectedDateRange}
+                                      renderInput={(startProps, endProps) => (
+                                        <>
+                                          <GridItem
+                                            xs={12}
+                                            sm={6}
+                                            className={
+                                              isXsView
+                                                ? classes.gridItemMobile
+                                                : ''
                                             }
-                                            name="includeResponsible"
-                                          />
-                                        </GridItem>
-                                      </GridContainer>
-                                    </GridItem>
-                                    <GridItem>
-                                      <Button
-                                        color="primary"
-                                        fullWidth
-                                        onClick={() =>
-                                          setWorkedOnDialogOpen(true)
-                                        }
+                                          >
+                                            <TextField
+                                              {...startProps}
+                                              fullWidth
+                                            />
+                                          </GridItem>
+                                          <GridItem
+                                            xs={12}
+                                            sm={6}
+                                            className={
+                                              isXsView
+                                                ? classes.gridItemMobile
+                                                : ''
+                                            }
+                                          >
+                                            <TextField
+                                              {...endProps}
+                                              fullWidth
+                                            />
+                                          </GridItem>
+                                        </>
+                                      )}
+                                    />
+                                  </LocalizationProvider>
+                                  <GridItem
+                                    className={
+                                      isXsView
+                                        ? classes.gridItemMobileNoTopPadding
+                                        : classes.gridItemMobile
+                                    }
+                                  >
+                                    <GridContainer
+                                      justifyContent="space-between"
+                                      alignItems="center"
+                                    >
+                                      <GridItem xs={6}>
+                                        <Typography variant="body2">
+                                          Felelős pozíciók
+                                        </Typography>
+                                      </GridItem>
+                                      <GridItem
+                                        xs={6}
+                                        className={classes.gridEnd}
                                       >
-                                        Kilistázás
-                                      </Button>
-                                    </GridItem>
-                                  </MuiPickersUtilsProvider>
+                                        <Switch
+                                          checked={includeResponsible}
+                                          onChange={(event) =>
+                                            setIncludeResponsible(
+                                              event.target.checked
+                                            )
+                                          }
+                                          name="includeResponsible"
+                                          color="secondary"
+                                        />
+                                      </GridItem>
+                                    </GridContainer>
+                                  </GridItem>
+                                  <GridItem>
+                                    <Button
+                                      color="primary"
+                                      fullWidth
+                                      onClick={() =>
+                                        setWorkedOnDialogOpen(true)
+                                      }
+                                    >
+                                      Kilistázás
+                                    </Button>
+                                  </GridItem>
                                 </GridContainer>
                               </AccordionDetails>
                             </Accordion>
@@ -715,8 +724,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                               workedOnDialogOpen={workedOnDialogOpen}
                               setWorkedOnDialogOpen={setWorkedOnDialogOpen}
                               userId={id || 'me'}
-                              selectedStartDate={selectedStartDate}
-                              selectedEndDate={selectedEndDate}
+                              selectedDateRange={selectedDateRange}
                               includeResponsible={includeResponsible}
                             />
                           </>

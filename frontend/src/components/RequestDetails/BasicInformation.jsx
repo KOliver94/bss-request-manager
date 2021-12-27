@@ -1,50 +1,52 @@
 import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-// Material UI components
-import Tooltip from '@material-ui/core/Tooltip';
-import Chip from '@material-ui/core/Chip';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import EditIcon from '@material-ui/icons/Edit';
-import CheckIcon from '@material-ui/icons/Check';
-import ClearIcon from '@material-ui/icons/Clear';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import BackupIcon from '@material-ui/icons/Backup';
-import CloudDoneIcon from '@material-ui/icons/CloudDone';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import DeleteIcon from '@material-ui/icons/Delete';
-import NotInterestedIcon from '@material-ui/icons/NotInterested';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
-import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import Avatar from '@material-ui/core/Avatar';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import { makeStyles } from '@material-ui/core/styles';
-import MUITextField from '@material-ui/core/TextField';
+// MUI components
+import Tooltip from '@mui/material/Tooltip';
+import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import BackupIcon from '@mui/icons-material/Backup';
+import CloudDoneIcon from '@mui/icons-material/CloudDone';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import ToggleButton from '@mui/material/ToggleButton';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
+import Avatar from '@mui/material/Avatar';
+import MenuItem from '@mui/material/MenuItem';
+import makeStyles from '@mui/styles/makeStyles';
+import MUITextField from '@mui/material/TextField';
 // Form components
 import { Formik, Form, Field } from 'formik';
-import { TextField, CheckboxWithLabel, Select } from 'formik-material-ui';
-import { DatePicker, DateTimePicker } from 'formik-material-ui-pickers';
-import { Autocomplete } from 'formik-material-ui-lab';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import {
+  Autocomplete,
+  CheckboxWithLabel,
+  Select,
+  TextField,
+  ToggleButtonGroup,
+} from 'formik-mui';
+import { DatePicker, DateTimePicker } from 'formik-mui-lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import * as Yup from 'yup';
 // Date format
 import { format } from 'date-fns';
@@ -71,11 +73,6 @@ const useStyles = makeStyles((theme) => ({
     padding: '15px',
     margin: '16px',
   },
-  statusBadge: {
-    padding: '10px 15px',
-    display: 'flex',
-    alignSelf: 'center',
-  },
   form: {
     margin: 0,
   },
@@ -99,6 +96,17 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(4),
     marginRight: 5,
   },
+  toggleButtonGroup: {
+    padding: '5px 0',
+  },
+  toggleButtonText: {
+    margin: 0,
+    lineHeight: 0,
+    paddingLeft: '2px',
+  },
+  beforeDividerTextField: {
+    margin: '16px 0',
+  },
 }));
 
 export default function BasicInformation({
@@ -121,34 +129,37 @@ export default function BasicInformation({
       .min(1, 'Az esemény neve túl rövid!')
       .max(200, 'Az esemény neve túl hosszú!')
       .trim()
-      .required('Az esemény nevének megadása kötelező'),
+      .required('Az esemény nevének megadása kötelező!'),
     start_datetime: Yup.date()
-      .required('A kezdés időpontjának megadása kötelező')
-      .nullable(),
+      .required('A kezdés időpontjának megadása kötelező!')
+      .nullable()
+      .typeError('Hibás dátum formátum!'),
     end_datetime: Yup.date()
       .min(
         Yup.ref('start_datetime'),
         'A befejezés időpontja nem lehet korábbi mint a kezdés!'
       )
-      .required('A várható befejezés megadása kötelező')
-      .nullable(),
+      .required('A várható befejezés megadása kötelező!')
+      .nullable()
+      .typeError('Hibás dátum formátum!'),
     place: Yup.string()
       .min(1, 'Túl rövid helyszín!')
       .max(150, 'Túl hosszú helyszín!')
       .trim()
-      .required('A helyszín megadása kötelező'),
+      .required('A helyszín megadása kötelező!'),
     type: Yup.string()
       .min(1, 'Túl rövid típus!')
       .max(50, 'Túl hosszú típus!')
       .trim()
-      .required('A videó típusának megadása kötelező'),
+      .required('A videó típusának megadása kötelező!'),
     deadline: Yup.date()
       .min(
         Yup.ref('end_datetime'),
         'A határidőnek a felkérés várható befejezése után kell lennie!'
       )
-      .required('A várható befejezés megadása kötelező')
-      .nullable(),
+      .required('A várható befejezés megadása kötelező!')
+      .nullable()
+      .typeError('Hibás dátum formátum!'),
   });
 
   const handleReload = async () => {
@@ -200,7 +211,7 @@ export default function BasicInformation({
       (values.additional_data.status_by_admin || values.status_field)
     ) {
       values.additional_data.status_by_admin = {
-        status: values.status_field ? values.status_field : null,
+        status: values.status_field ? parseInt(values.status_field, 10) : null,
         admin_id: parseInt(localStorage.getItem('user_id'), 10),
         admin_name: localStorage.getItem('name'),
       };
@@ -284,6 +295,7 @@ export default function BasicInformation({
                       )
                     }
                     disabled={loading}
+                    size="large"
                   >
                     <ArrowBackIcon />
                   </IconButton>
@@ -304,7 +316,11 @@ export default function BasicInformation({
                   arrow
                 >
                   <span>
-                    <IconButton onClick={changeView} disabled={loading}>
+                    <IconButton
+                      onClick={changeView}
+                      disabled={loading}
+                      size="large"
+                    >
                       <VisibilityIcon />
                     </IconButton>
                   </span>
@@ -313,7 +329,11 @@ export default function BasicInformation({
             {!editing && (
               <Tooltip title="Frissítés" placement="top" arrow>
                 <span>
-                  <IconButton onClick={handleReload} disabled={loading}>
+                  <IconButton
+                    onClick={handleReload}
+                    disabled={loading}
+                    size="large"
+                  >
                     <RefreshIcon />
                   </IconButton>
                 </span>
@@ -327,7 +347,11 @@ export default function BasicInformation({
                   arrow
                 >
                   <span>
-                    <IconButton onClick={handleEditing} disabled={loading}>
+                    <IconButton
+                      onClick={handleEditing}
+                      disabled={loading}
+                      size="large"
+                    >
                       {editing ? <CheckIcon /> : <EditIcon />}
                     </IconButton>
                   </span>
@@ -335,7 +359,11 @@ export default function BasicInformation({
                 {editing ? (
                   <Tooltip title="Elvetés" placement="top" arrow>
                     <span>
-                      <IconButton onClick={handleDiscard} disabled={loading}>
+                      <IconButton
+                        onClick={handleDiscard}
+                        disabled={loading}
+                        size="large"
+                      >
                         <ClearIcon />
                       </IconButton>
                     </span>
@@ -346,6 +374,7 @@ export default function BasicInformation({
                       <IconButton
                         onClick={() => setRemoveDialogOpen(true)}
                         disabled={loading}
+                        size="large"
                       >
                         <DeleteForeverIcon />
                       </IconButton>
@@ -360,7 +389,7 @@ export default function BasicInformation({
       <Divider variant="middle" />
       <Paper className={classes.paper} elevation={2}>
         {editing ? (
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={hu}>
+          <LocalizationProvider dateAdapter={AdapterDateFns} locale={hu}>
             <Formik
               initialValues={{
                 ...requestData,
@@ -376,6 +405,14 @@ export default function BasicInformation({
                   requestData.additional_data.recording.path
                     ? requestData.additional_data.recording.path
                     : '',
+                additional_data: {
+                  ...requestData.additional_data,
+                  recording: {
+                    removed: false,
+                    copied_to_gdrive: false,
+                    ...requestData.additional_data.recording,
+                  },
+                },
               }}
               onSubmit={handleSubmit}
               validationSchema={validationSchema}
@@ -386,70 +423,111 @@ export default function BasicInformation({
                   <div className={classes.formSectionFirst}>
                     <Typography variant="h6">Részletek</Typography>
                     <Field
+                      component={ToggleButtonGroup}
                       name="additional_data.accepted"
-                      Label={{ label: 'Elfogadva' }}
-                      component={CheckboxWithLabel}
                       type="checkbox"
-                      icon={<SentimentVeryDissatisfiedIcon />}
-                      checkedIcon={<SentimentVerySatisfiedIcon />}
-                      indeterminateIcon={<RadioButtonUncheckedIcon />}
                       disabled={!isAdmin()}
-                    />
-                    <Field
-                      name="additional_data.canceled"
-                      Label={{ label: 'Lemondva' }}
-                      component={CheckboxWithLabel}
-                      type="checkbox"
-                      icon={<RadioButtonUncheckedIcon />}
-                      checkedIcon={<NotInterestedIcon />}
-                      indeterminateIcon={<RadioButtonUncheckedIcon />}
-                      disabled={!isAdmin()}
-                    />
-                    <Field
-                      name="additional_data.failed"
-                      Label={{ label: 'Meghiúsult' }}
-                      component={CheckboxWithLabel}
-                      type="checkbox"
-                      icon={<RadioButtonUncheckedIcon />}
-                      checkedIcon={<ErrorOutlineIcon />}
-                      indeterminateIcon={<RadioButtonUncheckedIcon />}
-                      disabled={!isAdmin()}
-                    />
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                      <InputLabel htmlFor="status_field">
-                        Státusz felülírás
-                      </InputLabel>
-                      <Field
-                        labelId="status_field"
-                        label="Státusz felülírás"
-                        name="status_field"
-                        component={Select}
-                        disabled={!isAdmin()}
+                      className={classes.toggleButtonGroup}
+                      exclusive
+                      fullWidth
+                    >
+                      <ToggleButton
+                        value
+                        color="success"
+                        aria-label="Elfogadva"
                       >
-                        <MenuItem value="">
-                          <em>Nincs</em>
-                        </MenuItem>
-                        {requestStatuses.map((status) => {
-                          return (
-                            <MenuItem key={status.id} value={status.id}>
-                              {status.text}
-                            </MenuItem>
-                          );
-                        })}
-                      </Field>
-                      {requestData.additional_data &&
-                        requestData.additional_data.status_by_admin &&
-                        requestData.additional_data.status_by_admin
-                          .admin_name && (
-                          <FormHelperText>
-                            Utoljára módosította:{' '}
-                            {
-                              requestData.additional_data.status_by_admin
-                                .admin_name
-                            }
-                          </FormHelperText>
-                        )}
-                    </FormControl>
+                        <SentimentVerySatisfiedIcon />
+                        <Typography
+                          variant="inherit"
+                          className={classes.toggleButtonText}
+                        >
+                          Elfogadva
+                        </Typography>
+                      </ToggleButton>
+                      <ToggleButton
+                        value={false}
+                        color="error"
+                        aria-label="Elutasítva"
+                      >
+                        <SentimentVeryDissatisfiedIcon />
+                        <Typography
+                          variant="inherit"
+                          className={classes.toggleButtonText}
+                        >
+                          Elutasítva
+                        </Typography>
+                      </ToggleButton>
+                    </Field>
+                    <Field
+                      component={ToggleButtonGroup}
+                      name="additional_data.canceled"
+                      type="checkbox"
+                      disabled={!isAdmin()}
+                      className={classes.toggleButtonGroup}
+                      exclusive
+                      fullWidth
+                    >
+                      <ToggleButton value color="warning" aria-label="Lemondva">
+                        <NotInterestedIcon />
+                        <Typography
+                          variant="inherit"
+                          className={classes.toggleButtonText}
+                        >
+                          Lemondva
+                        </Typography>
+                      </ToggleButton>
+                    </Field>
+                    <Field
+                      component={ToggleButtonGroup}
+                      name="additional_data.failed"
+                      type="checkbox"
+                      disabled={!isAdmin()}
+                      className={classes.toggleButtonGroup}
+                      exclusive
+                      fullWidth
+                    >
+                      <ToggleButton value color="info" aria-label="Meghiúsult">
+                        <ErrorOutlineIcon />
+                        <Typography
+                          variant="inherit"
+                          className={classes.toggleButtonText}
+                        >
+                          Meghiúsult
+                        </Typography>
+                      </ToggleButton>
+                    </Field>
+                    <Field
+                      name="status_field"
+                      component={Select}
+                      labelId="status_field"
+                      label="Státusz felülírás"
+                      disabled={!isAdmin()}
+                      formControl={{
+                        fullWidth: true,
+                        margin: 'normal',
+                        className: classes.beforeDividerTextField,
+                      }}
+                      formHelperText={{
+                        children:
+                          requestData.additional_data &&
+                          requestData.additional_data.status_by_admin &&
+                          requestData.additional_data.status_by_admin
+                            .admin_name &&
+                          `Utoljára módosította: ${requestData.additional_data.status_by_admin.admin_name}`,
+                      }}
+                    >
+                      <MenuItem value="">
+                        <em>Nincs</em>
+                      </MenuItem>
+                      {requestStatuses.map((status) => {
+                        return (
+                          <MenuItem key={status.id} value={status.id}>
+                            {status.text}
+                          </MenuItem>
+                        );
+                      })}
+                    </Field>
+                    <Divider />
                     <Field
                       name="responsible"
                       component={Autocomplete}
@@ -457,19 +535,20 @@ export default function BasicInformation({
                       getOptionLabel={(option) =>
                         `${option.last_name} ${option.first_name}`
                       }
-                      renderOption={(option) => {
+                      renderOption={(props, option) => {
                         return (
-                          <>
+                          // eslint-disable-next-line react/jsx-props-no-spreading
+                          <li {...props}>
                             <Avatar
                               alt={`${option.first_name} ${option.last_name}`}
                               src={option.profile.avatar_url}
                               className={classes.smallAvatar}
                             />
                             {`${option.last_name} ${option.first_name}`}
-                          </>
+                          </li>
                         );
                       }}
-                      getOptionSelected={(option, value) =>
+                      isOptionEqualToValue={(option, value) =>
                         option.id === value.id
                       }
                       autoHighlight
@@ -480,7 +559,6 @@ export default function BasicInformation({
                           {...params}
                           name="responsible"
                           label="Felelős"
-                          variant="outlined"
                           margin="normal"
                         />
                       )}
@@ -488,13 +566,19 @@ export default function BasicInformation({
                     <Field
                       name="deadline"
                       label="Határidő"
-                      margin="normal"
                       component={DatePicker}
-                      inputVariant="outlined"
-                      format="yyyy. MMMM dd."
-                      fullWidth
-                      error={touched.deadline && !!errors.deadline}
-                      helperText={touched.deadline && errors.deadline}
+                      toolbarTitle="Határidő kiválasztása"
+                      okText="Rendben"
+                      cancelText="Mégsem"
+                      clearText="Törlés"
+                      inputFormat="yyyy.MM.dd."
+                      mask="____.__.__."
+                      textField={{
+                        margin: 'normal',
+                        fullWidth: true,
+                        error: touched.deadline && !!errors.deadline,
+                        helperText: touched.deadline && errors.deadline,
+                      }}
                     />
                   </div>
                   <Divider />
@@ -505,6 +589,7 @@ export default function BasicInformation({
                       Label={{ label: 'Google Driveba felmásolva' }}
                       component={CheckboxWithLabel}
                       type="checkbox"
+                      color="secondary"
                       icon={<BackupIcon />}
                       checkedIcon={<CloudDoneIcon />}
                       indeterminateIcon={<BackupIcon />}
@@ -514,6 +599,7 @@ export default function BasicInformation({
                       Label={{ label: 'Törölve' }}
                       component={CheckboxWithLabel}
                       type="checkbox"
+                      color="secondary"
                       icon={<DeleteOutlineIcon />}
                       checkedIcon={<DeleteIcon />}
                       indeterminateIcon={<DeleteOutlineIcon />}
@@ -523,7 +609,6 @@ export default function BasicInformation({
                       label="Nyersek helye"
                       margin="normal"
                       component={TextField}
-                      variant="outlined"
                       fullWidth
                     />
                   </div>
@@ -535,7 +620,6 @@ export default function BasicInformation({
                       label="Esemény neve"
                       margin="normal"
                       component={TextField}
-                      variant="outlined"
                       fullWidth
                       error={touched.title && !!errors.title}
                       helperText={touched.title && errors.title}
@@ -543,35 +627,44 @@ export default function BasicInformation({
                     <Field
                       name="start_datetime"
                       label="Kezdés időpontja"
-                      margin="normal"
+                      toolbarTitle="Esemény kezdésének időpontja"
+                      okText="Rendben"
+                      cancelText="Mégsem"
+                      clearText="Törlés"
                       component={DateTimePicker}
-                      inputVariant="outlined"
-                      ampm={false}
-                      format="yyyy. MMMM dd. HH:mm"
-                      fullWidth
-                      error={touched.start_datetime && !!errors.start_datetime}
-                      helperText={
-                        touched.start_datetime && errors.start_datetime
-                      }
+                      inputFormat="yyyy.MM.dd. HH:mm"
+                      mask="____.__.__. __:__"
+                      textField={{
+                        margin: 'normal',
+                        fullWidth: true,
+                        error:
+                          touched.start_datetime && !!errors.start_datetime,
+                        helperText:
+                          touched.start_datetime && errors.start_datetime,
+                      }}
                     />
                     <Field
                       name="end_datetime"
                       label="Várható befejezés"
-                      margin="normal"
+                      toolbarTitle="Esemény végének időpontja"
+                      okText="Rendben"
+                      cancelText="Mégsem"
+                      clearText="Törlés"
                       component={DateTimePicker}
-                      inputVariant="outlined"
-                      ampm={false}
-                      format="yyyy. MMMM dd. HH:mm"
-                      fullWidth
-                      error={touched.end_datetime && !!errors.end_datetime}
-                      helperText={touched.end_datetime && errors.end_datetime}
+                      inputFormat="yyyy.MM.dd. HH:mm"
+                      mask="____.__.__. __:__"
+                      textField={{
+                        margin: 'normal',
+                        fullWidth: true,
+                        error: touched.end_datetime && !!errors.end_datetime,
+                        helperText: touched.end_datetime && errors.end_datetime,
+                      }}
                     />
                     <Field
                       name="place"
                       label="Helyszín"
                       margin="normal"
                       component={TextField}
-                      variant="outlined"
                       fullWidth
                       error={touched.place && !!errors.place}
                       helperText={touched.place && errors.place}
@@ -581,7 +674,6 @@ export default function BasicInformation({
                       label="Videó típusa"
                       margin="normal"
                       component={TextField}
-                      variant="outlined"
                       fullWidth
                       error={touched.type && !!errors.type}
                       helperText={touched.type && errors.type}
@@ -590,7 +682,7 @@ export default function BasicInformation({
                 </Form>
               )}
             </Formik>
-          </MuiPickersUtilsProvider>
+          </LocalizationProvider>
         ) : (
           <>
             <p>
@@ -789,6 +881,7 @@ export default function BasicInformation({
           <DialogActions>
             <Button
               onClick={() => setRemoveDialogOpen(false)}
+              color="inherit"
               autoFocus
               disabled={loading}
             >

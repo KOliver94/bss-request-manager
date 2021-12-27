@@ -22,7 +22,7 @@ const navPillsStyle = (theme) => ({
     color: 'inherit',
   },
   flexContainer: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'flex',
       flexWrap: 'wrap',
     },

@@ -1,6 +1,6 @@
 import MuiPhoneNumber from 'material-ui-phone-number';
 import PropTypes from 'prop-types';
-import { fieldToTextField } from 'formik-material-ui';
+import { fieldToTextField } from 'formik-mui';
 
 export default function PhoneNumberInput(props) {
   const {

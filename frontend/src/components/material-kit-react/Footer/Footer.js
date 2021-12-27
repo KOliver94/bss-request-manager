@@ -2,9 +2,9 @@
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
-// material-ui core components
-import { List, ListItem } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+// @mui components
+import { List, ListItem } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 // core components
 import Button from 'components/material-kit-react/CustomButtons/Button.js';
@@ -32,7 +32,7 @@ export default function Footer(props) {
                 target="_blank"
                 className={classes.socialIcon}
               >
-                <i className={classes.socialIcons + ' fas fa-globe-europe'} />
+                <i className="fas fa-globe-europe" />
               </Button>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
@@ -42,7 +42,7 @@ export default function Footer(props) {
                 target="_blank"
                 className={classes.socialIcon}
               >
-                <i className={classes.socialIcons + ' fab fa-facebook'} />
+                <i className="fab fa-facebook" />
               </Button>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
@@ -52,7 +52,7 @@ export default function Footer(props) {
                 target="_blank"
                 className={classes.socialIcon}
               >
-                <i className={classes.socialIcons + ' fab fa-instagram'} />
+                <i className="fab fa-instagram" />
               </Button>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
@@ -62,7 +62,7 @@ export default function Footer(props) {
                 target="_blank"
                 className={classes.socialIcon}
               >
-                <i className={classes.socialIcons + ' fab fa-youtube'} />
+                <i className="fab fa-youtube" />
               </Button>
             </ListItem>
           </List>

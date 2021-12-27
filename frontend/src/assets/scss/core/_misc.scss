@@ -124,3 +124,10 @@ img {
 form {
   margin-bottom: 1.125rem;
 }
+div.css-17vdz66 {
+  // Workaround for https://github.com/mui-org/material-ui/issues/28711
+  width: 100%;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+}

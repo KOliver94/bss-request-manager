@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
-// @material-ui/core components
-import Alert from '@material-ui/lab/Alert';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+// @mui components
+import Alert from '@mui/material/Alert';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 // core components
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 // Formik
 import { Field } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { TextField } from 'formik-mui';
 import PhoneNumberInput from 'components/PhoneNumberInput';
 
 import styles from 'assets/jss/material-kit-react/views/profilePage';
@@ -38,7 +39,6 @@ export default function PersonalDetails({ errors, touched, disabled, isUser }) {
           label="Vezetéknév"
           margin="normal"
           component={TextField}
-          variant="outlined"
           fullWidth
           disabled={disabled}
           error={touched.last_name && !!errors.last_name}
@@ -51,7 +51,6 @@ export default function PersonalDetails({ errors, touched, disabled, isUser }) {
           label="Keresztnév"
           margin="normal"
           component={TextField}
-          variant="outlined"
           fullWidth
           disabled={disabled}
           error={touched.first_name && !!errors.first_name}
@@ -65,7 +64,6 @@ export default function PersonalDetails({ errors, touched, disabled, isUser }) {
           label="E-mail cím"
           margin="normal"
           component={TextField}
-          variant="outlined"
           fullWidth
           disabled={disabled}
           error={touched.email && !!errors.email}

@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
 import {
   primaryColor,
   roseColor as secondaryColor,
@@ -6,10 +6,19 @@ import {
   warningColor,
   infoColor,
   successColor,
-  grayColor,
 } from 'assets/jss/material-kit-react';
 
 const theme = createTheme({
+  components: {
+    MuiRating: {
+      styleOverrides: {
+        label: {
+          color: 'inherit',
+          fontSize: 'inherit',
+        },
+      },
+    },
+  },
   palette: {
     primary: {
       main: primaryColor,
@@ -28,9 +37,6 @@ const theme = createTheme({
     },
     success: {
       main: successColor,
-    },
-    grey: {
-      main: grayColor,
     },
   },
 });

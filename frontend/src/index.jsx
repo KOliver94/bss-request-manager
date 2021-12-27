@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 import * as Sentry from '@sentry/react';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
@@ -16,19 +16,21 @@ if (process.env.NODE_ENV === 'production') {
 
 ReactDOM.render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider
-        maxSnack={3}
-        preventDuplicate
-        autoHideDuration={2000}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-      >
-        <App />
-      </SnackbarProvider>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider
+          maxSnack={3}
+          preventDuplicate
+          autoHideDuration={2000}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+        >
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   </StrictMode>,
   document.getElementById('root')
 );

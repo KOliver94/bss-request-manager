@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { TextField } from 'formik-mui';
 import PhoneNumberInput from 'components/PhoneNumberInput';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import Button from 'components/material-kit-react/CustomButtons/Button';
-import MUIButton from '@material-ui/core/Button';
-import Alert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
+import MUIButton from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import makeStyles from '@mui/styles/makeStyles';
 import * as Yup from 'yup';
 import 'yup-phone';
 
@@ -29,18 +29,18 @@ const validationSchema = Yup.object({
     .min(2, 'Túl rövid keresztnév!')
     .max(30, 'Túl hosszú keresztnév!')
     .trim()
-    .required('A keresztnév megadása kötelező'),
+    .required('A keresztnév megadása kötelező!'),
   requester_last_name: Yup.string()
     .min(2, 'Túl rövid vezetéknév!')
     .max(150, 'Túl hosszú vezetéknév!')
     .trim()
-    .required('A vezetéknév megadása kötelező'),
+    .required('A vezetéknév megadása kötelező!'),
   requester_email: Yup.string()
-    .email('Érvénytelen e-mail cím')
-    .required('Az e-mail cím megadása kötelező'),
+    .email('Érvénytelen e-mail cím!')
+    .required('Az e-mail cím megadása kötelező!'),
   requester_mobile: Yup.string()
-    .phone('', false, 'Érvénytelen telefonszám')
-    .required('A telefonszám megadása kötelező'),
+    .phone('', false, 'Érvénytelen telefonszám!')
+    .required('A telefonszám megadása kötelező!'),
 });
 
 function PersonalDetails({
@@ -111,7 +111,6 @@ function PersonalDetails({
                 label="Vezetéknév"
                 margin="normal"
                 component={TextField}
-                variant="outlined"
                 fullWidth
                 disabled={isAuthenticated}
                 error={
@@ -128,7 +127,6 @@ function PersonalDetails({
                 label="Keresztnév"
                 margin="normal"
                 component={TextField}
-                variant="outlined"
                 fullWidth
                 disabled={isAuthenticated}
                 error={
@@ -146,7 +144,6 @@ function PersonalDetails({
                 label="E-mail cím"
                 margin="normal"
                 component={TextField}
-                variant="outlined"
                 fullWidth
                 disabled={isAuthenticated}
                 error={touched.requester_email && !!errors.requester_email}

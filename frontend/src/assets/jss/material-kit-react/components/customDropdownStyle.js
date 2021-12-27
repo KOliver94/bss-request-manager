@@ -38,7 +38,7 @@ const customDropdownStyle = (theme) => ({
   },
   popperResponsive: {
     zIndex: '1200',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       zIndex: '1640',
       position: 'static',
       float: 'none',
@@ -120,8 +120,7 @@ const customDropdownStyle = (theme) => ({
     textAlign: 'right',
   },
   dropdownDividerItem: {
-    margin: '5px 0',
-    backgroundColor: 'rgba(0, 0, 0, 0.12)',
+    margin: '5px 0 !important',
     height: '1px',
     overflow: 'hidden',
   },

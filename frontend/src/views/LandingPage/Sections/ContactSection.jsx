@@ -1,5 +1,5 @@
 import { useState, createRef } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useSnackbar } from 'notistack';
 
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
@@ -86,6 +86,9 @@ export default function ContactSection() {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  labelProps={{
+                    variant: 'standard',
+                  }}
                   inputProps={{
                     name: 'name',
                     onChange: (e) => handleChange(e),
@@ -100,6 +103,9 @@ export default function ContactSection() {
                   id="email"
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  labelProps={{
+                    variant: 'standard',
                   }}
                   inputProps={{
                     name: 'email',
@@ -116,6 +122,9 @@ export default function ContactSection() {
                 formControlProps={{
                   fullWidth: true,
                   className: classes.textArea,
+                }}
+                labelProps={{
+                  variant: 'standard',
                 }}
                 inputProps={{
                   multiline: true,

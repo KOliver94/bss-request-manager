@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-// Material UI components
-import Box from '@material-ui/core/Box';
-import CloseIcon from '@material-ui/icons/Close';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import Skeleton from '@material-ui/lab/Skeleton';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
+// MUI components
+import Box from '@mui/material/Box';
+import CloseIcon from '@mui/icons-material/Close';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import Skeleton from '@mui/material/Skeleton';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Date format
@@ -32,13 +32,12 @@ export default function WorkedOnDialog({
   workedOnDialogOpen,
   setWorkedOnDialogOpen,
   userId,
-  selectedStartDate,
-  selectedEndDate,
+  selectedDateRange,
   includeResponsible,
 }) {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState([]);
   const [orderBy, setOrderBy] = useState({
@@ -94,16 +93,15 @@ export default function WorkedOnDialog({
     if (workedOnDialogOpen) {
       loadData(
         userId,
-        selectedStartDate.toISOString().split('T')[0],
-        selectedEndDate.toISOString().split('T')[0],
+        format(selectedDateRange[0], 'yyyy-MM-dd'),
+        format(selectedDateRange[1], 'yyyy-MM-dd'),
         includeResponsible
       );
     }
   }, [
     workedOnDialogOpen,
     userId,
-    selectedStartDate,
-    selectedEndDate,
+    selectedDateRange,
     includeResponsible,
     enqueueSnackbar,
   ]);
@@ -120,7 +118,7 @@ export default function WorkedOnDialog({
         <Box display="flex" alignItems="center">
           <Box flexGrow={1}>Készített anyagok</Box>
           <Box>
-            <IconButton onClick={closeDialog}>
+            <IconButton onClick={closeDialog} size="large">
               <CloseIcon />
             </IconButton>
           </Box>
@@ -201,8 +199,7 @@ export default function WorkedOnDialog({
 WorkedOnDialog.propTypes = {
   workedOnDialogOpen: PropTypes.bool.isRequired,
   setWorkedOnDialogOpen: PropTypes.func.isRequired,
-  selectedStartDate: PropTypes.instanceOf(Date).isRequired,
-  selectedEndDate: PropTypes.instanceOf(Date).isRequired,
+  selectedDateRange: PropTypes.arrayOf(Date).isRequired,
   includeResponsible: PropTypes.bool.isRequired,
   userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };

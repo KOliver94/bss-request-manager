@@ -19,10 +19,6 @@ updates:
     interval: weekly
     day: saturday
     time: "04:00"
-  ignore:
-  - dependency-name: "@date-io/date-fns"
-    versions:
-    - "> 1.3.13"
   rebase-strategy: disabled
 
 # Python

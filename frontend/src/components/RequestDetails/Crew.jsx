@@ -1,31 +1,31 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-// Material UI components
-import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CheckIcon from '@material-ui/icons/Check';
-import ClearIcon from '@material-ui/icons/Clear';
-import MUITextField from '@material-ui/core/TextField';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
-import Fab from '@material-ui/core/Fab';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
-import Avatar from '@material-ui/core/Avatar';
-import { makeStyles } from '@material-ui/core/styles';
-import { createFilterOptions } from '@material-ui/lab/Autocomplete';
+// MUI components
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import MUITextField from '@mui/material/TextField';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Fab from '@mui/material/Fab';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import Avatar from '@mui/material/Avatar';
+import makeStyles from '@mui/styles/makeStyles';
+import { createFilterOptions } from '@mui/material/Autocomplete';
 // Form components
 import { Formik, Form, Field, getIn } from 'formik';
-import { Autocomplete } from 'formik-material-ui-lab';
+import { Autocomplete } from 'formik-mui';
 import * as Yup from 'yup';
 // Notistack
 import { useSnackbar } from 'notistack';
@@ -185,7 +185,7 @@ export default function Crew({
           .max(20, 'A pozíció túl hosszú!')
           .trim(),
       })
-      .required('A pozíció megadása kötelező')
+      .required('A pozíció megadása kötelező!')
       .nullable(),
   });
 
@@ -209,6 +209,7 @@ export default function Crew({
                             id="position"
                             name="position"
                             label="Pozíció"
+                            variant="standard"
                             defaultValue={crewMember.position}
                             onChange={handleChange}
                             required
@@ -236,6 +237,7 @@ export default function Crew({
                                 <IconButton
                                   onClick={() => handleEditSubmit()}
                                   disabled={loading}
+                                  size="large"
                                 >
                                   <CheckIcon />
                                 </IconButton>
@@ -246,6 +248,7 @@ export default function Crew({
                                 <IconButton
                                   onClick={handleCancel}
                                   disabled={loading}
+                                  size="large"
                                 >
                                   <ClearIcon />
                                 </IconButton>
@@ -259,6 +262,7 @@ export default function Crew({
                                 <IconButton
                                   onClick={() => handleEdit(crewMember.id)}
                                   disabled={loading}
+                                  size="large"
                                 >
                                   <EditIcon />
                                 </IconButton>
@@ -269,6 +273,7 @@ export default function Crew({
                                 <IconButton
                                   onClick={() => handleDelete(crewMember.id)}
                                   disabled={loading}
+                                  size="large"
                                 >
                                   <DeleteIcon />
                                 </IconButton>
@@ -318,19 +323,20 @@ export default function Crew({
                       getOptionLabel={(option) =>
                         `${option.last_name} ${option.first_name}`
                       }
-                      renderOption={(option) => {
+                      renderOption={(props, option) => {
                         return (
-                          <>
+                          // eslint-disable-next-line react/jsx-props-no-spreading
+                          <li {...props}>
                             <Avatar
                               alt={`${option.first_name} ${option.last_name}`}
                               src={option.profile.avatar_url}
                               className={classes.smallAvatar}
                             />
                             {`${option.last_name} ${option.first_name}`}
-                          </>
+                          </li>
                         );
                       }}
-                      getOptionSelected={(option, value) =>
+                      isOptionEqualToValue={(option, value) =>
                         option.id === value.id
                       }
                       autoHighlight
@@ -342,6 +348,7 @@ export default function Crew({
                           name="member_id"
                           label="Stábtag"
                           margin="normal"
+                          variant="standard"
                           error={touched.member && !!errors.member}
                           helperText={touched.member && errors.member}
                         />
@@ -354,8 +361,12 @@ export default function Crew({
                       filterOptions={(options, params) => {
                         const filtered = filter(options, params);
 
+                        const { inputValue } = params;
                         // Suggest the creation of a new value
-                        if (params.inputValue !== '') {
+                        const isExisting = options.some(
+                          (option) => inputValue === option.position
+                        );
+                        if (inputValue !== '' && !isExisting) {
                           filtered.push({
                             position: params.inputValue,
                             category: 'Egyéb',
@@ -366,13 +377,15 @@ export default function Crew({
                         return filtered;
                       }}
                       getOptionLabel={(option) => option.position}
-                      renderOption={(option) => {
+                      renderOption={(props, option) => {
                         // Add "xxx" option created dynamically
                         if (option.label) {
-                          return option.label;
+                          // eslint-disable-next-line react/jsx-props-no-spreading
+                          return <li {...props}>{option.label}</li>;
                         }
                         // Regular option
-                        return option.position;
+                        // eslint-disable-next-line react/jsx-props-no-spreading
+                        return <li {...props}>{option.position}</li>;
                       }}
                       groupBy={(option) => option.category}
                       fullWidth
@@ -388,6 +401,7 @@ export default function Crew({
                           name="position_obj"
                           label="Pozíció"
                           margin="normal"
+                          variant="standard"
                           error={touched.position_obj && !!errors.position_obj}
                           helperText={
                             touched.position_obj &&
@@ -402,7 +416,7 @@ export default function Crew({
                 <DialogActions>
                   <Button
                     onClick={handleDialogClose}
-                    color="primary"
+                    color="inherit"
                     disabled={isSubmitting}
                   >
                     Mégsem
