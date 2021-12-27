@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-// Material UI components
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+// MUI components
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
@@ -108,16 +108,16 @@ export default function ReviewDialog({
           label="Értékelés"
           multiline
           fullWidth
+          margin="dense"
           rows={4}
           placeholder="Írd le pár mondatban a véleményedet a videóról illetve a stáb munkájáról."
-          variant="outlined"
           value={reviewData.review}
           onChange={handleChange}
           autoFocus
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel} disabled={loading}>
+        <Button color="inherit" onClick={handleCancel} disabled={loading}>
           Mégsem
         </Button>
         <Button

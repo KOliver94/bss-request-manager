@@ -3,11 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Face from '@material-ui/icons/Face';
-import TheatersIcon from '@material-ui/icons/Theaters';
+// @mui components
+import makeStyles from '@mui/styles/makeStyles';
+import CircularProgress from '@mui/material/CircularProgress';
+import Face from '@mui/icons-material/Face';
+import TheatersIcon from '@mui/icons-material/Theaters';
 // background
 import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
@@ -166,13 +166,11 @@ export default function RequestDetailPage({
               </h1>
             </GridItem>
             <GridItem xs={12} sm={12} md={6} className={classes.textCenter}>
-              <div className={classes.statusBadge}>
-                {!loading && (
-                  <Badge color="primary">
-                    {requestStatuses.find((x) => x.id === data.status).text}
-                  </Badge>
-                )}
-              </div>
+              {!loading && (
+                <Badge color="primary">
+                  {requestStatuses.find((x) => x.id === data.status).text}
+                </Badge>
+              )}
             </GridItem>
           </GridContainer>
         </div>
@@ -197,14 +195,14 @@ export default function RequestDetailPage({
                   isPrivileged={isPrivileged}
                 />
               </GridItem>
-              <GridItem xs={12} sm={6} className={classes.textColor}>
+              <GridItem xs={12} sm={6}>
                 <CustomTabs
                   headerColor="primary"
                   tabs={tabsContent()}
                   activeTab={isPrivileged && data.status >= 4 ? 1 : 0}
                 />
               </GridItem>
-              <GridItem className={classes.textColor}>
+              <GridItem>
                 <Comments
                   requestId={id}
                   requestData={data}

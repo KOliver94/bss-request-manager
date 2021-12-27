@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
+// @mui components
+import makeStyles from '@mui/styles/makeStyles';
 // core components
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';

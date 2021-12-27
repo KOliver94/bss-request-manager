@@ -1,6 +1,6 @@
 import { container, primaryColor } from 'assets/jss/material-kit-react';
 
-const footerStyle = {
+const footerStyle = (theme) => ({
   block: {
     color: 'inherit',
     padding: '0.9375rem',
@@ -13,13 +13,18 @@ const footerStyle = {
     display: 'block',
   },
   left: {
-    float: 'left!important',
+    [theme.breakpoints.up('sm')]: {
+      float: 'left!important',
+    },
+    padding: '15px 0',
     display: 'block',
   },
   right: {
+    [theme.breakpoints.up('sm')]: {
+      float: 'right!important',
+    },
     padding: '15px 0',
     margin: '0',
-    float: 'right!important',
   },
   footer: {
     padding: '0.9375rem 0',
@@ -48,6 +53,8 @@ const footerStyle = {
     display: 'inline-block',
     padding: '0px',
     width: 'auto',
+    lineHeight: 0,
+    verticalAlign: 'text-bottom',
   },
   icon: {
     width: '18px',
@@ -56,8 +63,9 @@ const footerStyle = {
     top: '3px',
   },
   socialIcon: {
-    padding: '15px 10px',
+    padding: '0 10px',
     margin: '0',
   },
-};
+});
+
 export default footerStyle;

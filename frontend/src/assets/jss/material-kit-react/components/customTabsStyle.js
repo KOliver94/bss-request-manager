@@ -32,6 +32,7 @@ const customTabsStyle = {
     border: '0 !important',
     color: '#fff !important',
     marginLeft: '4px',
+    letterSpacing: 'normal',
     fontWeight: '500',
     fontSize: '12px',
     '&:last-child': {
@@ -57,6 +58,12 @@ const customTabsStyle = {
     '&,& *': {
       letterSpacing: 'normal !important',
     },
+  },
+  tabIconWrapper: {
+    marginRight: '5px !important',
+  },
+  tabTextColorInherit: {
+    opacity: 0.7,
   },
 };
 

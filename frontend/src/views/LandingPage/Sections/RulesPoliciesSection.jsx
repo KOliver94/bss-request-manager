@@ -1,10 +1,10 @@
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
+// @mui components
+import makeStyles from '@mui/styles/makeStyles';
 
-// @material-ui/icons
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import VerifiedUser from '@material-ui/icons/VerifiedUser';
-import CancelIcon from '@material-ui/icons/Cancel';
+// @mui/icons-material
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import VerifiedUser from '@mui/icons-material/VerifiedUser';
+import CancelIcon from '@mui/icons-material/Cancel';
 // core components
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';

@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types';
 import { Formik, Form, Field, getIn } from 'formik';
-import { TextField } from 'formik-material-ui';
-import { DateTimePicker } from 'formik-material-ui-pickers';
-import { Autocomplete } from 'formik-material-ui-lab';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import { Autocomplete, TextField } from 'formik-mui';
+import { DateTimePicker } from 'formik-mui-lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { hu } from 'date-fns/locale';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import Button from 'components/material-kit-react/CustomButtons/Button';
-import MUITextField from '@material-ui/core/TextField';
-import { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
+import MUITextField from '@mui/material/TextField';
+import { createFilterOptions } from '@mui/material/Autocomplete';
+import makeStyles from '@mui/styles/makeStyles';
 import * as Yup from 'yup';
 import { requestTypes } from 'helpers/enumConstants';
 
@@ -28,23 +27,25 @@ const validationSchema = Yup.object({
     .min(1, 'Az esemény neve túl rövid!')
     .max(200, 'Az esemény neve túl hosszú!')
     .trim()
-    .required('Az esemény nevének megadása kötelező'),
+    .required('Az esemény nevének megadása kötelező!'),
   start_datetime: Yup.date()
     .min(new Date(), 'A mostaninál korábbi időpont nem adható meg!')
-    .required('A kezdés időpontjának megadása kötelező')
-    .nullable(),
+    .required('A kezdés időpontjának megadása kötelező!')
+    .nullable()
+    .typeError('Hibás dátum formátum!'),
   end_datetime: Yup.date()
     .min(
       Yup.ref('start_datetime'),
       'A befejezés időpontja nem lehet korábbi mint a kezdés!'
     )
-    .required('A várható befejezés megadása kötelező')
-    .nullable(),
+    .required('A várható befejezés megadása kötelező!')
+    .nullable()
+    .typeError('Hibás dátum formátum!'),
   place: Yup.string()
     .min(1, 'Túl rövid helyszín!')
     .max(150, 'Túl hosszú helyszín!')
     .trim()
-    .required('A helyszín megadása kötelező'),
+    .required('A helyszín megadása kötelező!'),
   type_obj: Yup.object()
     .shape({
       text: Yup.string()
@@ -52,14 +53,14 @@ const validationSchema = Yup.object({
         .max(50, 'Túl hosszú típus!')
         .trim(),
     })
-    .required('A videó típusának megadása kötelező')
+    .required('A videó típusának megadása kötelező!')
     .nullable(),
 });
 
 function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
   const classes = useStyles();
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={hu}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} locale={hu}>
       <Formik
         initialValues={formData}
         onSubmit={(values) => {
@@ -77,7 +78,6 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
                   label="Esemény neve"
                   margin="normal"
                   component={TextField}
-                  variant="outlined"
                   fullWidth
                   error={touched.title && !!errors.title}
                   helperText={touched.title && errors.title}
@@ -87,30 +87,42 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
                 <Field
                   name="start_datetime"
                   label="Kezdés időpontja"
-                  margin="normal"
+                  toolbarTitle="Esemény kezdésének időpontja"
+                  okText="Rendben"
+                  cancelText="Mégsem"
+                  clearText="Törlés"
                   component={DateTimePicker}
-                  inputVariant="outlined"
                   clearable
-                  ampm={false}
                   disablePast
-                  fullWidth
-                  error={touched.start_datetime && !!errors.start_datetime}
-                  helperText={touched.start_datetime && errors.start_datetime}
+                  inputFormat="yyyy.MM.dd. HH:mm"
+                  mask="____.__.__. __:__"
+                  textField={{
+                    margin: 'normal',
+                    fullWidth: true,
+                    error: touched.start_datetime && !!errors.start_datetime,
+                    helperText: touched.start_datetime && errors.start_datetime,
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={6}>
                 <Field
                   name="end_datetime"
                   label="Várható befejezés"
-                  margin="normal"
+                  toolbarTitle="Esemény végének időpontja"
+                  okText="Rendben"
+                  cancelText="Mégsem"
+                  clearText="Törlés"
                   component={DateTimePicker}
-                  inputVariant="outlined"
                   clearable
-                  ampm={false}
                   disablePast
-                  fullWidth
-                  error={touched.end_datetime && !!errors.end_datetime}
-                  helperText={touched.end_datetime && errors.end_datetime}
+                  inputFormat="yyyy.MM.dd. HH:mm"
+                  mask="____.__.__. __:__"
+                  textField={{
+                    margin: 'normal',
+                    fullWidth: true,
+                    error: touched.end_datetime && !!errors.end_datetime,
+                    helperText: touched.end_datetime && errors.end_datetime,
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={6}>
@@ -119,7 +131,6 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
                   label="Helyszín"
                   margin="normal"
                   component={TextField}
-                  variant="outlined"
                   fullWidth
                   error={touched.place && !!errors.place}
                   helperText={touched.place && errors.place}
@@ -133,24 +144,30 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
                   filterOptions={(options, params) => {
                     const filtered = filter(options, params);
 
+                    const { inputValue } = params;
                     // Suggest the creation of a new value
-                    if (params.inputValue !== '') {
+                    const isExisting = options.some(
+                      (option) => inputValue === option.title
+                    );
+                    if (inputValue !== '' && !isExisting) {
                       filtered.push({
-                        text: params.inputValue,
-                        label: `Egyéb: "${params.inputValue}"`,
+                        text: inputValue,
+                        label: `Egyéb: "${inputValue}"`,
                       });
                     }
 
                     return filtered;
                   }}
                   getOptionLabel={(option) => option.text}
-                  renderOption={(option) => {
+                  renderOption={(props, option) => {
                     // Add "xxx" option created dynamically
                     if (option.label) {
-                      return option.label;
+                      // eslint-disable-next-line react/jsx-props-no-spreading
+                      return <li {...props}>{option.label}</li>;
                     }
                     // Regular option
-                    return option.text;
+                    // eslint-disable-next-line react/jsx-props-no-spreading
+                    return <li {...props}>{option.text}</li>;
                   }}
                   fullWidth
                   selectOnFocus
@@ -165,7 +182,6 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
                       name="type_obj"
                       label="Videó típusa"
                       margin="normal"
-                      variant="outlined"
                       error={touched.type_obj && !!errors.type_obj}
                       helperText={
                         touched.type_obj &&
@@ -194,7 +210,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
           </Form>
         )}
       </Formik>
-    </MuiPickersUtilsProvider>
+    </LocalizationProvider>
   );
 }
 

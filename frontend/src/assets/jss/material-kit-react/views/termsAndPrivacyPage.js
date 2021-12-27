@@ -1,13 +1,13 @@
 import { container } from 'assets/jss/material-kit-react';
 
-const requestCreatorPage = {
+const termsAndPrivacyPageStyle = {
   container: {
     zIndex: '12',
     color: '#FFFFFF',
     ...container,
   },
   section: {
-    padding: '70px 0',
+    padding: '70px 15px',
   },
   main: {
     background: '#FFFFFF',
@@ -30,4 +30,4 @@ const requestCreatorPage = {
   },
 };
 
-export default requestCreatorPage;
+export default termsAndPrivacyPageStyle;

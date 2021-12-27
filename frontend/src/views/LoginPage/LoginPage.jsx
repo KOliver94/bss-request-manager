@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Icon from '@material-ui/core/Icon';
-import Tooltip from '@material-ui/core/Tooltip';
-// @material-ui/icons
-import People from '@material-ui/icons/People';
-// notistack (Material UI Snackbars)
+// @mui components
+import makeStyles from '@mui/styles/makeStyles';
+import CircularProgress from '@mui/material/CircularProgress';
+import InputAdornment from '@mui/material/InputAdornment';
+import Icon from '@mui/material/Icon';
+import Tooltip from '@mui/material/Tooltip';
+// @mui/icons-material
+import People from '@mui/icons-material/People';
+// notistack (MUI Snackbars)
 import { useSnackbar } from 'notistack';
 // core components
 import Header from 'components/material-kit-react/Header/Header';
@@ -225,6 +225,9 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       formControlProps={{
                         fullWidth: true,
                       }}
+                      labelProps={{
+                        variant: 'standard',
+                      }}
                       inputProps={{
                         type: 'username',
                         name: 'username',
@@ -243,6 +246,9 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       id="pass"
                       formControlProps={{
                         fullWidth: true,
+                      }}
+                      labelProps={{
+                        variant: 'standard',
                       }}
                       inputProps={{
                         type: 'password',

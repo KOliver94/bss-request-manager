@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
+// @mui components
+import makeStyles from '@mui/styles/makeStyles';
 // background
 import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
 // core components

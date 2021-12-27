@@ -1,23 +1,23 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-// Material UI components
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import SendIcon from '@material-ui/icons/Send';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import LockIcon from '@material-ui/icons/Lock';
-import EditIcon from '@material-ui/icons/Edit';
-import ClearIcon from '@material-ui/icons/Clear';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Avatar from '@material-ui/core/Avatar';
-import Divider from '@material-ui/core/Divider';
-import Tooltip from '@material-ui/core/Tooltip';
-import { makeStyles } from '@material-ui/core/styles';
+// MUI components
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import SendIcon from '@mui/icons-material/Send';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockIcon from '@mui/icons-material/Lock';
+import EditIcon from '@mui/icons-material/Edit';
+import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import makeStyles from '@mui/styles/makeStyles';
 // New comment
 import { Formik, Form, Field } from 'formik';
-import { TextField, Checkbox } from 'formik-material-ui';
+import { TextField, Checkbox } from 'formik-mui';
 import * as Yup from 'yup';
 // Date format
 import { format, formatDistanceToNow } from 'date-fns';
@@ -208,7 +208,6 @@ export default function Comments({
                                 label="Szerkesztés"
                                 margin="normal"
                                 component={TextField}
-                                variant="outlined"
                                 fullWidth
                                 multiline
                                 rows={5}
@@ -228,6 +227,7 @@ export default function Comments({
                                       component={Checkbox}
                                       type="checkbox"
                                       name="internal"
+                                      color="secondary"
                                       icon={<LockOpenIcon />}
                                       checkedIcon={<LockIcon />}
                                     />
@@ -240,6 +240,7 @@ export default function Comments({
                                     <IconButton
                                       onClick={handleCancel}
                                       disabled={isSubmitting}
+                                      size="large"
                                     >
                                       <ClearIcon />
                                     </IconButton>
@@ -252,6 +253,7 @@ export default function Comments({
                                     <IconButton
                                       type="submit"
                                       disabled={isSubmitting}
+                                      size="large"
                                     >
                                       <SendIcon />
                                     </IconButton>
@@ -311,6 +313,7 @@ export default function Comments({
                               <IconButton
                                 onClick={() => handleDelete(comment.id)}
                                 disabled={loading}
+                                size="large"
                               >
                                 <DeleteIcon />
                               </IconButton>
@@ -323,6 +326,7 @@ export default function Comments({
                               <IconButton
                                 onClick={() => handleEdit(comment.id)}
                                 disabled={loading}
+                                size="large"
                               >
                                 <EditIcon />
                               </IconButton>
@@ -366,7 +370,6 @@ export default function Comments({
                     label="Új hozzászólás"
                     margin="normal"
                     component={TextField}
-                    variant="outlined"
                     fullWidth
                     multiline
                     rows={5}
@@ -386,6 +389,7 @@ export default function Comments({
                           component={Checkbox}
                           type="checkbox"
                           name="internal"
+                          color="secondary"
                           icon={<LockOpenIcon />}
                           checkedIcon={<LockIcon />}
                         />
@@ -395,7 +399,11 @@ export default function Comments({
                   <Grid item>
                     <Tooltip title="Küldés" placement="left" arrow>
                       <span>
-                        <IconButton type="submit" disabled={isSubmitting}>
+                        <IconButton
+                          type="submit"
+                          disabled={isSubmitting}
+                          size="large"
+                        >
                           <SendIcon />
                         </IconButton>
                       </span>

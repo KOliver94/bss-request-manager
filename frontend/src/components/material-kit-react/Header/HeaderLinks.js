@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import CircularProgress from '@material-ui/core/CircularProgress';
+// @mui components
+import makeStyles from '@mui/styles/makeStyles';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import CircularProgress from '@mui/material/CircularProgress';
 
-// @material-ui/icons
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import SendRoundedIcon from '@material-ui/icons/SendRounded';
+// @mui/icons-material
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 
 // core components
 import Button from 'components/material-kit-react/CustomButtons/Button.js';
@@ -70,7 +70,7 @@ export default function HeaderLinks({
 
   return (
     <List className={classes.list}>
-      {isAuthenticated ? (
+      {isAuthenticated && !hideLogin ? (
         <ListItem className={classes.listItem}>
           <CustomDropdown
             noLiPadding
