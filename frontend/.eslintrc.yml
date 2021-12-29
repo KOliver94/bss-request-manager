@@ -30,6 +30,7 @@ rules:
     'prettier/prettier': ['error', { 'endOfLine': 'auto' }],
     'react/forbid-prop-types': 'off',
     'react/jsx-no-useless-fragment': ['error', { 'allowExpressions': true }],
+    'react/jsx-props-no-spreading': ['error', { 'custom': 'ignore' }],
     'react/no-unstable-nested-components': ['error', { 'allowAsProps': true }],
     'react/react-in-jsx-scope': 'off',
   }

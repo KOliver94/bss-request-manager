@@ -161,7 +161,6 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
                   autoHighlight
                   renderInput={(params) => (
                     <MUITextField
-                      // eslint-disable-next-line react/jsx-props-no-spreading
                       {...params}
                       name="type_obj"
                       label="Videó típusa"
