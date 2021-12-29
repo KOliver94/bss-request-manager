@@ -338,7 +338,6 @@ export default function Crew({
                       fullWidth
                       renderInput={(params) => (
                         <MUITextField
-                          // eslint-disable-next-line react/jsx-props-no-spreading
                           {...params}
                           name="member_id"
                           label="Stábtag"
@@ -385,7 +384,6 @@ export default function Crew({
                       autoHighlight
                       renderInput={(params) => (
                         <MUITextField
-                          // eslint-disable-next-line react/jsx-props-no-spreading
                           {...params}
                           name="position_obj"
                           label="Pozíció"

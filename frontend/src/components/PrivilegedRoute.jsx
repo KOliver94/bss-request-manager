@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { isPrivileged } from '../api/loginApi';

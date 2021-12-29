@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { isAuthenticated } from '../api/loginApi';

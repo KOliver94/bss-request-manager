@@ -11,7 +11,6 @@ export default function PhoneNumberInput(props) {
 
   return (
     <MuiPhoneNumber
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...fieldToTextField(props)}
       preferredCountries={['hu']}
       defaultCountry="hu"

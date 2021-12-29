@@ -571,7 +571,6 @@ export default function Videos({
                               fullWidth
                               renderInput={(params) => (
                                 <MUITextField
-                                  // eslint-disable-next-line react/jsx-props-no-spreading
                                   {...params}
                                   name="editor"
                                   label="Vágó"
@@ -606,7 +605,6 @@ export default function Videos({
                               fullWidth
                               renderInput={(params) => (
                                 <MUITextField
-                                  // eslint-disable-next-line react/jsx-props-no-spreading
                                   {...params}
                                   name="additional_data.aired"
                                   label="Adásba kerülés"
@@ -864,7 +862,6 @@ export default function Videos({
                         fullWidth
                         renderInput={(params) => (
                           <MUITextField
-                            // eslint-disable-next-line react/jsx-props-no-spreading
                             {...params}
                             name="editor"
                             label="Vágó"
