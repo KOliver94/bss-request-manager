@@ -56,7 +56,7 @@ import {
   connectSocial,
   disconnectSocial,
 } from 'api/userApi';
-import { isAdmin, isPrivileged } from 'api/loginApi';
+import { isAdmin, isPrivileged, isSelf } from 'api/loginApi';
 import handleError from 'helpers/errorHandler';
 import { userRoles, avatarProviders, groups } from 'helpers/enumConstants';
 import {
@@ -456,7 +456,8 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                             }
                                             disabled={
                                               avatar[1] ===
-                                              userData.profile.avatar_url
+                                                userData.profile.avatar_url ||
+                                              (id && !isSelf(id))
                                             }
                                           >
                                             <CardMedia
@@ -501,7 +502,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                             )}
                           </AccordionDetails>
                         </Accordion>
-                        {!id && (
+                        {(!id || isSelf(id)) && (
                           <Accordion>
                             <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
@@ -607,7 +608,8 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                             </AccordionDetails>
                           </Accordion>
                         )}
-                        {isPrivileged() && (
+                        {(((!id || isSelf(id)) && isPrivileged()) ||
+                          isAdmin()) && (
                           <>
                             <Accordion>
                               <AccordionSummary
