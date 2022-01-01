@@ -71,6 +71,11 @@ export function isAdmin() {
   return role && role.toLowerCase() === 'admin';
 }
 
+export function isSelf(userId) {
+  const ownUserId = localStorage.getItem('user_id');
+  return userId === ownUserId;
+}
+
 export function checkRefreshTokenValid() {
   const refreshToken = localStorage.getItem('refresh_token');
   if (refreshToken) {
