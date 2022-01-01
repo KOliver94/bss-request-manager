@@ -24,7 +24,7 @@ import CardHeader from 'components/material-kit-react/Card/CardHeader';
 import CardFooter from 'components/material-kit-react/Card/CardFooter';
 import CustomInput from 'components/material-kit-react/CustomInput/CustomInput';
 // API calls and helpers
-import { loginLdap, loginSocial } from 'api/loginApi';
+import { loginLdap, loginSocial, isPrivileged } from 'api/loginApi';
 import {
   getOauthUrlAuthSch,
   getOauthUrlFacebook,
@@ -120,6 +120,9 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
 
   useEffect(() => {
     if (isAuthenticated) {
+      if (from.pathname === '/' && isPrivileged()) {
+        from.pathname = '/admin/requests';
+      }
       navigate(from, { replace: true });
     }
   });
