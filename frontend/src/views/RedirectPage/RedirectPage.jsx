@@ -22,10 +22,8 @@ export default function RedirectPage() {
     <>
       {isValidOauthRedirect() ? (
         <Navigate
-          to={{
-            pathname: state.operation,
-            state: { code, provider: state.provider },
-          }}
+          to={`/${state.operation}`}
+          state={{ code, provider: state.provider }}
           replace
         />
       ) : (

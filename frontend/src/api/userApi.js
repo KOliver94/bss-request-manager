@@ -14,8 +14,8 @@ export async function getUserWorkedOn(userId, fromDate, toDate, responsible) {
   });
 }
 
-export async function connectSocial(provider, code, force = false) {
-  return axiosInstance.post(`/users/me/social/${provider}`, { code, force });
+export async function connectSocial(provider, code) {
+  return axiosInstance.post(`/users/me/social/${provider}`, { code });
 }
 
 export async function disconnectSocial(provider) {
