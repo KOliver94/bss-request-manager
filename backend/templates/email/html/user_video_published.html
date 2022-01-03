@@ -45,57 +45,43 @@
                 </tr>
                 <!-- end button -->
 
-                {% if is_registered %}
-                    <!-- start copy -->
-                    <tr>
-                        <td align="left" bgcolor="#ffffff"
-                            style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                            <p style="margin: 0;">
-                                Kiváncsiak vagyunk a véleményedre. Kérjük az alábbi gombra kattinva értékeld az
-                                elkészült
-                                videót és a munkánkat!
-                            </p>
-                        </td>
-                    </tr>
-                    <!-- end copy -->
+                <!-- start copy -->
+                <tr>
+                    <td align="left" bgcolor="#ffffff"
+                        style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+                        <p style="margin: 0;">
+                            Kiváncsiak vagyunk a véleményedre. Kérjük az alábbi gombra kattinva értékeld az
+                            elkészült videót és a munkánkat!
+                            {% if not is_registered %}<br><br>Az oldalra felkéréshez megadott e-mail címedet használó
+                                Facebook, Google vagy AuthSCH fiókkal tudsz belépni.
+                            {% endif %}
+                        </p>
+                    </td>
+                </tr>
+                <!-- end copy -->
 
-                    <!-- start button -->
-                    <tr>
-                        <td align="left" bgcolor="#ffffff">
-                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                <tr>
-                                    <td align="center" bgcolor="#ffffff" style="padding: 12px;">
-                                        <table border="0" cellpadding="0" cellspacing="0">
-                                            <tr>
-                                                <td align="center" bgcolor="#f7a00a" style="border-radius: 6px;">
-                                                    <a href="{{ video.request.url }}" target="_blank"
-                                                       rel="noopener noreferrer"
-                                                       style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">
-                                                        Értékelés</a>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <!-- end button -->
-
-                {% else %}
-                    <!-- start copy -->
-                    <tr>
-                        <td align="left" bgcolor="#ffffff"
-                            style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                            <p style="margin: 0;">
-                                Kiváncsiak vagyunk a véleményedre. Amennyiben a felkéréshez megadott e-mail címedet
-                                használó Facebook, Google vagy AuthSCH fiókkal belépsz az oldalra értékelheted az
-                                elkészült videót.
-                            </p>
-                        </td>
-                    </tr>
-                    <!-- end copy -->
-                {% endif %}
+                <!-- start button -->
+                <tr>
+                    <td align="left" bgcolor="#ffffff">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td align="center" bgcolor="#ffffff" style="padding: 12px;">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td align="center" bgcolor="#f7a00a" style="border-radius: 6px;">
+                                                <a href="{{ video.request.url }}" target="_blank"
+                                                   rel="noopener noreferrer"
+                                                   style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">
+                                                    Értékelés</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- end button -->
 
                 <!-- start signature -->
                 <tr>
