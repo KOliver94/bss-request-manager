@@ -72,7 +72,6 @@ export default function RatingsDialog({
   const showError = (e) => {
     enqueueSnackbar(handleError(e), {
       variant: 'error',
-      autoHideDuration: 5000,
     });
   };
 
@@ -85,7 +84,6 @@ export default function RatingsDialog({
       } catch (e) {
         enqueueSnackbar(handleError(e), {
           variant: 'error',
-          autoHideDuration: 5000,
         });
       }
     }

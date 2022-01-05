@@ -126,7 +126,6 @@ export default function RequestDetailPage({
         } else {
           enqueueSnackbar(handleError(e), {
             variant: 'error',
-            autoHideDuration: 5000,
           });
         }
       }

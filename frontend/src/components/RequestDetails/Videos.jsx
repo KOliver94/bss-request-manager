@@ -160,7 +160,6 @@ export default function Videos({
   const showError = (e) => {
     enqueueSnackbar(handleError(e), {
       variant: 'error',
-      autoHideDuration: 5000,
     });
   };
 

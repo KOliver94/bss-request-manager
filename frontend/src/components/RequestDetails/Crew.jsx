@@ -80,7 +80,6 @@ export default function Crew({
   const showError = (e) => {
     enqueueSnackbar(handleError(e), {
       variant: 'error',
-      autoHideDuration: 5000,
     });
   };
 

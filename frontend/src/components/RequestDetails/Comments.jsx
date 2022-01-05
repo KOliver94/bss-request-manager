@@ -81,7 +81,6 @@ export default function Comments({
   const showError = (e) => {
     enqueueSnackbar(handleError(e), {
       variant: 'error',
-      autoHideDuration: 5000,
     });
   };
 

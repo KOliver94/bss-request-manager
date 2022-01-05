@@ -21,7 +21,7 @@ ReactDOM.render(
         <SnackbarProvider
           maxSnack={3}
           preventDuplicate
-          autoHideDuration={2000}
+          autoHideDuration={5000}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',

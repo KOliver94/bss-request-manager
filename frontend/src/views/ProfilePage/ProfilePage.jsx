@@ -124,7 +124,6 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     } catch (e) {
       enqueueSnackbar(handleError(e), {
         variant: 'error',
-        autoHideDuration: 5000,
       });
     }
   };
@@ -149,7 +148,6 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     } catch (e) {
       enqueueSnackbar(handleError(e), {
         variant: 'error',
-        autoHideDuration: 5000,
       });
     } finally {
       setProfileConnecting(false);
@@ -166,7 +164,6 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       } catch (e) {
         enqueueSnackbar(handleError(e), {
           variant: 'error',
-          autoHideDuration: 5000,
         });
       }
     }
@@ -186,7 +183,6 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       } catch (e) {
         enqueueSnackbar(handleError(e), {
           variant: 'error',
-          autoHideDuration: 5000,
         });
       } finally {
         setProfileConnecting(false);
