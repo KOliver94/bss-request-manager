@@ -106,7 +106,6 @@ export default function RequestCreatorPage({
     } catch (e) {
       enqueueSnackbar(handleError(e), {
         variant: 'error',
-        autoHideDuration: 5000,
       });
       setLoading(false);
     }
@@ -145,7 +144,6 @@ export default function RequestCreatorPage({
               `Kérlek töltsd ki hiányzó adataidat (${missingData.join(', ')})!`,
               {
                 variant: 'warning',
-                autoHideDuration: 5000,
               }
             );
             navigate('/profile');

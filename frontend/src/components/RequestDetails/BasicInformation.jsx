@@ -107,6 +107,9 @@ const useStyles = makeStyles((theme) => ({
   beforeDividerTextField: {
     margin: '16px 0',
   },
+  snackbarButton: {
+    color: 'inherit',
+  },
 }));
 
 export default function BasicInformation({
@@ -119,7 +122,7 @@ export default function BasicInformation({
   const classes = useStyles();
   const formRef = useRef();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
@@ -179,7 +182,6 @@ export default function BasicInformation({
     } catch (e) {
       enqueueSnackbar(handleError(e), {
         variant: 'error',
-        autoHideDuration: 5000,
       });
       setLoading(false);
     }
@@ -225,17 +227,40 @@ export default function BasicInformation({
         };
       }
     }
+    const conditionChanged =
+      values.additional_data.accepted !==
+        requestData.additional_data.accepted ||
+      values.additional_data.canceled !==
+        requestData.additional_data.canceled ||
+      values.additional_data.failed !== requestData.additional_data.failed;
     setLoading(true);
     try {
       await updateRequestAdmin(requestId, values).then((response) => {
         setLoading(false);
         setEditing(!editing);
         setRequestData(response.data);
+        if (conditionChanged) {
+          enqueueSnackbar(
+            'Állapotot változtattál. Ne felejtsd el értesíteni a felkérőt!',
+            {
+              variant: 'info',
+              persist: true,
+              action: (key) => (
+                <Button
+                  size="small"
+                  onClick={() => closeSnackbar(key)}
+                  className={classes.snackbarButton}
+                >
+                  Rendben
+                </Button>
+              ),
+            }
+          );
+        }
       });
     } catch (e) {
       enqueueSnackbar(handleError(e), {
         variant: 'error',
-        autoHideDuration: 5000,
       });
       setLoading(false);
     }
@@ -250,7 +275,6 @@ export default function BasicInformation({
     } catch (e) {
       enqueueSnackbar(handleError(e), {
         variant: 'error',
-        autoHideDuration: 5000,
       });
       setLoading(false);
     }

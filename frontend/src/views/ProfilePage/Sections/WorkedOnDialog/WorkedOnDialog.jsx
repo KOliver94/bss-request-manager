@@ -86,7 +86,6 @@ export default function WorkedOnDialog({
       } catch (e) {
         enqueueSnackbar(handleError(e), {
           variant: 'error',
-          autoHideDuration: 5000,
         });
       }
     }

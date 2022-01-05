@@ -52,13 +52,11 @@ export default function ContactSection() {
         setMessageData(emptyMessageData);
         enqueueSnackbar('Üzenetedet elküldtük!', {
           variant: 'success',
-          autoHideDuration: 5000,
         });
       });
     } catch (e) {
       enqueueSnackbar(handleError(e), {
         variant: 'error',
-        autoHideDuration: 5000,
       });
     } finally {
       setLoading(false);

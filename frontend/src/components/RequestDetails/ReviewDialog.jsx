@@ -32,7 +32,6 @@ export default function ReviewDialog({
   const showError = (e) => {
     enqueueSnackbar(handleError(e), {
       variant: 'error',
-      autoHideDuration: 5000,
     });
   };
 
