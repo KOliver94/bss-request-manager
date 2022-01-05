@@ -507,7 +507,7 @@ export default function Videos({
                           <Form>
                             <Field
                               name="additional_data.editing_done"
-                              Label={{ label: 'Vágás' }}
+                              Label={{ label: 'Megvágva' }}
                               component={CheckboxWithLabel}
                               type="checkbox"
                               color="secondary"
@@ -516,7 +516,7 @@ export default function Videos({
                             />
                             <Field
                               name="additional_data.coding.website"
-                              Label={{ label: 'Kódolás webre' }}
+                              Label={{ label: 'Webre kikódolva' }}
                               component={CheckboxWithLabel}
                               type="checkbox"
                               color="secondary"
@@ -525,7 +525,7 @@ export default function Videos({
                             />
                             <Field
                               name="additional_data.archiving.hq_archive"
-                              Label={{ label: 'Archiválás' }}
+                              Label={{ label: 'Archiválva' }}
                               component={CheckboxWithLabel}
                               type="checkbox"
                               color="secondary"
@@ -534,7 +534,7 @@ export default function Videos({
                             />
                             <Field
                               name="website_url"
-                              label="Videó elérési útja a honlapon"
+                              label="Videó linkje (honlap, YouTube vagy Google Drive)"
                               margin="normal"
                               component={TextField}
                               size="small"
