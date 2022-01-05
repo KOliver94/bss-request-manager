@@ -51,10 +51,13 @@ const footerStyle = (theme) => ({
   },
   inlineBlock: {
     display: 'inline-block',
-    padding: '0px',
     width: 'auto',
     lineHeight: 0,
     verticalAlign: 'text-bottom',
+    padding: '0 10px',
+    '&:nth-child(1)': {
+      paddingLeft: 0,
+    },
   },
   icon: {
     width: '18px',
@@ -63,7 +66,7 @@ const footerStyle = (theme) => ({
     top: '3px',
   },
   socialIcon: {
-    padding: '0 10px',
+    padding: '0',
     margin: '0',
   },
 });
