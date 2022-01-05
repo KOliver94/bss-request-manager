@@ -217,11 +217,12 @@ export default function BasicInformation({
       };
     }
     if (values.recording_path !== undefined) {
+      const path = values.recording_path ? values.recording_path : '';
       if (values.additional_data.recording) {
-        values.additional_data.recording.path = values.recording_path;
+        values.additional_data.recording.path = path;
       } else {
         values.additional_data.recording = {
-          path: values.recording_path,
+          path,
         };
       }
     }
@@ -404,7 +405,7 @@ export default function BasicInformation({
                   requestData.additional_data.recording &&
                   requestData.additional_data.recording.path
                     ? requestData.additional_data.recording.path
-                    : '',
+                    : null,
                 additional_data: {
                   ...requestData.additional_data,
                   recording: {
@@ -606,10 +607,31 @@ export default function BasicInformation({
                     />
                     <Field
                       name="recording_path"
-                      label="Nyersek helye"
-                      margin="normal"
-                      component={TextField}
+                      component={Autocomplete}
+                      options={[
+                        `N://${format(
+                          new Date(requestData.start_datetime),
+                          'yyyyMMdd'
+                        )}_${requestData.title
+                          .normalize('NFD')
+                          .replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s])/g, '')
+                          .toLowerCase()
+                          .split(' ')
+                          .join('_')}`,
+                      ]}
                       fullWidth
+                      selectOnFocus
+                      freeSolo
+                      autoComplete
+                      autoHighlight
+                      renderInput={(params) => (
+                        <MUITextField
+                          {...params}
+                          name="recording_path"
+                          label="Nyersek helye"
+                          margin="normal"
+                        />
+                      )}
                     />
                   </div>
                   <Divider />
