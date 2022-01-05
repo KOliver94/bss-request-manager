@@ -157,7 +157,7 @@ export default function BasicInformation({
         Yup.ref('end_datetime'),
         'A határidőnek a felkérés várható befejezése után kell lennie!'
       )
-      .required('A várható befejezés megadása kötelező!')
+      .required('A határidő megadása kötelező!')
       .nullable()
       .typeError('Hibás dátum formátum!'),
   });
@@ -203,8 +203,7 @@ export default function BasicInformation({
       values.responsible_id = values.responsible ? values.responsible.id : null;
     }
     if (values.deadline && typeof values.deadline.getMonth === 'function') {
-      // eslint-disable-next-line prefer-destructuring
-      values.deadline = values.deadline.toISOString().split('T')[0];
+      values.deadline = format(values.deadline, 'yyyy-MM-dd');
     }
     if (
       values.status_field !== undefined &&
