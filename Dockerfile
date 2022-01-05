@@ -25,8 +25,8 @@ WORKDIR /app/frontend
 # Copy package.json and package-lock.json to Docker environment
 COPY ./frontend/package*.json /app/frontend/
 
-# Install all required node packages
-RUN npm install --silent
+# Update npm and install all required node packages
+RUN npm install -g npm@latest && npm install --silent
 
 # Copy everything over to Docker environment
 COPY ./frontend /app/frontend
