@@ -12,6 +12,5 @@ class ContactSerializer(serializers.Serializer):
         recaptcha = ReCaptchaV2Field()
 
     def validate(self, data):
-        if "recaptcha" in data:
-            data.pop("recaptcha")
+        data.pop("recaptcha", None)
         return data

@@ -70,11 +70,7 @@ class RequestExternalSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        comment_text = (
-            validated_data.pop("comment_text")
-            if "comment_text" in validated_data
-            else None
-        )
+        comment_text = validated_data.pop("comment_text", None)
         callback_url = validated_data.pop("callback_url")
         validated_data["requester"], additional_data = create_user(validated_data)
         validated_data["requested_by"] = self.context["request"].user
