@@ -467,11 +467,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             },
         )
         self.assertIn("status_by_admin", response.data["additional_data"])
-        self.assertIn("status", response.data["additional_data"]["status_by_admin"])
-        self.assertEqual(
-            response.data["additional_data"]["status_by_admin"]["status"],
-            None,
-        )
+        self.assertNotIn("status", response.data["additional_data"]["status_by_admin"])
         self.assertIn("admin_id", response.data["additional_data"]["status_by_admin"])
         self.assertNotEqual(
             response.data["additional_data"]["status_by_admin"]["admin_id"],
@@ -491,6 +487,47 @@ class RequestsUtilitiesTestCase(APITestCase):
             new_admin.get_full_name_eastern_order(),
         )
         self.assertEqual(response.data["status"], Request.Statuses.CANCELED)
+
+    additional_data_fields_to_test = ["accepted", "failed", "canceled"]
+
+    def test_unset_additional_data_accepted_failed_canceled(self):
+        # Create Request
+        response = self.client.post(self.url, get_test_data())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
+        request_id = response.data["id"]
+
+        for field in self.additional_data_fields_to_test:
+            for value in [True, False]:
+                with self.subTest(field=field, value=value):
+                    # Change accepted/failed/canceled to True/False
+                    response = self.client.patch(
+                        f"{self.url}/{request_id}", {"additional_data": {field: value}}
+                    )
+                    self.assertIn(field, response.data["additional_data"])
+                    self.assertEqual(response.data["additional_data"][field], value)
+
+                    # Change accepted/failed/canceled to None --> Should unset/remove it from additional_data
+                    response = self.client.patch(
+                        f"{self.url}/{request_id}", {"additional_data": {field: None}}
+                    )
+                    self.assertNotIn(field, response.data["additional_data"])
+
+    def test_none_additional_data_accepted_failed_canceled_sent(self):
+        # Create Request
+        response = self.client.post(self.url, get_test_data())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
+        request_id = response.data["id"]
+
+        for field in self.additional_data_fields_to_test:
+            with self.subTest(field=field):
+                # Check accepted/failed/canceled not set, send in a None again and it should not change
+                self.assertNotIn(field, response.data["additional_data"])
+                response = self.client.patch(
+                    f"{self.url}/{request_id}", {"additional_data": {field: None}}
+                )
+                self.assertNotIn(field, response.data["additional_data"])
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
     def test_publishing_email_sent_to_user_in_video_additional_data_should_not_be_overwritten(

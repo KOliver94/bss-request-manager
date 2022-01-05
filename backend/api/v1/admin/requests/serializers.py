@@ -86,24 +86,15 @@ def get_requester(validated_data, requested_by_user, instance=None):
 
 def check_and_remove_unauthorized_additional_data(additional_data, user, original_data):
     """Remove keys and values which are used by other functions and should be changed only by authorized users"""
-    if "requester" in additional_data:
-        additional_data.pop("requester")
-    if (
-        "publishing" in additional_data
-        and "email_sent_to_user" in additional_data["publishing"]
-    ):
-        additional_data["publishing"].pop("email_sent_to_user")
+    additional_data.pop("requester", None)
+    if "publishing" in additional_data:
+        additional_data["publishing"].pop("email_sent_to_user", None)
     if not user.is_admin:
-        if "status_by_admin" in additional_data:
-            additional_data.pop("status_by_admin")
-        if "accepted" in additional_data:
-            additional_data.pop("accepted")
-        if "canceled" in additional_data:
-            additional_data.pop("canceled")
-        if "failed" in additional_data:
-            additional_data.pop("failed")
-        if "calendar_id" in additional_data:
-            additional_data.pop("calendar_id")
+        additional_data.pop("status_by_admin", None)
+        additional_data.pop("accepted", None)
+        additional_data.pop("canceled", None)
+        additional_data.pop("failed", None)
+        additional_data.pop("calendar_id", None)
     else:
         if "status_by_admin" in additional_data:
             """
@@ -132,16 +123,23 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
 
 
 def update_additional_data(orig_dict, new_dict):
-    """Update existing additional data. Only replaces/extends changed keys. Takes care of nested dictionaries."""
+    """
+    Update existing additional data.
+    Replaces/extends changed keys and removes them if None is provided.
+    Takes care of nested dictionaries.
+    """
     for key, value in new_dict.items():
         if isinstance(value, abc.Mapping):
             orig_dict[key] = update_additional_data(orig_dict.get(key, {}), value)
-        # Currently there is only one list in additional_data which needs to be replaced every time
+        # Currently, there is only one list in additional_data which needs to be replaced every time
         # to be able to delete from it. If there will be a list which will only be extended use this function.
         # elif isinstance(value, list):
         #     orig_dict[key] = orig_dict.get(key, []) + value
         else:
-            orig_dict[key] = new_dict[key]
+            if value is None:
+                orig_dict.pop(key, None)
+            else:
+                orig_dict[key] = new_dict[key]
     return orig_dict
 
 
@@ -428,11 +426,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         get_responsible_from_id(validated_data)
-        comment_text = (
-            validated_data.pop("comment_text")
-            if "comment_text" in validated_data
-            else None
-        )
+        comment_text = validated_data.pop("comment_text", None)
         handle_additional_data(validated_data, self.context["request"].user)
         get_requester(validated_data, self.context["request"].user)
         validated_data["requested_by"] = self.context["request"].user
@@ -445,7 +439,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         get_responsible_from_id(validated_data)
-        validated_data.pop("comment_text") if "comment_text" in validated_data else None
+        validated_data.pop("comment_text", None)
         handle_additional_data(validated_data, self.context["request"].user, instance)
         get_requester(validated_data, instance.requester, instance)
         request = super(RequestAdminSerializer, self).update(instance, validated_data)

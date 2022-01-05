@@ -154,11 +154,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
         write_only_fields = ("comment_text",)
 
     def create(self, validated_data):
-        comment_text = (
-            validated_data.pop("comment_text")
-            if "comment_text" in validated_data
-            else None
-        )
+        comment_text = validated_data.pop("comment_text", None)
         validated_data["requester"] = self.context["request"].user
         validated_data["requested_by"] = self.context["request"].user
         request = super(RequestDefaultSerializer, self).create(validated_data)
@@ -218,11 +214,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
             write_only_fields += ("recaptcha",)
 
     def create(self, validated_data):
-        comment_text = (
-            validated_data.pop("comment_text")
-            if "comment_text" in validated_data
-            else None
-        )
+        comment_text = validated_data.pop("comment_text", None)
         validated_data["requester"], additional_data = create_user(validated_data)
         request = super(RequestAnonymousSerializer, self).create(validated_data)
         if additional_data:
@@ -235,7 +227,6 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         return request
 
     def validate(self, data):
-        if "recaptcha" in data:
-            data.pop("recaptcha")
+        data.pop("recaptcha", None)
         validate_request_date_correlations(self.instance, data)
         return data

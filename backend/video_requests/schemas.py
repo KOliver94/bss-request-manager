@@ -11,9 +11,9 @@ REQUEST_ADDITIONAL_DATA_SCHEMA = {
             "required": ["status", "admin_id", "admin_name"],
             "additionalProperties": False,
         },
-        "accepted": {"type": "boolean"},
-        "canceled": {"type": "boolean"},
-        "failed": {"type": "boolean"},
+        "accepted": {"type": ["boolean", "null"]},
+        "canceled": {"type": ["boolean", "null"]},
+        "failed": {"type": ["boolean", "null"]},
         "recording": {
             "type": "object",
             "properties": {
@@ -60,7 +60,7 @@ VIDEO_ADDITIONAL_DATA_SCHEMA = {
             "additionalProperties": False,
         },
         "editing_done": {"type": "boolean"},
-        "length": {"anyOf": [{"type": "number"}, {"type": "null"}]},
+        "length": {"type": ["number", "null"]},
         "coding": {
             "type": "object",
             "properties": {"website": {"type": "boolean"}},
