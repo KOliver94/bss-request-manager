@@ -60,9 +60,10 @@ const customInputStyle = {
     margin: '0 0 17px 0',
     paddingTop: '27px',
     position: 'relative',
-    '& svg,& .fab,& .far,& .fal,& .fas,& .material-icons': {
-      color: '#495057',
-    },
+    '& svg,& .fa-brands,& .fa-solid,& .fa-regular,& .fa-light,& .material-icons':
+      {
+        color: '#495057',
+      },
   },
   input: {
     color: '#495057',
