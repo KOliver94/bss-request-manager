@@ -141,24 +141,26 @@ export default function CustomDropdown(props) {
                     </MenuItem>
                   ) : null}
                   {dropdownList.map((prop, key) => {
-                    if (prop.divider) {
-                      return (
-                        <Divider
-                          key={key}
-                          className={classes.dropdownDividerItem}
-                        />
-                      );
-                    } else {
-                      return (
-                        <MenuItem
-                          key={key}
-                          onClick={() => handleClose(prop)}
-                          className={dropdownItem}
-                        >
-                          {prop}
-                        </MenuItem>
-                      );
+                    if (prop.divider !== undefined) {
+                      if (prop.divider) {
+                        return (
+                          <Divider
+                            key={key}
+                            className={classes.dropdownDividerItem}
+                          />
+                        );
+                      }
+                      return null;
                     }
+                    return (
+                      <MenuItem
+                        key={key}
+                        onClick={() => handleClose(prop)}
+                        className={dropdownItem}
+                      >
+                        {prop}
+                      </MenuItem>
+                    );
                   })}
                 </MenuList>
               </ClickAwayListener>
