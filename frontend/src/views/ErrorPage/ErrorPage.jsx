@@ -29,16 +29,16 @@ export default function ErrorPage({ type }) {
         </p>
         <div className="error-social">
           <a href="https://bsstudio.hu">
-            <i className="fa fa-globe-europe" />
+            <i className="fa-solid fa-earth-europe" />
           </a>
           <a href="https://facebook.com/bsstudio">
-            <i className="fa fa-facebook" />
+            <i className="fa-brands fa-facebook" />
           </a>
           <a href="https://instagram.com/budavari_schonherz_studio">
-            <i className="fa fa-instagram" />
+            <i className="fa-brands fa-instagram" />
           </a>
           <a href="https://youtube.com/bsstudi0">
-            <i className="fa fa-youtube" />
+            <i className="fa-brands fa-youtube" />
           </a>
         </div>
       </div>

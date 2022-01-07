@@ -32,7 +32,7 @@ export default function Footer(props) {
                 target="_blank"
                 className={classes.socialIcon}
               >
-                <i className="fas fa-globe-europe" />
+                <i className="fa-solid fa-earth-europe" />
               </Button>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
@@ -42,7 +42,7 @@ export default function Footer(props) {
                 target="_blank"
                 className={classes.socialIcon}
               >
-                <i className="fab fa-facebook" />
+                <i className="fa-brands fa-facebook" />
               </Button>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
@@ -52,7 +52,7 @@ export default function Footer(props) {
                 target="_blank"
                 className={classes.socialIcon}
               >
-                <i className="fab fa-instagram" />
+                <i className="fa-brands fa-instagram" />
               </Button>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
@@ -62,7 +62,7 @@ export default function Footer(props) {
                 target="_blank"
                 className={classes.socialIcon}
               >
-                <i className="fab fa-youtube" />
+                <i className="fa-brands fa-youtube" />
               </Button>
             </ListItem>
           </List>

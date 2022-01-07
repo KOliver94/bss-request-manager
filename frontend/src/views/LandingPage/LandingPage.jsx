@@ -68,7 +68,7 @@ export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <i className="fas fa-play" />
+                <i className="fa-solid fa-play" />
                 Nézd meg korábbi videóinkat
               </Button>
             </GridItem>

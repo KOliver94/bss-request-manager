@@ -296,10 +296,10 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                             icon = 'fab icon-sch';
                             break;
                           case 'facebook':
-                            icon = 'fab fa-facebook';
+                            icon = 'fa-brands fa-facebook';
                             break;
                           case 'google-oauth2':
-                            icon = 'fab fa-google';
+                            icon = 'fa-brands fa-google';
                             break;
                           default:
                             break;
@@ -484,7 +484,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                                       classes.selectedIconAvatar
                                                     }
                                                   >
-                                                    <i className="fas fa-check-circle" />
+                                                    <i className="fa-solid fa-circle-check" />
                                                   </small>
                                                 )}
                                               </Typography>
@@ -522,7 +522,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                         handleDisconnect('facebook')
                                       }
                                     >
-                                      <i className="fab fa-facebook" />{' '}
+                                      <i className="fa-brands fa-facebook" />{' '}
                                       Kijelentkezés
                                     </Button>
                                   ) : (
@@ -535,7 +535,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                       target="_self"
                                       disabled={profileConnecting}
                                     >
-                                      <i className="fab fa-facebook" />{' '}
+                                      <i className="fa-brands fa-facebook" />{' '}
                                       Bejelenetkezés
                                     </Button>
                                   )}
@@ -552,7 +552,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                         handleDisconnect('google-oauth2')
                                       }
                                     >
-                                      <i className="fab fa-google" />{' '}
+                                      <i className="fa-brands fa-google" />{' '}
                                       Kijelentkezés
                                     </Button>
                                   ) : (
@@ -565,7 +565,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                       target="_self"
                                       disabled={profileConnecting}
                                     >
-                                      <i className="fab fa-google" />{' '}
+                                      <i className="fa-brands fa-google" />{' '}
                                       Bejelenetkezés
                                     </Button>
                                   )}
