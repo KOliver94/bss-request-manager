@@ -192,7 +192,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                             color="transparent"
                             disabled={loading}
                           >
-                            <i className="fab fa-facebook" />
+                            <i className="fa-brands fa-facebook" />
                           </Button>
                         </span>
                       </Tooltip>
@@ -211,7 +211,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                             color="transparent"
                             disabled={loading}
                           >
-                            <i className="fab fa-google" />
+                            <i className="fa-brands fa-google" />
                           </Button>
                         </span>
                       </Tooltip>

@@ -230,7 +230,8 @@ export default function MyRequestsPage({
                     className={classes.notFound}
                     gutterBottom
                   >
-                    Nincs beküldött felkérésed <i className="far fa-sad-tear" />
+                    Nincs beküldött felkérésed{' '}
+                    <i className="fa-regular fa-face-sad-tear" />
                   </Typography>
                 </GridContainer>
               )}

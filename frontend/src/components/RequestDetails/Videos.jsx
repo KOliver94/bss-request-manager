@@ -806,7 +806,7 @@ export default function Videos({
         <>
           {!isPrivileged && (
             <p className={classes.noVideosYet}>
-              Még nincsenek videók. <i className="far fa-pause-circle" />
+              Még nincsenek videók. <i className="fa-regular fa-circle-pause" />
             </p>
           )}
         </>
