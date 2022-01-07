@@ -40,7 +40,7 @@ const buttonStyle = {
       boxShadow:
         '0 14px 26px -12px rgba(153, 153, 153, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(153, 153, 153, 0.2)',
     },
-    '& .fab,& .fas,& .far,& .fal,& .material-icons': {
+    '& .fa-brands,& .fa-solid,& .fa-regular,& .fa-light,& .material-icons': {
       position: 'relative',
       display: 'inline-block',
       top: '0',
@@ -58,7 +58,7 @@ const buttonStyle = {
       verticalAlign: 'middle',
     },
     '&$justIcon': {
-      '& .fab,& .fas,& .far,& .fal,& .material-icons': {
+      '& .fa-brands,& .fa-solid,& .fa-regular,& .fa-light,& .material-icons': {
         marginRight: '0px',
         position: 'absolute',
         width: '100%',
@@ -300,15 +300,16 @@ const buttonStyle = {
     height: '41px',
     minWidth: '41px',
     width: '41px',
-    '& .fab,& .fas,& .far,& .fal,& svg,& .material-icons': {
-      marginRight: '0px',
-    },
+    '& .fa-brands,& .fa-solid,& .fa-regular,& .fa-light,& svg,& .material-icons':
+      {
+        marginRight: '0px',
+      },
     '&$lg': {
       height: '57px',
       minWidth: '57px',
       width: '57px',
       lineHeight: '56px',
-      '& .fab,& .fas,& .far,& .fal,& .material-icons': {
+      '& .fa-brands,& .fa-solid,& .fa-regular,& .fa-light,& .material-icons': {
         fontSize: '32px',
         lineHeight: '56px',
       },
@@ -321,7 +322,7 @@ const buttonStyle = {
       height: '30px',
       minWidth: '30px',
       width: '30px',
-      '& .fab,& .fas,& .far,& .fal,& .material-icons': {
+      '& .fa-brands,& .fa-solid,& .fa-regular,& .fa-light,& .material-icons': {
         fontSize: '17px',
         lineHeight: '29px',
       },

@@ -293,7 +293,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                         let icon;
                         switch (account.provider) {
                           case 'authsch':
-                            icon = 'fab icon-sch';
+                            icon = 'fa-brands icon-sch';
                             break;
                           case 'facebook':
                             icon = 'fa-brands fa-facebook';
@@ -582,7 +582,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                         handleDisconnect('authsch')
                                       }
                                     >
-                                      <i className="fab icon-sch" />{' '}
+                                      <i className="fa-brands icon-sch" />{' '}
                                       Kijelentkezés
                                     </Button>
                                   ) : (
@@ -595,7 +595,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                       target="_self"
                                       disabled={profileConnecting}
                                     >
-                                      <i className="fab icon-sch" />{' '}
+                                      <i className="fa-brands icon-sch" />{' '}
                                       Bejelenetkezés
                                     </Button>
                                   )}

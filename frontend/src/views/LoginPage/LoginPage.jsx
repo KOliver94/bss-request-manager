@@ -173,7 +173,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                             color="transparent"
                             disabled={loading}
                           >
-                            <i className="fab icon-sch" />
+                            <i className="fa-brands icon-sch" />
                           </Button>
                         </span>
                       </Tooltip>
