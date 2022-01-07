@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 // react components for routing our app without refresh
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 // @mui components
 import makeStyles from '@mui/styles/makeStyles';
@@ -113,7 +112,8 @@ export default function HeaderLinks({
           {!hideLogin && (
             <ListItem className={classes.listItem}>
               <Link
-                to={{ pathname: '/login', state: { from: location.pathname } }}
+                to="/login"
+                state={{ from: location }}
                 className={classes.navReactRouterLink}
               >
                 <Button color="transparent" className={classes.navLink}>

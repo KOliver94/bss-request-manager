@@ -47,8 +47,8 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { from } = location.state || {
-    from: { pathname: localStorage.getItem('redirectedFrom') || '/' },
+  const from = (location.state && location.state.from) || {
+    pathname: localStorage.getItem('redirectedFrom') || '/',
   };
   const { code, provider } = { ...location.state };
 
