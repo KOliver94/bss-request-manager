@@ -92,7 +92,9 @@ function PersonalDetails({
                       color="inherit"
                       size="small"
                       onClick={() => {
-                        navigate('/login');
+                        navigate('/login', {
+                          state: { from: { pathname: '/new-request' } },
+                        });
                       }}
                     >
                       Ugrás
