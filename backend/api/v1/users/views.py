@@ -8,8 +8,8 @@ from api.v1.users.serializers import (
     UserWorkedOnSerializer,
 )
 from common.models import Ban
-from common.pagination import ExtendedPagination
-from common.permissions import (
+from common.rest_framework.pagination import ExtendedPagination
+from common.rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticated,
     IsSelfOrAdmin,
@@ -85,13 +85,16 @@ class UserListView(generics.ListAPIView):
         staff = self.request.query_params.get("staff", None)
         admin = self.request.query_params.get("admin", None)
 
-        try:
-            if staff is not None:
+        if staff is not None:
+            try:
                 staff = util.strtobool(staff)
-            if admin is not None:
+            except ValueError:
+                raise ValidationError({"staff": ["Invalid filter."]})
+        if admin is not None:
+            try:
                 admin = util.strtobool(admin)
-        except ValueError:
-            raise ValidationError("Invalid filter.")
+            except ValueError:
+                raise ValidationError({"admin": ["Invalid filter."]})
 
         if staff is not None and admin is None:
             queryset = queryset.filter(is_staff=staff).cache()
@@ -165,7 +168,7 @@ class ConnectDisconnectSocialProfileView(
     def delete(self, request, *args, **kwargs):
         provider = self.kwargs.get("provider", None)
         if provider not in ["authsch", "facebook", "google-oauth2"]:
-            raise ValidationError(detail="Invalid provider.")
+            raise ValidationError({"provider": [f"Invalid provider '{provider}'."]})
         else:
             social_auth = get_object_or_404(
                 UserSocialAuth, user=self.request.user, provider=provider
@@ -218,6 +221,9 @@ class UserWorkedOnListView(generics.ListAPIView):
                 if type(to_date) is str
                 else to_date
             )
+        except ValueError:
+            raise ValidationError({"to_date": ["Invalid filter."]})
+        try:
             from_date = self.request.query_params.get(
                 "from_date", to_date - timedelta(weeks=20)
             )
@@ -226,16 +232,19 @@ class UserWorkedOnListView(generics.ListAPIView):
                 if type(from_date) is str
                 else from_date
             )
+        except ValueError:
+            raise ValidationError({"from_date": ["Invalid filter."]})
+        try:
             responsible = self.request.query_params.get("responsible", True)
             responsible = (
                 util.strtobool(responsible) if type(responsible) is str else responsible
             )
         except ValueError:
-            raise ValidationError("Invalid filter.")
+            raise ValidationError({"responsible": ["Invalid filter."]})
 
         # Check if date range is valid
         if to_date < from_date:
-            raise ValidationError("From date must be earlier than to date.")
+            raise ValidationError({"from_date": ["Must be earlier than to_date."]})
 
         if responsible:
             for request in Request.objects.filter(

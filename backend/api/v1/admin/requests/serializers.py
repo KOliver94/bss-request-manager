@@ -13,9 +13,9 @@ from rest_framework.generics import get_object_or_404
 from video_requests.emails import email_crew_new_comment, email_user_new_comment
 from video_requests.models import Comment, CrewMember, Rating, Request, Video
 from video_requests.utilities import (
+    recalculate_deadline,
     update_request_status,
     update_video_status,
-    validate_request_date_correlations,
 )
 
 
@@ -440,6 +440,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         get_responsible_from_id(validated_data)
         validated_data.pop("comment_text", None)
+        recalculate_deadline(instance, validated_data)
         handle_additional_data(validated_data, self.context["request"].user, instance)
         get_requester(validated_data, instance.requester, instance)
         request = super(RequestAdminSerializer, self).update(instance, validated_data)
@@ -448,7 +449,6 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         return request
 
     def validate(self, data):
-        data = validate_request_date_correlations(self.instance, data)
         requester_data = [
             data.get("requester_first_name"),
             data.get("requester_last_name"),

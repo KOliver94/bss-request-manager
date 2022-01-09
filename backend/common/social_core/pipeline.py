@@ -4,7 +4,6 @@ import requests
 from django_auth_ldap.backend import LDAPBackend
 from libgravatar import Gravatar, sanitize_email
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
-from social_core.exceptions import AuthAlreadyAssociated
 
 
 def check_for_email(details, *args, **kwargs):
@@ -27,8 +26,10 @@ def check_if_only_one_association_from_a_provider(
         ).count()
         > 0
     ):
-        msg = "There is already a connected account from this provider. Please disconnect the other one first."
-        raise AuthAlreadyAssociated(backend, msg)
+        msg = [
+            "There is already a connected account from this provider. Please disconnect the other one first."
+        ]
+        raise ValidationError({backend: msg})
 
 
 def set_user_active_when_first_logs_in(backend, user=None, *args, **kwargs):

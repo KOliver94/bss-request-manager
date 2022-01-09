@@ -11,7 +11,6 @@ from rest_framework import serializers
 from rest_framework.fields import CharField, EmailField, URLField
 from video_requests.emails import email_user_new_request_confirmation
 from video_requests.models import Request
-from video_requests.utilities import validate_request_date_correlations
 
 
 class RequestExternalSerializer(serializers.ModelSerializer):
@@ -85,7 +84,3 @@ class RequestExternalSerializer(serializers.ModelSerializer):
         create_calendar_event.delay(request.id)
         email_user_new_request_confirmation.delay(request.id)
         return request
-
-    def validate(self, data):
-        validate_request_date_correlations(self.instance, data)
-        return data

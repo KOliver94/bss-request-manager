@@ -226,17 +226,17 @@ class StatisticsAPITestCase(APITestCase):
 
         response = self.client.get(f"{self.url}?from_date=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["from_date"][0], "Invalid filter.")
 
         response = self.client.get(f"{self.url}?to_date=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["to_date"][0], "Invalid filter.")
 
         response = self.client.get(
             f"{self.url}?from_date=2020-11-21&to_date=2020-11-01"
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "From date must be earlier than to date.")
+        self.assertEqual(response.data["from_date"][0], "Must be earlier than to_date.")
 
     def test_request_statistics_filter_works(self):
         self.authorize_user(self.admin)

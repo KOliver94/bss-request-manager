@@ -799,8 +799,8 @@ class RequestsUtilitiesTestCase(APITestCase):
         response = self.client.patch(f"{self.url}/{request.id}", body)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["non_field_errors"][0],
-            "Deadline must be later than end of the event.",
+            response.data["deadline"][0],
+            "Must be later than end of the event.",
         )
         body = {
             "end_datetime": "2020-12-31T10:30:00+01:00",
@@ -809,8 +809,8 @@ class RequestsUtilitiesTestCase(APITestCase):
         response = self.client.patch(f"{self.url}/{request.id}", body)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["non_field_errors"][0],
-            "Deadline must be later than end of the event.",
+            response.data["deadline"][0],
+            "Must be later than end of the event.",
         )
 
     @freeze_time("2020-11-21 10:20:30", tz_offset=+1)

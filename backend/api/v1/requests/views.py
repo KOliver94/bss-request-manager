@@ -7,8 +7,12 @@ from api.v1.requests.serializers import (
     RequestDefaultSerializer,
     VideoDefaultSerializer,
 )
-from common.pagination import ExtendedPagination
-from common.permissions import IsAuthenticated, IsNotAuthenticated, IsSelf
+from common.rest_framework.pagination import ExtendedPagination
+from common.rest_framework.permissions import (
+    IsAuthenticated,
+    IsNotAuthenticated,
+    IsSelf,
+)
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
 from rest_framework.exceptions import ValidationError

@@ -488,7 +488,7 @@ class RequestsAPIAdminTestCase(APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["non_field_errors"][0], "Start time must be earlier than end."
+            response.data["start_datetime"][0], "Must be earlier than end_datetime."
         )
 
         data = self.get_test_data()
@@ -496,8 +496,8 @@ class RequestsAPIAdminTestCase(APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["non_field_errors"][0],
-            "Deadline must be later than end of the event.",
+            response.data["deadline"][0],
+            "Must be later than end of the event.",
         )
 
         data = self.get_test_data()

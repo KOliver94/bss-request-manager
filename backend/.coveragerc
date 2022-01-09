@@ -10,10 +10,10 @@ skip_covered = True
 omit =
     api/v1/admin/management/*
     core/*
-    common/authentication.py
     common/health_checks.py
-    common/permissions.py
-    common/social_pipeline.py
+    common/rest_framework/permissions.py
+    common/social_core/backends.py
+    common/social_core/pipeline.py
     manage.py
     tests/*
     */admin.py

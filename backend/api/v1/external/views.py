@@ -1,6 +1,6 @@
 from api.v1.external.serializers import RequestExternalSerializer
 from api.v1.requests.serializers import CommentDefaultSerializer
-from common.permissions import IsServiceAccount
+from common.rest_framework.permissions import IsServiceAccount
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 from video_requests.models import Request
