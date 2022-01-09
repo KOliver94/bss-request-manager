@@ -93,16 +93,20 @@ class Request(models.Model):
         return f"{settings.BASE_URL}/admin/requests/{self.id}"
 
     def clean(self):
-        super().clean()
         if not (self.start_datetime <= self.end_datetime):
-            raise ValidationError("Start time must be earlier than end.")
+            raise ValidationError(
+                {"start_datetime": ["Must be earlier than end_datetime."]}
+            )
         if self.deadline and not (self.end_datetime.date() < self.deadline):
-            raise ValidationError("Deadline must be later than end of the event.")
+            raise ValidationError(
+                {"deadline": ["Must be later than end of the event."]}
+            )
 
     def save(self, *args, **kwargs):
         if not self.deadline:
             self.deadline = (self.end_datetime + timedelta(weeks=3)).date()
-        super().save(*args, **kwargs)
+        self.full_clean(exclude=["additional_data"])
+        super(Request, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.title} || {self.start_datetime.date()}"

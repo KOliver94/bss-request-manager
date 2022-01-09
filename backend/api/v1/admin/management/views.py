@@ -2,7 +2,7 @@ from api.v1.admin.management.serializers import (
     CeleryTaskSerializer,
     CeleryTasksResultsSerializer,
 )
-from common.permissions import IsAdminUser
+from common.rest_framework.permissions import IsAdminUser
 from core.tasks import scheduled_flush_expired_jwt_tokens, scheduled_sync_ldap_users
 from django_celery_results.models import TaskResult
 from rest_framework import generics, status

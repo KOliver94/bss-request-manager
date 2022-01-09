@@ -42,10 +42,3 @@ class AuthSCHOAuth2(BaseOAuth2):
             "https://auth.sch.bme.hu/api/profile/",
             params={"access_token": access_token},
         )
-
-
-def default_user_authentication_rule(user):
-    if user and user.is_active and not hasattr(user, "ban"):
-        return True
-    else:
-        return False

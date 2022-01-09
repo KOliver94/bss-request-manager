@@ -116,4 +116,4 @@ class RequestsAPIFiltersTestCase(APITestCase):
     def test_video_filtering_by_last_aired_date_invalid_filter(self):
         response = self.client.get(f"{self.url}/videos?last_aired=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["last_aired"][0], "Invalid filter.")

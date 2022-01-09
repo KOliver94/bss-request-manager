@@ -381,7 +381,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
         response = self.client.post("/api/v1/requests", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["non_field_errors"][0], "Start time must be earlier than end."
+            response.data["start_datetime"][0], "Must be earlier than end_datetime."
         )
 
     @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
@@ -402,7 +402,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
         response = self.client.post("/api/v1/requests", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response.data["non_field_errors"][0], "Start time must be earlier than end."
+            response.data["start_datetime"][0], "Must be earlier than end_datetime."
         )
 
     @override_settings(DRF_RECAPTCHA_TESTING_PASS=False)

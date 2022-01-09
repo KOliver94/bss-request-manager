@@ -11,8 +11,8 @@ from api.v1.admin.requests.serializers import (
     VideoAdminSerializer,
 )
 from api.v1.requests.filters import RequestFilter, VideoFilter
-from common.pagination import ExtendedPagination
-from common.permissions import IsStaffSelfOrAdmin, IsStaffUser
+from common.rest_framework.pagination import ExtendedPagination
+from common.rest_framework.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from common.utilities import remove_calendar_event
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
@@ -232,7 +232,7 @@ class VideoAdminListView(generics.ListAPIView):
                 datetime.strptime(last_aired, "%Y-%m-%d").date()
                 is_date = True
         except ValueError:
-            raise ValidationError("Invalid filter.")
+            raise ValidationError({"last_aired": ["Invalid filter."]})
 
         """
         Additional data's aired part is ordered descending when model instance is being saved.

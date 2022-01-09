@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from api.v1.admin.statistics.serializers import RequestStatisticSerializer
-from common.permissions import IsStaffUser
+from common.rest_framework.permissions import IsStaffUser
 from django.utils.timezone import localdate
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
@@ -37,6 +37,9 @@ class RequestStatisticView(generics.RetrieveAPIView):
             from_date = self.request.query_params.get("from_date", None)
             if from_date:
                 from_date = datetime.strptime(from_date, "%Y-%m-%d").date()
+        except ValueError:
+            raise ValidationError({"from_date": ["Invalid filter."]})
+        try:
             to_date = self.request.query_params.get("to_date", localdate())
             to_date = (
                 datetime.strptime(to_date, "%Y-%m-%d").date()
@@ -44,11 +47,11 @@ class RequestStatisticView(generics.RetrieveAPIView):
                 else to_date
             )
         except ValueError:
-            raise ValidationError("Invalid filter.")
+            raise ValidationError({"to_date": ["Invalid filter."]})
 
         # Check if date range is valid
         if from_date and to_date < from_date:
-            raise ValidationError("From date must be earlier than to date.")
+            raise ValidationError({"from_date": ["Must be earlier than to_date."]})
 
         instance = {
             "new_requests": Request.objects.filter(

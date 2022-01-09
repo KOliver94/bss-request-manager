@@ -531,23 +531,23 @@ class UsersAPITestCase(APITransactionTestCase):
 
         response = self.client.get(f"{self.url}?staff=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["staff"][0], "Invalid filter.")
 
         response = self.client.get(f"{self.url}?admin=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["admin"][0], "Invalid filter.")
 
         response = self.client.get(f"{self.url}?staff=randomText&admin=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["staff"][0], "Invalid filter.")
 
         response = self.client.get(f"{self.url}?staff=True&admin=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["admin"][0], "Invalid filter.")
 
         response = self.client.get(f"{self.url}?staff=randomText&admin=True")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["staff"][0], "Invalid filter.")
 
     """
     GET /api/v1/users/staff
@@ -1224,18 +1224,18 @@ class UsersAPITestCase(APITransactionTestCase):
 
         response = self.client.get(f"{self.url}/me/worked?to_date=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["to_date"][0], "Invalid filter.")
 
         response = self.client.get(f"{self.url}/me/worked?from_date=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["from_date"][0], "Invalid filter.")
 
         response = self.client.get(f"{self.url}/me/worked?responsible=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "Invalid filter.")
+        self.assertEqual(response.data["responsible"][0], "Invalid filter.")
 
         response = self.client.get(
             f"{self.url}/me/worked?from_date=2020-12-01&to_date=2020-11-01"
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], "From date must be earlier than to date.")
+        self.assertEqual(response.data["from_date"][0], "Must be earlier than to_date.")
