@@ -1,7 +1,7 @@
 import json
 from io import StringIO
 
-from common.models import get_sentinel_user
+from common.models import Ban, get_sentinel_user
 from common.templatetags.settings import settings_value
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -126,3 +126,11 @@ class CommonTestCase(TestCase):
 
     def test_settings_template_tag(self):
         self.assertEqual(settings_value("BASE_URL"), settings.BASE_URL)
+
+    def test_user_ban_validation(self):
+        with self.assertRaises(ValidationError) as context:
+            Ban.objects.create(creator=self.user, receiver=self.user)
+        self.assertIn(
+            "Users cannot ban themselves.",
+            context.exception.messages[0],
+        )
