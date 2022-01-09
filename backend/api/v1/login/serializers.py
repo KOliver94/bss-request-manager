@@ -40,7 +40,7 @@ class LogoutAndBlacklistRefreshTokenSerializer(serializers.Serializer):
     def create(self, validated_data):
         try:
             token = RefreshToken(validated_data["refresh"])
-            if token.payload["user_id"] is self.context["request"].user.id:
+            if token.payload["user_id"] == self.context["request"].user.id:
                 token.blacklist()
                 return validated_data
             else:
