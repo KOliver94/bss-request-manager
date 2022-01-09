@@ -676,7 +676,9 @@ class UsersAPITestCase(APITransactionTestCase):
 
         response = self.client.post(f"{self.url}/{user.id}/ban")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(str(response.data[0]), "User is already banned.")
+        self.assertEqual(
+            str(response.data["receiver"][0]), "Ban with this Receiver already exists."
+        )
         self.check_if_user_is_banned(user.id, True)
 
         # Call unban multiple times
@@ -687,6 +689,13 @@ class UsersAPITestCase(APITransactionTestCase):
         response = self.client.delete(f"{self.url}/{user.id}/ban")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.check_if_user_is_banned(user.id, False)
+
+        # Try to ban himself
+        response = self.client.post(f"{self.url}/{self.admin.id}/ban")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(response.data["receiver"][0]), "Users cannot ban themselves."
+        )
 
     def test_refresh_token_after_ban(self):
         user = create_user()

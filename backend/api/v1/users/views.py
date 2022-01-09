@@ -19,7 +19,6 @@ from common.permissions import (
 )
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.db import IntegrityError
 from django.utils.timezone import localdate
 from rest_framework import filters, generics, status
 from rest_framework.exceptions import NotAuthenticated, ValidationError
@@ -144,18 +143,6 @@ class BanUserCreateDeleteView(generics.CreateAPIView, generics.DestroyAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = BanUserSerializer
     queryset = Ban.objects.all()
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED, headers=headers
-            )
-        except IntegrityError:
-            raise ValidationError("User is already banned.")
 
     def perform_create(self, serializer):
         serializer.save(

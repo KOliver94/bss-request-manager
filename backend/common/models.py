@@ -59,6 +59,14 @@ class Ban(models.Model):
     reason = models.CharField(max_length=100, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    def clean(self):
+        if self.receiver == self.creator:
+            raise ValidationError({"receiver": ["Users cannot ban themselves."]})
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(Ban, self).save(*args, **kwargs)
+
 
 class AbstractComment(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
