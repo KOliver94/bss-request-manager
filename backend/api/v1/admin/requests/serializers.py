@@ -106,7 +106,7 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
                 and (
                     "status_by_admin" in original_data.additional_data
                     and original_data.additional_data["status_by_admin"]["status"]
-                    is additional_data["status_by_admin"]["status"]
+                    == additional_data["status_by_admin"]["status"]
                 )
                 or (
                     "status_by_admin" not in original_data.additional_data
