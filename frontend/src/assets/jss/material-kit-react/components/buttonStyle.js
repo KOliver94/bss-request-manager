@@ -45,7 +45,7 @@ const buttonStyle = {
       display: 'inline-block',
       top: '0',
       fontSize: '1.1rem',
-      marginRight: '4px',
+      marginRight: '6px',
       verticalAlign: 'middle',
     },
     '& svg': {

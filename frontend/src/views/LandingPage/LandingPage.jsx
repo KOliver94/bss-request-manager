@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
@@ -71,6 +72,13 @@ export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
                 <i className="fa-solid fa-play" />
                 Nézd meg korábbi videóinkat
               </Button>
+              <br />
+              <Link to="/new-request">
+                <Button color="info" size="lg">
+                  <i className="fa-solid fa-paper-plane" />
+                  Küldj be felkérést
+                </Button>
+              </Link>
             </GridItem>
           </GridContainer>
         </div>
