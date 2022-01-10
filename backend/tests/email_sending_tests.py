@@ -1,3 +1,4 @@
+from datetime import timedelta
 from io import StringIO
 from unittest.mock import patch
 
@@ -6,6 +7,7 @@ from django.conf import settings
 from django.core import mail
 from django.core.management import call_command
 from django.test import override_settings
+from django.utils.timezone import localtime
 from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -64,8 +66,8 @@ class EmailSendingTestCase(APITestCase):
         self.authorize_user(self.normal_user)
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-11-08T10:30:00+01:00",
-            "end_datetime": "2020-11-09T10:30:00+01:00",
+            "start_datetime": localtime() + timedelta(minutes=10),
+            "end_datetime": localtime() + timedelta(days=1),
             "place": "Test place",
             "type": "Test type",
         }
@@ -86,8 +88,8 @@ class EmailSendingTestCase(APITestCase):
         # Create a Request without login
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-11-08T10:30:00+01:00",
-            "end_datetime": "2020-11-09T10:30:00+01:00",
+            "start_datetime": localtime() + timedelta(minutes=10),
+            "end_datetime": localtime() + timedelta(days=1),
             "place": "Test place",
             "type": "Test type",
             "requester_first_name": "Test",

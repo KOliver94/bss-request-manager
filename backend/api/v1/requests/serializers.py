@@ -2,9 +2,11 @@ from api.v1.requests.utilities import create_user
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event
 from django.conf import settings
+from django.utils.timezone import localtime
 from drf_recaptcha.fields import ReCaptchaV2Field
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, EmailField, SerializerMethodField
 from video_requests.emails import (
     email_crew_new_comment,
@@ -163,6 +165,13 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
         email_user_new_request_confirmation.delay(request.id)
         return request
 
+    def validate(self, data):
+        if data.get("start_datetime") < localtime():
+            raise ValidationError(
+                {"start_datetime": "Must be later than current time."}
+            )
+        return data
+
 
 class RequestAnonymousSerializer(serializers.ModelSerializer):
     comments = CommentDefaultSerializer(many=True, read_only=True)
@@ -223,4 +232,8 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         data.pop("recaptcha", None)
+        if data.get("start_datetime") < localtime():
+            raise ValidationError(
+                {"start_datetime": "Must be later than current time."}
+            )
         return data
