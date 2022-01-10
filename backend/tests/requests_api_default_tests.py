@@ -231,8 +231,8 @@ class RequestsAPIDefaultTestCase(APITestCase):
     def create_request(self):
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-03-05T10:30",
-            "end_datetime": "2020-03-06T10:30",
+            "start_datetime": localtime() + timedelta(minutes=10),
+            "end_datetime": localtime() + timedelta(days=1),
             "place": "Test place",
             "type": "Test type",
         }
@@ -284,8 +284,8 @@ class RequestsAPIDefaultTestCase(APITestCase):
         self.authorize_user(self.normal_user)
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-03-05T10:30",
-            "end_datetime": "2020-03-06T10:30",
+            "start_datetime": localtime() + timedelta(minutes=10),
+            "end_datetime": localtime() + timedelta(days=1),
             "place": "Test place",
             "type": "Test type",
             "comment_text": "Test comment",
@@ -302,8 +302,8 @@ class RequestsAPIDefaultTestCase(APITestCase):
     def test_anonymous_can_create_requests(self):
         data = {
             "title": "Test Request",
-            "start_datetime": "2020-03-05T10:30",
-            "end_datetime": "2020-03-06T10:30",
+            "start_datetime": localtime() + timedelta(minutes=10),
+            "end_datetime": localtime() + timedelta(days=1),
             "place": "Test place",
             "type": "Test type",
             "requester_first_name": "Test",
@@ -332,8 +332,8 @@ class RequestsAPIDefaultTestCase(APITestCase):
     def test_anonymous_can_create_requests_and_get_connected_to_existing_user(self):
         data = {
             "title": "Anonymous Test Request",
-            "start_datetime": "2020-03-05T10:30",
-            "end_datetime": "2020-03-06T10:30",
+            "start_datetime": localtime() + timedelta(minutes=10),
+            "end_datetime": localtime() + timedelta(days=1),
             "place": "Test place",
             "type": "Test type",
             "requester_first_name": "Anonymous",
@@ -372,7 +372,7 @@ class RequestsAPIDefaultTestCase(APITestCase):
         self.authorize_user(self.normal_user)
         data = {
             "title": "Test Request",
-            "start_datetime": localtime(),
+            "start_datetime": localtime() + timedelta(minutes=10),
             "place": "Test place",
             "type": "Test type",
             "comment_text": "Test comment",
@@ -384,11 +384,19 @@ class RequestsAPIDefaultTestCase(APITestCase):
             response.data["start_datetime"][0], "Must be earlier than end_datetime."
         )
 
+        data["start_datetime"] = localtime() - timedelta(hours=2)
+        data["end_datetime"] = data["start_datetime"] + timedelta(hours=8)
+        response = self.client.post("/api/v1/requests", data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["start_datetime"][0], "Must be later than current time."
+        )
+
     @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
     def test_request_date_relation_validation_anonymous(self):
         data = {
             "title": "Test Request",
-            "start_datetime": localtime(),
+            "start_datetime": localtime() + timedelta(minutes=10),
             "place": "Test place",
             "type": "Test type",
             "requester_first_name": "Test",
@@ -403,6 +411,14 @@ class RequestsAPIDefaultTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.data["start_datetime"][0], "Must be earlier than end_datetime."
+        )
+
+        data["start_datetime"] = localtime() - timedelta(hours=2)
+        data["end_datetime"] = data["start_datetime"] + timedelta(hours=8)
+        response = self.client.post("/api/v1/requests", data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data["start_datetime"][0], "Must be later than current time."
         )
 
     @override_settings(DRF_RECAPTCHA_TESTING_PASS=False)

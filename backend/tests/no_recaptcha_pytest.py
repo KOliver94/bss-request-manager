@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 import pytest
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core import mail
 from django.test import override_settings
+from django.utils.timezone import localtime
 from rest_framework import status
 from tests.email_sending_tests import EMAIL_FILE
 from tests.helpers.test_utils import conditional_override_settings
@@ -24,8 +27,8 @@ def disable_recaptcha(settings):
 def test_anonymous_can_create_requests_without_captcha(api_client, disable_recaptcha):
     data = {
         "title": "Test Request",
-        "start_datetime": "2020-03-05T10:30",
-        "end_datetime": "2020-03-06T10:30",
+        "start_datetime": localtime() + timedelta(minutes=10),
+        "end_datetime": localtime() + timedelta(days=1),
         "place": "Test place",
         "type": "Test type",
         "requester_first_name": "Test",
