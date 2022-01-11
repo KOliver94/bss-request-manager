@@ -14,6 +14,14 @@ export async function getUserWorkedOn(userId, fromDate, toDate, responsible) {
   });
 }
 
+export async function banUser(userId, reason) {
+  return axiosInstance.post(`/users/${userId}/ban`, { reason });
+}
+
+export async function unbanUser(userId) {
+  return axiosInstance.delete(`/users/${userId}/ban`);
+}
+
 export async function connectSocial(provider, code) {
   return axiosInstance.post(`/users/me/social/${provider}`, { code });
 }
