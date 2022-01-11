@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 // @mui components
 import Accordion from '@mui/material/Accordion';
+import AccordionActions from '@mui/material/AccordionActions';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Alert from '@mui/material/Alert';
@@ -17,6 +18,7 @@ import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MUIButton from '@mui/material/Button';
 import Skeleton from '@mui/material/Skeleton';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
@@ -41,6 +43,7 @@ import DateRangePicker from '@mui/lab/DateRangePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import sub from 'date-fns/sub';
+import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // Yup validations
 import * as Yup from 'yup';
@@ -53,6 +56,8 @@ import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
 import {
   getUser,
   updateUser,
+  banUser,
+  unbanUser,
   connectSocial,
   disconnectSocial,
 } from 'api/userApi';
@@ -102,6 +107,9 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const [includeResponsible, setIncludeResponsible] = useState(true);
   const [headerDataChange, setHeaderDataChange] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(null);
+  const [banReason, setBanReason] = useState('');
+  const [banLoading, setBanLoading] = useState(false);
+  const [banChanged, setBanChanged] = useState(false);
 
   const handleCloseTooltip = (tooltip) =>
     tooltipOpen === tooltip && setTooltipOpen(null);
@@ -125,6 +133,23 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       enqueueSnackbar(handleError(e), {
         variant: 'error',
       });
+    }
+  };
+
+  const handleBan = async () => {
+    setBanLoading(true);
+    try {
+      if (userData.ban) {
+        await unbanUser(id).then(setBanChanged(!banChanged));
+      } else {
+        await banUser(id, banReason).then(setBanChanged(!banChanged));
+      }
+    } catch (e) {
+      enqueueSnackbar(handleError(e), {
+        variant: 'error',
+      });
+    } finally {
+      setBanLoading(false);
     }
   };
 
@@ -169,7 +194,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     }
     setLoading(true);
     loadData();
-  }, [id, enqueueSnackbar]);
+  }, [id, enqueueSnackbar, banChanged]);
 
   useEffect(() => {
     changePageTitle(!loading && `${userData.last_name} ${userData.first_name}`);
@@ -724,6 +749,52 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                               includeResponsible={includeResponsible}
                             />
                           </>
+                        )}
+                        {id && !isSelf(id) && isAdmin() && (
+                          <Accordion>
+                            <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              id="ban-header"
+                            >
+                              <Typography>Felhasználó kitiltása</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <TextField
+                                label="Indoklás"
+                                fullWidth
+                                multiline
+                                rows={5}
+                                value={
+                                  (userData.ban && userData.ban.reason) ||
+                                  banReason
+                                }
+                                onChange={(event) =>
+                                  setBanReason(event.target.value)
+                                }
+                                disabled={!!userData.ban}
+                                helperText={
+                                  userData.ban &&
+                                  `Létrehozva: ${format(
+                                    new Date(userData.ban.created),
+                                    'yyyy. MMMM d. H:mm',
+                                    {
+                                      locale: hu,
+                                    }
+                                  )}`
+                                }
+                              />
+                            </AccordionDetails>
+                            <AccordionActions>
+                              <MUIButton
+                                size="small"
+                                color={userData.ban ? 'warning' : 'error'}
+                                onClick={() => handleBan()}
+                                disabled={banLoading}
+                              >
+                                {userData.ban ? 'Feloldás' : 'Kitiltás'}
+                              </MUIButton>
+                            </AccordionActions>
+                          </Accordion>
                         )}
                       </GridItem>
                     </GridContainer>
