@@ -53,6 +53,8 @@ import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // Notistack
 import { useSnackbar } from 'notistack';
+// Helpers
+import stringToColor from 'helpers/stringToColor';
 // API calls
 import {
   getRequestAdmin,
@@ -67,14 +69,14 @@ import ConditionalWrapper from 'components/ConditionalWrapper';
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    padding: '10px 15px',
+    padding: '10px 8px',
+  },
+  titleGrid: {
+    padding: '0 15px',
   },
   paper: {
     padding: '15px',
     margin: '16px',
-  },
-  form: {
-    margin: 0,
   },
   formSection: {
     padding: '15px 0px',
@@ -297,6 +299,7 @@ export default function BasicInformation({
           direction="row"
           justifyContent="space-between"
           alignItems="center"
+          className={classes.titleGrid}
         >
           <Grid item>
             <Typography variant="h6" className={classes.title}>
@@ -319,7 +322,6 @@ export default function BasicInformation({
                       )
                     }
                     disabled={loading}
-                    size="large"
                   >
                     <ArrowBackIcon />
                   </IconButton>
@@ -340,11 +342,7 @@ export default function BasicInformation({
                   arrow
                 >
                   <span>
-                    <IconButton
-                      onClick={changeView}
-                      disabled={loading}
-                      size="large"
-                    >
+                    <IconButton onClick={changeView} disabled={loading}>
                       <VisibilityIcon />
                     </IconButton>
                   </span>
@@ -353,11 +351,7 @@ export default function BasicInformation({
             {!editing && (
               <Tooltip title="Frissítés" placement="top" arrow>
                 <span>
-                  <IconButton
-                    onClick={handleReload}
-                    disabled={loading}
-                    size="large"
-                  >
+                  <IconButton onClick={handleReload} disabled={loading}>
                     <RefreshIcon />
                   </IconButton>
                 </span>
@@ -371,11 +365,7 @@ export default function BasicInformation({
                   arrow
                 >
                   <span>
-                    <IconButton
-                      onClick={handleEditing}
-                      disabled={loading}
-                      size="large"
-                    >
+                    <IconButton onClick={handleEditing} disabled={loading}>
                       {editing ? <CheckIcon /> : <EditIcon />}
                     </IconButton>
                   </span>
@@ -383,11 +373,7 @@ export default function BasicInformation({
                 {editing ? (
                   <Tooltip title="Elvetés" placement="top" arrow>
                     <span>
-                      <IconButton
-                        onClick={handleDiscard}
-                        disabled={loading}
-                        size="large"
-                      >
+                      <IconButton onClick={handleDiscard} disabled={loading}>
                         <ClearIcon />
                       </IconButton>
                     </span>
@@ -398,7 +384,6 @@ export default function BasicInformation({
                       <IconButton
                         onClick={() => setRemoveDialogOpen(true)}
                         disabled={loading}
-                        size="large"
                       >
                         <DeleteForeverIcon />
                       </IconButton>
@@ -443,7 +428,7 @@ export default function BasicInformation({
               innerRef={formRef}
             >
               {({ errors, touched }) => (
-                <Form className={classes.form}>
+                <Form>
                   <div className={classes.formSectionFirst}>
                     <Typography variant="h6">Részletek</Typography>
                     <Field
@@ -564,10 +549,16 @@ export default function BasicInformation({
                           // eslint-disable-next-line react/jsx-props-no-spreading
                           <li {...props}>
                             <Avatar
-                              alt={`${option.first_name} ${option.last_name}`}
+                              sx={{
+                                bgcolor: stringToColor(
+                                  `${option.last_name} ${option.first_name}`
+                                ),
+                              }}
                               src={option.profile.avatar_url}
                               className={classes.smallAvatar}
-                            />
+                            >
+                              {option.first_name[0]}
+                            </Avatar>
                             {`${option.last_name} ${option.first_name}`}
                           </li>
                         );

@@ -1,5 +1,6 @@
 import {
   container,
+  section,
   title,
   primaryColor,
   successColor,
@@ -10,10 +11,13 @@ import imagesStyle from 'assets/jss/material-kit-react/imagesStyles';
 const profilePageStyle = {
   container,
   section: {
-    paddingBottom: '70px',
+    ...section,
+    paddingTop: '0 !important',
+    paddingLeft: '15px !important',
+    paddingRight: '15px !important',
   },
   field: {
-    padding: '0 16px',
+    padding: '0 15px',
   },
   profile: {
     textAlign: 'center',

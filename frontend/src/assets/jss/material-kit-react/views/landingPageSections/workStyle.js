@@ -1,9 +1,7 @@
-import { title } from 'assets/jss/material-kit-react';
+import { section, title } from 'assets/jss/material-kit-react';
 
 const workStyle = {
-  section: {
-    padding: '70px 0',
-  },
+  section,
   title: {
     ...title,
     marginBottom: '50px',

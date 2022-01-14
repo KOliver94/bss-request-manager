@@ -212,7 +212,7 @@ export default function RatingsDialog({
         <Box display="flex" alignItems="center">
           <Box flexGrow={1}>Értékelések</Box>
           <Box>
-            <IconButton onClick={closeDialog} size="large">
+            <IconButton onClick={closeDialog}>
               <CloseIcon />
             </IconButton>
           </Box>
@@ -309,7 +309,6 @@ export default function RatingsDialog({
                                 <IconButton
                                   onClick={handleSubmit}
                                   disabled={inProgress}
-                                  size="large"
                                 >
                                   <CheckIcon />
                                 </IconButton>
@@ -322,7 +321,6 @@ export default function RatingsDialog({
                                     })
                                   }
                                   disabled={inProgress}
-                                  size="large"
                                 >
                                   <ClearIcon />
                                 </IconButton>
@@ -338,7 +336,6 @@ export default function RatingsDialog({
                                     })
                                   }
                                   disabled={inProgress}
-                                  size="large"
                                 >
                                   <EditIcon />
                                 </IconButton>
@@ -347,7 +344,6 @@ export default function RatingsDialog({
                                     handleDelete(rating.id, rating.author.id)
                                   }
                                   disabled={inProgress}
-                                  size="large"
                                 >
                                   <DeleteIcon />
                                 </IconButton>

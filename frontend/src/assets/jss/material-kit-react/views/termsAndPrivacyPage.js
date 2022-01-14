@@ -1,4 +1,4 @@
-import { container } from 'assets/jss/material-kit-react';
+import { container, section } from 'assets/jss/material-kit-react';
 
 const termsAndPrivacyPageStyle = {
   container: {
@@ -7,7 +7,9 @@ const termsAndPrivacyPageStyle = {
     ...container,
   },
   section: {
-    padding: '70px 15px',
+    ...section,
+    paddingLeft: '15px !important',
+    paddingRight: '15px !important',
   },
   main: {
     background: '#FFFFFF',

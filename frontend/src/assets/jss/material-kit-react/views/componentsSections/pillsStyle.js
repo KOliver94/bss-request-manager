@@ -1,9 +1,7 @@
-import { container, title } from 'assets/jss/material-kit-react';
+import { container, section, title } from 'assets/jss/material-kit-react';
 
 const pillsStyle = {
-  section: {
-    padding: '70px 0',
-  },
+  section,
   container,
   title: {
     ...title,

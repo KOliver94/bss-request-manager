@@ -1,8 +1,8 @@
-import { title } from 'assets/jss/material-kit-react';
+import { section, title } from 'assets/jss/material-kit-react';
 
 const productStyle = {
   section: {
-    padding: '70px 0',
+    ...section,
     textAlign: 'center',
   },
   title: {

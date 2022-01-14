@@ -47,6 +47,10 @@ export default function HeaderLinks({
   const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const location = useLocation();
+  const nameFirstLetter =
+    localStorage.getItem('name') &&
+    localStorage.getItem('name').split(' ')[1] &&
+    localStorage.getItem('name').split(' ')[1][0];
 
   async function handleLogout(event) {
     event.preventDefault();
@@ -80,6 +84,7 @@ export default function HeaderLinks({
             }}
             buttonIcon={{
               type: 'Avatar',
+              fallback: nameFirstLetter,
               imgSrc: localStorage.getItem('avatar'),
             }}
             dropdownList={[

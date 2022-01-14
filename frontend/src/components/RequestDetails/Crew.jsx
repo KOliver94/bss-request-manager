@@ -29,6 +29,8 @@ import { Autocomplete } from 'formik-mui';
 import * as Yup from 'yup';
 // Notistack
 import { useSnackbar } from 'notistack';
+// Helpers
+import stringToColor from 'helpers/stringToColor';
 // API calls
 import {
   createCrewAdmin,
@@ -236,7 +238,6 @@ export default function Crew({
                                 <IconButton
                                   onClick={() => handleEditSubmit()}
                                   disabled={loading}
-                                  size="large"
                                 >
                                   <CheckIcon />
                                 </IconButton>
@@ -247,7 +248,6 @@ export default function Crew({
                                 <IconButton
                                   onClick={handleCancel}
                                   disabled={loading}
-                                  size="large"
                                 >
                                   <ClearIcon />
                                 </IconButton>
@@ -261,7 +261,6 @@ export default function Crew({
                                 <IconButton
                                   onClick={() => handleEdit(crewMember.id)}
                                   disabled={loading}
-                                  size="large"
                                 >
                                   <EditIcon />
                                 </IconButton>
@@ -272,7 +271,6 @@ export default function Crew({
                                 <IconButton
                                   onClick={() => handleDelete(crewMember.id)}
                                   disabled={loading}
-                                  size="large"
                                 >
                                   <DeleteIcon />
                                 </IconButton>
@@ -327,10 +325,16 @@ export default function Crew({
                           // eslint-disable-next-line react/jsx-props-no-spreading
                           <li {...props}>
                             <Avatar
-                              alt={`${option.first_name} ${option.last_name}`}
+                              sx={{
+                                bgcolor: stringToColor(
+                                  `${option.last_name} ${option.first_name}`
+                                ),
+                              }}
                               src={option.profile.avatar_url}
                               className={classes.smallAvatar}
-                            />
+                            >
+                              {option.first_name[0]}
+                            </Avatar>
                             {`${option.last_name} ${option.first_name}`}
                           </li>
                         );

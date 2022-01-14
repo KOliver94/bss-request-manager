@@ -3,7 +3,6 @@ import { useState, useRef } from 'react';
 import classNames from 'classnames';
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
-
 // @mui components
 import makeStyles from '@mui/styles/makeStyles';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,9 +14,10 @@ import Divider from '@mui/material/Divider';
 import Icon from '@mui/material/Icon';
 import Popper from '@mui/material/Popper';
 import Avatar from '@mui/material/Avatar';
-
 // core components
 import Button from 'components/material-kit-react/CustomButtons/Button.js';
+// Helpers
+import stringToColor from 'helpers/stringToColor';
 
 import styles from 'assets/jss/material-kit-react/components/customDropdownStyle.js';
 
@@ -68,7 +68,15 @@ export default function CustomDropdown(props) {
     case 'object':
       if (buttonIcon.type === 'Avatar') {
         icon = (
-          <Avatar className={classes.buttonAvatar} src={buttonIcon.imgSrc} />
+          <Avatar
+            sx={{
+              bgcolor: stringToColor(buttonText),
+            }}
+            className={classes.buttonAvatar}
+            src={buttonIcon.imgSrc}
+          >
+            {buttonIcon.fallback}
+          </Avatar>
         );
         break;
       }

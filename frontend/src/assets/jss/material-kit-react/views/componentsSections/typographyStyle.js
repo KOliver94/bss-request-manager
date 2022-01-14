@@ -1,11 +1,9 @@
-import { container, title } from 'assets/jss/material-kit-react';
+import { container, section, title } from 'assets/jss/material-kit-react';
 
 import imagesStyles from 'assets/jss/material-kit-react/imagesStyles';
 
 const typographyStyle = {
-  section: {
-    padding: '70px 0',
-  },
+  section,
   container,
   space50: {
     height: '50px',
