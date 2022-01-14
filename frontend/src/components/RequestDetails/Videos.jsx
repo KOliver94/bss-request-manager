@@ -45,6 +45,8 @@ import * as Yup from 'yup';
 import { hu } from 'date-fns/locale';
 // Notistack
 import { useSnackbar } from 'notistack';
+// Helpers
+import stringToColor from 'helpers/stringToColor';
 // API calls
 import {
   getRequestAdmin,
@@ -558,10 +560,16 @@ export default function Videos({
                                   // eslint-disable-next-line react/jsx-props-no-spreading
                                   <li {...props}>
                                     <Avatar
-                                      alt={`${option.first_name} ${option.last_name}`}
+                                      sx={{
+                                        bgcolor: stringToColor(
+                                          `${option.last_name} ${option.first_name}`
+                                        ),
+                                      }}
                                       src={option.profile.avatar_url}
                                       className={classes.smallAvatar}
-                                    />
+                                    >
+                                      {option.first_name[0]}
+                                    </Avatar>
                                     {`${option.last_name} ${option.first_name}`}
                                   </li>
                                 );
@@ -863,10 +871,16 @@ export default function Videos({
                             // eslint-disable-next-line react/jsx-props-no-spreading
                             <li {...props}>
                               <Avatar
-                                alt={`${option.first_name} ${option.last_name}`}
+                                sx={{
+                                  bgcolor: stringToColor(
+                                    `${option.last_name} ${option.first_name}`
+                                  ),
+                                }}
                                 src={option.profile.avatar_url}
                                 className={classes.smallAvatar}
-                              />
+                              >
+                                {option.first_name[0]}
+                              </Avatar>
                               {`${option.last_name} ${option.first_name}`}
                             </li>
                           );

@@ -179,6 +179,13 @@ const cardSubtitle = {
   marginTop: '-.375rem',
 };
 
+const section = {
+  padding: '70px 0',
+  '@media (max-width: 900px)': {
+    padding: '40px 0',
+  },
+};
+
 export {
   // variables
   drawerWidth,
@@ -214,4 +221,5 @@ export {
   cardTitle,
   cardLink,
   cardSubtitle,
+  section,
 };

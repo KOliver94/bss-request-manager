@@ -1,5 +1,6 @@
 import {
   container,
+  section,
   title,
   primaryColor,
   successColor,
@@ -12,7 +13,9 @@ const requestCreatorPageStyle = {
     ...container,
   },
   section: {
-    padding: '70px 16px',
+    ...section,
+    paddingLeft: '15px !important',
+    paddingRight: '15px !important',
   },
   title: {
     ...title,

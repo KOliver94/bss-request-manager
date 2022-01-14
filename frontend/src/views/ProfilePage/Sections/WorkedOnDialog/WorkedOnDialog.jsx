@@ -117,7 +117,7 @@ export default function WorkedOnDialog({
         <Box display="flex" alignItems="center">
           <Box flexGrow={1}>Készített anyagok</Box>
           <Box>
-            <IconButton onClick={closeDialog} size="large">
+            <IconButton onClick={closeDialog}>
               <CloseIcon />
             </IconButton>
           </Box>

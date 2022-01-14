@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+// material-kit-react
+import Badge from 'components/material-kit-react/Badge/Badge';
 // MUI components
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -13,6 +15,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import makeStyles from '@mui/styles/makeStyles';
 // New comment
@@ -58,9 +61,6 @@ const useStyles = makeStyles(() => ({
   commentCreated: {
     textAlign: 'left',
     color: 'gray',
-  },
-  internalComment: {
-    background: 'rgba(0, 0, 0, 0.08)',
   },
   commentButtons: {
     alignSelf: 'flex-end',
@@ -266,12 +266,7 @@ export default function Comments({
                     </Formik>
                   </div>
                 ) : (
-                  <Grid
-                    container
-                    wrap="nowrap"
-                    spacing={2}
-                    className={comment.internal ? classes.internalComment : ''}
-                  >
+                  <Grid container wrap="nowrap" spacing={2}>
                     <Grid item>
                       <Avatar
                         alt={`${comment.author.first_name} ${comment.author.last_name}`}
@@ -279,9 +274,18 @@ export default function Comments({
                       />
                     </Grid>
                     <Grid item xs zeroMinWidth>
-                      <h4 className={classes.commentAuthor}>
-                        {`${comment.author.last_name} ${comment.author.first_name}`}
-                      </h4>
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <h4 className={classes.commentAuthor}>
+                          {`${comment.author.last_name} ${comment.author.first_name}`}
+                        </h4>
+                        {comment.author.id === requestData.requester.id && (
+                          <Badge color="info">Felkérő</Badge>
+                        )}
+                        {comment.internal && (
+                          <Badge color="danger">Belső</Badge>
+                        )}
+                      </Stack>
+
                       <p className={classes.commentText}>{comment.text}</p>
                       <Tooltip
                         title={format(
@@ -355,7 +359,7 @@ export default function Comments({
           validationSchema={validationSchema}
         >
           {({ isSubmitting, values, errors, touched }) => (
-            <Form>
+            <Form sx={{ marginBottom: '1.125rem' }}>
               <Grid container wrap="nowrap" spacing={2}>
                 <Grid item>
                   <Avatar src={localStorage.getItem('avatar')} />

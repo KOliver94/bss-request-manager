@@ -1,4 +1,9 @@
-import { container, title, primaryColor } from 'assets/jss/material-kit-react';
+import {
+  container,
+  section,
+  title,
+  primaryColor,
+} from 'assets/jss/material-kit-react';
 
 const myRequestsPageStyle = {
   container: {
@@ -6,9 +11,7 @@ const myRequestsPageStyle = {
     color: '#FFFFFF',
     ...container,
   },
-  section: {
-    padding: '70px 0',
-  },
+  section,
   title: {
     ...title,
     display: 'inline-block',

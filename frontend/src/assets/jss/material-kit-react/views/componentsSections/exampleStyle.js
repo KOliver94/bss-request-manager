@@ -1,11 +1,9 @@
-import { containerFluid } from 'assets/jss/material-kit-react';
+import { containerFluid, section } from 'assets/jss/material-kit-react';
 
 import imagesStyle from 'assets/jss/material-kit-react/imagesStyles';
 
 const exampleStyle = {
-  section: {
-    padding: '70px 0',
-  },
+  section,
   container: {
     ...containerFluid,
     textAlign: 'center !important',

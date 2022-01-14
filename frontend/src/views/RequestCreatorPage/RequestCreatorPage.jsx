@@ -4,11 +4,15 @@ import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import makeStyles from '@mui/styles/makeStyles';
 import CircularProgress from '@mui/material/CircularProgress';
+import MobileStepper from '@mui/material/MobileStepper';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import Typography from '@mui/material/Typography';
 // background
 import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
@@ -67,6 +71,8 @@ export default function RequestCreatorPage({
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const recaptchaRef = createRef();
+  const theme = useTheme();
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
 
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState(formInitialState);
@@ -199,27 +205,47 @@ export default function RequestCreatorPage({
         <div className={classNames(classes.container, classes.section)}>
           <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6}>
-              <Stepper
-                activeStep={activeStep}
-                className={classes.stepper}
-                alternativeLabel
-              >
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel
-                      StepIconProps={{
-                        classes: {
-                          root: classes.stepIcon,
-                          active: classes.activeIcon,
-                          completed: classes.completedIcon,
-                        },
-                      }}
-                    >
-                      {label}
-                    </StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
+              {isMobileView ? (
+                <>
+                  <Typography
+                    variant="h6"
+                    align="center"
+                    sx={{ color: 'black' }}
+                  >
+                    {steps.at(activeStep)}
+                  </Typography>
+                  <MobileStepper
+                    variant="progress"
+                    activeStep={activeStep}
+                    steps={4}
+                    position="static"
+                    LinearProgressProps={{ sx: { width: 1 } }}
+                    className={classes.stepper}
+                  />
+                </>
+              ) : (
+                <Stepper
+                  activeStep={activeStep}
+                  className={classes.stepper}
+                  alternativeLabel
+                >
+                  {steps.map((label) => (
+                    <Step key={label}>
+                      <StepLabel
+                        StepIconProps={{
+                          classes: {
+                            root: classes.stepIcon,
+                            active: classes.activeIcon,
+                            completed: classes.completedIcon,
+                          },
+                        }}
+                      >
+                        {label}
+                      </StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+              )}
             </GridItem>
           </GridContainer>
           {loading && activeStep === 0 ? (

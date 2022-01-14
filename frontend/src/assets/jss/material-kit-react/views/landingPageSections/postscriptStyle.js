@@ -1,6 +1,8 @@
+import { section } from 'assets/jss/material-kit-react';
+
 const postscriptStyle = {
   section: {
-    padding: '70px 0',
+    ...section,
     textAlign: 'center',
   },
   description: {

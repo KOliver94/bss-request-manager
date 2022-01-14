@@ -185,7 +185,7 @@ export default function RequestDetailPage({
             </GridContainer>
           ) : (
             <GridContainer justifyContent="center" className={classes.content}>
-              <GridItem xs={12} sm={6}>
+              <GridItem xs={12} sm={12} md={6}>
                 <BasicInformation
                   requestId={id}
                   requestData={data}
@@ -194,7 +194,7 @@ export default function RequestDetailPage({
                   isPrivileged={isPrivileged}
                 />
               </GridItem>
-              <GridItem xs={12} sm={6}>
+              <GridItem xs={12} sm={12} md={6}>
                 <CustomTabs
                   headerColor="primary"
                   tabs={tabsContent()}
