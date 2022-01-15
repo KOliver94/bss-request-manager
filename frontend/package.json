@@ -7,7 +7,7 @@
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.5",
     "@mui/lab": "^5.0.0-alpha.63",
-    "@mui/material": "^5.2.7",
+    "@mui/material": "^5.2.8",
     "@mui/styles": "^5.2.3",
     "@sentry/react": "^6.16.1",
     "axios": "^0.24.0",
