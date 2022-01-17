@@ -251,23 +251,38 @@ WHITENOISE_ROOT = os.path.join(FRONTEND_DIR, "build", "root")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "default": {
+            "format": "%(asctime)s [%(module)s | %(levelname)s] %(message)s",
+        },
+        "error": {
+            "format": "%(asctime)s [%(module)s | %(levelname)s] %(message)s @ %(pathname)s : %(lineno)d : %(funcName)s",
+        },
+    },
     "handlers": {
-        "console": {"class": "logging.StreamHandler"},
-        "file": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "WARNING",
+            "formatter": "default",
+        },
+        "info": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BACKEND_DIR, "logs", "info.log"),
+            "maxBytes": 1024 * 1024 * 25,
+            "backupCount": 3,
             "level": "INFO",
-            "class": "logging.FileHandler",
-            "filename": os.path.join(BACKEND_DIR, "logs", "backend.log"),
+            "formatter": "default",
         },
-        "error_file": {
+        "error": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BACKEND_DIR, "logs", "error.log"),
+            "maxBytes": 1024 * 1024 * 50,
+            "backupCount": 5,
             "level": "ERROR",
-            "class": "logging.FileHandler",
-            "filename": os.path.join(BACKEND_DIR, "logs", "backend.err"),
+            "formatter": "error",
         },
     },
-    "root": {
-        "handlers": ["console", "file", "error_file"],
-        "level": config("LOGGING_LEVEL", default="WARNING"),
-    },
+    "loggers": {"": {"handlers": ["console", "info", "error"], "level": "INFO"}},
 }
 
 # If requested enable Django's admin site
