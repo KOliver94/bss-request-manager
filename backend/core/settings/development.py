@@ -34,6 +34,28 @@ if DEBUG:
         }
     )
 
+    # Enable debug log file
+    LOGGING["handlers"].update(
+        {
+            "debug": {
+                "class": "logging.FileHandler",
+                "filename": os.path.join(BACKEND_DIR, "logs", "debug.log"),
+                "level": "DEBUG",
+                "formatter": "default",
+            }
+        }
+    )
+    LOGGING.update(
+        {
+            "loggers": {
+                "": {
+                    "handlers": ["console", "info", "error", "debug"],
+                    "level": "DEBUG",
+                }
+            },
+        }
+    )
+
     if BROWSABLE_API:
         # Enable Browsable API
         REST_FRAMEWORK.setdefault("DEFAULT_RENDERER_CLASSES", []).append(
