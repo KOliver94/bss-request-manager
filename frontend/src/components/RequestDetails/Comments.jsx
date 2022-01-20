@@ -1,30 +1,16 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-// material-kit-react
-import Badge from 'components/material-kit-react/Badge/Badge';
 // MUI components
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import SendIcon from '@mui/icons-material/Send';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import LockIcon from '@mui/icons-material/Lock';
-import EditIcon from '@mui/icons-material/Edit';
-import ClearIcon from '@mui/icons-material/Clear';
-import DeleteIcon from '@mui/icons-material/Delete';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
 import makeStyles from '@mui/styles/makeStyles';
-// New comment
-import { Formik, Form, Field } from 'formik';
-import { TextField, Checkbox } from 'formik-mui';
-import * as Yup from 'yup';
-// Date format
-import { format, formatDistanceToNow } from 'date-fns';
-import { hu } from 'date-fns/locale';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+// Components
+import CommentDesktop from 'components/RequestDetails/CommentDesktop';
+import CommentMobile from 'components/RequestDetails/CommentMobile';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
@@ -34,36 +20,16 @@ import {
   updateCommentAdmin,
   deleteCommentAdmin,
 } from 'api/requestAdminApi';
-import { isAdmin } from 'api/loginApi';
 import compareValues from 'helpers/objectComperator';
 import handleError from 'helpers/errorHandler';
 
 const useStyles = makeStyles(() => ({
   title: {
-    padding: '10px 15px',
+    padding: '10px 23px',
   },
   paper: {
     padding: '40px 20px',
     margin: '16px',
-  },
-  commentAuthor: {
-    margin: 0,
-    textAlign: 'left',
-    fontWeight: 400,
-  },
-  commentText: {
-    textAlign: 'left',
-    whiteSpace: 'pre-wrap',
-  },
-  commentDivider: {
-    margin: '30px 0',
-  },
-  commentCreated: {
-    textAlign: 'left',
-    color: 'gray',
-  },
-  commentButtons: {
-    alignSelf: 'flex-end',
   },
 }));
 
@@ -77,6 +43,8 @@ export default function Comments({
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(-1);
+  const theme = useTheme();
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
 
   const showError = (e) => {
     enqueueSnackbar(handleError(e), {
@@ -145,18 +113,6 @@ export default function Comments({
     }
   };
 
-  const handleEdit = (commentId) => {
-    setEditingCommentId(commentId);
-  };
-
-  const handleCancel = () => {
-    setEditingCommentId(-1);
-  };
-
-  const validationSchema = Yup.object({
-    text: Yup.string().trim().required('Üres hozzászólás nem küldhető be!'),
-  });
-
   return (
     <div>
       <div>
@@ -178,245 +134,56 @@ export default function Comments({
       <Paper className={classes.paper} elevation={2}>
         {requestData.comments.length > 0 && (
           <>
-            {requestData.comments.sort(compareValues('id')).map((comment) => (
-              <div key={`${comment.id}-base`}>
-                {editingCommentId === comment.id ? (
-                  <div key={`${comment.id}-edit-base`}>
-                    <Formik
-                      initialValues={comment}
-                      onSubmit={(values, resetForm) =>
-                        handleSubmit(values, false, resetForm)
-                      }
-                      validationSchema={validationSchema}
-                    >
-                      {({ isSubmitting, values, errors, touched }) => (
-                        <Form>
-                          <Grid container wrap="nowrap" spacing={2}>
-                            <Grid item>
-                              <Avatar
-                                alt={`${comment.author.first_name} ${comment.author.last_name}`}
-                                src={comment.author.profile.avatar_url}
-                              />
-                            </Grid>
-                            <Grid item xs zeroMinWidth>
-                              <h4 className={classes.commentAuthor}>
-                                {`${comment.author.last_name} ${comment.author.first_name}`}
-                              </h4>
-                              <Field
-                                name="text"
-                                label="Szerkesztés"
-                                margin="normal"
-                                component={TextField}
-                                fullWidth
-                                multiline
-                                rows={5}
-                                error={touched.text && !!errors.text}
-                                helperText={touched.text && errors.text}
-                              />
-                            </Grid>
-                            <Grid item className={classes.commentButtons}>
-                              {isPrivileged && (
-                                <Tooltip
-                                  title={values.internal ? 'Belső' : 'Publikus'}
-                                  placement="left"
-                                  arrow
-                                >
-                                  <Grid item>
-                                    <Field
-                                      component={Checkbox}
-                                      type="checkbox"
-                                      name="internal"
-                                      color="secondary"
-                                      icon={<LockOpenIcon />}
-                                      checkedIcon={<LockIcon />}
-                                    />
-                                  </Grid>
-                                </Tooltip>
-                              )}
-                              <Grid item>
-                                <Tooltip title="Elvetés" placement="left" arrow>
-                                  <span>
-                                    <IconButton
-                                      onClick={handleCancel}
-                                      disabled={isSubmitting}
-                                      size="large"
-                                    >
-                                      <ClearIcon />
-                                    </IconButton>
-                                  </span>
-                                </Tooltip>
-                              </Grid>
-                              <Grid item>
-                                <Tooltip title="Mentés" placement="left" arrow>
-                                  <span>
-                                    <IconButton
-                                      type="submit"
-                                      disabled={isSubmitting}
-                                      size="large"
-                                    >
-                                      <SendIcon />
-                                    </IconButton>
-                                  </span>
-                                </Tooltip>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Form>
-                      )}
-                    </Formik>
-                  </div>
+            {requestData.comments
+              .sort(compareValues('id'))
+              .map((comment) =>
+                isMobileView ? (
+                  <CommentMobile
+                    key={`${comment.id}-comment-base`}
+                    comment={comment}
+                    handleDelete={handleDelete}
+                    handleSubmit={handleSubmit}
+                    isEditing={editingCommentId === comment.id}
+                    isPrivileged={isPrivileged}
+                    loading={loading}
+                    requesterId={requestData.requester.id}
+                    setEditingCommentId={setEditingCommentId}
+                  />
                 ) : (
-                  <Grid container wrap="nowrap" spacing={2}>
-                    <Grid item>
-                      <Avatar
-                        alt={`${comment.author.first_name} ${comment.author.last_name}`}
-                        src={comment.author.profile.avatar_url}
-                      />
-                    </Grid>
-                    <Grid item xs zeroMinWidth>
-                      <Stack direction="row" spacing={1} alignItems="center">
-                        <h4 className={classes.commentAuthor}>
-                          {`${comment.author.last_name} ${comment.author.first_name}`}
-                        </h4>
-                        {comment.author.id === requestData.requester.id && (
-                          <Badge color="info">Felkérő</Badge>
-                        )}
-                        {comment.internal && (
-                          <Badge color="danger">Belső</Badge>
-                        )}
-                      </Stack>
-
-                      <p className={classes.commentText}>{comment.text}</p>
-                      <Tooltip
-                        title={format(
-                          new Date(comment.created),
-                          'yyyy. MMMM d. H:mm:ss',
-                          {
-                            locale: hu,
-                          }
-                        )}
-                        placement="bottom-start"
-                      >
-                        <p className={classes.commentCreated}>
-                          {formatDistanceToNow(new Date(comment.created), {
-                            locale: hu,
-                            addSuffix: true,
-                          })}
-                        </p>
-                      </Tooltip>
-                    </Grid>
-
-                    {((isPrivileged && isAdmin()) ||
-                      comment.author.id.toString() ===
-                        localStorage.getItem('user_id')) && (
-                      <Grid item className={classes.commentButtons}>
-                        <Grid item>
-                          <Tooltip title="Törlés" placement="left" arrow>
-                            <span>
-                              <IconButton
-                                onClick={() => handleDelete(comment.id)}
-                                disabled={loading}
-                                size="large"
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </span>
-                          </Tooltip>
-                        </Grid>
-                        <Grid item>
-                          <Tooltip title="Szerkesztés" placement="left" arrow>
-                            <span>
-                              <IconButton
-                                onClick={() => handleEdit(comment.id)}
-                                disabled={loading}
-                                size="large"
-                              >
-                                <EditIcon />
-                              </IconButton>
-                            </span>
-                          </Tooltip>
-                        </Grid>
-                      </Grid>
-                    )}
-                  </Grid>
-                )}
-                <Divider
-                  variant="fullWidth"
-                  className={classes.commentDivider}
-                />
-              </div>
-            ))}
+                  <CommentDesktop
+                    key={`${comment.id}-comment-base`}
+                    comment={comment}
+                    handleDelete={handleDelete}
+                    handleSubmit={handleSubmit}
+                    isEditing={editingCommentId === comment.id}
+                    isPrivileged={isPrivileged}
+                    loading={loading}
+                    requesterId={requestData.requester.id}
+                    setEditingCommentId={setEditingCommentId}
+                  />
+                )
+              )}
           </>
         )}
-        <Formik
-          initialValues={{
-            text: '',
-            internal: false,
-          }}
-          onSubmit={(values, resetForm) =>
-            handleSubmit(values, true, resetForm)
-          }
-          validationSchema={validationSchema}
-        >
-          {({ isSubmitting, values, errors, touched }) => (
-            <Form sx={{ marginBottom: '1.125rem' }}>
-              <Grid container wrap="nowrap" spacing={2}>
-                <Grid item>
-                  <Avatar src={localStorage.getItem('avatar')} />
-                </Grid>
-                <Grid item xs zeroMinWidth>
-                  <h4 className={classes.commentAuthor}>
-                    {localStorage.getItem('name')}
-                  </h4>
-                  <Field
-                    name="text"
-                    label="Új hozzászólás"
-                    margin="normal"
-                    component={TextField}
-                    fullWidth
-                    multiline
-                    rows={5}
-                    error={touched.text && !!errors.text}
-                    helperText={touched.text && errors.text}
-                  />
-                </Grid>
-                <Grid item className={classes.commentButtons}>
-                  {isPrivileged && (
-                    <Tooltip
-                      title={values.internal ? 'Belső' : 'Publikus'}
-                      placement="left"
-                      arrow
-                    >
-                      <Grid item>
-                        <Field
-                          component={Checkbox}
-                          type="checkbox"
-                          name="internal"
-                          color="secondary"
-                          icon={<LockOpenIcon />}
-                          checkedIcon={<LockIcon />}
-                        />
-                      </Grid>
-                    </Tooltip>
-                  )}
-                  <Grid item>
-                    <Tooltip title="Küldés" placement="left" arrow>
-                      <span>
-                        <IconButton
-                          type="submit"
-                          disabled={isSubmitting}
-                          size="large"
-                        >
-                          <SendIcon />
-                        </IconButton>
-                      </span>
-                    </Tooltip>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
+        {isMobileView ? (
+          <CommentMobile
+            handleDelete={handleDelete}
+            handleSubmit={handleSubmit}
+            isNew
+            isPrivileged={isPrivileged}
+            loading={loading}
+            setEditingCommentId={setEditingCommentId}
+          />
+        ) : (
+          <CommentDesktop
+            handleDelete={handleDelete}
+            handleSubmit={handleSubmit}
+            isNew
+            isPrivileged={isPrivileged}
+            loading={loading}
+            setEditingCommentId={setEditingCommentId}
+          />
+        )}
       </Paper>
     </div>
   );
