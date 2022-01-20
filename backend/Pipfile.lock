@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f7d1cd74327782e17c5f57fc0710abdc3b5f01f47587a071ab780ea79e01f186"
+            "sha256": "3057c52364a46454b47ba548d32c24f47c520c8b46c1691f4dfedea54b9b990a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -421,11 +421,11 @@
         },
         "google-api-python-client": {
             "hashes": [
-                "sha256:038b12979ea86ef0e33962bd33f955c337bc28f0471522bd27a801d52bfb4ae2",
-                "sha256:30ccd570ce0018dfc604438cc1e72d215f0d3d5844318729d29a1392ef131056"
+                "sha256:533c69e8ddce6630a2ce5b98348f6a58a23df49cb92040a0086315df979404af",
+                "sha256:9e8863dec46224d4375cf3834e27ffd4bce79858f0f00a6109a51e3e62b4f3c2"
             ],
             "index": "pypi",
-            "version": "==2.35.0"
+            "version": "==2.36.0"
         },
         "google-auth": {
             "hashes": [
@@ -873,11 +873,11 @@
         },
         "redis": {
             "hashes": [
-                "sha256:21f0a23bce707909076e6ba2ce076cba59bff60d2ab22972e0647fdf620ffe47",
-                "sha256:e13fad67c098a33141bacde872786960e86a5c97a4255009bcd43c795fa1cc77"
+                "sha256:07420a3fbedd8e012c31d4fadac943fb81568946da202c5a5bc237774e5280a0",
+                "sha256:bc97d18938ca18d66737d0ef88584a2073069589e4026813cfba9ad6df9a9f40"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==4.1.0"
+            "version": "==4.1.1"
         },
         "requests": {
             "hashes": [
@@ -999,11 +999,11 @@
         },
         "social-auth-core": {
             "hashes": [
-                "sha256:5ab43b3b15dce5f059db69cc3082c216574739f0edbc98629c8c6e8769c67eb4",
-                "sha256:983b53167ac56e7ba4909db555602a6e7a98c97ca47183bb222eb85ba627bf2b"
+                "sha256:08fe6645b98950cff9d6970b6704345f821d78729df0164bca0002c624b001e1",
+                "sha256:af6fc7d9ee39f0aa697cd953121add638fc32a49816341a9838a67904c39e034"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==4.1.0"
+            "version": "==4.2.0"
         },
         "sqlparse": {
             "hashes": [
