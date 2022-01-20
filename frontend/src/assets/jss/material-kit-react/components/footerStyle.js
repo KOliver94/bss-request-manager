@@ -55,8 +55,15 @@ const footerStyle = (theme) => ({
     lineHeight: 0,
     verticalAlign: 'text-bottom',
     padding: '0 10px',
-    '&:nth-child(1)': {
-      paddingLeft: 0,
+    [theme.breakpoints.up('sm')]: {
+      '&:nth-child(1)': {
+        paddingLeft: 0,
+      },
+    },
+    [theme.breakpoints.down('sm')]: {
+      '&:nth-last-child(1)': {
+        marginRight: '-6px',
+      },
     },
   },
   icon: {
