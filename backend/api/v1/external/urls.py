@@ -1,9 +1,10 @@
+from django.urls import path
+
 from api.v1.external.views import (
     CommentExternalListCreateView,
     RequestExternalCreateView,
     RequestExternalDetailView,
 )
-from django.urls import path
 
 urlpatterns = [
     path("sch-events/requests", RequestExternalCreateView.as_view()),

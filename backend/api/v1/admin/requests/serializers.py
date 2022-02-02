@@ -1,8 +1,5 @@
 from collections import abc
 
-from api.v1.requests.utilities import create_user
-from api.v1.users.serializers import UserSerializer
-from common.utilities import create_calendar_event, update_calendar_event
 from django.contrib.auth.models import User
 from django.http import Http404
 from phonenumber_field.serializerfields import PhoneNumberField
@@ -10,6 +7,10 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, EmailField, IntegerField
 from rest_framework.generics import get_object_or_404
+
+from api.v1.requests.utilities import create_user
+from api.v1.users.serializers import UserSerializer
+from common.utilities import create_calendar_event, update_calendar_event
 from video_requests.emails import email_crew_new_comment, email_user_new_comment
 from video_requests.models import Comment, CrewMember, Rating, Request, Video
 from video_requests.utilities import (

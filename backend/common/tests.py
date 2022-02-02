@@ -1,13 +1,14 @@
 import json
 from io import StringIO
 
-from common.models import Ban, get_sentinel_user
-from common.templatetags.settings import settings_value
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.test import TestCase
 from rest_framework import status
+
+from common.models import Ban, get_sentinel_user
+from common.templatetags.settings import settings_value
 from tests.helpers.users_test_utils import create_user
 from tests.helpers.video_requests_test_utils import (
     create_comment,

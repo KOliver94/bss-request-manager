@@ -1,9 +1,10 @@
+from django.urls import path
+
 from api.v1.admin.management.views import (
     CeleryTasksView,
     FlushExpiredTokensView,
     SyncLdapView,
 )
-from django.urls import path
 
 urlpatterns = [
     path("flush_expired_tokens", FlushExpiredTokensView.as_view()),

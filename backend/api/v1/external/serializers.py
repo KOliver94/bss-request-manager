@@ -1,3 +1,7 @@
+from phonenumber_field.serializerfields import PhoneNumberField
+from rest_framework import serializers
+from rest_framework.fields import CharField, EmailField, URLField
+
 from api.v1.requests.serializers import (
     CommentDefaultSerializer,
     VideoDefaultSerializer,
@@ -6,9 +10,6 @@ from api.v1.requests.serializers import (
 from api.v1.requests.utilities import create_user
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event
-from phonenumber_field.serializerfields import PhoneNumberField
-from rest_framework import serializers
-from rest_framework.fields import CharField, EmailField, URLField
 from video_requests.emails import email_user_new_request_confirmation
 from video_requests.models import Request
 

@@ -1,11 +1,12 @@
 from datetime import datetime
 
-from api.v1.admin.statistics.serializers import RequestStatisticSerializer
-from common.rest_framework.permissions import IsStaffUser
 from django.utils.timezone import localdate
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+
+from api.v1.admin.statistics.serializers import RequestStatisticSerializer
+from common.rest_framework.permissions import IsStaffUser
 from video_requests.models import Request, Video
 
 

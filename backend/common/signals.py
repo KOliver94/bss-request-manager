@@ -1,12 +1,13 @@
 import django_auth_ldap.backend
 import requests
-from common.models import Ban, UserProfile
 from django.contrib.auth.models import User
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from libgravatar import Gravatar, sanitize_email
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from common.models import Ban, UserProfile
 
 
 @receiver(post_save, sender=User)

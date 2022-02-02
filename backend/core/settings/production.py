@@ -1,10 +1,11 @@
 import ldap
 import sentry_sdk
-from core.settings.common import *
 from django_auth_ldap.config import GroupOfNamesType, LDAPSearch
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import ignore_logger
 from sentry_sdk.integrations.redis import RedisIntegration
+
+from core.settings.common import *
 
 INSTALLED_APPS += [
     "social_django",

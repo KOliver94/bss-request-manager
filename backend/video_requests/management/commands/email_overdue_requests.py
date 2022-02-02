@@ -1,5 +1,6 @@
 from django.core.management import BaseCommand
 from django.utils.timezone import localdate
+
 from video_requests.emails import email_responsible_overdue_request
 from video_requests.models import Request
 

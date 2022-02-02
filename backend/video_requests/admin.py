@@ -3,6 +3,7 @@ from django.db.models import Avg
 from django.urls import reverse
 from django.utils.html import format_html
 from simple_history.admin import SimpleHistoryAdmin
+
 from video_requests.models import Comment, CrewMember, Rating, Request, Video
 
 

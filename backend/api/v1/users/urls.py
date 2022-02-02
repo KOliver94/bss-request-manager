@@ -1,3 +1,5 @@
+from django.urls import path, re_path
+
 from api.v1.users.views import (
     BanUserCreateDeleteView,
     ConnectDisconnectSocialProfileView,
@@ -5,7 +7,6 @@ from api.v1.users.views import (
     UserDetailView,
     UserWorkedOnListView,
 )
-from django.urls import path, re_path
 
 urlpatterns = [
     path("staff", StaffUserListView.as_view()),

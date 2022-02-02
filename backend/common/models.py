@@ -1,4 +1,3 @@
-from common.schemas import USER_PROFILE_AVATAR_SCHEMA
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -11,6 +10,8 @@ from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
 from phonenumber_field.modelfields import PhoneNumberField
 from simple_history.models import HistoricalRecords
+
+from common.schemas import USER_PROFILE_AVATAR_SCHEMA
 
 
 def get_sentinel_user():

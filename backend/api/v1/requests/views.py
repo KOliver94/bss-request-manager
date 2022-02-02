@@ -1,3 +1,8 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
+
 from api.v1.requests.filters import RequestFilter
 from api.v1.requests.serializers import (
     CommentDefaultSerializer,
@@ -13,10 +18,6 @@ from common.rest_framework.permissions import (
     IsNotAuthenticated,
     IsSelf,
 )
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, generics
-from rest_framework.exceptions import ValidationError
-from rest_framework.generics import get_object_or_404
 from video_requests.models import Comment, Rating, Request, Video
 
 

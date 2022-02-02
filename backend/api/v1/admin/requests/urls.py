@@ -1,3 +1,5 @@
+from django.urls import path
+
 from api.v1.admin.requests.views import (
     CommentAdminDetailView,
     CommentAdminListCreateView,
@@ -11,7 +13,6 @@ from api.v1.admin.requests.views import (
     VideoAdminListCreateView,
     VideoAdminListView,
 )
-from django.urls import path
 
 urlpatterns = [
     path("<int:pk>", RequestAdminDetailView.as_view()),

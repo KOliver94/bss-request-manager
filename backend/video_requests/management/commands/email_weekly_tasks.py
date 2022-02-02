@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.core.management import BaseCommand
 from django.utils.timezone import localdate
+
 from video_requests.emails import email_staff_weekly_tasks
 from video_requests.models import Request, Video
 

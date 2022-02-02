@@ -1,4 +1,3 @@
-from common.models import Ban, UserProfile
 from django.conf import settings
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
@@ -12,6 +11,8 @@ from rest_framework.fields import (
 )
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, Serializer
+
+from common.models import Ban, UserProfile
 
 
 class BanUserSerializer(ModelSerializer):

@@ -7,6 +7,7 @@ from django.core import mail
 from django.test import override_settings
 from django.utils.timezone import localtime
 from rest_framework import status
+
 from tests.email_sending_tests import EMAIL_FILE
 from tests.helpers.test_utils import conditional_override_settings
 
