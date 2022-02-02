@@ -12,35 +12,94 @@
                 <tr>
                     <td align="center" valign="top" width="600">
             <![endif]-->
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-
+            <table
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                width="100%"
+                style="max-width: 600px"
+            >
                 <!-- start recording -->
                 {% if recording %}
                     <tr>
-                        <td align="left" bgcolor="#ffffff"
-                            style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                            <p style="margin: 0;"><strong>Következő heti forgatások:</strong></p>
+                        <td
+                            align="left"
+                            bgcolor="#ffffff"
+                            style="
+                            padding: 24px;
+                            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                            font-size: 16px;
+                            line-height: 24px;
+                            "
+                        >
+                            <p style="margin: 0"><strong>Következő heti forgatások:</strong></p>
 
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
-                                    <td align="left" bgcolor="#1a82e2" width="60%"
-                                        style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; color: white;">
-                                        <strong>Esemény neve</strong></td>
-                                    <td align="left" bgcolor="#1a82e2" width="40%"
-                                        style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; color: white;">
-                                        <strong>Dátum</strong></td>
+                                    <td
+                                        align="left"
+                                        bgcolor="#1a82e2"
+                                        width="60%"
+                                        style="
+                                        padding: 12px;
+                                        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                        font-size: 16px;
+                                        line-height: 24px;
+                                        color: white;
+                                        "
+                                    >
+                                        <strong>Esemény neve</strong>
+                                    </td>
+                                    <td
+                                        align="left"
+                                        bgcolor="#1a82e2"
+                                        width="40%"
+                                        style="
+                                        padding: 12px;
+                                        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                        font-size: 16px;
+                                        line-height: 24px;
+                                        color: white;
+                                        "
+                                    >
+                                        <strong>Dátum</strong>
+                                    </td>
                                 </tr>
                                 {% for request in recording %}
-                                    <tr style="border: solid; border-width: 1px 0; border-color:#e3e6e4">
-                                        <td align="left" width="60%"
-                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                            <a href="{{ request.admin_url }}" target="_blank"
-                                               rel="noopener noreferrer">{{ request.title }}</a>
+                                    <tr
+                                        style="border: solid; border-width: 1px 0; border-color: #e3e6e4"
+                                    >
+                                        <td
+                                            align="left"
+                                            width="60%"
+                                            style="
+                                            padding: 6px 12px;
+                                            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                            font-size: 16px;
+                                            line-height: 24px;
+                                            "
+                                        >
+                                            <a
+                                                href="{{ request.admin_url }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {{ request.title }}
+                                            </a>
                                         </td>
-                                        <td align="left" width="40%"
-                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+                                        <td
+                                            align="left"
+                                            width="40%"
+                                            style="
+                                            padding: 6px 12px;
+                                            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                            font-size: 16px;
+                                            line-height: 24px;
+                                            "
+                                        >
                                             {% language 'hu' %}
-                                                {{ request.start_datetime|date:"N j l, H:i" }}{% endlanguage %}
+                                                {{ request.start_datetime|date:"N j l, H:i" }}
+                                            {% endlanguage %}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -53,39 +112,117 @@
                 <!-- start editing -->
                 {% if editing_no_vids or editing_unedited_vids %}
                     <tr>
-                        <td align="left" bgcolor="#ffffff"
-                            style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                            <p style="margin: 0;"><strong>Vágandó anyagok:</strong></p>
+                        <td
+                            align="left"
+                            bgcolor="#ffffff"
+                            style="
+                            padding: 24px;
+                            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                            font-size: 16px;
+                            line-height: 24px;
+                            "
+                        >
+                            <p style="margin: 0"><strong>Vágandó anyagok:</strong></p>
 
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
-                                    <td align="left" bgcolor="#f7a00a" width="60%"
-                                        style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; color: white;">
-                                        <strong>Esemény/Videó neve</strong></td>
-                                    <td align="left" bgcolor="#f7a00a" width="40%"
-                                        style="padding: 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; color: white;">
-                                        <strong>Vágó</strong></td>
+                                    <td
+                                        align="left"
+                                        bgcolor="#f7a00a"
+                                        width="60%"
+                                        style="
+                                        padding: 12px;
+                                        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                        font-size: 16px;
+                                        line-height: 24px;
+                                        color: white;
+                                        "
+                                    >
+                                        <strong>Esemény/Videó neve</strong>
+                                    </td>
+                                    <td
+                                        align="left"
+                                        bgcolor="#f7a00a"
+                                        width="40%"
+                                        style="
+                                        padding: 12px;
+                                        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                        font-size: 16px;
+                                        line-height: 24px;
+                                        color: white;
+                                        "
+                                    >
+                                        <strong>Vágó</strong>
+                                    </td>
                                 </tr>
                                 {% for request in editing_no_vids %}
-                                    <tr style="border: solid; border-width: 1px 0; border-color:#e3e6e4">
-                                        <td align="left" width="60%"
-                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                            <a href="{{ request.admin_url }}" target="_blank"
-                                               rel="noopener noreferrer">{{ request.title }}</a>
+                                    <tr
+                                        style="border: solid; border-width: 1px 0; border-color: #e3e6e4"
+                                    >
+                                        <td
+                                            align="left"
+                                            width="60%"
+                                            style="
+                                            padding: 6px 12px;
+                                            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                            font-size: 16px;
+                                            line-height: 24px;
+                                            "
+                                        >
+                                            <a
+                                                href="{{ request.admin_url }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {{ request.title }}
+                                            </a>
                                         </td>
-                                        <td align="left" width="40%"
-                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;"></td>
+                                        <td
+                                            align="left"
+                                            width="40%"
+                                            style="
+                                            padding: 6px 12px;
+                                            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                            font-size: 16px;
+                                            line-height: 24px;
+                                            "
+                                        ></td>
                                     </tr>
                                 {% endfor %}
                                 {% for video in editing_unedited_vids %}
-                                    <tr style="border: solid; border-width: 1px 0; border-color:#e3e6e4">
-                                        <td align="left" width="60%"
-                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                            <a href="{{ video.request.admin_url }}" target="_blank"
-                                               rel="noopener noreferrer">{{ video.title }}</a>
+                                    <tr
+                                        style="border: solid; border-width: 1px 0; border-color: #e3e6e4"
+                                    >
+                                        <td
+                                            align="left"
+                                            width="60%"
+                                            style="
+                                            padding: 6px 12px;
+                                            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                            font-size: 16px;
+                                            line-height: 24px;
+                                            "
+                                        >
+                                            <a
+                                                href="{{ video.request.admin_url }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {{ video.title }}
+                                            </a>
                                         </td>
-                                        <td align="left" width="40%"
-                                            style="padding: 6px 12px;font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">{{ video.editor.last_name }} {{ video.editor.first_name }}</td>
+                                        <td
+                                            align="left"
+                                            width="40%"
+                                            style="
+                                            padding: 6px 12px;
+                                            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                                            font-size: 16px;
+                                            line-height: 24px;
+                                            "
+                                        >
+                                            {{ video.editor.last_name }} {{ video.editor.first_name }}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </table>
@@ -96,17 +233,28 @@
 
                 <!-- start signature -->
                 <tr>
-                    <td align="left" bgcolor="#ffffff"
-                        style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #014dff">
-                        <p style="margin: 0;">Üdv:<br> Felkéréskezelő robotka</p>
+                    <td
+                        align="left"
+                        bgcolor="#ffffff"
+                        style="
+                        padding: 24px;
+                        font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                        font-size: 16px;
+                        line-height: 24px;
+                        border-bottom: 3px solid #014dff;
+                        "
+                    >
+                        <p style="margin: 0">
+                            Üdv:<br />
+                            Felkéréskezelő robotka
+                        </p>
                     </td>
                 </tr>
                 <!-- end signature -->
-
             </table>
             <!--[if (gte mso 9)|(IE)]>
-            </td>
-            </tr>
+                    </td>
+                </tr>
             </table>
             <![endif]-->
         </td>

@@ -38,6 +38,12 @@ repos:
       - id: black
         name: 'Format Python code'
         files: \.py$
+  - repo: https://github.com/rtts/djhtml
+    rev: v1.4.11
+    hooks:
+      - id: djhtml
+        name: 'Format Django templates'
+        files: ^backend/templates/
   - repo: https://github.com/PyCQA/flake8
     rev: 4.0.1
     hooks:
@@ -57,7 +63,7 @@ repos:
     hooks:
       - id: prettier
         name: 'Format JavaScript code'
-        exclude: (\.py|Pipfile(\.lock)?|package(-lock)?\.json)$
+        exclude: (^backend/templates/)|((\.py|Pipfile(\.lock)?|package(-lock)?\.json)$)
         args: [--config, ./frontend/.prettierrc]
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.7.0

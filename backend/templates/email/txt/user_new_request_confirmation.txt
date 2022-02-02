@@ -6,7 +6,7 @@ Forgatási felkérésedet az alábbi részletekkel fogadtuk:
 Esemény neve: {{ request.title }}
 Kezdés időpontja: {% language 'hu' %}{{ request.start_datetime|date:"SHORT_DATETIME_FORMAT" }}{% endlanguage %}
 Várható befejezés: {% language 'hu' %}{{ request.end_datetime|date:"SHORT_DATETIME_FORMAT" }}{% endlanguage %}
-Helyszíne: {{ request.place }}
+Helyszín: {{ request.place }}
 
 További részleteket bejelentkezés után itt találsz: {{ request.url }}
 {% if not is_registered %}
