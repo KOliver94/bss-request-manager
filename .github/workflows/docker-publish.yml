@@ -7,13 +7,13 @@ name: Docker
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags: ['v*.*.*']
     paths-ignore:
       - '.github/**'
   pull_request:
-    branches: [ master ]
+    branches: [master]
     paths-ignore:
       - '.github/**'
   workflow_dispatch:
@@ -24,10 +24,8 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
