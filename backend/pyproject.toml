@@ -1,0 +1,38 @@
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings.test"
+python_files = "tests.py test_*.py *_tests.py"
+filterwarnings = [
+    # drf-recaptcha creates this deprecation warning but only because of backwards compatibility.
+    "ignore:Method `set_context` on validators is deprecated:rest_framework.RemovedInDRF313Warning",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["."]
+
+[tool.coverage.report]
+fail_under = 98
+ignore_errors = true
+show_missing = true
+skip_covered = true
+omit = [
+    "api/v1/admin/management/*",
+    "core/*",
+    "common/health_checks.py",
+    "common/rest_framework/permissions.py",
+    "common/social_core/backends.py",
+    "common/social_core/pipeline.py",
+    "manage.py",
+    "tests/*",
+    "*/admin.py",
+    "*/tests.py",
+]
+exclude_lines = [
+    "pragma: no cover",
+    "if settings.DEBUG",
+    'if getattr.*"swagger_fake_view".*',
+    "return .*[.]none[(][)]]",
+]
