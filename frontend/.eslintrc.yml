@@ -9,6 +9,8 @@ extends:
   - plugin:react-hooks/recommended
   - plugin:prettier/recommended
 settings:
+  react:
+    version: 'latest'
   import/resolver:
     node:
       moduleDirectory:
