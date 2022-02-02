@@ -45,7 +45,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
-    "format": "prettier --write src/**/*.js src/**/*.jsx",
+    "format": "prettier --write src/**/*.{js,jsx,json,css,scss}",
     "lint": "eslint src/",
     "lint:fix": "eslint --fix --ext .js,.jsx src/",
     "check-eslint-config": "eslint-config-prettier src/index.js"
