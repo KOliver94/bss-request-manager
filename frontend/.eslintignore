@@ -1,2 +1,2 @@
 # Ignore Material Kit React Components
-src/components/material-kit-react/*
+**/src/components/material-kit-react/*
