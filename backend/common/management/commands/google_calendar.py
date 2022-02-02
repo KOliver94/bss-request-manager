@@ -1,5 +1,8 @@
 from datetime import timedelta
 
+from django.conf import settings
+from django.core.management import BaseCommand
+
 from common.models import get_sentinel_user
 from common.utilities import (
     create_calendar_event,
@@ -7,8 +10,6 @@ from common.utilities import (
     remove_calendar_event,
     update_calendar_event,
 )
-from django.conf import settings
-from django.core.management import BaseCommand
 from tests.helpers.video_requests_test_utils import create_request
 
 

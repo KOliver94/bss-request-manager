@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-from common.models import AbstractComment, AbstractRating, get_sentinel_user
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -11,6 +10,8 @@ from jsonschema import FormatChecker
 from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
 from simple_history.models import HistoricalRecords
+
+from common.models import AbstractComment, AbstractRating, get_sentinel_user
 from video_requests.schemas import (
     REQUEST_ADDITIONAL_DATA_SCHEMA,
     VIDEO_ADDITIONAL_DATA_SCHEMA,

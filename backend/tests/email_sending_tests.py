@@ -12,6 +12,7 @@ from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
+
 from tests.helpers.test_utils import conditional_override_settings
 from tests.helpers.users_test_utils import create_user, get_default_password
 from tests.helpers.video_requests_test_utils import (

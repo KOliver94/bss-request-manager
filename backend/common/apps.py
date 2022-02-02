@@ -15,7 +15,8 @@ class CommonConfig(AppConfig):
             and "django_auth_ldap.backend.LDAPBackend"
             in settings.AUTHENTICATION_BACKENDS
         ):  # pragma: no cover
-            from common.health_checks import LdapHealthCheck
             from health_check.plugins import plugin_dir
+
+            from common.health_checks import LdapHealthCheck
 
             plugin_dir.register(LdapHealthCheck)

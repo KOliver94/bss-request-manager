@@ -1,5 +1,6 @@
-from api.v1.admin.requests.views import RequestAdminListCreateView
 from django.urls import include, path
+
+from api.v1.admin.requests.views import RequestAdminListCreateView
 
 urlpatterns = [
     path("management/", include("api.v1.admin.management.urls")),

@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+
 from tests.helpers.users_test_utils import create_user
 from tests.helpers.video_requests_test_utils import (
     create_comment,

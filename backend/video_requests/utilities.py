@@ -5,6 +5,7 @@ from celery import shared_task
 from django.conf import settings
 from django.utils.timezone import localtime
 from requests import RequestException
+
 from video_requests.emails import email_user_video_published
 from video_requests.models import Request, Video
 

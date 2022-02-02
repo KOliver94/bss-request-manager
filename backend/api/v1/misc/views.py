@@ -1,7 +1,8 @@
-from api.v1.misc.serializers import ContactSerializer
-from common.emails import email_contact_message
 from rest_framework import generics
 from rest_framework.throttling import ScopedRateThrottle
+
+from api.v1.misc.serializers import ContactSerializer
+from common.emails import email_contact_message
 
 
 class ContactView(generics.CreateAPIView):

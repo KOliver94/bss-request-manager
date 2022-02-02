@@ -1,3 +1,8 @@
+from django.conf import settings
+from django.urls import include, path, re_path
+from rest_framework import permissions
+from rest_framework_simplejwt.views import TokenRefreshView
+
 from api.v1.login.views import (
     ExtendedSocialJWTPairOnlyAuthView,
     ExtendedTokenObtainPairView,
@@ -5,10 +10,6 @@ from api.v1.login.views import (
 )
 from api.v1.requests.views import RequestDefaultListCreateView
 from api.v1.users.views import UserListView
-from django.conf import settings
-from django.urls import include, path, re_path
-from rest_framework import permissions
-from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path("admin/", include("api.v1.admin.urls")),

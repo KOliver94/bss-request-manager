@@ -1,6 +1,16 @@
 from datetime import datetime, timedelta
 from distutils import util
 
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.utils.timezone import localdate
+from rest_framework import filters, generics, status
+from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.generics import DestroyAPIView, get_object_or_404
+from rest_framework.response import Response
+from rest_social_auth.views import BaseSocialAuthView
+from social_django.models import UserSocialAuth
+
 from api.v1.users.serializers import (
     BanUserSerializer,
     UserDetailSerializer,
@@ -17,15 +27,6 @@ from common.rest_framework.permissions import (
     IsStaffSelfOrAdmin,
     IsStaffUser,
 )
-from django.conf import settings
-from django.contrib.auth.models import User
-from django.utils.timezone import localdate
-from rest_framework import filters, generics, status
-from rest_framework.exceptions import NotAuthenticated, ValidationError
-from rest_framework.generics import DestroyAPIView, get_object_or_404
-from rest_framework.response import Response
-from rest_social_auth.views import BaseSocialAuthView
-from social_django.models import UserSocialAuth
 from video_requests.models import CrewMember, Request, Video
 
 

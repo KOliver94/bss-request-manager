@@ -1,4 +1,3 @@
-from common.models import Ban, UserProfile
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.contrib.auth import get_user_model
@@ -6,6 +5,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.db import IntegrityError
 from django.urls import reverse
 from django.utils.html import format_html
+
+from common.models import Ban, UserProfile
 
 USER_MODEL = get_user_model()
 

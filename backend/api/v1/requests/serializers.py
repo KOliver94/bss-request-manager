@@ -1,6 +1,3 @@
-from api.v1.requests.utilities import create_user
-from api.v1.users.serializers import UserSerializer
-from common.utilities import create_calendar_event
 from django.conf import settings
 from django.utils.timezone import localtime
 from drf_recaptcha.fields import ReCaptchaV2Field
@@ -8,6 +5,10 @@ from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, EmailField, SerializerMethodField
+
+from api.v1.requests.utilities import create_user
+from api.v1.users.serializers import UserSerializer
+from common.utilities import create_calendar_event
 from video_requests.emails import (
     email_crew_new_comment,
     email_user_new_request_confirmation,

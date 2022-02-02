@@ -1,3 +1,5 @@
+from django.urls import path
+
 from api.v1.requests.views import (
     CommentDefaultDetailView,
     CommentDefaultListCreateView,
@@ -7,7 +9,6 @@ from api.v1.requests.views import (
     VideoDefaultDetailView,
     VideoDefaultListView,
 )
-from django.urls import path
 
 urlpatterns = [
     path("<int:pk>", RequestDefaultDetailView.as_view()),

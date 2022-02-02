@@ -1,8 +1,9 @@
 import uuid
 
-from common.models import Ban
 from django.contrib.auth.models import Group, User
 from django.utils.timezone import localtime
+
+from common.models import Ban
 
 PASSWORD = "ae9U$89z#zyA!YoPE$6m"
 
