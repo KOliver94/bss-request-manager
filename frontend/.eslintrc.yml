@@ -10,7 +10,7 @@ extends:
   - plugin:prettier/recommended
 settings:
   react:
-    version: 'latest'
+    version: '17.0.2'
   import/resolver:
     node:
       moduleDirectory:
