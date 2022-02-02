@@ -9,9 +9,9 @@ services:
       - credentials:/app/backend/credentials
       - logs:/app/backend/logs
     ports:
-      - "127.0.0.1:8000:8000"
+      - '127.0.0.1:8000:8000'
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - 'host.docker.internal:host-gateway'
     env_file:
       - ./backend/.env
     depends_on:
@@ -29,7 +29,7 @@ services:
     volumes:
       - credentials:/app/backend/credentials/:ro
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - 'host.docker.internal:host-gateway'
     healthcheck:
       disable: true
     depends_on:
