@@ -27,7 +27,6 @@ Dockerfile
 backend/**/*.pyc
 backend/**/__pycache__
 backend/.coverage
-backend/.coveragerc
 backend/.flake8
 backend/.pytest_cache
 backend/health_check_storage_test
@@ -35,7 +34,7 @@ backend/htmlcov
 backend/logs/**/*.log
 backend/logs/**/*.err
 backend/staticfiles
-backend/pytest.ini
+backend/pyproject.toml
 
 # React
 frontend/.eslintcache
