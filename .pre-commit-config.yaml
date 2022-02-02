@@ -32,6 +32,7 @@ repos:
       - id: isort
         name: 'Sort Python imports'
         files: \.py$
+        args: [--settings, ./backend/.isort.cfg]
   - repo: https://github.com/psf/black
     rev: 21.12b0
     hooks:
