@@ -2,6 +2,17 @@ name: Backend CI
 
 on:
   workflow_dispatch:
+    inputs:
+      run-tests:
+        description: 'Run all backend tests'
+        required: false
+        default: 'true'
+        type: boolean
+      generate-emails:
+        description: 'Generate downloadable test e-mails'
+        required: false
+        default: 'false'
+        type: boolean
   pull_request:
   push:
     branches:
@@ -24,6 +35,8 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    env:
+      DJANGO_SETTINGS_MODULE: core.settings.ci
 
     services:
       postgres:
@@ -76,26 +89,40 @@ jobs:
       - name: Install dependencies
         if: steps.cache-dependencies.outputs.cache-hit != 'true' || steps.cache-virtualenv.outputs.cache-hit != 'true'
         run: pipenv install --dev
-      - name: Run tests
-        env:
-          DJANGO_SETTINGS_MODULE: core.settings.ci
+      - name: Check for model changes without migration
+        run: pipenv run python manage.py makemigrations --check
+      - name: Synchronize database state and collect static files
         run: |
-          pipenv run python manage.py makemigrations --check
           pipenv run python manage.py migrate --no-input
           pipenv run python manage.py collectstatic --no-input --clear --link
+      - name: Run tests
+        if: ${{ github.event.inputs.run-tests == 'true' }}
+        run: |
           pipenv run coverage run -m pytest
           pipenv run coverage run -a -m pytest tests/no_recaptcha_pytest.py
           pipenv run coverage report
           pipenv run coverage html
           pipenv run coverage xml
       - name: Upload coverage to Codecov
-        if: always()
+        if: ${{ github.event.inputs.run-tests == 'true' }}
         uses: codecov/codecov-action@v2.1.0
         with:
           directory: backend/
       - name: Archive code coverage results
-        if: always()
+        if: ${{ github.event.inputs.run-tests == 'true' }}
         uses: actions/upload-artifact@v2
         with:
           name: code-coverage-report
           path: backend/htmlcov/
+      - name: Generate e-mail artifacts
+        if: ${{ github.event.inputs.generate-emails == 'true' }}
+        env:
+          BASE_URL_DOMAIN: felkeres.bsstudio.hu
+          EMAIL_FILE: True
+        run: pipenv run python manage.py test tests.email_sending_tests
+      - name: Archive sent e-mails
+        if: ${{ github.event.inputs.generate-emails == 'true' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: emails
+          path: backend/logs/emails/
