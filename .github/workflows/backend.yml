@@ -96,7 +96,7 @@ jobs:
           pipenv run python manage.py migrate --no-input
           pipenv run python manage.py collectstatic --no-input --clear --link
       - name: Run tests
-        if: ${{ github.event.inputs.run-tests == 'true' }}
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
         run: |
           pipenv run coverage run -m pytest
           pipenv run coverage run -a -m pytest tests/no_recaptcha_pytest.py
@@ -104,12 +104,12 @@ jobs:
           pipenv run coverage html
           pipenv run coverage xml
       - name: Upload coverage to Codecov
-        if: ${{ github.event.inputs.run-tests == 'true' }}
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
         uses: codecov/codecov-action@v2.1.0
         with:
           directory: backend/
       - name: Archive code coverage results
-        if: ${{ github.event.inputs.run-tests == 'true' }}
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
         uses: actions/upload-artifact@v2
         with:
           name: code-coverage-report
