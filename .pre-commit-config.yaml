@@ -29,12 +29,12 @@ repos:
         name: 'Sort Python imports'
         args: [--settings, ./backend/pyproject.toml]
   - repo: https://github.com/psf/black
-    rev: 21.12b0
+    rev: 22.1.0
     hooks:
       - id: black
         name: 'Format Python code'
   - repo: https://github.com/rtts/djhtml
-    rev: v1.4.11
+    rev: v1.4.13
     hooks:
       - id: djhtml
         name: 'Format Django templates'
@@ -59,7 +59,7 @@ repos:
         exclude: (^backend/templates/)|((\.py|Pipfile(\.lock)?|package(-lock)?\.json)$)
         args: [--config, ./frontend/.prettierrc]
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.7.0
+    rev: v8.8.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code'
