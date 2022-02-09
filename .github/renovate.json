@@ -1,3 +1,41 @@
 {
-  "extends": ["config:base"]
+  "baseBranches": ["development"],
+  "extends": [
+    ":autodetectPinVersions",
+    ":automergeDisabled",
+    ":dependencyDashboard",
+    ":disableRateLimiting",
+    ":enableVulnerabilityAlertsWithLabel(security)",
+    ":ignoreModulesAndTests",
+    ":ignoreUnstable",
+    ":label(dependencies)",
+    ":maintainLockFilesWeekly",
+    ":noUnscheduledUpdates",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":separateMajorReleases",
+    ":timezone(Europe/Budapest)",
+    "group:allNonMajor",
+    "schedule:weekends",
+    "workarounds:all"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["pipenv"],
+      "labels": ["python"]
+    },
+    {
+      "matchManagers": ["npm"],
+      "labels": ["javascript"]
+    },
+    {
+      "matchManagers": ["docker-compose", "dockerfile"],
+      "labels": ["docker"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "labels": ["github_actions"]
+    }
+  ],
+  "postUpdateOptions": ["npmDedupe"],
+  "rebaseWhen": "conflicted"
 }
