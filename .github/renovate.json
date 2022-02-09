@@ -10,32 +10,41 @@
     ":ignoreUnstable",
     ":label(dependencies)",
     ":maintainLockFilesWeekly",
-    ":noUnscheduledUpdates",
     ":semanticPrefixFixDepsChoreOthers",
     ":separateMajorReleases",
     ":timezone(Europe/Budapest)",
-    "group:allNonMajor",
     "schedule:weekends",
     "workarounds:all"
   ],
   "packageRules": [
     {
+      "description": "Add `python` label for Pipenv updates.",
       "matchManagers": ["pipenv"],
-      "labels": ["python"]
+      "addLabels": ["python"]
     },
     {
+      "description": "Add `javascript` label for npm updates and run `npmDedupe` after run.",
       "matchManagers": ["npm"],
-      "labels": ["javascript"]
+      "addLabels": ["javascript"],
+      "postUpdateOptions": ["npmDedupe"]
     },
     {
+      "description": "Add `docker` label for Dockerfile or docker-compose related updates.",
       "matchManagers": ["docker-compose", "dockerfile"],
-      "labels": ["docker"]
+      "addLabels": ["docker"]
     },
     {
+      "description": "Add `github_actions` label for GitHub Actions related updates.",
       "matchManagers": ["github-actions"],
-      "labels": ["github_actions"]
+      "addLabels": ["github_actions"]
+    },
+    {
+      "description": "Group all minor and patch updates together for npm and Pipenv.",
+      "matchManagers": ["npm", "pipenv"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
     }
   ],
-  "postUpdateOptions": ["npmDedupe"],
   "rebaseWhen": "conflicted"
 }
