@@ -18,12 +18,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - node-version: '16'
+          - node-version: '17'
             experimental: false
             node-options: ''
-          - node-version: '17'
-            experimental: true
-            node-options: '--openssl-legacy-provider'
     defaults:
       run:
         working-directory: frontend
