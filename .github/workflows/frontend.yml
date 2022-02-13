@@ -23,7 +23,7 @@ jobs:
             node-options: ''
           - node-version: '17'
             experimental: true
-            node-options: '--openssl-legacy-provider'
+            node-options: ''
     defaults:
       run:
         working-directory: frontend
