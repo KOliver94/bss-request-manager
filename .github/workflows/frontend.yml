@@ -18,11 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - node-version: '16'
-            experimental: false
-            node-options: ''
           - node-version: '17'
-            experimental: true
+            experimental: false
             node-options: ''
     defaults:
       run:
