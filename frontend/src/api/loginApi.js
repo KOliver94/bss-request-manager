@@ -73,7 +73,7 @@ export function isAdmin() {
 
 export function isSelf(userId) {
   const ownUserId = localStorage.getItem('user_id');
-  return userId === ownUserId;
+  return userId.toString() === ownUserId;
 }
 
 export function checkRefreshTokenValid() {
