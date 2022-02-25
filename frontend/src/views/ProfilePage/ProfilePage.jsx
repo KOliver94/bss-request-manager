@@ -84,7 +84,6 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { code, provider } = { ...location.state };
-  const ownUserId = parseInt(localStorage.getItem('user_id'), 10);
   const classes = useStyles();
   const theme = useTheme();
   const isMobileView = !useMediaQuery(theme.breakpoints.up('md'));
@@ -121,7 +120,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
         ? await updateUser(id, values)
         : await updateUser('me', values);
       setUserData(result.data);
-      if (!id || id === ownUserId) {
+      if (!id || isSelf(id)) {
         localStorage.setItem(
           'name',
           `${result.data.last_name} ${result.data.first_name}`
