@@ -106,12 +106,12 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
                 original_data
                 and (
                     "status_by_admin" in original_data.additional_data
-                    and original_data.additional_data["status_by_admin"]["status"]
-                    == additional_data["status_by_admin"]["status"]
+                    and original_data.additional_data["status_by_admin"].get("status")
+                    == additional_data["status_by_admin"].get("status")
                 )
                 or (
                     "status_by_admin" not in original_data.additional_data
-                    and not additional_data["status_by_admin"]["status"]
+                    and not additional_data["status_by_admin"].get("status")
                 )
             ):
                 additional_data.pop("status_by_admin")

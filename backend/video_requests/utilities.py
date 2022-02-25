@@ -15,7 +15,7 @@ def update_request_status(request, called_from_video=False):
     if (
         "status_by_admin" in request.additional_data
         and "status" in request.additional_data["status_by_admin"]
-        and request.additional_data["status_by_admin"]["status"]
+        and request.additional_data["status_by_admin"].get("status")
     ):
         request.status = request.additional_data["status_by_admin"]["status"]
 
@@ -135,7 +135,7 @@ def update_video_status(video, called_from_request=False, request_status=1):
     if (
         "status_by_admin" in video.additional_data
         and "status" in video.additional_data["status_by_admin"]
-        and video.additional_data["status_by_admin"]["status"]
+        and video.additional_data["status_by_admin"].get("status")
     ):
         video.status = video.additional_data["status_by_admin"]["status"]
 
@@ -144,7 +144,7 @@ def update_video_status(video, called_from_request=False, request_status=1):
         # Incrementing this status variable if the required part is correct.
         status = Video.Statuses.PENDING
 
-        # If the the event was recorded and the video has an editor
+        # If the event was recorded and the video has an editor
         if (
             max(video.request.status, request_status) >= Request.Statuses.UPLOADED
             and video.editor

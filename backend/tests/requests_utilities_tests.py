@@ -489,6 +489,42 @@ class RequestsUtilitiesTestCase(APITestCase):
         )
         self.assertEqual(response.data["status"], Request.Statuses.CANCELED)
 
+        # Check if status key was removed from dictionary
+        request_obj = Request.objects.get(pk=request_id)
+        self.assertNotIn("status", request_obj.additional_data["status_by_admin"])
+
+        # Check if other admin can change again
+        self.authorize_user(self.user)
+        response = self.client.patch(
+            f"{self.url}/{request_id}",
+            {
+                "additional_data": {
+                    "status_by_admin": {
+                        "status": Request.Statuses.DONE,
+                        "admin_id": 123,
+                        "admin_name": "Random Name",
+                    }
+                }
+            },
+        )
+        self.assertIn("status_by_admin", response.data["additional_data"])
+        self.assertIn("status", response.data["additional_data"]["status_by_admin"])
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["status"],
+            Request.Statuses.DONE,
+        )
+        self.assertIn("admin_id", response.data["additional_data"]["status_by_admin"])
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_id"],
+            self.user.id,
+        )
+        self.assertIn("admin_name", response.data["additional_data"]["status_by_admin"])
+        self.assertEqual(
+            response.data["additional_data"]["status_by_admin"]["admin_name"],
+            self.user.get_full_name_eastern_order(),
+        )
+        self.assertEqual(response.data["status"], Request.Statuses.DONE)
+
     additional_data_fields_to_test = ["accepted", "failed", "canceled"]
 
     def test_unset_additional_data_accepted_failed_canceled(self):
