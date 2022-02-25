@@ -81,12 +81,19 @@ class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     Retrieve (GET), Update (PUT, PATCH) and Delete (DELETE) view for a single Request object
 
     Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff and Admin users can do anything.
+    - Staff users can do anything except deleting requests which are not requested by them.
+        (either requested_by or requester field is the user)
+    - Admin users can do anything.
     """
 
     serializer_class = RequestAdminSerializer
-    permission_classes = [IsStaffUser]
     queryset = Request.objects.all()
+
+    def get_permissions(self):
+        if self.request.method == "DELETE":
+            return [IsStaffSelfOrAdmin()]
+        else:
+            return [IsStaffUser()]
 
     def destroy(self, request, *args, **kwargs):
         video_request = get_object_or_404(Request, pk=self.kwargs["pk"])

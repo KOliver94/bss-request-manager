@@ -401,6 +401,9 @@ class RequestsAPIAdminTestCase(APITestCase):
             response.data["requester"]["username"], self.admin_user.username
         )
         self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+        self.assertEqual(
             response.data["responsible"]["username"], self.admin_user.username
         )
 
@@ -413,6 +416,9 @@ class RequestsAPIAdminTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(
             response.data["requester"]["username"], self.staff_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.staff_user.username
         )
         self.assertEqual(
             response.data["responsible"]["username"], self.admin_user.username
@@ -452,6 +458,65 @@ class RequestsAPIAdminTestCase(APITestCase):
 
         self.authorize_user(self.staff_user)
         self.should_not_found("DELETE", BASE_URL + str(NOT_EXISTING_ID), None)
+
+    def test_admin_can_delete_any_requests(self):
+        self.authorize_user(self.staff_user)
+        response = self.create_request()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            response.data["requester"]["username"], self.staff_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.staff_user.username
+        )
+
+        self.authorize_user(self.admin_user)
+        response = self.client.delete(BASE_URL + str(response.data["id"]))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_staff_cannot_delete_any_request(self):
+        self.authorize_user(self.admin_user)
+        response = self.create_request()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            response.data["requester"]["username"], self.admin_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+
+        self.authorize_user(self.staff_user)
+        response = self.client.delete(BASE_URL + str(response.data["id"]))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_staff_can_delete_request_requested_by_them(self):
+        self.authorize_user(self.staff_user)
+        response = self.create_request({"requester_id": self.admin_user.id})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            response.data["requester"]["username"], self.admin_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.staff_user.username
+        )
+
+        response = self.client.delete(BASE_URL + str(response.data["id"]))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_staff_can_delete_request_when_requester_is_them(self):
+        self.authorize_user(self.admin_user)
+        response = self.create_request({"requester_id": self.staff_user.id})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            response.data["requester"]["username"], self.staff_user.username
+        )
+        self.assertEqual(
+            response.data["requested_by"]["username"], self.admin_user.username
+        )
+
+        self.authorize_user(self.staff_user)
+        response = self.client.delete(BASE_URL + str(response.data["id"]))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_adding_initial_comment_to_request(self):
         self.authorize_user(self.admin_user)

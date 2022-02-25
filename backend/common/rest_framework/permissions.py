@@ -146,6 +146,7 @@ class IsSelfOrAdmin(IsSelfOrStaff):
     """
     Allows access only to admin members and if the authenticated user is
     - Requester of the request OR
+    - Request is requested by them OR
     - Requester of the request which contains the video OR
     - Author of the comment OR
     - Author of the rating
@@ -154,7 +155,11 @@ class IsSelfOrAdmin(IsSelfOrStaff):
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Request):
-            return bool(obj.requester == request.user or is_admin(request.user))
+            return bool(
+                obj.requester == request.user
+                or obj.requested_by == request.user
+                or is_admin(request.user)
+            )
         elif isinstance(obj, Video):
             return bool(obj.request.requester == request.user or is_admin(request.user))
         elif isinstance(obj, Comment) or isinstance(obj, Rating):

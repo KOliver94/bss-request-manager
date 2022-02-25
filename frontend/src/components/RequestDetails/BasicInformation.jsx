@@ -62,7 +62,11 @@ import {
   deleteRequestAdmin,
 } from 'api/requestAdminApi';
 import { getRequest } from 'api/requestApi';
-import { isAdmin, isPrivileged as isPrivilegedCheck } from 'api/loginApi';
+import {
+  isAdmin,
+  isPrivileged as isPrivilegedCheck,
+  isSelf,
+} from 'api/loginApi';
 import { requestStatuses } from 'helpers/enumConstants';
 import handleError from 'helpers/errorHandler';
 import ConditionalWrapper from 'components/ConditionalWrapper';
@@ -330,8 +334,7 @@ export default function BasicInformation({
             )}
             {!editing &&
               isPrivilegedCheck() &&
-              requestData.requester.id.toString() ===
-                localStorage.getItem('user_id') && (
+              isSelf(requestData.requester.id) && (
                 <Tooltip
                   title={
                     isPrivileged
@@ -379,16 +382,22 @@ export default function BasicInformation({
                     </span>
                   </Tooltip>
                 ) : (
-                  <Tooltip title="Törlés" placement="top" arrow>
-                    <span>
-                      <IconButton
-                        onClick={() => setRemoveDialogOpen(true)}
-                        disabled={loading}
-                      >
-                        <DeleteForeverIcon />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
+                  <>
+                    {(isAdmin() ||
+                      isSelf(requestData.requester.id) ||
+                      isSelf(requestData.requested_by.id)) && (
+                      <Tooltip title="Törlés" placement="top" arrow>
+                        <span>
+                          <IconButton
+                            onClick={() => setRemoveDialogOpen(true)}
+                            disabled={loading}
+                          >
+                            <DeleteForeverIcon />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    )}
+                  </>
                 )}
               </>
             )}
