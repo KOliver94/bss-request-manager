@@ -37,6 +37,7 @@ import {
 } from 'api/requestAdminApi';
 import compareValues from 'helpers/objectComperator';
 import handleError from 'helpers/errorHandler';
+import { isSelf } from 'api/loginApi';
 
 export default function RatingsDialog({
   ratingsDialogData,
@@ -44,7 +45,6 @@ export default function RatingsDialog({
   setRequestData,
   isAdmin,
 }) {
-  const userId = parseInt(localStorage.getItem('user_id'), 10);
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [inProgress, setInProgress] = useState(false);
@@ -144,7 +144,7 @@ export default function RatingsDialog({
           return rating;
         })
       );
-      if (userId === result.data.author.id) {
+      if (isSelf(result.data.author.id)) {
         setRequestData((prevRequestData) => ({
           ...prevRequestData,
           videos: prevRequestData.videos.map((video) => {
@@ -178,7 +178,7 @@ export default function RatingsDialog({
         ratingId
       );
       setRatings(ratings.filter((rating) => rating.id !== ratingId));
-      if (userId === authorId) {
+      if (isSelf(authorId)) {
         setRequestData((prevRequestData) => ({
           ...prevRequestData,
           videos: prevRequestData.videos.map((video) => {

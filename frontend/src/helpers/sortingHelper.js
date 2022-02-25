@@ -1,9 +1,9 @@
+import { isSelf } from 'api/loginApi';
+
 function moveOwnUserToTop(listOfUsers) {
   listOfUsers.unshift(
     listOfUsers.splice(
-      listOfUsers.findIndex(
-        (user) => user.id.toString() === localStorage.getItem('user_id')
-      ),
+      listOfUsers.findIndex((user) => isSelf(user.id)),
       1
     )[0]
   );

@@ -57,7 +57,7 @@ import {
   updateRatingAdmin,
   deleteRatingAdmin,
 } from 'api/requestAdminApi';
-import { isAdmin } from 'api/loginApi';
+import { isAdmin, isSelf } from 'api/loginApi';
 import { createRating, updateRating, deleteRating } from 'api/requestApi';
 import { videoStatuses } from 'helpers/enumConstants';
 import compareValues from 'helpers/objectComperator';
@@ -151,10 +151,7 @@ export default function Videos({
   const getOwnRatingForVideo = (video) => {
     let found = null;
     if (video.ratings.length > 0) {
-      found = video.ratings.find(
-        (rating) =>
-          rating.author.id.toString() === localStorage.getItem('user_id')
-      );
+      found = video.ratings.find((rating) => isSelf(rating.author.id));
     }
     return found || { rating: 0, review: '' };
   };

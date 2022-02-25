@@ -24,7 +24,7 @@ import { hu } from 'date-fns/locale';
 // Helpers
 import stringToColor from 'helpers/stringToColor';
 // API calls
-import { isAdmin } from 'api/loginApi';
+import { isAdmin, isSelf } from 'api/loginApi';
 
 const useStyles = makeStyles(() => ({
   commentAuthor: {
@@ -192,9 +192,7 @@ export default function CommentMobile({
               })}
             </p>
           </Tooltip>
-          {((isPrivileged && isAdmin()) ||
-            comment.author.id.toString() ===
-              localStorage.getItem('user_id')) && (
+          {((isPrivileged && isAdmin()) || isSelf(comment.author.id)) && (
             <Stack
               direction="row"
               justifyContent="flex-end"
