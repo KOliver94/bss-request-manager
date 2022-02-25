@@ -8,6 +8,7 @@ from rest_framework.fields import CharField, EmailField, SerializerMethodField
 
 from api.v1.requests.utilities import create_user
 from api.v1.users.serializers import UserSerializer
+from common.models import get_anonymous_user
 from common.utilities import create_calendar_event
 from video_requests.emails import (
     email_crew_new_comment,
@@ -221,6 +222,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         comment_text = validated_data.pop("comment_text", None)
         validated_data["requester"], additional_data = create_user(validated_data)
+        validated_data["requested_by"] = get_anonymous_user()
         request = super(RequestAnonymousSerializer, self).create(validated_data)
         if additional_data:
             request.additional_data = additional_data

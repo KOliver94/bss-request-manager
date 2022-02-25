@@ -74,8 +74,6 @@ class Request(models.Model):
         User,
         related_name="requested_by_user",
         on_delete=models.SET(get_sentinel_user),
-        blank=True,
-        null=True,
     )
     additional_data = JSONField(
         encoder=DjangoJSONEncoder,
