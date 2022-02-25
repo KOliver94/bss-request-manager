@@ -17,6 +17,8 @@ class RequestHistoryAdmin(SimpleHistoryAdmin):
         "num_of_videos",
         "requester_link",
     ]
+    exclude = ["requested_by"]
+    readonly_fields = ["requested_by"]
     search_fields = ["title"]
 
     def num_of_videos(self, obj):
@@ -29,6 +31,11 @@ class RequestHistoryAdmin(SimpleHistoryAdmin):
         return format_html(f'<a href="{url}">{obj.requester.get_full_name()}</a>')
 
     requester_link.short_description = "Requester"
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.requested_by = request.user
+        super().save_model(request, obj, form, change)
 
 
 class CrewMemberHistoryAdmin(SimpleHistoryAdmin):

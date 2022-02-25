@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
+from common.models import get_anonymous_user
 from tests.helpers.users_test_utils import create_user, get_default_password
 from tests.helpers.video_requests_test_utils import (
     create_comment,
@@ -326,8 +327,11 @@ class RequestsAPIDefaultTestCase(APITestCase):
             response.data["comments"][0]["author"]["username"], "test.user@example.com"
         )
         self.assertEqual(response.data["comments"][0]["text"], "Additional information")
-        # Requested_by should be none because the request was sent in by anonymous
-        self.assertIsNone(Request.objects.get(id=response.data["id"]).requested_by)
+        # Requested_by should be the system default anonymous user
+        self.assertEqual(
+            Request.objects.get(id=response.data["id"]).requested_by,
+            get_anonymous_user(),
+        )
 
     @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
     def test_anonymous_can_create_requests_and_get_connected_to_existing_user(self):
@@ -354,8 +358,10 @@ class RequestsAPIDefaultTestCase(APITestCase):
             response.data["requester"]["username"], self.normal_user.username
         )
 
-        # Requested_by should be none because the request was sent in by anonymous
-        self.assertIsNone(Request.objects.get(id=response.data["id"]).requested_by)
+        # Requested_by should be the system default anonymous user
+        self.assertEqual(
+            response.data["requested_by"]["username"], get_anonymous_user().username
+        )
 
         # Check if data was saved to additional_data
         req = Request.objects.get(pk=response.data["id"])

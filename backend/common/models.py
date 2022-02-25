@@ -21,6 +21,13 @@ def get_sentinel_user():
     )[0]
 
 
+def get_anonymous_user():
+    return get_user_model().objects.get_or_create(
+        username="anonymous",
+        defaults={"first_name": "Felhasználó", "last_name": "Nem Azonosított"},
+    )[0]
+
+
 def validate_profile_avatar(value):
     try:
         validate(value, USER_PROFILE_AVATAR_SCHEMA, format_checker=FormatChecker())

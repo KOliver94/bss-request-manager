@@ -29,6 +29,7 @@ omit = [
     "tests/*",
     "*/admin.py",
     "*/tests.py",
+    "*/migrations/*"
 ]
 exclude_lines = [
     "pragma: no cover",
