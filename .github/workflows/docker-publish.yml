@@ -7,13 +7,13 @@ name: Docker
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     # Publish semver tags as releases.
     tags: ['v*.*.*']
     paths-ignore:
       - '.github/**'
   pull_request:
-    branches: [master]
+    branches: [main]
     paths-ignore:
       - '.github/**'
   workflow_dispatch:

@@ -3,7 +3,7 @@ version: '3.8'
 services:
   web:
     restart: unless-stopped
-    image: ghcr.io/koliver94/bss-request-manager:master
+    image: ghcr.io/koliver94/bss-request-manager:main
     command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 core.wsgi
     volumes:
       - credentials:/app/backend/credentials
@@ -20,7 +20,7 @@ services:
 
   celery-worker:
     restart: unless-stopped
-    image: ghcr.io/koliver94/bss-request-manager:master
+    image: ghcr.io/koliver94/bss-request-manager:main
     command: celery -A core worker
     env_file:
       - ./backend/.env
@@ -39,7 +39,7 @@ services:
 
   celery-beat:
     restart: unless-stopped
-    image: ghcr.io/koliver94/bss-request-manager:master
+    image: ghcr.io/koliver94/bss-request-manager:main
     command: celery -A core beat
     env_file:
       - ./backend/.env

@@ -1,5 +1,5 @@
 {
-  "baseBranches": ["development"],
+  "baseBranches": ["next"],
   "extends": [
     ":autodetectPinVersions",
     ":automergeDisabled",
