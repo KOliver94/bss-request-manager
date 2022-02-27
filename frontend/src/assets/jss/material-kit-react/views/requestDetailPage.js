@@ -49,6 +49,9 @@ const requestDetailPageStyle = {
     margin: '50px 30px',
     color: primaryColor,
   },
+  snackbarButton: {
+    color: 'inherit',
+  },
 };
 
 export default requestDetailPageStyle;
