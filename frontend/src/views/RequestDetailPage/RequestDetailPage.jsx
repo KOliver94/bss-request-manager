@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 // @mui components
 import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Face from '@mui/icons-material/Face';
 import TheatersIcon from '@mui/icons-material/Theaters';
@@ -47,8 +48,9 @@ export default function RequestDetailPage({
 }) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { id } = useParams();
+  const [snackbarId, setSnackbarId] = useState(0);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     id: 0,
@@ -111,6 +113,34 @@ export default function RequestDetailPage({
           await listStaffUsers().then((response) => {
             setStaffMembers(moveOwnUserToTop(response.data));
           });
+          if (
+            result.data.status === 3 &&
+            (!result.data.additional_data ||
+              (result.data.additional_data &&
+                !result.data.additional_data.recording) ||
+              (result.data.additional_data &&
+                result.data.additional_data.recording &&
+                !result.data.additional_data.recording.path))
+          ) {
+            setSnackbarId(
+              enqueueSnackbar(
+                'A nyersek helye még nincs megadva. Ne felejtsd el kitölteni!',
+                {
+                  variant: 'warning',
+                  persist: true,
+                  action: (key) => (
+                    <Button
+                      size="small"
+                      onClick={() => closeSnackbar(key)}
+                      className={classes.snackbarButton}
+                    >
+                      Rendben
+                    </Button>
+                  ),
+                }
+              )
+            );
+          }
         } else {
           result = await getRequest(requestId);
         }
@@ -133,11 +163,24 @@ export default function RequestDetailPage({
 
     setLoading(true);
     loadData(id);
-  }, [id, isPrivileged, enqueueSnackbar, navigate]);
+  }, [
+    id,
+    isPrivileged,
+    enqueueSnackbar,
+    closeSnackbar,
+    navigate,
+    classes.snackbarButton,
+  ]);
 
   useEffect(() => {
     changePageTitle(!loading && data.title);
   }, [loading, data]);
+
+  useEffect(() => {
+    return function cleanup() {
+      closeSnackbar(snackbarId);
+    };
+  }, [snackbarId, closeSnackbar]);
 
   return (
     <div>
