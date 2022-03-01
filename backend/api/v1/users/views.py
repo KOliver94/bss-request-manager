@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from distutils import util
 
+from decouple import strtobool
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.timezone import localdate
@@ -88,12 +88,12 @@ class UserListView(generics.ListAPIView):
 
         if staff is not None:
             try:
-                staff = util.strtobool(staff)
+                staff = strtobool(staff)
             except ValueError:
                 raise ValidationError({"staff": ["Invalid filter."]})
         if admin is not None:
             try:
-                admin = util.strtobool(admin)
+                admin = strtobool(admin)
             except ValueError:
                 raise ValidationError({"admin": ["Invalid filter."]})
 
@@ -238,7 +238,7 @@ class UserWorkedOnListView(generics.ListAPIView):
         try:
             responsible = self.request.query_params.get("responsible", True)
             responsible = (
-                util.strtobool(responsible) if type(responsible) is str else responsible
+                strtobool(responsible) if type(responsible) is str else responsible
             )
         except ValueError:
             raise ValidationError({"responsible": ["Invalid filter."]})
