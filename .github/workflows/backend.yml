@@ -6,12 +6,12 @@ on:
       run-tests:
         description: 'Run all backend tests'
         required: false
-        default: 'true'
+        default: true
         type: boolean
       generate-emails:
         description: 'Generate downloadable test e-mails'
         required: false
-        default: 'false'
+        default: false
         type: boolean
   pull_request:
   push:
