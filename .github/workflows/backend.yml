@@ -110,7 +110,7 @@ jobs:
           directory: backend/
       - name: Archive code coverage results
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
           path: backend/htmlcov/
@@ -122,7 +122,7 @@ jobs:
         run: pipenv run python manage.py test tests.email_sending_tests
       - name: Archive sent e-mails
         if: ${{ github.event.inputs.generate-emails == 'true' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: emails
           path: backend/logs/emails/
