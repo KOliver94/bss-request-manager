@@ -18,7 +18,7 @@ repos:
       - id: check-github-workflows
       - id: check-renovate
   - repo: https://github.com/hadialqattan/pycln
-    rev: v1.2.4
+    rev: v1.2.5
     hooks:
       - id: pycln
         name: 'Remove unused Python imports'
