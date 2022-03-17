@@ -9,7 +9,7 @@
     ":ignoreModulesAndTests",
     ":ignoreUnstable",
     ":label(dependencies)",
-    ":maintainLockFilesWeekly",
+    ":maintainLockFilesMonthly",
     ":semanticPrefixFixDepsChoreOthers",
     ":separateMajorReleases",
     ":timezone(Europe/Budapest)",
