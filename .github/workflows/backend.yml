@@ -77,12 +77,12 @@ jobs:
           pip install pipenv
           pipenv --python ${{ matrix.python-version }}
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache
           key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles('**/Pipfile.lock') }}-v-${{ secrets.CACHE_VERSION }}
       - name: Cache virtualenv
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-py${{ matrix.python-version }}-venv-${{ hashFiles('**/Pipfile.lock') }}-v-${{ secrets.CACHE_VERSION }}
