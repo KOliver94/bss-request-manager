@@ -5,13 +5,17 @@ from django.http import Http404
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import CharField, EmailField, IntegerField
+from rest_framework.fields import BooleanField, CharField, EmailField, IntegerField
 from rest_framework.generics import get_object_or_404
 
 from api.v1.requests.utilities import create_user
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event, update_calendar_event
-from video_requests.emails import email_crew_new_comment, email_user_new_comment
+from video_requests.emails import (
+    email_crew_new_comment,
+    email_user_new_comment,
+    email_user_new_request_confirmation,
+)
 from video_requests.models import Comment, CrewMember, Rating, Request, Video
 from video_requests.utilities import (
     recalculate_deadline,
@@ -368,6 +372,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     requester_last_name = CharField(write_only=True, required=False)
     requester_email = EmailField(write_only=True, required=False)
     requester_mobile = PhoneNumberField(write_only=True, required=False)
+    send_notification = BooleanField(write_only=True, required=False)
 
     class Meta:
         model = Request
@@ -395,6 +400,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
             "requester_last_name",
             "requester_email",
             "requester_mobile",
+            "send_notification",
         )
         read_only_fields = (
             "id",
@@ -415,6 +421,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
             "requester_last_name",
             "requester_email",
             "requester_mobile",
+            "send_notification",
         )
 
     def create_comment(self, comment_text, request):
@@ -428,12 +435,15 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         get_responsible_from_id(validated_data)
         comment_text = validated_data.pop("comment_text", None)
+        send_notification = validated_data.pop("send_notification", None)
         handle_additional_data(validated_data, self.context["request"].user)
         get_requester(validated_data, self.context["request"].user)
         validated_data["requested_by"] = self.context["request"].user
         request = super(RequestAdminSerializer, self).create(validated_data)
         if comment_text:
             request.comments.add(self.create_comment(comment_text, request))
+        if send_notification:
+            email_user_new_request_confirmation.delay(request.id)
         update_request_status(request)
         create_calendar_event.delay(request.id)
         return request
@@ -441,6 +451,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         get_responsible_from_id(validated_data)
         validated_data.pop("comment_text", None)
+        validated_data.pop("send_notification", None)
         recalculate_deadline(instance, validated_data)
         handle_additional_data(validated_data, self.context["request"].user, instance)
         get_requester(validated_data, instance.requester, instance)

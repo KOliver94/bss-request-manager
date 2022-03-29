@@ -84,6 +84,31 @@ class EmailSendingTestCase(APITestCase):
             mail.outbox[0].subject, f"{data['title']} | Forgatási felkérésedet fogadtuk"
         )
 
+    def test_new_request_confirmation_email_sent_when_admin_or_staff_checks_send_notification(
+        self,
+    ):
+        # Create a Request with a staff user
+        self.authorize_user(self.staff_user)
+        data = {
+            "title": "Test Request",
+            "start_datetime": localtime() + timedelta(minutes=10),
+            "end_datetime": localtime() + timedelta(days=1),
+            "place": "Test place",
+            "type": "Test type",
+            "send_notification": True,
+        }
+        response = self.client.post("/api/v1/admin/requests", data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Check if e-mail was sent to the right people
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(self.staff_user.email, mail.outbox[0].to)
+        self.assertIn(self.editor_in_chief.email, mail.outbox[0].bcc)
+        self.assertIn(settings.DEFAULT_REPLY_EMAIL, mail.outbox[0].reply_to)
+        self.assertEqual(
+            mail.outbox[0].subject, f"{data['title']} | Forgatási felkérésedet fogadtuk"
+        )
+
     @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
     def test_new_request_confirmation_email_sent_to_anonymous(self):
         # Create a Request without login
