@@ -1,6 +1,13 @@
 import MuiPhoneNumber from 'material-ui-phone-number-2';
 import PropTypes from 'prop-types';
 import { fieldToTextField } from 'formik-mui';
+import { styled } from '@mui/material/styles';
+
+const CustomizedMuiPhoneNumber = styled(MuiPhoneNumber)`
+  & .MuiIconButton-root {
+    padding: 5px;
+  }
+`;
 
 export default function PhoneNumberInput(props) {
   const {
@@ -10,7 +17,7 @@ export default function PhoneNumberInput(props) {
   } = props;
 
   return (
-    <MuiPhoneNumber
+    <CustomizedMuiPhoneNumber
       {...fieldToTextField(props)}
       preferredCountries={['hu']}
       defaultCountry="hu"
