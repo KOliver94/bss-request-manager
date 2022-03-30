@@ -1,4 +1,4 @@
-import MuiPhoneNumber from 'material-ui-phone-number';
+import MuiPhoneNumber from 'material-ui-phone-number-2';
 import PropTypes from 'prop-types';
 import { fieldToTextField } from 'formik-mui';
 
