@@ -22,7 +22,6 @@ repos:
     hooks:
       - id: pycln
         name: 'Remove unused Python imports'
-        additional_dependencies: ['click==8.0.4'] # https://github.com/hadialqattan/pycln/issues/116
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
