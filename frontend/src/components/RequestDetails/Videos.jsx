@@ -38,8 +38,8 @@ import Badge from 'components/material-kit-react/Badge/Badge';
 import { Formik, Form, Field, getIn } from 'formik';
 import { Autocomplete, TextField, CheckboxWithLabel, Select } from 'formik-mui';
 import { TimePicker } from 'formik-mui-lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import * as Yup from 'yup';
 // Date format
 import { hu } from 'date-fns/locale';
