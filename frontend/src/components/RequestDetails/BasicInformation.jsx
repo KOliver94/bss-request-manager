@@ -45,8 +45,8 @@ import {
   ToggleButtonGroup,
 } from 'formik-mui';
 import { DatePicker, DateTimePicker } from 'formik-mui-lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import * as Yup from 'yup';
 // Date format
 import { format } from 'date-fns';

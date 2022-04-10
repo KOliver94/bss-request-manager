@@ -39,9 +39,9 @@ import Badge from 'components/material-kit-react/Badge/Badge';
 // Formik
 import { Formik, Form } from 'formik';
 // Date fields
-import DateRangePicker from '@mui/lab/DateRangePicker';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import sub from 'date-fns/sub';
 import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
@@ -99,10 +99,10 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const [profileConnecting, setProfileConnecting] = useState(false);
   const [workedOnDialogOpen, setWorkedOnDialogOpen] = useState(false);
   const [userData, setUserData] = useState({});
-  const [selectedDateRange, setSelectedDateRange] = useState([
-    sub(new Date(), { weeks: 20 }),
-    new Date(),
-  ]);
+  const [selectedStartDate, setSelectedStartDate] = useState(
+    sub(new Date(), { weeks: 20 })
+  );
+  const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   const [includeResponsible, setIncludeResponsible] = useState(true);
   const [headerDataChange, setHeaderDataChange] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(null);
@@ -649,49 +649,50 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                     dateAdapter={AdapterDateFns}
                                     locale={hu}
                                   >
-                                    <DateRangePicker
-                                      startText="Kezdő dátum"
-                                      endText="Vége dátum"
-                                      toolbarTitle="Válaszd ki az időszakot"
-                                      okText="Rendben"
-                                      cancelText="Mégsem"
-                                      calendars={3}
-                                      mask="____. __. __."
-                                      value={selectedDateRange}
-                                      onChange={setSelectedDateRange}
-                                      renderInput={(startProps, endProps) => (
-                                        <>
-                                          <GridItem
-                                            xs={12}
-                                            sm={6}
-                                            className={
-                                              isXsView
-                                                ? classes.gridItemMobile
-                                                : ''
-                                            }
-                                          >
-                                            <TextField
-                                              {...startProps}
-                                              fullWidth
-                                            />
-                                          </GridItem>
-                                          <GridItem
-                                            xs={12}
-                                            sm={6}
-                                            className={
-                                              isXsView
-                                                ? classes.gridItemMobile
-                                                : ''
-                                            }
-                                          >
-                                            <TextField
-                                              {...endProps}
-                                              fullWidth
-                                            />
-                                          </GridItem>
-                                        </>
-                                      )}
-                                    />
+                                    <>
+                                      <GridItem
+                                        xs={12}
+                                        sm={6}
+                                        className={
+                                          isXsView ? classes.gridItemMobile : ''
+                                        }
+                                      >
+                                        <DatePicker
+                                          label="Kezdő dátum"
+                                          toolbarTitle="Válaszd ki az időszak elejét"
+                                          okText="Rendben"
+                                          cancelText="Mégsem"
+                                          mask="____. __. __."
+                                          maxDate={new Date()}
+                                          value={selectedStartDate}
+                                          onChange={setSelectedStartDate}
+                                          renderInput={(params) => (
+                                            <TextField {...params} fullWidth />
+                                          )}
+                                        />
+                                      </GridItem>
+                                      <GridItem
+                                        xs={12}
+                                        sm={6}
+                                        className={
+                                          isXsView ? classes.gridItemMobile : ''
+                                        }
+                                      >
+                                        <DatePicker
+                                          label="Vége dátum"
+                                          toolbarTitle="Válaszd ki az időszak végét"
+                                          okText="Rendben"
+                                          cancelText="Mégsem"
+                                          mask="____. __. __."
+                                          maxDate={new Date()}
+                                          value={selectedEndDate}
+                                          onChange={setSelectedEndDate}
+                                          renderInput={(params) => (
+                                            <TextField {...params} fullWidth />
+                                          )}
+                                        />
+                                      </GridItem>
+                                    </>
                                   </LocalizationProvider>
                                   <GridItem
                                     className={
@@ -744,7 +745,10 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                               workedOnDialogOpen={workedOnDialogOpen}
                               setWorkedOnDialogOpen={setWorkedOnDialogOpen}
                               userId={id || 'me'}
-                              selectedDateRange={selectedDateRange}
+                              selectedDateRange={[
+                                selectedStartDate,
+                                selectedEndDate,
+                              ]}
                               includeResponsible={includeResponsible}
                             />
                           </>
