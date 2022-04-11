@@ -1,5 +1,10 @@
 from django.forms import IntegerField
-from django_filters.rest_framework import DateFilter, Filter, FilterSet
+from django_filters.rest_framework import (
+    DateFilter,
+    Filter,
+    FilterSet,
+    MultipleChoiceFilter,
+)
 
 from video_requests.models import Request, Video
 
@@ -16,6 +21,7 @@ class IntegerFilter(Filter):
 class RequestFilter(FilterSet):
     from_date = DateFilter(field_name="start_datetime__date", lookup_expr="gte")
     to_date = DateFilter(field_name="end_datetime__date", lookup_expr="lte")
+    status = MultipleChoiceFilter(choices=Request.Statuses.choices)
 
     class Meta:
         model = Request
@@ -28,6 +34,7 @@ class VideoFilter(FilterSet):
     )
     to_date = DateFilter(field_name="request__end_datetime__date", lookup_expr="lte")
     length = IntegerFilter(field_name="additional_data__length", lookup_expr="lte")
+    status = MultipleChoiceFilter(choices=Video.Statuses.choices)
 
     class Meta:
         model = Video

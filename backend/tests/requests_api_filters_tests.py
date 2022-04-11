@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 
 from tests.helpers.users_test_utils import create_user, get_default_password
 from tests.helpers.video_requests_test_utils import create_request, create_video
+from video_requests.models import Request, Video
 
 
 class RequestsAPIFiltersTestCase(APITestCase):
@@ -19,12 +20,18 @@ class RequestsAPIFiltersTestCase(APITestCase):
         token = resp.data["access"]
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
 
-        self.request1 = create_request(100, self.user, start="2020-03-10T19:30:00+0100")
-        self.request2 = create_request(101, self.user, start="2020-07-07T19:30:00+0100")
-        self.request3 = create_request(102, self.user, start="2020-12-24T19:30:00+0100")
+        self.request1 = create_request(
+            100, self.user, Request.Statuses.REQUESTED, "2020-03-10T19:30:00+0100"
+        )
+        self.request2 = create_request(
+            101, self.user, Request.Statuses.EDITED, "2020-07-07T19:30:00+0100"
+        )
+        self.request3 = create_request(
+            102, self.user, Request.Statuses.DONE, "2020-12-24T19:30:00+0100"
+        )
 
-        self.video1 = create_video(200, self.request1)
-        self.video2 = create_video(201, self.request2)
+        self.video1 = create_video(200, self.request1, Video.Statuses.IN_PROGRESS)
+        self.video2 = create_video(201, self.request2, Video.Statuses.PUBLISHED)
         self.video2.additional_data = {
             "aired": [
                 "2020-01-12",
@@ -35,7 +42,7 @@ class RequestsAPIFiltersTestCase(APITestCase):
             ]
         }
         self.video2.save()
-        self.video3 = create_video(202, self.request3)
+        self.video3 = create_video(202, self.request3, Video.Statuses.DONE)
         self.video3.additional_data = {
             "aired": [
                 "2019-03-03",
@@ -65,6 +72,24 @@ class RequestsAPIFiltersTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
         self.assertEqual(response.data["results"][0]["title"], self.request2.title)
+
+    def test_request_filtering_by_status(self):
+        response = self.client.get(f"{self.url}?status={Request.Statuses.REQUESTED}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"][0]["title"], self.request1.title)
+
+        response = self.client.get(f"{self.url}?status={Request.Statuses.ARCHIVED}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 0)
+
+        response = self.client.get(
+            f"{self.url}?status={Request.Statuses.EDITED}&status={Request.Statuses.DONE}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 2)
+        self.assertEqual(response.data["results"][0]["title"], self.request2.title)
+        self.assertEqual(response.data["results"][1]["title"], self.request3.title)
 
     def test_video_filtering_by_date(self):
         # Note: Videos are sorted descending on Request start_datetime
@@ -118,3 +143,23 @@ class RequestsAPIFiltersTestCase(APITestCase):
         response = self.client.get(f"{self.url}/videos?last_aired=randomText")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data["last_aired"][0], "Invalid filter.")
+
+    def test_video_filtering_by_status(self):
+        response = self.client.get(
+            f"{self.url}/videos?status={Video.Statuses.IN_PROGRESS}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(response.data["results"][0]["title"], self.video1.title)
+
+        response = self.client.get(f"{self.url}/videos?status={Video.Statuses.PENDING}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 0)
+
+        response = self.client.get(
+            f"{self.url}/videos?status={Video.Statuses.PUBLISHED}&status={Video.Statuses.DONE}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 2)
+        self.assertEqual(response.data["results"][0]["title"], self.video3.title)
+        self.assertEqual(response.data["results"][1]["title"], self.video2.title)
