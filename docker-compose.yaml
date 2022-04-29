@@ -64,7 +64,7 @@ services:
 
   redis:
     restart: unless-stopped
-    image: redis:6-alpine
+    image: redis:7-alpine
     volumes:
       - redis:/data
 
