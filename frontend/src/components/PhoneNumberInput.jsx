@@ -1,11 +1,12 @@
-import MuiPhoneNumber from 'material-ui-phone-number-2';
+import { MuiTelInput } from 'mui-tel-input';
 import PropTypes from 'prop-types';
 import { fieldToTextField } from 'formik-mui';
 import { styled } from '@mui/material/styles';
 
-const CustomizedMuiPhoneNumber = styled(MuiPhoneNumber)`
+const CustomizedMuiPhoneNumber = styled(MuiTelInput)`
   & .MuiIconButton-root {
-    padding: 5px;
+    margin-left: -7px;
+    margin-right: -5px;
   }
 `;
 
@@ -19,10 +20,10 @@ export default function PhoneNumberInput(props) {
   return (
     <CustomizedMuiPhoneNumber
       {...fieldToTextField(props)}
-      preferredCountries={['hu']}
-      defaultCountry="hu"
-      regions="europe"
-      disableAreaCodes
+      defaultCountry="HU"
+      preferredCountries={['HU', 'RO', 'SK', 'UA']}
+      continents={['EU']}
+      langOfCountryName="hu"
       disableDropdown={disabled}
       onChange={(value) => {
         setFieldValue(name, value);
