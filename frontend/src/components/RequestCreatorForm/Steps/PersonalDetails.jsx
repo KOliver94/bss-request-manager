@@ -10,7 +10,7 @@ import MUIButton from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import makeStyles from '@mui/styles/makeStyles';
 import * as Yup from 'yup';
-import 'yup-phone';
+import isValidPhone from 'helpers/yupPhoneNumberValidator';
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -24,6 +24,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+Yup.addMethod(Yup.string, 'phone', isValidPhone);
 const validationSchema = Yup.object({
   requester_first_name: Yup.string()
     .min(2, 'Túl rövid keresztnév!')
@@ -39,7 +40,7 @@ const validationSchema = Yup.object({
     .email('Érvénytelen e-mail cím!')
     .required('Az e-mail cím megadása kötelező!'),
   requester_mobile: Yup.string()
-    .phone('', false, 'Érvénytelen telefonszám!')
+    .phone('Érvénytelen telefonszám!')
     .required('A telefonszám megadása kötelező!'),
 });
 

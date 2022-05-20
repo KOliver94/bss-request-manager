@@ -47,7 +47,7 @@ import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // Yup validations
 import * as Yup from 'yup';
-import 'yup-phone';
+import isValidPhone from 'helpers/yupPhoneNumberValidator';
 // Notistack
 import { useSnackbar } from 'notistack';
 // background
@@ -220,6 +220,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     }
   }, [code, provider, navigate, enqueueSnackbar]);
 
+  Yup.addMethod(Yup.string, 'phone', isValidPhone);
   const validationSchema = Yup.object({
     first_name: Yup.string()
       .min(2, 'Túl rövid keresztnév!')
@@ -235,7 +236,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       .email('Érvénytelen e-mail cím!')
       .required('Az e-mail cím megadása kötelező!'),
     phone_number: Yup.string()
-      .phone('', false, 'Érvénytelen telefonszám!')
+      .phone('Érvénytelen telefonszám!')
       .required('A telefonszám megadása kötelező!'),
   });
 
