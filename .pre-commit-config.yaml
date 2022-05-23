@@ -18,7 +18,7 @@ repos:
       - id: check-github-workflows
       - id: check-renovate
   - repo: https://github.com/hadialqattan/pycln
-    rev: v1.3.2
+    rev: v1.3.3
     hooks:
       - id: pycln
         name: 'Remove unused Python imports'
@@ -59,7 +59,7 @@ repos:
         exclude: (^backend/templates/)|((\.py|Pipfile(\.lock)?|package(-lock)?\.json)$)
         args: [--config, ./frontend/.prettierrc]
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.15.0
+    rev: v8.16.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code'
