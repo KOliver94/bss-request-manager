@@ -226,7 +226,6 @@ SIMPLE_JWT = {
 LANGUAGE_CODE = config("LANGUAGE_CODE", default="en-us")
 TIME_ZONE = config("TIME_ZONE", default="Europe/Budapest")
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
