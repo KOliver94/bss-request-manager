@@ -28,7 +28,7 @@ psycopg2-binary = "==2.9.3"
 python-decouple = "==3.6"
 python-ldap = "==3.4.0"
 requests = "==2.27.1"
-rest-social-auth = "==7.0.0"
+rest-social-auth = {editable = true, ref = "next", git = "https://github.com/KOliver94/django-rest-social-auth.git"}
 sentry-sdk = "==1.5.12"
 whitenoise = {extras = ["brotli"],version = "==6.1.0"}
 
