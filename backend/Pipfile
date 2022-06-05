@@ -5,13 +5,13 @@ verify_ssl = true
 
 [packages]
 celery = {extras = ["redis"],version = "==5.2.7"}
-django = "==4.0.4"
+django = "==4.0.5"
 djangorestframework = "==3.13.1"
 djangorestframework_simplejwt = "==5.2.0"
 django-auth-ldap = "==4.1.0"
 django-cacheops = "==6.1"
 django-celery-results = "==2.3.1"
-django-cors-headers = "==3.12.0"
+django-cors-headers = "==3.13.0"
 django-filter = "==21.1"
 django-health-check = "==3.16.5"
 django-phonenumber-field = {extras = ["phonenumbers"],version = "==6.1.0"}
@@ -22,7 +22,7 @@ google-api-python-client = "==2.49.0"
 google-auth-httplib2 = "==0.1.0"
 google-auth-oauthlib = "==0.5.1"
 gunicorn = "==20.1.0"
-jsonschema = {extras = ["format"],version = "==4.5.1"}
+jsonschema = {extras = ["format"],version = "==4.6.0"}
 libgravatar = "==1.0.0"
 psycopg2-binary = "==2.9.3"
 python-decouple = "==3.6"
@@ -30,7 +30,7 @@ python-ldap = "==3.4.0"
 requests = "==2.27.1"
 rest-social-auth = {editable = true, ref = "next", git = "https://github.com/KOliver94/django-rest-social-auth.git"}
 sentry-sdk = "==1.5.12"
-whitenoise = {extras = ["brotli"],version = "==6.1.0"}
+whitenoise = {extras = ["brotli"],version = "==6.2.0"}
 
 [dev-packages]
 coverage = {extras = ["toml"],version = "*"}
