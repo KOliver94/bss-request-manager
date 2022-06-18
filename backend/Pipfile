@@ -12,7 +12,7 @@ django-auth-ldap = "==4.1.0"
 django-cacheops = "==6.1"
 django-celery-results = "==2.3.1"
 django-cors-headers = "==3.13.0"
-django-filter = "==21.1"
+django-filter = "==22.1"
 django-health-check = "==3.16.5"
 django-phonenumber-field = {extras = ["phonenumbers"],version = "==6.1.0"}
 django-simple-history = "==3.1.1"
