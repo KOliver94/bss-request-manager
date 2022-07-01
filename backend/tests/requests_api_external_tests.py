@@ -269,6 +269,7 @@ class RequestsAPIExternalTestCase(APITestCase):
         self.assertTrue(mock_notify_sch_event_management_system.call_args.args[1])
 
     @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+    @override_settings(CELERY_RESULT_EXTENDED=True)
     @patch("video_requests.utilities.requests.post")
     @patch("video_requests.utilities.requests.head")
     def test_external_callback_for_status_change_redirect_and_result_works(
