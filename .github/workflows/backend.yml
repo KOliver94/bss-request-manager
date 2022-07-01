@@ -15,8 +15,7 @@ on:
         type: boolean
   pull_request:
   push:
-    branches:
-      - main
+    branches: [main, next]
     paths:
       - 'backend/**'
       - '.github/workflows/backend.yml'
