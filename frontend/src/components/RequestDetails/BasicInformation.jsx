@@ -44,9 +44,9 @@ import {
   TextField,
   ToggleButtonGroup,
 } from 'formik-mui';
-import { DatePicker, DateTimePicker } from 'formik-mui-lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { DatePicker, DateTimePicker } from 'formik-mui-x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import * as Yup from 'yup';
 // Date format
 import { format } from 'date-fns';
@@ -407,7 +407,7 @@ export default function BasicInformation({
       <Divider variant="middle" />
       <Paper className={classes.paper} elevation={2}>
         {editing ? (
-          <LocalizationProvider dateAdapter={AdapterDateFns} locale={hu}>
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={hu}>
             <Formik
               initialValues={{
                 ...requestData,
