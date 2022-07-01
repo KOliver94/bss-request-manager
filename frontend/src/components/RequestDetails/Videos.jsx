@@ -37,9 +37,9 @@ import Badge from 'components/material-kit-react/Badge/Badge';
 // Form components
 import { Formik, Form, Field, getIn } from 'formik';
 import { Autocomplete, TextField, CheckboxWithLabel, Select } from 'formik-mui';
-import { TimePicker } from 'formik-mui-lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { TimePicker } from 'formik-mui-x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import * as Yup from 'yup';
 // Date format
 import { hu } from 'date-fns/locale';
@@ -452,7 +452,10 @@ export default function Videos({
                 </div>
               </AccordionSummary>
               {isPrivileged ? (
-                <LocalizationProvider dateAdapter={AdapterDateFns} locale={hu}>
+                <LocalizationProvider
+                  dateAdapter={AdapterDateFns}
+                  adapterLocale={hu}
+                >
                   <Formik
                     enableReinitialize
                     initialValues={{

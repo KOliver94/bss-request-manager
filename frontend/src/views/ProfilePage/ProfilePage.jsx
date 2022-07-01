@@ -648,7 +648,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                 >
                                   <LocalizationProvider
                                     dateAdapter={AdapterDateFns}
-                                    locale={hu}
+                                    adapterLocale={hu}
                                   >
                                     <>
                                       <GridItem

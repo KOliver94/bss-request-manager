@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { Formik, Form, Field, getIn } from 'formik';
 import { Autocomplete, TextField } from 'formik-mui';
-import { DateTimePicker } from 'formik-mui-lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { DateTimePicker } from 'formik-mui-x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { hu } from 'date-fns/locale';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
@@ -60,7 +60,7 @@ const validationSchema = Yup.object({
 function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
   const classes = useStyles();
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} locale={hu}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={hu}>
       <Formik
         initialValues={formData}
         onSubmit={(values) => {
