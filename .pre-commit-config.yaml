@@ -13,12 +13,12 @@ repos:
       - id: mixed-line-ending
         name: 'Replace mixed line endings'
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.16.2
+    rev: 0.17.0
     hooks:
       - id: check-github-workflows
       - id: check-renovate
   - repo: https://github.com/hadialqattan/pycln
-    rev: v1.3.5
+    rev: v2.0.1
     hooks:
       - id: pycln
         name: 'Remove unused Python imports'
