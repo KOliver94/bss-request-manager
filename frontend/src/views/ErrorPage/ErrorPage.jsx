@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Paper from '@mui/material/Paper';
 import changePageTitle from 'helpers/pageTitleHelper';
 import getErrorDetails from 'helpers/errorPageConstants';
 import 'assets/css/error-page.css';
@@ -13,7 +14,7 @@ export default function ErrorPage({ type }) {
   }, []);
 
   return (
-    <div id="error">
+    <Paper id="error" elevation={15}>
       <div className="error">
         <div className="error-code">
           <h1>{errorDetails.code}</h1>
@@ -42,7 +43,7 @@ export default function ErrorPage({ type }) {
           </a>
         </div>
       </div>
-    </div>
+    </Paper>
   );
 }
 
