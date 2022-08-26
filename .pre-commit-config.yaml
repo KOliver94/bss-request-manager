@@ -64,7 +64,7 @@ repos:
     rev: v3.0.0-alpha.9-for-vscode
     hooks:
       - id: prettier
-        name: 'Format JavaScript code'
+        name: 'Format JavaScript and TypeScript code'
         exclude: (^backend/templates/)|((\.py|Pipfile(\.lock)?|package(-lock)?\.json)$)
         args: [--config, ./frontend/.prettierrc]
         additional_dependencies:
@@ -95,3 +95,26 @@ repos:
           - eslint-plugin-react@7.32.2
           - eslint@8.43.0
           - prettier@2.8.8
+      - id: eslint
+        name: 'Lint TypeScript code (Admin dashboard)'
+        files: ^frontend-admin/.*\.(j|t)sx?$
+        args:
+          [
+            --config,
+            ./frontend-admin/.eslintrc.js,
+            --ignore-path,
+            ./frontend-admin/.eslintignore,
+            --fix,
+          ]
+        additional_dependencies:
+          - '@typescript-eslint/eslint-plugin@5.39.0'
+          - '@typescript-eslint/parser@5.39.0'
+          - eslint-config-prettier@8.5.0
+          - eslint-import-resolver-typescript@3.5.1
+          - eslint-plugin-import@2.26.0
+          - eslint-plugin-prettier@4.2.1
+          - eslint-plugin-react-hooks@4.6.0
+          - eslint-plugin-react@7.31.8
+          - eslint@8.24.0
+          - prettier@2.7.1
+          - typescript@4.8.4

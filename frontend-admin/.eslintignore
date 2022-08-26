@@ -1,0 +1,4 @@
+.eslintrc.js
+
+# Ignore Material Kit React Components
+**/src/components/material-kit-react/*
