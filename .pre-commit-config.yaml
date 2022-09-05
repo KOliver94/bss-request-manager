@@ -67,7 +67,7 @@ repos:
         args:
           [
             --config,
-            ./frontend/.eslintrc.yml,
+            ./frontend/.eslintrc.js,
             --ignore-path,
             ./frontend/.eslintignore,
             --rule,
