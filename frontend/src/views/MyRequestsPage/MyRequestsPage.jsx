@@ -74,7 +74,7 @@ export default function MyRequestsPage({
     [enqueueSnackbar, isPrivileged, ordering]
   );
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (event, page) => {
     loadData(page);
   };
 
