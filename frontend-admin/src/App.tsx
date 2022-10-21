@@ -1,19 +1,12 @@
+import Header from 'components/Header/Header';
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="flex flex-column min-h-screen surface-ground">
+      <Header />
+      <div className="flex flex-auto flex-column p-5">
+        <div className="border-round flex-auto surface-border surface-section"></div>
+      </div>
     </div>
   );
 }
