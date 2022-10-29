@@ -104,7 +104,7 @@ jobs:
           pipenv run coverage xml
       - name: Upload coverage to Codecov
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
-        uses: codecov/codecov-action@v3.1.0
+        uses: codecov/codecov-action@v3.1.1
         with:
           directory: backend/
       - name: Archive code coverage results
