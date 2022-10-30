@@ -15,7 +15,7 @@ module.exports = {
     ecmaVersion: '2021',
     sourceType: 'module',
   },
-  plugins: ['jsx-a11y', 'react', 'react-hooks', 'prettier'],
+  plugins: ['jsx-a11y', 'prettier', 'react', 'react-hooks'],
   rules: {
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'react/forbid-prop-types': 'off',
