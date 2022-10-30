@@ -690,6 +690,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         request = create_request(100, self.user)
         self.patch_additional_data_to_request(request.id)
 
+        # Existing additional_data should not disappear
         existing_user_data = {
             "requester_first_name": "Anonymous",
             "requester_last_name": "Tester",
@@ -721,47 +722,6 @@ class RequestsUtilitiesTestCase(APITestCase):
         )
 
         self.assertDictEqual(response.data["additional_data"], expected_dict)
-
-        def test_modifying_requester_should_not_interfere_with_existing_additional_data(
-            self,
-        ):
-            request = create_request(100, self.user)
-            self.patch_additional_data_to_request(request.id)
-
-            # Existing additional_data should not disappear
-            existing_user_data = {
-                "requester_first_name": "Anonymous",
-                "requester_last_name": "Tester",
-                "requester_email": self.user.email,
-                "requester_mobile": "+36701234567",
-            }
-
-            response = self.client.patch(f"{self.url}/{request.id}", existing_user_data)
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(response.data["requester"]["username"], self.user.username)
-            self.assertEqual(
-                response.data["requested_by"]["username"], self.user.username
-            )
-
-            expected_dict = (
-                self._patch_data["additional_data"]
-                | {
-                    "status_by_admin": {
-                        "status": Request.Statuses.ARCHIVED,
-                        "admin_id": self.user.id,
-                        "admin_name": self.user.get_full_name_eastern_order(),
-                    }
-                }
-                | {
-                    "requester": {
-                        "first_name": "Anonymous",
-                        "last_name": "Tester",
-                        "phone_number": "+36701234567",
-                    }
-                }
-            )
-
-            self.assertDictEqual(response.data["additional_data"], expected_dict)
 
     def test_modifying_requester_should_not_interfere_with_additional_data_sent_in(
         self,
