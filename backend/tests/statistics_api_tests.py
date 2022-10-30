@@ -1,4 +1,4 @@
-from freezegun import freeze_time
+import time_machine
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -12,7 +12,7 @@ from tests.helpers.video_requests_test_utils import (
 from video_requests.models import Request
 
 
-@freeze_time("2020-11-21 18:30:00")
+@time_machine.travel("2020-11-21 18:30:00 +0100")
 class StatisticsAPITestCase(APITestCase):
     def authorize_user(self, user):
         url = reverse("login_obtain_jwt_pair")

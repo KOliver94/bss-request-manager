@@ -34,9 +34,9 @@ whitenoise = {extras = ["brotli"],version = "==6.2.0"}
 
 [dev-packages]
 coverage = {extras = ["toml"],version = "*"}
-freezegun = "*"
 pre-commit = "*"
 pytest-django = "*"
+time-machine = "*"
 
 [requires]
 python_version = "3.10"
