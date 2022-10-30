@@ -2,13 +2,13 @@ from datetime import timedelta
 from io import StringIO
 from unittest.mock import patch
 
+import time_machine
 from decouple import config
 from django.conf import settings
 from django.core import mail
 from django.core.management import call_command
 from django.test import override_settings
 from django.utils.timezone import localtime
-from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -298,170 +298,177 @@ class EmailSendingTestCase(APITestCase):
     In production use it is done by Celery Beat
     """
 
-    @freeze_time("2020-11-19 10:20:30", tz_offset=+1, as_kwarg="frozen_time")
     @patch(
         "video_requests.emails.email_staff_weekly_tasks", wraps=email_staff_weekly_tasks
     )
-    def test_weekly_staff_email_sending(
-        self, mock_email_staff_weekly_tasks, frozen_time
-    ):
-        # Create test Requests - Recording
-        # Should be included
-        rec1 = create_request(100, self.normal_user, start="2020-11-16T04:16:13+0100")
-        rec2 = create_request(
-            101,
-            self.normal_user,
-            Request.Statuses.ACCEPTED,
-            start="2020-11-21T21:41:57+0100",
-        )
-        # Should not be included
-        rec3 = create_request(
-            102, self.normal_user, start="2020-11-15T10:01:24+0100"
-        )  # previous week
-        rec4 = create_request(
-            103, self.normal_user, start="2020-11-24T17:22:05+0100"
-        )  # next week
-        rec5 = create_request(
-            104,
-            self.normal_user,
-            Request.Statuses.EDITED,
-            start="2020-11-20T14:55:45+0100",
-        )  # this week but wrong status
+    def test_weekly_staff_email_sending(self, mock_email_staff_weekly_tasks):
+        with time_machine.travel("2020-11-19 10:20:30 +0100") as traveller:
+            # Create test Requests - Recording
+            # Should be included
+            rec1 = create_request(
+                100, self.normal_user, start="2020-11-16T04:16:13+0100"
+            )
+            rec2 = create_request(
+                101,
+                self.normal_user,
+                Request.Statuses.ACCEPTED,
+                start="2020-11-21T21:41:57+0100",
+            )
+            # Should not be included
+            rec3 = create_request(
+                102, self.normal_user, start="2020-11-15T10:01:24+0100"
+            )  # previous week
+            rec4 = create_request(
+                103, self.normal_user, start="2020-11-24T17:22:05+0100"
+            )  # next week
+            rec5 = create_request(
+                104,
+                self.normal_user,
+                Request.Statuses.EDITED,
+                start="2020-11-20T14:55:45+0100",
+            )  # this week but wrong status
 
-        # Create test Requests - Editing
-        # Should be included
-        edit1 = create_request(110, self.normal_user, Request.Statuses.RECORDED)
-        edit2 = create_request(111, self.normal_user, Request.Statuses.UPLOADED)
-        edit_vid21 = create_video(211, edit2, Video.Statuses.PENDING)
-        edit_vid22 = create_video(
-            212, edit2, Video.Statuses.IN_PROGRESS, self.staff_user
-        )
-        # Should not be included
-        edit3 = create_request(
-            112, self.normal_user, Request.Statuses.EDITED
-        )  # later status
-        edit4 = create_request(
-            113, self.normal_user, Request.Statuses.RECORDED
-        )  # good status but wrong status video
-        edit_vid41 = create_video(213, edit4, Video.Statuses.EDITED)
-        edit5 = create_request(
-            114, self.normal_user, Request.Statuses.EDITED
-        )  # wrong status but good status video
-        edit_vid51 = create_video(214, edit5, Video.Statuses.PENDING)
+            # Create test Requests - Editing
+            # Should be included
+            edit1 = create_request(110, self.normal_user, Request.Statuses.RECORDED)
+            edit2 = create_request(111, self.normal_user, Request.Statuses.UPLOADED)
+            edit_vid21 = create_video(211, edit2, Video.Statuses.PENDING)
+            edit_vid22 = create_video(
+                212, edit2, Video.Statuses.IN_PROGRESS, self.staff_user
+            )
+            # Should not be included
+            edit3 = create_request(
+                112, self.normal_user, Request.Statuses.EDITED
+            )  # later status
+            edit4 = create_request(
+                113, self.normal_user, Request.Statuses.RECORDED
+            )  # good status but wrong status video
+            edit_vid41 = create_video(213, edit4, Video.Statuses.EDITED)
+            edit5 = create_request(
+                114, self.normal_user, Request.Statuses.EDITED
+            )  # wrong status but good status video
+            edit_vid51 = create_video(214, edit5, Video.Statuses.PENDING)
 
-        """
-        Case 1: Successful e-mail sending
-        """
-        # Call management command
-        with StringIO() as out:
-            call_command("email_weekly_tasks", stdout=out)
-            self.assertEqual(
-                out.getvalue(), "Weekly tasks email was sent successfully.\n"
+            """
+            Case 1: Successful e-mail sending
+            """
+            # Call management command
+            with StringIO() as out:
+                call_command("email_weekly_tasks", stdout=out)
+                self.assertEqual(
+                    out.getvalue(), "Weekly tasks email was sent successfully.\n"
+                )
+
+            # Check if fuction was called with correct parameters
+            mock_email_staff_weekly_tasks.assert_called_once()
+
+            self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[0]), 2)
+            self.assertIn(rec1, mock_email_staff_weekly_tasks.call_args.args[0])
+            self.assertIn(rec2, mock_email_staff_weekly_tasks.call_args.args[0])
+            self.assertNotIn(rec3, mock_email_staff_weekly_tasks.call_args.args[0])
+            self.assertNotIn(rec4, mock_email_staff_weekly_tasks.call_args.args[0])
+            self.assertNotIn(rec5, mock_email_staff_weekly_tasks.call_args.args[0])
+
+            self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[1]), 1)
+            self.assertIn(edit1, mock_email_staff_weekly_tasks.call_args.args[1])
+            self.assertNotIn(edit2, mock_email_staff_weekly_tasks.call_args.args[1])
+            self.assertNotIn(edit3, mock_email_staff_weekly_tasks.call_args.args[1])
+            self.assertNotIn(edit4, mock_email_staff_weekly_tasks.call_args.args[1])
+            self.assertNotIn(edit5, mock_email_staff_weekly_tasks.call_args.args[1])
+
+            self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[2]), 2)
+            self.assertIn(edit_vid21, mock_email_staff_weekly_tasks.call_args.args[2])
+            self.assertIn(edit_vid22, mock_email_staff_weekly_tasks.call_args.args[2])
+            self.assertNotIn(
+                edit_vid41, mock_email_staff_weekly_tasks.call_args.args[2]
+            )
+            self.assertNotIn(
+                edit_vid51, mock_email_staff_weekly_tasks.call_args.args[2]
             )
 
-        # Check if fuction was called with correct parameters
-        mock_email_staff_weekly_tasks.assert_called_once()
+            # Check if e-mail was sent to the right people
+            self.assertEqual(len(mail.outbox), 1)
+            self.assertIn(settings.WEEKLY_TASK_EMAIL, mail.outbox[0].to)
+            self.assertEqual(
+                mail.outbox[0].subject, "Eheti forgatások és vágandó anyagok"
+            )
 
-        self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[0]), 2)
-        self.assertIn(rec1, mock_email_staff_weekly_tasks.call_args.args[0])
-        self.assertIn(rec2, mock_email_staff_weekly_tasks.call_args.args[0])
-        self.assertNotIn(rec3, mock_email_staff_weekly_tasks.call_args.args[0])
-        self.assertNotIn(rec4, mock_email_staff_weekly_tasks.call_args.args[0])
-        self.assertNotIn(rec5, mock_email_staff_weekly_tasks.call_args.args[0])
+            """
+            Case 2: No Request for the week.
+            """
+            # Change time to next month
+            traveller.move_to("2020-12-21 10:20:30 +0100")
 
-        self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[1]), 1)
-        self.assertIn(edit1, mock_email_staff_weekly_tasks.call_args.args[1])
-        self.assertNotIn(edit2, mock_email_staff_weekly_tasks.call_args.args[1])
-        self.assertNotIn(edit3, mock_email_staff_weekly_tasks.call_args.args[1])
-        self.assertNotIn(edit4, mock_email_staff_weekly_tasks.call_args.args[1])
-        self.assertNotIn(edit5, mock_email_staff_weekly_tasks.call_args.args[1])
+            # Change editing objects
+            edit1.status = Request.Statuses.EDITED
+            edit1.save()
+            edit2.status = Request.Statuses.ARCHIVED
+            edit2.save()
 
-        self.assertEqual(len(mock_email_staff_weekly_tasks.call_args.args[2]), 2)
-        self.assertIn(edit_vid21, mock_email_staff_weekly_tasks.call_args.args[2])
-        self.assertIn(edit_vid22, mock_email_staff_weekly_tasks.call_args.args[2])
-        self.assertNotIn(edit_vid41, mock_email_staff_weekly_tasks.call_args.args[2])
-        self.assertNotIn(edit_vid51, mock_email_staff_weekly_tasks.call_args.args[2])
+            # Call management command
+            with StringIO() as out:
+                call_command("email_weekly_tasks", stdout=out)
+                self.assertEqual(out.getvalue(), "No tasks for this week.\n")
 
-        # Check if e-mail was sent to the right people
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn(settings.WEEKLY_TASK_EMAIL, mail.outbox[0].to)
-        self.assertEqual(mail.outbox[0].subject, "Eheti forgatások és vágandó anyagok")
-
-        """
-        Case 2: No Request for the week.
-        """
-        # Change time to next month
-        frozen_time.move_to("2020-12-21 10:20:30")
-
-        # Change editing objects
-        edit1.status = Request.Statuses.EDITED
-        edit1.save()
-        edit2.status = Request.Statuses.ARCHIVED
-        edit2.save()
-
-        # Call management command
-        with StringIO() as out:
-            call_command("email_weekly_tasks", stdout=out)
-            self.assertEqual(out.getvalue(), "No tasks for this week.\n")
-
-    @freeze_time("2020-11-19 10:20:30", tz_offset=+1, as_kwarg="frozen_time")
     @patch(
         "video_requests.emails.email_crew_daily_reminder",
         wraps=email_crew_daily_reminder,
     )
-    def test_daily_reminder_email_sent_to_crew(
-        self, mock_email_crew_daily_reminder, frozen_time
-    ):
-        # Create test Requests
-        with_crew = create_request(
-            100, self.normal_user, start="2020-11-19T18:00:00+0100"
-        )
-        without_crew = create_request(
-            101, self.normal_user, start="2020-11-19T20:00:00+0100"
-        )
-        crew1 = create_crew(201, with_crew, self.staff_user, "Cameraman")
-        crew2 = create_crew(202, with_crew, self.editor_in_chief, "Reporter")
+    def test_daily_reminder_email_sent_to_crew(self, mock_email_crew_daily_reminder):
+        with time_machine.travel("2020-11-19 10:20:30 +0100") as traveller:
+            # Create test Requests
+            with_crew = create_request(
+                100, self.normal_user, start="2020-11-19T18:00:00+0100"
+            )
+            without_crew = create_request(
+                101, self.normal_user, start="2020-11-19T20:00:00+0100"
+            )
+            crew1 = create_crew(201, with_crew, self.staff_user, "Cameraman")
+            crew2 = create_crew(202, with_crew, self.editor_in_chief, "Reporter")
 
-        """
-        Case 1: Successful e-mail sending
-        """
-        # Call management command
-        with StringIO() as out:
-            call_command("email_daily_reminders", stdout=out)
+            """
+            Case 1: Successful e-mail sending
+            """
+            # Call management command
+            with StringIO() as out:
+                call_command("email_daily_reminders", stdout=out)
+                self.assertEqual(
+                    out.getvalue(),
+                    "1 reminders were sent to crew members. There are 2 request(s) today.\n",
+                )
+
+            # Check if function was called with correct parameters
+            mock_email_crew_daily_reminder.assert_called_once()
+
             self.assertEqual(
-                out.getvalue(),
-                "1 reminders were sent to crew members. There are 2 request(s) today.\n",
+                with_crew, mock_email_crew_daily_reminder.call_args.args[0]
+            )
+            self.assertNotEqual(
+                without_crew, mock_email_crew_daily_reminder.call_args.args[0]
             )
 
-        # Check if function was called with correct parameters
-        mock_email_crew_daily_reminder.assert_called_once()
+            self.assertIn(crew1, mock_email_crew_daily_reminder.call_args.args[1])
+            self.assertIn(crew2, mock_email_crew_daily_reminder.call_args.args[1])
 
-        self.assertEqual(with_crew, mock_email_crew_daily_reminder.call_args.args[0])
-        self.assertNotEqual(
-            without_crew, mock_email_crew_daily_reminder.call_args.args[0]
-        )
+            # Check if e-mail was sent to the right people
+            self.assertEqual(len(mail.outbox), 1)
+            self.assertIn(crew1.member.email, mail.outbox[0].to)
+            self.assertIn(crew2.member.email, mail.outbox[0].to)
+            self.assertEqual(
+                mail.outbox[0].subject,
+                f"Emlékeztető | {with_crew.title} | Mai forgatás",
+            )
 
-        self.assertIn(crew1, mock_email_crew_daily_reminder.call_args.args[1])
-        self.assertIn(crew2, mock_email_crew_daily_reminder.call_args.args[1])
+            """
+            Case 2: No Request for today
+            """
+            # Change time to next day
+            traveller.move_to("2020-11-20 10:20:30 +0100")
 
-        # Check if e-mail was sent to the right people
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn(crew1.member.email, mail.outbox[0].to)
-        self.assertIn(crew2.member.email, mail.outbox[0].to)
-        self.assertEqual(
-            mail.outbox[0].subject, f"Emlékeztető | {with_crew.title} | Mai forgatás"
-        )
-
-        """
-        Case 2: No Request for today
-        """
-        # Change time to next day
-        frozen_time.move_to("2020-11-20 10:20:30")
-
-        # Call management command
-        with StringIO() as out:
-            call_command("email_daily_reminders", stdout=out)
-            self.assertEqual(out.getvalue(), "No reminders for today.\n")
+            # Call management command
+            with StringIO() as out:
+                call_command("email_daily_reminders", stdout=out)
+                self.assertEqual(out.getvalue(), "No reminders for today.\n")
 
     @patch(
         "video_requests.emails.email_production_manager_unfinished_requests",
@@ -536,7 +543,7 @@ class EmailSendingTestCase(APITestCase):
         # Check if function was called with correct parameters
         mock_email_production_manager_unfinished_requests.assert_not_called()
 
-    @freeze_time("2020-11-19 10:20:30", tz_offset=+1)
+    @time_machine.travel("2020-11-19 10:20:30 +0100")
     @patch(
         "video_requests.emails.email_responsible_overdue_request",
         wraps=email_responsible_overdue_request,
