@@ -1,0 +1,53 @@
+name: Reusable Frontend Workflow
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: 'Name of the root directory of the frontend project.'
+        required: true
+        type: string
+      node-version:
+        description: 'Version of NodeJS to use.'
+        required: true
+        type: string
+      node-options:
+        description: 'Optional parameters to use as NODE_OPTIONS environment variable.'
+        required: false
+        default: ''
+        type: string
+      experimental:
+        description: 'Set this to true to enable the job to fail without making the whole workflow run fail.'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  frontend-test:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ inputs.experimental }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ inputs.node-version }}
+        uses: actions/setup-node@v3.5.1
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+      - name: Install frontend dependencies
+        run: npm install
+      - name: Run ESLint config check and lint
+        run: |
+          npm run check-eslint-config
+          npm run lint
+      - name: Build frontend
+        run: npm run build --if-present
+        env:
+          CI: ''
+          NODE_OPTIONS: ${{ inputs.node-options }}
+      - name: Run frontend tests
+        run: npm test
