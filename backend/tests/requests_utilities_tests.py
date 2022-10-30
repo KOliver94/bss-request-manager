@@ -1,13 +1,15 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from io import StringIO
 
+import time_machine
 from django.core.management import call_command
 from django.test import override_settings
 from django.utils.timezone import localtime
-from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.utils import make_utc
 
 from tests.helpers.users_test_utils import create_user, get_default_password
 from tests.helpers.video_requests_test_utils import create_request, create_video
@@ -32,149 +34,152 @@ class RequestsUtilitiesTestCase(APITestCase):
             {"username": user.username, "password": get_default_password()},
             format="json",
         )
-        token = resp.data["access"]
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+        token = AccessToken(resp.data["access"])
+        token.set_iat(at_time=make_utc(datetime(2020, 11, 21, 00, 00)))
+        token.set_exp(lifetime=timedelta(hours=5))
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(token)}")
 
     def setUp(self):
         self.url = "/api/v1/admin/requests"
         self.user = create_user(is_admin=True)
         self.authorize_user(self.user)
 
-    @freeze_time("2020-11-21 10:20:30", tz_offset=+1, as_kwarg="frozen_time")
-    def test_request_and_video_status_changes(self, frozen_time):
-        # 1. Create Request
-        response = self.client.post(self.url, get_test_data())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
-        request_id = response.data["id"]
+    def test_request_and_video_status_changes(self):
+        with time_machine.travel("2020-11-21 10:20:30 +0100") as traveller:
+            # 1. Create Request
+            response = self.client.post(self.url, get_test_data())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(response.data["status"], Request.Statuses.REQUESTED)
+            request_id = response.data["id"]
 
-        # 2. Accept the Request
-        response = self.client.patch(
-            f"{self.url}/{request_id}", {"additional_data": {"accepted": True}}
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.ACCEPTED)
-
-        # 3. Change time to the end of the event and update status
-        frozen_time.move_to("2020-11-21 14:30:20")
-        with StringIO() as out:
-            call_command("update_request_status", stdout=out)
-            self.assertEqual(
-                out.getvalue(), "1 requests was checked for valid status.\n"
+            # 2. Accept the Request
+            response = self.client.patch(
+                f"{self.url}/{request_id}", {"additional_data": {"accepted": True}}
             )
-        response = self.client.get(f"{self.url}/{request_id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.RECORDED)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.ACCEPTED)
 
-        # 4. Add recording information
-        response = self.client.patch(
-            f"{self.url}/{request_id}",
-            {"additional_data": {"recording": {"path": "N:/20201121_test"}}},
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.UPLOADED)
+            # 3. Change time to the end of the event and update status
+            traveller.move_to("2020-11-21 14:30:20 +0100")
+            with StringIO() as out:
+                call_command("update_request_status", stdout=out)
+                self.assertEqual(
+                    out.getvalue(), "1 requests was checked for valid status.\n"
+                )
+            response = self.client.get(f"{self.url}/{request_id}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.RECORDED)
 
-        # 5./1 Add a video
-        response = self.client.post(
-            f"{self.url}/{request_id}/videos", {"title": "New video"}
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["status"], Video.Statuses.PENDING)
-        video_id = response.data["id"]
+            # 4. Add recording information
+            response = self.client.patch(
+                f"{self.url}/{request_id}",
+                {"additional_data": {"recording": {"path": "N:/20201121_test"}}},
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.UPLOADED)
 
-        # 5./2 Assign editor to the video
-        response = self.client.patch(
-            f"{self.url}/{request_id}/videos/{video_id}", {"editor_id": self.user.id}
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Video.Statuses.IN_PROGRESS)
+            # 5./1 Add a video
+            response = self.client.post(
+                f"{self.url}/{request_id}/videos", {"title": "New video"}
+            )
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(response.data["status"], Video.Statuses.PENDING)
+            video_id = response.data["id"]
 
-        # 5./3 Finish the editing of the video
-        response = self.client.patch(
-            f"{self.url}/{request_id}/videos/{video_id}",
-            {"additional_data": {"editing_done": True}},
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Video.Statuses.EDITED)
-        # Request status should also change
-        response = self.client.get(f"{self.url}/{request_id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.EDITED)
+            # 5./2 Assign editor to the video
+            response = self.client.patch(
+                f"{self.url}/{request_id}/videos/{video_id}",
+                {"editor_id": self.user.id},
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Video.Statuses.IN_PROGRESS)
 
-        # 6./1 Copy raw materials to Google Drive
-        response = self.client.patch(
-            f"{self.url}/{request_id}",
-            {"additional_data": {"recording": {"copied_to_gdrive": True}}},
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+            # 5./3 Finish the editing of the video
+            response = self.client.patch(
+                f"{self.url}/{request_id}/videos/{video_id}",
+                {"additional_data": {"editing_done": True}},
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Video.Statuses.EDITED)
+            # Request status should also change
+            response = self.client.get(f"{self.url}/{request_id}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.EDITED)
 
-        # 6./2 Encode the video to the website
-        response = self.client.patch(
-            f"{self.url}/{request_id}/videos/{video_id}",
-            {"additional_data": {"coding": {"website": True}}},
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Video.Statuses.CODED)
+            # 6./1 Copy raw materials to Google Drive
+            response = self.client.patch(
+                f"{self.url}/{request_id}",
+                {"additional_data": {"recording": {"copied_to_gdrive": True}}},
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # 6./3 Publish the video on the website
-        response = self.client.patch(
-            f"{self.url}/{request_id}/videos/{video_id}",
-            {"additional_data": {"publishing": {"website": "https://example.com"}}},
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Video.Statuses.PUBLISHED)
+            # 6./2 Encode the video to the website
+            response = self.client.patch(
+                f"{self.url}/{request_id}/videos/{video_id}",
+                {"additional_data": {"coding": {"website": True}}},
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Video.Statuses.CODED)
 
-        # 6./4 Archive the HQ export
-        response = self.client.patch(
-            f"{self.url}/{request_id}/videos/{video_id}",
-            {"additional_data": {"archiving": {"hq_archive": True}}},
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Video.Statuses.DONE)
-        # Request status should also change
-        response = self.client.get(f"{self.url}/{request_id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.ARCHIVED)
+            # 6./3 Publish the video on the website
+            response = self.client.patch(
+                f"{self.url}/{request_id}/videos/{video_id}",
+                {"additional_data": {"publishing": {"website": "https://example.com"}}},
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Video.Statuses.PUBLISHED)
 
-        # 7. Remove raw files
-        response = self.client.patch(
-            f"{self.url}/{request_id}",
-            {"additional_data": {"recording": {"removed": True}}},
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.DONE)
+            # 6./4 Archive the HQ export
+            response = self.client.patch(
+                f"{self.url}/{request_id}/videos/{video_id}",
+                {"additional_data": {"archiving": {"hq_archive": True}}},
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Video.Statuses.DONE)
+            # Request status should also change
+            response = self.client.get(f"{self.url}/{request_id}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.ARCHIVED)
 
-        # 8. Remove video
-        response = self.client.delete(f"{self.url}/{request_id}/videos/{video_id}")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        # Request status should also change
-        response = self.client.get(f"{self.url}/{request_id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.UPLOADED)
+            # 7. Remove raw files
+            response = self.client.patch(
+                f"{self.url}/{request_id}",
+                {"additional_data": {"recording": {"removed": True}}},
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.DONE)
 
-        # 10. Cancel the Request
-        response = self.client.patch(
-            f"{self.url}/{request_id}", {"additional_data": {"canceled": True}}
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.CANCELED)
-        self.client.patch(
-            f"{self.url}/{request_id}", {"additional_data": {"canceled": False}}
-        )
+            # 8. Remove video
+            response = self.client.delete(f"{self.url}/{request_id}/videos/{video_id}")
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+            # Request status should also change
+            response = self.client.get(f"{self.url}/{request_id}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.UPLOADED)
 
-        # 11. Fail the Request
-        response = self.client.patch(
-            f"{self.url}/{request_id}", {"additional_data": {"failed": True}}
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.FAILED)
+            # 10. Cancel the Request
+            response = self.client.patch(
+                f"{self.url}/{request_id}", {"additional_data": {"canceled": True}}
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.CANCELED)
+            self.client.patch(
+                f"{self.url}/{request_id}", {"additional_data": {"canceled": False}}
+            )
 
-        # 12. Decline the Request
-        response = self.client.patch(
-            f"{self.url}/{request_id}", {"additional_data": {"accepted": False}}
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["status"], Request.Statuses.DENIED)
+            # 11. Fail the Request
+            response = self.client.patch(
+                f"{self.url}/{request_id}", {"additional_data": {"failed": True}}
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.FAILED)
+
+            # 12. Decline the Request
+            response = self.client.patch(
+                f"{self.url}/{request_id}", {"additional_data": {"accepted": False}}
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data["status"], Request.Statuses.DENIED)
 
     def test_request_and_video_status_changes_set_by_admin(self):
         # 1. Create Request
@@ -768,7 +773,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             str((get_test_data()["end_datetime"] + timedelta(weeks=3)).date()),
         )
 
-    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    @time_machine.travel("2020-11-21 10:20:30 +0100")
     def test_request_deadline_recalculate_no_deadline_in_body(self):
         request = create_request(100, self.user)
         body = {"end_datetime": "2020-12-31T10:30:00+01:00"}
@@ -776,7 +781,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["deadline"], "2021-01-21")
 
-    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    @time_machine.travel("2020-11-21 10:20:30 +0100")
     def test_request_deadline_recalculate_old_deadline_in_body(self):
         request = create_request(100, self.user)
         body = {
@@ -787,7 +792,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["deadline"], "2021-01-21")
 
-    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    @time_machine.travel("2020-11-21 10:20:30 +0100")
     def test_request_no_deadline_recalculation_custom_original_deadline(self):
         request = create_request(100, self.user)
         request.deadline = (request.end_datetime + timedelta(days=5)).date()
@@ -810,7 +815,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             "Must be later than end of the event.",
         )
 
-    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    @time_machine.travel("2020-11-21 10:20:30 +0100")
     def test_request_no_deadline_recalculation_no_end_datetime_in_body(self):
         request = create_request(100, self.user)
         body = {"start_datetime": request.start_datetime + timedelta(hours=4)}
@@ -818,7 +823,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["deadline"], str(request.deadline))
 
-    @freeze_time("2020-11-21 10:20:30", tz_offset=+1)
+    @time_machine.travel("2020-11-21 10:20:30 +0100")
     def test_request_no_deadline_recalculation_old_end_datetime_in_body(self):
         request = create_request(100, self.user)
         body = {
