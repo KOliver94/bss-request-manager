@@ -4,10 +4,6 @@ profile = "black"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "core.settings.test"
 python_files = "tests.py test_*.py *_tests.py"
-filterwarnings = [
-    # drf-recaptcha creates this deprecation warning but only because of backwards compatibility.
-    "ignore:Method `set_context` on validators is deprecated:rest_framework.RemovedInDRF313Warning",
-]
 
 [tool.coverage.run]
 branch = true
