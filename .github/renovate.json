@@ -13,21 +13,11 @@
     ":semanticPrefixFixDepsChoreOthers",
     ":separateMajorReleases",
     ":timezone(Europe/Budapest)",
+    "group:monorepos",
     "schedule:weekends",
     "workarounds:all"
   ],
   "packageRules": [
-    {
-      "description": "Add `python` label for Pipenv updates.",
-      "matchManagers": ["pipenv"],
-      "addLabels": ["python"]
-    },
-    {
-      "description": "Add `javascript` label for npm updates and run `npmDedupe` after run.",
-      "matchManagers": ["npm"],
-      "addLabels": ["javascript"],
-      "postUpdateOptions": ["npmDedupe"]
-    },
     {
       "description": "Add `docker` label for Dockerfile or docker-compose related updates.",
       "matchManagers": ["docker-compose", "dockerfile"],
@@ -39,11 +29,23 @@
       "addLabels": ["github_actions"]
     },
     {
-      "description": "Group all minor and patch updates together for npm and Pipenv.",
-      "matchManagers": ["npm", "pipenv"],
+      "description": "Group all minor and patch updates together for Pipenv in /backend.",
+      "addLabels": ["python"],
+      "groupName": "all non-major backend dependencies",
+      "groupSlug": "all-minor-patch-backend",
+      "matchManagers": ["pipenv"],
+      "matchPaths": ["backend/**"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "Group all minor and patch updates together for npm in /frontend.",
+      "addLabels": ["javascript"],
+      "groupName": "all non-major frontend dependencies",
+      "groupSlug": "all-minor-patch-frontend",
+      "matchManagers": ["npm"],
+      "matchPaths": ["frontend/**"],
       "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch"
+      "postUpdateOptions": ["npmDedupe"]
     }
   ],
   "rebaseWhen": "conflicted"
