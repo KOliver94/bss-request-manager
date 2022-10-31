@@ -17,6 +17,15 @@ repos:
     hooks:
       - id: check-github-workflows
       - id: check-renovate
+  - repo: local
+    hooks:
+      - id: sync-additional-dependencies
+        name: 'Sync additional_dependencies'
+        entry: python .pre-commit/sync-additional-dependencies.py
+        language: python
+        files: package.json$
+        additional_dependencies:
+          - pyyaml==6.0
   - repo: https://github.com/hadialqattan/pycln
     rev: v2.1.1
     hooks:
@@ -75,14 +84,12 @@ repos:
             --fix,
           ]
         additional_dependencies:
-          [
-            'eslint@8.26.0',
-            'eslint-config-airbnb@19.0.4',
-            'eslint-config-prettier@8.5.0',
-            'eslint-plugin-import@2.26.0',
-            'eslint-plugin-jsx-a11y@6.6.1',
-            'eslint-plugin-prettier@4.2.1',
-            'eslint-plugin-react@7.31.10',
-            'eslint-plugin-react-hooks@4.6.0',
-            'prettier@2.7.1',
-          ]
+          - eslint-config-airbnb@19.0.4
+          - eslint-config-prettier@8.5.0
+          - eslint-plugin-import@2.26.0
+          - eslint-plugin-jsx-a11y@6.6.1
+          - eslint-plugin-prettier@4.2.1
+          - eslint-plugin-react-hooks@4.6.0
+          - eslint-plugin-react@7.31.10
+          - eslint@8.26.0
+          - prettier@2.7.1
