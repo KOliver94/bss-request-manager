@@ -19,7 +19,7 @@ export default function Parallax(props) {
     windowScrollTop = 0;
   }
   const [transform, setTransform] = useState(
-    'translate3d(0,' + windowScrollTop + 'px,0)'
+    'translate3d(0,' + windowScrollTop + 'px,0)',
   );
   useEffect(() => {
     if (window.innerWidth >= 768) {

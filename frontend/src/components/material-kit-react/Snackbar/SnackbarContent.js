@@ -59,7 +59,7 @@ export default function SnackbarContent(props) {
         root: classes.root + ' ' + classes[color],
         message: classes.message + ' ' + classes.container,
       }}
-    />
+    />,
   );
   return alert;
 }

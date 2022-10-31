@@ -120,7 +120,7 @@ export default function Crew({
         const result = await updateCrewAdmin(
           requestId,
           editingCrewId,
-          crewMemberDetails
+          crewMemberDetails,
         );
         setRequestData({
           ...requestData,
@@ -327,7 +327,7 @@ export default function Crew({
                             <Avatar
                               sx={{
                                 bgcolor: stringToColor(
-                                  `${option.last_name} ${option.first_name}`
+                                  `${option.last_name} ${option.first_name}`,
                                 ),
                               }}
                               src={option.profile.avatar_url}
@@ -367,7 +367,7 @@ export default function Crew({
                         const { inputValue } = params;
                         // Suggest the creation of a new value
                         const isExisting = options.some(
-                          (option) => inputValue === option.position
+                          (option) => inputValue === option.position,
                         );
                         if (inputValue !== '' && !isExisting) {
                           filtered.push({
