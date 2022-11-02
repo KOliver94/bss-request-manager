@@ -25,8 +25,8 @@ const Menubar = () => {
             icon="pi-video"
             label="Felkérések"
             dropdownItems={[
-              { icon: 'pi-plus', label: 'Új', path: '/requests/new' },
               { icon: 'pi-bars', label: 'Lista', path: '/requests' },
+              { icon: 'pi-plus', label: 'Új', path: '/requests/new' },
             ]}
           />
           <Button icon="pi-users" label="Felhasználók" path="/users" />

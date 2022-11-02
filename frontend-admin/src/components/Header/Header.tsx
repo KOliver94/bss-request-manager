@@ -1,11 +1,11 @@
-import Breadcrumb from './Breadcrumb/Breadcrumb';
+import Breadcrumbs from './Breadcrumb/Breadcrumbs';
 import Menubar from './Menubar/Menubar';
 
 const Header = () => {
   return (
     <header>
       <Menubar />
-      <Breadcrumb />
+      <Breadcrumbs />
     </header>
   );
 };
