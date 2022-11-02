@@ -1,16 +1,32 @@
 import { Fragment } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useMatches, useNavigate } from 'react-router-dom';
 
-type BreadcrumbProps = {
-  breadcrumbs?: {
-    name: string;
-    path?: string;
-  }[];
-};
+type BreadcrumbsType = {
+  name: string;
+  path: string;
+}[];
 
-const Breadcrumb = ({ breadcrumbs }: BreadcrumbProps) => {
+type ReactRouterUseMatchesType = {
+  data: unknown;
+  handle: {
+    crumb: (data?: unknown) => string;
+  };
+  pathname: string;
+}[];
+
+const Breadcrumbs = () => {
   const navigate = useNavigate();
+  const matches = useMatches() as ReactRouterUseMatchesType;
+
+  const breadcrumbs: BreadcrumbsType = matches
+    // first get rid of any matches that don't have handle and crumb
+    .filter((match) => Boolean(match.handle?.crumb))
+    // now map them into an array of elements, passing the loader
+    // data to each one
+    .map((match) => {
+      return { name: match.handle.crumb(match.data), path: match.pathname };
+    });
 
   return (
     <ul className="align-items-center border-bottom-1 border-top-1 flex font-medium list-none m-0 overflow-x-auto px-5 py-3 surface-border surface-section">
@@ -33,7 +49,7 @@ const Breadcrumb = ({ breadcrumbs }: BreadcrumbProps) => {
             {!Object.is(array.length - 1, index) ? (
               <a
                 className="cursor-pointer text-blue-500 white-space-nowrap"
-                onClick={() => navigate(breadcrumb.path || '/')}
+                onClick={() => navigate(breadcrumb.path)}
               >
                 {breadcrumb.name}
               </a>
@@ -49,4 +65,4 @@ const Breadcrumb = ({ breadcrumbs }: BreadcrumbProps) => {
   );
 };
 
-export default Breadcrumb;
+export default Breadcrumbs;
