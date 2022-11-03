@@ -23,7 +23,7 @@ repos:
         name: 'Sync additional_dependencies'
         entry: python .pre-commit/sync-additional-dependencies.py
         language: python
-        files: package.json$
+        files: (^.pre-commit/)|(package.json$)
         additional_dependencies:
           - pyyaml==6.0
   - repo: https://github.com/hadialqattan/pycln
@@ -116,5 +116,4 @@ repos:
           - eslint-plugin-react-hooks@4.6.0
           - eslint-plugin-react@7.31.10
           - eslint@8.26.0
-          - prettier@2.7.1
           - typescript@4.8.4

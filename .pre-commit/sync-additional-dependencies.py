@@ -5,7 +5,17 @@ from yaml.dumper import SafeDumper
 from yaml.loader import SafeLoader
 from yaml.nodes import ScalarNode
 
-DEPENDENCIES_TO_IGNORE = ["source-map-explorer", "react-scripts"]
+DEPENDENCIES_TO_IGNORE = [
+    "@types/node",
+    "@types/react",
+    "@types/react-dom",
+    "@vitejs/plugin-react",
+    "source-map-explorer",
+    "prettier",
+    "react-scripts",
+    "vite",
+    "vite-tsconfig-paths",
+]
 REPOS_TO_CHECK = ["eslint"]
 
 
