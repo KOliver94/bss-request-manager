@@ -49,5 +49,3 @@ jobs:
         env:
           CI: ''
           NODE_OPTIONS: ${{ inputs.node-options }}
-      - name: Run frontend tests
-        run: npm test
