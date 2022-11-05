@@ -29,7 +29,7 @@ const Breadcrumbs = () => {
     });
 
   return (
-    <ul className="align-items-center border-bottom-1 border-top-1 flex font-medium list-none m-0 overflow-x-auto px-5 py-3 surface-border surface-section">
+    <ul className="align-items-center border-bottom-1 border-top-1 flex font-medium list-none m-0 overflow-x-auto px-3 py-3 sm:px-5 surface-border surface-section">
       {/* Home button */}
       <li className="pr-3">
         <a className="cursor-pointer" onClick={() => navigate('/')}>

@@ -13,7 +13,7 @@ const Menubar = () => {
 
   return (
     <div
-      className="flex justify-content-between lg:static px-6 relative surface-overlay"
+      className="flex justify-content-between lg:static px-3 relative sm:px-5 surface-overlay"
       style={{ minHeight: '80px' }}
     >
       <Logo />
