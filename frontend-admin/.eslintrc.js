@@ -40,6 +40,7 @@ module.exports = {
     ],
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'react/react-in-jsx-scope': 'off',
+    'sort-keys': ['error', 'asc', { caseSensitive: true, natural: true }],
   },
   settings: {
     'import/resolver': {
