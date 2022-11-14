@@ -13,7 +13,7 @@ repos:
       - id: mixed-line-ending
         name: 'Replace mixed line endings'
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.18.4
+    rev: 0.19.1
     hooks:
       - id: check-github-workflows
       - id: check-renovate
@@ -27,7 +27,7 @@ repos:
         additional_dependencies:
           - pyyaml==6.0
   - repo: https://github.com/hadialqattan/pycln
-    rev: v2.1.1
+    rev: v2.1.2
     hooks:
       - id: pycln
         name: 'Remove unused Python imports'
@@ -68,7 +68,7 @@ repos:
         exclude: (^backend/templates/)|((\.py|Pipfile(\.lock)?|package(-lock)?\.json)$)
         args: [--config, ./frontend/.prettierrc]
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.26.0
+    rev: v8.27.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
