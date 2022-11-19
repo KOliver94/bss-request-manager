@@ -68,6 +68,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pipenv'
+          cache-dependency-path: backend/Pipfile.lock
       - name: Install pipenv, libpq and ldap system dependencies
         run: |
           sudo apt-get update
@@ -75,18 +77,7 @@ jobs:
           pip install tblib
           pip install pipenv
           pipenv --python ${{ matrix.python-version }}
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache
-          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles('**/Pipfile.lock') }}-v-${{ secrets.CACHE_VERSION }}
-      - name: Cache virtualenv
-        uses: actions/cache@v3
-        with:
-          path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-py${{ matrix.python-version }}-venv-${{ hashFiles('**/Pipfile.lock') }}-v-${{ secrets.CACHE_VERSION }}
       - name: Install dependencies
-        if: steps.cache-dependencies.outputs.cache-hit != 'true' || steps.cache-virtualenv.outputs.cache-hit != 'true'
         run: pipenv install --dev
       - name: Check for model changes without migration
         run: pipenv run python manage.py makemigrations --check
