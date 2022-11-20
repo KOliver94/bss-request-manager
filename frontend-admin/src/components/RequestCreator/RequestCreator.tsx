@@ -13,6 +13,9 @@ import AutoCompleteStaff, {
   StaffUser,
 } from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
+import UsersDataTable, {
+  UsersDataType,
+} from 'components/UsersDataTable/UsersDataTable';
 import useMobile from 'hooks/useMobile';
 
 import NewRequesterForm from './NewRequesterForm';
@@ -24,6 +27,7 @@ export interface IRequestCreator {
   end_datetime: Date | null;
   place: string;
   responsible: StaffUser | null;
+  requester: UsersDataType | null;
   requester_email: string;
   requester_first_name: string;
   requester_last_name: string;
@@ -41,6 +45,7 @@ const RequestCreator = () => {
     deadline: null,
     end_datetime: null,
     place: '',
+    requester: null,
     requester_email: '',
     requester_first_name: '',
     requester_last_name: '',
@@ -105,10 +110,7 @@ const RequestCreator = () => {
       <div className="font-medium mb-3 text-900 text-xl">
         Felkérés létrehozása
       </div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="border-round p-3 p-fluid shadow-2 sm:p-4 surface-card"
-      >
+      <form className="border-round p-3 p-fluid shadow-2 sm:p-4 surface-card">
         <div className="formgrid grid p-fluid">
           <FormField
             className="col-12 mb-4"
@@ -233,9 +235,19 @@ const RequestCreator = () => {
             }
           />
           {watchRequesterType === 'search' && (
-            <div className="col-12 field mb-0 mt-4">
-              <></>
-            </div>
+            <Controller
+              name="requester"
+              control={control}
+              render={({ field }) => (
+                <div className="col-12 field mb-0 mt-4">
+                  <UsersDataTable
+                    selectionMode="single"
+                    selection={field.value}
+                    onSelectionChange={(e) => field.onChange(e.value)}
+                  />
+                </div>
+              )}
+            />
           )}
           {watchRequesterType === 'new' && (
             <NewRequesterForm control={control} />
@@ -247,6 +259,7 @@ const RequestCreator = () => {
             icon="pi pi-save"
             label="Mentés"
             model={buttonOptions}
+            onClick={handleSubmit(onSubmit)}
           />
           <div className="col-12 field-checkbox md:col-3 md:mb-0 md:mt-0 mt-3">
             <Controller

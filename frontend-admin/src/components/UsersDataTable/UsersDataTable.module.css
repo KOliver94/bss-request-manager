@@ -1,0 +1,9 @@
+.isStaffFilter {
+  min-width: 14rem !important;
+}
+
+.isStaffFilter
+  > [class~='p-column-filter-constraints']
+  > [class~='p-column-filter-constraint'] {
+  padding-bottom: 0;
+}
