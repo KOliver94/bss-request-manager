@@ -5,8 +5,9 @@ import {
   Route,
 } from 'react-router-dom';
 
-import App from './App';
-import Layout from './Layout';
+import App from 'App';
+import RequestCreator from 'components/RequestCreator/RequestCreator';
+import Layout from 'Layout';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,7 +23,7 @@ const router = createBrowserRouter(
         <Route index element={<App />} />
         <Route
           path="new"
-          element={<App />}
+          element={<RequestCreator />}
           handle={{
             crumb: () => 'Új',
           }}
