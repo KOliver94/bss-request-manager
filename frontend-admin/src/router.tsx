@@ -8,6 +8,7 @@ import {
 import App from 'App';
 import RequestCreator from 'components/RequestCreator/RequestCreator';
 import Layout from 'Layout';
+import UsersListPage from 'pages/UsersListPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,7 +54,7 @@ const router = createBrowserRouter(
       />
       <Route
         path="users"
-        element={<App />}
+        element={<UsersListPage />}
         handle={{
           crumb: () => 'Felhasználók',
         }}
