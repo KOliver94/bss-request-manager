@@ -31,6 +31,7 @@ const NewRequesterForm = ({ control }: NewRequesterFormProps) => {
       <FormField
         className="col-12 mb-4 md:col-6 md:mb-0"
         control={control}
+        icon="pi-envelope"
         name="requester_email"
         title="E-mail cím"
       >
@@ -39,6 +40,7 @@ const NewRequesterForm = ({ control }: NewRequesterFormProps) => {
       <FormField
         className="col-12 mb-0 md:col-6"
         control={control}
+        icon="pi-phone"
         name="requester_mobile"
         title="Telefonszám"
       >

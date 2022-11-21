@@ -153,6 +153,7 @@ const RequestCreator = () => {
           <FormField
             className="col-12 mb-4 md:col-6 md:mb-0"
             control={control}
+            icon="pi-map-marker"
             name="place"
             title="Helyszín"
           >
