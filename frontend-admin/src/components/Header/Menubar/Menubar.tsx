@@ -1,3 +1,5 @@
+import { useTheme } from 'hooks/useTheme';
+
 import AvatarButton from './Button/AvatarButton';
 import Button from './Button/Button';
 import DropdownButton from './Button/DropdownButton';
@@ -6,6 +8,8 @@ import Logo from './Logo';
 import SandwichMenu from './SandwichMenu';
 
 const Menubar = () => {
+  const [darkMode, setDarkMode] = useTheme();
+
   const signOut = () => {
     localStorage.clear();
     window.location.href = '/';
@@ -33,6 +37,11 @@ const Menubar = () => {
           <Button icon="pi-search" label="Keresés" path="/search" />
         </ul>
         <ul className="border-top-1 flex flex-column lg:border-top-none lg:flex-row list-none m-0 p-0 select-none surface-border">
+          <IconButton
+            icon={darkMode ? 'pi-sun' : 'pi-moon'}
+            label={darkMode ? 'Világos téma' : 'Sötét téma'}
+            onClick={() => setDarkMode(!darkMode)}
+          />
           <IconButton
             icon="pi-sign-out"
             label="Kijelentkezés"
