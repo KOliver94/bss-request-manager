@@ -7,9 +7,8 @@ import { RouterProvider } from 'react-router-dom';
 
 import * as locales from 'locales.json';
 import router from 'router';
+import { ThemeProvider } from 'themes/ThemeProvider';
 
-import 'primereact/resources/themes/lara-light-blue/theme.css';
-import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
@@ -28,6 +27,8 @@ locale('hu');
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </StrictMode>
 );
