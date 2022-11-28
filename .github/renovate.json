@@ -46,6 +46,16 @@
       "matchPaths": ["frontend/**"],
       "matchUpdateTypes": ["minor", "patch"],
       "postUpdateOptions": ["npmDedupe"]
+    },
+    {
+      "description": "Group all minor and patch updates together for npm in /frontend-admin.",
+      "addLabels": ["javascript"],
+      "groupName": "all non-major frontend-admin dependencies",
+      "groupSlug": "all-minor-patch-frontend-admin",
+      "matchManagers": ["npm"],
+      "matchPaths": ["frontend-admin/**"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "postUpdateOptions": ["npmDedupe"]
     }
   ],
   "rebaseWhen": "conflicted"
