@@ -45,6 +45,10 @@ def post_delete_ban(sender, instance, **kwargs):
 def populate_user_profile_from_ldap(
     sender, user=None, ldap_user=None, **kwargs
 ):  # pragma: no cover
+    if not user.id and User.objects.filter(email=user.email).exists():
+        raise Exception(
+            "User with e-mail address already exists. Please contact the system administrator."
+        )
     user.save()  # Create the user which will create the profile as well
 
     try:
