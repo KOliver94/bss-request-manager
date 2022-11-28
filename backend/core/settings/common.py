@@ -38,8 +38,9 @@ SECRET_KEY = config("APP_SECRET_KEY", default=get_random_secret_key())
 DEBUG = config("APP_DEBUG", default=False, cast=bool)
 DJANGO_ADMIN = config("DJANGO_ADMIN", default=True, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost", cast=Csv())
-CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default=[], cast=Csv())
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default=[], cast=Csv())
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default=[], cast=Csv())
 
 # Application definition
 
