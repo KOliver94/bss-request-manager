@@ -18,12 +18,12 @@ django-phonenumber-field = {extras = ["phonenumbers"],version = "==7.0.0"}
 django-simple-history = "==3.2.0"
 drf-recaptcha = "==2.2.2"
 drf-yasg = "==1.21.4"
-google-api-python-client = "==2.66.0"
+google-api-python-client = "==2.68.0"
 google-auth-httplib2 = "==0.1.0"
 google-auth-oauthlib = "==0.7.1"
 gunicorn = "==20.1.0"
-jsonschema = {extras = ["format"],version = "==4.17.1"}
-libgravatar = "==1.0.0"
+jsonschema = {extras = ["format"],version = "==4.17.3"}
+libgravatar = "==1.0.3"
 psycopg2-binary = "==2.9.5"
 python-decouple = "==3.6"
 python-ldap = "==3.4.3"
