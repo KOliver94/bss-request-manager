@@ -9,6 +9,7 @@ import * as locales from 'locales.json';
 import router from 'router';
 import { ThemeProvider } from 'themes/ThemeProvider';
 
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
