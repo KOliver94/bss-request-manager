@@ -9,14 +9,14 @@ import { classNames } from 'primereact/utils';
 import stylesModule from './Avatar.module.css';
 
 const Avatar = forwardRef<React.Ref<HTMLDivElement>, PrimeAvatarProps>(
-  (props, ref) => {
+  ({ className, ...props }, ref) => {
     return (
       <PrimeAvatar
         icon="pi pi-user"
         shape="circle"
         {...props}
         {...ref}
-        className={classNames(stylesModule.avatarIcon, props.className)}
+        className={classNames(stylesModule.avatarIcon, className)}
       />
     );
   }
