@@ -86,7 +86,7 @@ const VideosDataTable = forwardRef<
       responsiveLayout="scroll"
       showGridlines
       sortField="title"
-      sortOrder={-1}
+      sortOrder={1}
       stripedRows
       value={[]}
       {...props}
