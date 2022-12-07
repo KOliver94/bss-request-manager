@@ -92,6 +92,7 @@ const UsersDataTable = forwardRef<React.Ref<HTMLTableElement>, DataTableProps>(
         rowsPerPageOptions={[10, 25, 50, 100]}
         showGridlines
         sortField="full_name"
+        sortOrder={1}
         stripedRows
         value={[]}
         {...props}
