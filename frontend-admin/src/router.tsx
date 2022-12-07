@@ -8,6 +8,7 @@ import {
 import App from 'App';
 import RequestCreator from 'components/RequestCreator/RequestCreator';
 import Layout from 'Layout';
+import RequestsListPage from 'pages/RequestsListPage';
 import UsersListPage from 'pages/UsersListPage';
 
 const router = createBrowserRouter(
@@ -21,7 +22,7 @@ const router = createBrowserRouter(
           crumb: () => 'Felkérések',
         }}
       >
-        <Route index element={<App />} />
+        <Route index element={<RequestsListPage />} />
         <Route
           path="new"
           element={<RequestCreator />}
