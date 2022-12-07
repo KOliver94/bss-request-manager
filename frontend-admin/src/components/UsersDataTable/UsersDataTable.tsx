@@ -102,21 +102,21 @@ const UsersDataTable = forwardRef<React.Ref<HTMLTableElement>, DataTableProps>(
           filterMatchMode="contains"
           header="Név"
           sortable
-        ></Column>
+        />
         <Column
           field="email"
           filter
           filterMatchMode="contains"
           header="E-mail"
           sortable
-        ></Column>
+        />
         <Column
           field="profile.phone_number"
           filter
           filterMatchMode="contains"
           header="Telefonszám"
           sortable
-        ></Column>
+        />
         <Column
           body={isStaffBodyTemplate}
           bodyClassName="text-center"
@@ -131,7 +131,7 @@ const UsersDataTable = forwardRef<React.Ref<HTMLTableElement>, DataTableProps>(
           showFilterOperator={false}
           sortable
           style={{ minWidth: '8rem' }}
-        ></Column>
+        />
         <Column
           body={actionBodyTemplate}
           bodyStyle={{ overflow: 'visible', textAlign: 'center' }}
