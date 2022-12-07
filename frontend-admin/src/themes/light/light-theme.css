@@ -1,2 +1,47 @@
 @import '~primereact/resources/themes/lara-light-blue/theme.css';
 @import '~primereact/resources/primereact.min.css';
+
+.p-tag.p-tag-blue {
+  background-color: var(--blue-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-bluegray {
+  background-color: var(--bluegray-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-cyan {
+  background-color: var(--cyan-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-green {
+  background-color: var(--green-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-indigo {
+  background-color: var(--indigo-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-orange {
+  background-color: var(--orange-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-pink {
+  background-color: var(--pink-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-purple {
+  background-color: var(--purple-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-red {
+  background-color: var(--red-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-teal {
+  background-color: var(--teal-500);
+  color: var(--primary-color-text);
+}
+.p-tag.p-tag-yellow {
+  background-color: var(--yellow-500);
+  color: var(--primary-color-text);
+}
