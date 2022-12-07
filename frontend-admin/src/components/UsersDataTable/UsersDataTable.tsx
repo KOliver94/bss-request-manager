@@ -24,11 +24,11 @@ export type UsersDataType = {
 const UsersDataTable = forwardRef<React.Ref<HTMLTableElement>, DataTableProps>(
   (props, ref) => {
     const navigate = useNavigate();
-    const isStaffBodyTemplate = (rowData: UsersDataType) => {
+    const isStaffBodyTemplate = ({ is_staff }: UsersDataType) => {
       return (
         <i
           className={
-            rowData.is_staff
+            is_staff
               ? 'true-icon pi pi-check-circle text-green-500'
               : 'false-icon pi pi-times-circle text-pink-500'
           }
@@ -36,25 +36,22 @@ const UsersDataTable = forwardRef<React.Ref<HTMLTableElement>, DataTableProps>(
       );
     };
 
-    const fullNameBodyTemplate = (rowData: UsersDataType) => {
+    const fullNameBodyTemplate = ({ full_name, profile }: UsersDataType) => {
       return (
         <div className="align-items-center flex">
-          <Avatar
-            className="mr-2"
-            image={rowData.profile.avatar_url || undefined}
-          />
-          <div>{rowData.full_name}</div>
+          <Avatar className="mr-2" image={profile.avatar_url || undefined} />
+          <div>{full_name}</div>
         </div>
       );
     };
 
-    const actionBodyTemplate = (rowData: UsersDataType) => {
+    const actionBodyTemplate = ({ id }: UsersDataType) => {
       return (
         <Button
           aria-label="Ugrás a profilra"
           className="p-button-info p-button-outlined"
           icon="pi pi-id-card"
-          onClick={() => navigate(`/users/${rowData.id}`)}
+          onClick={() => navigate(`/users/${id}`)}
           type="button"
         />
       );
