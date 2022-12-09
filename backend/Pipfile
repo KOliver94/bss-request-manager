@@ -5,7 +5,7 @@ verify_ssl = true
 
 [packages]
 celery = {extras = ["redis"],version = "==5.2.7"}
-django = "==4.1.3"
+django = "==4.1.4"
 djangorestframework = "==3.14.0"
 djangorestframework_simplejwt = "==5.2.2"
 django-auth-ldap = "==4.1.0"
@@ -14,11 +14,11 @@ django-celery-results = "==2.4.0"
 django-cors-headers = "==3.13.0"
 django-filter = "==22.1"
 django-health-check = "==3.17.0"
-django-phonenumber-field = {extras = ["phonenumbers"],version = "==7.0.0"}
+django-phonenumber-field = {extras = ["phonenumbers"],version = "==7.0.1"}
 django-simple-history = "==3.2.0"
 drf-recaptcha = "==2.2.2"
 drf-yasg = "==1.21.4"
-google-api-python-client = "==2.68.0"
+google-api-python-client = "==2.69.0"
 google-auth-httplib2 = "==0.1.0"
 google-auth-oauthlib = "==0.7.1"
 gunicorn = "==20.1.0"
