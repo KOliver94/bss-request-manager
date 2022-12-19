@@ -32,7 +32,7 @@ repos:
       - id: pycln
         name: 'Remove unused Python imports'
   - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+    rev: v5.11.3
     hooks:
       - id: isort
         name: 'Sort Python imports'
@@ -70,7 +70,7 @@ repos:
         additional_dependencies:
           - prettier@2.8.1
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.29.0
+    rev: v8.30.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
