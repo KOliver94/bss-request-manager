@@ -70,7 +70,7 @@ repos:
         additional_dependencies:
           - prettier@2.8.1
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.30.0
+    rev: v8.31.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
