@@ -45,3 +45,13 @@
   background-color: var(--yellow-300);
   color: var(--primary-color-text);
 }
+
+.p-inline-message.p-inline-message-warn {
+  background: rgb(25, 18, 7);
+  border: solid rgb(255, 167, 38);
+  border-width: 1px;
+  color: rgb(255, 226, 183);
+}
+.p-inline-message.p-inline-message-warn .p-inline-message-icon {
+  color: rgb(255, 167, 38);
+}
