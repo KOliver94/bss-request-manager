@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import Avatar from 'components/Avatar/Avatar';
 import { RequestStatusTag } from 'components/StatusTag/StatusTag';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
+import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
 
 const AvatarGroupCrew = lazy(
@@ -71,22 +72,7 @@ const RequestsDataTable = forwardRef<
   };
 
   const dateBodyTemplate = ({ start_datetime }: RequestDataType) => {
-    return isMobile
-      ? start_datetime.toLocaleString('hu-HU', {
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          month: 'short',
-          year: 'numeric',
-        })
-      : start_datetime.toLocaleString('hu-HU', {
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          month: 'long',
-          weekday: 'long',
-          year: 'numeric',
-        });
+    return dateTimeToLocaleString(start_datetime, isMobile);
   };
 
   const responsibleBodyTemplate = ({ responsible }: RequestDataType) => {
