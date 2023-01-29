@@ -12,8 +12,8 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Skeleton } from 'primereact/skeleton';
 import { useNavigate } from 'react-router-dom';
 
-import Avatar from 'components/Avatar/Avatar';
 import { RequestStatusTag } from 'components/StatusTag/StatusTag';
+import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
@@ -78,13 +78,11 @@ const RequestsDataTable = forwardRef<
   const responsibleBodyTemplate = ({ responsible }: RequestDataType) => {
     return (
       responsible && (
-        <div className="align-items-center flex justify-content-center">
-          <Avatar
-            className="mr-2"
-            image={responsible.profile.avatar_url || undefined}
-          />
-          <div>{responsible.full_name}</div>
-        </div>
+        <User
+          className="justify-content-center"
+          imageUrl={responsible.profile.avatar_url}
+          name={responsible.full_name}
+        />
       )
     );
   };
