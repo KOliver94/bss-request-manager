@@ -6,8 +6,8 @@ import { DataTable, DataTableProps } from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
 import { useNavigate } from 'react-router-dom';
 
-import Avatar from 'components/Avatar/Avatar';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
+import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 
 const RatingDialog = lazy(() => import('components/RatingDialog/RatingDialog'));
@@ -40,13 +40,11 @@ const VideosDataTable = forwardRef<
   const editorBodyTemplate = ({ editor }: VideoDataType) => {
     return (
       editor && (
-        <div className="align-items-center flex justify-content-center">
-          <Avatar
-            className="mr-2"
-            image={editor.profile.avatar_url || undefined}
-          />
-          <div>{editor.full_name}</div>
-        </div>
+        <User
+          className="justify-content-center"
+          imageUrl={editor.profile.avatar_url}
+          name={editor.full_name}
+        />
       )
     );
   };

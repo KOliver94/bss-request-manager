@@ -6,7 +6,7 @@ import { DataTable, DataTableProps } from 'primereact/datatable';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import { useNavigate } from 'react-router-dom';
 
-import Avatar from 'components/Avatar/Avatar';
+import User from 'components/User/User';
 
 import stylesModule from './UsersDataTable.module.css';
 
@@ -37,12 +37,7 @@ const UsersDataTable = forwardRef<React.Ref<HTMLTableElement>, DataTableProps>(
     };
 
     const fullNameBodyTemplate = ({ full_name, profile }: UsersDataType) => {
-      return (
-        <div className="align-items-center flex">
-          <Avatar className="mr-2" image={profile.avatar_url || undefined} />
-          <div>{full_name}</div>
-        </div>
-      );
+      return <User imageUrl={profile.avatar_url} name={full_name} />;
     };
 
     const actionBodyTemplate = ({ id }: UsersDataType) => {
