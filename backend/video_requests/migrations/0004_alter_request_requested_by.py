@@ -7,7 +7,6 @@ import common.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("video_requests", "0003_update_request_requested_by_data"),
