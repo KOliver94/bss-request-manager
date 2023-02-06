@@ -12,7 +12,6 @@ def set_requested_by(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("video_requests", "0002_add_request_requested_by"),
     ]
