@@ -57,6 +57,7 @@ def get_pr_responsible():
 #      Google Calendar       #
 ##############################
 
+
 # https://github.com/googleapis/google-api-python-client/issues/325#issuecomment-274349841
 class MemoryCache(Cache):  # pragma: no cover
     _CACHE = {}
