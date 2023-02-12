@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5e796b5147db3b296aa833a25a60694f75b16474a4bf7d7f63b0915ae9a78567"
+            "sha256": "2c925e2f9439bb20746389f0c70258bfe1567f5b7ab1d41aef895bd189701f77"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -528,11 +528,11 @@
         },
         "drf-yasg": {
             "hashes": [
-                "sha256:4a156d195fdccc51b40a227955588d982ca43c2e327927c7713bf967f5589913",
-                "sha256:887c9f79e64f46aa48974234e61029b1bea6b12ea628a8fc8a3697589add1d3e"
+                "sha256:ba9cf4bf79f259290daee9b400fa4fcdb0e78d2f043fa5e9f6589c939fd06d05",
+                "sha256:ceef0c3b5dc4389781afd786e6dc3697af2a2fe0d8724ee1f637c23d75bbc5b2"
             ],
             "index": "pypi",
-            "version": "==1.21.4"
+            "version": "==1.21.5"
         },
         "fqdn": {
             "hashes": [
@@ -558,11 +558,11 @@
         },
         "google-api-python-client": {
             "hashes": [
-                "sha256:1446d8c618191afdb1190296a4f9648955460184c655da2bfa40c2968e6caac6",
-                "sha256:514326068802f8e8b32c282c2c1f528cf007247ba19470de6d013731985a3d28"
+                "sha256:42a44e9adfca6bb27540ce52348aa1d3b81e214bcc53d454a76ebfbe8eee1483",
+                "sha256:f18e9dbb365f0485194a8daf5d60da2cff6a80ce2c9a694efc2b279922cb3dd0"
             ],
             "index": "pypi",
-            "version": "==2.76.0"
+            "version": "==2.77.0"
         },
         "google-auth": {
             "hashes": [
@@ -1099,11 +1099,11 @@
         },
         "sentry-sdk": {
             "hashes": [
-                "sha256:273fe05adf052b40fd19f6d4b9a5556316807246bd817e5e3482930730726bb0",
-                "sha256:72c00322217d813cf493fe76590b23a757e063ff62fec59299f4af7201dd4448"
+                "sha256:69ecbb2e1ff4db02a06c4f20f6f69cb5dfe3ebfbc06d023e40d77cf78e9c37e7",
+                "sha256:7ad4d37dd093f4a7cb5ad804c6efe9e8fab8873f7ffc06042dc3f3fd700a93ec"
             ],
             "index": "pypi",
-            "version": "==1.14.0"
+            "version": "==1.15.0"
         },
         "setuptools": {
             "hashes": [
