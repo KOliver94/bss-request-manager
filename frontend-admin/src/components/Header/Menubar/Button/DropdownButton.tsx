@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { Ripple } from 'primereact/ripple';
 import { StyleClass } from 'primereact/styleclass';
 import { IconType } from 'primereact/utils';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 type ButtonDropdownProps = {
   dropdownItems: {
@@ -21,7 +21,6 @@ const DropdownButton = ({
   label,
 }: ButtonDropdownProps) => {
   const btnRef = useRef(null);
-  const navigate = useNavigate();
 
   return (
     <li className="lg:relative">
@@ -50,14 +49,14 @@ const DropdownButton = ({
       <ul className="border-50 border-round cursor-pointer hidden lg:absolute lg:border-1 lg:px-0 lg:shadow-2 lg:w-15rem list-none m-0 origin-top px-6 py-0 shadow-0 surface-overlay w-full">
         {dropdownItems?.map((item, index) => (
           <li key={`dropdown-${item.label}-${index}`}>
-            <a
-              className="align-items-center border-left-2 border-transparent flex hover:border-primary hover:text-900 p-3 p-ripple text-600 transition-colors transition-duration-150"
-              onClick={() => navigate(item.path)}
+            <Link
+              className="align-items-center border-left-2 border-transparent flex hover:border-primary hover:text-900 no-underline p-3 p-ripple text-600 transition-colors transition-duration-150"
+              to={item.path}
             >
               <i className={`mr-2 pi ${item.icon}`}></i>
               <span className="font-medium">{item.label}</span>
               <Ripple />
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

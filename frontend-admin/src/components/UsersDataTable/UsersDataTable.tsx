@@ -1,11 +1,10 @@
 import { forwardRef } from 'react';
 
-import { Button } from 'primereact/button';
 import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
 import { DataTable, DataTableProps } from 'primereact/datatable';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
-import { useNavigate } from 'react-router-dom';
 
+import LinkButton from 'components/LinkButton/LinkButton';
 import User from 'components/User/User';
 
 import stylesModule from './UsersDataTable.module.css';
@@ -23,7 +22,6 @@ export type UsersDataType = {
 
 const UsersDataTable = forwardRef<React.Ref<HTMLTableElement>, DataTableProps>(
   (props, ref) => {
-    const navigate = useNavigate();
     const isStaffBodyTemplate = ({ is_staff }: UsersDataType) => {
       return (
         <i
@@ -42,12 +40,13 @@ const UsersDataTable = forwardRef<React.Ref<HTMLTableElement>, DataTableProps>(
 
     const actionBodyTemplate = ({ id }: UsersDataType) => {
       return (
-        <Button
-          aria-label="Ugrás a profilra"
-          className="p-button-info p-button-outlined"
-          icon="pi pi-id-card"
-          onClick={() => navigate(`/users/${id}`)}
-          type="button"
+        <LinkButton
+          buttonProps={{
+            'aria-label': 'Ugrás a profilra',
+            className: 'p-button-info p-button-outlined',
+            icon: 'pi pi-id-card',
+          }}
+          linkProps={{ to: `/users/${id}` }}
         />
       );
     };

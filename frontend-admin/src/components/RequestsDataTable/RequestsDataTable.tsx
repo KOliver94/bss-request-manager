@@ -1,7 +1,6 @@
 import { forwardRef, lazy, Suspense, useState } from 'react';
 
 import { Badge } from 'primereact/badge';
-import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import {
   DataTable,
@@ -10,8 +9,8 @@ import {
 } from 'primereact/datatable';
 import { ProgressBar } from 'primereact/progressbar';
 import { Skeleton } from 'primereact/skeleton';
-import { useNavigate } from 'react-router-dom';
 
+import LinkButton from 'components/LinkButton/LinkButton';
 import { RequestStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
@@ -48,7 +47,6 @@ const RequestsDataTable = forwardRef<
   DataTableProps
 >((props, ref) => {
   const isMobile = useMobile();
-  const navigate = useNavigate();
 
   const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows>({});
 
@@ -109,12 +107,13 @@ const RequestsDataTable = forwardRef<
 
   const actionBodyTemplate = ({ id }: RequestDataType) => {
     return (
-      <Button
-        aria-label="Ugrás a felkéréshez"
-        className="p-button-info p-button-outlined"
-        icon="pi pi-sign-in"
-        onClick={() => navigate(`/requests/${id}`)}
-        type="button"
+      <LinkButton
+        buttonProps={{
+          'aria-label': 'Ugrás a felkéréshez',
+          className: 'p-button-info p-button-outlined',
+          icon: 'pi pi-sign-in',
+        }}
+        linkProps={{ to: `/requests/${id}` }}
       />
     );
   };
