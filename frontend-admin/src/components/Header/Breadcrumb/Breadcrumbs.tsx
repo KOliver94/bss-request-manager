@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 
-import { useMatches, useNavigate } from 'react-router-dom';
+import { Link, useMatches } from 'react-router-dom';
 
 type BreadcrumbsType = {
   name: string;
@@ -16,7 +16,6 @@ type ReactRouterUseMatchesType = {
 }[];
 
 const Breadcrumbs = () => {
-  const navigate = useNavigate();
   const matches = useMatches() as ReactRouterUseMatchesType;
 
   const breadcrumbs: BreadcrumbsType = matches
@@ -32,9 +31,9 @@ const Breadcrumbs = () => {
     <ul className="align-items-center border-bottom-1 border-top-1 flex font-medium list-none m-0 overflow-x-auto px-3 py-3 sm:px-5 surface-border surface-section">
       {/* Home button */}
       <li className="pr-3">
-        <a className="cursor-pointer" onClick={() => navigate('/')}>
+        <Link className="cursor-pointer no-underline" to="/">
           <i className="pi pi-home text-blue-500"></i>
-        </a>
+        </Link>
       </li>
 
       {breadcrumbs?.map((breadcrumb, index, array) => (
@@ -47,12 +46,12 @@ const Breadcrumbs = () => {
           {/* Texts - Last item different, no redirect*/}
           <li className="px-2">
             {!Object.is(array.length - 1, index) ? (
-              <a
-                className="cursor-pointer text-blue-500 white-space-nowrap"
-                onClick={() => navigate(breadcrumb.path)}
+              <Link
+                className="cursor-pointer no-underline text-blue-500 white-space-nowrap"
+                to={breadcrumb.path}
               >
                 {breadcrumb.name}
-              </a>
+              </Link>
             ) : (
               <span className="text-900 white-space-nowrap">
                 {breadcrumb.name}

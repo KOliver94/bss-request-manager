@@ -4,8 +4,8 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable, DataTableProps } from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
-import { useNavigate } from 'react-router-dom';
 
+import LinkButton from 'components/LinkButton/LinkButton';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
@@ -79,12 +79,13 @@ const VideosDataTable = forwardRef<
             setRatingDialogVisible(true);
           }}
         />
-        <Button
-          aria-label="Ugrás a videóhoz"
-          className="p-button-info p-button-outlined"
-          icon="pi pi-sign-in"
-          onClick={() => navigate(`/requests/${requestId}/videos/${id}`)}
-          type="button"
+        <LinkButton
+          buttonProps={{
+            'aria-label': 'Ugrás a videóhoz',
+            className: 'p-button-info p-button-outlined',
+            icon: 'pi pi-sign-in',
+          }}
+          linkProps={{ to: `/requests/${requestId}/videos/${id}` }}
         />
       </div>
     );
