@@ -58,6 +58,16 @@ export default function Footer(props) {
             <ListItem className={classes.inlineBlock}>
               <Button
                 color="transparent"
+                href="https://tiktok.com/@bsstudio_"
+                target="_blank"
+                className={classes.socialIcon}
+              >
+                <i className="fa-brands fa-tiktok" />
+              </Button>
+            </ListItem>
+            <ListItem className={classes.inlineBlock}>
+              <Button
+                color="transparent"
                 href="https://youtube.com/bsstudi0"
                 target="_blank"
                 className={classes.socialIcon}
