@@ -38,6 +38,9 @@ export default function ErrorPage({ type }) {
           <a href="https://instagram.com/budavari_schonherz_studio">
             <i className="fa-brands fa-instagram" />
           </a>
+          <a href="https://tiktok.com/@bsstudio_">
+            <i className="fa-brands fa-tiktok" />
+          </a>
           <a href="https://youtube.com/bsstudi0">
             <i className="fa-brands fa-youtube" />
           </a>
