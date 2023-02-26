@@ -2,7 +2,11 @@ import { forwardRef, lazy, Suspense, useState } from 'react';
 
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
-import { DataTable, DataTableProps } from 'primereact/datatable';
+import {
+  DataTable,
+  DataTableProps,
+  DataTableValueArray,
+} from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
 
 import LinkButton from 'components/LinkButton/LinkButton';
@@ -21,7 +25,7 @@ export type VideoDataType = {
   title: string;
 };
 
-interface VideosDataTableProps extends DataTableProps {
+interface VideosDataTableProps extends DataTableProps<DataTableValueArray> {
   requestId: number;
 }
 
@@ -29,8 +33,6 @@ const VideosDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
   VideosDataTableProps
 >(({ requestId, ...props }, ref) => {
-  const navigate = useNavigate();
-
   const [ratingDialogVideoId, setRatingDialogVideoId] = useState<number>(0);
   const [ratingDialogVideoTitle, setRatingDialogVideoTitle] =
     useState<string>('');
@@ -96,7 +98,6 @@ const VideosDataTable = forwardRef<
       <DataTable
         dataKey="id"
         emptyMessage="Nem található videó."
-        responsiveLayout="scroll"
         showGridlines
         sortField="title"
         sortOrder={1}

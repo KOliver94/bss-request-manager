@@ -243,7 +243,7 @@ const RequestCreator = () => {
                 <div className="col-12 field mb-0 mt-4">
                   <UsersDataTable
                     selectionMode="single"
-                    selection={field.value}
+                    selection={field.value || undefined}
                     onSelectionChange={(e) => field.onChange(e.value)}
                   />
                 </div>

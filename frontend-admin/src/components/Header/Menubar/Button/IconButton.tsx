@@ -1,10 +1,10 @@
-import { Badge, BadgeSeverityType } from 'primereact/badge';
+import { Badge, BadgeProps } from 'primereact/badge';
 import { Ripple } from 'primereact/ripple';
 import { IconType } from 'primereact/utils';
 import { useNavigate } from 'react-router-dom';
 
 interface IconButtonWithClickHandler {
-  badgeSeverity?: BadgeSeverityType;
+  badgeSeverity?: BadgeProps['severity'];
   icon: IconType<IconButtonProps>;
   label: string;
   onClick: React.MouseEventHandler<HTMLAnchorElement>;
@@ -12,7 +12,7 @@ interface IconButtonWithClickHandler {
 }
 
 interface IconButtonWithPath {
-  badgeSeverity?: BadgeSeverityType;
+  badgeSeverity?: BadgeProps['severity'];
   icon: IconType<IconButtonProps>;
   label: string;
   onClick?: never;
