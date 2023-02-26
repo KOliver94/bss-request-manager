@@ -13,8 +13,6 @@ body {
   hyphens: auto;
   overflow-wrap: break-word;
   word-wrap: break-word;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
 }
 
 .p-badge-new-request {
