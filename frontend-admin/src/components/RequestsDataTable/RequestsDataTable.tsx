@@ -6,6 +6,7 @@ import {
   DataTable,
   DataTableExpandedRows,
   DataTableProps,
+  DataTableValueArray,
 } from 'primereact/datatable';
 import { ProgressBar } from 'primereact/progressbar';
 import { Skeleton } from 'primereact/skeleton';
@@ -44,7 +45,7 @@ type RequestDataList = [RequestDataType];
 
 const RequestsDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
-  DataTableProps
+  DataTableProps<DataTableValueArray>
 >((props, ref) => {
   const isMobile = useMobile();
 
@@ -137,7 +138,6 @@ const RequestsDataTable = forwardRef<
         setExpandedRows(e.data)
       }
       paginator
-      responsiveLayout="scroll"
       rowExpansionTemplate={rowExpansionTemplate}
       rows={25}
       rowsPerPageOptions={[10, 25, 50, 100]}
