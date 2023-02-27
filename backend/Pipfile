@@ -9,16 +9,16 @@ django = "==4.1.7"
 djangorestframework = "==3.14.0"
 djangorestframework_simplejwt = "==5.2.2"
 django-auth-ldap = "==4.1.0"
-django-cacheops = "==6.1"
+django-cacheops = "==6.2"
 django-celery-results = "==2.4.0"
-django-cors-headers = "==3.13.0"
+django-cors-headers = "==3.14.0"
 django-filter = "==22.1"
 django-health-check = "==3.17.0"
 django-phonenumber-field = {extras = ["phonenumbers"],version = "==7.0.2"}
 django-simple-history = "==3.2.0"
 drf-recaptcha = "==2.2.2"
 drf-yasg = "==1.21.5"
-google-api-python-client = "==2.78.0"
+google-api-python-client = "==2.79.0"
 google-auth-httplib2 = "==0.1.0"
 google-auth-oauthlib = "==1.0.0"
 gunicorn = "==20.1.0"
@@ -29,8 +29,8 @@ python-decouple = "==3.7"
 python-ldap = "==3.4.3"
 requests = "==2.28.2"
 rest-social-auth = "==8.0.0"
-sentry-sdk = "==1.15.0"
-whitenoise = {extras = ["brotli"],version = "==6.3.0"}
+sentry-sdk = "==1.16.0"
+whitenoise = {extras = ["brotli"],version = "==6.4.0"}
 
 [dev-packages]
 coverage = {extras = ["toml"],version = "*"}
