@@ -11,6 +11,12 @@
   color: rgb(255, 167, 38);
 }
 
+.p-tabview .p-tabview-nav {
+  background: transparent;
+  border: 1px solid #0b213f;
+  border-width: 0 0 1px 0;
+}
+
 .p-tag.p-tag-blue {
   background-color: var(--blue-300);
   color: var(--primary-color-text);
@@ -98,4 +104,8 @@
 .p-toast .p-toast-message.p-toast-message-warn .p-toast-message-icon,
 .p-toast .p-toast-message.p-toast-message-warn .p-toast-icon-close {
   color: rgb(255, 167, 38);
+}
+
+.text-color-primary {
+  color: var(--primary-color-text);
 }

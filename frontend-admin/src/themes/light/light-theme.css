@@ -1,6 +1,12 @@
 @import '~primereact/resources/themes/lara-light-blue/theme.css';
 @import '~primereact/resources/primereact.min.css';
 
+.p-tabview .p-tabview-nav {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-width: 0 0 1px 0;
+}
+
 .p-tag.p-tag-blue {
   background-color: var(--blue-500);
   color: var(--primary-color-text);
@@ -55,4 +61,8 @@
 .p-toast .p-toast-message.p-toast-message-info .p-toast-message-icon,
 .p-toast .p-toast-message.p-toast-message-info .p-toast-icon-close {
   color: #0288d1;
+}
+
+.text-color-primary {
+  color: var(--primary-color-text);
 }
