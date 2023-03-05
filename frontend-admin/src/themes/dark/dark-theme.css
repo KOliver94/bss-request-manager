@@ -1,6 +1,16 @@
 @import '~primereact/resources/themes/lara-dark-blue/theme.css';
 @import '~primereact/resources/primereact.min.css';
 
+.p-inline-message.p-inline-message-warn {
+  background: rgb(25, 18, 7);
+  border: solid rgb(255, 167, 38);
+  border-width: 1px;
+  color: rgb(255, 226, 183);
+}
+.p-inline-message.p-inline-message-warn .p-inline-message-icon {
+  color: rgb(255, 167, 38);
+}
+
 .p-tag.p-tag-blue {
   background-color: var(--blue-300);
   color: var(--primary-color-text);
@@ -46,12 +56,46 @@
   color: var(--primary-color-text);
 }
 
-.p-inline-message.p-inline-message-warn {
+.p-toast .p-toast-message .p-toast-icon-close:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.p-toast .p-toast-message.p-toast-message-info {
+  background: rgb(7, 19, 24);
+  border: solid rgb(41, 182, 246);
+  border-width: 0 0 0 6px;
+  color: rgb(184, 231, 251);
+}
+.p-toast .p-toast-message.p-toast-message-info .p-toast-message-icon,
+.p-toast .p-toast-message.p-toast-message-info .p-toast-icon-close {
+  color: rgb(41, 182, 246);
+}
+.p-toast .p-toast-message.p-toast-message-error {
+  background: rgb(22, 11, 11);
+  border: solid rgb(244, 67, 54);
+  border-width: 0 0 0 6px;
+  color: rgb(244, 199, 199);
+}
+.p-toast .p-toast-message.p-toast-message-error .p-toast-message-icon,
+.p-toast .p-toast-message.p-toast-message-error .p-toast-icon-close {
+  color: rgb(244, 67, 54);
+}
+.p-toast .p-toast-message.p-toast-message-success {
+  background: rgb(12, 19, 13);
+  border: solid rgb(102, 187, 106);
+  border-width: 0 0 0 6px;
+  color: rgb(204, 232, 205);
+}
+.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon,
+.p-toast .p-toast-message.p-toast-message-success .p-toast-icon-close {
+  color: rgb(102, 187, 106);
+}
+.p-toast .p-toast-message.p-toast-message-warn {
   background: rgb(25, 18, 7);
   border: solid rgb(255, 167, 38);
-  border-width: 1px;
+  border-width: 0 0 0 6px;
   color: rgb(255, 226, 183);
 }
-.p-inline-message.p-inline-message-warn .p-inline-message-icon {
+.p-toast .p-toast-message.p-toast-message-warn .p-toast-message-icon,
+.p-toast .p-toast-message.p-toast-message-warn .p-toast-icon-close {
   color: rgb(255, 167, 38);
 }
