@@ -10,7 +10,7 @@ interface FormFieldProps extends UseControllerProps<IRequestCreator> {
   children: JSX.Element;
   className: string;
   icon?: IconType<FormFieldProps>;
-  title: string;
+  label: string;
 }
 
 const FormField = ({
@@ -18,8 +18,8 @@ const FormField = ({
   children,
   control,
   icon,
+  label,
   name,
-  title,
 }: FormFieldProps) => {
   return (
     <Controller
@@ -28,7 +28,7 @@ const FormField = ({
       render={({ field, fieldState }) => (
         <div className={classNames('field', className)}>
           <label className="font-medium text-900" htmlFor={field.name}>
-            {title}
+            {label}
           </label>
           <ConditionalWrapper
             condition={!!icon}
