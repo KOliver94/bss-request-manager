@@ -4,18 +4,18 @@ interface DetailsRowProps {
   button?: JSX.Element;
   content: string | JSX.Element;
   firstElement?: boolean;
+  label: string;
   lastElement?: boolean;
   multipleLines?: boolean;
-  title: string;
 }
 
 const DetailsRow = ({
   button,
   content,
   firstElement,
+  label,
   lastElement,
   multipleLines,
-  title,
 }: DetailsRowProps) => {
   return (
     <li
@@ -26,7 +26,7 @@ const DetailsRow = ({
       )}
     >
       <div className="font-medium md:pb-0 md:w-2 pb-1 pr-3 text-500 w-6">
-        {title}
+        {label}
       </div>
       <div
         className={classNames(

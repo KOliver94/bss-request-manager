@@ -115,16 +115,16 @@ const RequestCreator = () => {
           <FormField
             className="col-12 mb-4"
             control={control}
+            label="Esemény neve"
             name="title"
-            title="Esemény neve"
           >
             <InputText autoFocus type="text" />
           </FormField>
           <FormField
             className="col-12 mb-4 md:col-6"
             control={control}
+            label="Kezdés időpontja"
             name="start_datetime"
-            title="Kezdés időpontja"
           >
             <Calendar
               dateFormat="yy.mm.dd"
@@ -138,8 +138,8 @@ const RequestCreator = () => {
           <FormField
             className="col-12 mb-4 md:col-6"
             control={control}
+            label="Befejezés időpontja"
             name="end_datetime"
-            title="Befejezés időpontja"
           >
             <Calendar
               dateFormat="yy.mm.dd"
@@ -154,16 +154,16 @@ const RequestCreator = () => {
             className="col-12 mb-4 md:col-6 md:mb-0"
             control={control}
             icon="pi-map-marker"
+            label="Helyszín"
             name="place"
-            title="Helyszín"
           >
             <InputText type="text" />
           </FormField>
           <FormField
             className="col-12 mb-0 md:col-6"
             control={control}
+            label="Típus"
             name="type"
-            title="Típus"
           >
             <Dropdown editable options={typeOptions} />
           </FormField>
@@ -173,8 +173,8 @@ const RequestCreator = () => {
           <FormField
             className="col-12 mb-0"
             control={control}
+            label="Megjegyzések"
             name="comment_text"
-            title="Megjegyzések"
           >
             <InputTextarea rows={isMobile ? 5 : 8} autoResize />
           </FormField>
@@ -182,16 +182,16 @@ const RequestCreator = () => {
           <FormField
             className="col-12 mb-4 md:col-6 md:mb-0"
             control={control}
+            label="Felelős"
             name="responsible"
-            title="Felelős"
           >
             <AutoCompleteStaff placeholder="Főszerkesztő" />
           </FormField>
           <FormField
             className="col-12 mb-0 md:col-6"
             control={control}
+            label="Határidő"
             name="deadline"
-            title="Határidő"
           >
             <Calendar
               dateFormat="yy.mm.dd"

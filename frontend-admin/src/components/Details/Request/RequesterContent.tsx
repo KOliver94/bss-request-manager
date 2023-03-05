@@ -10,17 +10,17 @@ import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import { RequestAdditionalDataType } from 'pages/RequestDetailsPage';
 
 type RequesterContentProps = {
-  additional_data: RequestAdditionalDataType;
+  additionalData: RequestAdditionalDataType;
   requester: UsersDataType;
 };
 
 type RequesterContentButtonsProps = {
+  requestTitle: string;
   requester: UsersDataType;
-  title: string;
 };
 
 export const RequesterContent = ({
-  additional_data,
+  additionalData,
   requester,
 }: RequesterContentProps) => {
   return (
@@ -37,11 +37,11 @@ export const RequesterContent = ({
             position="top"
             target=".requester-different-data-tag"
           />
-          {additional_data?.requester && (
+          {additionalData?.requester && (
             <Tag
               className="requester-different-data-tag"
-              data-pr-tooltip={`Név: ${additional_data.requester.last_name} ${additional_data.requester.first_name}
-              Telefonszám: ${additional_data.requester.phone_number}`}
+              data-pr-tooltip={`Név: ${additionalData.requester.last_name} ${additionalData.requester.first_name}
+              Telefonszám: ${additionalData.requester.phone_number}`}
               icon="pi pi-exclamation-triangle"
               severity="warning"
               value="Eltérő adatok"
@@ -62,8 +62,8 @@ export const RequesterContent = ({
 };
 
 export const RequesterContentButtons = ({
+  requestTitle,
   requester,
-  title,
 }: RequesterContentButtonsProps) => {
   return (
     <span className="flex flex-no-wrap justify-content-end p-buttonset sm:flex-wrap">
@@ -82,7 +82,7 @@ export const RequesterContentButtons = ({
           icon: 'pi pi-envelope',
           label: 'E-mail',
         }}
-        linkProps={{ to: `mailto:${requester.email}?subject=${title}` }}
+        linkProps={{ to: `mailto:${requester.email}?subject=${requestTitle}` }}
       />
       <LinkButton
         buttonProps={{

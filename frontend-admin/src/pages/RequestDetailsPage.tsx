@@ -296,40 +296,40 @@ const RequestDetailsPage = () => {
             <DetailsRow
               content={data.title}
               firstElement
-              title="Esemény neve"
+              label="Esemény neve"
             />
             <DetailsRow
               content={<RequestStatusTag statusNum={data.status} />}
-              title="Státusz"
+              label="Státusz"
             />
             <DetailsRow
               content={dateTimeToLocaleString(data.start_datetime)}
-              title="Kezdés időpontja"
+              label="Kezdés időpontja"
             />
             <DetailsRow
               content={dateTimeToLocaleString(data.end_datetime)}
-              title="Várható befejezés"
+              label="Várható befejezés"
             />
-            <DetailsRow content={data.place} title="Helyszín" />
-            <DetailsRow content={data.type} title="Típus" />
+            <DetailsRow content={data.place} label="Helyszín" />
+            <DetailsRow content={data.type} label="Típus" />
             <DetailsRow
               button={
                 <RequesterContentButtons
+                  requestTitle={data.title}
                   requester={data.requester}
-                  title={data.title}
                 />
               }
               content={
                 <RequesterContent
-                  additional_data={data.additional_data}
+                  additionalData={data.additional_data}
                   requester={data.requester}
                 />
               }
-              title="Felkérő"
+              label="Felkérő"
             />
             <DetailsRow
               content={dateToLocaleString(data.deadline)}
-              title="Határidő"
+              label="Határidő"
             />
             <DetailsRow
               button={
@@ -359,7 +359,7 @@ const RequestDetailsPage = () => {
                   />
                 )
               }
-              title="Felelős"
+              label="Felelős"
             />
             <DetailsRow
               button={<JumpButton onClick={() => onJumpToTabView(0)} />}
@@ -369,12 +369,12 @@ const RequestDetailsPage = () => {
                   value={data.comments}
                 />
               }
-              title="Hozzászólások"
+              label="Hozzászólások"
             />
             <DetailsRow
               button={<JumpButton onClick={() => onJumpToTabView(1)} />}
               content={<AvatarGroupCrew crew={data.crew} />}
-              title="Stáb"
+              label="Stáb"
             />
             <DetailsRow
               button={
@@ -400,7 +400,7 @@ const RequestDetailsPage = () => {
                   removed={data.additional_data.recording?.removed}
                 />
               }
-              title="Nyersek"
+              label="Nyersek"
             />
             <DetailsRow
               button={<JumpButton onClick={() => onJumpToTabView(2)} />}
@@ -410,7 +410,7 @@ const RequestDetailsPage = () => {
                   severity={data.videos > 0 ? 'success' : 'danger'}
                 />
               }
-              title="Videók"
+              label="Videók"
             />
             <DetailsRow
               button={
@@ -429,11 +429,11 @@ const RequestDetailsPage = () => {
                   imageUrl={data.requested_by.profile.avatar_url}
                 />
               }
-              title="Beküldő"
+              label="Beküldő"
             />
             <DetailsRow
-              title="Beküldve"
               content={dateTimeToLocaleString(data.created)}
+              label="Beküldve"
             />
           </ul>
           <TabView
