@@ -45,3 +45,14 @@
   background-color: var(--yellow-500);
   color: var(--primary-color-text);
 }
+
+.p-toast .p-toast-message.p-toast-message-info {
+  background: rgb(229, 246, 253);
+  border: solid #0288d1;
+  border-width: 0 0 0 6px;
+  color: #0288d1;
+}
+.p-toast .p-toast-message.p-toast-message-info .p-toast-message-icon,
+.p-toast .p-toast-message.p-toast-message-info .p-toast-icon-close {
+  color: #0288d1;
+}
