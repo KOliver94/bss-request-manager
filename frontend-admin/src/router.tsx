@@ -8,6 +8,7 @@ import {
 import App from 'App';
 import RequestCreator from 'components/RequestCreator/RequestCreator';
 import Layout from 'Layout';
+import RequestDetailsPage from 'pages/RequestDetailsPage';
 import RequestsListPage from 'pages/RequestsListPage';
 import UsersListPage from 'pages/UsersListPage';
 
@@ -31,8 +32,8 @@ const router = createBrowserRouter(
           }}
         />
         <Route
-          path=":id"
-          element={<App />}
+          path=":requestId"
+          element={<RequestDetailsPage />}
           handle={{
             crumb: () => 'Teszt felkérés',
           }}
