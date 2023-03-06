@@ -68,12 +68,13 @@ const VideosDataTable = forwardRef<
     );
   };
 
-  const actionBodyTemplate = ({ id, title }: VideoDataType) => {
+  const actionBodyTemplate = ({ id, status, title }: VideoDataType) => {
     return (
       <div>
         <Button
           aria-label="Értékelés"
           className="mr-2 p-button-info p-button-outlined"
+          disabled={status < 3}
           icon="pi pi-star"
           onClick={() => {
             setRatingDialogVideoId(id);
