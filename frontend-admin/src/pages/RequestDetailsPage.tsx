@@ -400,7 +400,18 @@ const RequestDetailsPage = () => {
             />
             <DetailsRow
               button={<JumpButton onClick={() => onJumpToTabView(1)} />}
-              content={<AvatarGroupCrew crew={data.crew} />}
+              content={
+                data.crew && data.crew.length > 0 ? (
+                  <AvatarGroupCrew crew={data.crew} />
+                ) : (
+                  <Tag
+                    className="mr-2"
+                    icon="pi pi-exclamation-triangle"
+                    severity="warning"
+                    value="Nincs stáb"
+                  />
+                )
+              }
               label="Stáb"
             />
             <DetailsRow
