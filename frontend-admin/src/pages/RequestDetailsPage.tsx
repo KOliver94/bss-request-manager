@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { ProgressBar } from 'primereact/progressbar';
 import { StyleClass } from 'primereact/styleclass';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
+import { classNames } from 'primereact/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -34,6 +36,10 @@ import {
 import useMobile from 'hooks/useMobile';
 
 import * as testData from './testData.json';
+
+const VideosDataTable = lazy(
+  () => import('components/VideosDataTable/VideosDataTable')
+);
 
 export type RequestAdditionalDataRecordingType = {
   path?: string;
@@ -179,6 +185,27 @@ const RequestDetailsPage = () => {
   };
 
   const [data, setData] = useState<RequestDataType>(getRequest(testData));
+
+  const videoDataHeader = (
+    <div
+      className={classNames(
+        'align-items-center flex flex-wrap',
+        isMobile ? 'justify-content-start' : ' justify-content-end'
+      )}
+    >
+      <LinkButton
+        buttonProps={{
+          className: isMobile ? 'w-full' : '',
+          icon: 'pi pi-plus',
+          label: 'Új videó',
+        }}
+        linkProps={{
+          className: isMobile ? 'w-full' : '',
+          to: `/requests/${data.id}/videos/new`,
+        }}
+      />
+    </div>
+  );
 
   const {
     control: recordingContentControl,
@@ -467,16 +494,9 @@ const RequestDetailsPage = () => {
               </p>
             </TabPanel>
             <TabPanel header="Videók" leftIcon="pi pi-video mr-2">
-              <p className="m-0">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
-                modi.
-              </p>
+              <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+                <VideosDataTable header={videoDataHeader} requestId={data.id} />
+              </Suspense>
             </TabPanel>
             <TabPanel header="Előzmények" leftIcon="pi pi-history mr-2">
               <p className="m-0">Hamarosan...</p>
