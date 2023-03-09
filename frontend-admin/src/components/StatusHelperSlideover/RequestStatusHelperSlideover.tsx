@@ -157,7 +157,7 @@ const RequestStatusHelperSlideover = ({
                 icon={REQUEST_STATUSES[5].icon}
                 label={REQUEST_STATUSES[5].text}
               >
-                <ActivePendingTaskItem label="Minden videó megvágása" />
+                <ActivePendingTaskItem label="Videó(k) megvágása" />
               </ActiveTask>
             )}
             {status > 4 && status < 9 && (
@@ -179,7 +179,7 @@ const RequestStatusHelperSlideover = ({
                 {allVideosDone ? (
                   <ActiveCompleteTaskItem label="Minden videó lezárva" />
                 ) : (
-                  <ActivePendingTaskItem label="Videó lezárása" />
+                  <ActivePendingTaskItem label="Videó(k) lezárása" />
                 )}
                 {copiedToDrive ? (
                   <ActiveCompleteTaskItem label="Nyersek felmásolva Drive-ra" />
