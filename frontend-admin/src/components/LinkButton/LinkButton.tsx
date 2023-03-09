@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 
 import { Button, ButtonProps } from 'primereact/button';
+import { classNames } from 'primereact/utils';
 import { Link, LinkProps } from 'react-router-dom';
 
 interface LinkButtonProps {
@@ -10,8 +11,9 @@ interface LinkButtonProps {
 
 const LinkButton = forwardRef<React.Ref<HTMLTableElement>, LinkButtonProps>(
   ({ buttonProps, linkProps }, ref) => {
+    const { className, ..._linkProps } = linkProps;
     return (
-      <Link className="no-underline" {...linkProps}>
+      <Link className={classNames('no-underline', className)} {..._linkProps}>
         <Button {...buttonProps} {...ref} />
       </Link>
     );
