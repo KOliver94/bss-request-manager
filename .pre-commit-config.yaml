@@ -13,7 +13,7 @@ repos:
       - id: mixed-line-ending
         name: 'Replace mixed line endings'
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.21.0
+    rev: 0.22.0
     hooks:
       - id: check-github-workflows
       - id: check-renovate
@@ -43,7 +43,7 @@ repos:
       - id: black
         name: 'Format Python code'
   - repo: https://github.com/rtts/djhtml
-    rev: 3.0.3
+    rev: 3.0.5
     hooks:
       - id: djhtml
         name: 'Format Django templates'
@@ -55,7 +55,7 @@ repos:
         name: 'Lint Python code'
         args: [--config=./backend/.flake8]
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.4
+    rev: 1.7.5
     hooks:
       - id: bandit
         name: 'Check Python security issues'
@@ -70,7 +70,7 @@ repos:
         additional_dependencies:
           - prettier@2.8.1
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.35.0
+    rev: v8.36.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
