@@ -107,13 +107,19 @@ const VideosDataTable = forwardRef<
         {...props}
         {...ref}
       >
-        <Column field="title" header="Videó címe" sortable />
+        <Column
+          field="title"
+          header="Videó címe"
+          sortable
+          style={{ minWidth: '10rem', width: '30%' }}
+        />
         <Column
           align="center"
           body={statusBodyTemplate}
           field="status"
           header="Státusz"
           sortable
+          style={{ minWidth: '5rem', width: '15%' }}
         />
         <Column
           alignHeader="center"
@@ -122,6 +128,7 @@ const VideosDataTable = forwardRef<
           header="Vágó"
           sortable
           sortField="editor.full_name"
+          style={{ minWidth: '10rem', width: '25%' }}
         />
         <Column
           alignHeader="center"
@@ -129,11 +136,12 @@ const VideosDataTable = forwardRef<
           field="avg_rating"
           header="Értékelések"
           sortable
+          style={{ width: '20%' }}
         />
         <Column
           body={actionBodyTemplate}
           bodyStyle={{ overflow: 'visible', textAlign: 'center' }}
-          headerStyle={{ textAlign: 'center', width: '9rem' }}
+          headerStyle={{ minWidth: '10rem', textAlign: 'center', width: '10%' }}
         />
       </DataTable>
       <Suspense>
