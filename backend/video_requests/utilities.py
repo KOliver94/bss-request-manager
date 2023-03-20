@@ -237,7 +237,9 @@ def notify_sch_event_management_system(self, url, accepted):
         "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
     }
     data = {"accept": accepted}
-    url = requests.head(url, headers=headers, allow_redirects=True).url
-    response = requests.post(url, data=data, headers=headers, allow_redirects=False)
+    url = requests.head(url, headers=headers, allow_redirects=True, timeout=10).url
+    response = requests.post(
+        url, data=data, headers=headers, allow_redirects=False, timeout=30
+    )
     response.raise_for_status()
     return response.json()

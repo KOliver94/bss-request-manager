@@ -100,6 +100,7 @@ def add_phone_number_to_profile(backend, details, response, user, *args, **kwarg
         resp = requests.get(
             "https://people.googleapis.com/v1/people/me?personFields=phoneNumbers",
             headers={"Authorization": f"Bearer {response['access_token']}"},
+            timeout=5,
         )
         if resp.status_code == 200 and len(resp.json().get("phoneNumbers", [])) > 0:
             phone_number = resp.json()["phoneNumbers"][0]["value"]
@@ -127,7 +128,7 @@ def get_avatar(backend, response, user, *args, **kwargs):
         size=500, use_ssl=True, default="404"
     )
     try:
-        resp = requests.get(url)
+        resp = requests.get(url, timeout=5)
         resp.raise_for_status()
         user.userprofile.avatar["gravatar"] = url
         if not user.userprofile.avatar.get("provider", None):
