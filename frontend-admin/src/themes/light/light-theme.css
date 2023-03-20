@@ -62,7 +62,3 @@
 .p-toast .p-toast-message.p-toast-message-info .p-toast-icon-close {
   color: #0288d1;
 }
-
-.text-color-primary {
-  color: var(--primary-color-text);
-}

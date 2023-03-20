@@ -105,7 +105,3 @@
 .p-toast .p-toast-message.p-toast-message-warn .p-toast-icon-close {
   color: rgb(255, 167, 38);
 }
-
-.text-color-primary {
-  color: var(--primary-color-text);
-}
