@@ -39,12 +39,12 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const isMobile = useMobile();
 
-  const deleteActionBodyTemplate = ({ id }: CrewDataType) => {
+  const deleteActionBodyTemplate = ({ member, id, position }: CrewDataType) => {
     return (
       <button
         className="p-link p-row-editor-init"
         disabled={loading}
-        onClick={() => onRowDelete(id)}
+        onClick={() => onRowDelete(id, member, position)}
         name="row-delete"
         type="button"
       >
@@ -113,13 +113,17 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     return data;
   };
 
-  const onRowDelete = (id: number) => {
+  const onRowDelete = (
+    id: number,
+    { full_name }: CrewDataType['member'],
+    position: string
+  ) => {
     confirmDialog({
       accept: () => handleDelete(id),
       acceptClassName: 'p-button-danger',
       header: 'Biztosan törölni akarod a stábtagot?',
       icon: 'pi pi-exclamation-triangle',
-      message: 'A stábtag visszavonhatatlanul törlés fog kerülni!',
+      message: `"${full_name} - ${position}" visszavonhatatlanul törlés fog kerülni!`,
       style: { width: isMobile ? '95vw' : '50vw' },
     });
   };
