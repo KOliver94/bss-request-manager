@@ -482,7 +482,10 @@ const RequestDetailsPage = () => {
             className="pt-3"
             id="comments-crew-videos-history-tabs"
             onTabChange={(e) => setTabViewActiveIndex(e.index)}
-            panelContainerClassName="border-bottom-1 surface-border"
+            panelContainerClassName={classNames(
+              'border-bottom-1 surface-border',
+              { 'px-0 py-2': isMobile }
+            )}
           >
             <TabPanel header="Hozzászólások" leftIcon="pi pi-comments mr-2">
               <p className="m-0">
