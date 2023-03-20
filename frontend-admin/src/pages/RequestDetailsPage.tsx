@@ -37,6 +37,9 @@ import useMobile from 'hooks/useMobile';
 
 import * as testData from './testData.json';
 
+const CommentCards = lazy(
+  () => import('components/Details/Request/CommentCards')
+);
 const CrewDataTable = lazy(
   () => import('components/Details/Request/Crew/CrewDataTable')
 );
@@ -488,15 +491,12 @@ const RequestDetailsPage = () => {
             )}
           >
             <TabPanel header="Hozzászólások" leftIcon="pi pi-comments mr-2">
-              <p className="m-0">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+              <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+                <CommentCards
+                  requestId={data.id}
+                  requesterId={data.requester.id}
+                />
+              </Suspense>
             </TabPanel>
             <TabPanel header="Stáb" leftIcon="pi pi-users mr-2">
               <Suspense fallback={<ProgressBar mode="indeterminate" />}>
