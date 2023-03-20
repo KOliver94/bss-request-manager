@@ -4,6 +4,8 @@ import * as Sentry from '@sentry/react';
 import PrimeReact, { addLocale, locale } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
+import { register } from 'timeago.js';
+import huLocal from 'timeago.js/lib/lang/hu';
 
 import * as locales from 'locales.json';
 import router from 'router';
@@ -24,6 +26,8 @@ if (import.meta.env.PROD) {
 PrimeReact.ripple = true;
 addLocale('hu', locales['hu']);
 locale('hu');
+
+register('hu_HU', huLocal);
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(

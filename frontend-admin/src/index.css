@@ -9,6 +9,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.comment-text {
+  white-space: pre-wrap;
+}
+
 .hyphenate {
   hyphens: auto;
   overflow-wrap: break-word;

@@ -8,11 +8,12 @@
     "bootstrap-icons": "1.10.3",
     "primeflex": "3.3.0",
     "primeicons": "6.0.1",
-    "primereact": "9.2.0",
+    "primereact": "9.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "7.43.5",
     "react-router-dom": "6.9.0",
+    "timeago-react": "3.0.6",
     "yup": "1.0.2"
   },
   "scripts": {
