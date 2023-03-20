@@ -72,7 +72,7 @@ def populate_user_profile_from_ldap(
             size=500, use_ssl=True, default="404"
         )
         try:
-            resp = requests.get(url)
+            resp = requests.get(url, timeout=5)
             resp.raise_for_status()
             profile.avatar["gravatar"] = url
             if not profile.avatar.get("provider", None):

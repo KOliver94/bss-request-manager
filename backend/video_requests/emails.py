@@ -16,7 +16,7 @@ TEXT_HTML = "text/html"
 
 @shared_task
 def email_user_new_request_confirmation(request_id):
-    request = Request.objects.get(pk=request_id)
+    request = Request.objects.get(pk=request_id)  # nosec B113
     context = {
         "request": request,
         "is_registered": request.requester.is_active,
@@ -50,7 +50,7 @@ def email_user_new_request_confirmation(request_id):
 
 @shared_task
 def email_user_video_published(video_id):
-    video = Video.objects.get(pk=video_id)
+    video = Video.objects.get(pk=video_id)  # nosec B113
     context = {
         "video": video,
         "is_registered": video.request.requester.is_active,
@@ -84,7 +84,7 @@ def email_user_video_published(video_id):
 
 @shared_task
 def email_user_new_comment(comment_id):
-    comment = Comment.objects.get(pk=comment_id)
+    comment = Comment.objects.get(pk=comment_id)  # nosec B113
     context = {
         "comment": comment,
         "commenter_name": comment.author.get_full_name_eastern_order(),
@@ -163,7 +163,7 @@ def email_crew_daily_reminder(request, crew_members):
 
 @shared_task
 def email_crew_new_comment(comment_id):
-    comment = Comment.objects.get(pk=comment_id)
+    comment = Comment.objects.get(pk=comment_id)  # nosec B113
     context = {
         "comment": comment,
         "commenter_name": comment.author.get_full_name_eastern_order(),

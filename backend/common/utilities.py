@@ -97,7 +97,7 @@ def get_calendar_event_body(request):  # pragma: no cover
 def create_calendar_event(request_id):  # pragma: no cover
     if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
         return "Missing credentials file for Google Calendar"
-    request = Request.objects.get(pk=request_id)
+    request = Request.objects.get(pk=request_id)  # nosec B113
     service = get_google_calendar_service()
     request.additional_data["calendar_id"] = (
         service.events()
@@ -115,7 +115,7 @@ def create_calendar_event(request_id):  # pragma: no cover
 def update_calendar_event(request_id):  # pragma: no cover
     if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
         return "Missing credentials file for Google Calendar"
-    request = Request.objects.get(pk=request_id)
+    request = Request.objects.get(pk=request_id)  # nosec B113
     if request.additional_data and "calendar_id" in request.additional_data:
         service = get_google_calendar_service()
         service.events().patch(
@@ -130,7 +130,7 @@ def update_calendar_event(request_id):  # pragma: no cover
 def remove_calendar_event(request_id):  # pragma: no cover
     if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
         return "Missing credentials file for Google Calendar"
-    request = Request.objects.get(pk=request_id)
+    request = Request.objects.get(pk=request_id)  # nosec B113
     if request.additional_data and "calendar_id" in request.additional_data:
         service = get_google_calendar_service()
         service.events().delete(
