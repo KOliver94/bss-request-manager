@@ -33,18 +33,6 @@ const RequestStatusHelperSlideover = ({
   const closeBtnRef = useRef(null);
   const isMobile = useMobile();
 
-  const _style = () => {
-    if (isMobile) {
-      if (adminStatusOverride) {
-        return 'pt-2 px-4';
-      }
-      return 'mb-2 px-4 py-2';
-    } else if (adminStatusOverride) {
-      return 'mb-2 pb-2 pt-4 px-4';
-    }
-    return 'mb-4 p-4';
-  };
-
   return (
     <div
       className="h-screen hidden left-0 shadow-2 sticky surface-overlay top-0 w-18rem z-5"
@@ -55,7 +43,12 @@ const RequestStatusHelperSlideover = ({
         <div
           className={classNames(
             'align-items-center flex justify-content-between',
-            _style()
+            {
+              'mb-2 pb-2 pt-4 px-4': !isMobile && adminStatusOverride,
+              'mb-2 px-4 py-2': isMobile && !adminStatusOverride,
+              'mb-4 p-4': !isMobile && !adminStatusOverride,
+              'pt-2 px-4': isMobile && adminStatusOverride,
+            }
           )}
         >
           <span className="font-medium text-900 text-xl">Munkafolyamat</span>
