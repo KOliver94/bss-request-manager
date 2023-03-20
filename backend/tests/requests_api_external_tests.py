@@ -311,6 +311,7 @@ class RequestsAPIExternalTestCase(APITestCase):
                 "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
             },
             allow_redirects=False,
+            timeout=30,
         )
         self.assertDictEqual(
             json.loads(
