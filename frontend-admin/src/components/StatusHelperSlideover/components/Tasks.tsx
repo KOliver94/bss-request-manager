@@ -62,49 +62,30 @@ export const ActiveTask = ({ children, icon, label }: ActiveTaskProps) => {
 export const Task = ({ icon, label, type }: TaskProps) => {
   const [darkMode] = useTheme();
 
-  const _color = () => {
-    if (type === 'complete') {
-      return darkMode ? 'bg-green-300' : 'bg-green-500';
-    } else if (type === 'failed') {
-      return darkMode ? 'bg-red-300' : 'bg-red-500';
-    }
-    return '';
-  };
-
-  const _icon = () => {
-    if (icon) {
-      return icon;
-    } else if (type === 'complete') {
-      return 'pi-check';
-    } else if (type === 'failed') {
-      return 'pi-times';
-    }
-    return '';
-  };
-
-  const _style = () => {
-    if (type === 'pending') {
-      return 'surface-border';
-    }
-    return 'border-transparent text-color-primary';
-  };
-
   return (
     <li className="align-items-center border-top-1 flex p-3 surface-border">
       <span
         className={classNames(
           'align-items-center border-1 border-circle inline-flex justify-content-center mr-3 text-2xl',
-          _color(),
-          _style()
+          type === 'pending'
+            ? 'surface-border'
+            : 'border-transparent text-color-primary',
+          {
+            'bg-green-300': darkMode && type === 'complete',
+            'bg-green-500': !darkMode && type === 'complete',
+            'bg-red-300': darkMode && type === 'failed',
+            'bg-red-500': !darkMode && type === 'failed',
+          }
         )}
         style={{ height: '35px', width: '35px' }}
       >
         <i
-          className={classNames(
-            'pi',
-            _icon(),
-            type === 'pending' && 'text-700'
-          )}
+          className={classNames('pi', {
+            icon: !!icon,
+            'pi-check': type === 'complete',
+            'pi-times': type === 'failed',
+            'text-700': type === 'pending',
+          })}
         ></i>
       </span>
       <span className="font-medium text-700">{label}</span>
