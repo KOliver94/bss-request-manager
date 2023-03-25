@@ -34,8 +34,7 @@ import {
   dateToLocaleString,
 } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
-
-import * as testData from './testData.json';
+import * as testData from 'testData/testData_req.json';
 
 const CommentCards = lazy(
   () => import('components/Details/Request/CommentCards')
