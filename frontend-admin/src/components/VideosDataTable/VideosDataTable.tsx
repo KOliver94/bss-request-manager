@@ -13,6 +13,7 @@ import LinkButton from 'components/LinkButton/LinkButton';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
+import * as testData from 'testData/testData_vids.json';
 
 const RatingDialog = lazy(() => import('components/RatingDialog/RatingDialog'));
 
@@ -33,6 +34,7 @@ const VideosDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
   VideosDataTableProps
 >(({ requestId, ...props }, ref) => {
+  const [data, setData] = useState<VideoDataType[]>(testData['default']);
   const [ratingDialogVideoId, setRatingDialogVideoId] = useState<number>(0);
   const [ratingDialogVideoTitle, setRatingDialogVideoTitle] =
     useState<string>('');
@@ -103,7 +105,7 @@ const VideosDataTable = forwardRef<
         sortField="title"
         sortOrder={1}
         stripedRows
-        value={[]}
+        value={data}
         {...props}
         {...ref}
       >

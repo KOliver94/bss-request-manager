@@ -17,6 +17,7 @@ import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
+import * as testData from 'testData/testData_reqs.json';
 
 const AvatarGroupCrew = lazy(
   () => import('components/AvatarGroupCrew/AvatarGroupCrew')
@@ -41,8 +42,6 @@ export type RequestDataType = {
   videos: number;
 };
 
-type RequestDataList = [RequestDataType];
-
 const RequestsDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
   DataTableProps<DataTableValueArray>
@@ -51,7 +50,7 @@ const RequestsDataTable = forwardRef<
 
   const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows>({});
 
-  const getRequests = (data: RequestDataList) => {
+  const getRequests = (data: RequestDataType[]) => {
     return [...(data || [])].map((d) => {
       d.created = new Date(d.created);
       d.end_datetime = new Date(d.end_datetime);
@@ -59,6 +58,10 @@ const RequestsDataTable = forwardRef<
       return d;
     });
   };
+
+  const [data, setData] = useState<RequestDataType[]>(
+    getRequests(testData['default'])
+  );
 
   const crewBodyTemplate = ({ crew }: RequestDataType) => {
     return (
@@ -145,7 +148,7 @@ const RequestsDataTable = forwardRef<
       sortField="start_datetime"
       sortOrder={-1}
       stripedRows
-      value={[]}
+      value={data}
       {...props}
       {...ref}
     >
