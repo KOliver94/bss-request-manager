@@ -281,7 +281,10 @@ const RequestDetailsPage = () => {
               {data.title}
             </div>
             <div className="font-medium mb-3 sm:mb-0 text-500 text-sm">
-              <RequestStatusTag statusNum={data.status} />
+              <RequestStatusTag
+                modified={!!data.additional_data.status_by_admin?.status}
+                statusNum={data.status}
+              />
             </div>
           </div>
           <div className="flex">
@@ -332,7 +335,12 @@ const RequestDetailsPage = () => {
               label="Esemény neve"
             />
             <DetailsRow
-              content={<RequestStatusTag statusNum={data.status} />}
+              content={
+                <RequestStatusTag
+                  modified={!!data.additional_data.status_by_admin?.status}
+                  statusNum={data.status}
+                />
+              }
               label="Státusz"
             />
             <DetailsRow
