@@ -3,10 +3,9 @@ import { cloneElement } from 'react';
 import { classNames, IconType } from 'primereact/utils';
 import { Controller, UseControllerProps } from 'react-hook-form';
 
-import { IRequestCreator } from 'components/RequestCreator/RequestCreator';
 import ConditionalWrapper from 'helpers/ConditionalWrapper';
 
-interface FormFieldProps extends UseControllerProps<IRequestCreator> {
+interface FormFieldProps extends UseControllerProps<any> {
   children: JSX.Element;
   className: string;
   icon?: IconType<FormFieldProps>;

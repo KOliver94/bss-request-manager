@@ -7,10 +7,12 @@ import {
 
 import App from 'App';
 import RequestCreator from 'components/RequestCreator/RequestCreator';
+import VideoCreator from 'components/VideoCreator/VideoCreator';
 import Layout from 'Layout';
 import RequestDetailsPage from 'pages/RequestDetailsPage';
 import RequestsListPage from 'pages/RequestsListPage';
 import UsersListPage from 'pages/UsersListPage';
+import VideoDetailsPage from 'pages/VideoDetailsPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,18 +35,32 @@ const router = createBrowserRouter(
         />
         <Route
           path=":requestId"
-          element={<RequestDetailsPage />}
           handle={{
             crumb: () => 'Teszt felkérés',
           }}
         >
+          <Route index element={<RequestDetailsPage />} />
           <Route
             path="videos"
-            element={<App />}
             handle={{
               crumb: () => 'Videók',
             }}
-          />
+          >
+            <Route
+              path="new"
+              element={<VideoCreator />}
+              handle={{
+                crumb: () => 'Új videó',
+              }}
+            />
+            <Route
+              path=":videoId"
+              element={<VideoDetailsPage />}
+              handle={{
+                crumb: () => 'Teszt videó',
+              }}
+            />
+          </Route>
         </Route>
       </Route>
       <Route
