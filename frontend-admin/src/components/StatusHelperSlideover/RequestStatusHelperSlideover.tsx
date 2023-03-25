@@ -15,7 +15,7 @@ import {
   Task,
 } from './components/Tasks';
 
-type StatusHelperSlideoverProps = {
+type RequestStatusHelperSlideoverProps = {
   adminStatusOverride: boolean;
   allVideosDone: boolean;
   copiedToDrive: boolean;
@@ -29,7 +29,7 @@ const RequestStatusHelperSlideover = ({
   copiedToDrive,
   id,
   status,
-}: StatusHelperSlideoverProps) => {
+}: RequestStatusHelperSlideoverProps) => {
   const closeBtnRef = useRef(null);
   const isMobile = useMobile();
 
