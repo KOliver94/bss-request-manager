@@ -11,6 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AdditionalDataDialog from 'components/AdditionalDataDialog/AdditionalDataDialog';
 import DetailsRow from 'components/Details/DetailsRow';
 import AiredAddDialog from 'components/Details/Video/AiredAddDialog';
+import Ratings from 'components/Details/Video/Ratings';
 import LinkButton from 'components/LinkButton/LinkButton';
 import VideoStatusHelperSlideover from 'components/StatusHelperSlideover/VideoStatusHelperSlideover';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
@@ -346,6 +347,9 @@ const VideoDetailsPage = () => {
               label="Teendők"
             />
           </ul>
+          <div className="md:pt-6 pt-4 px-2">
+            <Ratings videoId={data.id} videoTitle={data.title} />
+          </div>
         </div>
       </div>
     </>
