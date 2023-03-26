@@ -136,6 +136,7 @@ CACHEOPS = {
 
 CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://redis:6379/1")
 CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_EXTENDED = True
 CELERY_IMPORTS = [
     "common.emails",
     "common.utilities",
