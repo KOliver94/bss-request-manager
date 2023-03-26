@@ -95,7 +95,7 @@ const CommentCardHeader = ({
   return (
     <div className="grid pb-2">
       <div className="align-items-center col-12 flex justify-content-between md:col-6 md:justify-content-start">
-        <Tooltip target=".created-date-text" />
+        <Tooltip className="text-xs" target=".created-date-text" />
         <div className="align-items-center flex">
           <Avatar
             className="flex-shrink-0 h-2rem mr-2 w-2rem"
