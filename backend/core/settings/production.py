@@ -1,6 +1,7 @@
 import ldap
 import sentry_sdk
 from django_auth_ldap.config import GroupOfNamesType, LDAPSearch
+from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import ignore_logger
 from sentry_sdk.integrations.redis import RedisIntegration
@@ -224,7 +225,11 @@ GOOGLE_CALENDAR_ID = config("GOOGLE_CALENDAR_ID", default=None)
 if not DEBUG:
     sentry_sdk.init(
         dsn=config("SENTRY_URL"),
-        integrations=[DjangoIntegration(), RedisIntegration()],
+        integrations=[CeleryIntegration(), DjangoIntegration(), RedisIntegration()],
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production,
+        traces_sample_rate=0.25,
         # If you wish to associate users to errors (assuming you are using
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True,
