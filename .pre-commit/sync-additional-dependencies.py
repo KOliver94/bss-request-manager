@@ -39,7 +39,7 @@ class Dumper(SafeDumper):
 def main():
     data_changed = False
 
-    with open(".pre-commit-config.yaml", "r") as f:
+    with open(".pre-commit-config.yaml") as f:
         data = yaml.load(f, Loader=SafeLoader)
 
         for repo_name in REPOS_TO_CHECK:
@@ -57,7 +57,7 @@ def main():
                 folder = files[1 : files.index("/")]
                 additional_dependencies_list = hook.get("additional_dependencies", [])
 
-                with open(f"{folder}/package.json", "r") as package_json:
+                with open(f"{folder}/package.json") as package_json:
                     package_json_data = json.load(package_json)
                     dev_dependencies = package_json_data.get("devDependencies", {})
 

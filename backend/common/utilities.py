@@ -22,7 +22,7 @@ def role(self):
 
 
 def get_full_name_eastern_order(self):
-    full_name = "%s %s" % (self.last_name, self.first_name)
+    full_name = f"{self.last_name} {self.first_name}"
     return full_name.strip()
 
 

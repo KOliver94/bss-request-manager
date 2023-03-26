@@ -142,7 +142,7 @@ class UserDetailSerializer(ModelSerializer):
             instance.userprofile.avatar["provider"] = validated_data.pop(
                 "avatar_provider"
             )
-        return super(UserDetailSerializer, self).update(instance, validated_data)
+        return super().update(instance, validated_data)
 
     @staticmethod
     def get_role(user):

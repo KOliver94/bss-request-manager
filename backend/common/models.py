@@ -73,7 +73,7 @@ class Ban(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        return super(Ban, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
 
 class AbstractComment(models.Model):

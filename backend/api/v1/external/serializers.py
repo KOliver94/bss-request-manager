@@ -74,7 +74,7 @@ class RequestExternalSerializer(serializers.ModelSerializer):
         callback_url = validated_data.pop("callback_url")
         validated_data["requester"], additional_data = create_user(validated_data)
         validated_data["requested_by"] = self.context["request"].user
-        request = super(RequestExternalSerializer, self).create(validated_data)
+        request = super().create(validated_data)
         if additional_data:
             request.additional_data = additional_data
         if comment_text:

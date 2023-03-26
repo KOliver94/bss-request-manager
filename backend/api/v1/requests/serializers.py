@@ -32,7 +32,7 @@ class FilteredListSerializer(serializers.ListSerializer):
             data = data.filter(internal=False)
         elif data.model is Rating:  # pragma: no cover
             data = data.filter(author=self.context["request"].user)
-        return super(FilteredListSerializer, self).to_representation(data)
+        return super().to_representation(data)
 
 
 class RatingDefaultSerializer(serializers.ModelSerializer):
@@ -74,7 +74,7 @@ class CommentDefaultSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        comment = super(CommentDefaultSerializer, self).create(validated_data)
+        comment = super().create(validated_data)
         email_crew_new_comment.delay(comment.id)
         return comment
 
@@ -160,7 +160,7 @@ class RequestDefaultSerializer(serializers.ModelSerializer):
         comment_text = validated_data.pop("comment_text", None)
         validated_data["requester"] = self.context["request"].user
         validated_data["requested_by"] = self.context["request"].user
-        request = super(RequestDefaultSerializer, self).create(validated_data)
+        request = super().create(validated_data)
         if comment_text:
             request.comments.add(create_comment(comment_text, request))
         create_calendar_event.delay(request.id)
@@ -223,7 +223,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
         comment_text = validated_data.pop("comment_text", None)
         validated_data["requester"], additional_data = create_user(validated_data)
         validated_data["requested_by"] = get_anonymous_user()
-        request = super(RequestAnonymousSerializer, self).create(validated_data)
+        request = super().create(validated_data)
         if additional_data:
             request.additional_data = additional_data
         if comment_text:

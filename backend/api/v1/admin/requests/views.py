@@ -98,7 +98,7 @@ class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         video_request = get_object_or_404(Request, pk=self.kwargs["pk"])
         remove_calendar_event.delay(video_request.id)
-        return super(RequestAdminDetailView, self).destroy(request, *args, **kwargs)
+        return super().destroy(request, *args, **kwargs)
 
 
 class CommentAdminListCreateView(generics.ListCreateAPIView):
