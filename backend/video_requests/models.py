@@ -105,7 +105,7 @@ class Request(models.Model):
         if not self.deadline:
             self.deadline = (self.end_datetime + timedelta(weeks=3)).date()
         self.full_clean(exclude=["additional_data"])
-        super(Request, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.title} || {self.start_datetime.date()}"
@@ -156,7 +156,7 @@ class Video(models.Model):
         return published_url
 
     def __init__(self, *args, **kwargs):
-        super(Video, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.__original_aired = self.additional_data.get("aired", None)
 
     def save(self, *args, **kwargs):

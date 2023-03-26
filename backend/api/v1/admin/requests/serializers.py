@@ -168,7 +168,7 @@ class FilteredListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         if isinstance(self.parent, VideoAdminSerializer):
             data = data.filter(author=self.context["request"].user)
-        return super(FilteredListSerializer, self).to_representation(data)
+        return super().to_representation(data)
 
 
 class HistoricalRecordField(serializers.ListField):
@@ -221,7 +221,7 @@ class CommentAdminSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        comment = super(CommentAdminSerializer, self).create(validated_data)
+        comment = super().create(validated_data)
         if not comment.internal and not hasattr(comment.request.requester, "ban"):
             email_user_new_comment.delay(comment.id)
         email_crew_new_comment.delay(comment.id)
@@ -265,14 +265,14 @@ class VideoAdminSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         get_editor_from_id(validated_data)
         handle_additional_data(validated_data, self.context["request"].user)
-        video = super(VideoAdminSerializer, self).create(validated_data)
+        video = super().create(validated_data)
         update_video_status(video)
         return video
 
     def update(self, instance, validated_data):
         get_editor_from_id(validated_data)
         handle_additional_data(validated_data, self.context["request"].user, instance)
-        video = super(VideoAdminSerializer, self).update(instance, validated_data)
+        video = super().update(instance, validated_data)
         update_video_status(video)
         return video
 
@@ -317,11 +317,11 @@ class CrewMemberAdminSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         get_member_from_id(validated_data)
-        return super(CrewMemberAdminSerializer, self).create(validated_data)
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         get_member_from_id(validated_data)
-        return super(CrewMemberAdminSerializer, self).update(instance, validated_data)
+        return super().update(instance, validated_data)
 
 
 class RequestAdminListSerializer(serializers.ModelSerializer):
@@ -439,7 +439,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         handle_additional_data(validated_data, self.context["request"].user)
         get_requester(validated_data, self.context["request"].user)
         validated_data["requested_by"] = self.context["request"].user
-        request = super(RequestAdminSerializer, self).create(validated_data)
+        request = super().create(validated_data)
         if comment_text:
             request.comments.add(self.create_comment(comment_text, request))
         if send_notification:
@@ -455,7 +455,7 @@ class RequestAdminSerializer(serializers.ModelSerializer):
         recalculate_deadline(instance, validated_data)
         handle_additional_data(validated_data, self.context["request"].user, instance)
         get_requester(validated_data, instance.requester, instance)
-        request = super(RequestAdminSerializer, self).update(instance, validated_data)
+        request = super().update(instance, validated_data)
         update_request_status(request)
         update_calendar_event.delay(request.id)
         return request

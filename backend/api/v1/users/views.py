@@ -59,7 +59,7 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         if self.kwargs.get("pk", None) == "me":
             self.kwargs["pk"] = self.request.user.pk
-        return super(UserDetailView, self).get_object()
+        return super().get_object()
 
 
 class UserListView(generics.ListAPIView):
@@ -207,7 +207,7 @@ class UserWorkedOnListView(generics.ListAPIView):
     def get_object(self):
         if self.kwargs.get("pk", None) == "me":
             self.kwargs["pk"] = self.request.user.pk
-        return super(UserWorkedOnListView, self).get_object()
+        return super().get_object()
 
     def list(self, request, *args, **kwargs):
         worked_on = []

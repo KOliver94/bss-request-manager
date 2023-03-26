@@ -26,6 +26,11 @@ repos:
         files: (^.pre-commit/)|(package.json$)
         additional_dependencies:
           - pyyaml==6.0
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.3.1
+    hooks:
+      - id: pyupgrade
+        args: [--py310-plus]
   - repo: https://github.com/hadialqattan/pycln
     rev: v2.1.5
     hooks:
