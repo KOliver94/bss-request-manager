@@ -44,10 +44,7 @@ def update_request_status(request, called_from_video=False):
                     and status == Request.Statuses.DENIED
                 )
             ):
-                notify_sch_event_management_system.delay(
-                    request.additional_data["external"]["sch_events_callback_url"],
-                    request.additional_data["accepted"],
-                )
+                notify_sch_event_management_system.delay(request.id)
 
         # If the request is accepted but canceled by requester set the status
         if (
@@ -231,12 +228,17 @@ def recalculate_deadline(instance, data):
     retry_backoff=True,
     retry_kwargs={"max_retries": 10},
 )
-def notify_sch_event_management_system(self, url, accepted):
+def notify_sch_event_management_system(self, request_id):
+    request = Request.objects.get(pk=request_id)
+
+    accept = request.additional_data["accepted"]
+    url = request.additional_data["external"]["sch_events_callback_url"]
+
     headers = {
         "Accept": "application/json",
         "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
     }
-    data = {"accept": accepted}
+    data = {"accept": accept}
     url = requests.head(url, headers=headers, allow_redirects=True, timeout=10).url
     response = requests.post(
         url, data=data, headers=headers, allow_redirects=False, timeout=30
