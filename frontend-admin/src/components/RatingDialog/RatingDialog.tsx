@@ -15,7 +15,7 @@ import * as yup from 'yup';
 import useMobile from 'hooks/useMobile';
 
 interface RatingDialogProps extends DialogProps {
-  ratingCreatorName?: string;
+  ratingAuthorName?: string;
   ratingId?: number;
   videoId: number;
   videoTitle: string;
@@ -36,7 +36,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
   (
     {
       onHide,
-      ratingCreatorName,
+      ratingAuthorName,
       ratingId: ratingIdParam,
       videoId,
       videoTitle,
@@ -164,12 +164,12 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
     const renderHeader = () => {
       return (
         <div className="align-items-center flex justify-content-start">
-          <span style={{ whiteSpace: ratingCreatorName ? 'pre' : 'normal' }}>
+          <span style={{ whiteSpace: ratingAuthorName ? 'pre' : 'normal' }}>
             Értékelés{' '}
           </span>
-          {ratingCreatorName && (
+          {ratingAuthorName && (
             <span style={{ color: 'var(--primary-color)' }}>
-              - {ratingCreatorName}
+              - {ratingAuthorName}
             </span>
           )}
           {loading && (
