@@ -26,6 +26,15 @@ class ExtendedUserAdmin(UserAdmin):
     actions = [
         "ban_selected_users",
     ]
+    list_display = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "is_staff",
+        "is_admin",
+        "is_superuser",
+    )
 
     def ban_selected_users(self, request, queryset):
         for user in queryset:
