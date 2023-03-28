@@ -30,6 +30,7 @@ repos:
     rev: v3.3.1
     hooks:
       - id: pyupgrade
+        name: 'Upgrade Python syntax to newer versions'
         args: [--py310-plus]
   - repo: https://github.com/hadialqattan/pycln
     rev: v2.1.5
@@ -58,7 +59,8 @@ repos:
     hooks:
       - id: flake8
         name: 'Lint Python code'
-        args: [--config=./backend/.flake8]
+        args: [--toml-config=./backend/pyproject.toml]
+        additional_dependencies: [Flake8-pyproject]
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
     hooks:
