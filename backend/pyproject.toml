@@ -1,3 +1,13 @@
+[tool.flake8]
+max-line-length = 88
+max-complexity = 15
+ignore = ["E203", "E501", "W503"]
+per-file-ignores = [
+    "backend/core/settings/*.py: F403,F405",
+    "backend/common/apps.py: F401",
+    "backend/video_requests/apps.py: F401"
+]
+
 [tool.isort]
 profile = "black"
 
