@@ -38,7 +38,7 @@ repos:
         name: 'Sort Python imports'
         args: [--settings, ./backend/pyproject.toml]
   - repo: https://github.com/psf/black
-    rev: 23.1.0
+    rev: 23.3.0
     hooks:
       - id: black
         name: 'Format Python code'
@@ -70,7 +70,7 @@ repos:
         additional_dependencies:
           - prettier@2.8.1
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.36.0
+    rev: v8.37.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
