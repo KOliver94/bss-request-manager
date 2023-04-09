@@ -225,7 +225,11 @@ GOOGLE_CALENDAR_ID = config("GOOGLE_CALENDAR_ID", default=None)
 if not DEBUG:
     sentry_sdk.init(
         dsn=config("SENTRY_URL"),
-        integrations=[CeleryIntegration(), DjangoIntegration(), RedisIntegration()],
+        integrations=[
+            CeleryIntegration(monitor_beat_tasks=True),
+            DjangoIntegration(),
+            RedisIntegration(),
+        ],
         # Set traces_sample_rate to 1.0 to capture 100%
         # of transactions for performance monitoring.
         # We recommend adjusting this value in production,
