@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from core.settings.common import *
+from core.settings.base import *
 
 # Use localhost as default instead of docker container hostnames
 DATABASES["default"].update({"HOST": config("DATABASE_HOST", default="localhost")})
