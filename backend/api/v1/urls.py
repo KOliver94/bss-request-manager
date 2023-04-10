@@ -40,7 +40,7 @@ if settings.HEALTH_CHECK_API_ENABLED:
         path(f"health{token}", include("health_check.urls")),
     ]
 
-if settings.DEBUG and "drf_yasg" in settings.INSTALLED_APPS:
+if settings.SWAGGER and "drf_yasg" in settings.INSTALLED_APPS:
     from drf_yasg import openapi
     from drf_yasg.views import get_schema_view
 

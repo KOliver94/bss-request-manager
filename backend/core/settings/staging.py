@@ -8,29 +8,14 @@ from core.settings._auth import *
 
 # E-mail settings
 # https://docs.djangoproject.com/en/3.0/topics/email/
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = "logs/emails"
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = config("EMAIL_HOST")
-EMAIL_PORT = config("EMAIL_PORT")
-
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", default=None)
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default=None)
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=None)
-EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=None)
-EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
-EMAIL_SSL_KEYFILE = config("EMAIL_SSL_KEYFILE", default=None)
-EMAIL_SSL_CERTFILE = config("EMAIL_SSL_CERTFILE", default=None)
-
-DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
-DEFAULT_REPLY_EMAIL = config("DEFAULT_REPLY_EMAIL")
-WEEKLY_TASK_EMAIL = config("WEEKLY_TASK_EMAIL")
-
-DEBUG_EMAIL = config(
-    "DEBUG_EMAIL", default=None
-)  # if set all e-mails will be sent to this address only
+DEFAULT_REPLY_EMAIL = "reply@example.com"
+WEEKLY_TASK_EMAIL = "weekly@example.com"
 
 # External services:
-SCH_EVENTS_TOKEN = config("SCH_EVENTS_TOKEN")
+SCH_EVENTS_TOKEN = "123456789abcdef"  # nosec
 
 # Google Calendar settings:
 GOOGLE_SERVICE_ACCOUNT_KEY_FILE_NAME = config("GOOGLE_SERVICE_ACCOUNT_KEY_FILE_NAME")

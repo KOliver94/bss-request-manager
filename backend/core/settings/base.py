@@ -19,8 +19,9 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BACKEND_DIR = BASE_DIR  # rename variable for clarity
+BACKEND_DIR = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 FRONTEND_DIR = os.path.abspath(os.path.join(BACKEND_DIR, "..", "frontend"))
 
 # URL of the site such as: https://website.example.com
@@ -33,10 +34,6 @@ BASE_URL = f'{"https://" if BASE_URL_HTTPS else "http://"}{BASE_URL_DOMAIN}'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("APP_SECRET_KEY", default=get_random_secret_key())
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("APP_DEBUG", default=False, cast=bool)
-DJANGO_ADMIN = config("DJANGO_ADMIN", default=True, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
@@ -286,7 +283,8 @@ LOGGING = {
     "loggers": {"": {"handlers": ["console", "info", "error"], "level": "INFO"}},
 }
 
-# If requested enable Django's admin site
+# Enable Django's admin site
+DJANGO_ADMIN = config("DJANGO_ADMIN", default=True, cast=bool)
 if DJANGO_ADMIN:
     # Enable Django admin
     INSTALLED_APPS += [
@@ -316,6 +314,29 @@ except AttributeError:
 # https://github.com/llybin/drf-recaptcha
 
 DRF_RECAPTCHA_ENABLED = config("RECAPTCHA", default=True, cast=bool)
-DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
 if DRF_RECAPTCHA_ENABLED:
     INSTALLED_APPS += ["drf_recaptcha"]
+    DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
+
+# Enable Browsable API
+BROWSABLE_API = config("BROWSABLE_API", default=False, cast=bool)
+if BROWSABLE_API:
+    REST_FRAMEWORK.setdefault("DEFAULT_RENDERER_CLASSES", []).append(
+        "rest_framework.renderers.BrowsableAPIRenderer"
+    )
+
+# Enable Swagger/ReDoc
+SWAGGER = config("SWAGGER", default=False, cast=bool)
+if SWAGGER:
+    INSTALLED_APPS += [
+        "drf_yasg",
+    ]
+
+    # Swagger settings
+    # https://drf-yasg.readthedocs.io/en/stable/index.html
+    SWAGGER_SETTINGS = {
+        "USE_SESSION_AUTH": False,
+        "SECURITY_DEFINITIONS": {
+            "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
+        },
+    }
