@@ -34,6 +34,7 @@ whitenoise = {extras = ["brotli"],version = "==6.5.0"}
 
 [dev-packages]
 coverage = {extras = ["toml"],version = "*"}
+model_bakery = "*"
 pre-commit = "*"
 pytest-django = "*"
 time-machine = "*"
