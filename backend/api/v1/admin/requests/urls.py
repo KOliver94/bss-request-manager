@@ -4,9 +4,11 @@ from api.v1.admin.requests.comments.views import (
     CommentAdminDetailUpdateDeleteView,
     CommentAdminListCreateView,
 )
+from api.v1.admin.requests.crew.views import (
+    CrewMemberAdminDetailUpdateDeleteView,
+    CrewMemberAdminListCreateView,
+)
 from api.v1.admin.requests.views import (
-    CrewAdminDetailView,
-    CrewAdminListCreateView,
     HistoryRetrieveView,
     RatingAdminDetailView,
     RatingAdminListCreateView,
@@ -33,8 +35,16 @@ urlpatterns = [
         "<int:request_id_comment>/comments/<int:pk>/history",
         HistoryRetrieveView.as_view(),
     ),
-    path("<int:request_id>/crew", CrewAdminListCreateView.as_view()),
-    path("<int:request_id>/crew/<int:pk>", CrewAdminDetailView.as_view()),
+    path(
+        "<int:request_id>/crew",
+        CrewMemberAdminListCreateView.as_view(),
+        name="admin-crew-list-create",
+    ),
+    path(
+        "<int:request_id>/crew/<int:pk>",
+        CrewMemberAdminDetailUpdateDeleteView.as_view(),
+        name="admin-crew-detail-update-delete",
+    ),
     path("<int:request_id>/videos", VideoAdminListCreateView.as_view()),
     path("<int:request_id>/videos/<int:pk>", VideoAdminDetailView.as_view()),
     path(

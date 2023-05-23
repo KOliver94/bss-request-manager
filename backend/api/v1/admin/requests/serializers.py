@@ -9,11 +9,12 @@ from rest_framework.fields import BooleanField, CharField, EmailField, IntegerFi
 from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.comments.serializers import CommentAdminListDetailSerializer
+from api.v1.admin.requests.crew.serializers import CrewMemberAdminListDetailSerializer
 from api.v1.requests.utilities import create_user
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event, update_calendar_event
 from video_requests.emails import email_user_new_request_confirmation
-from video_requests.models import Comment, CrewMember, Rating, Request, Video
+from video_requests.models import Comment, Rating, Request, Video
 from video_requests.utilities import (
     recalculate_deadline,
     update_request_status,
@@ -44,14 +45,6 @@ def get_responsible_from_id(validated_data):
     if "responsible_id" in validated_data:
         validated_data["responsible"] = get_user_by_id(
             validated_data.pop("responsible_id"), "responsible"
-        )
-
-
-def get_member_from_id(validated_data):
-    # Member_id is required for creation but not for update, so this check is needed.
-    if "member_id" in validated_data:
-        validated_data["member"] = get_user_by_id(
-            validated_data.pop("member_id"), "member"
         )
 
 
@@ -273,28 +266,6 @@ class VideoAdminListSerializer(VideoAdminSerializer):
         )
 
 
-class CrewMemberAdminSerializer(serializers.ModelSerializer):
-    member = UserSerializer(read_only=True)
-    member_id = IntegerField(write_only=True)
-
-    class Meta:
-        model = CrewMember
-        fields = ("id", "member", "position", "member_id")
-        read_only_fields = (
-            "id",
-            "member",
-        )
-        write_only_fields = ("member_id",)
-
-    def create(self, validated_data):
-        get_member_from_id(validated_data)
-        return super().create(validated_data)
-
-    def update(self, instance, validated_data):
-        get_member_from_id(validated_data)
-        return super().update(instance, validated_data)
-
-
 class RequestAdminListSerializer(serializers.ModelSerializer):
     requester = UserSerializer(read_only=True)
     responsible = UserSerializer(read_only=True)
@@ -330,7 +301,7 @@ class RequestAdminListSerializer(serializers.ModelSerializer):
 
 
 class RequestAdminSerializer(serializers.ModelSerializer):
-    crew = CrewMemberAdminSerializer(many=True, read_only=True)
+    crew = CrewMemberAdminListDetailSerializer(many=True, read_only=True)
     videos = VideoAdminSerializer(many=True, read_only=True)
     comments = CommentAdminListDetailSerializer(many=True, read_only=True)
     requester = UserSerializer(read_only=True)
