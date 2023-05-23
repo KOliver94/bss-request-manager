@@ -6,7 +6,6 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.serializers import (
-    CrewMemberAdminSerializer,
     HistorySerializer,
     RatingAdminSerializer,
     RequestAdminListSerializer,
@@ -18,7 +17,7 @@ from api.v1.requests.filters import RequestFilter, VideoFilter
 from common.rest_framework.pagination import ExtendedPagination
 from common.rest_framework.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from common.utilities import remove_calendar_event
-from video_requests.models import Comment, CrewMember, Rating, Request, Video
+from video_requests.models import Comment, Rating, Request, Video
 
 
 class HistoryRetrieveView(generics.RetrieveAPIView):
@@ -98,54 +97,6 @@ class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
         video_request = get_object_or_404(Request, pk=self.kwargs["pk"])
         remove_calendar_event.delay(video_request.id)
         return super().destroy(request, *args, **kwargs)
-
-
-class CrewAdminListCreateView(generics.ListCreateAPIView):
-    """
-    List (GET) and Create (POST) view for CrewMember objects
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff and Admin users can do anything.
-    """
-
-    serializer_class = CrewMemberAdminSerializer
-    permission_classes = [IsStaffUser]
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["member", "position"]
-    ordering = ["position"]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return CrewMember.objects.none()
-        return CrewMember.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs["request_id"])
-        )
-
-    def perform_create(self, serializer):
-        serializer.save(
-            request=get_object_or_404(Request, pk=self.kwargs["request_id"])
-        )
-
-
-class CrewAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve (GET), Update (PUT, PATCH) and Delete (DELETE) view for a single CrewMember object
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff and Admin users can do anything.
-    """
-
-    serializer_class = CrewMemberAdminSerializer
-    permission_classes = [IsStaffUser]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return CrewMember.objects.none()
-        return CrewMember.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs["request_id"])
-        )
 
 
 class VideoAdminListView(generics.ListAPIView):
