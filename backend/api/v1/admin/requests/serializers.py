@@ -8,14 +8,11 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.fields import BooleanField, CharField, EmailField, IntegerField
 from rest_framework.generics import get_object_or_404
 
+from api.v1.admin.requests.comments.serializers import CommentAdminListDetailSerializer
 from api.v1.requests.utilities import create_user
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event, update_calendar_event
-from video_requests.emails import (
-    email_crew_new_comment,
-    email_user_new_comment,
-    email_user_new_request_confirmation,
-)
+from video_requests.emails import email_user_new_request_confirmation
 from video_requests.models import Comment, CrewMember, Rating, Request, Video
 from video_requests.utilities import (
     recalculate_deadline,
@@ -202,32 +199,6 @@ class RatingAdminSerializer(serializers.ModelSerializer):
         )
 
 
-class CommentAdminSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Comment
-        fields = (
-            "id",
-            "created",
-            "author",
-            "text",
-            "internal",
-        )
-        read_only_fields = (
-            "id",
-            "created",
-            "author",
-        )
-
-    def create(self, validated_data):
-        comment = super().create(validated_data)
-        if not comment.internal and not hasattr(comment.request.requester, "ban"):
-            email_user_new_comment.delay(comment.id)
-        email_crew_new_comment.delay(comment.id)
-        return comment
-
-
 class VideoRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
@@ -361,7 +332,7 @@ class RequestAdminListSerializer(serializers.ModelSerializer):
 class RequestAdminSerializer(serializers.ModelSerializer):
     crew = CrewMemberAdminSerializer(many=True, read_only=True)
     videos = VideoAdminSerializer(many=True, read_only=True)
-    comments = CommentAdminSerializer(many=True, read_only=True)
+    comments = CommentAdminListDetailSerializer(many=True, read_only=True)
     requester = UserSerializer(read_only=True)
     requester_id = IntegerField(write_only=True, required=False)
     requested_by = UserSerializer(read_only=True)

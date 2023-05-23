@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.fields import (
+    BooleanField,
     CharField,
     ChoiceField,
     DateTimeField,
@@ -59,6 +60,32 @@ class UserProfileSerializerWithAvatar(ModelSerializer):
             "avatar",
         )
         read_only_fields = ("avatar_url", "avatar")
+
+
+class UserNestedListSerializer(Serializer):
+    avatar_url = SerializerMethodField(read_only=True)
+    full_name = SerializerMethodField(read_only=True)
+    id = IntegerField(read_only=True)
+
+    @staticmethod
+    def get_full_name(obj):
+        return obj.get_full_name_eastern_order()
+
+    @staticmethod
+    def get_avatar_url(obj):
+        return obj.userprofile.avatar_url
+
+
+class UserDetailedListSerializer(Serializer):
+    email = EmailField(read_only=True)
+    full_name = SerializerMethodField(read_only=True)
+    id = IntegerField(read_only=True)
+    is_staff = BooleanField(read_only=True)
+    profile = UserProfileSerializer(read_only=True, source="userprofile")
+
+    @staticmethod
+    def get_full_name(obj):
+        return obj.get_full_name_eastern_order()
 
 
 class UserSerializer(ModelSerializer):
