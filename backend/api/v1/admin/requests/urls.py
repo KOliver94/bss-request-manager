@@ -1,8 +1,10 @@
 from django.urls import path
 
-from api.v1.admin.requests.views import (
-    CommentAdminDetailView,
+from api.v1.admin.requests.comments.views import (
+    CommentAdminDetailUpdateDeleteView,
     CommentAdminListCreateView,
+)
+from api.v1.admin.requests.views import (
     CrewAdminDetailView,
     CrewAdminListCreateView,
     HistoryRetrieveView,
@@ -17,8 +19,16 @@ from api.v1.admin.requests.views import (
 urlpatterns = [
     path("<int:pk>", RequestAdminDetailView.as_view()),
     path("<int:pk>/history", HistoryRetrieveView.as_view()),
-    path("<int:request_id>/comments", CommentAdminListCreateView.as_view()),
-    path("<int:request_id>/comments/<int:pk>", CommentAdminDetailView.as_view()),
+    path(
+        "<int:request_id>/comments",
+        CommentAdminListCreateView.as_view(),
+        name="admin-comments-list-create",
+    ),
+    path(
+        "<int:request_id>/comments/<int:pk>",
+        CommentAdminDetailUpdateDeleteView.as_view(),
+        name="admin-comments-detail-update-delete",
+    ),
     path(
         "<int:request_id_comment>/comments/<int:pk>/history",
         HistoryRetrieveView.as_view(),

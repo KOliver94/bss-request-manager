@@ -6,7 +6,6 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.serializers import (
-    CommentAdminSerializer,
     CrewMemberAdminSerializer,
     HistorySerializer,
     RatingAdminSerializer,
@@ -99,61 +98,6 @@ class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
         video_request = get_object_or_404(Request, pk=self.kwargs["pk"])
         remove_calendar_event.delay(video_request.id)
         return super().destroy(request, *args, **kwargs)
-
-
-class CommentAdminListCreateView(generics.ListCreateAPIView):
-    """
-    List (GET) and Create (POST) view for Comment objects
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff and admin members can read every comment and create new ones.
-    """
-
-    serializer_class = CommentAdminSerializer
-    permission_classes = [IsStaffUser]
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["created", "author", "internal"]
-    ordering = ["created"]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Comment.objects.none()
-        return Comment.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs["request_id"])
-        )
-
-    def perform_create(self, serializer):
-        serializer.save(
-            request=get_object_or_404(Request, pk=self.kwargs["request_id"]),
-            author=self.request.user,
-        )
-
-
-class CommentAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve (GET), Update (PUT, PATCH) and Delete (DELETE) view for a single Comment object
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff members can read every comment but can only modify and delete those which are his own.
-    - Admin members can do anything.
-    """
-
-    serializer_class = CommentAdminSerializer
-
-    def get_permissions(self):
-        if self.request.method == "GET":
-            return [IsStaffUser()]
-        else:
-            return [IsStaffSelfOrAdmin()]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Comment.objects.none()
-        return Comment.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs["request_id"])
-        )
 
 
 class CrewAdminListCreateView(generics.ListCreateAPIView):
