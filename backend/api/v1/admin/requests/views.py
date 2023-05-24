@@ -7,7 +7,6 @@ from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.serializers import (
     HistorySerializer,
-    RatingAdminSerializer,
     RequestAdminListSerializer,
     RequestAdminSerializer,
     VideoAdminListSerializer,
@@ -196,81 +195,4 @@ class VideoAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Video.objects.none()
         return Video.objects.filter(
             request=get_object_or_404(Request, pk=self.kwargs["request_id"])
-        )
-
-
-class RatingAdminListCreateView(generics.ListCreateAPIView):
-    """
-    List (GET) and Create (POST) view for Rating objects
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff and admin members can read every rating but can create only one to each video.
-    """
-
-    serializer_class = RatingAdminSerializer
-    permission_classes = [IsStaffUser]
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["created", "author", "rating", "review"]
-    ordering = ["created"]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Rating.objects.none()
-        return Rating.objects.filter(
-            video=get_object_or_404(Video, pk=self.kwargs["video_id"]),
-            video__request=get_object_or_404(Request, pk=self.kwargs["request_id"]),
-        )
-
-    def perform_create(self, serializer):
-        """
-        Check if the user has already rated a video. If so do not allow multiple ratings.
-        A Video cannot be rated before being edited (reached status 3).
-        """
-        if (
-            get_object_or_404(Video, pk=self.kwargs["video_id"]).status
-            < Video.Statuses.EDITED
-        ):
-            raise ValidationError("The video has not been edited yet.")
-
-        if Rating.objects.filter(
-            video=get_object_or_404(Video, pk=self.kwargs["video_id"]),
-            author=self.request.user,
-        ).exists():
-            raise ValidationError("You have already posted a rating.")
-
-        serializer.save(
-            video=get_object_or_404(
-                Video,
-                pk=self.kwargs["video_id"],
-                request=get_object_or_404(Request, pk=self.kwargs["request_id"]),
-            ),
-            author=self.request.user,
-        )
-
-
-class RatingAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve (GET), Update (PUT, PATCH) and Delete (DELETE) view for a single Rating object
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff members can read every rating but can only modify and delete those which are his own.
-    - Admin members can do anything.
-    """
-
-    serializer_class = RatingAdminSerializer
-
-    def get_permissions(self):
-        if self.request.method == "GET":
-            return [IsStaffUser()]
-        else:
-            return [IsStaffSelfOrAdmin()]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Rating.objects.none()
-        return Rating.objects.filter(
-            video=get_object_or_404(Video, pk=self.kwargs["video_id"]),
-            video__request=get_object_or_404(Request, pk=self.kwargs["request_id"]),
         )

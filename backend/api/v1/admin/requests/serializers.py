@@ -10,11 +10,12 @@ from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.comments.serializers import CommentAdminListDetailSerializer
 from api.v1.admin.requests.crew.serializers import CrewMemberAdminListDetailSerializer
+from api.v1.admin.requests.ratings.serializers import RatingAdminListDetailSerializer
 from api.v1.requests.utilities import create_user
 from api.v1.users.serializers import UserSerializer
 from common.utilities import create_calendar_event, update_calendar_event
 from video_requests.emails import email_user_new_request_confirmation
-from video_requests.models import Comment, Rating, Request, Video
+from video_requests.models import Comment, Request, Video
 from video_requests.utilities import (
     recalculate_deadline,
     update_request_status,
@@ -152,15 +153,6 @@ def handle_additional_data(validated_data, user, original_data=None):
     return validated_data
 
 
-class FilteredListSerializer(serializers.ListSerializer):
-    """For VideoAdminSerializer return only own rating"""
-
-    def to_representation(self, data):
-        if isinstance(self.parent, VideoAdminSerializer):
-            data = data.filter(author=self.context["request"].user)
-        return super().to_representation(data)
-
-
 class HistoricalRecordField(serializers.ListField):
     child = serializers.DictField()
 
@@ -172,26 +164,6 @@ class HistorySerializer(serializers.Serializer):
     history = HistoricalRecordField(read_only=True)
 
 
-class RatingAdminSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Rating
-        list_serializer_class = FilteredListSerializer
-        fields = (
-            "id",
-            "created",
-            "author",
-            "rating",
-            "review",
-        )
-        read_only_fields = (
-            "id",
-            "created",
-            "author",
-        )
-
-
 class VideoRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
@@ -200,7 +172,7 @@ class VideoRequestSerializer(serializers.ModelSerializer):
 
 
 class VideoAdminSerializer(serializers.ModelSerializer):
-    ratings = RatingAdminSerializer(many=True, read_only=True)
+    ratings = RatingAdminListDetailSerializer(many=True, read_only=True)
     editor = UserSerializer(read_only=True)
     editor_id = IntegerField(write_only=True, required=False, allow_null=True)
     avg_rating = serializers.FloatField(read_only=True)

@@ -4,7 +4,7 @@ import pytest
 from django.contrib.auth.models import Group, User
 from rest_framework.test import APIClient
 
-from video_requests.models import Request
+from video_requests.models import Request, Video
 
 
 @pytest.fixture
@@ -61,4 +61,12 @@ def not_existing_request_id():
     while True:
         non_existing_id = randint(1000, 100000)
         if not Request.objects.filter(pk=non_existing_id).exists():
+            return non_existing_id
+
+
+@pytest.fixture
+def not_existing_video_id():
+    while True:
+        non_existing_id = randint(1000, 100000)
+        if not Video.objects.filter(pk=non_existing_id).exists():
             return non_existing_id
