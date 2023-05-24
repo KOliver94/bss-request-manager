@@ -13,7 +13,7 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import login
+from tests.api.helpers import get_response, login
 from video_requests.models import Comment
 
 pytestmark = pytest.mark.django_db
@@ -335,16 +335,6 @@ def test_detail_update_delete_comment_error(
     request,
     user,
 ):
-    def get_response():
-        if method == "GET":
-            return api_client.get(url)
-        elif method == "DELETE":
-            return api_client.delete(url)
-        elif method == "PATCH":
-            return api_client.patch(url, comment_data)
-        else:  # PUT
-            return api_client.put(url, comment_data)
-
     def get_not_existing_comment_id():
         while True:
             non_existing_id = randint(1000, 100000)
@@ -366,7 +356,7 @@ def test_detail_update_delete_comment_error(
             "pk": get_not_existing_comment_id(),
         },
     )
-    response = get_response()
+    response = get_response(api_client, method, url, comment_data)
 
     assert response.status_code == expected
 
@@ -375,7 +365,7 @@ def test_detail_update_delete_comment_error(
         "admin-comments-detail-update-delete",
         kwargs={"request_id": not_existing_request_id, "pk": comment.id},
     )
-    response = get_response()
+    response = get_response(api_client, method, url, comment_data)
 
     assert response.status_code == expected
 
@@ -387,6 +377,6 @@ def test_detail_update_delete_comment_error(
             "pk": get_not_existing_comment_id(),
         },
     )
-    response = get_response()
+    response = get_response(api_client, method, url, comment_data)
 
     assert response.status_code == expected

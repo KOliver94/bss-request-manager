@@ -15,7 +15,7 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import login
+from tests.api.helpers import get_response, login
 from video_requests.models import CrewMember
 
 pytestmark = pytest.mark.django_db
@@ -261,16 +261,6 @@ def test_detail_update_delete_crew_member_error(
     request,
     user,
 ):
-    def get_response():
-        if method == "GET":
-            return api_client.get(url)
-        elif method == "DELETE":
-            return api_client.delete(url)
-        elif method == "PATCH":
-            return api_client.patch(url, crew_member_data)
-        else:  # PUT
-            return api_client.put(url, crew_member_data)
-
     def get_not_existing_crew_member_id():
         while True:
             non_existing_id = randint(1000, 100000)
@@ -292,7 +282,7 @@ def test_detail_update_delete_crew_member_error(
             "pk": get_not_existing_crew_member_id(),
         },
     )
-    response = get_response()
+    response = get_response(api_client, method, url, crew_member_data)
 
     assert response.status_code == expected
 
@@ -301,7 +291,7 @@ def test_detail_update_delete_crew_member_error(
         "admin-crew-detail-update-delete",
         kwargs={"request_id": not_existing_request_id, "pk": crew_member.id},
     )
-    response = get_response()
+    response = get_response(api_client, method, url, crew_member_data)
 
     assert response.status_code == expected
 
@@ -313,7 +303,7 @@ def test_detail_update_delete_crew_member_error(
             "pk": get_not_existing_crew_member_id(),
         },
     )
-    response = get_response()
+    response = get_response(api_client, method, url, crew_member_data)
 
     assert response.status_code == expected
 
@@ -365,5 +355,5 @@ def test_create_update_crew_member_invalid_member(
 
     assert response.status_code == expected
 
-    if response.status_code == "401":
+    if response.status_code == HTTP_400_BAD_REQUEST:
         assert response.data["member"][0].code == "does_not_exist"
