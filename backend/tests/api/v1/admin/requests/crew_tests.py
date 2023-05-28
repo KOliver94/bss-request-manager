@@ -1,7 +1,6 @@
 from random import randint
 
 import pytest
-from django.contrib.auth.models import User
 from model_bakery import baker
 from rest_framework.reverse import reverse
 from rest_framework.status import (
@@ -322,16 +321,11 @@ def test_create_update_crew_member_invalid_member(
     api_client,
     expected,
     method,
+    not_existing_user_id,
     request,
     user,
 ):
-    def get_not_existing_user_id():
-        while True:
-            non_existing_id = randint(1000, 100000)
-            if not User.objects.filter(pk=non_existing_id).exists():
-                return non_existing_id
-
-    data = {"member": get_not_existing_user_id(), "position": "Failure"}
+    data = {"member": not_existing_user_id, "position": "Failure"}
 
     video_request = baker.make("video_requests.Request")
     crew_member = baker.make("video_requests.CrewMember", request=video_request)

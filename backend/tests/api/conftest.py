@@ -65,6 +65,14 @@ def not_existing_request_id():
 
 
 @pytest.fixture
+def not_existing_user_id():
+    while True:
+        non_existing_id = randint(1000, 100000)
+        if not User.objects.filter(pk=non_existing_id).exists():
+            return non_existing_id
+
+
+@pytest.fixture
 def not_existing_video_id():
     while True:
         non_existing_id = randint(1000, 100000)

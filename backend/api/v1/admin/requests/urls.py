@@ -14,14 +14,12 @@ from api.v1.admin.requests.ratings.views import (
 )
 from api.v1.admin.requests.views import (
     HistoryRetrieveView,
-    RequestAdminDetailView,
     VideoAdminDetailView,
     VideoAdminListCreateView,
     VideoAdminListView,
 )
 
 urlpatterns = [
-    path("<int:pk>", RequestAdminDetailView.as_view()),
     path("<int:pk>/history", HistoryRetrieveView.as_view()),
     path(
         "<int:request_id>/comments",
