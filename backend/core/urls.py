@@ -19,7 +19,7 @@ from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path("api/", include("api.urls")),
+    path("api/", include(("api.urls", "api"), namespace="api")),
     re_path(r"", TemplateView.as_view(template_name="index.html")),  # React frontend
 ]
 

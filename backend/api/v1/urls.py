@@ -12,7 +12,7 @@ from api.v1.requests.views import RequestDefaultListCreateView
 from api.v1.users.views import UserListView
 
 urlpatterns = [
-    path("admin/", include("api.v1.admin.urls")),
+    path("admin/", include(("api.v1.admin.urls", "admin"), namespace="admin")),
     path("external/", include("api.v1.external.urls")),
     path("login", ExtendedTokenObtainPairView.as_view(), name="login_obtain_jwt_pair"),
     path("login/refresh", TokenRefreshView.as_view(), name="login_refresh_jwt_token"),

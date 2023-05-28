@@ -7,15 +7,12 @@ from rest_framework.generics import get_object_or_404
 
 from api.v1.admin.requests.serializers import (
     HistorySerializer,
-    RequestAdminListSerializer,
-    RequestAdminSerializer,
     VideoAdminListSerializer,
     VideoAdminSerializer,
 )
-from api.v1.requests.filters import RequestFilter, VideoFilter
+from api.v1.requests.filters import VideoFilter
 from common.rest_framework.pagination import ExtendedPagination
-from common.rest_framework.permissions import IsStaffSelfOrAdmin, IsStaffUser
-from common.utilities import remove_calendar_event
+from common.rest_framework.permissions import IsStaffUser
 from video_requests.models import Comment, Rating, Request, Video
 
 
@@ -44,58 +41,6 @@ class HistoryRetrieveView(generics.RetrieveAPIView):
             )
         else:  # Request object
             return Request.objects.all()
-
-
-class RequestAdminListCreateView(generics.ListCreateAPIView):
-    """
-    List (GET) and Create (POST) view for Request objects
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff and Admin users can do anything.
-    """
-
-    permission_classes = [IsStaffUser]
-    filter_backends = [
-        filters.OrderingFilter,
-        filters.SearchFilter,
-        DjangoFilterBackend,
-    ]
-    ordering_fields = ["title", "created", "start_datetime", "status"]
-    search_fields = ["title", "videos__title"]
-    filterset_class = RequestFilter
-    ordering = ["created"]
-    pagination_class = ExtendedPagination
-    queryset = Request.objects.all().cache()
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return RequestAdminSerializer
-        return RequestAdminListSerializer
-
-
-class RequestAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve (GET), Update (PUT, PATCH) and Delete (DELETE) view for a single Request object
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff users can do anything except deleting requests which are not requested by them.
-        (either requested_by or requester field is the user)
-    - Admin users can do anything.
-    """
-
-    serializer_class = RequestAdminSerializer
-    queryset = Request.objects.all()
-
-    def get_permissions(self):
-        if self.request.method == "DELETE":
-            return [IsStaffSelfOrAdmin()]
-        else:
-            return [IsStaffUser()]
-
-    def destroy(self, request, *args, **kwargs):
-        video_request = get_object_or_404(Request, pk=self.kwargs["pk"])
-        remove_calendar_event.delay(video_request.id)
-        return super().destroy(request, *args, **kwargs)
 
 
 class VideoAdminListView(generics.ListAPIView):
