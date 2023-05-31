@@ -141,10 +141,7 @@ def test_list_create_crew_error(
         kwargs={"request_pk": not_existing_request_id},
     )
 
-    if method == "GET":
-        response = api_client.get(url)
-    else:  # POST
-        response = api_client.post(url, crew_member_data)
+    response = get_response(api_client, method, url, crew_member_data)
 
     assert response.status_code == expected
 
@@ -152,13 +149,14 @@ def test_list_create_crew_error(
 @pytest.mark.parametrize(
     "user,expected",
     [
-        ("admin_user", HTTP_200_OK),
-        ("staff_user", HTTP_200_OK),
-        ("basic_user", HTTP_403_FORBIDDEN),
-        (None, HTTP_401_UNAUTHORIZED),
+        ("admin_user", {"DELETE": HTTP_204_NO_CONTENT, "GET": HTTP_200_OK}),
+        ("staff_user", {"DELETE": HTTP_204_NO_CONTENT, "GET": HTTP_200_OK}),
+        ("basic_user", {"DELETE": HTTP_403_FORBIDDEN, "GET": HTTP_403_FORBIDDEN}),
+        (None, {"DELETE": HTTP_401_UNAUTHORIZED, "GET": HTTP_401_UNAUTHORIZED}),
     ],
 )
-def test_detail_crew_member(api_client, expected, request, user):
+@pytest.mark.parametrize("method", ["DELETE", "GET"])
+def test_retrieve_destroy_crew_member(api_client, expected, method, request, user):
     video_request = baker.make("video_requests.Request")
     crew = baker.make("video_requests.CrewMember", request=video_request, _quantity=5)
 
@@ -170,11 +168,11 @@ def test_detail_crew_member(api_client, expected, request, user):
         "api:v1:admin:request:crew-detail",
         kwargs={"request_pk": video_request.id, "pk": crew[0].id},
     )
-    response = api_client.get(url)
+    response = get_response(api_client, method, url, None)
 
-    assert response.status_code == expected
+    assert response.status_code == expected[method]
 
-    if is_success(response.status_code):
+    if is_success(response.status_code) and method == "GET":
         assert_response_keys(response.data)
 
 
@@ -206,10 +204,7 @@ def test_update_crew_member(
         kwargs={"request_pk": video_request.id, "pk": crew_member.id},
     )
 
-    if method == "PATCH":
-        response = api_client.patch(url, crew_member_data)
-    else:  # PUT
-        response = api_client.put(url, crew_member_data)
+    response = get_response(api_client, method, url, crew_member_data)
 
     assert response.status_code == expected
 
@@ -223,32 +218,6 @@ def test_update_crew_member(
 @pytest.mark.parametrize(
     "user,expected",
     [
-        ("admin_user", HTTP_204_NO_CONTENT),
-        ("staff_user", HTTP_204_NO_CONTENT),
-        ("basic_user", HTTP_403_FORBIDDEN),
-        (None, HTTP_401_UNAUTHORIZED),
-    ],
-)
-def test_delete_crew_member(api_client, expected, request, user):
-    video_request = baker.make("video_requests.Request")
-    crew = baker.make("video_requests.CrewMember", request=video_request, _quantity=5)
-
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
-
-    url = reverse(
-        "api:v1:admin:request:crew-detail",
-        kwargs={"request_pk": video_request.id, "pk": crew[0].id},
-    )
-    response = api_client.delete(url)
-
-    assert response.status_code == expected
-
-
-@pytest.mark.parametrize(
-    "user,expected",
-    [
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_403_FORBIDDEN),
@@ -256,7 +225,7 @@ def test_delete_crew_member(api_client, expected, request, user):
     ],
 )
 @pytest.mark.parametrize("method", ["GET", "DELETE", "PATCH", "PUT"])
-def test_detail_update_delete_crew_member_error(
+def test_retrieve_update_destroy_crew_member_error(
     api_client,
     crew_member_data,
     expected,
@@ -344,16 +313,13 @@ def test_create_update_crew_member_invalid_member(
             "api:v1:admin:request:crew-list",
             kwargs={"request_pk": video_request.id},
         )
-        response = api_client.post(url, data)
     else:
         url = reverse(
             "api:v1:admin:request:crew-detail",
             kwargs={"request_pk": video_request.id, "pk": crew_member.id},
         )
-        if method == "PATCH":
-            response = api_client.patch(url, data)
-        else:  # PUT
-            response = api_client.put(url, data)
+
+    response = get_response(api_client, method, url, data)
 
     assert response.status_code == expected
 

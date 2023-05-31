@@ -5,7 +5,7 @@ from api.v1.users.serializers import UserNestedListSerializer
 from video_requests.models import Rating
 
 
-class RatingAdminListDetailSerializer(Serializer):
+class RatingAdminListRetrieveSerializer(Serializer):
     author = UserNestedListSerializer(read_only=True)
     created = DateTimeField(read_only=True)
     id = IntegerField(read_only=True)

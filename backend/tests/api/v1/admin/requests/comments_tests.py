@@ -139,10 +139,7 @@ def test_list_create_comments_error(
         kwargs={"request_pk": not_existing_request_id},
     )
 
-    if method == "GET":
-        response = api_client.get(url)
-    else:  # POST
-        response = api_client.post(url, comment_data)
+    response = get_response(api_client, method, url, comment_data)
 
     assert response.status_code == expected
 
@@ -156,7 +153,7 @@ def test_list_create_comments_error(
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-def test_detail_comment(api_client, expected, request, user):
+def test_retrieve_comment(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     comments = baker.make("video_requests.Comment", request=video_request, _quantity=5)
 
@@ -205,10 +202,7 @@ def test_update_own_comment(api_client, comment_data, expected, method, request,
         kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
 
-    if method == "PATCH":
-        response = api_client.patch(url, comment_data)
-    else:  # PUT
-        response = api_client.put(url, comment_data)
+    response = get_response(api_client, method, url, comment_data)
 
     assert response.status_code == expected
 
@@ -249,10 +243,7 @@ def test_update_others_comment(
         kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
 
-    if method == "PATCH":
-        response = api_client.patch(url, comment_data)
-    else:  # PUT
-        response = api_client.put(url, comment_data)
+    response = get_response(api_client, method, url, comment_data)
 
     assert response.status_code == expected
 
@@ -274,7 +265,7 @@ def test_update_others_comment(
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-def test_delete_own_comment(api_client, expected, request, user):
+def test_destroy_own_comment(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
 
     if user:
@@ -304,7 +295,7 @@ def test_delete_own_comment(api_client, expected, request, user):
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-def test_delete_others_comment(api_client, expected, request, user):
+def test_destroy_others_comment(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     comment = baker.make("video_requests.Comment", request=video_request)
 
@@ -333,7 +324,7 @@ def test_delete_others_comment(api_client, expected, request, user):
     ],
 )
 @pytest.mark.parametrize("method", ["GET", "DELETE", "PATCH", "PUT"])
-def test_detail_update_delete_comment_error(
+def test_retrieve_update_destroy_comment_error(
     api_client,
     comment_data,
     expected,
