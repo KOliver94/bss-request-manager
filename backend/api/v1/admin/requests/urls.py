@@ -1,17 +1,10 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import SimpleRouter
 
-from api.v1.admin.requests.comments.views import (
-    CommentAdminDetailUpdateDeleteView,
-    CommentAdminListCreateView,
-)
-from api.v1.admin.requests.crew.views import (
-    CrewMemberAdminDetailUpdateDeleteView,
-    CrewMemberAdminListCreateView,
-)
-from api.v1.admin.requests.ratings.views import (
-    RatingAdminDetailUpdateDeleteView,
-    RatingAdminListCreateView,
-)
+from api.v1.admin.requests.comments.views import CommentAdminViewSet
+from api.v1.admin.requests.crew.views import CrewMemberAdminViewSet
+from api.v1.admin.requests.ratings.views import RatingAdminViewSet
+from api.v1.admin.requests.requests.views import RequestAdminViewSet
 from api.v1.admin.requests.views import (
     HistoryRetrieveView,
     VideoAdminDetailView,
@@ -19,47 +12,40 @@ from api.v1.admin.requests.views import (
     VideoAdminListView,
 )
 
+router = SimpleRouter(trailing_slash=False)
+router.register(r"requests", RequestAdminViewSet, basename="request")
+
+request_router = SimpleRouter(trailing_slash=False)
+request_router.register(r"comments", CommentAdminViewSet, basename="comment")
+request_router.register(r"crew", CrewMemberAdminViewSet, basename="crew")
+
+video_router = SimpleRouter(trailing_slash=False)
+video_router.register(r"ratings", RatingAdminViewSet, basename="rating")
+
+request_urlpatterns = [
+    path("", include(request_router.urls)),
+    path(
+        "videos/<int:video_pk>/",
+        include((video_router.urls, "video"), namespace="video"),
+    ),
+]
+
 urlpatterns = [
+    path("", include(router.urls)),
+    path(
+        "requests/<int:request_pk>/",
+        include((request_urlpatterns, "request"), namespace="request"),
+    ),
     path("<int:pk>/history", HistoryRetrieveView.as_view()),
-    path(
-        "<int:request_id>/comments",
-        CommentAdminListCreateView.as_view(),
-        name="admin-comments-list-create",
-    ),
-    path(
-        "<int:request_id>/comments/<int:pk>",
-        CommentAdminDetailUpdateDeleteView.as_view(),
-        name="admin-comments-detail-update-delete",
-    ),
     path(
         "<int:request_id_comment>/comments/<int:pk>/history",
         HistoryRetrieveView.as_view(),
-    ),
-    path(
-        "<int:request_id>/crew",
-        CrewMemberAdminListCreateView.as_view(),
-        name="admin-crew-list-create",
-    ),
-    path(
-        "<int:request_id>/crew/<int:pk>",
-        CrewMemberAdminDetailUpdateDeleteView.as_view(),
-        name="admin-crew-detail-update-delete",
     ),
     path("<int:request_id>/videos", VideoAdminListCreateView.as_view()),
     path("<int:request_id>/videos/<int:pk>", VideoAdminDetailView.as_view()),
     path(
         "<int:request_id_video>/videos/<int:pk>/history",
         HistoryRetrieveView.as_view(),
-    ),
-    path(
-        "<int:request_id>/videos/<int:video_id>/ratings",
-        RatingAdminListCreateView.as_view(),
-        name="admin-ratings-list-create",
-    ),
-    path(
-        "<int:request_id>/videos/<int:video_id>/ratings/<int:pk>",
-        RatingAdminDetailUpdateDeleteView.as_view(),
-        name="admin-ratings-detail-update-delete",
     ),
     path(
         "<int:request_id>/videos/<int:video_id>/ratings/<int:pk>/history",

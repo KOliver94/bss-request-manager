@@ -54,7 +54,9 @@ def test_list_crew(api_client, expected, request, user):
         user = request.getfixturevalue(user)
         login(api_client, user)
 
-    url = reverse("admin-crew-list-create", kwargs={"request_id": video_request.id})
+    url = reverse(
+        "api:v1:admin:request:crew-list", kwargs={"request_pk": video_request.id}
+    )
     response = api_client.get(url)
 
     assert response.status_code == expected
@@ -83,7 +85,9 @@ def test_create_crew_member(
         user = request.getfixturevalue(user)
         login(api_client, user)
 
-    url = reverse("admin-crew-list-create", kwargs={"request_id": video_request.id})
+    url = reverse(
+        "api:v1:admin:request:crew-list", kwargs={"request_pk": video_request.id}
+    )
     response = api_client.post(url, crew_member_data)
 
     assert response.status_code == expected
@@ -133,7 +137,8 @@ def test_list_create_crew_error(
         login(api_client, user)
 
     url = reverse(
-        "admin-crew-list-create", kwargs={"request_id": not_existing_request_id}
+        "api:v1:admin:request:crew-list",
+        kwargs={"request_pk": not_existing_request_id},
     )
 
     if method == "GET":
@@ -162,8 +167,8 @@ def test_detail_crew_member(api_client, expected, request, user):
         login(api_client, user)
 
     url = reverse(
-        "admin-crew-detail-update-delete",
-        kwargs={"request_id": video_request.id, "pk": crew[0].id},
+        "api:v1:admin:request:crew-detail",
+        kwargs={"request_pk": video_request.id, "pk": crew[0].id},
     )
     response = api_client.get(url)
 
@@ -197,8 +202,8 @@ def test_update_crew_member(
     assert crew_member.position != crew_member_data["position"]
 
     url = reverse(
-        "admin-crew-detail-update-delete",
-        kwargs={"request_id": video_request.id, "pk": crew_member.id},
+        "api:v1:admin:request:crew-detail",
+        kwargs={"request_pk": video_request.id, "pk": crew_member.id},
     )
 
     if method == "PATCH":
@@ -233,8 +238,8 @@ def test_delete_crew_member(api_client, expected, request, user):
         login(api_client, user)
 
     url = reverse(
-        "admin-crew-detail-update-delete",
-        kwargs={"request_id": video_request.id, "pk": crew[0].id},
+        "api:v1:admin:request:crew-detail",
+        kwargs={"request_pk": video_request.id, "pk": crew[0].id},
     )
     response = api_client.delete(url)
 
@@ -275,9 +280,9 @@ def test_detail_update_delete_crew_member_error(
 
     # Existing request with not existing crew member
     url = reverse(
-        "admin-crew-detail-update-delete",
+        "api:v1:admin:request:crew-detail",
         kwargs={
-            "request_id": video_requests[0].id,
+            "request_pk": video_requests[0].id,
             "pk": get_not_existing_crew_member_id(),
         },
     )
@@ -287,8 +292,8 @@ def test_detail_update_delete_crew_member_error(
 
     # Not existing request with existing crew member
     url = reverse(
-        "admin-crew-detail-update-delete",
-        kwargs={"request_id": not_existing_request_id, "pk": crew_member.id},
+        "api:v1:admin:request:crew-detail",
+        kwargs={"request_pk": not_existing_request_id, "pk": crew_member.id},
     )
     response = get_response(api_client, method, url, crew_member_data)
 
@@ -296,9 +301,9 @@ def test_detail_update_delete_crew_member_error(
 
     # Not existing request with not existing crew member
     url = reverse(
-        "admin-crew-detail-update-delete",
+        "api:v1:admin:request:crew-detail",
         kwargs={
-            "request_id": not_existing_request_id,
+            "request_pk": not_existing_request_id,
             "pk": get_not_existing_crew_member_id(),
         },
     )
@@ -335,12 +340,15 @@ def test_create_update_crew_member_invalid_member(
         login(api_client, user)
 
     if method == "POST":
-        url = reverse("admin-crew-list-create", kwargs={"request_id": video_request.id})
+        url = reverse(
+            "api:v1:admin:request:crew-list",
+            kwargs={"request_pk": video_request.id},
+        )
         response = api_client.post(url, data)
     else:
         url = reverse(
-            "admin-crew-detail-update-delete",
-            kwargs={"request_id": video_request.id, "pk": crew_member.id},
+            "api:v1:admin:request:crew-detail",
+            kwargs={"request_pk": video_request.id, "pk": crew_member.id},
         )
         if method == "PATCH":
             response = api_client.patch(url, data)
