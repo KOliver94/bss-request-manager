@@ -5,11 +5,8 @@ from rest_framework import filters, generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
-from api.v1.admin.requests.serializers import (
-    HistorySerializer,
-    VideoAdminListSerializer,
-    VideoAdminSerializer,
-)
+from api.v1.admin.requests.serializers import HistorySerializer
+from api.v1.admin.requests.videos.serializers import VideoAdminListSerializer
 from api.v1.requests.filters import VideoFilter
 from common.rest_framework.pagination import ExtendedPagination
 from common.rest_framework.permissions import IsStaffUser
@@ -93,51 +90,3 @@ class VideoAdminListView(generics.ListAPIView):
             return Video.objects.filter(additional_data__aired__0__isnull=True)
         else:
             return Video.objects.all()
-
-
-class VideoAdminListCreateView(generics.ListCreateAPIView):
-    """
-    List (GET) and Create (POST) view for Video objects
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff and Admin users can do anything.
-    """
-
-    serializer_class = VideoAdminSerializer
-    permission_classes = [IsStaffUser]
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["title", "editor", "status"]
-    ordering = ["title"]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Video.objects.none()
-        return Video.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs["request_id"])
-        )
-
-    def perform_create(self, serializer):
-        serializer.save(
-            request=get_object_or_404(Request, pk=self.kwargs["request_id"])
-        )
-
-
-class VideoAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve (GET), Update (PUT, PATCH) and Delete (DELETE) view for a single Video object
-
-    Only authenticated and authorized persons with Staff privilege can access this view:
-    - Staff and Admin users can do anything.
-    """
-
-    serializer_class = VideoAdminSerializer
-    permission_classes = [IsStaffUser]
-
-    def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Video.objects.none()
-        return Video.objects.filter(
-            request=get_object_or_404(Request, pk=self.kwargs["request_id"])
-        )
