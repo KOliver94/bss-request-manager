@@ -19,7 +19,7 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import get_response, login
+from tests.api.helpers import do_login, get_response
 from video_requests.models import Comment
 
 pytestmark = pytest.mark.django_db
@@ -110,10 +110,9 @@ def test_list_requests(api_client, expected, pagination, request, user):
     video_requests = baker.make("video_requests.Request", _quantity=5)
     baker.make("video_requests.CrewMember", _quantity=3, request=video_requests[0])
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    user = do_login(api_client, request, user)
 
+    if user:
         video_requests[1].responsible = user
         video_requests[1].save()
 
@@ -187,9 +186,7 @@ def test_create_update_request(
 ):
     test_user = baker.make(User, is_staff=True, _fill_optional=["email"])
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    user = do_login(api_client, request, user)
 
     data = deepcopy(request_create_data)
 
@@ -306,9 +303,7 @@ def test_create_update_request_requester_validation(
 ):
     test_user = baker.make(User, is_staff=True, _fill_optional=["email"])
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     user_data = [
         {"requester_email": "test@example.com"},
@@ -360,9 +355,7 @@ def test_create_update_request_requester_validation(
 def test_create_update_request_date_validation(
     api_client, expected, method, request, request_create_data, user
 ):
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     if method == "POST":
         url = reverse("api:v1:admin:request-list")
@@ -408,9 +401,7 @@ def test_create_update_request_invalid_user(
     request_create_data,
     user,
 ):
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     if method == "POST":
         url = reverse("api:v1:admin:request-list")
@@ -445,9 +436,7 @@ def test_create_update_request_invalid_user(
 def test_retrieve_request(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
     response = api_client.get(url)
@@ -476,9 +465,7 @@ def test_retrieve_request_status_by_admin(api_client, expected, request, user):
         },
     )
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url_1 = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request_1.id})
     url_2 = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request_2.id})
@@ -510,9 +497,7 @@ def test_retrieve_request_status_by_admin(api_client, expected, request, user):
 def test_retrieve_update_destroy_request_error(
     api_client, expected, method, not_existing_request_id, request, user
 ):
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse("api:v1:admin:request-detail", kwargs={"pk": not_existing_request_id})
     response = get_response(api_client, method, url, {"title": "Lorem Ipsum"})
@@ -536,9 +521,7 @@ def test_update_request_remove_responsible(
     test_user = baker.make(User, _fill_optional=["email"])
     video_request = baker.make("video_requests.Request", responsible=test_user)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
 
@@ -571,9 +554,7 @@ def test_update_request_remove_requester_error(
     test_user = baker.make(User, _fill_optional=["email"])
     video_request = baker.make("video_requests.Request", requester=test_user)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
 
@@ -600,9 +581,9 @@ def test_update_request_remove_requester_error(
 )
 @pytest.mark.parametrize("scenario", ["requester", "requested_by"])
 def test_destroy_own_request(api_client, expected, request, scenario, user):
+    user = do_login(api_client, request, user)
+
     if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
         if scenario == "requester":
             video_request = baker.make("video_requests.Request", requester=user)
         else:
@@ -629,9 +610,7 @@ def test_destroy_own_request(api_client, expected, request, scenario, user):
 def test_destroy_others_request(api_client, expected, request, scenario, user):
     video_request = baker.make("video_requests.Request")
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    user = do_login(api_client, request, user)
 
     assert video_request.requester != user
     assert video_request.requested_by != user

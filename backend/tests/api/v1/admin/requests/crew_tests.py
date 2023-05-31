@@ -14,7 +14,7 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import get_response, login
+from tests.api.helpers import do_login, get_response
 from video_requests.models import CrewMember
 
 pytestmark = pytest.mark.django_db
@@ -50,9 +50,7 @@ def test_list_crew(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     crew = baker.make("video_requests.CrewMember", request=video_request, _quantity=5)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:crew-list", kwargs={"request_pk": video_request.id}
@@ -81,9 +79,7 @@ def test_create_crew_member(
 ):
     video_request = baker.make("video_requests.Request")
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:crew-list", kwargs={"request_pk": video_request.id}
@@ -132,9 +128,7 @@ def test_list_create_crew_error(
     video_request = baker.make("video_requests.Request")
     baker.make("video_requests.CrewMember", request=video_request, _quantity=5)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:crew-list",
@@ -160,9 +154,7 @@ def test_retrieve_destroy_crew_member(api_client, expected, method, request, use
     video_request = baker.make("video_requests.Request")
     crew = baker.make("video_requests.CrewMember", request=video_request, _quantity=5)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:crew-detail",
@@ -192,9 +184,7 @@ def test_update_crew_member(
     video_request = baker.make("video_requests.Request")
     crew_member = baker.make("video_requests.CrewMember", request=video_request)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     assert crew_member.member != staff_user
     assert crew_member.position != crew_member_data["position"]
@@ -243,9 +233,7 @@ def test_retrieve_update_destroy_crew_member_error(
     video_requests = baker.make("video_requests.Request", _quantity=2)
     crew_member = baker.make("video_requests.CrewMember", request=video_requests[0])
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     # Existing request with not existing crew member
     url = reverse(
@@ -304,9 +292,7 @@ def test_create_update_crew_member_invalid_member(
     video_request = baker.make("video_requests.Request")
     crew_member = baker.make("video_requests.CrewMember", request=video_request)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     if method == "POST":
         url = reverse(

@@ -1,15 +1,11 @@
 from rest_framework.reverse import reverse
 
 
-def login(client, user):
-    url = reverse("api:v1:login_obtain_jwt_pair")
-    resp = client.post(
-        url,
-        {"username": user.username, "password": "password"},
-        format="json",
-    )
-    token = resp.data["access"]
-    client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+def do_login(api_client, request, user):
+    if user:
+        user = request.getfixturevalue(user)
+        login(api_client, user)
+    return user
 
 
 def get_response(api_client, method, url, data):
@@ -23,3 +19,14 @@ def get_response(api_client, method, url, data):
         return api_client.post(url, data)
     else:  # PUT
         return api_client.put(url, data)
+
+
+def login(client, user):
+    url = reverse("api:v1:login_obtain_jwt_pair")
+    resp = client.post(
+        url,
+        {"username": user.username, "password": "password"},
+        format="json",
+    )
+    token = resp.data["access"]
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")

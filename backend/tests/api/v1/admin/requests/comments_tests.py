@@ -13,7 +13,7 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import get_response, login
+from tests.api.helpers import do_login, get_response
 from video_requests.models import Comment
 
 pytestmark = pytest.mark.django_db
@@ -57,9 +57,7 @@ def test_list_comments(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     comments = baker.make("video_requests.Comment", request=video_request, _quantity=5)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:comment-list",
@@ -87,9 +85,7 @@ def test_list_comments(api_client, expected, request, user):
 def test_create_comment(api_client, comment_data, expected, request, user):
     video_request = baker.make("video_requests.Request")
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    user = do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:comment-list",
@@ -130,9 +126,7 @@ def test_list_create_comments_error(
     video_request = baker.make("video_requests.Request")
     baker.make("video_requests.Comment", request=video_request, _quantity=5)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:comment-list",
@@ -157,9 +151,7 @@ def test_retrieve_comment(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     comments = baker.make("video_requests.Comment", request=video_request, _quantity=5)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:comment-detail",
@@ -186,9 +178,9 @@ def test_retrieve_comment(api_client, expected, request, user):
 def test_update_own_comment(api_client, comment_data, expected, method, request, user):
     video_request = baker.make("video_requests.Request")
 
+    user = do_login(api_client, request, user)
+
     if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
         comment = baker.make(
             "video_requests.Comment", author=user, request=video_request
         )
@@ -231,9 +223,7 @@ def test_update_others_comment(
     video_request = baker.make("video_requests.Request")
     comment = baker.make("video_requests.Comment", request=video_request)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    user = do_login(api_client, request, user)
 
     assert comment.text != comment_data["text"]
     assert comment.author != user
@@ -268,9 +258,9 @@ def test_update_others_comment(
 def test_destroy_own_comment(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
 
+    user = do_login(api_client, request, user)
+
     if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
         comment = baker.make(
             "video_requests.Comment", author=user, request=video_request
         )
@@ -299,9 +289,7 @@ def test_destroy_others_comment(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     comment = baker.make("video_requests.Comment", request=video_request)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    user = do_login(api_client, request, user)
 
     assert comment.author != user
 
@@ -342,9 +330,7 @@ def test_retrieve_update_destroy_comment_error(
     video_requests = baker.make("video_requests.Request", _quantity=2)
     comment = baker.make("video_requests.Comment", request=video_requests[0])
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     # Existing request with not existing comment
     url = reverse(

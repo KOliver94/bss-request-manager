@@ -15,7 +15,7 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import get_response, login
+from tests.api.helpers import do_login, get_response
 from video_requests.models import Rating, Video
 
 pytestmark = pytest.mark.django_db
@@ -65,9 +65,7 @@ def test_list_ratings(api_client, expected, request, user):
         "video_requests.Rating", rating=randint(1, 5), video=video, _quantity=5
     )
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:video:rating-list",
@@ -98,9 +96,7 @@ def test_create_rating(api_client, expected, rating_data, request, user):
         "video_requests.Video", request=video_request, status=Video.Statuses.DONE
     )
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    user = do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:video:rating-list",
@@ -151,9 +147,7 @@ def test_list_create_ratings_error(
     )
     baker.make("video_requests.Rating", rating=randint(1, 5), video=video, _quantity=5)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:video:rating-list",
@@ -200,9 +194,7 @@ def test_create_rating_error_video_not_edited(
         "video_requests.Video", request=video_request, status=Video.Statuses.IN_PROGRESS
     )
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:video:rating-list",
@@ -235,9 +227,9 @@ def test_create_rating_error_one_rating_per_video(
         "video_requests.Video", request=video_request, status=Video.Statuses.DONE
     )
 
+    user = do_login(api_client, request, user)
+
     if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
         baker.make(
             "video_requests.Rating", author=user, rating=randint(1, 5), video=video
         )
@@ -276,9 +268,7 @@ def test_retrieve_rating(api_client, expected, request, user):
         "video_requests.Rating", rating=randint(1, 5), video=video, _quantity=5
     )
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     url = reverse(
         "api:v1:admin:request:video:rating-detail",
@@ -312,9 +302,9 @@ def test_update_own_rating(api_client, expected, method, rating_data, request, u
         "video_requests.Video", request=video_request, status=Video.Statuses.DONE
     )
 
+    user = do_login(api_client, request, user)
+
     if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
         rating = baker.make(
             "video_requests.Rating", author=user, rating=randint(1, 4), video=video
         )
@@ -359,9 +349,7 @@ def test_update_others_rating(api_client, expected, method, rating_data, request
     )
     rating = baker.make("video_requests.Rating", rating=randint(1, 4), video=video)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    user = do_login(api_client, request, user)
 
     assert rating.rating != rating_data["rating"]
     assert rating.review != rating_data["review"]
@@ -400,9 +388,9 @@ def test_destroy_own_rating(api_client, expected, request, user):
         "video_requests.Video", request=video_request, status=Video.Statuses.DONE
     )
 
+    user = do_login(api_client, request, user)
+
     if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
         rating = baker.make(
             "video_requests.Rating", author=user, rating=randint(1, 5), video=video
         )
@@ -434,9 +422,7 @@ def test_destroy_others_rating(api_client, expected, request, user):
     )
     rating = baker.make("video_requests.Rating", rating=randint(1, 5), video=video)
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    user = do_login(api_client, request, user)
 
     assert rating.author != user
 
@@ -484,9 +470,7 @@ def test_retrieve_update_destroy_rating_error(
     )
     rating = baker.make("video_requests.Rating", rating=randint(1, 5), video=videos[0])
 
-    if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
+    do_login(api_client, request, user)
 
     # Existing request, existing video, not existing rating
     url = reverse(
@@ -606,9 +590,9 @@ def test_create_update_rating_invalid_rating(
         "video_requests.Video", request=video_request, status=Video.Statuses.DONE
     )
 
+    user = do_login(api_client, request, user)
+
     if user:
-        user = request.getfixturevalue(user)
-        login(api_client, user)
         rating = baker.make(
             "video_requests.Rating", author=user, rating=randint(1, 5), video=video
         )
