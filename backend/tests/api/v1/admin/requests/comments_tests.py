@@ -61,7 +61,10 @@ def test_list_comments(api_client, expected, request, user):
         user = request.getfixturevalue(user)
         login(api_client, user)
 
-    url = reverse("admin-comments-list-create", kwargs={"request_id": video_request.id})
+    url = reverse(
+        "api:v1:admin:request:comment-list",
+        kwargs={"request_pk": video_request.id},
+    )
     response = api_client.get(url)
 
     assert response.status_code == expected
@@ -88,7 +91,10 @@ def test_create_comment(api_client, comment_data, expected, request, user):
         user = request.getfixturevalue(user)
         login(api_client, user)
 
-    url = reverse("admin-comments-list-create", kwargs={"request_id": video_request.id})
+    url = reverse(
+        "api:v1:admin:request:comment-list",
+        kwargs={"request_pk": video_request.id},
+    )
     response = api_client.post(url, comment_data)
 
     assert response.status_code == expected
@@ -129,7 +135,8 @@ def test_list_create_comments_error(
         login(api_client, user)
 
     url = reverse(
-        "admin-comments-list-create", kwargs={"request_id": not_existing_request_id}
+        "api:v1:admin:request:comment-list",
+        kwargs={"request_pk": not_existing_request_id},
     )
 
     if method == "GET":
@@ -158,8 +165,8 @@ def test_detail_comment(api_client, expected, request, user):
         login(api_client, user)
 
     url = reverse(
-        "admin-comments-detail-update-delete",
-        kwargs={"request_id": video_request.id, "pk": comments[0].id},
+        "api:v1:admin:request:comment-detail",
+        kwargs={"request_pk": video_request.id, "pk": comments[0].id},
     )
     response = api_client.get(url)
 
@@ -194,8 +201,8 @@ def test_update_own_comment(api_client, comment_data, expected, method, request,
     assert comment.text != comment_data["text"]
 
     url = reverse(
-        "admin-comments-detail-update-delete",
-        kwargs={"request_id": video_request.id, "pk": comment.id},
+        "api:v1:admin:request:comment-detail",
+        kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
 
     if method == "PATCH":
@@ -238,8 +245,8 @@ def test_update_others_comment(
     assert comment.author != user
 
     url = reverse(
-        "admin-comments-detail-update-delete",
-        kwargs={"request_id": video_request.id, "pk": comment.id},
+        "api:v1:admin:request:comment-detail",
+        kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
 
     if method == "PATCH":
@@ -280,8 +287,8 @@ def test_delete_own_comment(api_client, expected, request, user):
         comment = baker.make("video_requests.Comment", request=video_request)
 
     url = reverse(
-        "admin-comments-detail-update-delete",
-        kwargs={"request_id": video_request.id, "pk": comment.id},
+        "api:v1:admin:request:comment-detail",
+        kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
     response = api_client.delete(url)
 
@@ -308,8 +315,8 @@ def test_delete_others_comment(api_client, expected, request, user):
     assert comment.author != user
 
     url = reverse(
-        "admin-comments-detail-update-delete",
-        kwargs={"request_id": video_request.id, "pk": comment.id},
+        "api:v1:admin:request:comment-detail",
+        kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
     response = api_client.delete(url)
 
@@ -350,9 +357,9 @@ def test_detail_update_delete_comment_error(
 
     # Existing request with not existing comment
     url = reverse(
-        "admin-comments-detail-update-delete",
+        "api:v1:admin:request:comment-detail",
         kwargs={
-            "request_id": video_requests[0].id,
+            "request_pk": video_requests[0].id,
             "pk": get_not_existing_comment_id(),
         },
     )
@@ -362,8 +369,8 @@ def test_detail_update_delete_comment_error(
 
     # Not existing request with existing comment
     url = reverse(
-        "admin-comments-detail-update-delete",
-        kwargs={"request_id": not_existing_request_id, "pk": comment.id},
+        "api:v1:admin:request:comment-detail",
+        kwargs={"request_pk": not_existing_request_id, "pk": comment.id},
     )
     response = get_response(api_client, method, url, comment_data)
 
@@ -371,9 +378,9 @@ def test_detail_update_delete_comment_error(
 
     # Not existing request with not existing comment
     url = reverse(
-        "admin-comments-detail-update-delete",
+        "api:v1:admin:request:comment-detail",
         kwargs={
-            "request_id": not_existing_request_id,
+            "request_pk": not_existing_request_id,
             "pk": get_not_existing_comment_id(),
         },
     )

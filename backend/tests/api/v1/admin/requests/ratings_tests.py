@@ -70,8 +70,8 @@ def test_list_ratings(api_client, expected, request, user):
         login(api_client, user)
 
     url = reverse(
-        "admin-ratings-list-create",
-        kwargs={"request_id": video_request.id, "video_id": video.id},
+        "api:v1:admin:request:video:rating-list",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = api_client.get(url)
 
@@ -103,8 +103,8 @@ def test_create_rating(api_client, expected, rating_data, request, user):
         login(api_client, user)
 
     url = reverse(
-        "admin-ratings-list-create",
-        kwargs={"request_id": video_request.id, "video_id": video.id},
+        "api:v1:admin:request:video:rating-list",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = api_client.post(url, rating_data)
 
@@ -162,26 +162,26 @@ def test_list_create_ratings_error(
         login(api_client, user)
 
     url = reverse(
-        "admin-ratings-list-create",
-        kwargs={"request_id": not_existing_request_id, "video_id": video.id},
+        "api:v1:admin:request:video:rating-list",
+        kwargs={"request_pk": not_existing_request_id, "video_pk": video.id},
     )
     response = get_response()
 
     assert response.status_code == expected
 
     url = reverse(
-        "admin-ratings-list-create",
-        kwargs={"request_id": video_request.id, "video_id": not_existing_video_id},
+        "api:v1:admin:request:video:rating-list",
+        kwargs={"request_pk": video_request.id, "video_pk": not_existing_video_id},
     )
     response = get_response()
 
     assert response.status_code == expected
 
     url = reverse(
-        "admin-ratings-list-create",
+        "api:v1:admin:request:video:rating-list",
         kwargs={
-            "request_id": not_existing_request_id,
-            "video_id": not_existing_video_id,
+            "request_pk": not_existing_request_id,
+            "video_pk": not_existing_video_id,
         },
     )
     response = get_response()
@@ -211,8 +211,8 @@ def test_create_rating_error_video_not_edited(
         login(api_client, user)
 
     url = reverse(
-        "admin-ratings-list-create",
-        kwargs={"request_id": video_request.id, "video_id": video.id},
+        "api:v1:admin:request:video:rating-list",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = api_client.post(url, rating_data)
 
@@ -251,8 +251,8 @@ def test_create_rating_error_one_rating_per_video(
         baker.make("video_requests.Rating", rating=randint(1, 5), video=video)
 
     url = reverse(
-        "admin-ratings-list-create",
-        kwargs={"request_id": video_request.id, "video_id": video.id},
+        "api:v1:admin:request:video:rating-list",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = api_client.post(url, rating_data)
 
@@ -287,10 +287,10 @@ def test_detail_rating(api_client, expected, request, user):
         login(api_client, user)
 
     url = reverse(
-        "admin-ratings-detail-update-delete",
+        "api:v1:admin:request:video:rating-detail",
         kwargs={
-            "request_id": video_request.id,
-            "video_id": video.id,
+            "request_pk": video_request.id,
+            "video_pk": video.id,
             "pk": ratings[0].id,
         },
     )
@@ -331,8 +331,8 @@ def test_update_own_rating(api_client, expected, method, rating_data, request, u
     assert rating.review != rating_data["review"]
 
     url = reverse(
-        "admin-ratings-detail-update-delete",
-        kwargs={"request_id": video_request.id, "video_id": video.id, "pk": rating.id},
+        "api:v1:admin:request:video:rating-detail",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id, "pk": rating.id},
     )
 
     if method == "PATCH":
@@ -377,8 +377,8 @@ def test_update_others_rating(api_client, expected, method, rating_data, request
     assert rating.author != user
 
     url = reverse(
-        "admin-ratings-detail-update-delete",
-        kwargs={"request_id": video_request.id, "video_id": video.id, "pk": rating.id},
+        "api:v1:admin:request:video:rating-detail",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id, "pk": rating.id},
     )
 
     if method == "PATCH":
@@ -422,8 +422,8 @@ def test_delete_own_rating(api_client, expected, request, user):
         rating = baker.make("video_requests.Rating", rating=randint(1, 5), video=video)
 
     url = reverse(
-        "admin-ratings-detail-update-delete",
-        kwargs={"request_id": video_request.id, "video_id": video.id, "pk": rating.id},
+        "api:v1:admin:request:video:rating-detail",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id, "pk": rating.id},
     )
     response = api_client.delete(url)
 
@@ -453,8 +453,8 @@ def test_delete_others_rating(api_client, expected, request, user):
     assert rating.author != user
 
     url = reverse(
-        "admin-ratings-detail-update-delete",
-        kwargs={"request_id": video_request.id, "video_id": video.id, "pk": rating.id},
+        "api:v1:admin:request:video:rating-detail",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id, "pk": rating.id},
     )
     response = api_client.delete(url)
 
@@ -502,10 +502,10 @@ def test_detail_update_delete_rating_error(
 
     # Existing request, existing video, not existing rating
     url = reverse(
-        "admin-ratings-detail-update-delete",
+        "api:v1:admin:request:video:rating-detail",
         kwargs={
-            "request_id": video_request.id,
-            "video_id": videos[0].id,
+            "request_pk": video_request.id,
+            "video_pk": videos[0].id,
             "pk": get_not_existing_rating_id(),
         },
     )
@@ -515,10 +515,10 @@ def test_detail_update_delete_rating_error(
 
     # Existing request, not existing video, existing rating
     url = reverse(
-        "admin-ratings-detail-update-delete",
+        "api:v1:admin:request:video:rating-detail",
         kwargs={
-            "request_id": video_request.id,
-            "video_id": not_existing_video_id,
+            "request_pk": video_request.id,
+            "video_pk": not_existing_video_id,
             "pk": rating.id,
         },
     )
@@ -528,10 +528,10 @@ def test_detail_update_delete_rating_error(
 
     # Existing request, not existing video, not existing rating
     url = reverse(
-        "admin-ratings-detail-update-delete",
+        "api:v1:admin:request:video:rating-detail",
         kwargs={
-            "request_id": video_request.id,
-            "video_id": not_existing_video_id,
+            "request_pk": video_request.id,
+            "video_pk": not_existing_video_id,
             "pk": get_not_existing_rating_id(),
         },
     )
@@ -541,10 +541,10 @@ def test_detail_update_delete_rating_error(
 
     # Not existing request, existing video, existing rating
     url = reverse(
-        "admin-ratings-detail-update-delete",
+        "api:v1:admin:request:video:rating-detail",
         kwargs={
-            "request_id": not_existing_request_id,
-            "video_id": videos[0].id,
+            "request_pk": not_existing_request_id,
+            "video_pk": videos[0].id,
             "pk": rating.id,
         },
     )
@@ -554,10 +554,10 @@ def test_detail_update_delete_rating_error(
 
     # Not existing request, existing video, not existing rating
     url = reverse(
-        "admin-ratings-detail-update-delete",
+        "api:v1:admin:request:video:rating-detail",
         kwargs={
-            "request_id": not_existing_request_id,
-            "video_id": videos[0].id,
+            "request_pk": not_existing_request_id,
+            "video_pk": videos[0].id,
             "pk": get_not_existing_rating_id(),
         },
     )
@@ -567,10 +567,10 @@ def test_detail_update_delete_rating_error(
 
     # Not existing request, not existing video, existing rating
     url = reverse(
-        "admin-ratings-detail-update-delete",
+        "api:v1:admin:request:video:rating-detail",
         kwargs={
-            "request_id": not_existing_request_id,
-            "video_id": not_existing_video_id,
+            "request_pk": not_existing_request_id,
+            "video_pk": not_existing_video_id,
             "pk": rating.id,
         },
     )
@@ -580,10 +580,10 @@ def test_detail_update_delete_rating_error(
 
     # Not existing request, not existing video, not existing rating
     url = reverse(
-        "admin-ratings-detail-update-delete",
+        "api:v1:admin:request:video:rating-detail",
         kwargs={
-            "request_id": not_existing_request_id,
-            "video_id": not_existing_video_id,
+            "request_pk": not_existing_request_id,
+            "video_pk": not_existing_video_id,
             "pk": get_not_existing_rating_id(),
         },
     )
@@ -629,16 +629,16 @@ def test_create_update_rating_invalid_rating(
 
     if method == "POST":
         url = reverse(
-            "admin-ratings-list-create",
-            kwargs={"request_id": video_request.id, "video_id": video.id},
+            "api:v1:admin:request:video:rating-list",
+            kwargs={"request_pk": video_request.id, "video_pk": video.id},
         )
         response = api_client.post(url, data)
     else:
         url = reverse(
-            "admin-ratings-detail-update-delete",
+            "api:v1:admin:request:video:rating-detail",
             kwargs={
-                "request_id": video_request.id,
-                "video_id": video.id,
+                "request_pk": video_request.id,
+                "video_pk": video.id,
                 "pk": rating.id,
             },
         )
