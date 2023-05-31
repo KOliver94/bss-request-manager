@@ -25,29 +25,6 @@ from video_requests.models import Comment
 pytestmark = pytest.mark.django_db
 
 
-def assert_detail_response_keys(video_request):
-    assert_list_response_keys(video_request, True)
-
-    assert "additional_data" in video_request
-    assert "comment_count" in video_request
-    assert "deadline" in video_request
-    assert "end_datetime" in video_request
-    assert "place" in video_request
-    assert "requester" in video_request
-    assert "requested_by" in video_request
-    assert "type" in video_request
-
-    requester = video_request.get("requester")
-    assert_user_details(requester)
-
-    requested_by = video_request.get("requested_by")
-    assert_user_details(requested_by)
-
-    responsible = video_request.get("responsible")
-    if responsible:
-        assert_user_details(responsible)
-
-
 def assert_list_response_keys(video_request, detail=False):
     assert "created" in video_request
     assert "crew" in video_request
@@ -71,6 +48,29 @@ def assert_list_response_keys(video_request, detail=False):
         assert "avatar_url" in responsible
         assert "full_name" in responsible
         assert "id" in responsible
+
+
+def assert_retrieve_response_keys(video_request):
+    assert_list_response_keys(video_request, True)
+
+    assert "additional_data" in video_request
+    assert "comment_count" in video_request
+    assert "deadline" in video_request
+    assert "end_datetime" in video_request
+    assert "place" in video_request
+    assert "requester" in video_request
+    assert "requested_by" in video_request
+    assert "type" in video_request
+
+    requester = video_request.get("requester")
+    assert_user_details(requester)
+
+    requested_by = video_request.get("requested_by")
+    assert_user_details(requested_by)
+
+    responsible = video_request.get("responsible")
+    if responsible:
+        assert_user_details(responsible)
 
 
 def assert_user_details(user):
@@ -232,7 +232,7 @@ def test_create_update_request(
     assert response.status_code == expected[method]
 
     if is_success(response.status_code):
-        assert_detail_response_keys(response.data)
+        assert_retrieve_response_keys(response.data)
 
         if method == "POST":
             assert response.data["requested_by"]["id"] == user.id
@@ -455,7 +455,7 @@ def test_retrieve_request(api_client, expected, request, user):
     assert response.status_code == expected
 
     if is_success(response.status_code):
-        assert_detail_response_keys(response.data)
+        assert_retrieve_response_keys(response.data)
 
 
 @pytest.mark.parametrize(
@@ -490,8 +490,8 @@ def test_retrieve_request_status_by_admin(api_client, expected, request, user):
     assert response_2.status_code == expected
 
     if is_success(response_1.status_code) and is_success(response_2.status_code):
-        assert_detail_response_keys(response_1.data)
-        assert_detail_response_keys(response_2.data)
+        assert_retrieve_response_keys(response_1.data)
+        assert_retrieve_response_keys(response_2.data)
 
         assert not response_1.data.get("status_by_admin")
         assert response_2.data.get("status_by_admin")

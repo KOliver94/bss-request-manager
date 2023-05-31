@@ -8,7 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.v1.admin.requests.crew.serializers import (
     CrewMemberAdminCreateUpdateSerializer,
-    CrewMemberAdminListDetailSerializer,
+    CrewMemberAdminListRetrieveSerializer,
 )
 from common.rest_framework.permissions import IsStaffUser
 from video_requests.models import CrewMember, Request
@@ -24,7 +24,7 @@ class CrewMemberAdminViewSet(ModelViewSet):
         input_serializer = self.get_serializer(data=request.data)
         input_serializer.is_valid(raise_exception=True)
         self.perform_create(input_serializer)
-        output_serializer = CrewMemberAdminListDetailSerializer(
+        output_serializer = CrewMemberAdminListRetrieveSerializer(
             input_serializer.instance
         )
         headers = self.get_success_headers(output_serializer.data)
@@ -39,7 +39,7 @@ class CrewMemberAdminViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-            return CrewMemberAdminListDetailSerializer
+            return CrewMemberAdminListRetrieveSerializer
         return CrewMemberAdminCreateUpdateSerializer
 
     def perform_create(self, serializer):
@@ -58,7 +58,7 @@ class CrewMemberAdminViewSet(ModelViewSet):
 
         instance._prefetched_objects_cache = {}
 
-        output_serializer = CrewMemberAdminListDetailSerializer(
+        output_serializer = CrewMemberAdminListRetrieveSerializer(
             input_serializer.instance
         )
 

@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.v1.admin.requests.ratings.serializers import (
     RatingAdminCreateUpdateSerializer,
-    RatingAdminListDetailSerializer,
+    RatingAdminListRetrieveSerializer,
 )
 from common.rest_framework.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from video_requests.models import Rating, Request, Video
@@ -34,7 +34,7 @@ class RatingAdminViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-            return RatingAdminListDetailSerializer
+            return RatingAdminListRetrieveSerializer
         return RatingAdminCreateUpdateSerializer
 
     def perform_create(self, serializer):

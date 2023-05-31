@@ -6,7 +6,7 @@ from video_requests.emails import email_crew_new_comment, email_user_new_comment
 from video_requests.models import Comment
 
 
-class CommentAdminListDetailSerializer(Serializer):
+class CommentAdminListRetrieveSerializer(Serializer):
     author = UserNestedListSerializer(read_only=True)
     created = DateTimeField(read_only=True)
     id = IntegerField(read_only=True)

@@ -6,7 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.v1.admin.requests.comments.serializers import (
     CommentAdminCreateUpdateSerializer,
-    CommentAdminListDetailSerializer,
+    CommentAdminListRetrieveSerializer,
 )
 from common.rest_framework.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from video_requests.models import Comment, Request
@@ -30,7 +30,7 @@ class CommentAdminViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-            return CommentAdminListDetailSerializer
+            return CommentAdminListRetrieveSerializer
         return CommentAdminCreateUpdateSerializer
 
     def perform_create(self, serializer):

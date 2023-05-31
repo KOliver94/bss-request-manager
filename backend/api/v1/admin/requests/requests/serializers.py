@@ -55,7 +55,7 @@ class RequestAdminListSerializer(Serializer):
             return False
 
 
-class RequestAdminDetailSerializer(RequestAdminListSerializer):
+class RequestAdminRetrieveSerializer(RequestAdminListSerializer):
     additional_data = JSONField(read_only=True)
     comment_count = IntegerField(read_only=True, source="comments.count")
     deadline = DateField(read_only=True)

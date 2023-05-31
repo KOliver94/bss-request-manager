@@ -7,7 +7,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.fields import IntegerField
 from rest_framework.generics import get_object_or_404
 
-from api.v1.admin.requests.ratings.serializers import RatingAdminListDetailSerializer
+from api.v1.admin.requests.ratings.serializers import RatingAdminListRetrieveSerializer
 from api.v1.users.serializers import UserSerializer
 from video_requests.models import Request, Video
 from video_requests.utilities import update_video_status
@@ -124,7 +124,7 @@ class VideoRequestSerializer(serializers.ModelSerializer):
 
 
 class VideoAdminSerializer(serializers.ModelSerializer):
-    ratings = RatingAdminListDetailSerializer(many=True, read_only=True)
+    ratings = RatingAdminListRetrieveSerializer(many=True, read_only=True)
     editor = UserSerializer(read_only=True)
     editor_id = IntegerField(write_only=True, required=False, allow_null=True)
     avg_rating = serializers.FloatField(read_only=True)

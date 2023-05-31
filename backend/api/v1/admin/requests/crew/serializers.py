@@ -5,7 +5,7 @@ from api.v1.users.serializers import UserNestedListSerializer
 from video_requests.models import CrewMember
 
 
-class CrewMemberAdminListDetailSerializer(Serializer):
+class CrewMemberAdminListRetrieveSerializer(Serializer):
     id = IntegerField(read_only=True)
     member = UserNestedListSerializer(read_only=True)
     position = CharField(read_only=True)

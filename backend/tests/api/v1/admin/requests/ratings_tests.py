@@ -145,12 +145,6 @@ def test_list_create_ratings_error(
     request,
     user,
 ):
-    def get_response():
-        if method == "GET":
-            return api_client.get(url)
-        else:  # POST
-            return api_client.post(url, rating_data)
-
     video_request = baker.make("video_requests.Request")
     video = baker.make(
         "video_requests.Video", request=video_request, status=Video.Statuses.DONE
@@ -165,7 +159,7 @@ def test_list_create_ratings_error(
         "api:v1:admin:request:video:rating-list",
         kwargs={"request_pk": not_existing_request_id, "video_pk": video.id},
     )
-    response = get_response()
+    response = get_response(api_client, method, url, rating_data)
 
     assert response.status_code == expected
 
@@ -173,7 +167,7 @@ def test_list_create_ratings_error(
         "api:v1:admin:request:video:rating-list",
         kwargs={"request_pk": video_request.id, "video_pk": not_existing_video_id},
     )
-    response = get_response()
+    response = get_response(api_client, method, url, rating_data)
 
     assert response.status_code == expected
 
@@ -184,7 +178,7 @@ def test_list_create_ratings_error(
             "video_pk": not_existing_video_id,
         },
     )
-    response = get_response()
+    response = get_response(api_client, method, url, rating_data)
 
     assert response.status_code == expected
 
@@ -273,7 +267,7 @@ def test_create_rating_error_one_rating_per_video(
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-def test_detail_rating(api_client, expected, request, user):
+def test_retrieve_rating(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     video = baker.make(
         "video_requests.Video", request=video_request, status=Video.Statuses.DONE
@@ -335,10 +329,7 @@ def test_update_own_rating(api_client, expected, method, rating_data, request, u
         kwargs={"request_pk": video_request.id, "video_pk": video.id, "pk": rating.id},
     )
 
-    if method == "PATCH":
-        response = api_client.patch(url, rating_data)
-    else:  # PUT
-        response = api_client.put(url, rating_data)
+    response = get_response(api_client, method, url, rating_data)
 
     assert response.status_code == expected
 
@@ -381,10 +372,7 @@ def test_update_others_rating(api_client, expected, method, rating_data, request
         kwargs={"request_pk": video_request.id, "video_pk": video.id, "pk": rating.id},
     )
 
-    if method == "PATCH":
-        response = api_client.patch(url, rating_data)
-    else:  # PUT
-        response = api_client.put(url, rating_data)
+    response = get_response(api_client, method, url, rating_data)
 
     assert response.status_code == expected
 
@@ -406,7 +394,7 @@ def test_update_others_rating(api_client, expected, method, rating_data, request
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-def test_delete_own_rating(api_client, expected, request, user):
+def test_destroy_own_rating(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     video = baker.make(
         "video_requests.Video", request=video_request, status=Video.Statuses.DONE
@@ -439,7 +427,7 @@ def test_delete_own_rating(api_client, expected, request, user):
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-def test_delete_others_rating(api_client, expected, request, user):
+def test_destroy_others_rating(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     video = baker.make(
         "video_requests.Video", request=video_request, status=Video.Statuses.DONE
@@ -471,7 +459,7 @@ def test_delete_others_rating(api_client, expected, request, user):
     ],
 )
 @pytest.mark.parametrize("method", ["GET", "DELETE", "PATCH", "PUT"])
-def test_detail_update_delete_rating_error(
+def test_retrieve_update_destroy_rating_error(
     api_client,
     expected,
     method,
@@ -632,7 +620,6 @@ def test_create_update_rating_invalid_rating(
             "api:v1:admin:request:video:rating-list",
             kwargs={"request_pk": video_request.id, "video_pk": video.id},
         )
-        response = api_client.post(url, data)
     else:
         url = reverse(
             "api:v1:admin:request:video:rating-detail",
@@ -642,10 +629,8 @@ def test_create_update_rating_invalid_rating(
                 "pk": rating.id,
             },
         )
-        if method == "PATCH":
-            response = api_client.patch(url, data)
-        else:  # PUT
-            response = api_client.put(url, data)
+
+    response = get_response(api_client, method, url, data)
 
     assert response.status_code == expected
 
