@@ -6,7 +6,7 @@ from api.v1.admin.requests.crew.views import CrewMemberAdminViewSet
 from api.v1.admin.requests.ratings.views import RatingAdminViewSet
 from api.v1.admin.requests.requests.views import RequestAdminViewSet
 from api.v1.admin.requests.videos.views import VideoAdminViewSet
-from api.v1.admin.requests.views import HistoryRetrieveView, VideoAdminListView
+from api.v1.admin.requests.views import VideoAdminListView
 
 router = SimpleRouter(trailing_slash=False)
 router.register(r"requests", RequestAdminViewSet, basename="request")
@@ -32,19 +32,6 @@ urlpatterns = [
     path(
         "requests/<int:request_pk>/",
         include((request_urlpatterns, "request"), namespace="request"),
-    ),
-    path("<int:pk>/history", HistoryRetrieveView.as_view()),
-    path(
-        "<int:request_id_comment>/comments/<int:pk>/history",
-        HistoryRetrieveView.as_view(),
-    ),
-    path(
-        "<int:request_id_video>/videos/<int:pk>/history",
-        HistoryRetrieveView.as_view(),
-    ),
-    path(
-        "<int:request_id>/videos/<int:video_id>/ratings/<int:pk>/history",
-        HistoryRetrieveView.as_view(),
     ),
     path("videos", VideoAdminListView.as_view()),
 ]

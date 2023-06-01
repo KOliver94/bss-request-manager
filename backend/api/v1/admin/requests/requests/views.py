@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
 from django.db.models import Count, Prefetch
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 from rest_framework.viewsets import ModelViewSet
 
+from api.v1.admin.helpers import serialize_history
 from api.v1.admin.requests.requests.serializers import (
     RequestAdminCreateSerializer,
     RequestAdminListSerializer,
@@ -120,3 +122,10 @@ class RequestAdminViewSet(ModelViewSet):
         output_serializer = RequestAdminRetrieveSerializer(input_serializer.instance)
 
         return Response(output_serializer.data)
+
+    @action(detail=True)
+    def history(self, request, pk=None):
+        history_objects = (
+            get_object_or_404(Request, pk=pk).history.all().order_by("-history_date")
+        )
+        return Response(serialize_history(history_objects))
