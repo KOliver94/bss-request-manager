@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
 from django.db.models import Prefetch
+from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 from rest_framework.viewsets import ModelViewSet
 
+from api.v1.admin.helpers import serialize_history
 from api.v1.admin.requests.videos.serializers import (
     VideoAdminCreateUpdateSerializer,
     VideoAdminListSerializer,
@@ -62,3 +64,12 @@ class VideoAdminViewSet(ModelViewSet):
         output_serializer = VideoAdminRetrieveSerializer(input_serializer.instance)
 
         return Response(output_serializer.data)
+
+    @action(detail=True)
+    def history(self, request, pk=None, request_pk=None):
+        history_objects = (
+            get_object_or_404(Video, pk=pk, request__pk=request_pk)
+            .history.all()
+            .order_by("-history_date")
+        )
+        return Response(serialize_history(history_objects))

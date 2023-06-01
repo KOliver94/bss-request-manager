@@ -3,41 +3,12 @@ from datetime import datetime
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import get_object_or_404
 
-from api.v1.admin.requests.serializers import HistorySerializer
 from api.v1.admin.requests.videos.serializers import VideoAdminListSerializer
 from api.v1.requests.filters import VideoFilter
 from common.rest_framework.pagination import ExtendedPagination
 from common.rest_framework.permissions import IsStaffUser
-from video_requests.models import Comment, Rating, Request, Video
-
-
-class HistoryRetrieveView(generics.RetrieveAPIView):
-    """
-    Retrieve (GET) view for history of a certain object
-    Supported objects: Requests, Comments, Videos, Ratings
-    """
-
-    serializer_class = HistorySerializer
-    permission_classes = [IsStaffUser]
-
-    def get_queryset(self):
-        if "request_id_comment" in self.kwargs.keys():  # Comment object
-            return Comment.objects.filter(
-                request=get_object_or_404(Request, pk=self.kwargs["request_id_comment"])
-            )
-        elif "request_id_video" in self.kwargs.keys():  # Video object
-            return Video.objects.filter(
-                request=get_object_or_404(Request, pk=self.kwargs["request_id_video"])
-            )
-        elif "video_id" in self.kwargs.keys():  # Rating object
-            return Rating.objects.filter(
-                video=get_object_or_404(Video, pk=self.kwargs["video_id"]),
-                video__request=get_object_or_404(Request, pk=self.kwargs["request_id"]),
-            )
-        else:  # Request object
-            return Request.objects.all()
+from video_requests.models import Video
 
 
 class VideoAdminListView(generics.ListAPIView):
