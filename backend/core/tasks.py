@@ -47,7 +47,18 @@ def scheduled_send_overdue_requests_email():
 
 
 @shared_task
-def scheduled_flush_expired_jwt_tokens():
+def scheduled_cleaning():
     with StringIO() as out:
         call_command("flushexpiredtokens", stdout=out)
+        call_command(
+            "clean_duplicate_history", "--minutes", "1500", auto=True, stdout=out
+        )
+        call_command(
+            "clean_old_history",
+            "video_requests.Comment",
+            "video_requests.Rating",
+            "--days",
+            "90",
+            stdout=out,
+        )
         return out.getvalue()
