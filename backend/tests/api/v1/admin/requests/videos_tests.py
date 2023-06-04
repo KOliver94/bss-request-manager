@@ -11,6 +11,7 @@ from rest_framework.status import (
     HTTP_401_UNAUTHORIZED,
     HTTP_403_FORBIDDEN,
     HTTP_404_NOT_FOUND,
+    is_client_error,
     is_success,
 )
 
@@ -22,7 +23,8 @@ pytestmark = pytest.mark.django_db
 
 def assert_list_response_keys(video):
     assert_fields_exist(
-        video, ["avg_rating", "editor", "id", "status", "status_by_admin", "title"]
+        video,
+        ["avg_rating", "editor", "id", "rated", "status", "status_by_admin", "title"],
     )
 
     editor = video.get("editor")
@@ -38,6 +40,7 @@ def assert_retrieve_response_keys(video):
             "avg_rating",
             "editor",
             "id",
+            "rated",
             "status",
             "status_by_admin",
             "title",
@@ -221,6 +224,60 @@ def test_retrieve_video_status_by_admin(api_client, expected, request, user):
 
         assert not response_1.data.get("status_by_admin")
         assert response_2.data.get("status_by_admin")
+
+
+@pytest.mark.parametrize(
+    "user,expected",
+    [
+        ("admin_user", HTTP_200_OK),
+        ("staff_user", HTTP_200_OK),
+        ("basic_user", HTTP_403_FORBIDDEN),
+        (None, HTTP_401_UNAUTHORIZED),
+    ],
+)
+def test_retrieve_video_rated(api_client, expected, request, user):
+    video_request = baker.make("video_requests.Request")
+    video = baker.make(
+        "video_requests.Video", request=video_request, status=Video.Statuses.EDITED
+    )
+
+    do_login(api_client, request, user)
+
+    url = reverse(
+        "api:v1:admin:request:video-detail",
+        kwargs={"request_pk": video_request.id, "pk": video.id},
+    )
+
+    # Check video without rating --> Rated should be False
+
+    response = api_client.get(url)
+
+    assert response.status_code == expected
+
+    if is_success(response.status_code):
+        assert_retrieve_response_keys(response.data)
+        assert response.data.get("rated") is False
+
+    # Create a rating
+    url_rating = reverse(
+        "api:v1:admin:request:video:rating-list",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id},
+    )
+    response = api_client.post(url_rating, {"rating": 5})
+
+    if is_client_error(expected):
+        assert response.status_code == expected
+    else:
+        assert is_success(response.status_code)
+
+    # Check if rated is True now
+    response = api_client.get(url)
+
+    assert response.status_code == expected
+
+    if is_success(response.status_code):
+        assert_retrieve_response_keys(response.data)
+        assert response.data.get("rated") is True
 
 
 @pytest.mark.parametrize(

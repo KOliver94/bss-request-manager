@@ -17,9 +17,13 @@ class VideoAdminListSerializer(Serializer):
     avg_rating = FloatField(default=0.0, read_only=True)
     editor = UserNestedListSerializer(read_only=True)
     id = IntegerField(read_only=True)
+    rated = SerializerMethodField(read_only=True)
     status = IntegerField(read_only=True)
     status_by_admin = SerializerMethodField(read_only=True)
     title = CharField(read_only=True)
+
+    def get_rated(self, obj):
+        return obj.ratings.filter(author=self.context["request"].user).exists()
 
     @staticmethod
     def get_status_by_admin(obj):
