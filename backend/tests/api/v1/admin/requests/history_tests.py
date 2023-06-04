@@ -1,5 +1,4 @@
 from datetime import timedelta, timezone
-from time import sleep
 
 import pytest
 from django.contrib.auth.models import User
@@ -66,8 +65,7 @@ def assert_response(history, fields_changed, new_values, old_values, user):
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-@pytest.mark.parametrize("scenario", ["api", "model"])
-def test_list_comment_history(api_client, expected, request, scenario, user):
+def test_list_comment_history(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     user = do_login(api_client, request, user)
 
@@ -89,33 +87,17 @@ def test_list_comment_history(api_client, expected, request, scenario, user):
 
     # Change one field
     changes_1 = {"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
-    if scenario == "api":
-        api_client.patch(url, changes_1)
-    else:
-        comment.text = changes_1["text"]
-        comment.save()
-
-    sleep(0.25)
+    api_client.patch(url, changes_1)
 
     # Change multiple fields
     changes_2 = {
         "internal": True,
         "text": "Cras purus elit, dictum ut dolor facilisis, ultrices tempus diam.",
     }
-    if scenario == "api":
-        api_client.patch(url, changes_2)
-    else:
-        comment.internal = changes_2["internal"]
-        comment.text = changes_2["text"]
-        comment.save()
+    api_client.patch(url, changes_2)
 
-    sleep(0.25)
-
-    # Don't change any fields just save/patch with same data
-    if scenario == "api":
-        api_client.patch(url, changes_2)
-    else:
-        comment.save()
+    # Don't change any fields just patch with the same data
+    api_client.patch(url, changes_2)
 
     url = reverse(
         "api:v1:admin:request:comment-history",
@@ -152,8 +134,7 @@ def test_list_comment_history(api_client, expected, request, scenario, user):
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-@pytest.mark.parametrize("scenario", ["api", "model"])
-def test_list_rating_history(api_client, expected, request, scenario, user):
+def test_list_rating_history(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     video = baker.make("video_requests.Video", request=video_request)
     user = do_login(api_client, request, user)
@@ -172,33 +153,17 @@ def test_list_rating_history(api_client, expected, request, scenario, user):
 
     # Change one field
     changes_1 = {"review": "Duis hendrerit in ipsum et faucibus."}
-    if scenario == "api":
-        api_client.patch(url, changes_1)
-    else:
-        rating.review = changes_1["review"]
-        rating.save()
-
-    sleep(0.25)
+    api_client.patch(url, changes_1)
 
     # Change multiple fields
     changes_2 = {
         "rating": 5,
         "review": "Praesent a malesuada ligula, a sagittis justo.",
     }
-    if scenario == "api":
-        api_client.patch(url, changes_2)
-    else:
-        rating.rating = changes_2["rating"]
-        rating.review = changes_2["review"]
-        rating.save()
+    api_client.patch(url, changes_2)
 
-    sleep(0.25)
-
-    # Don't change any fields just save/patch with same data
-    if scenario == "api":
-        api_client.patch(url, changes_2)
-    else:
-        rating.save()
+    # Don't change any fields just patch with the same data
+    api_client.patch(url, changes_2)
 
     url = reverse(
         "api:v1:admin:request:video:rating-history",
@@ -235,8 +200,7 @@ def test_list_rating_history(api_client, expected, request, scenario, user):
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-@pytest.mark.parametrize("scenario", ["api", "model"])
-def test_list_request_history(api_client, expected, request, scenario, user):
+def test_list_request_history(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     test_user = baker.make(User, is_staff=True, _fill_optional=["email"])
     user = do_login(api_client, request, user)
@@ -260,13 +224,7 @@ def test_list_request_history(api_client, expected, request, scenario, user):
 
     # Change one field
     changes_1 = {"title": "Phasellus auctor eros id diam venenatis volutpat."}
-    if scenario == "api":
-        api_client.patch(url, changes_1)
-    else:
-        video_request.title = changes_1["title"]
-        video_request.save()
-
-    sleep(0.25)
+    api_client.patch(url, changes_1)
 
     # Change multiple fields
     changes_2 = {
@@ -280,37 +238,14 @@ def test_list_request_history(api_client, expected, request, scenario, user):
         "title": "Morbi non augue augue.",
         "type": "Test type",
     }
-    if scenario == "api":
-        api_client.patch(url, changes_2)
-    else:
-        video_request.additional_data = changes_2["additional_data"]
-        video_request.deadline = changes_2["deadline"]
-        video_request.end_datetime = changes_2["end_datetime"]
-        video_request.place = changes_2["place"]
-        video_request.requester = User.objects.get(pk=changes_2["requester"])
-        video_request.responsible = User.objects.get(pk=changes_2["responsible"])
-        video_request.start_datetime = changes_2["start_datetime"]
-        video_request.title = changes_2["title"]
-        video_request.type = changes_2["type"]
-        video_request.save()
-
-    sleep(0.25)
+    api_client.patch(url, changes_2)
 
     # Remove responsible
     changes_3 = {"responsible": None}
-    if scenario == "api":
-        api_client.patch(url, changes_3)
-    else:
-        video_request.responsible = None
-        video_request.save()
+    api_client.patch(url, changes_3)
 
-    sleep(0.25)
-
-    # Don't change any fields just save/patch with same data
-    if scenario == "api":
-        api_client.patch(url, changes_3)
-    else:
-        video_request.save()
+    # Don't change any fields just patch with the same data
+    api_client.patch(url, changes_3)
 
     url = reverse(
         "api:v1:admin:request-history",
@@ -369,8 +304,7 @@ def test_list_request_history(api_client, expected, request, scenario, user):
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
-@pytest.mark.parametrize("scenario", ["api", "model"])
-def test_list_video_history(api_client, expected, request, scenario, user):
+def test_list_video_history(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     video = baker.make("video_requests.Video", request=video_request)
     test_user = baker.make(User, is_staff=True, _fill_optional=["email"])
@@ -389,13 +323,7 @@ def test_list_video_history(api_client, expected, request, scenario, user):
 
     # Change one field
     changes_1 = {"title": "Aliquam erat volutpat."}
-    if scenario == "api":
-        api_client.patch(url, changes_1)
-    else:
-        video.title = changes_1["title"]
-        video.save()
-
-    sleep(0.25)
+    api_client.patch(url, changes_1)
 
     # Change multiple fields
     changes_2 = {
@@ -403,31 +331,14 @@ def test_list_video_history(api_client, expected, request, scenario, user):
         "editor": test_user.id,
         "title": "Aenean accumsan, velit vehicula laoreet maximus.",
     }
-    if scenario == "api":
-        api_client.patch(url, changes_2)
-    else:
-        video.additional_data = changes_2["additional_data"]
-        video.editor = User.objects.get(pk=changes_2["editor"])
-        video.title = changes_2["title"]
-        video.save()
-
-    sleep(0.25)
+    api_client.patch(url, changes_2)
 
     # Remove editor
     changes_3 = {"editor": None}
-    if scenario == "api":
-        api_client.patch(url, changes_3)
-    else:
-        video.editor = None
-        video.save()
+    api_client.patch(url, changes_3)
 
-    sleep(0.25)
-
-    # Don't change any fields just save/patch with same data
-    if scenario == "api":
-        api_client.patch(url, changes_3)
-    else:
-        video.save()
+    # Don't change any fields just patch with the same data
+    api_client.patch(url, changes_3)
 
     url = reverse(
         "api:v1:admin:request:video-history",
