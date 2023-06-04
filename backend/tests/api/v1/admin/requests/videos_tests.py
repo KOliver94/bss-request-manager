@@ -14,30 +14,39 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import do_login, get_response
+from tests.api.helpers import assert_fields_exist, do_login, get_response
 from video_requests.models import Video
 
 pytestmark = pytest.mark.django_db
 
 
 def assert_list_response_keys(video):
-    assert "avg_rating" in video
-    assert "editor" in video
-    assert "id" in video
-    assert "status" in video
-    assert "status_by_admin" in video
-    assert "title" in video
+    assert_fields_exist(
+        video, ["avg_rating", "editor", "id", "status", "status_by_admin", "title"]
+    )
 
     editor = video.get("editor")
     if editor:
-        assert "avatar_url" in editor
-        assert "full_name" in editor
-        assert "id" in editor
+        assert_fields_exist(editor, ["avatar_url", "full_name", "id"])
 
 
 def assert_retrieve_response_keys(video):
-    assert_list_response_keys(video)
-    assert "additional_data" in video
+    assert_fields_exist(
+        video,
+        [
+            "additional_data",
+            "avg_rating",
+            "editor",
+            "id",
+            "status",
+            "status_by_admin",
+            "title",
+        ],
+    )
+
+    editor = video.get("editor")
+    if editor:
+        assert_fields_exist(editor, ["avatar_url", "full_name", "id"])
 
 
 @pytest.fixture

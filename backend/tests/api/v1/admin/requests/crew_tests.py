@@ -14,22 +14,18 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import do_login, get_response
+from tests.api.helpers import assert_fields_exist, do_login, get_response
 from video_requests.models import CrewMember
 
 pytestmark = pytest.mark.django_db
 
 
 def assert_response_keys(crew):
-    assert "id" in crew
-    assert "member" in crew
-    assert "position" in crew
+    assert_fields_exist(crew, ["id", "member", "position"])
 
     member = crew.get("member")
     assert member is not None
-    assert "avatar_url" in member
-    assert "full_name" in member
-    assert "id" in member
+    assert_fields_exist(member, ["avatar_url", "full_name", "id"])
 
 
 @pytest.fixture

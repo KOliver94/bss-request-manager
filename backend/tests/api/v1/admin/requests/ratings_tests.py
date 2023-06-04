@@ -15,24 +15,18 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import do_login, get_response
+from tests.api.helpers import assert_fields_exist, do_login, get_response
 from video_requests.models import Rating, Video
 
 pytestmark = pytest.mark.django_db
 
 
 def assert_response_keys(rating):
-    assert "author" in rating
-    assert "created" in rating
-    assert "id" in rating
-    assert "rating" in rating
-    assert "review" in rating
+    assert_fields_exist(rating, ["author", "created", "id", "rating", "review"])
 
     author = rating.get("author")
     assert author is not None
-    assert "avatar_url" in author
-    assert "full_name" in author
-    assert "id" in author
+    assert_fields_exist(author, ["avatar_url", "full_name", "id"])
 
 
 @pytest.fixture

@@ -19,48 +19,66 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import do_login, get_response
+from tests.api.helpers import assert_fields_exist, do_login, get_response
 from video_requests.models import Comment
 
 pytestmark = pytest.mark.django_db
 
 
-def assert_list_response_keys(video_request, detail=False):
-    assert "created" in video_request
-    assert "crew" in video_request
-    assert "id" in video_request
-    assert "start_datetime" in video_request
-    assert "status" in video_request
-    assert "status_by_admin" in video_request
-    assert "responsible" in video_request
-    assert "title" in video_request
-    assert "video_count" in video_request
+def assert_list_response_keys(video_request):
+    assert_fields_exist(
+        video_request,
+        [
+            "created",
+            "crew",
+            "id",
+            "start_datetime",
+            "status",
+            "status_by_admin",
+            "responsible",
+            "title",
+            "video_count",
+        ],
+    )
 
     crew = video_request.get("crew")
     if crew:
         for crew_member in crew:
-            assert "avatar_url" in crew_member
-            assert "full_name" in crew_member
-            assert "id" in crew_member
+            assert_fields_exist(crew_member, ["avatar_url", "full_name", "id"])
 
     responsible = video_request.get("responsible")
-    if responsible and not detail:
-        assert "avatar_url" in responsible
-        assert "full_name" in responsible
-        assert "id" in responsible
+    if responsible:
+        assert_fields_exist(responsible, ["avatar_url", "full_name", "id"])
 
 
 def assert_retrieve_response_keys(video_request):
-    assert_list_response_keys(video_request, True)
+    assert_fields_exist(
+        video_request,
+        [
+            "additional_data",
+            "comment_count",
+            "created",
+            "crew",
+            "deadline",
+            "end_datetime",
+            "id",
+            "place",
+            "requester",
+            "requested_by",
+            "start_datetime",
+            "status",
+            "status_by_admin",
+            "responsible",
+            "title",
+            "type",
+            "video_count",
+        ],
+    )
 
-    assert "additional_data" in video_request
-    assert "comment_count" in video_request
-    assert "deadline" in video_request
-    assert "end_datetime" in video_request
-    assert "place" in video_request
-    assert "requester" in video_request
-    assert "requested_by" in video_request
-    assert "type" in video_request
+    crew = video_request.get("crew")
+    if crew:
+        for crew_member in crew:
+            assert_fields_exist(crew_member, ["avatar_url", "full_name", "id"])
 
     requester = video_request.get("requester")
     assert_user_details(requester)
@@ -74,15 +92,10 @@ def assert_retrieve_response_keys(video_request):
 
 
 def assert_user_details(user):
-    assert "email" in user
-    assert "full_name" in user
-    assert "id" in user
-    assert "is_staff" in user
-    assert "profile" in user
+    assert_fields_exist(user, ["email", "full_name", "id", "is_staff", "profile"])
 
     profile = user.get("profile")
-    assert "avatar_url" in profile
-    assert "phone_number" in profile
+    assert_fields_exist(profile, ["avatar_url", "phone_number"])
 
 
 @pytest.fixture

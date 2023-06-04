@@ -13,24 +13,18 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import do_login, get_response
+from tests.api.helpers import assert_fields_exist, do_login, get_response
 from video_requests.models import Comment
 
 pytestmark = pytest.mark.django_db
 
 
 def assert_response_keys(comment):
-    assert "author" in comment
-    assert "created" in comment
-    assert "id" in comment
-    assert "internal" in comment
-    assert "text" in comment
+    assert_fields_exist(comment, ["author", "created", "id", "internal", "text"])
 
     author = comment.get("author")
     assert author is not None
-    assert "avatar_url" in author
-    assert "full_name" in author
-    assert "id" in author
+    assert_fields_exist(author, ["avatar_url", "full_name", "id"])
 
 
 @pytest.fixture
