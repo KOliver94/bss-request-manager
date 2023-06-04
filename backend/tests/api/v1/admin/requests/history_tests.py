@@ -13,15 +13,13 @@ from rest_framework.status import (
     is_success,
 )
 
-from tests.api.helpers import do_login
+from tests.api.helpers import assert_fields_exist, do_login
 
 pytestmark = pytest.mark.django_db
 
 
 def assert_response(history, fields_changed, new_values, old_values, user):
-    assert "changes" in history
-    assert "date" in history
-    assert "user" in history
+    assert_fields_exist(history, ["changes", "date", "user"])
 
     assert len(history["changes"]) == len(fields_changed)
     assert all(
@@ -31,9 +29,7 @@ def assert_response(history, fields_changed, new_values, old_values, user):
     assert all(change["field"] in fields_changed for change in history["changes"])
 
     for change in history["changes"]:
-        assert "field" in change
-        assert "new" in change
-        assert "old" in change
+        assert_fields_exist(change, ["field", "new", "old"])
 
         field = change["field"]
         if field.endswith("datetime"):
@@ -54,9 +50,7 @@ def assert_response(history, fields_changed, new_values, old_values, user):
         assert change["old"] == old_value
 
     if history["user"]:
-        assert "avatar_url" in history["user"]
-        assert "full_name" in history["user"]
-        assert "id" in history["user"]
+        assert_fields_exist(history["user"], ["avatar_url", "full_name", "id"])
 
         assert history["user"]["avatar_url"] == user.userprofile.avatar_url
         assert history["user"]["full_name"] == user.get_full_name_eastern_order()

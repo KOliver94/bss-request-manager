@@ -1,6 +1,12 @@
 from rest_framework.reverse import reverse
 
 
+def assert_fields_exist(response, expected_fields):
+    # Check if all expected fields are in the response and no other
+    assert all(field in response for field in expected_fields)
+    assert all(field in expected_fields for field in response)
+
+
 def do_login(api_client, request, user):
     if user:
         user = request.getfixturevalue(user)
