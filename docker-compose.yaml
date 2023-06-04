@@ -61,6 +61,9 @@ services:
       - POSTGRES_DB=request_manager_db
       - POSTGRES_USER=request_manager
       - POSTGRES_PASSWORD=change_me
+      - POSTGRES_INITDB_ARGS=--locale-provider=icu --icu-locale=hu-HU
+      - LC_COLLATE=hu_HU.utf8
+      - LC_CTYPE=hu_HU.utf8
 
   redis:
     restart: unless-stopped
