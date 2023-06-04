@@ -25,7 +25,7 @@ class CrewMemberAdminViewSet(ModelViewSet):
         input_serializer.is_valid(raise_exception=True)
         self.perform_create(input_serializer)
         output_serializer = CrewMemberAdminListRetrieveSerializer(
-            input_serializer.instance
+            input_serializer.instance, context=self.get_serializer_context()
         )
         headers = self.get_success_headers(output_serializer.data)
         return Response(
@@ -59,7 +59,7 @@ class CrewMemberAdminViewSet(ModelViewSet):
         instance._prefetched_objects_cache = {}
 
         output_serializer = CrewMemberAdminListRetrieveSerializer(
-            input_serializer.instance
+            input_serializer.instance, context=self.get_serializer_context()
         )
 
         return Response(output_serializer.data)

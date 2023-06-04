@@ -36,7 +36,9 @@ class RequestAdminViewSet(ModelViewSet):
         input_serializer = self.get_serializer(data=request.data)
         input_serializer.is_valid(raise_exception=True)
         self.perform_create(input_serializer)
-        output_serializer = RequestAdminRetrieveSerializer(input_serializer.instance)
+        output_serializer = RequestAdminRetrieveSerializer(
+            input_serializer.instance, context=self.get_serializer_context()
+        )
         headers = self.get_success_headers(output_serializer.data)
         return Response(
             output_serializer.data, status=HTTP_201_CREATED, headers=headers
@@ -119,7 +121,9 @@ class RequestAdminViewSet(ModelViewSet):
 
         instance._prefetched_objects_cache = {}
 
-        output_serializer = RequestAdminRetrieveSerializer(input_serializer.instance)
+        output_serializer = RequestAdminRetrieveSerializer(
+            input_serializer.instance, context=self.get_serializer_context()
+        )
 
         return Response(output_serializer.data)
 
