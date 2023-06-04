@@ -35,7 +35,8 @@ class VideoAdminViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Video.objects.prefetch_related(
-            Prefetch("editor", queryset=User.objects.prefetch_related("userprofile"))
+            Prefetch("editor", queryset=User.objects.prefetch_related("userprofile")),
+            Prefetch("ratings"),
         ).filter(request=get_object_or_404(Request, pk=self.kwargs["request_pk"]))
 
     def get_serializer_class(self):
