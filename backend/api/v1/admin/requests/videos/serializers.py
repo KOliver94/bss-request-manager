@@ -7,7 +7,7 @@ from rest_framework.fields import (
 )
 from rest_framework.serializers import ModelSerializer, Serializer
 
-from api.v1.admin.requests.helpers import handle_additional_data
+from api.v1.admin.requests.helpers import handle_additional_data, is_status_by_admin
 from api.v1.users.serializers import UserNestedListSerializer
 from video_requests.models import Video
 from video_requests.utilities import update_video_status
@@ -27,12 +27,7 @@ class VideoAdminListSerializer(Serializer):
 
     @staticmethod
     def get_status_by_admin(obj):
-        try:
-            return isinstance(
-                obj.additional_data.get("status_by_admin").get("status"), int
-            )
-        except AttributeError:
-            return False
+        return is_status_by_admin(obj)
 
 
 class VideoAdminRetrieveSerializer(VideoAdminListSerializer):
