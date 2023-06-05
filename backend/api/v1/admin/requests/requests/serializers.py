@@ -17,6 +17,7 @@ from rest_framework.serializers import ModelSerializer, Serializer
 from api.v1.admin.requests.helpers import (
     get_or_create_requester_from_data,
     handle_additional_data,
+    is_status_by_admin,
 )
 from api.v1.users.serializers import (
     UserDetailedListSerializer,
@@ -47,12 +48,7 @@ class RequestAdminListSerializer(Serializer):
 
     @staticmethod
     def get_status_by_admin(obj):
-        try:
-            return isinstance(
-                obj.additional_data.get("status_by_admin").get("status"), int
-            )
-        except AttributeError:
-            return False
+        return is_status_by_admin(obj)
 
 
 class RequestAdminRetrieveSerializer(RequestAdminListSerializer):

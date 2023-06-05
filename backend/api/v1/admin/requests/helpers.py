@@ -73,6 +73,13 @@ def handle_additional_data(validated_data, user, original_data=None):
     return validated_data
 
 
+def is_status_by_admin(obj):
+    try:
+        return isinstance(obj.additional_data.get("status_by_admin").get("status"), int)
+    except AttributeError:
+        return False
+
+
 def update_additional_data(orig_dict, new_dict):
     """
     Update existing additional data.
