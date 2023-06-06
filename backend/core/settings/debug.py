@@ -4,12 +4,23 @@ from core.settings._auth import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 # Enable local Django user based login
 AUTHENTICATION_BACKENDS += ("django.contrib.auth.backends.ModelBackend",)
 
+# Enable Browsable API
+REST_FRAMEWORK.setdefault("DEFAULT_RENDERER_CLASSES", []).append(
+    "rest_framework.renderers.BrowsableAPIRenderer"
+)
+
 # Enable CORS requests from anywhere
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Enable Django Debug Toolbar
+INSTALLED_APPS += ["debug_toolbar"]
+MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+INTERNAL_IPS = ["127.0.0.1"]
 
 # Do not send real e-mails
 EMAIL_BACKEND_TYPE = config("EMAIL_BACKEND", default="console")

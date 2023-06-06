@@ -26,3 +26,10 @@ urlpatterns = [
 # Enable Django Admin when requested
 if settings.DJANGO_ADMIN and "django.contrib.admin" in settings.INSTALLED_APPS:
     urlpatterns.insert(0, path("django-admin/", admin.site.urls))
+
+# Enable Django Debug Toolbar
+if "debug_toolbar" in settings.INSTALLED_APPS:
+    urlpatterns.insert(
+        0,
+        path("__debug__/", include("debug_toolbar.urls")),
+    )

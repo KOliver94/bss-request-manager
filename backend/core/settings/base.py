@@ -318,12 +318,6 @@ if DRF_RECAPTCHA_ENABLED:
     INSTALLED_APPS += ["drf_recaptcha"]
     DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
 
-# Enable Browsable API
-BROWSABLE_API = config("BROWSABLE_API", default=False, cast=bool)
-if BROWSABLE_API:
-    REST_FRAMEWORK.setdefault("DEFAULT_RENDERER_CLASSES", []).append(
-        "rest_framework.renderers.BrowsableAPIRenderer"
-    )
 
 # Enable Swagger/ReDoc
 SWAGGER = config("SWAGGER", default=False, cast=bool)
