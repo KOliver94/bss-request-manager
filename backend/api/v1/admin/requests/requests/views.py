@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.db.models import Count, Prefetch
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
@@ -58,45 +57,31 @@ class RequestAdminViewSet(ModelViewSet):
     def get_queryset(self):
         if self.action == "list":
             return (
-                Request.objects.prefetch_related(
+                Request.objects.select_related("responsible__userprofile")
+                .prefetch_related(
                     Prefetch(
                         "crew",
-                        queryset=CrewMember.objects.prefetch_related(
-                            Prefetch(
-                                "member",
-                                queryset=User.objects.prefetch_related("userprofile"),
-                            )
+                        queryset=CrewMember.objects.select_related(
+                            "member__userprofile"
                         ),
-                    ),
-                    Prefetch(
-                        "responsible",
-                        queryset=User.objects.prefetch_related("userprofile"),
                     ),
                 )
                 .annotate(video_count=Count("videos"))
                 .cache()
             )
 
-        return Request.objects.prefetch_related(
-            Prefetch(
-                "crew",
-                queryset=CrewMember.objects.prefetch_related(
-                    Prefetch(
-                        "member",
-                        queryset=User.objects.prefetch_related("userprofile"),
-                    )
+        return (
+            Request.objects.select_related("requester__userprofile")
+            .select_related("requested_by__userprofile")
+            .select_related("responsible__userprofile")
+            .prefetch_related(
+                Prefetch(
+                    "crew",
+                    queryset=CrewMember.objects.select_related("member__userprofile"),
                 ),
-            ),
-            Prefetch(
-                "requester", queryset=User.objects.prefetch_related("userprofile")
-            ),
-            Prefetch(
-                "requested_by", queryset=User.objects.prefetch_related("userprofile")
-            ),
-            Prefetch(
-                "responsible", queryset=User.objects.prefetch_related("userprofile")
-            ),
-        ).annotate(comment_count=Count("comments"), video_count=Count("videos"))
+            )
+            .annotate(comment_count=Count("comments"), video_count=Count("videos"))
+        )
 
     def get_serializer_class(self):
         if self.action == "list":

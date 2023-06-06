@@ -1,5 +1,3 @@
-from django.contrib.auth.models import User
-from django.db.models import Prefetch
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter
@@ -28,9 +26,7 @@ class RatingAdminViewSet(ModelViewSet):
         return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
-        return Rating.objects.prefetch_related(
-            Prefetch("author", queryset=User.objects.prefetch_related("userprofile"))
-        ).filter(
+        return Rating.objects.select_related("author__userprofile").filter(
             video=get_object_or_404(Video, pk=self.kwargs["video_pk"]),
             video__request=get_object_or_404(Request, pk=self.kwargs["request_pk"]),
         )

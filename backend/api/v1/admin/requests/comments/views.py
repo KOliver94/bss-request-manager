@@ -1,5 +1,3 @@
-from django.contrib.auth.models import User
-from django.db.models import Prefetch
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
@@ -27,9 +25,9 @@ class CommentAdminViewSet(ModelViewSet):
         return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
-        return Comment.objects.prefetch_related(
-            Prefetch("author", queryset=User.objects.prefetch_related("userprofile"))
-        ).filter(request=get_object_or_404(Request, pk=self.kwargs["request_pk"]))
+        return Comment.objects.select_related("author__userprofile").filter(
+            request=get_object_or_404(Request, pk=self.kwargs["request_pk"])
+        )
 
     def get_serializer_class(self):
         if self.request.method == "GET":

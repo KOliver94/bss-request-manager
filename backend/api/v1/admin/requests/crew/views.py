@@ -1,5 +1,3 @@
-from django.contrib.auth.models import User
-from django.db.models import Prefetch
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -33,9 +31,9 @@ class CrewMemberAdminViewSet(ModelViewSet):
         )
 
     def get_queryset(self):
-        return CrewMember.objects.prefetch_related(
-            Prefetch("member", queryset=User.objects.prefetch_related("userprofile"))
-        ).filter(request=get_object_or_404(Request, pk=self.kwargs["request_pk"]))
+        return CrewMember.objects.select_related("member__userprofile").filter(
+            request=get_object_or_404(Request, pk=self.kwargs["request_pk"])
+        )
 
     def get_serializer_class(self):
         if self.request.method == "GET":
