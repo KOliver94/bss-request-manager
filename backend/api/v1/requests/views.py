@@ -58,9 +58,6 @@ class RequestDefaultListCreateView(generics.ListCreateAPIView):
         return RequestDefaultListSerializer
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Request.objects.none()
         return Request.objects.filter(requester=self.request.user)
 
 
@@ -76,9 +73,6 @@ class RequestDefaultDetailView(generics.RetrieveAPIView):
     permission_classes = [IsSelf]
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Request.objects.none()
         return Request.objects.filter(requester=self.request.user)
 
 
@@ -97,9 +91,6 @@ class CommentDefaultListCreateView(generics.ListCreateAPIView):
     ordering = ["created"]
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Comment.objects.none()
         return Comment.objects.filter(
             request=get_object_or_404(
                 Request, pk=self.kwargs["request_id"], requester=self.request.user
@@ -134,9 +125,6 @@ class CommentDefaultDetailView(generics.RetrieveUpdateDestroyAPIView):
             return [IsSelf()]
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Comment.objects.none()
         return Comment.objects.filter(
             request=get_object_or_404(
                 Request, pk=self.kwargs["request_id"], requester=self.request.user
@@ -160,9 +148,6 @@ class VideoDefaultListView(generics.ListAPIView):
     ordering = ["title"]
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Video.objects.none()
         return Video.objects.filter(
             request=get_object_or_404(
                 Request, pk=self.kwargs["request_id"], requester=self.request.user
@@ -182,9 +167,6 @@ class VideoDefaultDetailView(generics.RetrieveAPIView):
     permission_classes = [IsSelf]
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Video.objects.none()
         return Video.objects.filter(
             request=get_object_or_404(
                 Request, pk=self.kwargs["request_id"], requester=self.request.user
@@ -217,9 +199,6 @@ class RatingDefaultListCreateView(generics.ListCreateAPIView):
         )
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Rating.objects.none()
         return Rating.objects.filter(
             video=self.get_video_related_to_user(), author=self.request.user
         )
@@ -258,9 +237,6 @@ class RatingDefaultDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsSelf]
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Rating.objects.none()
         return Rating.objects.filter(
             video=get_object_or_404(
                 Video,
