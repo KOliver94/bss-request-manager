@@ -31,9 +31,6 @@ class RequestExternalDetailView(generics.RetrieveAPIView):
     permission_classes = [IsServiceAccount]
 
     def get_queryset(self):
-        if getattr(self, "swagger_fake_view", False):
-            # queryset just for schema generation metadata
-            return Request.objects.none()
         return Request.objects.filter(requested_by=self.request.user)
 
 

@@ -317,20 +317,3 @@ DRF_RECAPTCHA_ENABLED = config("RECAPTCHA", default=True, cast=bool)
 if DRF_RECAPTCHA_ENABLED:
     INSTALLED_APPS += ["drf_recaptcha"]
     DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
-
-
-# Enable Swagger/ReDoc
-SWAGGER = config("SWAGGER", default=False, cast=bool)
-if SWAGGER:
-    INSTALLED_APPS += [
-        "drf_yasg",
-    ]
-
-    # Swagger settings
-    # https://drf-yasg.readthedocs.io/en/stable/index.html
-    SWAGGER_SETTINGS = {
-        "USE_SESSION_AUTH": False,
-        "SECURITY_DEFINITIONS": {
-            "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
-        },
-    }
