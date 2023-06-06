@@ -1,5 +1,3 @@
-from django.contrib.auth.models import User
-from django.db.models import Prefetch
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
@@ -36,10 +34,11 @@ class VideoAdminViewSet(ModelViewSet):
         )
 
     def get_queryset(self):
-        return Video.objects.prefetch_related(
-            Prefetch("editor", queryset=User.objects.prefetch_related("userprofile")),
-            Prefetch("ratings"),
-        ).filter(request=get_object_or_404(Request, pk=self.kwargs["request_pk"]))
+        return (
+            Video.objects.select_related("editor__userprofile")
+            .prefetch_related("ratings")
+            .filter(request=get_object_or_404(Request, pk=self.kwargs["request_pk"]))
+        )
 
     def get_serializer_class(self):
         if self.action == "list":
