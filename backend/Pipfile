@@ -34,6 +34,7 @@ whitenoise = {extras = ["brotli"],version = "==6.5.0"}
 
 [dev-packages]
 coverage = {extras = ["toml"],version = "==7.2.5"}
+django-debug-toolbar = "==4.1.0"
 model_bakery = "==1.12.0"
 pre-commit = "==3.3.3"
 pytest = "==7.3.2"
