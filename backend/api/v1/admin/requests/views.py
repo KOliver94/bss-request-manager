@@ -4,8 +4,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
 from rest_framework.exceptions import ValidationError
 
+from api.v1.admin.requests.filters import VideoFilter
 from api.v1.admin.requests.videos.serializers import VideoAdminListSerializer
-from api.v1.requests.filters import VideoFilter
 from common.rest_framework.pagination import ExtendedPagination
 from common.rest_framework.permissions import IsStaffUser
 from video_requests.models import Video

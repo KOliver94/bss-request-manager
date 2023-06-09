@@ -1,4 +1,5 @@
 from django.forms import IntegerField
+from django_filters import DateFromToRangeFilter
 from django_filters.rest_framework import (
     DateFilter,
     Filter,
@@ -19,13 +20,12 @@ class IntegerFilter(Filter):
 
 
 class RequestFilter(FilterSet):
-    from_date = DateFilter(field_name="start_datetime__date", lookup_expr="gte")
-    to_date = DateFilter(field_name="end_datetime__date", lookup_expr="lte")
+    start_datetime = DateFromToRangeFilter()
     status = MultipleChoiceFilter(choices=Request.Statuses.choices)
 
     class Meta:
         model = Request
-        fields = ["from_date", "to_date", "status"]
+        fields = ["start_datetime", "status"]
 
 
 class VideoFilter(FilterSet):

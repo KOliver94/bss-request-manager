@@ -20,7 +20,13 @@ from video_requests.models import Request, Video
 class VideoAdminViewSet(ModelViewSet):
     filter_backends = [OrderingFilter]
     ordering = ["title"]
-    ordering_fields = ["editor", "status", "title"]
+    ordering_fields = [
+        "avg_rating",
+        "editor__first_name",
+        "editor__last_name",
+        "status",
+        "title",
+    ]
     permission_classes = [IsStaffUser]
 
     @extend_schema(

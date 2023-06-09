@@ -16,7 +16,7 @@ from video_requests.models import CrewMember, Request
 class CrewMemberAdminViewSet(ModelViewSet):
     filter_backends = [OrderingFilter]
     ordering = ["position"]
-    ordering_fields = ["member", "position"]
+    ordering_fields = ["member__first_name", "member__last_name", "position"]
     permission_classes = [IsStaffUser]
 
     @extend_schema(

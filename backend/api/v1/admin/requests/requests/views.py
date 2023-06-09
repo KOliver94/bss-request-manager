@@ -2,13 +2,14 @@ from django.db.models import Count, Prefetch
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
-from rest_framework.filters import OrderingFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 from rest_framework.viewsets import ModelViewSet
 
 from api.v1.admin.helpers import serialize_history
+from api.v1.admin.requests.filters import RequestFilter
 from api.v1.admin.requests.requests.serializers import (
     RequestAdminCreateSerializer,
     RequestAdminListSerializer,
@@ -16,7 +17,6 @@ from api.v1.admin.requests.requests.serializers import (
     RequestAdminUpdateSerializer,
 )
 from api.v1.admin.serializers import HistorySerializer
-from api.v1.requests.filters import RequestFilter
 from common.rest_framework.pagination import ExtendedPagination
 from common.rest_framework.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from common.utilities import remove_calendar_event
@@ -27,11 +27,20 @@ class RequestAdminViewSet(ModelViewSet):
     filter_backends = [
         DjangoFilterBackend,
         OrderingFilter,
+        SearchFilter,
     ]
     filterset_class = RequestFilter
     ordering = ["created"]
-    ordering_fields = ["created", "start_datetime", "status", "title"]
+    ordering_fields = [
+        "created",
+        "start_datetime",
+        "status",
+        "responsible__first_name",
+        "responsible__last_name",
+        "title",
+    ]
     pagination_class = ExtendedPagination
+    search_fields = ["@title"]
 
     @extend_schema(
         request=RequestAdminCreateSerializer,
