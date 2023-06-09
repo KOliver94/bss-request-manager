@@ -18,7 +18,7 @@ from video_requests.models import Comment, Request
 class CommentAdminViewSet(ModelViewSet):
     filter_backends = [OrderingFilter]
     ordering = ["created"]
-    ordering_fields = ["author", "created", "internal"]
+    ordering_fields = ["author__first_name", "author__last_name", "created", "internal"]
 
     def get_permissions(self):
         # Staff members can read every comment but can only modify and delete those which were created by them.

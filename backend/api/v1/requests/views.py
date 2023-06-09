@@ -1,9 +1,7 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
-from api.v1.requests.filters import RequestFilter
 from api.v1.requests.serializers import (
     CommentDefaultSerializer,
     RatingDefaultSerializer,
@@ -34,11 +32,9 @@ class RequestDefaultListCreateView(generics.ListCreateAPIView):
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
-        DjangoFilterBackend,
     ]
     ordering_fields = ["title", "created", "start_datetime", "status"]
     search_fields = ["title", "videos__title"]
-    filterset_class = RequestFilter
     ordering = ["created"]
     pagination_class = ExtendedPagination
 
