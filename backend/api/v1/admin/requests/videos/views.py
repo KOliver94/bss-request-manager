@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
@@ -11,6 +12,7 @@ from api.v1.admin.requests.videos.serializers import (
     VideoAdminListSerializer,
     VideoAdminRetrieveSerializer,
 )
+from api.v1.admin.serializers import HistorySerializer
 from common.rest_framework.permissions import IsStaffUser
 from video_requests.models import Request, Video
 
@@ -21,6 +23,10 @@ class VideoAdminViewSet(ModelViewSet):
     ordering_fields = ["editor", "status", "title"]
     permission_classes = [IsStaffUser]
 
+    @extend_schema(
+        request=VideoAdminCreateUpdateSerializer,
+        responses=VideoAdminRetrieveSerializer,
+    )
     def create(self, request, *args, **kwargs):
         input_serializer = self.get_serializer(data=request.data)
         input_serializer.is_valid(raise_exception=True)
@@ -34,6 +40,8 @@ class VideoAdminViewSet(ModelViewSet):
         )
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Video.objects.none()
         return (
             Video.objects.select_related("editor__userprofile")
             .prefetch_related("ratings")
@@ -47,11 +55,22 @@ class VideoAdminViewSet(ModelViewSet):
             return VideoAdminRetrieveSerializer
         return VideoAdminCreateUpdateSerializer
 
+    @extend_schema(
+        request=VideoAdminCreateUpdateSerializer,
+        responses=VideoAdminRetrieveSerializer,
+    )
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         serializer.save(
             request=get_object_or_404(Request, pk=self.kwargs["request_pk"]),
         )
 
+    @extend_schema(
+        request=VideoAdminCreateUpdateSerializer,
+        responses=VideoAdminRetrieveSerializer,
+    )
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop("partial", False)
         instance = self.get_object()
@@ -69,7 +88,8 @@ class VideoAdminViewSet(ModelViewSet):
 
         return Response(output_serializer.data)
 
-    @action(detail=True)
+    @extend_schema(responses=HistorySerializer(many=True))
+    @action(detail=True, filter_backends=[], pagination_class=None)
     def history(self, request, pk=None, request_pk=None):
         history_objects = (
             get_object_or_404(Video, pk=pk, request__pk=request_pk)

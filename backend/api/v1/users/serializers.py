@@ -68,11 +68,11 @@ class UserNestedListSerializer(Serializer):
     id = IntegerField(read_only=True)
 
     @staticmethod
-    def get_full_name(obj):
+    def get_full_name(obj) -> str:
         return obj.get_full_name_eastern_order()
 
     @staticmethod
-    def get_avatar_url(obj):
+    def get_avatar_url(obj) -> str:
         return obj.userprofile.avatar_url
 
 
@@ -84,7 +84,7 @@ class UserDetailedListSerializer(Serializer):
     profile = UserProfileSerializer(read_only=True, source="userprofile")
 
     @staticmethod
-    def get_full_name(obj):
+    def get_full_name(obj) -> str:
         return obj.get_full_name_eastern_order()
 
 
@@ -105,7 +105,7 @@ class UserSerializer(ModelSerializer):
         )
 
     @staticmethod
-    def get_banned(user):
+    def get_banned(user) -> bool:
         return hasattr(user, "ban")
 
 
@@ -172,7 +172,7 @@ class UserDetailSerializer(ModelSerializer):
         return super().update(instance, validated_data)
 
     @staticmethod
-    def get_role(user):
+    def get_role(user) -> str:
         return user.role
 
 

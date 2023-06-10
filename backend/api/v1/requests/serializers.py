@@ -84,7 +84,7 @@ class VideoDefaultSerializer(serializers.ModelSerializer):
     video_url = SerializerMethodField("get_video_url", read_only=True)
 
     @staticmethod
-    def get_video_url(obj):
+    def get_video_url(obj) -> str | None:
         if obj.status >= Video.Statuses.PUBLISHED and obj.additional_data.get(
             "publishing", {}
         ).get("website"):

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
+    "drf_spectacular",
     "corsheaders",
     "rest_framework_simplejwt.token_blacklist",
     "phonenumber_field",
@@ -199,15 +200,16 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
-    "EXCEPTION_HANDLER": "common.rest_framework.exception.exception_handler",
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
-    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.AnonRateThrottle"],
     "DEFAULT_THROTTLE_RATES": {
         "anon": "5/hour",
         "contact": "2/hour",
         "login": "5/minute",
     },
+    "EXCEPTION_HANDLER": "common.rest_framework.exception.exception_handler",
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
 # Simple JWT Settings
@@ -317,3 +319,17 @@ DRF_RECAPTCHA_ENABLED = config("RECAPTCHA", default=True, cast=bool)
 if DRF_RECAPTCHA_ENABLED:
     INSTALLED_APPS += ["drf_recaptcha"]
     DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
+
+# drf-spectacular
+# https://drf-spectacular.readthedocs.io/en/latest/
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "BSS Request Manager",
+    "DESCRIPTION": "Workflow Support System for managing video shooting, "
+    "filming and live streaming requests of Budavári Schönherz Stúdió.",
+    "VERSION": "0.0.1",
+    "SCHEMA_PATH_PREFIX": "/api/v[0-9]",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
+SPECTACULAR_SERVE_SCHEMA = config("SPECTACULAR_SERVE_SCHEMA", default=False, cast=bool)

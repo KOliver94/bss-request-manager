@@ -49,7 +49,7 @@ class UserProfile(models.Model):
         return f"{self.user.get_full_name()}'s ({self.user.username}) profile"
 
     @property
-    def avatar_url(self):
+    def avatar_url(self) -> str:
         return self.avatar.get(self.avatar.get("provider", None), None)
 
 

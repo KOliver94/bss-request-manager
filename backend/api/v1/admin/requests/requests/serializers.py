@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from drf_spectacular.utils import extend_schema_field
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import (
@@ -29,6 +30,7 @@ from video_requests.models import Comment, Request
 from video_requests.utilities import recalculate_deadline, update_request_status
 
 
+@extend_schema_field(UserNestedListSerializer)
 class CrewMembersListingField(RelatedField):
     def to_representation(self, value):
         serializer = UserNestedListSerializer(value.member)
@@ -47,7 +49,7 @@ class RequestAdminListSerializer(Serializer):
     video_count = IntegerField(read_only=True, source="videos.count")
 
     @staticmethod
-    def get_status_by_admin(obj):
+    def get_status_by_admin(obj) -> bool:
         return is_status_by_admin(obj)
 
 

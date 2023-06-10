@@ -22,11 +22,11 @@ class VideoAdminListSerializer(Serializer):
     status_by_admin = SerializerMethodField(read_only=True)
     title = CharField(read_only=True)
 
-    def get_rated(self, obj):
+    def get_rated(self, obj) -> bool:
         return obj.ratings.filter(author=self.context["request"].user).exists()
 
     @staticmethod
-    def get_status_by_admin(obj):
+    def get_status_by_admin(obj) -> bool:
         return is_status_by_admin(obj)
 
 
