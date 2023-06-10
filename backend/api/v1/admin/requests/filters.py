@@ -1,11 +1,14 @@
+from django.db.models import Q
 from django.forms import IntegerField
-from django_filters import DateFromToRangeFilter
 from django_filters.rest_framework import (
     DateFilter,
+    DateFromToRangeFilter,
     Filter,
     FilterSet,
     MultipleChoiceFilter,
 )
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 
 from video_requests.models import Request, Video
 
@@ -23,19 +26,28 @@ class RequestFilter(FilterSet):
     start_datetime = DateFromToRangeFilter()
     status = MultipleChoiceFilter(choices=Request.Statuses.choices)
 
-    class Meta:
-        model = Request
-        fields = ["start_datetime", "status"]
-
 
 class VideoFilter(FilterSet):
-    from_date = DateFilter(
-        field_name="request__start_datetime__date", lookup_expr="gte"
+    last_aired = DateFilter(method="filter_last_aired")
+    length_max = extend_schema_field(OpenApiTypes.NUMBER)(
+        IntegerFilter(field_name="additional_data__length", method="filter_length_max")
     )
-    to_date = DateFilter(field_name="request__end_datetime__date", lookup_expr="lte")
-    length = IntegerFilter(field_name="additional_data__length", lookup_expr="lte")
+    length_min = extend_schema_field(OpenApiTypes.NUMBER)(
+        IntegerFilter(field_name="additional_data__length", lookup_expr="gte")
+    )
+    request_start_datetime = DateFromToRangeFilter(field_name="request__start_datetime")
     status = MultipleChoiceFilter(choices=Video.Statuses.choices)
 
-    class Meta:
-        model = Video
-        fields = ["from_date", "to_date", "length", "status"]
+    @staticmethod
+    def filter_last_aired(queryset, name, value):
+        # The video was last aired before the given date or never.
+        return queryset.filter(
+            Q(**{f"{name}__lte": value}) | Q(**{f"{name}__isnull": True})
+        )
+
+    @staticmethod
+    def filter_length_max(queryset, name, value):
+        # Length is less than given value including nulls.
+        return queryset.filter(
+            Q(**{f"{name}__lte": value}) | Q(**{f"{name}__isnull": True})
+        )

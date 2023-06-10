@@ -1,18 +1,23 @@
+from django.db.models.fields.json import KeyTransform
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
-from rest_framework.filters import OrderingFilter
-from rest_framework.generics import get_object_or_404
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.generics import ListAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 from rest_framework.viewsets import ModelViewSet
 
 from api.v1.admin.helpers import serialize_history
+from api.v1.admin.requests.filters import VideoFilter
 from api.v1.admin.requests.videos.serializers import (
     VideoAdminCreateUpdateSerializer,
     VideoAdminListSerializer,
     VideoAdminRetrieveSerializer,
+    VideoAdminSearchSerializer,
 )
 from api.v1.admin.serializers import HistorySerializer
+from common.rest_framework.pagination import ExtendedPagination
 from common.rest_framework.permissions import IsStaffUser
 from video_requests.models import Request, Video
 
@@ -103,3 +108,35 @@ class VideoAdminViewSet(ModelViewSet):
             .order_by("-history_date")
         )
         return Response(serialize_history(history_objects))
+
+
+class VideoAdminSearchListAPIView(ListAPIView):
+    filter_backends = [
+        DjangoFilterBackend,
+        OrderingFilter,
+        SearchFilter,
+    ]
+    filterset_class = VideoFilter
+    ordering = ["-request__start_datetime"]
+    ordering_fields = [
+        "avg_rating",
+        "last_aired",
+        "length",
+        "request__start_datetime",
+        "status",
+        "title",
+    ]
+    pagination_class = ExtendedPagination
+    permission_classes = [IsStaffUser]
+    search_fields = ["@title"]
+    serializer_class = VideoAdminSearchSerializer
+
+    def get_queryset(self):
+        return (
+            Video.objects.select_related("request")
+            .prefetch_related("ratings")
+            .annotate(
+                last_aired=KeyTransform(0, KeyTransform("aired", "additional_data"))
+            )
+            .annotate(length=KeyTransform("length", "additional_data"))
+        )
