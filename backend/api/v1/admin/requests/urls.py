@@ -5,8 +5,10 @@ from api.v1.admin.requests.comments.views import CommentAdminViewSet
 from api.v1.admin.requests.crew.views import CrewMemberAdminViewSet
 from api.v1.admin.requests.ratings.views import RatingAdminViewSet
 from api.v1.admin.requests.requests.views import RequestAdminViewSet
-from api.v1.admin.requests.videos.views import VideoAdminViewSet
-from api.v1.admin.requests.views import VideoAdminListView
+from api.v1.admin.requests.videos.views import (
+    VideoAdminSearchListAPIView,
+    VideoAdminViewSet,
+)
 
 router = SimpleRouter(trailing_slash=False)
 router.register(r"requests", RequestAdminViewSet, basename="request")
@@ -33,5 +35,5 @@ urlpatterns = [
         "requests/<int:request_pk>/",
         include((request_urlpatterns, "request"), namespace="request"),
     ),
-    path("videos", VideoAdminListView.as_view()),
+    path("videos", VideoAdminSearchListAPIView.as_view(), name="video-list"),
 ]

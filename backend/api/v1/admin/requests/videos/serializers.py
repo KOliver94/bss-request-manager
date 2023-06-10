@@ -1,5 +1,7 @@
 from rest_framework.fields import (
     CharField,
+    DateField,
+    DateTimeField,
     FloatField,
     IntegerField,
     JSONField,
@@ -54,3 +56,20 @@ class VideoAdminCreateUpdateSerializer(ModelSerializer):
         video = super().update(instance, validated_data)
         update_video_status(video)
         return video
+
+
+class VideoAdminSearchSerializer(Serializer):
+    avg_rating = FloatField(default=0.0, read_only=True)
+    id = IntegerField(read_only=True)
+    last_aired = DateField(read_only=True)
+    length = IntegerField(read_only=True)
+    request_start_datetime = DateTimeField(
+        read_only=True, source="request.start_datetime"
+    )
+    status = IntegerField(read_only=True)
+    status_by_admin = SerializerMethodField(read_only=True)
+    title = CharField(read_only=True)
+
+    @staticmethod
+    def get_status_by_admin(obj) -> bool:
+        return is_status_by_admin(obj)

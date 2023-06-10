@@ -469,3 +469,67 @@ def test_retrieve_update_destroy_video_error(
     response = get_response(api_client, method, url, video_data)
 
     assert response.status_code == expected
+
+
+"""
+--------------------------------------------------
+                   ALL VIDEOS
+--------------------------------------------------
+"""
+
+
+@pytest.mark.parametrize(
+    "user,expected",
+    [
+        ("admin_user", HTTP_200_OK),
+        ("staff_user", HTTP_200_OK),
+        ("basic_user", HTTP_403_FORBIDDEN),
+        (None, HTTP_401_UNAUTHORIZED),
+    ],
+)
+@pytest.mark.parametrize("pagination", [True, False])
+def test_list_all_videos(api_client, expected, pagination, request, user):
+    video_requests = baker.make("video_requests.Request", _quantity=5)
+    videos = []
+
+    for video_request in video_requests:
+        videos.extend(
+            baker.make("video_requests.Video", request=video_request, _quantity=2)
+        )
+
+    do_login(api_client, request, user)
+
+    url = reverse("api:v1:admin:video-list")
+    response = api_client.get(url, {"pagination": pagination})
+
+    assert response.status_code == expected
+
+    if is_success(response.status_code):
+        if pagination:
+            assert "count" in response.data
+            assert "links" in response.data
+            assert "results" in response.data
+            assert "total_pages" in response.data
+
+            assert "next" in response.data["links"]
+            assert "previous" in response.data["links"]
+
+            assert response.data["count"] == len(videos)
+
+        response_data = response.data["results"] if pagination else response.data
+
+        assert len(response_data) == len(videos)
+        for video in response_data:
+            assert_fields_exist(
+                video,
+                [
+                    "avg_rating",
+                    "id",
+                    "last_aired",
+                    "length",
+                    "request_start_datetime",
+                    "status",
+                    "status_by_admin",
+                    "title",
+                ],
+            )
