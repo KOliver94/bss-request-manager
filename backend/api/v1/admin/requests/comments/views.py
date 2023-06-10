@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
@@ -9,6 +10,7 @@ from api.v1.admin.requests.comments.serializers import (
     CommentAdminCreateUpdateSerializer,
     CommentAdminListRetrieveSerializer,
 )
+from api.v1.admin.serializers import HistorySerializer
 from common.rest_framework.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from video_requests.models import Comment, Request
 
@@ -25,6 +27,8 @@ class CommentAdminViewSet(ModelViewSet):
         return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Comment.objects.none()
         return Comment.objects.select_related("author__userprofile").filter(
             request=get_object_or_404(Request, pk=self.kwargs["request_pk"])
         )
@@ -40,7 +44,8 @@ class CommentAdminViewSet(ModelViewSet):
             request=get_object_or_404(Request, pk=self.kwargs["request_pk"]),
         )
 
-    @action(detail=True)
+    @extend_schema(responses=HistorySerializer(many=True))
+    @action(detail=True, filter_backends=[], pagination_class=None)
     def history(self, request, pk=None, request_pk=None):
         history_objects = (
             get_object_or_404(Comment, pk=pk, request__pk=request_pk)

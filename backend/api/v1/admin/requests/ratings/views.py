@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter
@@ -10,6 +11,7 @@ from api.v1.admin.requests.ratings.serializers import (
     RatingAdminCreateUpdateSerializer,
     RatingAdminListRetrieveSerializer,
 )
+from api.v1.admin.serializers import HistorySerializer
 from common.rest_framework.permissions import IsStaffSelfOrAdmin, IsStaffUser
 from video_requests.models import Rating, Request, Video
 
@@ -26,6 +28,8 @@ class RatingAdminViewSet(ModelViewSet):
         return [IsStaffSelfOrAdmin()]
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Rating.objects.none()
         return Rating.objects.select_related("author__userprofile").filter(
             video=get_object_or_404(Video, pk=self.kwargs["video_pk"]),
             video__request=get_object_or_404(Request, pk=self.kwargs["request_pk"]),
@@ -57,7 +61,8 @@ class RatingAdminViewSet(ModelViewSet):
 
         serializer.save(author=self.request.user, video=video)
 
-    @action(detail=True)
+    @extend_schema(responses=HistorySerializer(many=True))
+    @action(detail=True, filter_backends=[], pagination_class=None)
     def history(self, request, pk=None, request_pk=None, video_pk=None):
         history_objects = (
             get_object_or_404(

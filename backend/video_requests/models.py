@@ -84,11 +84,11 @@ class Request(models.Model):
     history = HistoricalRecords()
 
     @property
-    def url(self):
+    def url(self) -> str:
         return f"{settings.BASE_URL}/my-requests/{self.id}"
 
     @property
-    def admin_url(self):
+    def admin_url(self) -> str:
         return f"{settings.BASE_URL}/admin/requests/{self.id}"
 
     def clean(self):
@@ -151,7 +151,7 @@ class Video(models.Model):
     __original_aired = None
 
     @property
-    def published_url(self):
+    def published_url(self) -> str:
         published_url = self.additional_data.get("publishing", {}).get("website")
         return published_url
 

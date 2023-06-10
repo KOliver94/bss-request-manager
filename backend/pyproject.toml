@@ -40,5 +40,6 @@ omit = [
 exclude_lines = [
     "pragma: no cover",
     "if settings.DEBUG",
+    'if getattr.*"swagger_fake_view".*',
     "return .*[.]none[(][)]]",
 ]
