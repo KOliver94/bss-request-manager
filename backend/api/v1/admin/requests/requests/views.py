@@ -33,10 +33,10 @@ class RequestAdminViewSet(ModelViewSet):
     ordering = ["created"]
     ordering_fields = [
         "created",
-        "start_datetime",
-        "status",
         "responsible__first_name",
         "responsible__last_name",
+        "start_datetime",
+        "status",
         "title",
     ]
     pagination_class = ExtendedPagination
