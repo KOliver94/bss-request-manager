@@ -136,13 +136,10 @@ def test_list_requests(api_client, expected, pagination, request, user):
 
     if is_success(response.status_code):
         if pagination:
-            assert "count" in response.data
-            assert "links" in response.data
-            assert "results" in response.data
-            assert "total_pages" in response.data
-
-            assert "next" in response.data["links"]
-            assert "previous" in response.data["links"]
+            assert_fields_exist(
+                response.data, ["count", "links", "results", "total_pages"]
+            )
+            assert_fields_exist(response.data["links"], ["next", "previous"])
 
             assert response.data["count"] == len(video_requests)
 
