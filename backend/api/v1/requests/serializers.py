@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.utils.timezone import localtime
 from drf_recaptcha.fields import ReCaptchaV2Field
 from phonenumber_field.serializerfields import PhoneNumberField
@@ -182,8 +181,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
     requester_last_name = CharField(write_only=True)
     requester_email = EmailField(write_only=True)
     requester_mobile = PhoneNumberField(write_only=True)
-    if settings.DRF_RECAPTCHA_ENABLED:
-        recaptcha = ReCaptchaV2Field()
+    recaptcha = ReCaptchaV2Field()
 
     class Meta:
         model = Request
@@ -201,6 +199,7 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
             "requester_last_name",
             "requester_email",
             "requester_mobile",
+            "recaptcha",
         )
         read_only_fields = (
             "id",
@@ -213,11 +212,8 @@ class RequestAnonymousSerializer(serializers.ModelSerializer):
             "requester_last_name",
             "requester_email",
             "requester_mobile",
+            "recaptcha",
         )
-
-        if settings.DRF_RECAPTCHA_ENABLED:
-            fields += ("recaptcha",)
-            write_only_fields += ("recaptcha",)
 
     def create(self, validated_data):
         comment_text = validated_data.pop("comment_text", None)
