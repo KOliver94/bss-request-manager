@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
+    "drf_recaptcha",
     "drf_spectacular",
     "corsheaders",
     "rest_framework_simplejwt.token_blacklist",
@@ -316,10 +317,7 @@ except AttributeError:
 # Django REST reCAPTCHA
 # https://github.com/llybin/drf-recaptcha
 
-DRF_RECAPTCHA_ENABLED = config("RECAPTCHA", default=True, cast=bool)
-if DRF_RECAPTCHA_ENABLED:
-    INSTALLED_APPS += ["drf_recaptcha"]
-    DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
+DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
 
 # drf-spectacular
 # https://drf-spectacular.readthedocs.io/en/latest/

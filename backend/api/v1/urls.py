@@ -22,7 +22,7 @@ urlpatterns = [
         name="login_social_obtain_jwt_pair",
     ),
     path("logout", LogoutAndBlacklistRefreshTokenView.as_view(), name="logout"),
-    path("misc/", include("api.v1.misc.urls")),
+    path("misc/", include(("api.v1.misc.urls", "misc"), namespace="misc")),
     path("users", UserListView.as_view()),
     path("users/", include("api.v1.users.urls")),
     path("requests", RequestDefaultListCreateView.as_view()),

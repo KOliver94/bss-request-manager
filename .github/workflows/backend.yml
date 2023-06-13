@@ -89,7 +89,6 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
         run: |
           pipenv run coverage run -m pytest
-          pipenv run coverage run -a -m pytest tests/no_recaptcha_pytest.py
           pipenv run coverage report
           pipenv run coverage html
           pipenv run coverage xml
