@@ -25,7 +25,6 @@ ignore_errors = true
 show_missing = true
 skip_covered = true
 omit = [
-    "api/v1/admin/management/*",
     "core/*",
     "common/health_checks.py",
     "common/rest_framework/permissions.py",
