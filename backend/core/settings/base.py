@@ -238,9 +238,13 @@ STATICFILES_DIRS = [
     os.path.join(FRONTEND_DIR, "build", "static"),
     os.path.join(BACKEND_DIR, "templates", "static"),
 ]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_ROOT = os.path.join(BACKEND_DIR, "staticfiles")
 STATIC_URL = "/static/"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Whitenoise
 # http://whitenoise.evans.io/en/stable/django.html
