@@ -191,7 +191,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # User authentication backends
 # https://docs.djangoproject.com/en/3.0/ref/settings/#authentication-backends
 
-AUTHENTICATION_BACKENDS = ()
+AUTHENTICATION_BACKENDS = []
 ADMIN_GROUP = config("ADMIN_GROUP", default="Administrators")
 
 # Django Rest Framework Settings

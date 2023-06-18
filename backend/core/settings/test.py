@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from core.settings.base import *
+from core.settings._auth_social import *
 
 # Use localhost as default instead of docker container hostnames
 DATABASES["default"].update({"HOST": config("DATABASE_HOST", default="localhost")})
@@ -11,8 +11,22 @@ try:
 except AttributeError:
     raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
 
-# Use the default Django authentication backend only
-AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
+# Use the default Django authentication backend
+AUTHENTICATION_BACKENDS += ["django.contrib.auth.backends.ModelBackend"]
+
+# Facebook OAuth2 settings:
+SOCIAL_AUTH_FACEBOOK_KEY = "123456789012345"  # nosec
+SOCIAL_AUTH_FACEBOOK_SECRET = "1234567890abcdef1234567890abcdef"  # nosec
+
+# Google OAuth2 settings:
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
+    "123456789012-p95xsuczae7s1w8un1apct2c90s6rj19.apps.googleusercontent.com"  # nosec
+)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "27c7dFrK6aYsuvHLmV5Be3zU"  # nosec
+
+# AuthSCH OAuth2 settings:
+SOCIAL_AUTH_AUTHSCH_KEY = "12345678901234567890"  # nosec
+SOCIAL_AUTH_AUTHSCH_SECRET = "TNcJ3UoBMUqpfYLBqlGlqN0Lsw1LHyIFvEtMTatL65RtTKAc6JnAYyNdDHX2DLFxkWLHpef8Wu8GHIAr"  # nosec
 
 # Use faster password hashing algorithm
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
