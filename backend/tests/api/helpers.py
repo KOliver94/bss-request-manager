@@ -28,11 +28,11 @@ def get_response(api_client, method, url, data):
 
 
 def login(client, user):
-    url = reverse("api:v1:login_obtain_jwt_pair")
-    resp = client.post(
+    url = reverse("api:v1:login:obtain_jwt_pair")
+    response = client.post(
         url,
         {"username": user.username, "password": "password"},
         format="json",
     )
-    token = resp.data["access"]
+    token = response.data["access"]
     client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")

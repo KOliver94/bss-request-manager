@@ -1,27 +1,14 @@
 from django.conf import settings
-from django.urls import include, path, re_path
-from rest_framework_simplejwt.views import TokenRefreshView
+from django.urls import include, path
 
-from api.v1.login.views import (
-    ExtendedSocialJWTPairOnlyAuthView,
-    ExtendedTokenObtainPairView,
-    LogoutAndBlacklistRefreshTokenView,
-)
 from api.v1.requests.views import RequestDefaultListCreateView
 from api.v1.users.views import UserListView
 from video_requests.models import Request, Video
 
 urlpatterns = [
+    path("", include(("api.v1.login.urls", "login"), namespace="login")),
     path("admin/", include(("api.v1.admin.urls", "admin"), namespace="admin")),
     path("external/", include("api.v1.external.urls")),
-    path("login", ExtendedTokenObtainPairView.as_view(), name="login_obtain_jwt_pair"),
-    path("login/refresh", TokenRefreshView.as_view(), name="login_refresh_jwt_token"),
-    re_path(
-        r"^login/social/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$",
-        ExtendedSocialJWTPairOnlyAuthView.as_view(),
-        name="login_social_obtain_jwt_pair",
-    ),
-    path("logout", LogoutAndBlacklistRefreshTokenView.as_view(), name="logout"),
     path("misc/", include(("api.v1.misc.urls", "misc"), namespace="misc")),
     path("users", UserListView.as_view()),
     path("users/", include("api.v1.users.urls")),
