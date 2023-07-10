@@ -59,7 +59,7 @@ def get_pr_responsible():
 
 
 # https://github.com/googleapis/google-api-python-client/issues/325#issuecomment-274349841
-class MemoryCache(Cache):  # pragma: no cover
+class MemoryCache(Cache):
     _CACHE = {}
 
     def get(self, url):
@@ -69,7 +69,7 @@ class MemoryCache(Cache):  # pragma: no cover
         MemoryCache._CACHE[url] = content
 
 
-def get_google_calendar_service():  # pragma: no cover
+def get_google_calendar_service():
     credentials = Credentials.from_service_account_file(
         filename=settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH,
         scopes=["https://www.googleapis.com/auth/calendar"],
@@ -77,7 +77,7 @@ def get_google_calendar_service():  # pragma: no cover
     return build("calendar", "v3", credentials=credentials, cache=MemoryCache())
 
 
-def get_calendar_event_body(request):  # pragma: no cover
+def get_calendar_event_body(request):
     return {
         "summary": request.title,
         "location": request.place,
@@ -94,7 +94,7 @@ def get_calendar_event_body(request):  # pragma: no cover
 
 
 @shared_task
-def create_calendar_event(request_id):  # pragma: no cover
+def create_calendar_event(request_id):
     if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
         return "Missing credentials file for Google Calendar"
     request = Request.objects.get(pk=request_id)  # nosec B113
@@ -112,7 +112,7 @@ def create_calendar_event(request_id):  # pragma: no cover
 
 
 @shared_task
-def update_calendar_event(request_id):  # pragma: no cover
+def update_calendar_event(request_id):
     if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
         return "Missing credentials file for Google Calendar"
     request = Request.objects.get(pk=request_id)  # nosec B113
@@ -127,7 +127,7 @@ def update_calendar_event(request_id):  # pragma: no cover
 
 
 @shared_task
-def remove_calendar_event(request_id):  # pragma: no cover
+def remove_calendar_event(request_id):
     if not settings.GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH:
         return "Missing credentials file for Google Calendar"
     request = Request.objects.get(pk=request_id)  # nosec B113
