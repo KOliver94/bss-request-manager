@@ -27,15 +27,12 @@ show_missing = true
 skip_covered = true
 omit = [
     "core/*",
-    "common/health_checks.py",
-    "common/rest_framework/permissions.py",
-    "common/social_core/backends.py",
-    "common/social_core/pipeline.py",
-    "manage.py",
     "tests/*",
+    "*/migrations/*",
     "*/admin.py",
     "*/tests.py",
-    "*/migrations/*"
+    "common/health_checks.py",
+    "manage.py",
 ]
 exclude_lines = [
     "pragma: no cover",

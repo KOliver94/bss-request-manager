@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 
 # EmailMultiAlternatives object attributes detailed description
 # https://docs.djangoproject.com/en/3.0/topics/email/#emailmessage-objects
-def debug_email(subject, msg_plain):  # pragma: no cover
+def debug_email(subject, msg_plain):
     return EmailMultiAlternatives(
         subject=subject,
         body=msg_plain,
