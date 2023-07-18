@@ -13,6 +13,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
+    HTTP_403_FORBIDDEN,
     HTTP_404_NOT_FOUND,
     is_success,
 )
@@ -100,6 +101,7 @@ def requester_data():
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_200_OK),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -153,6 +155,20 @@ def test_create_request_logged_in(api_client, request, request_create_data, user
     url = reverse("api:v1:request-list")
     response = api_client.get(url, {"pagination": True})
     assert response.data["count"] == 1
+
+
+def test_create_request_service_account(
+    api_client, request_create_data, service_account
+):
+    login(api_client, service_account)
+
+    url = reverse("api:v1:request-list")
+    response = api_client.post(url, request_create_data)
+
+    assert response.status_code == HTTP_201_CREATED
+    assert_retrieve_response_keys(response.data)
+    assert response.data["requester"]["id"] == service_account.id
+    assert response.data["requested_by"]["id"] == service_account.id
 
 
 @pytest.mark.parametrize(
@@ -213,7 +229,9 @@ def test_create_request_anonymous(
         )
 
 
-@pytest.mark.parametrize("user", ["admin_user", "staff_user", "basic_user", None])
+@pytest.mark.parametrize(
+    "user", ["admin_user", "staff_user", "basic_user", "service_account", None]
+)
 def test_create_request_with_comment(
     api_client, request, request_create_data, requester_data, settings, user
 ):
@@ -243,7 +261,9 @@ def test_create_request_with_comment(
     assert comment.author.id == response.data["requester"]["id"]
 
 
-@pytest.mark.parametrize("user", ["admin_user", "staff_user", "basic_user", None])
+@pytest.mark.parametrize(
+    "user", ["admin_user", "staff_user", "basic_user", "service_account", None]
+)
 def test_create_request_date_validation(
     api_client, request, request_create_data, requester_data, settings, user
 ):
@@ -330,6 +350,7 @@ def test_create_request_user_info_validation(api_client, request_create_data):
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_200_OK),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -356,6 +377,7 @@ def test_retrieve_request(api_client, expected, request, user):
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_404_NOT_FOUND),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )

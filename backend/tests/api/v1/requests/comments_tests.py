@@ -6,6 +6,7 @@ from rest_framework.status import (
     HTTP_201_CREATED,
     HTTP_204_NO_CONTENT,
     HTTP_401_UNAUTHORIZED,
+    HTTP_403_FORBIDDEN,
     HTTP_404_NOT_FOUND,
     is_success,
 )
@@ -39,6 +40,7 @@ def comment_data():
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_200_OK),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -85,6 +87,7 @@ def test_list_comments_own_request(api_client, expected, request, user):
         ("admin_user", HTTP_201_CREATED),
         ("staff_user", HTTP_201_CREATED),
         ("basic_user", HTTP_201_CREATED),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -117,6 +120,7 @@ def test_create_comment_own_request(api_client, comment_data, expected, request,
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_404_NOT_FOUND),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -178,6 +182,7 @@ def test_list_create_comments_errors(
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_200_OK),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -207,6 +212,7 @@ def test_retrieve_comment(api_client, expected, request, user):
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_200_OK),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -242,6 +248,7 @@ def test_update_own_comment(api_client, comment_data, expected, method, request,
         ("admin_user", HTTP_204_NO_CONTENT),
         ("staff_user", HTTP_204_NO_CONTENT),
         ("basic_user", HTTP_204_NO_CONTENT),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -268,6 +275,7 @@ def test_destroy_own_comment(api_client, expected, request, user):
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_404_NOT_FOUND),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )

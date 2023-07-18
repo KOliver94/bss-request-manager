@@ -68,6 +68,27 @@ def basic_user():
 
 
 @pytest.fixture
+def service_account():
+    user = User.objects.create_user(
+        email="service-account@example.com",
+        first_name="Service",
+        is_staff=False,
+        last_name="Account",
+        password="password",
+        username="service-account",
+    )
+
+    grp = Group.objects.get_or_create(name="Service Accounts")[0]
+    user.groups.add(grp)
+    user.save()
+
+    user.userprofile.phone_number = "+36509999999"
+    user.userprofile.save()
+
+    return user
+
+
+@pytest.fixture
 def not_existing_comment_id():
     while True:
         non_existing_id = randint(1000, 100000)

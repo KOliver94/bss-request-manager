@@ -12,12 +12,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
 from tests.helpers.users_test_utils import create_user, get_default_password
-from tests.helpers.video_requests_test_utils import (
-    create_comment,
-    create_rating,
-    create_request,
-    create_video,
-)
+from tests.helpers.video_requests_test_utils import create_request
 from video_requests.models import Request
 
 INVALID_ID = 9000
@@ -341,89 +336,3 @@ class RequestsAPIExternalTestCase(APITestCase):
             f"{self.admin_url}/{request_id}", {"additional_data": {"accepted": True}}
         )
         self.assertEqual(mock_requests_post.call_count, 11)
-
-    def test_service_account_should_not_access_other_endpoints(self):
-        request = create_request(100, self.user)
-        video = create_video(200, request)
-        comment = create_comment(300, request, self.user, False)
-        rating = create_rating(400, video, self.user)
-
-        # Default API
-        # Create Request
-        response = self.client.post(self.default_url, self._create_request_test_data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # List Requests
-        response = self.client.get(self.default_url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Retrieve Request
-        response = self.client.get(f"{self.default_url}/{request.id}")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # List Videos
-        response = self.client.get(f"{self.default_url}/{request.id}/videos")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Retrieve Video
-        response = self.client.get(f"{self.default_url}/{request.id}/videos/{video.id}")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Create Comment
-        response = self.client.post(
-            f"{self.default_url}/{request.id}/comments", {"text": "Test"}
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # List Comments
-        response = self.client.get(f"{self.default_url}/{request.id}/comments")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Retrieve Comment
-        response = self.client.get(
-            f"{self.default_url}/{request.id}/comments/{comment.id}"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Modify Comment
-        response = self.client.patch(
-            f"{self.default_url}/{request.id}/comments/{comment.id}", {"text": "Test"}
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Delete Comment
-        response = self.client.delete(
-            f"{self.default_url}/{request.id}/comments/{comment.id}"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Create Rating
-        response = self.client.post(
-            f"{self.default_url}/{request.id}/videos/{video.id}/ratings", {"rating": 5}
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # List Ratings
-        response = self.client.get(
-            f"{self.default_url}/{request.id}/videos/{video.id}/ratings"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Retrieve Rating
-        response = self.client.get(
-            f"{self.default_url}/{request.id}/videos/{video.id}/ratings/{rating.id}"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Modify Rating
-        response = self.client.patch(
-            f"{self.default_url}/{request.id}/videos/{video.id}/ratings/{rating.id}",
-            {"rating": 5},
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Delete Rating
-        response = self.client.delete(
-            f"{self.default_url}/{request.id}/videos/{video.id}/ratings/{rating.id}"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
