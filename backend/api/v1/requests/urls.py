@@ -1,30 +1,34 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import SimpleRouter
 
-from api.v1.requests.views import (
-    CommentDefaultDetailView,
-    CommentDefaultListCreateView,
-    RatingDefaultDetailView,
-    RatingDefaultListCreateView,
-    RequestDefaultDetailView,
-    VideoDefaultDetailView,
-    VideoDefaultListView,
-)
+from api.v1.requests.comments.views import CommentViewSet
+from api.v1.requests.ratings.views import RatingViewSet
+from api.v1.requests.requests.views import RequestViewSet
+from api.v1.requests.routers import RatingRouter
+from api.v1.requests.videos.views import VideoViewSet
+
+router = SimpleRouter(trailing_slash=False)
+router.register(r"requests", RequestViewSet, basename="request")
+
+request_router = SimpleRouter(trailing_slash=False)
+request_router.register(r"comments", CommentViewSet, basename="comment")
+request_router.register(r"videos", VideoViewSet, basename="video")
+
+video_router = RatingRouter(trailing_slash=False)
+video_router.register(r"rating", RatingViewSet, basename="rating")
+
+request_urlpatterns = [
+    path("", include(request_router.urls)),
+    path(
+        "videos/<int:video_pk>/",
+        include((video_router.urls, "video"), namespace="video"),
+    ),
+]
 
 urlpatterns = [
-    path("<int:pk>", RequestDefaultDetailView.as_view()),
-    path("<int:request_id>/comments", CommentDefaultListCreateView.as_view()),
+    path("", include(router.urls)),
     path(
-        "<int:request_id>/comments/<int:pk>",
-        CommentDefaultDetailView.as_view(),
-    ),
-    path("<int:request_id>/videos", VideoDefaultListView.as_view()),
-    path("<int:request_id>/videos/<int:pk>", VideoDefaultDetailView.as_view()),
-    path(
-        "<int:request_id>/videos/<int:video_id>/ratings",
-        RatingDefaultListCreateView.as_view(),
-    ),
-    path(
-        "<int:request_id>/videos/<int:video_id>/ratings/<int:pk>",
-        RatingDefaultDetailView.as_view(),
+        "requests/<int:request_pk>/",
+        include((request_urlpatterns, "request"), namespace="request"),
     ),
 ]
