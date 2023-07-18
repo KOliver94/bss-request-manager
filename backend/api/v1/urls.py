@@ -1,19 +1,19 @@
 from django.conf import settings
 from django.urls import include, path
 
-from api.v1.requests.views import RequestDefaultListCreateView
 from api.v1.users.views import UserListView
 from video_requests.models import Request, Video
 
 urlpatterns = [
     path("", include(("api.v1.login.urls", "login"), namespace="login")),
+    path("", include("api.v1.requests.urls")),
     path("admin/", include(("api.v1.admin.urls", "admin"), namespace="admin")),
-    path("external/", include("api.v1.external.urls")),
+    path(
+        "external/", include(("api.v1.external.urls", "external"), namespace="external")
+    ),
     path("misc/", include(("api.v1.misc.urls", "misc"), namespace="misc")),
     path("users", UserListView.as_view()),
     path("users/", include("api.v1.users.urls")),
-    path("requests", RequestDefaultListCreateView.as_view()),
-    path("requests/", include("api.v1.requests.urls")),
 ]
 
 if settings.HEALTH_CHECK_API_ENABLED:
