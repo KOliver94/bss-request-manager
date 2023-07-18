@@ -4,7 +4,7 @@ import pytest
 from django.contrib.auth.models import Group, User
 from rest_framework.test import APIClient
 
-from video_requests.models import Request, Video
+from video_requests.models import Comment, Request, Video
 
 
 @pytest.fixture
@@ -29,12 +29,15 @@ def admin_user():
 
     user.save()
 
+    user.userprofile.phone_number = "+36509999999"
+    user.userprofile.save()
+
     return user
 
 
 @pytest.fixture
 def staff_user():
-    return User.objects.create_user(
+    user = User.objects.create_user(
         email="staff@example.com",
         first_name="Staff",
         is_staff=True,
@@ -43,10 +46,14 @@ def staff_user():
         username="staff",
     )
 
+    user.userprofile.phone_number = "+36509999999"
+    user.userprofile.save()
+    return user
+
 
 @pytest.fixture
 def basic_user():
-    return User.objects.create_user(
+    user = User.objects.create_user(
         email="basic@example.com",
         first_name="Basic",
         is_staff=False,
@@ -54,6 +61,18 @@ def basic_user():
         password="password",
         username="basic",
     )
+
+    user.userprofile.phone_number = "+36509999999"
+    user.userprofile.save()
+    return user
+
+
+@pytest.fixture
+def not_existing_comment_id():
+    while True:
+        non_existing_id = randint(1000, 100000)
+        if not Comment.objects.filter(pk=non_existing_id).exists():
+            return non_existing_id
 
 
 @pytest.fixture
