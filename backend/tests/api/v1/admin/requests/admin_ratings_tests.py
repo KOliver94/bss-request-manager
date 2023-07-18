@@ -223,12 +223,7 @@ def test_create_rating_error_one_rating_per_video(
 
     user = do_login(api_client, request, user)
 
-    if user:
-        baker.make(
-            "video_requests.Rating", author=user, rating=randint(1, 5), video=video
-        )
-    else:
-        baker.make("video_requests.Rating", rating=randint(1, 5), video=video)
+    baker.make("video_requests.Rating", author=user, rating=randint(1, 5), video=video)
 
     url = reverse(
         "api:v1:admin:request:video:rating-list",
@@ -298,12 +293,9 @@ def test_update_own_rating(api_client, expected, method, rating_data, request, u
 
     user = do_login(api_client, request, user)
 
-    if user:
-        rating = baker.make(
-            "video_requests.Rating", author=user, rating=randint(1, 4), video=video
-        )
-    else:
-        rating = baker.make("video_requests.Rating", rating=randint(1, 4), video=video)
+    rating = baker.make(
+        "video_requests.Rating", author=user, rating=randint(1, 4), video=video
+    )
 
     assert rating.rating != rating_data["rating"]
     assert rating.review != rating_data["review"]
@@ -384,12 +376,9 @@ def test_destroy_own_rating(api_client, expected, request, user):
 
     user = do_login(api_client, request, user)
 
-    if user:
-        rating = baker.make(
-            "video_requests.Rating", author=user, rating=randint(1, 5), video=video
-        )
-    else:
-        rating = baker.make("video_requests.Rating", rating=randint(1, 5), video=video)
+    rating = baker.make(
+        "video_requests.Rating", author=user, rating=randint(1, 5), video=video
+    )
 
     url = reverse(
         "api:v1:admin:request:video:rating-detail",
@@ -586,12 +575,9 @@ def test_create_update_rating_invalid_rating(
 
     user = do_login(api_client, request, user)
 
-    if user:
-        rating = baker.make(
-            "video_requests.Rating", author=user, rating=randint(1, 5), video=video
-        )
-    else:
-        rating = baker.make("video_requests.Rating", rating=randint(1, 5), video=video)
+    rating = baker.make(
+        "video_requests.Rating", author=user, rating=randint(1, 5), video=video
+    )
 
     if method == "POST":
         url = reverse(

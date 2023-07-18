@@ -36,8 +36,7 @@ def test_contact(
 ):
     settings.DRF_RECAPTCHA_TESTING_PASS = recaptcha_pass
 
-    if user:
-        do_login(api_client, request, user)
+    do_login(api_client, request, user)
 
     url = reverse("api:v1:misc:contact")
     response = api_client.post(url, contact_data)

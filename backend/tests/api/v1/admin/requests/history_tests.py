@@ -68,15 +68,9 @@ def assert_response(history, fields_changed, new_values, old_values, user):
 def test_list_comment_history(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     user = do_login(api_client, request, user)
-
-    if user:
-        comment = baker.make(
-            "video_requests.Comment", author=user, internal=False, request=video_request
-        )
-    else:
-        comment = baker.make(
-            "video_requests.Comment", internal=False, request=video_request
-        )
+    comment = baker.make(
+        "video_requests.Comment", author=user, internal=False, request=video_request
+    )
 
     original_text = comment.text
 
@@ -138,11 +132,7 @@ def test_list_rating_history(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request")
     video = baker.make("video_requests.Video", request=video_request)
     user = do_login(api_client, request, user)
-
-    if user:
-        rating = baker.make("video_requests.Rating", author=user, rating=1, video=video)
-    else:
-        rating = baker.make("video_requests.Rating", rating=1, video=video)
+    rating = baker.make("video_requests.Rating", author=user, rating=1, video=video)
 
     original_review = rating.review
 
