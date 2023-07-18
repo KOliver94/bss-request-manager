@@ -25,7 +25,7 @@ def contact_data():
 
 @pytest.mark.parametrize(
     "user",
-    ["admin_user", "staff_user", "basic_user", None],
+    ["admin_user", "staff_user", "basic_user", "service_account", None],
 )
 @pytest.mark.parametrize(
     "recaptcha_pass",

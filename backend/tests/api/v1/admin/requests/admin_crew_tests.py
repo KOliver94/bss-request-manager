@@ -39,6 +39,7 @@ def crew_member_data(staff_user):
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -67,6 +68,7 @@ def test_list_crew(api_client, expected, request, user):
         ("admin_user", HTTP_201_CREATED),
         ("staff_user", HTTP_201_CREATED),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -108,6 +110,7 @@ def test_create_crew_member(
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -142,6 +145,7 @@ def test_list_create_crew_error(
         ("admin_user", {"DELETE": HTTP_204_NO_CONTENT, "GET": HTTP_200_OK}),
         ("staff_user", {"DELETE": HTTP_204_NO_CONTENT, "GET": HTTP_200_OK}),
         ("basic_user", {"DELETE": HTTP_403_FORBIDDEN, "GET": HTTP_403_FORBIDDEN}),
+        ("service_account", {"DELETE": HTTP_403_FORBIDDEN, "GET": HTTP_403_FORBIDDEN}),
         (None, {"DELETE": HTTP_401_UNAUTHORIZED, "GET": HTTP_401_UNAUTHORIZED}),
     ],
 )
@@ -170,6 +174,7 @@ def test_retrieve_destroy_crew_member(api_client, expected, method, request, use
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -207,6 +212,7 @@ def test_update_crew_member(
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -271,6 +277,7 @@ def test_retrieve_update_destroy_crew_member_error(
         ("admin_user", HTTP_400_BAD_REQUEST),
         ("staff_user", HTTP_400_BAD_REQUEST),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )

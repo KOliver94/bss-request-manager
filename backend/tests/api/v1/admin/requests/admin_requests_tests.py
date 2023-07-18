@@ -115,6 +115,7 @@ def request_create_data():
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -158,6 +159,14 @@ def test_list_requests(api_client, expected, pagination, request, user):
         ),
         (
             "basic_user",
+            {
+                "PATCH": HTTP_403_FORBIDDEN,
+                "POST": HTTP_403_FORBIDDEN,
+                "PUT": HTTP_403_FORBIDDEN,
+            },
+        ),
+        (
+            "service_account",
             {
                 "PATCH": HTTP_403_FORBIDDEN,
                 "POST": HTTP_403_FORBIDDEN,
@@ -300,6 +309,7 @@ def test_create_update_request(
         ("admin_user", HTTP_400_BAD_REQUEST),
         ("staff_user", HTTP_400_BAD_REQUEST),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -354,6 +364,7 @@ def test_create_update_request_requester_validation(
         ("admin_user", HTTP_400_BAD_REQUEST),
         ("staff_user", HTTP_400_BAD_REQUEST),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -394,6 +405,7 @@ def test_create_update_request_date_validation(
         ("admin_user", HTTP_400_BAD_REQUEST),
         ("staff_user", HTTP_400_BAD_REQUEST),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -436,6 +448,7 @@ def test_create_update_request_invalid_user(
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -459,6 +472,7 @@ def test_retrieve_request(api_client, expected, request, user):
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -496,6 +510,7 @@ def test_retrieve_request_status_by_admin(api_client, expected, request, user):
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -517,6 +532,7 @@ def test_retrieve_update_destroy_request_error(
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -550,6 +566,7 @@ def test_update_request_remove_responsible(
         ("admin_user", HTTP_400_BAD_REQUEST),
         ("staff_user", HTTP_400_BAD_REQUEST),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -582,6 +599,7 @@ def test_update_request_remove_requester_error(
         ("admin_user", HTTP_204_NO_CONTENT),
         ("staff_user", HTTP_204_NO_CONTENT),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -606,6 +624,7 @@ def test_destroy_own_request(api_client, expected, request, scenario, user):
         ("admin_user", HTTP_204_NO_CONTENT),
         ("staff_user", HTTP_403_FORBIDDEN),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )

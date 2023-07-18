@@ -7,6 +7,7 @@ from rest_framework.reverse import reverse
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_401_UNAUTHORIZED,
+    HTTP_403_FORBIDDEN,
     HTTP_404_NOT_FOUND,
     is_success,
 )
@@ -31,6 +32,7 @@ def assert_response_keys(video):
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_200_OK),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -60,6 +62,7 @@ def test_list_videos_own_request(api_client, expected, request, user):
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_404_NOT_FOUND),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -94,6 +97,7 @@ def test_list_videos_errors(
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_200_OK),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -121,6 +125,7 @@ def test_retrieve_video(api_client, expected, request, user):
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_404_NOT_FOUND),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )

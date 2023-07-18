@@ -41,6 +41,7 @@ def comment_data():
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -70,6 +71,7 @@ def test_list_comments(api_client, expected, request, user):
         ("admin_user", HTTP_201_CREATED),
         ("staff_user", HTTP_201_CREATED),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -107,6 +109,7 @@ def test_create_comment(api_client, comment_data, expected, request, user):
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -135,6 +138,7 @@ def test_list_create_comments_error(
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -162,6 +166,7 @@ def test_retrieve_comment(api_client, expected, request, user):
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -199,6 +204,7 @@ def test_update_own_comment(api_client, comment_data, expected, method, request,
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_403_FORBIDDEN),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -238,6 +244,7 @@ def test_update_others_comment(
         ("admin_user", HTTP_204_NO_CONTENT),
         ("staff_user", HTTP_204_NO_CONTENT),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -263,6 +270,7 @@ def test_destroy_own_comment(api_client, expected, request, user):
         ("admin_user", HTTP_204_NO_CONTENT),
         ("staff_user", HTTP_403_FORBIDDEN),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -289,6 +297,7 @@ def test_destroy_others_comment(api_client, expected, request, user):
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )

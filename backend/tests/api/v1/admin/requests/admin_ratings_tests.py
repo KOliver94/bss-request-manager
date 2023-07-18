@@ -47,6 +47,7 @@ def rating_data():
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -81,6 +82,7 @@ def test_list_ratings(api_client, expected, request, user):
         ("admin_user", HTTP_201_CREATED),
         ("staff_user", HTTP_201_CREATED),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -121,6 +123,7 @@ def test_create_rating(api_client, expected, rating_data, request, user):
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -177,6 +180,7 @@ def test_list_create_ratings_error(
         ("admin_user", HTTP_400_BAD_REQUEST),
         ("staff_user", HTTP_400_BAD_REQUEST),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -210,6 +214,7 @@ def test_create_rating_error_video_not_edited(
         ("admin_user", HTTP_400_BAD_REQUEST),
         ("staff_user", HTTP_400_BAD_REQUEST),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -245,6 +250,7 @@ def test_create_rating_error_one_rating_per_video(
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -281,6 +287,7 @@ def test_retrieve_rating(api_client, expected, request, user):
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_200_OK),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -324,6 +331,7 @@ def test_update_own_rating(api_client, expected, method, rating_data, request, u
         ("admin_user", HTTP_200_OK),
         ("staff_user", HTTP_403_FORBIDDEN),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -365,6 +373,7 @@ def test_update_others_rating(api_client, expected, method, rating_data, request
         ("admin_user", HTTP_204_NO_CONTENT),
         ("staff_user", HTTP_204_NO_CONTENT),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -395,6 +404,7 @@ def test_destroy_own_rating(api_client, expected, request, user):
         ("admin_user", HTTP_204_NO_CONTENT),
         ("staff_user", HTTP_403_FORBIDDEN),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -424,6 +434,7 @@ def test_destroy_others_rating(api_client, expected, request, user):
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -553,6 +564,7 @@ def test_retrieve_update_destroy_rating_error(
         ("admin_user", HTTP_400_BAD_REQUEST),
         ("staff_user", HTTP_400_BAD_REQUEST),
         ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )

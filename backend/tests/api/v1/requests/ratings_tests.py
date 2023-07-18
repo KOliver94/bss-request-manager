@@ -8,6 +8,7 @@ from rest_framework.status import (
     HTTP_204_NO_CONTENT,
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
+    HTTP_403_FORBIDDEN,
     HTTP_404_NOT_FOUND,
     is_success,
 )
@@ -40,6 +41,7 @@ def rating_data():
         ("admin_user", HTTP_201_CREATED),
         ("staff_user", HTTP_201_CREATED),
         ("basic_user", HTTP_201_CREATED),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -75,6 +77,7 @@ def test_create_rating(api_client, expected, rating_data, request, user):
         ("admin_user", HTTP_400_BAD_REQUEST),
         ("staff_user", HTTP_400_BAD_REQUEST),
         ("basic_user", HTTP_400_BAD_REQUEST),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
@@ -151,6 +154,15 @@ def test_create_rating_validation(api_client, expected, rating_data, request, us
             },
         ),
         (
+            "service_account",
+            {
+                "DELETE": HTTP_403_FORBIDDEN,
+                "GET": HTTP_403_FORBIDDEN,
+                "PATCH": HTTP_403_FORBIDDEN,
+                "PUT": HTTP_403_FORBIDDEN,
+            },
+        ),
+        (
             None,
             {
                 "DELETE": HTTP_401_UNAUTHORIZED,
@@ -195,6 +207,7 @@ def test_retrieve_update_destroy_rating(
         ("admin_user", HTTP_404_NOT_FOUND),
         ("staff_user", HTTP_404_NOT_FOUND),
         ("basic_user", HTTP_404_NOT_FOUND),
+        ("service_account", HTTP_403_FORBIDDEN),
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
