@@ -1,16 +1,10 @@
-from django.urls import path
-
-from api.v1.external.views import (
-    CommentExternalListCreateView,
-    RequestExternalCreateView,
-    RequestExternalDetailView,
-)
+from django.urls import include, path
 
 urlpatterns = [
-    path("sch-events/requests", RequestExternalCreateView.as_view()),
-    path("sch-events/requests/<int:pk>", RequestExternalDetailView.as_view()),
     path(
-        "sch-events/requests/<int:request_id>/comments",
-        CommentExternalListCreateView.as_view(),
+        "sch-events/",
+        include(
+            ("api.v1.external.sch_events.urls", "sch-events"), namespace="sch-events"
+        ),
     ),
 ]
