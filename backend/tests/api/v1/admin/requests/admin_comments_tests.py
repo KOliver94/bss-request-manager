@@ -1,5 +1,3 @@
-from random import randint
-
 import pytest
 from model_bakery import baker
 from rest_framework.reverse import reverse
@@ -14,7 +12,6 @@ from rest_framework.status import (
 )
 
 from tests.api.helpers import assert_fields_exist, do_login, get_response
-from video_requests.models import Comment
 
 pytestmark = pytest.mark.django_db
 
@@ -174,12 +171,7 @@ def test_update_own_comment(api_client, comment_data, expected, method, request,
 
     user = do_login(api_client, request, user)
 
-    if user:
-        comment = baker.make(
-            "video_requests.Comment", author=user, request=video_request
-        )
-    else:
-        comment = baker.make("video_requests.Comment", request=video_request)
+    comment = baker.make("video_requests.Comment", author=user, request=video_request)
 
     assert comment.text != comment_data["text"]
 
@@ -254,12 +246,7 @@ def test_destroy_own_comment(api_client, expected, request, user):
 
     user = do_login(api_client, request, user)
 
-    if user:
-        comment = baker.make(
-            "video_requests.Comment", author=user, request=video_request
-        )
-    else:
-        comment = baker.make("video_requests.Comment", request=video_request)
+    comment = baker.make("video_requests.Comment", author=user, request=video_request)
 
     url = reverse(
         "api:v1:admin:request:comment-detail",
@@ -311,16 +298,11 @@ def test_retrieve_update_destroy_comment_error(
     comment_data,
     expected,
     method,
+    not_existing_comment_id,
     not_existing_request_id,
     request,
     user,
 ):
-    def get_not_existing_comment_id():
-        while True:
-            non_existing_id = randint(1000, 100000)
-            if not Comment.objects.filter(pk=non_existing_id).exists():
-                return non_existing_id
-
     video_requests = baker.make("video_requests.Request", _quantity=2)
     comment = baker.make("video_requests.Comment", request=video_requests[0])
 
@@ -331,7 +313,7 @@ def test_retrieve_update_destroy_comment_error(
         "api:v1:admin:request:comment-detail",
         kwargs={
             "request_pk": video_requests[0].id,
-            "pk": get_not_existing_comment_id(),
+            "pk": not_existing_comment_id,
         },
     )
     response = get_response(api_client, method, url, comment_data)
@@ -352,7 +334,7 @@ def test_retrieve_update_destroy_comment_error(
         "api:v1:admin:request:comment-detail",
         kwargs={
             "request_pk": not_existing_request_id,
-            "pk": get_not_existing_comment_id(),
+            "pk": not_existing_comment_id,
         },
     )
     response = get_response(api_client, method, url, comment_data)

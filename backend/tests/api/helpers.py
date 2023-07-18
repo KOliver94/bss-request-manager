@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from model_bakery import baker
 from rest_framework.reverse import reverse
 
 
@@ -11,6 +13,8 @@ def do_login(api_client, request, user):
     if user:
         user = request.getfixturevalue(user)
         login(api_client, user)
+    else:
+        user = baker.make(User)
     return user
 
 

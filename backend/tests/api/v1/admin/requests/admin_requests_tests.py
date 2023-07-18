@@ -120,14 +120,10 @@ def request_create_data():
 )
 @pytest.mark.parametrize("pagination", [True, False])
 def test_list_requests(api_client, expected, pagination, request, user):
-    video_requests = baker.make("video_requests.Request", _quantity=5)
-    baker.make("video_requests.CrewMember", _quantity=3, request=video_requests[0])
-
     user = do_login(api_client, request, user)
 
-    if user:
-        video_requests[1].responsible = user
-        video_requests[1].save()
+    video_requests = baker.make("video_requests.Request", responsible=user, _quantity=5)
+    baker.make("video_requests.CrewMember", _quantity=3, request=video_requests[0])
 
     url = reverse("api:v1:admin:request-list")
     response = api_client.get(url, {"pagination": pagination})
@@ -593,13 +589,10 @@ def test_update_request_remove_requester_error(
 def test_destroy_own_request(api_client, expected, request, scenario, user):
     user = do_login(api_client, request, user)
 
-    if user:
-        if scenario == "requester":
-            video_request = baker.make("video_requests.Request", requester=user)
-        else:
-            video_request = baker.make("video_requests.Request", requested_by=user)
+    if scenario == "requester":
+        video_request = baker.make("video_requests.Request", requester=user)
     else:
-        video_request = baker.make("video_requests.Request")
+        video_request = baker.make("video_requests.Request", requested_by=user)
 
     url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
     response = api_client.delete(url)
