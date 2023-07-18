@@ -198,8 +198,8 @@ def test_create_rating_error_video_not_edited(
 
     assert response.status_code == expected
 
-    if response.status_code == 400:
-        assert response.data[0] == ErrorDetail(
+    if response.status_code == HTTP_400_BAD_REQUEST:
+        assert response.data["non_field_errors"][0] == ErrorDetail(
             string="The video has not been edited yet.", code="invalid"
         )
 
@@ -233,8 +233,8 @@ def test_create_rating_error_one_rating_per_video(
 
     assert response.status_code == expected
 
-    if response.status_code == 400:
-        assert response.data[0] == ErrorDetail(
+    if response.status_code == HTTP_400_BAD_REQUEST:
+        assert response.data["non_field_errors"][0] == ErrorDetail(
             string="You have already posted a rating.", code="invalid"
         )
 

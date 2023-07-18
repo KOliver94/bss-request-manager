@@ -56,13 +56,13 @@ class RatingAdminViewSet(ModelViewSet):
         if video.status < Video.Statuses.EDITED:
             # A video cannot be rated before being edited (reached status 3).
             raise ValidationError(
-                "The video has not been edited yet."
+                {"non_field_errors": ["The video has not been edited yet."]}
             )  # TODO: Translate
 
         if Rating.objects.filter(author=self.request.user, video=video).exists():
             # Only one rating per user is permitted for a video.
             raise ValidationError(
-                "You have already posted a rating."
+                {"non_field_errors": ["You have already posted a rating."]}
             )  # TODO: Translate
 
         serializer.save(author=self.request.user, video=video)
