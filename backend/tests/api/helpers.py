@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from model_bakery import baker
+from rest_framework.authtoken.models import Token
 from rest_framework.reverse import reverse
 
 
@@ -9,10 +10,18 @@ def assert_fields_exist(response, expected_fields):
     assert all(field in expected_fields for field in response)
 
 
-def do_login(api_client, request, user):
+def authorize(client, user):
+    token = Token.objects.get_or_create(user=user)[0]
+    client.credentials(HTTP_AUTHORIZATION=f"Token {token}")
+
+
+def do_login(api_client, request, user, token=False):
     if user:
         user = request.getfixturevalue(user)
-        login(api_client, user)
+        if token:
+            authorize(api_client, user)
+        else:
+            login(api_client, user)
     else:
         user = baker.make(User)
     return user

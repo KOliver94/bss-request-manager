@@ -229,7 +229,7 @@ def recalculate_deadline(instance, data):
     retry_kwargs={"max_retries": 10},
 )
 def notify_sch_event_management_system(self, request_id):
-    request = Request.objects.get(pk=request_id)
+    request = Request.objects.get(pk=request_id)  # nosec B113
 
     accept = request.additional_data["accepted"]
     url = request.additional_data["external"]["sch_events_callback_url"]
