@@ -430,7 +430,7 @@ def test_external_callback_on_status_changes_redirect_and_result(
             mock_requests_post.assert_called_once()
             mock_requests_post.assert_called_with(
                 mock_head_redirect_response().url,
-                data={"accept": accepted},
+                data=json.dumps({"accept": accepted}),
                 headers={
                     "Accept": "application/json",
                     "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",

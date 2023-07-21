@@ -1,3 +1,4 @@
+import json
 from datetime import timedelta
 
 import requests
@@ -238,7 +239,7 @@ def notify_sch_event_management_system(self, request_id):
         "Accept": "application/json",
         "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
     }
-    data = {"accept": accept}
+    data = json.dumps({"accept": accept})
     url = requests.head(url, headers=headers, allow_redirects=True, timeout=10).url
     response = requests.post(
         url, data=data, headers=headers, allow_redirects=False, timeout=30
