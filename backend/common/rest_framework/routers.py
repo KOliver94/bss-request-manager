@@ -1,7 +1,7 @@
 from rest_framework.routers import DynamicRoute, Route, SimpleRouter
 
 
-class RatingRouter(SimpleRouter):
+class DetailOnlyRouter(SimpleRouter):
     # This router does not map list route because user can only interact with his rating and cannot see others.
     # For this reason no unique identifier is necessary as a user can only have one rating for a video.
     routes = [
