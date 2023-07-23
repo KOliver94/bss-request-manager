@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.fields import (
-    BooleanField,
     CharField,
     ChoiceField,
     DateTimeField,
@@ -41,16 +40,6 @@ class UserSocialProfileSerializer(ModelSerializer):
         )
 
 
-class UserProfileSerializer(ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = (
-            "phone_number",
-            "avatar_url",
-        )
-        read_only_fields = ("phone_number", "avatar_url")
-
-
 class UserProfileSerializerWithAvatar(ModelSerializer):
     class Meta:
         model = UserProfile
@@ -60,53 +49,6 @@ class UserProfileSerializerWithAvatar(ModelSerializer):
             "avatar",
         )
         read_only_fields = ("avatar_url", "avatar")
-
-
-class UserNestedListSerializer(Serializer):
-    avatar_url = SerializerMethodField(read_only=True)
-    full_name = SerializerMethodField(read_only=True)
-    id = IntegerField(read_only=True)
-
-    @staticmethod
-    def get_full_name(obj) -> str:
-        return obj.get_full_name_eastern_order()
-
-    @staticmethod
-    def get_avatar_url(obj) -> str:
-        return obj.userprofile.avatar_url
-
-
-class UserDetailedListSerializer(Serializer):
-    email = EmailField(read_only=True)
-    full_name = SerializerMethodField(read_only=True)
-    id = IntegerField(read_only=True)
-    is_staff = BooleanField(read_only=True)
-    profile = UserProfileSerializer(read_only=True, source="userprofile")
-
-    @staticmethod
-    def get_full_name(obj) -> str:
-        return obj.get_full_name_eastern_order()
-
-
-class UserSerializer(ModelSerializer):
-    profile = UserProfileSerializer(read_only=True, source="userprofile")
-    banned = SerializerMethodField(read_only=True)
-
-    class Meta:
-        model = User
-        fields = (
-            "id",
-            "first_name",
-            "last_name",
-            "username",
-            "email",
-            "profile",
-            "banned",
-        )
-
-    @staticmethod
-    def get_banned(user) -> bool:
-        return hasattr(user, "ban")
 
 
 class UserDetailSerializer(ModelSerializer):

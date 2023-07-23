@@ -20,8 +20,8 @@ from api.v1.admin.requests.helpers import (
     handle_additional_data,
     is_status_by_admin,
 )
-from api.v1.users.serializers import (
-    UserDetailedListSerializer,
+from api.v1.admin.users.serializers import (
+    UserNestedDetailSerializer,
     UserNestedListSerializer,
 )
 from common.utilities import create_calendar_event, update_calendar_event
@@ -59,9 +59,9 @@ class RequestAdminRetrieveSerializer(RequestAdminListSerializer):
     deadline = DateField(read_only=True)
     end_datetime = DateTimeField(read_only=True)
     place = CharField(read_only=True)
-    requester = UserDetailedListSerializer(read_only=True)
-    requested_by = UserDetailedListSerializer(read_only=True)
-    responsible = UserDetailedListSerializer(read_only=True)
+    requester = UserNestedDetailSerializer(read_only=True)
+    requested_by = UserNestedDetailSerializer(read_only=True)
+    responsible = UserNestedDetailSerializer(read_only=True)
     type = CharField(read_only=True)
 
 

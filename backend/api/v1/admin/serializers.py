@@ -1,7 +1,7 @@
 from rest_framework.fields import CharField, DateTimeField
 from rest_framework.serializers import Serializer
 
-from api.v1.users.serializers import UserNestedListSerializer
+from api.v1.admin.users.serializers import UserNestedListSerializer
 
 
 class HistoryChangesSerializer(Serializer):

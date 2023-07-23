@@ -1,7 +1,7 @@
 from rest_framework.fields import CharField, DateTimeField, IntegerField
 from rest_framework.serializers import ModelSerializer, Serializer
 
-from api.v1.users.serializers import UserNestedListSerializer
+from api.v1.admin.users.serializers import UserNestedListSerializer
 from video_requests.models import Rating
 
 

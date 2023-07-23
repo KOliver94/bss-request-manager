@@ -92,10 +92,9 @@ def assert_retrieve_response_keys(video_request):
 
 
 def assert_user_details(user):
-    assert_fields_exist(user, ["email", "full_name", "id", "is_staff", "profile"])
-
-    profile = user.get("profile")
-    assert_fields_exist(profile, ["avatar_url", "phone_number"])
+    assert_fields_exist(
+        user, ["avatar_url", "email", "full_name", "id", "is_staff", "phone_number"]
+    )
 
 
 @pytest.fixture
