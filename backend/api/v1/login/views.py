@@ -1,5 +1,3 @@
-import logging
-
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from drf_spectacular.utils import extend_schema
@@ -11,7 +9,6 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import (
     TokenObtainPairView as SimpleJWTTokenObtainPairView,
 )
-from social_core.exceptions import AuthException, SocialAuthBaseException
 
 from api.v1.login.serializers import (
     TokenBlacklistSerializer,
@@ -20,8 +17,7 @@ from api.v1.login.serializers import (
     TokenObtainResponseSerializer,
 )
 from common.rest_framework.permissions import IsAuthenticated, IsNotAuthenticated
-
-logger = logging.getLogger(__name__)
+from common.social_core.helpers import handle_exception
 
 
 class TokenBlacklistView(GenericAPIView):
@@ -91,19 +87,6 @@ class TokenObtainPairOAuth2View(GenericAPIView):
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "login"
 
-    @staticmethod
-    def log_exception(error):
-        err_msg = error.args[0] if error.args else ""
-        if getattr(error, "response", None) is not None:
-            try:
-                err_data = error.response.json()
-            except (ValueError, AttributeError):
-                logger.error("%s; %s", error, err_msg)
-            else:
-                logger.error("%s; %s; %s", error, err_msg, err_data)
-        else:
-            logger.exception("{%s}; {%s}", error, err_msg)
-
     @extend_schema(
         request=TokenObtainPairOAuth2Serializer,
         responses=TokenObtainResponseSerializer,
@@ -118,24 +101,7 @@ class TokenObtainPairOAuth2View(GenericAPIView):
                 input_serializer.validated_data, context=self.get_serializer_context()
             )
         except Exception as e:
-            message = None
-            if isinstance(e, TokenError):
-                raise InvalidToken(e.args[0])
-            if not isinstance(e, AuthException):
-                self.log_exception(e)
-            if hasattr(e, "response"):
-                try:
-                    message = e.response.json()["error"]
-                    if isinstance(message, dict) and "message" in message:
-                        message = message["message"]
-                    elif isinstance(message, list) and len(message):
-                        message = message[0]
-                except (KeyError, TypeError):
-                    pass
-            # As a fallback, if no valid message was captured, covert the exception to string
-            # because most of the social-core exceptions implement a valid conversion.
-            if isinstance(e, SocialAuthBaseException) and not message:
-                message = str(e)
+            message = handle_exception(e)
             return Response(data=message, status=HTTP_400_BAD_REQUEST)
 
         return Response(output_serializer.data, status=HTTP_200_OK)
