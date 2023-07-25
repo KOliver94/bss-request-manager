@@ -94,6 +94,21 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.load_extra_data",
 )
 
+SOCIAL_AUTH_DISCONNECT_PIPELINE = (
+    # Custom action: Verifies that the social association can be disconnected from the current
+    # user (ensure that the user login mechanism is not compromised by this
+    # disconnection).
+    "common.social_core.pipeline.allowed_to_disconnect",
+    # Custom action: Removes user's avatar.
+    "common.social_core.pipeline.delete_avatar",
+    # Collects the social associations to disconnect.
+    "social_core.pipeline.disconnect.get_entries",
+    # Revoke any access_token when possible.
+    "social_core.pipeline.disconnect.revoke_tokens",
+    # Removes the social associations.
+    "social_core.pipeline.disconnect.disconnect",
+)
+
 AUTHENTICATION_BACKENDS += [
     "common.social_core.backends.AuthSCHOAuth2",
     "social_core.backends.facebook.FacebookOAuth2",

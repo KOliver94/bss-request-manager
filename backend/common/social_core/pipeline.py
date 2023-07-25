@@ -4,6 +4,8 @@ import requests
 from django_auth_ldap.backend import LDAPBackend
 from libgravatar import Gravatar, sanitize_email
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
+from social_core.exceptions import NotAllowedToDisconnect
+from social_django.models import UserSocialAuth
 
 
 def check_for_email(details, *args, **kwargs):
@@ -143,3 +145,20 @@ def get_avatar(backend, response, user, *args, **kwargs):
         user.userprofile.avatar["provider"] = backend.name
 
     user.save()
+
+
+def allowed_to_disconnect(
+    strategy, user, name, user_storage, association_id=None, *args, **kwargs
+):
+    if not (
+        UserSocialAuth.objects.filter(user=user).exclude(provider=name).exists()
+        or user.is_staff
+    ):
+        raise NotAllowedToDisconnect()
+
+
+def delete_avatar(
+    strategy, user, name, user_storage, association_id=None, *args, **kwargs
+):
+    if user.userprofile.avatar.pop(name, None):
+        user.save()
