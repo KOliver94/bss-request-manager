@@ -2,10 +2,14 @@ from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.fields import CharField, ChoiceField, EmailField
 from rest_framework.relations import SlugRelatedField
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer
 from social_django.models import UserSocialAuth
 
 from common.models import UserProfile
+
+
+class OAuth2ConnectSerializer(Serializer):
+    code = CharField()
 
 
 class UserProfileSerializer(ModelSerializer):
