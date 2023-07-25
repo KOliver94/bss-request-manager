@@ -1,8 +1,5 @@
-from urllib.parse import urljoin, urlparse
-
 from django.conf import settings
 from django.http import HttpResponse
-from django.utils.encoding import iri_to_uri
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.fields import CharField
 from rest_framework.serializers import Serializer
@@ -14,17 +11,8 @@ from rest_framework_simplejwt.serializers import (
 )
 from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from social_core.exceptions import AuthException
-from social_core.utils import get_strategy, user_is_authenticated
-from social_django.utils import STORAGE, psa
 
-
-def load_strategy(request=None):
-    return get_strategy("common.social_core.strategy.DRFStrategy", STORAGE, request)
-
-
-@psa("/redirect", load_strategy=load_strategy)
-def decorate_request(request, backend):
-    pass
+from common.social_core.helpers import decorate_request
 
 
 class TokenBlacklistSerializer(SimpleJWTTokenBlacklistSerializer):
@@ -58,23 +46,15 @@ class TokenObtainPairOAuth2Serializer(TokenObtainPairSerializer):
         super(TokenObtainSerializer, self).__init__(*args, **kwargs)
 
     def get_user(self):
-        user = self.context["request"].user
-        origin = self.context["request"].strategy.request.META.get("HTTP_ORIGIN")
-        if origin:
-            relative_path = urlparse(self.context["request"].backend.redirect_uri).path
-            url = urlparse(origin)
-            origin_scheme_host = f"{url.scheme}://{url.netloc}"
-            location = urljoin(origin_scheme_host, relative_path)
-            self.context["request"].backend.redirect_uri = iri_to_uri(location)
-        is_authenticated = user_is_authenticated(user)
-        user = is_authenticated and user or None
+        # Getting origin from HTTP request was removed as not needed. If still needed check:
+        # https://github.com/st4lk/django-rest-social-auth/blob/ba02233f5d13e7431d53690bb9ed7beca7f5596f/rest_social_auth/views.py#L142-L149
 
         # skip checking state by setting following params to False
         # it is responsibility of front-end to check state
         self.context["request"].backend.REDIRECT_STATE = False
         self.context["request"].backend.STATE_PARAMETER = False
 
-        user = self.context["request"].backend.complete(user=user)
+        user = self.context["request"].backend.complete()
         return user
 
     def validate(self, attrs):

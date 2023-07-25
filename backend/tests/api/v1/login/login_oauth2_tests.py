@@ -21,7 +21,7 @@ from social_core.tests.models import (
 )
 from social_core.utils import module_member
 
-from api.v1.login.serializers import load_strategy
+from common.social_core.helpers import load_strategy
 
 
 class BaseBackendTest(APITestCase, SocialCoreBaseBackendTest):
