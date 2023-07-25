@@ -14,7 +14,7 @@ def api_client():
 
 
 @pytest.fixture
-def admin_user():
+def admin_user(settings):
     user = User.objects.create_user(
         email="admin@example.com",
         first_name="Admin",
@@ -24,7 +24,7 @@ def admin_user():
         username="admin",
     )
 
-    group = Group.objects.get_or_create(name="Administrators")[0]
+    group = Group.objects.get_or_create(name=settings.ADMIN_GROUP)[0]
     user.groups.add(group)
 
     user.save()
