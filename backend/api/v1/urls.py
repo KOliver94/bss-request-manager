@@ -44,18 +44,21 @@ if settings.SPECTACULAR_SERVE_SCHEMA:
                     },
                     "SCHEMA_PATH_PREFIX_INSERT": "/api/v1",
                 },
+                throttle_classes=[],
                 urlconf="api.v1.urls",
             ),
             name="schema",
         ),
         path(
             "schema/swagger-ui/",
-            SpectacularSwaggerView.as_view(url_name="api:v1:schema"),
+            SpectacularSwaggerView.as_view(
+                throttle_classes=[], url_name="api:v1:schema"
+            ),
             name="swagger-ui",
         ),
         path(
             "schema/redoc/",
-            SpectacularRedocView.as_view(url_name="api:v1:schema"),
+            SpectacularRedocView.as_view(throttle_classes=[], url_name="api:v1:schema"),
             name="redoc",
         ),
     ]

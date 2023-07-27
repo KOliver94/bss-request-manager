@@ -61,6 +61,9 @@ class RequestViewSet(CreateModelMixin, ReadOnlyModelViewSet):
         return [IsSelf()]
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Request.objects.none()
+
         if self.action == "list":
             return Request.objects.filter(requester=self.request.user)
 

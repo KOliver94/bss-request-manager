@@ -17,7 +17,7 @@ django-health-check = "==3.17.0"
 django-phonenumber-field = {extras = ["phonenumbers"],version = "==7.1.0"}
 django-simple-history = "==3.3.0"
 drf-recaptcha = "==2.2.3"
-drf-spectacular = "==0.26.2"
+drf-spectacular = "==0.26.4"
 google-api-python-client = "==2.89.0"
 google-auth-httplib2 = "==0.1.0"
 google-auth-oauthlib = "==1.0.0"
