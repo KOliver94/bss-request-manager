@@ -125,7 +125,7 @@ def test_list_requests(api_client, expected, pagination, request, user):
     video_requests = baker.make("video_requests.Request", responsible=user, _quantity=5)
     baker.make("video_requests.CrewMember", _quantity=3, request=video_requests[0])
 
-    url = reverse("api:v1:admin:request-list")
+    url = reverse("api:v1:admin:requests:request-list")
     response = api_client.get(url, {"pagination": pagination})
 
     assert response.status_code == expected
@@ -233,10 +233,12 @@ def test_create_update_request(
         data |= scenario_data[scenario]
 
     if method == "POST":
-        url = reverse("api:v1:admin:request-list")
+        url = reverse("api:v1:admin:requests:request-list")
     else:
         video_request = baker.make("video_requests.Request")
-        url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+        url = reverse(
+            "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+        )
 
     response = get_response(api_client, method, url, data)
 
@@ -328,10 +330,12 @@ def test_create_update_request_requester_validation(
     ]
 
     if method == "POST":
-        url = reverse("api:v1:admin:request-list")
+        url = reverse("api:v1:admin:requests:request-list")
     else:
         video_request = baker.make("video_requests.Request")
-        url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+        url = reverse(
+            "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+        )
 
     for r in range(1, len(user_data) + 1):
         for selected in list(combinations(user_data, r)):
@@ -374,10 +378,12 @@ def test_create_update_request_date_validation(
     do_login(api_client, request, user)
 
     if method == "POST":
-        url = reverse("api:v1:admin:request-list")
+        url = reverse("api:v1:admin:requests:request-list")
     else:
         video_request = baker.make("video_requests.Request")
-        url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+        url = reverse(
+            "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+        )
 
     data = deepcopy(request_create_data)
     data["end_datetime"] = data["start_datetime"] - timedelta(hours=2)
@@ -421,10 +427,12 @@ def test_create_update_request_invalid_user(
     do_login(api_client, request, user)
 
     if method == "POST":
-        url = reverse("api:v1:admin:request-list")
+        url = reverse("api:v1:admin:requests:request-list")
     else:
         video_request = baker.make("video_requests.Request")
-        url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+        url = reverse(
+            "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+        )
 
     data = deepcopy(request_create_data)
     data["requester"] = not_existing_user_id
@@ -456,7 +464,9 @@ def test_retrieve_request(api_client, expected, request, user):
 
     do_login(api_client, request, user)
 
-    url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+    )
     response = api_client.get(url)
 
     assert response.status_code == expected
@@ -486,8 +496,12 @@ def test_retrieve_request_status_by_admin(api_client, expected, request, user):
 
     do_login(api_client, request, user)
 
-    url_1 = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request_1.id})
-    url_2 = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request_2.id})
+    url_1 = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request_1.id}
+    )
+    url_2 = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request_2.id}
+    )
 
     response_1 = api_client.get(url_1)
     response_2 = api_client.get(url_2)
@@ -519,7 +533,9 @@ def test_retrieve_update_destroy_request_error(
 ):
     do_login(api_client, request, user)
 
-    url = reverse("api:v1:admin:request-detail", kwargs={"pk": not_existing_request_id})
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": not_existing_request_id}
+    )
     response = get_response(api_client, method, url, {"title": "Lorem Ipsum"})
 
     assert response.status_code == expected
@@ -544,7 +560,9 @@ def test_update_request_remove_responsible(
 
     do_login(api_client, request, user)
 
-    url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+    )
 
     response_before = api_client.get(url)
     response = get_response(
@@ -578,7 +596,9 @@ def test_update_request_remove_requester_error(
 
     do_login(api_client, request, user)
 
-    url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+    )
 
     response = get_response(
         api_client, method, url, request_create_data | {"requester": None}
@@ -611,7 +631,9 @@ def test_destroy_own_request(api_client, expected, request, scenario, user):
     else:
         video_request = baker.make("video_requests.Request", requested_by=user)
 
-    url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+    )
     response = api_client.delete(url)
 
     assert response.status_code == expected
@@ -636,7 +658,9 @@ def test_destroy_others_request(api_client, expected, request, scenario, user):
     assert video_request.requester != user
     assert video_request.requested_by != user
 
-    url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+    )
     response = api_client.delete(url)
 
     assert response.status_code == expected

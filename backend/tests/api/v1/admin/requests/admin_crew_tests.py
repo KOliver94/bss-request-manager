@@ -50,7 +50,8 @@ def test_list_crew(api_client, expected, request, user):
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:crew-list", kwargs={"request_pk": video_request.id}
+        "api:v1:admin:requests:request:crew-list",
+        kwargs={"request_pk": video_request.id},
     )
     response = api_client.get(url)
 
@@ -80,7 +81,8 @@ def test_create_crew_member(
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:crew-list", kwargs={"request_pk": video_request.id}
+        "api:v1:admin:requests:request:crew-list",
+        kwargs={"request_pk": video_request.id},
     )
     response = api_client.post(url, crew_member_data)
 
@@ -130,7 +132,7 @@ def test_list_create_crew_error(
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:crew-list",
+        "api:v1:admin:requests:request:crew-list",
         kwargs={"request_pk": not_existing_request_id},
     )
 
@@ -157,7 +159,7 @@ def test_retrieve_destroy_crew_member(api_client, expected, method, request, use
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:crew-detail",
+        "api:v1:admin:requests:request:crew-detail",
         kwargs={"request_pk": video_request.id, "pk": crew[0].id},
     )
     response = get_response(api_client, method, url, None)
@@ -191,7 +193,7 @@ def test_update_crew_member(
     assert crew_member.position != crew_member_data["position"]
 
     url = reverse(
-        "api:v1:admin:request:crew-detail",
+        "api:v1:admin:requests:request:crew-detail",
         kwargs={"request_pk": video_request.id, "pk": crew_member.id},
     )
 
@@ -239,7 +241,7 @@ def test_retrieve_update_destroy_crew_member_error(
 
     # Existing request with not existing crew member
     url = reverse(
-        "api:v1:admin:request:crew-detail",
+        "api:v1:admin:requests:request:crew-detail",
         kwargs={
             "request_pk": video_requests[0].id,
             "pk": get_not_existing_crew_member_id(),
@@ -251,7 +253,7 @@ def test_retrieve_update_destroy_crew_member_error(
 
     # Not existing request with existing crew member
     url = reverse(
-        "api:v1:admin:request:crew-detail",
+        "api:v1:admin:requests:request:crew-detail",
         kwargs={"request_pk": not_existing_request_id, "pk": crew_member.id},
     )
     response = get_response(api_client, method, url, crew_member_data)
@@ -260,7 +262,7 @@ def test_retrieve_update_destroy_crew_member_error(
 
     # Not existing request with not existing crew member
     url = reverse(
-        "api:v1:admin:request:crew-detail",
+        "api:v1:admin:requests:request:crew-detail",
         kwargs={
             "request_pk": not_existing_request_id,
             "pk": get_not_existing_crew_member_id(),
@@ -299,12 +301,12 @@ def test_create_update_crew_member_invalid_member(
 
     if method == "POST":
         url = reverse(
-            "api:v1:admin:request:crew-list",
+            "api:v1:admin:requests:request:crew-list",
             kwargs={"request_pk": video_request.id},
         )
     else:
         url = reverse(
-            "api:v1:admin:request:crew-detail",
+            "api:v1:admin:requests:request:crew-detail",
             kwargs={"request_pk": video_request.id, "pk": crew_member.id},
         )
 

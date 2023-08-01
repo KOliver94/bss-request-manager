@@ -54,7 +54,7 @@ def test_create_rating(api_client, expected, rating_data, request, user):
     )
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = api_client.post(url, rating_data)
@@ -91,7 +91,7 @@ def test_create_rating_validation(api_client, expected, rating_data, request, us
     baker.make("video_requests.Rating", author=user, video=video)
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = api_client.post(url, rating_data)
@@ -109,7 +109,7 @@ def test_create_rating_validation(api_client, expected, rating_data, request, us
     )
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = api_client.post(url, rating_data)
@@ -186,7 +186,7 @@ def test_retrieve_update_destroy_rating(
     baker.make("video_requests.Rating", author=user, video=video)
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = get_response(api_client, method, url, rating_data)
@@ -236,7 +236,7 @@ def test_create_retrieve_update_destroy_rating_errors(
     )
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={"request_pk": video_request.id, "video_pk": not_existing_video_id},
     )
     response = get_response(api_client, method, url, rating_data)
@@ -244,7 +244,7 @@ def test_create_retrieve_update_destroy_rating_errors(
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={"request_pk": video_request.id, "video_pk": video_not_own.id},
     )
     response = get_response(api_client, method, url, rating_data)
@@ -252,7 +252,7 @@ def test_create_retrieve_update_destroy_rating_errors(
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={"request_pk": not_existing_request_id, "video_pk": video.id},
     )
     response = get_response(api_client, method, url, rating_data)
@@ -260,7 +260,7 @@ def test_create_retrieve_update_destroy_rating_errors(
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={
             "request_pk": not_existing_request_id,
             "video_pk": not_existing_video_id,
@@ -271,7 +271,7 @@ def test_create_retrieve_update_destroy_rating_errors(
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={
             "request_pk": video_request_not_own.id,
             "video_pk": not_existing_video_id,
@@ -282,7 +282,7 @@ def test_create_retrieve_update_destroy_rating_errors(
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={"request_pk": video_request_not_own.id, "video_pk": video_not_own.id},
     )
     response = get_response(api_client, method, url, rating_data)
@@ -290,7 +290,7 @@ def test_create_retrieve_update_destroy_rating_errors(
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:request:video:rating-detail",
+        "api:v1:requests:request:video:rating-detail",
         kwargs={"request_pk": video_request_not_own.id, "video_pk": video.id},
     )
     response = get_response(api_client, method, url, rating_data)
@@ -299,7 +299,7 @@ def test_create_retrieve_update_destroy_rating_errors(
 
     if not method == "POST":
         url = reverse(
-            "api:v1:request:video:rating-detail",
+            "api:v1:requests:request:video:rating-detail",
             kwargs={"request_pk": video_request.id, "video_pk": video.id},
         )
         response = get_response(api_client, method, url, rating_data)

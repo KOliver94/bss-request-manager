@@ -76,7 +76,7 @@ def test_list_comment_history(api_client, expected, request, user):
     original_text = comment.text
 
     url = reverse(
-        "api:v1:admin:request:comment-detail",
+        "api:v1:admin:requests:request:comment-detail",
         kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
 
@@ -95,7 +95,7 @@ def test_list_comment_history(api_client, expected, request, user):
     api_client.patch(url, changes_2)
 
     url = reverse(
-        "api:v1:admin:request:comment-history",
+        "api:v1:admin:requests:request:comment-history",
         kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
     response = api_client.get(url)
@@ -139,7 +139,7 @@ def test_list_rating_history(api_client, expected, request, user):
     original_review = rating.review
 
     url = reverse(
-        "api:v1:admin:request:video:rating-detail",
+        "api:v1:admin:requests:request:video:rating-detail",
         kwargs={"request_pk": video_request.id, "video_pk": video.id, "pk": rating.id},
     )
 
@@ -158,7 +158,7 @@ def test_list_rating_history(api_client, expected, request, user):
     api_client.patch(url, changes_2)
 
     url = reverse(
-        "api:v1:admin:request:video:rating-history",
+        "api:v1:admin:requests:request:video:rating-history",
         kwargs={"request_pk": video_request.id, "video_pk": video.id, "pk": rating.id},
     )
     response = api_client.get(url)
@@ -211,7 +211,7 @@ def test_list_request_history(api_client, expected, request, user):
     }
 
     url = reverse(
-        "api:v1:admin:request-detail",
+        "api:v1:admin:requests:request-detail",
         kwargs={"pk": video_request.id},
     )
 
@@ -241,7 +241,7 @@ def test_list_request_history(api_client, expected, request, user):
     api_client.patch(url, changes_3)
 
     url = reverse(
-        "api:v1:admin:request-history",
+        "api:v1:admin:requests:request-history",
         kwargs={"pk": video_request.id},
     )
     response = api_client.get(url)
@@ -311,7 +311,7 @@ def test_list_video_history(api_client, expected, request, user):
     }
 
     url = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": video.id},
     )
 
@@ -335,7 +335,7 @@ def test_list_video_history(api_client, expected, request, user):
     api_client.patch(url, changes_3)
 
     url = reverse(
-        "api:v1:admin:request:video-history",
+        "api:v1:admin:requests:request:video-history",
         kwargs={"request_pk": video_request.id, "pk": video.id},
     )
     response = api_client.get(url)

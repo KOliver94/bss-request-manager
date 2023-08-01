@@ -64,7 +64,7 @@ def test_list_comments_own_request(api_client, expected, request, user):
     )
 
     url = reverse(
-        "api:v1:request:comment-list",
+        "api:v1:requests:request:comment-list",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.get(url)
@@ -97,7 +97,7 @@ def test_create_comment_own_request(api_client, comment_data, expected, request,
     video_request = baker.make("video_requests.Request", requester=user)
 
     url = reverse(
-        "api:v1:request:comment-list",
+        "api:v1:requests:request:comment-list",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.post(url, comment_data)
@@ -159,7 +159,7 @@ def test_list_create_comments_errors(
 
     # A request where the requester is not the user logged in
     url = reverse(
-        "api:v1:request:comment-list",
+        "api:v1:requests:request:comment-list",
         kwargs={"request_pk": video_request.id},
     )
     response = get_response(api_client, method, url, comment_data)
@@ -168,7 +168,7 @@ def test_list_create_comments_errors(
 
     # Not existing request
     url = reverse(
-        "api:v1:request:comment-list",
+        "api:v1:requests:request:comment-list",
         kwargs={"request_pk": not_existing_request_id},
     )
     response = get_response(api_client, method, url, comment_data)
@@ -195,7 +195,7 @@ def test_retrieve_comment(api_client, expected, request, user):
     )
 
     url = reverse(
-        "api:v1:request:comment-detail",
+        "api:v1:requests:request:comment-detail",
         kwargs={"request_pk": video_request.id, "pk": comments[0].id},
     )
     response = api_client.get(url)
@@ -228,7 +228,7 @@ def test_update_own_comment(api_client, comment_data, expected, method, request,
     assert comment.text != comment_data["text"]
 
     url = reverse(
-        "api:v1:request:comment-detail",
+        "api:v1:requests:request:comment-detail",
         kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
 
@@ -261,7 +261,7 @@ def test_destroy_own_comment(api_client, expected, request, user):
     )
 
     url = reverse(
-        "api:v1:request:comment-detail",
+        "api:v1:requests:request:comment-detail",
         kwargs={"request_pk": video_request.id, "pk": comment.id},
     )
     response = api_client.delete(url)
@@ -332,7 +332,7 @@ def test_retrieve_update_destroy_comment_error(
             not_existing_comment_id,
         ]:
             url = reverse(
-                "api:v1:request:comment-detail",
+                "api:v1:requests:request:comment-detail",
                 kwargs={
                     "request_pk": request_id,
                     "pk": comment_id,
@@ -344,7 +344,7 @@ def test_retrieve_update_destroy_comment_error(
 
         if not method == "GET" or request_id == video_request.id:
             url = reverse(
-                "api:v1:request:comment-detail",
+                "api:v1:requests:request:comment-detail",
                 kwargs={
                     "request_pk": request_id,
                     "pk": not_internal_comment_request_own,
@@ -356,7 +356,7 @@ def test_retrieve_update_destroy_comment_error(
 
         if request_id == video_request.id:
             url = reverse(
-                "api:v1:request:comment-detail",
+                "api:v1:requests:request:comment-detail",
                 kwargs={
                     "request_pk": request_id,
                     "pk": not_internal_comment_own_request_own,
