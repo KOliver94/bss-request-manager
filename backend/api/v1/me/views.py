@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin
@@ -16,8 +18,10 @@ from rest_framework.status import (
 from rest_framework.viewsets import GenericViewSet
 from social_core.exceptions import AuthException
 
+from api.v1.admin.users.serializers import UserAdminWorkedOnSerializer
+from api.v1.admin.users.views import UserAdminViewSet
 from api.v1.me.serializers import OAuth2ConnectSerializer, UserSerializer
-from common.rest_framework.permissions import IsAuthenticated
+from common.rest_framework.permissions import IsAuthenticated, IsStaffUser
 from common.social_core.helpers import decorate_request, handle_exception
 
 
@@ -27,6 +31,38 @@ class MeViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 
     def get_object(self):
         return User.objects.get(pk=self.request.user.pk)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "is_responsible",
+                OpenApiTypes.BOOL,
+                OpenApiParameter.QUERY,
+                description="Default is True.",
+            ),
+            OpenApiParameter(
+                "start_datetime_after",
+                OpenApiTypes.DATE,
+                OpenApiParameter.QUERY,
+                description="Default is 20 weeks before start_datetime_before.",
+            ),
+            OpenApiParameter(
+                "start_datetime_before",
+                OpenApiTypes.DATE,
+                OpenApiParameter.QUERY,
+                description="Default is today.",
+            ),
+        ],
+        responses=UserAdminWorkedOnSerializer(many=True),
+    )
+    @action(
+        detail=True,
+        filter_backends=[],
+        pagination_class=None,
+        permission_classes=[IsStaffUser],
+    )
+    def worked_on(self, request, pk=None):
+        return UserAdminViewSet.worked_on(request, request.user.pk)
 
 
 class OAuth2ConnectDisconnectView(GenericAPIView):
