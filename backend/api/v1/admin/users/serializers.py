@@ -48,7 +48,6 @@ class UserAdminDetailSerializer(UserSerializer):
     class Meta:
         model = User
         fields = (
-            "avatar_provider",
             "ban",
             "email",
             "first_name",
@@ -68,7 +67,6 @@ class UserAdminDetailSerializer(UserSerializer):
             "social_accounts",
             "username",
         )
-        write_only_fields = ("avatar_provider",)
 
 
 class UserAdminListSerializer(UserNestedDetailSerializer):

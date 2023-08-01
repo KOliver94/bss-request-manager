@@ -13,26 +13,6 @@ class OAuth2ConnectSerializer(Serializer):
 
 
 class UserProfileSerializer(ModelSerializer):
-    phone_number = PhoneNumberField(required=False)
-
-    class Meta:
-        model = UserProfile
-        fields = (
-            "avatar",
-            "avatar_url",
-            "phone_number",
-        )
-        read_only_fields = ("avatar", "avatar_url")
-
-
-class UserSocialAuthSerializer(ModelSerializer):
-    class Meta:
-        model = UserSocialAuth
-        fields = ("provider", "uid")
-        read_only_fields = ("provider", "uid")
-
-
-class UserSerializer(ModelSerializer):
     AVATAR_PROVIDER_CHOICES = (
         ("facebook", "Facebook"),
         ("google-oauth2", "Google"),
@@ -44,6 +24,35 @@ class UserSerializer(ModelSerializer):
         required=False,
         write_only=True,
     )
+    phone_number = PhoneNumberField(required=False)
+
+    class Meta:
+        model = UserProfile
+        fields = (
+            "avatar",
+            "avatar_provider",
+            "avatar_url",
+            "phone_number",
+        )
+        read_only_fields = ("avatar", "avatar_url")
+        write_only_fields = ("avatar_provider",)
+
+    def update(self, instance, validated_data):
+        if "avatar_provider" in validated_data and instance.avatar.get(
+            validated_data["avatar_provider"], None
+        ):
+            instance.avatar["provider"] = validated_data.pop("avatar_provider")
+        return super().update(instance, validated_data)
+
+
+class UserSocialAuthSerializer(ModelSerializer):
+    class Meta:
+        model = UserSocialAuth
+        fields = ("provider", "uid")
+        read_only_fields = ("provider", "uid")
+
+
+class UserSerializer(ModelSerializer):
     email = EmailField(required=False)
     first_name = CharField(max_length=150, required=False)
     groups = SlugRelatedField(many=True, read_only=True, slug_field="name")
@@ -57,7 +66,6 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "avatar_provider",
             "email",
             "first_name",
             "groups",
@@ -69,15 +77,8 @@ class UserSerializer(ModelSerializer):
             "username",
         )
         read_only_fields = ("groups", "id", "role", "social_accounts", "username")
-        write_only_fields = ("avatar_provider",)
 
     def update(self, instance, validated_data):
-        if "avatar_provider" in validated_data and instance.userprofile.avatar.get(
-            validated_data["avatar_provider"], None
-        ):
-            instance.userprofile.avatar["provider"] = validated_data.pop(
-                "avatar_provider"
-            )
         profile_data = validated_data.pop("profile")
         UserProfileSerializer.update(self, instance.userprofile, profile_data)
         return super().update(instance, validated_data)
