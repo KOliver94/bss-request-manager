@@ -117,7 +117,7 @@ class UserAdminViewSet(
         # Get and validate all query parameters by trying to convert them to the corresponding type
         # if not the default value was used.
         try:
-            start_datetime_before = self.request.query_params.get(
+            start_datetime_before = request.query_params.get(
                 "start_datetime_before", localdate()
             )
             start_datetime_before = (
@@ -131,7 +131,7 @@ class UserAdminViewSet(
             )  # TODO: Translate
 
         try:
-            start_datetime_after = self.request.query_params.get(
+            start_datetime_after = request.query_params.get(
                 "start_datetime_after", start_datetime_before - timedelta(weeks=20)
             )
             start_datetime_after = (
@@ -145,7 +145,7 @@ class UserAdminViewSet(
             )  # TODO: Translate
 
         try:
-            is_responsible = self.request.query_params.get("is_responsible", True)
+            is_responsible = request.query_params.get("is_responsible", True)
             is_responsible = (
                 strtobool(is_responsible)
                 if type(is_responsible) is str
