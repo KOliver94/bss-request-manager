@@ -11,6 +11,6 @@ urlpatterns = [
     path(
         "me/social/<str:provider>",
         OAuth2ConnectDisconnectView.as_view(),
-        name="me:social_connect_disconnect",
+        name="social_connect_disconnect",
     ),
 ]
