@@ -111,7 +111,7 @@ def test_list_requests(api_client, expected, pagination, request, user):
     video_requests = baker.make("video_requests.Request", requester=user, _quantity=5)
     video_requests_should_not_find = baker.make("video_requests.Request", _quantity=5)
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.get(url, {"pagination": pagination})
 
     assert response.status_code == expected
@@ -139,11 +139,11 @@ def test_list_requests(api_client, expected, pagination, request, user):
 def test_create_request_logged_in(api_client, request, request_create_data, user):
     user = do_login(api_client, request, user)
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.get(url, {"pagination": True})
     assert response.data["count"] == 0
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.post(url, request_create_data)
 
     assert response.status_code == HTTP_201_CREATED
@@ -151,7 +151,7 @@ def test_create_request_logged_in(api_client, request, request_create_data, user
     assert response.data["requester"]["id"] == user.id
     assert response.data["requested_by"]["id"] == user.id
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.get(url, {"pagination": True})
     assert response.data["count"] == 1
 
@@ -161,7 +161,7 @@ def test_create_request_service_account(
 ):
     login(api_client, service_account)
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.post(url, request_create_data)
 
     assert response.status_code == HTTP_201_CREATED
@@ -189,7 +189,7 @@ def test_create_request_anonymous(
     else:  # Verify user with this e-mail address doesn't exist
         assert not User.objects.filter(email=requester_data["requester_email"]).exists()
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.post(
         url,
         request_create_data
@@ -248,7 +248,7 @@ def test_create_request_with_comment(
 
     data |= {"comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.post(url, data)
 
     assert response.status_code == HTTP_201_CREATED
@@ -280,7 +280,7 @@ def test_create_request_date_validation(
 
     data |= {"start_datetime": localtime() - timedelta(days=10)}
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.post(url, data)
 
     assert response.status_code == HTTP_400_BAD_REQUEST
@@ -293,7 +293,7 @@ def test_create_request_date_validation(
         "start_datetime": localtime() + timedelta(days=10),
     }
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.post(url, data)
 
     assert response.status_code == HTTP_400_BAD_REQUEST
@@ -303,7 +303,7 @@ def test_create_request_date_validation(
 
 
 def test_create_request_user_info_validation(api_client, request_create_data):
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
 
     user_data = [
         {"email": "test@example.com"},
@@ -359,7 +359,7 @@ def test_retrieve_request(api_client, expected, request, user):
     video_request = baker.make("video_requests.Request", requester=user)
 
     url = reverse(
-        "api:v1:request-detail",
+        "api:v1:requests:request-detail",
         kwargs={"pk": video_request.id},
     )
     response = api_client.get(url)
@@ -389,7 +389,7 @@ def test_retrieve_request_error(
     video_request = baker.make("video_requests.Request")
 
     url = reverse(
-        "api:v1:request-detail",
+        "api:v1:requests:request-detail",
         kwargs={"pk": video_request.id},
     )
     response = api_client.get(url)
@@ -397,7 +397,7 @@ def test_retrieve_request_error(
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:request-detail",
+        "api:v1:requests:request-detail",
         kwargs={"pk": not_existing_request_id},
     )
     response = api_client.get(url)
@@ -474,7 +474,7 @@ def test_order_requests(
 
     login(api_client, basic_user)
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.get(url, {"ordering": ordering, "pagination": pagination})
 
     assert is_success(response.status_code)
@@ -522,7 +522,7 @@ def test_search_requests(api_client, basic_user, pagination):
 
     login(api_client, basic_user)
 
-    url = reverse("api:v1:request-list")
+    url = reverse("api:v1:requests:request-list")
     response = api_client.get(url, {"pagination": pagination, "search": "AAAA"})
 
     assert is_success(response.status_code)

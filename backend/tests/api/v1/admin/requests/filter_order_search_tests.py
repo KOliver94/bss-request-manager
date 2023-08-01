@@ -102,7 +102,7 @@ def test_order_comments(admin_user, api_client, expected, ordering, time_machine
     login(api_client, admin_user)
 
     url = reverse(
-        "api:v1:admin:request:comment-list",
+        "api:v1:admin:requests:request:comment-list",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.get(url, {"ordering": ordering})
@@ -179,7 +179,7 @@ def test_order_crew(admin_user, api_client, expected, ordering):
     login(api_client, admin_user)
 
     url = reverse(
-        "api:v1:admin:request:crew-list",
+        "api:v1:admin:requests:request:crew-list",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.get(url, {"ordering": ordering})
@@ -271,7 +271,7 @@ def test_order_ratings(admin_user, api_client, expected, ordering, time_machine)
     login(api_client, admin_user)
 
     url = reverse(
-        "api:v1:admin:request:video:rating-list",
+        "api:v1:admin:requests:request:video:rating-list",
         kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = api_client.get(url, {"ordering": ordering})
@@ -333,7 +333,7 @@ def test_filter_requests(admin_user, api_client, filters, expected, pagination):
 
     login(api_client, admin_user)
 
-    url = reverse("api:v1:admin:request-list")
+    url = reverse("api:v1:admin:requests:request-list")
     response = api_client.get(url, {"pagination": pagination} | filters)
 
     assert is_success(response.status_code)
@@ -354,7 +354,7 @@ def test_filter_requests_multiple_status(admin_user, api_client, pagination):
 
     login(api_client, admin_user)
 
-    url = reverse("api:v1:admin:request-list")
+    url = reverse("api:v1:admin:requests:request-list")
     response = api_client.get(
         url
         + f"?pagination={pagination}&status={Request.Statuses.RECORDED}&status={Request.Statuses.ACCEPTED}"
@@ -467,7 +467,7 @@ def test_order_requests(
 
     login(api_client, admin_user)
 
-    url = reverse("api:v1:admin:request-list")
+    url = reverse("api:v1:admin:requests:request-list")
     response = api_client.get(url, {"ordering": ordering, "pagination": pagination})
 
     assert is_success(response.status_code)
@@ -490,7 +490,7 @@ def test_search_requests(admin_user, api_client, pagination):
 
     login(api_client, admin_user)
 
-    url = reverse("api:v1:admin:request-list")
+    url = reverse("api:v1:admin:requests:request-list")
     response = api_client.get(url, {"pagination": pagination, "search": "AAAA"})
 
     assert is_success(response.status_code)
@@ -591,7 +591,7 @@ def test_order_videos(admin_user, api_client, expected, ordering):
     login(api_client, admin_user)
 
     url = reverse(
-        "api:v1:admin:request:video-list",
+        "api:v1:admin:requests:request:video-list",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.get(url, {"ordering": ordering})
@@ -701,7 +701,7 @@ def test_filter_all_videos(admin_user, api_client, filters, expected, pagination
 
     login(api_client, admin_user)
 
-    url = reverse("api:v1:admin:video-list")
+    url = reverse("api:v1:admin:requests:video-list")
     response = api_client.get(url, {"pagination": pagination} | filters)
 
     assert is_success(response.status_code)
@@ -740,7 +740,7 @@ def test_filter_all_videos_multiple_status(admin_user, api_client, pagination):
 
     login(api_client, admin_user)
 
-    url = reverse("api:v1:admin:video-list")
+    url = reverse("api:v1:admin:requests:video-list")
     response = api_client.get(
         url
         + f"?pagination={pagination}&status={Video.Statuses.CODED}&status={Video.Statuses.PUBLISHED}"
@@ -849,7 +849,7 @@ def test_order_all_videos(admin_user, api_client, expected, ordering, pagination
 
     login(api_client, admin_user)
 
-    url = reverse("api:v1:admin:video-list")
+    url = reverse("api:v1:admin:requests:video-list")
     response = api_client.get(url, {"ordering": ordering, "pagination": pagination})
 
     assert is_success(response.status_code)
@@ -884,7 +884,7 @@ def test_search_all_videos(admin_user, api_client, pagination):
 
     login(api_client, admin_user)
 
-    url = reverse("api:v1:admin:video-list")
+    url = reverse("api:v1:admin:requests:video-list")
     response = api_client.get(
         url, {"ordering": "title", "pagination": pagination, "search": "AAAA"}
     )

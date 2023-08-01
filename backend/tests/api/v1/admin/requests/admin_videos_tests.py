@@ -74,7 +74,7 @@ def test_list_videos(api_client, expected, request, user):
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:video-list",
+        "api:v1:admin:requests:request:video-list",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.get(url)
@@ -103,7 +103,7 @@ def test_create_video(api_client, expected, request, user, video_data):
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:video-list",
+        "api:v1:admin:requests:request:video-list",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.post(url, video_data)
@@ -139,7 +139,7 @@ def test_list_create_videos_error(
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:video-list",
+        "api:v1:admin:requests:request:video-list",
         kwargs={"request_pk": not_existing_request_id},
     )
 
@@ -169,7 +169,7 @@ def test_retrieve_destroy_video(api_client, expected, method, request, user):
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": videos[0].id},
     )
     response = get_response(api_client, method, url, None)
@@ -209,11 +209,11 @@ def test_retrieve_video_status_by_admin(api_client, expected, request, user):
     do_login(api_client, request, user)
 
     url_1 = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": video_1.id},
     )
     url_2 = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": video_2.id},
     )
 
@@ -250,7 +250,7 @@ def test_retrieve_video_rated(api_client, expected, request, user):
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": video.id},
     )
 
@@ -266,7 +266,7 @@ def test_retrieve_video_rated(api_client, expected, request, user):
 
     # Create a rating
     url_rating = reverse(
-        "api:v1:admin:request:video:rating-list",
+        "api:v1:admin:requests:request:video:rating-list",
         kwargs={"request_pk": video_request.id, "video_pk": video.id},
     )
     response = api_client.post(url_rating, {"rating": 5})
@@ -306,7 +306,7 @@ def test_update_video(api_client, expected, method, request, user, video_data):
     assert video.title != video_data["title"]
 
     url = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": video.id},
     )
 
@@ -367,13 +367,13 @@ def test_create_update_video_editor(
 
     if method == "POST":
         url = reverse(
-            "api:v1:admin:request:video-list",
+            "api:v1:admin:requests:request:video-list",
             kwargs={"request_pk": video_request.id},
         )
     else:
         video = baker.make("video_requests.Video", request=video_request)
         url = reverse(
-            "api:v1:admin:request:video-detail",
+            "api:v1:admin:requests:request:video-detail",
             kwargs={"request_pk": video_request.id, "pk": video.id},
         )
 
@@ -415,7 +415,7 @@ def test_update_video_remove_editor(
     do_login(api_client, request, user)
 
     url = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": video.id},
     )
 
@@ -456,7 +456,7 @@ def test_retrieve_update_destroy_video_error(
 
     # Existing request with not existing video
     url = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={
             "request_pk": video_requests[0].id,
             "pk": get_not_existing_video_id(),
@@ -468,7 +468,7 @@ def test_retrieve_update_destroy_video_error(
 
     # Not existing request with existing video
     url = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={"request_pk": not_existing_request_id, "pk": video.id},
     )
     response = get_response(api_client, method, url, video_data)
@@ -477,7 +477,7 @@ def test_retrieve_update_destroy_video_error(
 
     # Not existing request with not existing video
     url = reverse(
-        "api:v1:admin:request:video-detail",
+        "api:v1:admin:requests:request:video-detail",
         kwargs={
             "request_pk": not_existing_request_id,
             "pk": get_not_existing_video_id(),
@@ -517,7 +517,7 @@ def test_list_all_videos(api_client, expected, pagination, request, user):
 
     do_login(api_client, request, user)
 
-    url = reverse("api:v1:admin:video-list")
+    url = reverse("api:v1:admin:requests:video-list")
     response = api_client.get(url, {"pagination": pagination})
 
     assert response.status_code == expected

@@ -36,7 +36,7 @@ def test_pagination(admin_user, api_client, expected, parameters):
 
     login(api_client, admin_user)
 
-    url = reverse("api:v1:admin:request-list")
+    url = reverse("api:v1:admin:requests:request-list")
     response = api_client.get(url, parameters)
 
     assert is_success(response.status_code)
@@ -62,7 +62,7 @@ def test_pagination(admin_user, api_client, expected, parameters):
         if page < response.data["total_pages"]:
             assert response.data["links"]["next"] is not None
 
-            url = reverse("api:v1:admin:request-list")
+            url = reverse("api:v1:admin:requests:request-list")
             response = api_client.get(
                 url, parameters | {"page": response.data["total_pages"]}
             )

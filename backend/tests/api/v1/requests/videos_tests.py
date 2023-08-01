@@ -43,7 +43,7 @@ def test_list_videos_own_request(api_client, expected, request, user):
     videos = baker.make("video_requests.Video", request=video_request, _quantity=5)
 
     url = reverse(
-        "api:v1:request:video-list",
+        "api:v1:requests:request:video-list",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.get(url)
@@ -74,7 +74,7 @@ def test_list_videos_errors(
 
     # A request where the requester is not the user logged in
     url = reverse(
-        "api:v1:request:video-list",
+        "api:v1:requests:request:video-list",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.get(url)
@@ -83,7 +83,7 @@ def test_list_videos_errors(
 
     # Not existing request
     url = reverse(
-        "api:v1:request:video-list",
+        "api:v1:requests:request:video-list",
         kwargs={"request_pk": not_existing_request_id},
     )
     response = api_client.get(url)
@@ -108,7 +108,7 @@ def test_retrieve_video(api_client, expected, request, user):
     videos = baker.make("video_requests.Video", request=video_request, _quantity=5)
 
     url = reverse(
-        "api:v1:request:video-detail",
+        "api:v1:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": videos[0].id},
     )
     response = api_client.get(url)
@@ -145,7 +145,7 @@ def test_retrieve_video_errors(
                 continue
 
             url = reverse(
-                "api:v1:request:video-detail",
+                "api:v1:requests:request:video-detail",
                 kwargs={"request_pk": request_id, "pk": video_id},
             )
             response = api_client.get(url)
@@ -169,7 +169,7 @@ def test_retrieve_video_url(api_client, request, user):
     )
 
     url = reverse(
-        "api:v1:request:video-detail",
+        "api:v1:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": video.id},
     )
 
@@ -212,7 +212,7 @@ def test_retrieve_video_rating(api_client, request, user):
     )
 
     url = reverse(
-        "api:v1:request:video-detail",
+        "api:v1:requests:request:video-detail",
         kwargs={"request_pk": video_request.id, "pk": video.id},
     )
 

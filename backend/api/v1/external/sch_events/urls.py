@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from api.v1.external.sch_events.views import (
     CommentExternalSchEventsCreateView,
@@ -6,7 +6,7 @@ from api.v1.external.sch_events.views import (
     RequestExternalSchEventsRetrieveView,
 )
 
-urlpatterns = [
+urlpatterns_requests = [
     path(
         "requests", RequestExternalSchEventsCreateView.as_view(), name="request-create"
     ),
@@ -20,4 +20,8 @@ urlpatterns = [
         CommentExternalSchEventsCreateView.as_view(),
         name="request-comment-create",
     ),
+]
+
+urlpatterns = [
+    path("", include((urlpatterns_requests, "requests"), namespace="requests")),
 ]

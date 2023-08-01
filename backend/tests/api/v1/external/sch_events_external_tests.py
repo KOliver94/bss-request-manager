@@ -129,7 +129,7 @@ def test_create_request(
     if with_comment:
         data |= {"comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
 
-    url = reverse("api:v1:external:sch-events:request-create")
+    url = reverse("api:v1:external:sch-events:requests:request-create")
     response = api_client.post(url, data)
 
     assert response.status_code == expected
@@ -188,7 +188,8 @@ def test_retrieve_request(
     video_request = baker.make("video_requests.Request", requested_by=user)
 
     url = reverse(
-        "api:v1:external:sch-events:request-detail", kwargs={"pk": video_request.id}
+        "api:v1:external:sch-events:requests:request-detail",
+        kwargs={"pk": video_request.id},
     )
     response = api_client.get(url)
 
@@ -221,21 +222,23 @@ def test_retrieve_request_errors(
     video_request_2 = baker.make("video_requests.Request")
 
     url = reverse(
-        "api:v1:external:sch-events:request-detail", kwargs={"pk": video_request_1.id}
+        "api:v1:external:sch-events:requests:request-detail",
+        kwargs={"pk": video_request_1.id},
     )
     response = api_client.get(url)
 
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:external:sch-events:request-detail", kwargs={"pk": video_request_2.id}
+        "api:v1:external:sch-events:requests:request-detail",
+        kwargs={"pk": video_request_2.id},
     )
     response = api_client.get(url)
 
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:external:sch-events:request-detail",
+        "api:v1:external:sch-events:requests:request-detail",
         kwargs={"pk": not_existing_request_id},
     )
     response = api_client.get(url)
@@ -265,7 +268,7 @@ def test_create_comment(
     video_request = baker.make("video_requests.Request", requested_by=user)
 
     url = reverse(
-        "api:v1:external:sch-events:request-comment-create",
+        "api:v1:external:sch-events:requests:request-comment-create",
         kwargs={"request_pk": video_request.id},
     )
     response = api_client.post(url, comment_data)
@@ -302,7 +305,7 @@ def test_create_comment_errors(
     video_request_2 = baker.make("video_requests.Request")
 
     url = reverse(
-        "api:v1:external:sch-events:request-comment-create",
+        "api:v1:external:sch-events:requests:request-comment-create",
         kwargs={"request_pk": video_request_1.id},
     )
     response = api_client.post(url, comment_data)
@@ -310,7 +313,7 @@ def test_create_comment_errors(
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:external:sch-events:request-comment-create",
+        "api:v1:external:sch-events:requests:request-comment-create",
         kwargs={"request_pk": video_request_2.id},
     )
     response = api_client.post(url, comment_data)
@@ -318,7 +321,7 @@ def test_create_comment_errors(
     assert response.status_code == expected
 
     url = reverse(
-        "api:v1:external:sch-events:request-comment-create",
+        "api:v1:external:sch-events:requests:request-comment-create",
         kwargs={"request_pk": not_existing_request_id},
     )
     response = api_client.post(url, comment_data)
@@ -354,7 +357,9 @@ def test_external_callback_on_status_changes(admin_user, api_client, settings):
         HTTPretty.POST, external_url_2, body=json.dumps({"status": "ok"})
     )
 
-    url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request_1.id})
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request_1.id}
+    )
 
     # Request changed from Requested to Accepted
     api_client.patch(url, {"additional_data": {"accepted": True}})
@@ -366,7 +371,9 @@ def test_external_callback_on_status_changes(admin_user, api_client, settings):
     assert HTTPretty.last_request.url == external_url_1
     assert json.loads(HTTPretty.last_request.body.decode()) == {"accept": False}
 
-    url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request_2.id})
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request_2.id}
+    )
 
     # Request changed from Requested to Denied
     api_client.patch(url, {"additional_data": {"accepted": False}})
@@ -421,7 +428,7 @@ def test_external_callback_on_status_changes_redirect_and_result(
             mock_requests_post.return_value = mock_post_response()
 
             url = reverse(
-                "api:v1:admin:request-detail", kwargs={"pk": video_request.id}
+                "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
             )
             api_client.patch(url, {"additional_data": {"accepted": accepted}})
 
@@ -472,7 +479,9 @@ def test_external_callback_retry(admin_user, api_client, settings):
     with patch("video_requests.utilities.requests.post") as mock_requests_post:
         mock_requests_post.return_value = mock_response()
 
-        url = reverse("api:v1:admin:request-detail", kwargs={"pk": video_request.id})
+        url = reverse(
+            "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+        )
         api_client.patch(url, {"additional_data": {"accepted": True}})
 
         assert mock_requests_post.call_count == 11
