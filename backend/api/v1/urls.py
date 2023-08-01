@@ -5,7 +5,7 @@ from video_requests.models import Request, Video
 
 urlpatterns = [
     path("", include(("api.v1.login.urls", "login"), namespace="login")),
-    path("", include("api.v1.me.urls")),
+    path("", include(("api.v1.me.urls", "me"), namespace="me")),
     path("", include("api.v1.requests.urls")),
     path("admin/", include(("api.v1.admin.urls", "admin"), namespace="admin")),
     path(
