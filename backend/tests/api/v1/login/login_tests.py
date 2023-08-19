@@ -2,7 +2,7 @@ from time import sleep
 
 import pytest
 from django.conf import settings
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.reverse import reverse
 from rest_framework.status import (
@@ -11,6 +11,8 @@ from rest_framework.status import (
     HTTP_401_UNAUTHORIZED,
 )
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+
+from tests.api.helpers import login
 
 pytestmark = pytest.mark.django_db
 
@@ -104,7 +106,7 @@ def test_custom_jwt_claims(api_client, expected, user, request):
 def test_token_refresh(api_client, basic_user):
     login_url = reverse("api:v1:login:obtain_jwt_pair")
     refresh_url = reverse("api:v1:login:refresh_jwt_token")
-    user_profile_url = "/api/v1/users/me"  # TODO: Change to reverse
+    user_profile_url = reverse("api:v1:me:me-detail")
 
     # Login
     response = api_client.post(
@@ -156,4 +158,71 @@ def test_token_refresh(api_client, basic_user):
     assert response.status_code == HTTP_401_UNAUTHORIZED
     assert response.data["detail"] == ErrorDetail(
         string="Token is blacklisted", code="token_not_valid"
+    )
+
+
+def test_token_create_refresh_error_when_banned(admin_user, api_client, basic_user):
+    login_url = reverse("api:v1:login:obtain_jwt_pair")
+    logout_url = reverse("api:v1:login:logout")
+    refresh_url = reverse("api:v1:login:refresh_jwt_token")
+
+    response = api_client.post(
+        login_url,
+        {"username": basic_user.username, "password": "password"},
+        format="json",
+    )
+    assert response.status_code == HTTP_200_OK
+
+    # Set tokens
+    access_token = response.data["access"]
+    refresh_token = response.data["refresh"]
+    api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+
+    # Logout to create an already blacklisted token to test exception handling in signals.py
+    response = api_client.post(logout_url, {"refresh": refresh_token}, format="json")
+    assert response.status_code == HTTP_200_OK
+
+    # Login again
+    response = api_client.post(
+        login_url,
+        {"username": basic_user.username, "password": "password"},
+        format="json",
+    )
+    assert response.status_code == HTTP_200_OK
+    assert not access_token == response.data["access"]
+    assert not refresh_token == response.data["refresh"]
+
+    # Set tokens
+    access_token = response.data["access"]
+    refresh_token = response.data["refresh"]
+
+    # Login as admin and ban user
+    login(api_client, admin_user)
+    url = reverse("api:v1:admin:users:user-ban", kwargs={"pk": basic_user.id})
+    api_client.post(url, {})
+
+    # Check if user is banned
+    user = User.objects.get(pk=basic_user.id)
+    assert not user.is_active
+    assert user.ban.creator == admin_user
+
+    # Try to refresh token of banned user
+    api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+    response = api_client.post(refresh_url, {"refresh": refresh_token}, format="json")
+    assert response.status_code == HTTP_401_UNAUTHORIZED
+    assert response.data["detail"] == ErrorDetail(
+        string="Token is blacklisted", code="token_not_valid"
+    )
+
+    # Try to log in
+    api_client.credentials(HTTP_AUTHORIZATION=None)
+    response = api_client.post(
+        login_url,
+        {"username": basic_user.username, "password": "password"},
+        format="json",
+    )
+    assert response.status_code == HTTP_401_UNAUTHORIZED
+    assert response.data["detail"] == ErrorDetail(
+        string="No active account found with the given credentials",
+        code="no_active_account",
     )
