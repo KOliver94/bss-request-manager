@@ -70,7 +70,7 @@ class UserAdminDetailSerializer(UserSerializer):
 
 
 class UserAdminListSerializer(UserNestedDetailSerializer):
-    pass
+    full_name = CharField(read_only=True)
 
 
 class UserAdminWorkedOnSerializer(Serializer):

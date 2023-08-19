@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from phonenumber_field.serializerfields import PhoneNumberField
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, ChoiceField, EmailField
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer, Serializer
@@ -38,9 +39,11 @@ class UserProfileSerializer(ModelSerializer):
         write_only_fields = ("avatar_provider",)
 
     def update(self, instance, validated_data):
-        if "avatar_provider" in validated_data and instance.avatar.get(
-            validated_data["avatar_provider"], None
-        ):
+        if "avatar_provider" in validated_data:
+            if not instance.avatar.get(validated_data["avatar_provider"]):
+                raise ValidationError(
+                    {"avatar_provider": "Avatar does not exist for this provider."}
+                )  # TODO: Translate
             instance.avatar["provider"] = validated_data.pop("avatar_provider")
         return super().update(instance, validated_data)
 
@@ -79,6 +82,8 @@ class UserSerializer(ModelSerializer):
         read_only_fields = ("groups", "id", "role", "social_accounts", "username")
 
     def update(self, instance, validated_data):
-        profile_data = validated_data.pop("profile")
-        UserProfileSerializer.update(self, instance.userprofile, profile_data)
+        profile_data = validated_data.pop("userprofile")
+        UserProfileSerializer.update(
+            UserProfileSerializer(), instance.userprofile, profile_data
+        )
         return super().update(instance, validated_data)

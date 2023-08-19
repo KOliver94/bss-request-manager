@@ -2,6 +2,8 @@ from datetime import date, timedelta
 
 from decouple import strtobool
 from django.contrib.auth.models import User
+from django.db.models import Value
+from django.db.models.functions import Concat
 from django.utils.timezone import localdate
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
@@ -46,14 +48,22 @@ class UserAdminViewSet(
         "email",
         "full_name",
         "is_staff",
-        "phone_number",
+        "userprofile__phone_number",
     ]
     pagination_class = ExtendedPagination
-    queryset = User.objects.select_related("userprofile").all().cache()
-    search_fields = ["@full_name"]
+    queryset = (
+        User.objects.select_related("userprofile")
+        .prefetch_related("groups")
+        .annotate(full_name=Concat("last_name", Value(" "), "first_name"))
+        .all()
+        .cache()
+    )
+    search_fields = ["first_name", "last_name"]
 
     def get_permissions(self):
-        if self.action == "update":
+        if self.action.endswith("ban"):
+            return [IsAdminUser()]
+        if "update" in self.action:
             return [IsStaffSelfOrAdmin()]
         return [IsStaffUser()]
 
@@ -63,13 +73,7 @@ class UserAdminViewSet(
         return UserAdminDetailSerializer
 
     @extend_schema(request=BanUserSerializer, responses=BanUserSerializer)
-    @action(
-        detail=True,
-        filter_backends=[],
-        methods=["post"],
-        pagination_class=None,
-        permission_classes=[IsAdminUser],
-    )
+    @action(detail=True, filter_backends=[], methods=["post"], pagination_class=None)
     def ban(self, request, pk=None):
         serializer = BanUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -175,14 +179,8 @@ class UserAdminViewSet(
                 ],
             ):
                 worked_on.append(
-                    {
-                        "id": request.id,
-                        "title": request.title,
-                        "position": "Felelős",
-                        "start_datetime": request.start_datetime,
-                        "end_datetime": request.end_datetime,
-                    }
-                )
+                    request.__dict__ | {"position": "Felelős"}
+                )  # TODO: Translate
 
         for crew in CrewMember.objects.filter(
             member=user,
@@ -191,15 +189,7 @@ class UserAdminViewSet(
                 start_datetime_before,
             ],
         ):
-            worked_on.append(
-                {
-                    "id": crew.request.id,
-                    "title": crew.request.title,
-                    "position": crew.position,
-                    "start_datetime": crew.request.start_datetime,
-                    "end_datetime": crew.request.end_datetime,
-                }
-            )
+            worked_on.append(crew.request.__dict__ | {"position": crew.position})
 
         for video in Video.objects.filter(
             editor=user,
@@ -209,14 +199,8 @@ class UserAdminViewSet(
             ],
         ):
             worked_on.append(
-                {
-                    "id": video.request.id,
-                    "title": video.request.title,
-                    "position": "Vágó",
-                    "start_datetime": video.request.start_datetime,
-                    "end_datetime": video.request.end_datetime,
-                }
-            )
+                video.request.__dict__ | {"position": "Vágó"}
+            )  # TODO: Translate
 
         serializer = UserAdminWorkedOnSerializer(worked_on, many=True)
         return Response(serializer.data)

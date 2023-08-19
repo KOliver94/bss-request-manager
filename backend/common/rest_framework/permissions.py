@@ -111,23 +111,11 @@ class IsSelfOrStaff(BasePermission):
     """
 
     def has_permission(self, request, view):
-        """
-        For the User Details Endpoint return Not Authorized
-        for every case when the non-staff user tries to get other user's data.
-        """
-        from api.v1.users.views import UserDetailView
-
-        if isinstance(view, UserDetailView) and (
-            not request.user.is_staff
-            and (view.kwargs["pk"] != "me" and view.kwargs["pk"] != request.user.id)
-        ):
-            return False
-        else:
-            return bool(
-                request.user
-                and request.user.is_authenticated
-                and not request.user.groups.filter(name="Service Accounts").exists()
-            )
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and not request.user.groups.filter(name="Service Accounts").exists()
+        )
 
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Request):

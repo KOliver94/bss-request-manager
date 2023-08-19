@@ -62,7 +62,7 @@ class MeViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
         permission_classes=[IsStaffUser],
     )
     def worked_on(self, request, pk=None):
-        return UserAdminViewSet.worked_on(request, request.user.pk)
+        return UserAdminViewSet.worked_on(UserAdminViewSet(), request, request.user.pk)
 
 
 class OAuth2ConnectDisconnectView(GenericAPIView):
