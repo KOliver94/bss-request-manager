@@ -60,7 +60,8 @@ repos:
       - id: flake8
         name: 'Lint Python code'
         args: [--toml-config=./backend/pyproject.toml]
-        additional_dependencies: [Flake8-pyproject]
+        additional_dependencies:
+          - Flake8-pyproject
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
     hooks:
@@ -126,4 +127,5 @@ repos:
           - eslint-plugin-react@7.32.2
           - eslint@8.36.0
           - postcss@8.4.21
+          - prettier@2.8.4
           - typescript@4.9.5

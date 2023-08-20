@@ -11,7 +11,6 @@ DEPENDENCIES_TO_IGNORE = [
     "@types/react-dom",
     "@vitejs/plugin-react",
     "source-map-explorer",
-    "prettier",
     "react-scripts",
     "vite",
     "vite-tsconfig-paths",
