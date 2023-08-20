@@ -16,7 +16,7 @@ interface AddCrewDialogProps extends DialogProps {
 }
 
 interface ICrewCreate {
-  member_id: number;
+  member_id: number | null;
   position: string;
 }
 
