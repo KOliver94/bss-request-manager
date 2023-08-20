@@ -25,9 +25,9 @@ export type VideoDataType = {
   title: string;
 };
 
-interface VideosDataTableProps extends DataTableProps<DataTableValueArray> {
+type VideosDataTableProps = DataTableProps<DataTableValueArray> & {
   requestId: number;
-}
+};
 
 const VideosDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
