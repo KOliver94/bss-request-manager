@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4c9722c9d66f8a7f28b28c49f6dd079d6502811a9dbf6ea87739f25b69eecc0a"
+            "sha256": "bda22fb67cf24500a887db3e78ba62d7f639277fdb5decb5323dd6fe8b293947"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -586,12 +586,12 @@
         },
         "gunicorn": {
             "hashes": [
-                "sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e",
-                "sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8"
+                "sha256:3213aa5e8c24949e792bcacfc176fef362e7aac80b76c56f6b5122bf350722f0",
+                "sha256:88ec8bff1d634f98e61b9f65bc4bf3cd918a90806c6f5c48bc5603849ec81033"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.5'",
-            "version": "==20.1.0"
+            "version": "==21.2.0"
         },
         "httplib2": {
             "hashes": [
@@ -673,6 +673,14 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==3.2.2"
+        },
+        "packaging": {
+            "hashes": [
+                "sha256:994793af429502c4ea2ebf6bf664629d07c1a9fe974af92966e4b8d2df7edc61",
+                "sha256:a392980d2b6cffa644431898be54b0045151319d1e7ec34f0cfed48767dd334f"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==23.1"
         },
         "phonenumbers": {
             "hashes": [
@@ -1066,14 +1074,6 @@
             ],
             "index": "pypi",
             "version": "==1.29.2"
-        },
-        "setuptools": {
-            "hashes": [
-                "sha256:3d4dfa6d95f1b101d695a6160a7626e15583af71a5f52176efa5d39a054d475d",
-                "sha256:3d8083eed2d13afc9426f227b24fd1659489ec107c0e86cec2ffdde5c92e790b"
-            ],
-            "markers": "python_version >= '3.8'",
-            "version": "==68.1.2"
         },
         "six": {
             "hashes": [
