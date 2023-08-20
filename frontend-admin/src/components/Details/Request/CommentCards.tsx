@@ -124,7 +124,7 @@ const CommentCardHeader = ({
             'justify-content-end': isEditing && !isRequester,
             'justify-content-start': !isEditing && isRequester,
             'p-0': !isEditing && !isRequester,
-          }
+          },
         )}
       >
         {isRequester && (
@@ -166,7 +166,7 @@ const CommentCardWrapper = ({
           {
             'border-blue-400 surface-50': isInternal && !darkMode,
             'border-blue-600 surface-0': isInternal && darkMode,
-          }
+          },
         )}
       >
         {children}
@@ -270,7 +270,12 @@ const CommentCardEdit = ({
   const onSubmit = (data: IComment) => {
     setLoading(true);
     console.log(
-      'Updating comment... ' + commentId + ' ' + data.text + ' ' + data.internal
+      'Updating comment... ' +
+        commentId +
+        ' ' +
+        data.text +
+        ' ' +
+        data.internal,
     );
     setTimeout(() => {
       setLoading(false);
@@ -466,7 +471,7 @@ const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
             setEditing={setEditingId}
             text={comment.text}
           />
-        )
+        ),
       )}
       <CommentCardNew authorName="Teszt Elek" />
     </>

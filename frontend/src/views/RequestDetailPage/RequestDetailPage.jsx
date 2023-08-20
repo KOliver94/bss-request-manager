@@ -137,8 +137,8 @@ export default function RequestDetailPage({
                       Rendben
                     </Button>
                   ),
-                }
-              )
+                },
+              ),
             );
           }
         } else {

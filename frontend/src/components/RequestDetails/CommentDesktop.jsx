@@ -195,7 +195,7 @@ export default function CommentDesktop({
                 'yyyy. MMMM d. H:mm:ss',
                 {
                   locale: hu,
-                }
+                },
               )}
               placement="bottom-start"
             >

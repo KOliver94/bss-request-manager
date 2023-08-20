@@ -19,7 +19,7 @@ const Avatar = forwardRef<React.Ref<HTMLDivElement>, PrimeAvatarProps>(
         className={classNames(stylesModule.avatarIcon, className)}
       />
     );
-  }
+  },
 );
 
 Avatar.displayName = 'Avatar';

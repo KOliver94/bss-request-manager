@@ -24,7 +24,7 @@ export const StatusTag = forwardRef<React.Ref<HTMLSpanElement>, StatusTagProps>(
         value={status.text.concat(modified ? '*' : '')}
       />
     );
-  }
+  },
 );
 
 StatusTag.defaultProps = {

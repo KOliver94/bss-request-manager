@@ -27,7 +27,7 @@ export async function createComment(requestId, commentData) {
 export async function updateComment(requestId, commentId, commentData) {
   return axiosInstance.patch(
     `/requests/${requestId}/comments/${commentId}`,
-    commentData
+    commentData,
   );
 }
 
@@ -42,19 +42,19 @@ export async function deleteComment(requestId, commentId) {
 export async function createRating(requestId, videoId, ratingData) {
   return axiosInstance.post(
     `/requests/${requestId}/videos/${videoId}/ratings`,
-    ratingData
+    ratingData,
   );
 }
 
 export async function updateRating(requestId, videoId, ratingId, ratingData) {
   return axiosInstance.patch(
     `/requests/${requestId}/videos/${videoId}/ratings/${ratingId}`,
-    ratingData
+    ratingData,
   );
 }
 
 export async function deleteRating(requestId, videoId, ratingId) {
   return axiosInstance.delete(
-    `/requests/${requestId}/videos/${videoId}/ratings/${ratingId}`
+    `/requests/${requestId}/videos/${videoId}/ratings/${ratingId}`,
   );
 }

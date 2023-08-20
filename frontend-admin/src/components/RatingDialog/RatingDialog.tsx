@@ -43,7 +43,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
       visible,
       ...props
     },
-    ref
+    ref,
   ) => {
     const isMobile = useMobile();
     const [loading, setLoading] = useState<boolean>(false);
@@ -119,7 +119,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
     };
 
     const onDelete = (
-      event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     ) => {
       confirmPopup({
         accept: handleDelete,
@@ -261,7 +261,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
         </form>
       </Dialog>
     );
-  }
+  },
 );
 RatingDialog.displayName = 'RatingDialog';
 

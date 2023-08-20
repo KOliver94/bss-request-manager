@@ -30,9 +30,9 @@ export const getOauthState = (location) => {
   return JSON.parse(
     atob(
       decodeURIComponent(
-        (location.search.match(/state=([^&]+)/) || [])[1] || ''
-      )
-    ) || null
+        (location.search.match(/state=([^&]+)/) || [])[1] || '',
+      ),
+    ) || null,
   );
 };
 
@@ -48,7 +48,7 @@ export const getOauthUrlFacebook = (paramState = {}) => {
   return `https://www.facebook.com/${facebookApiVersion}/dialog/oauth?client_id=${
     process.env.REACT_APP_FACEBOOK_CLIENT_ID
   }&scope=${facebookScopes.join(
-    '+'
+    '+',
   )}&redirect_uri=${redirectUri}&state=${createState(state)}`;
 };
 
@@ -57,6 +57,6 @@ export const getOauthUrlGoogle = (paramState = {}) => {
   return `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&include_granted_scopes=true&client_id=${
     process.env.REACT_APP_GOOGLE_CLIENT_ID
   }&scope=${googleScopes.join(
-    ' '
+    ' ',
   )}&redirect_uri=${redirectUri}&state=${createState(state)}`;
 };
