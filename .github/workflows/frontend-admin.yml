@@ -15,10 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - node-version: '19'
+          - node-version: '20'
             experimental: false
             node-options: ''
-    uses: ./.github/workflows/frontend-workflow.yml
+    uses: ./.github/workflows/frontend-base-workflow.yml
     with:
       working-directory: 'frontend-admin'
       node-version: ${{ matrix.node-version }}
