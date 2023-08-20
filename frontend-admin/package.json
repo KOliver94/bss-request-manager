@@ -14,7 +14,7 @@
     "react-hook-form": "7.43.5",
     "react-router-dom": "6.9.0",
     "timeago-react": "3.0.6",
-    "yup": "1.0.2"
+    "yup": "1.2.0"
   },
   "scripts": {
     "start": "vite dev",
