@@ -5,6 +5,7 @@ import { Controller, UseControllerProps } from 'react-hook-form';
 
 import ConditionalWrapper from 'helpers/ConditionalWrapper';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface FormFieldProps extends UseControllerProps<any> {
   children: JSX.Element;
   className: string;
