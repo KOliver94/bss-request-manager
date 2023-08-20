@@ -36,7 +36,7 @@ const validationSchema = Yup.object({
   end_datetime: Yup.date()
     .min(
       Yup.ref('start_datetime'),
-      'A befejezés időpontja nem lehet korábbi mint a kezdés!'
+      'A befejezés időpontja nem lehet korábbi mint a kezdés!',
     )
     .required('A várható befejezés megadása kötelező!')
     .nullable()
@@ -147,7 +147,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
                     const { inputValue } = params;
                     // Suggest the creation of a new value
                     const isExisting = options.some(
-                      (option) => inputValue === option.title
+                      (option) => inputValue === option.title,
                     );
                     if (inputValue !== '' && !isExisting) {
                       filtered.push({

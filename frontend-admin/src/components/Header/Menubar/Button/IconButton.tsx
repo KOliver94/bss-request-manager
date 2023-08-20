@@ -31,7 +31,7 @@ const IconButton = ({
   const navigate = useNavigate();
 
   const handleClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
     event.preventDefault();
     path && navigate(path);

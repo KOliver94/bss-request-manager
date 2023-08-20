@@ -145,7 +145,7 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
         </form>
       </Dialog>
     );
-  }
+  },
 );
 AddCrewDialog.displayName = 'AddCrewDialog';
 

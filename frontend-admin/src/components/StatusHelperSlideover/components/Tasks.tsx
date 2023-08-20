@@ -25,7 +25,7 @@ export const ActiveCompleteTaskItem = ({ label }: ActiveTaskItemProps) => {
       <i
         className={classNames(
           'pi pi-check',
-          darkMode ? 'text-green-300' : 'text-green-500'
+          darkMode ? 'text-green-300' : 'text-green-500',
         )}
       ></i>
       <span className="ml-3 text-600">{label}</span>
@@ -75,7 +75,7 @@ export const Task = ({ icon, label, type }: TaskProps) => {
             'bg-green-500': !darkMode && type === 'complete',
             'bg-red-300': darkMode && type === 'failed',
             'bg-red-500': !darkMode && type === 'failed',
-          }
+          },
         )}
         style={{ height: '35px', width: '35px' }}
       >

@@ -17,7 +17,7 @@ const JumpButton = forwardRef<React.Ref<HTMLTableElement>, JumpButtonProps>(
         {...ref}
       />
     );
-  }
+  },
 );
 JumpButton.displayName = 'JumpButton';
 

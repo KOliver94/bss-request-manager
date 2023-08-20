@@ -105,7 +105,7 @@ NavPills.propTypes = {
       tabButton: PropTypes.string,
       tabIcon: PropTypes.object,
       tabContent: PropTypes.node,
-    })
+    }),
   ).isRequired,
   color: PropTypes.oneOf([
     'primary',

@@ -24,9 +24,15 @@ $bmd-bmd-label-static-size-ratio: math.div(75, 100) !default;
 $bmd-help-size-ratio: math.div(75, 100) !default;
 
 $bmd-form-control-bg-repeat-y: no-repeat !default;
-$bmd-form-control-bg-position: center bottom, center calc(100% - 1px) !default;
-$bmd-form-control-bg-size: 0 100%, 100% 100% !default;
-$bmd-form-control-bg-size-active: 100% 100%, 100% 100% !default;
+$bmd-form-control-bg-position:
+  center bottom,
+  center calc(100% - 1px) !default;
+$bmd-form-control-bg-size:
+  0 100%,
+  100% 100% !default;
+$bmd-form-control-bg-size-active:
+  100% 100%,
+  100% 100% !default;
 
 // expandable
 $input-text-button-size: 32px !default;

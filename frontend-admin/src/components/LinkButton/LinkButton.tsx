@@ -17,7 +17,7 @@ const LinkButton = forwardRef<React.Ref<HTMLTableElement>, LinkButtonProps>(
         <Button {...buttonProps} {...ref} />
       </Link>
     );
-  }
+  },
 );
 LinkButton.displayName = 'LinkButton';
 

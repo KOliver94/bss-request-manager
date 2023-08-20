@@ -56,14 +56,14 @@ export default function ReviewDialog({
           reviewDialogData.requestId,
           reviewDialogData.videoId,
           reviewDialogData.rating.id,
-          reviewData
+          reviewData,
         );
       } else {
         result = await updateRating(
           reviewDialogData.requestId,
           reviewDialogData.videoId,
           reviewDialogData.rating.id,
-          reviewData
+          reviewData,
         );
       }
       setReviewDialogData({ ...reviewDialogData, open: false });

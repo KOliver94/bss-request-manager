@@ -146,7 +146,7 @@ export default function BasicInformation({
     end_datetime: Yup.date()
       .min(
         Yup.ref('start_datetime'),
-        'A befejezés időpontja nem lehet korábbi mint a kezdés!'
+        'A befejezés időpontja nem lehet korábbi mint a kezdés!',
       )
       .required('A várható befejezés megadása kötelező!')
       .nullable()
@@ -164,7 +164,7 @@ export default function BasicInformation({
     deadline: Yup.date()
       .min(
         Yup.ref('end_datetime'),
-        'A határidőnek a felkérés várható befejezése után kell lennie!'
+        'A határidőnek a felkérés várható befejezése után kell lennie!',
       )
       .required('A határidő megadása kötelező!')
       .nullable()
@@ -260,7 +260,7 @@ export default function BasicInformation({
                   Rendben
                 </Button>
               ),
-            }
+            },
           );
         }
       });
@@ -322,7 +322,7 @@ export default function BasicInformation({
                     onClick={() =>
                       navigate(
                         isPrivileged ? '/admin/requests' : '/my-requests',
-                        { replace: true }
+                        { replace: true },
                       )
                     }
                     disabled={loading}
@@ -560,7 +560,7 @@ export default function BasicInformation({
                             <Avatar
                               sx={{
                                 bgcolor: stringToColor(
-                                  `${option.last_name} ${option.first_name}`
+                                  `${option.last_name} ${option.first_name}`,
                                 ),
                               }}
                               src={option.profile.avatar_url}
@@ -634,7 +634,7 @@ export default function BasicInformation({
                       options={[
                         `N://${format(
                           new Date(requestData.start_datetime),
-                          'yyyyMMdd'
+                          'yyyyMMdd',
                         )}_${requestData.title
                           .normalize('NFD')
                           .replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s])/g, '')
@@ -739,7 +739,7 @@ export default function BasicInformation({
                 {format(
                   new Date(requestData.start_datetime),
                   'yyyy. MMMM d. (eeee) | H:mm',
-                  { locale: hu }
+                  { locale: hu },
                 )}
               </strong>
             </p>
@@ -749,7 +749,7 @@ export default function BasicInformation({
                 {format(
                   new Date(requestData.end_datetime),
                   'yyyy. MMMM d. (eeee) | H:mm',
-                  { locale: hu }
+                  { locale: hu },
                 )}
               </strong>
             </p>
@@ -841,7 +841,7 @@ export default function BasicInformation({
                   'yyyy. MMMM d. (eeee) | H:mm',
                   {
                     locale: hu,
-                  }
+                  },
                 )}
               </strong>
             </p>
@@ -853,7 +853,7 @@ export default function BasicInformation({
                     {format(
                       new Date(requestData.deadline),
                       'yyyy. MMMM d. (eeee)',
-                      { locale: hu }
+                      { locale: hu },
                     )}
                   </strong>
                 </p>

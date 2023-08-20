@@ -91,7 +91,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const avatarClasses = classNames(
     classes.imgRaised,
     classes.imgRoundedCircle,
-    classes.avatar
+    classes.avatar,
   );
   const { enqueueSnackbar } = useSnackbar();
 
@@ -100,7 +100,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const [workedOnDialogOpen, setWorkedOnDialogOpen] = useState(false);
   const [userData, setUserData] = useState({});
   const [selectedStartDate, setSelectedStartDate] = useState(
-    sub(new Date(), { weeks: 20 })
+    sub(new Date(), { weeks: 20 }),
   );
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   const [includeResponsible, setIncludeResponsible] = useState(true);
@@ -123,7 +123,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       if (!id || isSelf(id)) {
         localStorage.setItem(
           'name',
-          `${result.data.last_name} ${result.data.first_name}`
+          `${result.data.last_name} ${result.data.first_name}`,
         );
         localStorage.setItem('avatar', result.data.profile.avatar_url);
         setHeaderDataChange(!headerDataChange);
@@ -159,7 +159,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
       setUserData((prevUserData) => ({
         ...prevUserData,
         social_accounts: prevUserData.social_accounts.filter(
-          (account) => account.provider !== val
+          (account) => account.provider !== val,
         ),
         profile: {
           ...prevUserData.profile,
@@ -455,7 +455,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                 {Object.entries(userData.profile.avatar)
                                   .filter(
                                     (avatar) =>
-                                      avatar[0] !== 'provider' && avatar[1]
+                                      avatar[0] !== 'provider' && avatar[1],
                                   )
                                   .map((avatar) => {
                                     return (
@@ -537,7 +537,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                               <GridContainer>
                                 <GridItem>
                                   {userData.social_accounts.some(
-                                    (x) => x.provider === 'facebook'
+                                    (x) => x.provider === 'facebook',
                                   ) ? (
                                     <Button
                                       color="facebook"
@@ -567,7 +567,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                 </GridItem>
                                 <GridItem>
                                   {userData.social_accounts.some(
-                                    (x) => x.provider === 'google-oauth2'
+                                    (x) => x.provider === 'google-oauth2',
                                   ) ? (
                                     <Button
                                       color="google"
@@ -597,7 +597,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                 </GridItem>
                                 <GridItem>
                                   {userData.social_accounts.some(
-                                    (x) => x.provider === 'authsch'
+                                    (x) => x.provider === 'authsch',
                                   ) ? (
                                     <Button
                                       color="authsch"
@@ -719,7 +719,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                           checked={includeResponsible}
                                           onChange={(event) =>
                                             setIncludeResponsible(
-                                              event.target.checked
+                                              event.target.checked,
                                             )
                                           }
                                           name="includeResponsible"
@@ -783,7 +783,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                     'yyyy. MMMM d. H:mm',
                                     {
                                       locale: hu,
-                                    }
+                                    },
                                   )}`
                                 }
                               />

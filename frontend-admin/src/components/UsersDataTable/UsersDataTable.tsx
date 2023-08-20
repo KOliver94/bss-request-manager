@@ -58,7 +58,7 @@ const UsersDataTable = forwardRef<
   };
 
   const isStaffFilterTemplate = (
-    options: ColumnFilterElementTemplateOptions
+    options: ColumnFilterElementTemplateOptions,
   ) => {
     function getLabel(value: boolean | null | undefined): string {
       if (value !== null) {

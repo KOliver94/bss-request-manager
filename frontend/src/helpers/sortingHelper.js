@@ -4,8 +4,8 @@ function moveOwnUserToTop(listOfUsers) {
   listOfUsers.unshift(
     listOfUsers.splice(
       listOfUsers.findIndex((user) => isSelf(user.id)),
-      1
-    )[0]
+      1,
+    )[0],
   );
   return listOfUsers;
 }

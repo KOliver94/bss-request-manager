@@ -47,7 +47,7 @@ export default function CustomInput(props) {
   if (formControlProps !== undefined) {
     formControlClasses = classNames(
       formControlProps.className,
-      classes.formControl
+      classes.formControl,
     );
   } else {
     formControlClasses = classes.formControl;

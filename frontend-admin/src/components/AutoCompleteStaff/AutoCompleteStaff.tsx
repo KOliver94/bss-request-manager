@@ -45,7 +45,7 @@ const AutoCompleteStaff = forwardRef<
     } else {
       _filteredStaff = staff.filter((user) => {
         const fullName = normalizeString(
-          user.last_name + ' ' + user.first_name
+          user.last_name + ' ' + user.first_name,
         );
 
         return fullName.includes(normalizeString(event.query));
