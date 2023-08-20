@@ -35,7 +35,9 @@ type CrewDataTableProps = {
 const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
   const [addCrewDialogVisible, setAddCrewDialogVisible] =
     useState<boolean>(false);
-  const [data, setData] = useState<CrewDataType[]>();
+  const [data, setData] = useState<CrewDataType[]>([
+    { id: 1, member: { avatar_url: '', full_name: 'Test' }, position: 'Test' },
+  ]);
   const [loading, setLoading] = useState<boolean>(false);
   const isMobile = useMobile();
 
@@ -132,7 +134,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     const _data = [...data];
     const { newData, index } = e;
 
-    _data[index] = newData;
+    _data[index] = newData as CrewDataType;
 
     setData(_data);
     // TODO: Add API call
