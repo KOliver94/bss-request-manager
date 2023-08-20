@@ -116,7 +116,7 @@ repos:
           - '@typescript-eslint/eslint-plugin@5.54.1'
           - '@typescript-eslint/parser@5.54.1'
           - autoprefixer@10.4.14
-          - cssnano@5.1.15
+          - cssnano@6.0.1
           - eslint-config-prettier@9.0.0
           - eslint-import-resolver-typescript@3.5.3
           - eslint-plugin-import@2.27.5
