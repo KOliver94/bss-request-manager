@@ -71,7 +71,7 @@ export default function MyRequestsPage({
         });
       }
     },
-    [enqueueSnackbar, isPrivileged, ordering]
+    [enqueueSnackbar, isPrivileged, ordering],
   );
 
   const handlePageChange = (event, page) => {
@@ -190,21 +190,21 @@ export default function MyRequestsPage({
                                 {`${item.title} `}
                                 {isAfter(
                                   new Date(item.created),
-                                  sub(new Date(), { days: 5 })
+                                  sub(new Date(), { days: 5 }),
                                 ) && <Badge color="info">Új</Badge>}
                               </TableCell>
                               <TableCell align="center">
                                 {format(
                                   new Date(item.start_datetime),
                                   'yyyy. MMMM d. (eeee) | H:mm',
-                                  { locale: hu }
+                                  { locale: hu },
                                 )}
                               </TableCell>
                               <TableCell align="center">
                                 <Badge color="primary">
                                   {
                                     requestStatuses.find(
-                                      (x) => x.id === item.status
+                                      (x) => x.id === item.status,
                                     ).text
                                   }
                                 </Badge>

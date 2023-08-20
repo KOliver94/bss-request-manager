@@ -19,10 +19,10 @@ import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
 
 const AvatarGroupCrew = lazy(
-  () => import('components/AvatarGroupCrew/AvatarGroupCrew')
+  () => import('components/AvatarGroupCrew/AvatarGroupCrew'),
 );
 const VideosDataTable = lazy(
-  () => import('components/VideosDataTable/VideosDataTable')
+  () => import('components/VideosDataTable/VideosDataTable'),
 );
 
 export type RequestDataType = {

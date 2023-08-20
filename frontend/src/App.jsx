@@ -23,7 +23,7 @@ import 'assets/scss/material-kit-react.scss';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem('access_token') && checkRefreshTokenValid()
+    !!localStorage.getItem('access_token') && checkRefreshTokenValid(),
   );
   return (
     <Router>

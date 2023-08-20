@@ -59,7 +59,7 @@ const AvatarGroupCrew = forwardRef<
             <Avatar
               className={classNames(
                 'additional-crew-members-avatar',
-                crewSize - 4 >= 10 ? 'text-xs' : 'text-sm'
+                crewSize - 4 >= 10 ? 'text-xs' : 'text-sm',
               )}
               data-pr-tooltip={additionalCrewMemberNames}
               label={'+' + (crewSize - 4).toString()}

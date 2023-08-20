@@ -120,7 +120,9 @@ export default function Videos({
   const [videoDeleteLoading, setVideoDeleteLoading] = useState(false);
   const [ratingLoading, setRatingLoading] = useState(false);
   const [videoAccordionOpen, setVideoAccordionOpen] = useState(
-    requestData.videos.length === 1 ? `${requestData.videos[0].id}-panel` : null
+    requestData.videos.length === 1
+      ? `${requestData.videos[0].id}-panel`
+      : null,
   );
   const [createVideoDialogOpen, setCreateVideoDialogOpen] = useState(false);
   const [ratingRemoveDialog, setRatingRemoveDialog] = useState({
@@ -350,13 +352,13 @@ export default function Videos({
         await deleteRatingAdmin(
           requestId,
           ratingRemoveDialog.videoId,
-          ratingRemoveDialog.ratingId
+          ratingRemoveDialog.ratingId,
         );
       } else {
         await deleteRating(
           requestId,
           ratingRemoveDialog.videoId,
-          ratingRemoveDialog.ratingId
+          ratingRemoveDialog.ratingId,
         );
       }
       setRequestData({
@@ -369,7 +371,7 @@ export default function Videos({
           return {
             ...video,
             ratings: video.ratings.filter(
-              (rating) => rating.id !== ratingRemoveDialog.ratingId
+              (rating) => rating.id !== ratingRemoveDialog.ratingId,
             ),
           };
         }),
@@ -411,8 +413,8 @@ export default function Videos({
       aired: Yup.array().of(
         Yup.string().matches(
           /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/,
-          'Kérlek a dátumot ÉÉÉÉ-HH-NN formában add meg!'
-        )
+          'Kérlek a dátumot ÉÉÉÉ-HH-NN formában add meg!',
+        ),
       ),
       length: Yup.date().nullable().typeError('Hibás formátum!'),
     }),
@@ -467,8 +469,8 @@ export default function Videos({
                         length: video.additional_data.length
                           ? new Date(
                               new Date('1970-01-01T00:00:00').setSeconds(
-                                video.additional_data.length
-                              )
+                                video.additional_data.length,
+                              ),
                             )
                           : null,
                         coding: {
@@ -562,7 +564,7 @@ export default function Videos({
                                     <Avatar
                                       sx={{
                                         bgcolor: stringToColor(
-                                          `${option.last_name} ${option.first_name}`
+                                          `${option.last_name} ${option.first_name}`,
                                         ),
                                       }}
                                       src={option.profile.avatar_url}
@@ -752,7 +754,7 @@ export default function Videos({
                       <Tooltip
                         title={`Összes értékelés. Átlag: ${
                           Math.round(
-                            (video.avg_rating + Number.EPSILON) * 100
+                            (video.avg_rating + Number.EPSILON) * 100,
                           ) / 100
                         }`}
                         classes={{ tooltip: classes.tooltip }}
@@ -873,7 +875,7 @@ export default function Videos({
                               <Avatar
                                 sx={{
                                   bgcolor: stringToColor(
-                                    `${option.last_name} ${option.first_name}`
+                                    `${option.last_name} ${option.first_name}`,
                                   ),
                                 }}
                                 src={option.profile.avatar_url}

@@ -65,7 +65,7 @@ function Summary({ formData, setActiveStep, isAuthenticated }) {
                   'yyyy. MMMM d. (eee) @ H:mm',
                   {
                     locale: hu,
-                  }
+                  },
                 )}
               </strong>
               <br />
@@ -76,7 +76,7 @@ function Summary({ formData, setActiveStep, isAuthenticated }) {
                   'yyyy. MMMM d. (eee) @ H:mm',
                   {
                     locale: hu,
-                  }
+                  },
                 )}
               </strong>
               <br />

@@ -129,7 +129,7 @@ export default function RatingsDialog({
         ratingsDialogData.requestId,
         ratingsDialogData.videoId,
         editingRating.id,
-        editingRating
+        editingRating,
       );
       setEditingRating({
         id: -1,
@@ -142,7 +142,7 @@ export default function RatingsDialog({
             return result.data;
           }
           return rating;
-        })
+        }),
       );
       if (isSelf(result.data.author.id)) {
         setRequestData((prevRequestData) => ({
@@ -175,7 +175,7 @@ export default function RatingsDialog({
       await deleteRatingAdmin(
         ratingsDialogData.requestId,
         ratingsDialogData.videoId,
-        ratingId
+        ratingId,
       );
       setRatings(ratings.filter((rating) => rating.id !== ratingId));
       if (isSelf(authorId)) {
@@ -261,8 +261,8 @@ export default function RatingsDialog({
                       compareValues(
                         orderBy.field,
                         orderBy.direction,
-                        orderBy.field2
-                      )
+                        orderBy.field2,
+                      ),
                     )
                     .map((rating) => (
                       <TableRow key={`${rating.id}-rating`} hover>
@@ -299,7 +299,7 @@ export default function RatingsDialog({
                         <TableCell align="center">
                           {format(
                             new Date(rating.created),
-                            'yyyy.MM.dd. HH:mm'
+                            'yyyy.MM.dd. HH:mm',
                           )}
                         </TableCell>
                         {isAdmin && (

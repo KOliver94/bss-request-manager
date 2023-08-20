@@ -79,7 +79,7 @@ export default function WorkedOnDialog({
           user,
           fromData,
           toDate,
-          responsible
+          responsible,
         );
         setRequests(result.data);
         setLoading(false);
@@ -94,7 +94,7 @@ export default function WorkedOnDialog({
         userId,
         format(selectedDateRange[0], 'yyyy-MM-dd'),
         format(selectedDateRange[1], 'yyyy-MM-dd'),
-        includeResponsible
+        includeResponsible,
       );
     }
   }, [
@@ -160,8 +160,8 @@ export default function WorkedOnDialog({
                       compareValues(
                         orderBy.field,
                         orderBy.direction,
-                        orderBy.field2
-                      )
+                        orderBy.field2,
+                      ),
                     )
                     .map((request) => (
                       <TableRow key={`${request.id}-${request.position}`} hover>
@@ -174,13 +174,13 @@ export default function WorkedOnDialog({
                         <TableCell align="center">
                           {format(
                             new Date(request.start_datetime),
-                            'yyyy.MM.dd. HH:mm'
+                            'yyyy.MM.dd. HH:mm',
                           )}
                         </TableCell>
                         <TableCell align="center">
                           {format(
                             new Date(request.end_datetime),
-                            'yyyy.MM.dd. HH:mm'
+                            'yyyy.MM.dd. HH:mm',
                           )}
                         </TableCell>
                       </TableRow>

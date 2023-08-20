@@ -42,7 +42,7 @@ const AutoCompleteCrewPosition = forwardRef<
 
     for (const category of positionSuggestions) {
       const filteredItems = category.items.filter(
-        (item) => item.toLowerCase().indexOf(query.toLowerCase()) !== -1
+        (item) => item.toLowerCase().indexOf(query.toLowerCase()) !== -1,
       );
 
       if (filteredItems && filteredItems.length) {

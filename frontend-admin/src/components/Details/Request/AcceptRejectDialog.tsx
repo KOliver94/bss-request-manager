@@ -34,7 +34,7 @@ const AcceptRejectDialog = forwardRef<
 >(
   (
     { accepted, canceled, failed, loading, onHide, onSave, visible, ...props },
-    ref
+    ref,
   ) => {
     const isMobile = useMobile();
     const defaultValues = {
@@ -79,7 +79,7 @@ const AcceptRejectDialog = forwardRef<
           <i
             className={classNames(
               'p-button-icon p-c p-button-icon-left',
-              option.icon
+              option.icon,
             )}
           />
           <span className="p-button-label p-c text-center">{option.label}</span>
@@ -175,7 +175,7 @@ const AcceptRejectDialog = forwardRef<
         />
       </Dialog>
     );
-  }
+  },
 );
 
 AcceptRejectDialog.displayName = 'AcceptRejectDialog';

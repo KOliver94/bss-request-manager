@@ -46,7 +46,7 @@ const VideoStatusHelperSlideover = ({
               'mb-2 px-4 py-2': isMobile && !adminStatusOverride,
               'mb-4 p-4': !isMobile && !adminStatusOverride,
               'pt-2 px-4': isMobile && adminStatusOverride,
-            }
+            },
           )}
         >
           <span className="font-medium text-900 text-xl">Munkafolyamat</span>

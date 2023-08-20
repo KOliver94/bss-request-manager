@@ -160,7 +160,7 @@ const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
     setAverageRating(
       data
         ? data.reduce((total, next) => total + next.rating, 0) / data.length
-        : 0
+        : 0,
     );
   }, [data]);
 
@@ -168,7 +168,7 @@ const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
     return data
       ? data.reduce(
           (total, next) => (next.rating == rating ? ++total : total),
-          0
+          0,
         )
       : 0;
   };
@@ -252,17 +252,19 @@ const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
           />
         </div>
         <div className="grid -ml-3 -mr-3 -mt-3">
-          {data?.sort(compare).map((rating) => (
-            <Rating
-              authorName={rating.author.full_name}
-              avatarUrl={rating.author.avatar_url}
-              creationDate={rating.created}
-              key={rating.id}
-              onEdit={() => onRatingEdit(rating.author.full_name, rating.id)}
-              rating={rating.rating}
-              review={rating.review}
-            />
-          ))}
+          {data
+            ?.sort(compare)
+            .map((rating) => (
+              <Rating
+                authorName={rating.author.full_name}
+                avatarUrl={rating.author.avatar_url}
+                creationDate={rating.created}
+                key={rating.id}
+                onEdit={() => onRatingEdit(rating.author.full_name, rating.id)}
+                rating={rating.rating}
+                review={rating.review}
+              />
+            ))}
         </div>
       </div>
     </>

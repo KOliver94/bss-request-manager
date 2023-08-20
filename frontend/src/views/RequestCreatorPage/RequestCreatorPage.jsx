@@ -150,7 +150,7 @@ export default function RequestCreatorPage({
               `Kérlek töltsd ki hiányzó adataidat (${missingData.join(', ')})!`,
               {
                 variant: 'warning',
-              }
+              },
             );
             navigate('/profile');
           }

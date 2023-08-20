@@ -60,7 +60,7 @@ export default function Comments({
           result = await updateCommentAdmin(
             requestId,
             editingCommentId,
-            values
+            values,
           );
         } else {
           result = await updateComment(requestId, editingCommentId, values);
@@ -103,7 +103,7 @@ export default function Comments({
       setRequestData({
         ...requestData,
         comments: requestData.comments.filter(
-          (comment) => comment.id !== commentId
+          (comment) => comment.id !== commentId,
         ),
       });
     } catch (e) {
@@ -161,7 +161,7 @@ export default function Comments({
                     requesterId={requestData.requester.id}
                     setEditingCommentId={setEditingCommentId}
                   />
-                )
+                ),
               )}
           </>
         )}

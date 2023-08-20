@@ -36,13 +36,13 @@ import {
 import useMobile from 'hooks/useMobile';
 
 const CommentCards = lazy(
-  () => import('components/Details/Request/CommentCards')
+  () => import('components/Details/Request/CommentCards'),
 );
 const CrewDataTable = lazy(
-  () => import('components/Details/Request/Crew/CrewDataTable')
+  () => import('components/Details/Request/Crew/CrewDataTable'),
 );
 const VideosDataTable = lazy(
-  () => import('components/VideosDataTable/VideosDataTable')
+  () => import('components/VideosDataTable/VideosDataTable'),
 );
 
 export type RequestAdditionalDataRecordingType = {
@@ -191,7 +191,7 @@ const RequestDetailsPage = () => {
   const onJumpToTabView = (tabViewIndex: number) => {
     setTabViewActiveIndex(tabViewIndex);
     const tabViewEl = document.getElementById(
-      'comments-crew-videos-history-tabs'
+      'comments-crew-videos-history-tabs',
     );
     // Workaround for: https://github.com/primefaces/primereact/issues/4034
     setTimeout(() => {
@@ -239,14 +239,14 @@ const RequestDetailsPage = () => {
       title: 'Parkett Klub - Salsa Party',
       type: 'Előadás/rendezvény dokumentálás jellegű rögzítése',
       videos: 1,
-    })
+    }),
   );
 
   const videoDataHeader = (
     <div
       className={classNames(
         'align-items-center flex flex-wrap',
-        isMobile ? 'justify-content-start' : ' justify-content-end'
+        isMobile ? 'justify-content-start' : ' justify-content-end',
       )}
     >
       <LinkButton
@@ -276,7 +276,7 @@ const RequestDetailsPage = () => {
   });
 
   const onSubmit: SubmitHandler<RequestAdditionalDataRecordingType> = (
-    data
+    data,
   ) => {
     setLoading(true);
     console.log(data);
@@ -545,7 +545,7 @@ const RequestDetailsPage = () => {
             onTabChange={(e) => setTabViewActiveIndex(e.index)}
             panelContainerClassName={classNames(
               'border-bottom-1 surface-border',
-              { 'px-0 py-2': isMobile }
+              { 'px-0 py-2': isMobile },
             )}
           >
             <TabPanel header="Hozzászólások" leftIcon="pi pi-comments mr-2">

@@ -86,7 +86,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
         navigate({ replace: true });
       }
     },
-    [enqueueSnackbar, navigate, setIsAuthenticated]
+    [enqueueSnackbar, navigate, setIsAuthenticated],
   );
 
   const handleSubmit = (event) => {

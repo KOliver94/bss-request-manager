@@ -77,11 +77,11 @@ const router = createBrowserRouter(
           crumb: () => 'Felhasználók',
         }}
       />
-    </Route>
+    </Route>,
   ),
   {
     basename: '/admin',
-  }
+  },
 );
 
 if (import.meta.hot) {

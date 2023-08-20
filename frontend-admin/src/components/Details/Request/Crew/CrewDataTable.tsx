@@ -70,7 +70,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     <div
       className={classNames(
         'align-items-center flex flex-wrap',
-        isMobile ? 'justify-content-start' : ' justify-content-end'
+        isMobile ? 'justify-content-start' : ' justify-content-end',
       )}
     >
       <Button
@@ -118,7 +118,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
   const onRowDelete = (
     id: number,
     { full_name }: CrewDataType['member'],
-    position: string
+    position: string,
   ) => {
     confirmDialog({
       accept: () => handleDelete(id),
