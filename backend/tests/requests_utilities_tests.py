@@ -28,7 +28,7 @@ def get_test_data():
 
 class RequestsUtilitiesTestCase(APITestCase):
     def authorize_user(self, user):
-        url = reverse("login_obtain_jwt_pair")
+        url = reverse("api:v1:login:obtain_jwt_pair")
         resp = self.client.post(
             url,
             {"username": user.username, "password": get_default_password()},
@@ -40,7 +40,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(token)}")
 
     def setUp(self):
-        self.url = "/api/v1/admin/requests"
+        self.url = reverse("api:v1:admin:requests:request-list")
         self.user = create_user(is_admin=True)
         self.authorize_user(self.user)
 
@@ -89,7 +89,7 @@ class RequestsUtilitiesTestCase(APITestCase):
             # 5./2 Assign editor to the video
             response = self.client.patch(
                 f"{self.url}/{request_id}/videos/{video_id}",
-                {"editor_id": self.user.id},
+                {"editor": self.user.id},
             )
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(response.data["status"], Video.Statuses.IN_PROGRESS)
@@ -581,7 +581,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         # Add a video with some data
         video_data = {
             "title": "New video",
-            "editor_id": self.user.id,
+            "editor": self.user.id,
             "additional_data": {
                 "editing_done": True,
                 "coding": {"website": True},
@@ -705,8 +705,8 @@ class RequestsUtilitiesTestCase(APITestCase):
 
         response = self.client.patch(f"{self.url}/{request.id}", existing_user_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["requester"]["username"], self.user.username)
-        self.assertEqual(response.data["requested_by"]["username"], self.user.username)
+        self.assertEqual(response.data["requester"]["id"], self.user.id)
+        self.assertEqual(response.data["requested_by"]["id"], self.user.id)
 
         expected_dict = (
             self._patch_data["additional_data"]
@@ -742,8 +742,8 @@ class RequestsUtilitiesTestCase(APITestCase):
 
         response = self.client.patch(f"{self.url}/{request.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["requester"]["username"], self.user.username)
-        self.assertEqual(response.data["requested_by"]["username"], self.user.username)
+        self.assertEqual(response.data["requester"]["id"], self.user.id)
+        self.assertEqual(response.data["requested_by"]["id"], self.user.id)
 
         expected_dict = (
             self._patch_data["additional_data"]
