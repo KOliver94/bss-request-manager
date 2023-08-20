@@ -88,10 +88,7 @@ jobs:
       - name: Run tests
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
         run: |
-          pipenv run coverage run -m pytest
-          pipenv run coverage report
-          pipenv run coverage html
-          pipenv run coverage xml
+          pipenv run pytest --cov --cov-report html --cov-report term --cov-report xml -n auto
       - name: Upload coverage to Codecov
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
         uses: codecov/codecov-action@v3.1.4
