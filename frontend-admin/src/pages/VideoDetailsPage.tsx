@@ -18,7 +18,6 @@ import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import useMobile from 'hooks/useMobile';
-import * as testData from 'testData/testData_vid.json';
 
 export type VideoAdditionalDataType = {
   aired?: [string];
@@ -41,9 +40,9 @@ export type VideoAdditionalDataType = {
 };
 
 export type VideoDataType = {
-  additional_data: VideoAdditionalDataType;
+  additional_data: VideoAdditionalDataType | Record<string, never>;
   avg_rating: number;
-  editor: UsersDataType;
+  editor?: UsersDataType;
   id: number;
   status: 1 | 2 | 3 | 4 | 5 | 6;
   title: string;
@@ -103,7 +102,13 @@ const VideoDetailsPage = () => {
     });
   };
 
-  const [data, setData] = useState<VideoDataType>(testData);
+  const [data, setData] = useState<VideoDataType>({
+    additional_data: {},
+    avg_rating: 5,
+    id: 1,
+    status: 5,
+    title: 'Test',
+  });
 
   return (
     <>

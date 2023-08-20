@@ -34,7 +34,6 @@ import {
   dateToLocaleString,
 } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
-import * as testData from 'testData/testData_req.json';
 
 const CommentCards = lazy(
   () => import('components/Details/Request/CommentCards')
@@ -96,6 +95,17 @@ export type RequestDataType = {
   videos: number;
 };
 
+interface RequestApiDataType
+  extends Omit<
+    RequestDataType,
+    'created' | 'deadline' | 'end_datetime' | 'start_datetime'
+  > {
+  created: string;
+  deadline: string;
+  end_datetime: string;
+  start_datetime: string;
+}
+
 const RequestDetailsPage = () => {
   const { requestId } = useParams();
   const isMobile = useMobile();
@@ -109,7 +119,7 @@ const RequestDetailsPage = () => {
   const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
   const statusHelperSlideoverOpenBtnRef = useRef(null);
 
-  const getRequest = (data: RequestDataType) => {
+  const getRequest = (data: RequestApiDataType) => {
     return {
       ...data,
       created: new Date(data.created),
@@ -189,7 +199,48 @@ const RequestDetailsPage = () => {
     }, 5);
   };
 
-  const [data, setData] = useState<RequestDataType>(getRequest(testData));
+  const [data, setData] = useState<RequestDataType>(
+    getRequest({
+      additional_data: {},
+      comments: 2,
+      created: '2022-07-02T00:26:11.595881+02:00',
+      crew: [
+        {
+          avatar_url: null,
+          full_name: 'Kecskeméty Olivér',
+        },
+      ],
+      deadline: '2022-08-13',
+      end_datetime: '2022-07-23T02:30:00+02:00',
+      id: 17,
+      place: 'Schönherz',
+      requested_by: {
+        email: 'kecskemety.oliver@example.com',
+        full_name: 'Kecskeméty Olivér',
+        id: 61,
+        is_staff: false,
+        profile: {
+          avatar_url: '',
+          phone_number: '+36707755250',
+        },
+      },
+      requester: {
+        email: 'kecskemety.oliver@example.com',
+        full_name: 'Kecskeméty Olivér',
+        id: 61,
+        is_staff: false,
+        profile: {
+          avatar_url: '',
+          phone_number: '+36707755250',
+        },
+      },
+      start_datetime: '2022-07-22T18:05:00+02:00',
+      status: 1,
+      title: 'Parkett Klub - Salsa Party',
+      type: 'Előadás/rendezvény dokumentálás jellegű rögzítése',
+      videos: 1,
+    })
+  );
 
   const videoDataHeader = (
     <div
