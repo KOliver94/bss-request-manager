@@ -33,12 +33,12 @@ social-auth-app-django = "==5.2.0"
 whitenoise = {extras = ["brotli"],version = "==6.5.0"}
 
 [dev-packages]
-coverage = {extras = ["toml"],version = "==7.2.5"}
 django-debug-toolbar = "==4.1.0"
 httpretty = "==1.1.4"
 model_bakery = "==1.12.0"
 pre-commit = "==3.3.3"
 pytest = "==7.3.2"
+pytest-cov = "==4.1.0"
 pytest-django = "==4.5.2"
 pytest-xdist = {extras = ["psutil"], version = "==3.3.1"}
 time-machine = "==2.10.0"
