@@ -41,7 +41,7 @@ class EmailSendingTestCase(APITestCase):
     """
 
     def authorize_user(self, user):
-        url = reverse("login_obtain_jwt_pair")
+        url = reverse("api:v1:login:obtain_jwt_pair")
         resp = self.client.post(
             url,
             {"username": user.username, "password": get_default_password()},
@@ -72,7 +72,8 @@ class EmailSendingTestCase(APITestCase):
             "place": "Test place",
             "type": "Test type",
         }
-        response = self.client.post("/api/v1/requests", data)
+        url = reverse("api:v1:requests:request-list")
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
@@ -97,7 +98,8 @@ class EmailSendingTestCase(APITestCase):
             "type": "Test type",
             "send_notification": True,
         }
-        response = self.client.post("/api/v1/admin/requests", data)
+        url = reverse("api:v1:admin:requests:request-list")
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
@@ -122,10 +124,11 @@ class EmailSendingTestCase(APITestCase):
             "requester_last_name": "User",
             "requester_email": "test.user@example.com",
             "requester_mobile": "+36509999999",
-            "comment_text": "Additional information",
+            "comment": "Additional information",
             "recaptcha": "randomReCaptchaResponseToken",
         }
-        response = self.client.post("/api/v1/requests", data)
+        url = reverse("api:v1:requests:request-list")
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
@@ -144,7 +147,7 @@ class EmailSendingTestCase(APITestCase):
 
         # Video data to be patched
         data = {
-            "editor_id": self.staff_user.id,
+            "editor": self.staff_user.id,
             "additional_data": {
                 "editing_done": True,
                 "coding": {"website": True},
@@ -154,9 +157,11 @@ class EmailSendingTestCase(APITestCase):
 
         # Authorized staff user and update video data
         self.authorize_user(self.staff_user)
-        response = self.client.patch(
-            f"/api/v1/admin/requests/{request.id}/videos/{video.id}", data
+        url = reverse(
+            "api:v1:admin:requests:request:video-detail",
+            kwargs={"request_pk": request.id, "pk": video.id},
         )
+        response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check if e-mail was sent to the right people
@@ -185,9 +190,11 @@ class EmailSendingTestCase(APITestCase):
 
         # Authorized staff user and create new comment
         self.authorize_user(self.staff_user)
-        response = self.client.post(
-            f"/api/v1/admin/requests/{request.id}/comments", data
+        url = reverse(
+            "api:v1:admin:requests:request:comment-list",
+            kwargs={"request_pk": request.id},
         )
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
@@ -221,9 +228,11 @@ class EmailSendingTestCase(APITestCase):
 
         # Authorized staff user and create new comment
         self.authorize_user(self.staff_user)
-        response = self.client.post(
-            f"/api/v1/admin/requests/{request.id}/comments", data
+        url = reverse(
+            "api:v1:admin:requests:request:comment-list",
+            kwargs={"request_pk": request.id},
         )
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
@@ -249,9 +258,11 @@ class EmailSendingTestCase(APITestCase):
 
         # Authorized staff user and create new comment
         self.authorize_user(self.staff_user)
-        response = self.client.post(
-            f"/api/v1/admin/requests/{request.id}/comments", data
+        url = reverse(
+            "api:v1:admin:requests:request:comment-list",
+            kwargs={"request_pk": request.id},
         )
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
@@ -276,7 +287,11 @@ class EmailSendingTestCase(APITestCase):
 
         # Authorized staff user and create new comment
         self.authorize_user(self.normal_user)
-        response = self.client.post(f"/api/v1/requests/{request.id}/comments", data)
+        url = reverse(
+            "api:v1:requests:request:comment-list",
+            kwargs={"request_pk": request.id},
+        )
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
@@ -641,7 +656,8 @@ class EmailSendingTestCase(APITestCase):
             "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere tempus nibh et lobortis.",
             "recaptcha": "randomReCaptchaResponseToken",
         }
-        response = self.client.post("/api/v1/misc/contact", data)
+        url = reverse("api:v1:misc:contact")
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # Check if e-mail was sent to the right people
