@@ -60,7 +60,8 @@ repos:
       - id: flake8
         name: 'Lint Python code'
         args: [--toml-config=./backend/pyproject.toml]
-        additional_dependencies: [Flake8-pyproject]
+        additional_dependencies:
+          - Flake8-pyproject
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
     hooks:
@@ -101,7 +102,6 @@ repos:
           - eslint-plugin-react-hooks@4.6.0
           - eslint-plugin-react@7.32.2
           - eslint@8.43.0
-          - prettier@2.8.8
       - id: eslint
         name: 'Lint TypeScript code (Admin dashboard)'
         files: ^frontend-admin/.*\.(j|t)sx?$
@@ -118,7 +118,7 @@ repos:
           - '@typescript-eslint/parser@5.54.1'
           - autoprefixer@10.4.14
           - cssnano@5.1.15
-          - eslint-config-prettier@8.7.0
+          - eslint-config-prettier@8.10.0
           - eslint-import-resolver-typescript@3.5.3
           - eslint-plugin-import@2.27.5
           - eslint-plugin-prettier@4.2.1
