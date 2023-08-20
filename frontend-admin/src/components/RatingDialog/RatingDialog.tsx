@@ -23,7 +23,7 @@ interface RatingDialogProps extends DialogProps {
 
 interface IRating {
   rating: number;
-  review: string;
+  review?: string;
 }
 
 const validationSchema = yup
