@@ -72,6 +72,7 @@ interface InternalOption {
 }
 
 const validationSchema = yup.object({
+  internal: yup.bool().required(),
   text: yup.string().trim().required('Üres hozzászólás nem küldhető be!'),
 });
 
