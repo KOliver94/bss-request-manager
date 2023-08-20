@@ -19,8 +19,8 @@ SOCIAL_AUTH_IMMUTABLE_USER_FIELDS = ["first_name", "last_name"]
 SOCIAL_AUTH_PROVIDERS = ["authsch", "facebook", "google-oauth2"]
 
 # Facebook OAuth2 settings:
-SOCIAL_AUTH_FACEBOOK_KEY = config("AUTH_FACEBOOK_APP_ID")
-SOCIAL_AUTH_FACEBOOK_SECRET = config("AUTH_FACEBOOK_APP_SECRET")
+SOCIAL_AUTH_FACEBOOK_KEY = config("AUTH_FACEBOOK_APP_ID", default=None)
+SOCIAL_AUTH_FACEBOOK_SECRET = config("AUTH_FACEBOOK_APP_SECRET", default=None)
 SOCIAL_AUTH_FACEBOOK_SCOPE = ["email"]
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     "fields": "id, name, email, picture.width(500)"
@@ -31,8 +31,8 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
 ]
 
 # Google OAuth2 settings:
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("AUTH_GOOGLE_CLIENT_ID")
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("AUTH_GOOGLE_CLIENT_SECRET")
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("AUTH_GOOGLE_CLIENT_ID", default=None)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("AUTH_GOOGLE_CLIENT_SECRET", default=None)
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/userinfo.email",
@@ -45,8 +45,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [
 ]
 
 # AuthSCH OAuth2 settings:
-SOCIAL_AUTH_AUTHSCH_KEY = config("AUTH_SCH_CLIENT_ID")
-SOCIAL_AUTH_AUTHSCH_SECRET = config("AUTH_SCH_CLIENT_SECRET")
+SOCIAL_AUTH_AUTHSCH_KEY = config("AUTH_SCH_CLIENT_ID", default=None)
+SOCIAL_AUTH_AUTHSCH_SECRET = config("AUTH_SCH_CLIENT_SECRET", default=None)
 
 SOCIAL_AUTH_PIPELINE = (
     # Get the information we can about the user and return it in a simple
