@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 
 import * as Sentry from '@sentry/react';
 import * as locales from 'primelocale/hu.json';
-import PrimeReact, { addLocale, locale } from 'primereact/api';
+import { PrimeReactProvider, addLocale, locale } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { register } from 'timeago.js';
@@ -23,7 +23,6 @@ if (import.meta.env.PROD) {
   });
 }
 
-PrimeReact.ripple = true;
 addLocale('hu', locales['hu']);
 locale('hu');
 
@@ -32,8 +31,10 @@ register('hu_HU', huLocal);
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <StrictMode>
-    <ThemeProvider>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <PrimeReactProvider>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </PrimeReactProvider>
   </StrictMode>,
 );
