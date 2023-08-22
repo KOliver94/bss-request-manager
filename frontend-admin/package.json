@@ -8,6 +8,7 @@
     "bootstrap-icons": "1.10.5",
     "primeflex": "3.3.1",
     "primeicons": "6.0.1",
+    "primelocale": "primefaces/primelocale",
     "primereact": "9.6.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

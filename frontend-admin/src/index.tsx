@@ -1,13 +1,13 @@
 import { StrictMode } from 'react';
 
 import * as Sentry from '@sentry/react';
+import * as locales from 'primelocale/hu.json';
 import PrimeReact, { addLocale, locale } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { register } from 'timeago.js';
 import huLocal from 'timeago.js/lib/lang/hu';
 
-import * as locales from 'locales.json';
 import router from 'router';
 import { ThemeProvider } from 'themes/ThemeProvider';
 
