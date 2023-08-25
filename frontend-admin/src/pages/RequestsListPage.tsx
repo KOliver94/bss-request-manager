@@ -11,4 +11,4 @@ const RequestsListPage = () => {
   );
 };
 
-export default RequestsListPage;
+export { RequestsListPage as Component };

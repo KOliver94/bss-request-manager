@@ -175,4 +175,4 @@ const VideoCreator = () => {
   );
 };
 
-export default VideoCreator;
+export { VideoCreator as Component };

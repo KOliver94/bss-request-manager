@@ -282,4 +282,4 @@ const RequestCreator = () => {
   );
 };
 
-export default RequestCreator;
+export { RequestCreator as Component };
