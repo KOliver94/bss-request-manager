@@ -5,19 +5,12 @@ import {
   Route,
 } from 'react-router-dom';
 
-import App from 'App';
-import RequestCreator from 'components/RequestCreator/RequestCreator';
-import VideoCreator from 'components/VideoCreator/VideoCreator';
 import Layout from 'Layout';
-import RequestDetailsPage from 'pages/RequestDetailsPage';
-import RequestsListPage from 'pages/RequestsListPage';
-import UsersListPage from 'pages/UsersListPage';
-import VideoDetailsPage from 'pages/VideoDetailsPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route index element={<App />} />
+      <Route index lazy={() => import('App')} />
       <Route
         path="requests"
         element={<Outlet />}
@@ -25,10 +18,10 @@ const router = createBrowserRouter(
           crumb: () => 'Felkérések',
         }}
       >
-        <Route index element={<RequestsListPage />} />
+        <Route index lazy={() => import('pages/RequestsListPage')} />
         <Route
           path="new"
-          element={<RequestCreator />}
+          lazy={() => import('components/RequestCreator/RequestCreator')}
           handle={{
             crumb: () => 'Új',
           }}
@@ -39,7 +32,7 @@ const router = createBrowserRouter(
             crumb: () => 'Teszt felkérés',
           }}
         >
-          <Route index element={<RequestDetailsPage />} />
+          <Route index lazy={() => import('pages/RequestDetailsPage')} />
           <Route
             path="videos"
             handle={{
@@ -48,14 +41,14 @@ const router = createBrowserRouter(
           >
             <Route
               path="new"
-              element={<VideoCreator />}
+              lazy={() => import('components/VideoCreator/VideoCreator')}
               handle={{
                 crumb: () => 'Új videó',
               }}
             />
             <Route
               path=":videoId"
-              element={<VideoDetailsPage />}
+              lazy={() => import('pages/VideoDetailsPage')}
               handle={{
                 crumb: () => 'Teszt videó',
               }}
@@ -65,14 +58,14 @@ const router = createBrowserRouter(
       </Route>
       <Route
         path="search"
-        element={<App />}
+        lazy={() => import('App')}
         handle={{
           crumb: () => 'Keresés',
         }}
       />
       <Route
         path="users"
-        element={<UsersListPage />}
+        lazy={() => import('pages/UsersListPage')}
         handle={{
           crumb: () => 'Felhasználók',
         }}

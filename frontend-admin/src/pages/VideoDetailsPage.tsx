@@ -361,4 +361,4 @@ const VideoDetailsPage = () => {
   );
 };
 
-export default VideoDetailsPage;
+export { VideoDetailsPage as Component };

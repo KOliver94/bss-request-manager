@@ -576,4 +576,4 @@ const RequestDetailsPage = () => {
   );
 };
 
-export default RequestDetailsPage;
+export { RequestDetailsPage as Component };
