@@ -5,6 +5,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
@@ -17,7 +18,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'prettier'],
+  plugins: ['@tanstack/query', '@typescript-eslint', 'prettier', 'react'],
   rules: {
     '@typescript-eslint/no-unused-vars': 'warn', // TODO: Delete later
     'import/order': [
