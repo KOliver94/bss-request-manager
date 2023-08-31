@@ -327,12 +327,18 @@ DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
 # https://drf-spectacular.readthedocs.io/en/latest/
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "BSS Request Manager",
-    "DESCRIPTION": "Workflow Support System for managing video shooting, "
+    "COMPONENT_SPLIT_REQUEST": True,
+    "CONTACT": {
+        "email": "kecskemety.oliver@simonyi.bme.hu",
+        "name": "Olivér Kecskeméty",
+    },
+    "DESCRIPTION": "REST API for Workflow Support System for managing video shooting, "
     "filming and live streaming requests of Budavári Schönherz Stúdió.",
-    "VERSION": "0.0.1",
+    "SCHEMA_COERCE_PATH_PK_SUFFIX": True,
     "SCHEMA_PATH_PREFIX": "/api/v[0-9]",
     "SERVE_INCLUDE_SCHEMA": False,
+    "TITLE": "BSS Request Manager API",
+    "VERSION": "0.1.0",
 }
 
 SPECTACULAR_SERVE_SCHEMA = config("SPECTACULAR_SERVE_SCHEMA", default=False, cast=bool)
