@@ -1,0 +1,3839 @@
+openapi: 3.0.3
+info:
+  title: BSS Request Manager API
+  version: 0.1.0
+  description:
+    REST API for Workflow Support System for managing video shooting, filming
+    and live streaming requests of Budavári Schönherz Stúdió.
+  contact:
+    email: kecskemety.oliver@simonyi.bme.hu
+    name: Olivér Kecskeméty
+paths:
+  /api/v1/admin/requests:
+    get:
+      operationId: admin_requests_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+        - name: page_size
+          required: false
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: pagination
+          required: false
+          in: query
+          description: Return paginated response.
+          schema:
+            type: boolean
+        - name: search
+          required: false
+          in: query
+          description: A search term.
+          schema:
+            type: string
+        - in: query
+          name: start_datetime_after
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: start_datetime_before
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: status
+          schema:
+            type: array
+            items:
+              type: integer
+              enum:
+                - 0
+                - 1
+                - 10
+                - 2
+                - 3
+                - 4
+                - 5
+                - 6
+                - 7
+                - 9
+          description: |-
+            * `0` - Elutasítva
+            * `1` - Felkérés
+            * `2` - Elvállalva
+            * `3` - Leforgatva
+            * `4` - Beírva
+            * `5` - Megvágva
+            * `6` - Archiválva
+            * `7` - Lezárva
+            * `9` - Szervezők által lemondva
+            * `10` - Meghiúsult
+          explode: true
+          style: form
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRequestAdminListList'
+          description: ''
+    post:
+      operationId: admin_requests_create
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestAdminCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RequestAdminCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RequestAdminCreateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestAdminRetrieve'
+          description: ''
+  /api/v1/admin/requests/{id}:
+    get:
+      operationId: admin_requests_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this request.
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestAdminRetrieve'
+          description: ''
+    put:
+      operationId: admin_requests_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this request.
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestAdminUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RequestAdminUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RequestAdminUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestAdminRetrieve'
+          description: ''
+    patch:
+      operationId: admin_requests_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this request.
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRequestAdminUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRequestAdminUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRequestAdminUpdateRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestAdminRetrieve'
+          description: ''
+    delete:
+      operationId: admin_requests_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this request.
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/admin/requests/{id}/history:
+    get:
+      operationId: admin_requests_history_list
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this request.
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/History'
+          description: ''
+  /api/v1/admin/requests/{request_id}/comments:
+    get:
+      operationId: admin_requests_comments_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentAdminListRetrieve'
+          description: ''
+    post:
+      operationId: admin_requests_comments_create
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentAdminCreateUpdate'
+          description: ''
+  /api/v1/admin/requests/{request_id}/comments/{id}:
+    get:
+      operationId: admin_requests_comments_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentAdminListRetrieve'
+          description: ''
+    put:
+      operationId: admin_requests_comments_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentAdminCreateUpdate'
+          description: ''
+    patch:
+      operationId: admin_requests_comments_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCommentAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCommentAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCommentAdminCreateUpdateRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentAdminCreateUpdate'
+          description: ''
+    delete:
+      operationId: admin_requests_comments_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/admin/requests/{request_id}/comments/{id}/history:
+    get:
+      operationId: admin_requests_comments_history_list
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/History'
+          description: ''
+  /api/v1/admin/requests/{request_id}/crew:
+    get:
+      operationId: admin_requests_crew_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CrewMemberAdminListRetrieve'
+          description: ''
+    post:
+      operationId: admin_requests_crew_create
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrewMemberAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CrewMemberAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CrewMemberAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrewMemberAdminListRetrieve'
+          description: ''
+  /api/v1/admin/requests/{request_id}/crew/{id}:
+    get:
+      operationId: admin_requests_crew_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this crew member.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrewMemberAdminListRetrieve'
+          description: ''
+    put:
+      operationId: admin_requests_crew_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this crew member.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrewMemberAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CrewMemberAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CrewMemberAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrewMemberAdminListRetrieve'
+          description: ''
+    patch:
+      operationId: admin_requests_crew_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this crew member.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCrewMemberAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCrewMemberAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCrewMemberAdminCreateUpdateRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrewMemberAdminListRetrieve'
+          description: ''
+    delete:
+      operationId: admin_requests_crew_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this crew member.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/admin/requests/{request_id}/videos:
+    get:
+      operationId: admin_requests_videos_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoAdminList'
+          description: ''
+    post:
+      operationId: admin_requests_videos_create
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VideoAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VideoAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoAdminRetrieve'
+          description: ''
+  /api/v1/admin/requests/{request_id}/videos/{id}:
+    get:
+      operationId: admin_requests_videos_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this video.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoAdminRetrieve'
+          description: ''
+    put:
+      operationId: admin_requests_videos_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this video.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VideoAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VideoAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoAdminRetrieve'
+          description: ''
+    patch:
+      operationId: admin_requests_videos_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this video.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedVideoAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedVideoAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedVideoAdminCreateUpdateRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoAdminRetrieve'
+          description: ''
+    delete:
+      operationId: admin_requests_videos_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this video.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/admin/requests/{request_id}/videos/{id}/history:
+    get:
+      operationId: admin_requests_videos_history_list
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this video.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/History'
+          description: ''
+  /api/v1/admin/requests/{request_id}/videos/{video_id}/ratings:
+    get:
+      operationId: admin_requests_videos_ratings_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RatingAdminListRetrieve'
+          description: ''
+    post:
+      operationId: admin_requests_videos_ratings_create
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RatingAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RatingAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingAdminCreateUpdate'
+          description: ''
+  /api/v1/admin/requests/{request_id}/videos/{video_id}/ratings/{id}:
+    get:
+      operationId: admin_requests_videos_ratings_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this rating.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingAdminListRetrieve'
+          description: ''
+    put:
+      operationId: admin_requests_videos_ratings_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this rating.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RatingAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RatingAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingAdminCreateUpdate'
+          description: ''
+    patch:
+      operationId: admin_requests_videos_ratings_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this rating.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRatingAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRatingAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRatingAdminCreateUpdateRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingAdminCreateUpdate'
+          description: ''
+    delete:
+      operationId: admin_requests_videos_ratings_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this rating.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/admin/requests/{request_id}/videos/{video_id}/ratings/{id}/history:
+    get:
+      operationId: admin_requests_videos_ratings_history_list
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this rating.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/History'
+          description: ''
+  /api/v1/admin/users:
+    get:
+      operationId: admin_users_list
+      parameters:
+        - in: query
+          name: is_admin
+          schema:
+            type: boolean
+        - in: query
+          name: is_staff
+          schema:
+            type: boolean
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+        - name: page_size
+          required: false
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: pagination
+          required: false
+          in: query
+          description: Return paginated response.
+          schema:
+            type: boolean
+        - name: search
+          required: false
+          in: query
+          description: A search term.
+          schema:
+            type: string
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserAdminListList'
+          description: ''
+  /api/v1/admin/users/{id}:
+    get:
+      operationId: admin_users_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this user.
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAdminDetail'
+          description: ''
+    put:
+      operationId: admin_users_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this user.
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAdminDetailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAdminDetailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAdminDetailRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAdminDetail'
+          description: ''
+    patch:
+      operationId: admin_users_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this user.
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserAdminDetailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserAdminDetailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserAdminDetailRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAdminDetail'
+          description: ''
+  /api/v1/admin/users/{id}/ban:
+    post:
+      operationId: admin_users_ban_create
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this user.
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BanUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BanUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BanUserRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BanUser'
+          description: ''
+    delete:
+      operationId: admin_users_ban_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this user.
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/admin/users/{id}/worked_on:
+    get:
+      operationId: admin_users_worked_on_list
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this user.
+          required: true
+        - in: query
+          name: is_responsible
+          schema:
+            type: boolean
+          description: Default is True.
+        - in: query
+          name: start_datetime_after
+          schema:
+            type: string
+            format: date
+          description: Default is 20 weeks before start_datetime_before.
+        - in: query
+          name: start_datetime_before
+          schema:
+            type: string
+            format: date
+          description: Default is today.
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserAdminWorkedOn'
+          description: ''
+  /api/v1/admin/videos:
+    get:
+      operationId: admin_videos_list
+      parameters:
+        - in: query
+          name: last_aired
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: length_max
+          schema:
+            type: number
+        - in: query
+          name: length_min
+          schema:
+            type: number
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+        - name: page_size
+          required: false
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: pagination
+          required: false
+          in: query
+          description: Return paginated response.
+          schema:
+            type: boolean
+        - in: query
+          name: request_start_datetime_after
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: request_start_datetime_before
+          schema:
+            type: string
+            format: date
+        - name: search
+          required: false
+          in: query
+          description: A search term.
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: array
+            items:
+              type: integer
+              enum:
+                - 1
+                - 2
+                - 3
+                - 4
+                - 5
+                - 6
+          description: |-
+            * `1` - Vágásra vár
+            * `2` - Vágás alatt
+            * `3` - Megvágva
+            * `4` - Kikódolva
+            * `5` - Közzétéve
+            * `6` - Lezárva
+          explode: true
+          style: form
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedVideoAdminSearchList'
+          description: ''
+  /api/v1/external/sch-events/requests:
+    post:
+      operationId: external_sch_events_requests_create
+      tags:
+        - external
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestExternalSchEventsCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RequestExternalSchEventsCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RequestExternalSchEventsCreateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestRetrieve'
+          description: ''
+  /api/v1/external/sch-events/requests/{id}:
+    get:
+      operationId: external_sch_events_requests_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - external
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestRetrieve'
+          description: ''
+  /api/v1/external/sch-events/requests/{request_id}/comments:
+    post:
+      operationId: external_sch_events_requests_comments_create
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - external
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentCreateUpdate'
+          description: ''
+  /api/v1/login:
+    post:
+      operationId: login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+        - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainResponse'
+          description: ''
+  /api/v1/login/refresh:
+    post:
+      operationId: login_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+        - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/login/social:
+    post:
+      operationId: login_social_create
+      tags:
+        - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairOAuth2Request'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairOAuth2Request'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairOAuth2Request'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainResponse'
+          description: ''
+  /api/v1/logout:
+    post:
+      operationId: logout_create
+      description: Takes a token and blacklists it.
+      tags:
+        - logout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklistRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklistRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklistRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/me:
+    get:
+      operationId: me_retrieve
+      tags:
+        - me
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: me_update
+      tags:
+        - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: me_partial_update
+      tags:
+        - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/me/social/{provider}:
+    post:
+      operationId: me_social_create
+      parameters:
+        - in: path
+          name: provider
+          schema:
+            type: string
+          required: true
+      tags:
+        - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2ConnectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OAuth2ConnectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OAuth2ConnectRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          description: No response body
+    delete:
+      operationId: me_social_destroy
+      parameters:
+        - in: path
+          name: provider
+          schema:
+            type: string
+          required: true
+      tags:
+        - me
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/me/worked_on:
+    get:
+      operationId: me_worked_on_list
+      parameters:
+        - in: query
+          name: is_responsible
+          schema:
+            type: boolean
+          description: Default is True.
+        - in: query
+          name: start_datetime_after
+          schema:
+            type: string
+            format: date
+          description: Default is 20 weeks before start_datetime_before.
+        - in: query
+          name: start_datetime_before
+          schema:
+            type: string
+            format: date
+          description: Default is today.
+      tags:
+        - me
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserAdminWorkedOn'
+          description: ''
+  /api/v1/misc/contact:
+    post:
+      operationId: misc_contact_create
+      tags:
+        - misc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ContactRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ContactRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+          description: ''
+  /api/v1/requests:
+    get:
+      operationId: requests_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+        - name: page_size
+          required: false
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: pagination
+          required: false
+          in: query
+          description: Return paginated response.
+          schema:
+            type: boolean
+        - name: search
+          required: false
+          in: query
+          description: A search term.
+          schema:
+            type: string
+      tags:
+        - requests
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRequestListList'
+          description: ''
+    post:
+      operationId: requests_create
+      tags:
+        - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolymorphicProxyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PolymorphicProxyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PolymorphicProxyRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestRetrieve'
+          description: ''
+  /api/v1/requests/{id}:
+    get:
+      operationId: requests_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this request.
+          required: true
+      tags:
+        - requests
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestRetrieve'
+          description: ''
+  /api/v1/requests/{request_id}/comments:
+    get:
+      operationId: requests_comments_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentListRetrieve'
+          description: ''
+    post:
+      operationId: requests_comments_create
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentCreateUpdate'
+          description: ''
+  /api/v1/requests/{request_id}/comments/{id}:
+    get:
+      operationId: requests_comments_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentListRetrieve'
+          description: ''
+    put:
+      operationId: requests_comments_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentCreateUpdate'
+          description: ''
+    patch:
+      operationId: requests_comments_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCommentCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCommentCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCommentCreateUpdateRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentCreateUpdate'
+          description: ''
+    delete:
+      operationId: requests_comments_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/requests/{request_id}/videos:
+    get:
+      operationId: requests_videos_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoListRetrieve'
+          description: ''
+  /api/v1/requests/{request_id}/videos/{id}:
+    get:
+      operationId: requests_videos_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this video.
+          required: true
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoListRetrieve'
+          description: ''
+  /api/v1/requests/{request_id}/videos/{video_id}/rating:
+    get:
+      operationId: requests_videos_rating_retrieve
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingRetrieve'
+          description: ''
+    post:
+      operationId: requests_videos_rating_create
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RatingCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RatingCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingCreateUpdate'
+          description: ''
+    put:
+      operationId: requests_videos_rating_update
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RatingCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RatingCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingCreateUpdate'
+          description: ''
+    patch:
+      operationId: requests_videos_rating_partial_update
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRatingCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRatingCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRatingCreateUpdateRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingCreateUpdate'
+          description: ''
+    delete:
+      operationId: requests_videos_rating_destroy
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - requests
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    AvatarProviderEnum:
+      enum:
+        - facebook
+        - google-oauth2
+        - gravatar
+      type: string
+      description: |-
+        * `facebook` - Facebook
+        * `google-oauth2` - Google
+        * `gravatar` - Gravatar
+    BanUser:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        creator:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        reason:
+          type: string
+          nullable: true
+          maxLength: 100
+      required:
+        - created
+        - creator
+    BanUserRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          nullable: true
+          maxLength: 100
+    CommentAdminCreateUpdate:
+      type: object
+      properties:
+        author:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        internal:
+          type: boolean
+        text:
+          type: string
+      required:
+        - author
+        - created
+        - id
+        - text
+    CommentAdminCreateUpdateRequest:
+      type: object
+      properties:
+        internal:
+          type: boolean
+        text:
+          type: string
+          minLength: 1
+      required:
+        - text
+    CommentAdminListRetrieve:
+      type: object
+      properties:
+        author:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        internal:
+          type: boolean
+          readOnly: true
+        text:
+          type: string
+          readOnly: true
+      required:
+        - author
+        - created
+        - id
+        - internal
+        - text
+    CommentCreateUpdate:
+      type: object
+      properties:
+        author:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        text:
+          type: string
+      required:
+        - author
+        - created
+        - id
+        - text
+    CommentCreateUpdateRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          minLength: 1
+      required:
+        - text
+    CommentListRetrieve:
+      type: object
+      properties:
+        author:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        text:
+          type: string
+          readOnly: true
+      required:
+        - author
+        - created
+        - id
+        - text
+    Contact:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        message:
+          type: string
+        name:
+          type: string
+          maxLength: 150
+      required:
+        - email
+        - message
+        - name
+    ContactRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        recaptcha:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+        - email
+        - message
+        - name
+        - recaptcha
+    CrewMemberAdminCreateUpdateRequest:
+      type: object
+      properties:
+        member:
+          type: integer
+        position:
+          type: string
+          minLength: 1
+          maxLength: 20
+      required:
+        - member
+        - position
+    CrewMemberAdminListRetrieve:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        member:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        position:
+          type: string
+          readOnly: true
+      required:
+        - id
+        - member
+        - position
+    History:
+      type: object
+      properties:
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryChanges'
+          readOnly: true
+        date:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+      required:
+        - changes
+        - date
+        - user
+    HistoryChanges:
+      type: object
+      properties:
+        field:
+          type: string
+          readOnly: true
+        new:
+          type: string
+          readOnly: true
+        old:
+          type: string
+          readOnly: true
+      required:
+        - field
+        - new
+        - old
+    OAuth2ConnectRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 1
+      required:
+        - code
+    PaginatedRequestAdminListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        links:
+          type: object
+          properties:
+            next:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=4
+            previous:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestAdminList'
+        total_pages:
+          type: integer
+          example: 123
+    PaginatedRequestListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        links:
+          type: object
+          properties:
+            next:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=4
+            previous:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestList'
+        total_pages:
+          type: integer
+          example: 123
+    PaginatedUserAdminListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        links:
+          type: object
+          properties:
+            next:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=4
+            previous:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserAdminList'
+        total_pages:
+          type: integer
+          example: 123
+    PaginatedVideoAdminSearchList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        links:
+          type: object
+          properties:
+            next:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=4
+            previous:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoAdminSearch'
+        total_pages:
+          type: integer
+          example: 123
+    PatchedCommentAdminCreateUpdateRequest:
+      type: object
+      properties:
+        internal:
+          type: boolean
+        text:
+          type: string
+          minLength: 1
+    PatchedCommentCreateUpdateRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          minLength: 1
+    PatchedCrewMemberAdminCreateUpdateRequest:
+      type: object
+      properties:
+        member:
+          type: integer
+        position:
+          type: string
+          minLength: 1
+          maxLength: 20
+    PatchedRatingAdminCreateUpdateRequest:
+      type: object
+      properties:
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        review:
+          type: string
+    PatchedRatingCreateUpdateRequest:
+      type: object
+      properties:
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        review:
+          type: string
+    PatchedRequestAdminUpdateRequest:
+      type: object
+      properties:
+        additional_data:
+          type: object
+          additionalProperties: {}
+        deadline:
+          type: string
+          format: date
+        end_datetime:
+          type: string
+          format: date-time
+        place:
+          type: string
+          minLength: 1
+          maxLength: 150
+        requester:
+          type: integer
+        requester_email:
+          type: string
+          format: email
+          minLength: 1
+        requester_first_name:
+          type: string
+          minLength: 1
+        requester_last_name:
+          type: string
+          minLength: 1
+        requester_mobile:
+          type: string
+          minLength: 1
+        responsible:
+          type: integer
+          nullable: true
+        start_datetime:
+          type: string
+          format: date-time
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+    PatchedUserAdminDetailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        profile:
+          $ref: '#/components/schemas/UserProfileRequest'
+    PatchedUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        profile:
+          $ref: '#/components/schemas/UserProfileRequest'
+    PatchedVideoAdminCreateUpdateRequest:
+      type: object
+      properties:
+        additional_data:
+          type: object
+          additionalProperties: {}
+        editor:
+          type: integer
+          nullable: true
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+    PolymorphicProxyRequest:
+      oneOf:
+        - $ref: '#/components/schemas/RequestCreateRequest'
+        - $ref: '#/components/schemas/RequestAnonymousCreateRequest'
+    RatingAdminCreateUpdate:
+      type: object
+      properties:
+        author:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        review:
+          type: string
+      required:
+        - author
+        - created
+        - id
+        - rating
+    RatingAdminCreateUpdateRequest:
+      type: object
+      properties:
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        review:
+          type: string
+      required:
+        - rating
+    RatingAdminListRetrieve:
+      type: object
+      properties:
+        author:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        rating:
+          type: integer
+          readOnly: true
+        review:
+          type: string
+          readOnly: true
+      required:
+        - author
+        - created
+        - id
+        - rating
+        - review
+    RatingCreateUpdate:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        review:
+          type: string
+      required:
+        - created
+        - rating
+    RatingCreateUpdateRequest:
+      type: object
+      properties:
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 1
+        review:
+          type: string
+      required:
+        - rating
+    RatingRetrieve:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        rating:
+          type: integer
+          readOnly: true
+        review:
+          type: string
+          readOnly: true
+      required:
+        - created
+        - rating
+        - review
+    RequestAdminCreateRequest:
+      type: object
+      properties:
+        additional_data:
+          type: object
+          additionalProperties: {}
+        comment:
+          type: string
+          minLength: 1
+        deadline:
+          type: string
+          format: date
+        end_datetime:
+          type: string
+          format: date-time
+        place:
+          type: string
+          minLength: 1
+          maxLength: 150
+        requester:
+          type: integer
+        requester_email:
+          type: string
+          format: email
+          minLength: 1
+        requester_first_name:
+          type: string
+          minLength: 1
+        requester_last_name:
+          type: string
+          minLength: 1
+        requester_mobile:
+          type: string
+          minLength: 1
+        responsible:
+          type: integer
+          nullable: true
+        send_notification:
+          type: boolean
+        start_datetime:
+          type: string
+          format: date-time
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+      required:
+        - end_datetime
+        - place
+        - start_datetime
+        - title
+        - type
+    RequestAdminList:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        crew:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        start_datetime:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          type: integer
+          readOnly: true
+        status_by_admin:
+          type: boolean
+          readOnly: true
+        responsible:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        video_count:
+          type: integer
+          readOnly: true
+      required:
+        - created
+        - crew
+        - id
+        - responsible
+        - start_datetime
+        - status
+        - status_by_admin
+        - title
+        - video_count
+    RequestAdminRetrieve:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        crew:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        start_datetime:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          type: integer
+          readOnly: true
+        status_by_admin:
+          type: boolean
+          readOnly: true
+        responsible:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedDetail'
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        video_count:
+          type: integer
+          readOnly: true
+        additional_data:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        comment_count:
+          type: integer
+          readOnly: true
+        deadline:
+          type: string
+          format: date
+          readOnly: true
+        end_datetime:
+          type: string
+          format: date-time
+          readOnly: true
+        place:
+          type: string
+          readOnly: true
+        requester:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedDetail'
+          readOnly: true
+        requested_by:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedDetail'
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+      required:
+        - additional_data
+        - comment_count
+        - created
+        - crew
+        - deadline
+        - end_datetime
+        - id
+        - place
+        - requested_by
+        - requester
+        - responsible
+        - start_datetime
+        - status
+        - status_by_admin
+        - title
+        - type
+        - video_count
+    RequestAdminUpdateRequest:
+      type: object
+      properties:
+        additional_data:
+          type: object
+          additionalProperties: {}
+        deadline:
+          type: string
+          format: date
+        end_datetime:
+          type: string
+          format: date-time
+        place:
+          type: string
+          minLength: 1
+          maxLength: 150
+        requester:
+          type: integer
+        requester_email:
+          type: string
+          format: email
+          minLength: 1
+        requester_first_name:
+          type: string
+          minLength: 1
+        requester_last_name:
+          type: string
+          minLength: 1
+        requester_mobile:
+          type: string
+          minLength: 1
+        responsible:
+          type: integer
+          nullable: true
+        start_datetime:
+          type: string
+          format: date-time
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+      required:
+        - end_datetime
+        - place
+        - start_datetime
+        - title
+        - type
+    RequestAnonymousCreateRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          minLength: 1
+        end_datetime:
+          type: string
+          format: date-time
+        place:
+          type: string
+          minLength: 1
+          maxLength: 150
+        recaptcha:
+          type: string
+          writeOnly: true
+          minLength: 1
+        requester_first_name:
+          type: string
+          minLength: 1
+        requester_email:
+          type: string
+          format: email
+          minLength: 1
+        requester_last_name:
+          type: string
+          minLength: 1
+        requester_mobile:
+          type: string
+          minLength: 1
+        start_datetime:
+          type: string
+          format: date-time
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+      required:
+        - end_datetime
+        - place
+        - recaptcha
+        - requester_email
+        - requester_first_name
+        - requester_last_name
+        - requester_mobile
+        - start_datetime
+        - title
+        - type
+    RequestCreateRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          minLength: 1
+        end_datetime:
+          type: string
+          format: date-time
+        place:
+          type: string
+          minLength: 1
+          maxLength: 150
+        start_datetime:
+          type: string
+          format: date-time
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+      required:
+        - end_datetime
+        - place
+        - start_datetime
+        - title
+        - type
+    RequestExternalSchEventsCreateRequest:
+      type: object
+      properties:
+        callback_url:
+          type: string
+          format: uri
+          minLength: 1
+        comment:
+          type: string
+          minLength: 1
+        end_datetime:
+          type: string
+          format: date-time
+        place:
+          type: string
+          minLength: 1
+          maxLength: 150
+        requester_first_name:
+          type: string
+          minLength: 1
+        requester_email:
+          type: string
+          format: email
+          minLength: 1
+        requester_last_name:
+          type: string
+          minLength: 1
+        requester_mobile:
+          type: string
+          minLength: 1
+        start_datetime:
+          type: string
+          format: date-time
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        type:
+          type: string
+          minLength: 1
+          maxLength: 50
+      required:
+        - callback_url
+        - end_datetime
+        - place
+        - requester_email
+        - requester_first_name
+        - requester_last_name
+        - requester_mobile
+        - start_datetime
+        - title
+        - type
+    RequestList:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        start_datetime:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+      required:
+        - created
+        - id
+        - start_datetime
+        - status
+        - title
+    RequestRetrieve:
+      type: object
+      properties:
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        start_datetime:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        end_datetime:
+          type: string
+          format: date-time
+          readOnly: true
+        place:
+          type: string
+          readOnly: true
+        requester:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedDetail'
+          readOnly: true
+        requested_by:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedDetail'
+          readOnly: true
+        responsible:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedDetail'
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+      required:
+        - created
+        - end_datetime
+        - id
+        - place
+        - requested_by
+        - requester
+        - responsible
+        - start_datetime
+        - status
+        - title
+        - type
+    TokenBlacklistRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+        - refresh
+    TokenObtainPairOAuth2Request:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 1
+        provider:
+          type: string
+          minLength: 1
+      required:
+        - code
+        - provider
+    TokenObtainPairRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+        - password
+        - username
+    TokenObtainResponse:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+        - access
+        - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+        - access
+        - refresh
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+        - refresh
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          maxLength: 150
+        groups:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        last_name:
+          type: string
+          maxLength: 150
+        profile:
+          $ref: '#/components/schemas/UserProfile'
+        role:
+          type: string
+          readOnly: true
+        social_accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSocialAuth'
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          description:
+            Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+      required:
+        - groups
+        - id
+        - profile
+        - role
+        - social_accounts
+        - username
+    UserAdminDetail:
+      type: object
+      properties:
+        ban:
+          allOf:
+            - $ref: '#/components/schemas/BanUser'
+          readOnly: true
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          maxLength: 150
+        groups:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        last_name:
+          type: string
+          maxLength: 150
+        profile:
+          $ref: '#/components/schemas/UserProfile'
+        role:
+          type: string
+          readOnly: true
+        social_accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSocialAuth'
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          description:
+            Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+      required:
+        - ban
+        - groups
+        - id
+        - profile
+        - role
+        - social_accounts
+        - username
+    UserAdminDetailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        profile:
+          $ref: '#/components/schemas/UserProfileRequest'
+      required:
+        - profile
+    UserAdminList:
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          format: uri
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        is_staff:
+          type: boolean
+          readOnly: true
+        phone_number:
+          type: string
+          readOnly: true
+      required:
+        - avatar_url
+        - email
+        - full_name
+        - id
+        - is_staff
+        - phone_number
+    UserAdminWorkedOn:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        position:
+          type: string
+          readOnly: true
+        start_datetime:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+      required:
+        - id
+        - position
+        - start_datetime
+        - title
+    UserNestedDetail:
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          format: uri
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        is_staff:
+          type: boolean
+          readOnly: true
+        phone_number:
+          type: string
+          readOnly: true
+      required:
+        - avatar_url
+        - email
+        - full_name
+        - id
+        - is_staff
+        - phone_number
+    UserNestedList:
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          format: uri
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+      required:
+        - avatar_url
+        - full_name
+        - id
+    UserProfile:
+      type: object
+      properties:
+        avatar:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+        avatar_url:
+          type: string
+          readOnly: true
+        phone_number:
+          type: string
+      required:
+        - avatar
+        - avatar_url
+    UserProfileRequest:
+      type: object
+      properties:
+        avatar_provider:
+          allOf:
+            - $ref: '#/components/schemas/AvatarProviderEnum'
+          writeOnly: true
+        phone_number:
+          type: string
+          minLength: 1
+    UserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        profile:
+          $ref: '#/components/schemas/UserProfileRequest'
+      required:
+        - profile
+    UserSocialAuth:
+      type: object
+      properties:
+        provider:
+          type: string
+          readOnly: true
+        uid:
+          type: string
+          readOnly: true
+      required:
+        - provider
+        - uid
+    VideoAdminCreateUpdateRequest:
+      type: object
+      properties:
+        additional_data:
+          type: object
+          additionalProperties: {}
+        editor:
+          type: integer
+          nullable: true
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+      required:
+        - title
+    VideoAdminList:
+      type: object
+      properties:
+        avg_rating:
+          type: number
+          format: double
+          readOnly: true
+          default: 0.0
+        editor:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        rated:
+          type: boolean
+          readOnly: true
+        status:
+          type: integer
+          readOnly: true
+        status_by_admin:
+          type: boolean
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+      required:
+        - avg_rating
+        - editor
+        - id
+        - rated
+        - status
+        - status_by_admin
+        - title
+    VideoAdminRetrieve:
+      type: object
+      properties:
+        avg_rating:
+          type: number
+          format: double
+          readOnly: true
+          default: 0.0
+        editor:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        rated:
+          type: boolean
+          readOnly: true
+        status:
+          type: integer
+          readOnly: true
+        status_by_admin:
+          type: boolean
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        additional_data:
+          type: object
+          additionalProperties: {}
+          readOnly: true
+      required:
+        - additional_data
+        - avg_rating
+        - editor
+        - id
+        - rated
+        - status
+        - status_by_admin
+        - title
+    VideoAdminSearch:
+      type: object
+      properties:
+        avg_rating:
+          type: number
+          format: double
+          readOnly: true
+          default: 0.0
+        id:
+          type: integer
+          readOnly: true
+        last_aired:
+          type: string
+          format: date
+          readOnly: true
+        length:
+          type: integer
+          readOnly: true
+        request_start_datetime:
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          type: integer
+          readOnly: true
+        status_by_admin:
+          type: boolean
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+      required:
+        - avg_rating
+        - id
+        - last_aired
+        - length
+        - request_start_datetime
+        - status
+        - status_by_admin
+        - title
+    VideoListRetrieve:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        rating:
+          allOf:
+            - $ref: '#/components/schemas/RatingRetrieve'
+          readOnly: true
+        status:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        video_url:
+          type: string
+          nullable: true
+          readOnly: true
+      required:
+        - id
+        - rating
+        - status
+        - title
+        - video_url
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
