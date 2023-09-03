@@ -6,11 +6,15 @@ from yaml.loader import SafeLoader
 from yaml.nodes import ScalarNode
 
 DEPENDENCIES_TO_IGNORE = [
+    "@openapitools/openapi-generator-cli",
     "@types/node",
     "@types/react",
     "@types/react-dom",
     "@vitejs/plugin-react",
+    "autoprefixer",
+    "cssnano",
     "source-map-explorer",
+    "postcss",
     "react-scripts",
     "vite",
     "vite-tsconfig-paths",
