@@ -27,7 +27,8 @@
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css}",
     "lint": "eslint src/",
     "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx src/",
-    "check-eslint-config": "eslint-config-prettier src/index.tsx"
+    "check-eslint-config": "eslint-config-prettier src/index.tsx",
+    "generate-client": "openapi-generator-cli generate && prettier --write src/api/**/*.ts"
   },
   "browserslist": {
     "production": [
@@ -42,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "2.7.0",
     "@tanstack/eslint-plugin-query": "4.32.5",
     "@types/node": "18.17.11",
     "@types/react": "18.2.21",
