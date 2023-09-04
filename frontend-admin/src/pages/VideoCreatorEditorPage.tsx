@@ -29,7 +29,7 @@ export interface IVideoCreator {
   title: string;
 }
 
-const VideoCreator = () => {
+const VideoCreatorEditorPage = () => {
   const defaultValues = {
     additional_data: {
       archiving: {
@@ -175,4 +175,4 @@ const VideoCreator = () => {
   );
 };
 
-export { VideoCreator as Component };
+export { VideoCreatorEditorPage as Component };

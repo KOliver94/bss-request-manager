@@ -12,7 +12,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import AdditionalDataDialog from 'components/AdditionalDataDialog/AdditionalDataDialog';
-import AvatarGroupCrew from 'components/AvatarGroupCrew/AvatarGroupCrew';
+import AvatarGroupCrew from 'components/Avatar/AvatarGroupCrew';
 import DetailsRow from 'components/Details/DetailsRow';
 import AcceptRejectDialog from 'components/Details/Request/AcceptRejectDialog';
 import JumpButton from 'components/Details/Request/JumpButton';

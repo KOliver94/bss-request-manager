@@ -21,7 +21,7 @@ const router = createBrowserRouter(
         <Route index lazy={() => import('pages/RequestsListPage')} />
         <Route
           path="new"
-          lazy={() => import('components/RequestCreator/RequestCreator')}
+          lazy={() => import('pages/RequestCreatorEditorPage')}
           handle={{
             crumb: () => 'Új',
           }}
@@ -41,7 +41,7 @@ const router = createBrowserRouter(
           >
             <Route
               path="new"
-              lazy={() => import('components/VideoCreator/VideoCreator')}
+              lazy={() => import('pages/VideoCreatorEditorPage')}
               handle={{
                 crumb: () => 'Új videó',
               }}
