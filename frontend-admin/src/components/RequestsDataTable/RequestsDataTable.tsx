@@ -18,9 +18,7 @@ import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
 
-const AvatarGroupCrew = lazy(
-  () => import('components/AvatarGroupCrew/AvatarGroupCrew'),
-);
+const AvatarGroupCrew = lazy(() => import('components/Avatar/AvatarGroupCrew'));
 const VideosDataTable = lazy(
   () => import('components/VideosDataTable/VideosDataTable'),
 );

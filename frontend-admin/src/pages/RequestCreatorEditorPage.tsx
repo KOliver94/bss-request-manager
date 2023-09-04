@@ -13,12 +13,11 @@ import AutoCompleteStaff, {
   StaffUser,
 } from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
+import NewRequesterForm from 'components/RequestCreator/NewRequesterForm';
 import UsersDataTable, {
   UsersDataType,
 } from 'components/UsersDataTable/UsersDataTable';
 import useMobile from 'hooks/useMobile';
-
-import NewRequesterForm from './NewRequesterForm';
 
 export interface IRequestCreator {
   comment_text: string;
@@ -38,7 +37,7 @@ export interface IRequestCreator {
   type: string;
 }
 
-const RequestCreator = () => {
+const RequestCreatorEditorPage = () => {
   const defaultValues = {
     comment_text: '',
     create_more: false,
@@ -282,4 +281,4 @@ const RequestCreator = () => {
   );
 };
 
-export { RequestCreator as Component };
+export { RequestCreatorEditorPage as Component };
