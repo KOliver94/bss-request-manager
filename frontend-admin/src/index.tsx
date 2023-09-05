@@ -8,8 +8,9 @@ import { RouterProvider } from 'react-router-dom';
 import { register } from 'timeago.js';
 import huLocal from 'timeago.js/lib/lang/hu';
 
+import { ThemeProvider } from 'providers/ThemeProvider';
+import { ToastProvider } from 'providers/ToastProvider';
 import router from 'router';
-import { ThemeProvider } from 'themes/ThemeProvider';
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'primeicons/primeicons.css';
@@ -33,7 +34,9 @@ root.render(
   <StrictMode>
     <PrimeReactProvider>
       <ThemeProvider>
-        <RouterProvider router={router} />
+        <ToastProvider>
+          <RouterProvider router={router} />
+        </ToastProvider>
       </ThemeProvider>
     </PrimeReactProvider>
   </StrictMode>,
