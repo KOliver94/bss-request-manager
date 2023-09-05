@@ -185,7 +185,7 @@ const RecordingContentButtonsNonEditing = ({
   recordingPath,
 }: RecordingContentButtonsNonEditingProps) => {
   const _recordingPath = recordingPath || '';
-  const { show } = useToast();
+  const { showToast } = useToast();
 
   return (
     <span className="flex flex-no-wrap justify-content-end p-buttonset sm:flex-wrap">
@@ -201,7 +201,7 @@ const RecordingContentButtonsNonEditing = ({
         icon="pi pi-folder-open"
         label="Másolás"
         onClick={() => {
-          show({
+          showToast({
             detail: 'Elérési út a vágólapra másolva',
             life: 3000,
             severity: 'info',

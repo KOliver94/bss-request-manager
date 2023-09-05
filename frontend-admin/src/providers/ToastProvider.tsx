@@ -9,13 +9,13 @@ type ToastProviderProps = {
 };
 
 interface ToastContextValue {
-  clear: () => void;
-  show: (message: MessageType) => void;
+  clearToasts: () => void;
+  showToast: (message: MessageType) => void;
 }
 
 const initialValue: ToastContextValue = {
-  clear: () => null,
-  show: () => null,
+  clearToasts: () => null,
+  showToast: () => null,
 };
 
 export class ToastEvent extends Event {
@@ -27,7 +27,7 @@ export class ToastEvent extends Event {
 export const toast = new (class Toaster {
   private _currentEvent: ToastEvent | null = null;
 
-  show(message: MessageType) {
+  showToast(message: MessageType) {
     this._currentEvent = new ToastEvent(message);
     if (this._currentEvent) window.dispatchEvent(this._currentEvent);
   }
@@ -38,25 +38,25 @@ const ToastContext = createContext<ToastContextValue>(initialValue);
 export const ToastProvider = (props: ToastProviderProps) => {
   const toast = useRef<Toast>(null);
 
-  const show = (message: MessageType) => {
+  const showToast = (message: MessageType) => {
     toast.current?.show(message);
   };
 
   useLayoutEffect(() => {
     function callback(e: Event) {
-      if (e instanceof ToastEvent) show(e.message);
+      if (e instanceof ToastEvent) showToast(e.message);
     }
 
     window.addEventListener('toast', callback);
     return () => window.removeEventListener('toast', callback);
   }, []);
 
-  const clear = () => toast.current?.clear();
+  const clearToasts = () => toast.current?.clear();
 
   return (
     <>
       <Toast ref={toast} position="bottom-left" />
-      <ToastContext.Provider value={{ clear, show }}>
+      <ToastContext.Provider value={{ clearToasts, showToast }}>
         {props.children}
       </ToastContext.Provider>
     </>
