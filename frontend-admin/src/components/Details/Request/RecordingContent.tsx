@@ -1,12 +1,10 @@
-import { useRef } from 'react';
-
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
-import { Toast } from 'primereact/toast';
 import { Control, Controller } from 'react-hook-form';
 
 import { RequestAdditionalDataRecordingType } from 'pages/RequestDetailsPage';
+import { useToast } from 'providers/ToastProvider';
 
 type RequestAdditionalDataRecordingFormType = {
   control: Control<RequestAdditionalDataRecordingType>;
@@ -187,11 +185,10 @@ const RecordingContentButtonsNonEditing = ({
   recordingPath,
 }: RecordingContentButtonsNonEditingProps) => {
   const _recordingPath = recordingPath || '';
-  const toastRef = useRef<Toast>(null);
+  const { show } = useToast();
 
   return (
     <span className="flex flex-no-wrap justify-content-end p-buttonset sm:flex-wrap">
-      <Toast ref={toastRef} position="bottom-left" />
       <Button
         className="p-button-sm p-button-text pl-1 pr-2 py-0"
         icon="pi pi-pencil"
@@ -204,7 +201,7 @@ const RecordingContentButtonsNonEditing = ({
         icon="pi pi-folder-open"
         label="Másolás"
         onClick={() => {
-          toastRef.current?.show({
+          show({
             detail: 'Elérési út a vágólapra másolva',
             life: 3000,
             severity: 'info',
