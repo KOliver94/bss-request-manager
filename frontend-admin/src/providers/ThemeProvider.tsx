@@ -5,8 +5,8 @@ import { useMountEffect } from 'primereact/hooks';
 
 import { useTheme } from 'hooks/useTheme';
 
-const DarkTheme = lazy(() => import('./dark/DarkTheme'));
-const LightTheme = lazy(() => import('./light/LightTheme'));
+const DarkTheme = lazy(() => import('themes/dark/DarkTheme'));
+const LightTheme = lazy(() => import('themes/light/LightTheme'));
 
 type ThemeProviderProps = {
   children: JSX.Element;
