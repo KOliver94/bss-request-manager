@@ -337,6 +337,20 @@ SPECTACULAR_SETTINGS = {
     "SCHEMA_COERCE_PATH_PK_SUFFIX": True,
     "SCHEMA_PATH_PREFIX": "/api/v[0-9]",
     "SERVE_INCLUDE_SCHEMA": False,
+    "SERVERS": [
+        {
+            "description": "Local development environment",
+            "url": "http://localhost:8000",
+        },
+        {
+            "description": "Production environment",
+            "url": "https://felkeres.bsstudio.hu",
+        },
+        {
+            "description": "Sandbox/staging environment",
+            "url": "https://felkeres-dev.bsstudio.hu",
+        },
+    ],
     "TITLE": "BSS Request Manager API",
     "VERSION": "0.1.0",
 }

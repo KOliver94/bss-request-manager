@@ -3837,3 +3837,10 @@ components:
       in: header
       name: Authorization
       description: Token-based authentication with required prefix "Token"
+servers:
+  - description: Local development environment
+    url: http://localhost:8000
+  - description: Production environment
+    url: https://felkeres.bsstudio.hu
+  - description: Sandbox/staging environment
+    url: https://felkeres-dev.bsstudio.hu
