@@ -623,7 +623,7 @@ def test_user_worked_on(
             baker.make("video_requests.Video", editor=user, request=video_requests[7]),
         ]
         for video in videos:
-            should_find.append({"id": video.request.id, "position": "Vágó"})
+            should_find.append({"id": video.request.id, "position": "Editor"})
 
     if was_responsible:
         video_requests += [
@@ -638,14 +638,14 @@ def test_user_worked_on(
                 start_datetime=start_datetime - timedelta(weeks=7),
             ),
         ]
-        should_find.append({"id": video_requests[8].id, "position": "Felelős"})
-        should_find.append({"id": video_requests[9].id, "position": "Felelős"})
+        should_find.append({"id": video_requests[8].id, "position": "Responsible"})
+        should_find.append({"id": video_requests[9].id, "position": "Responsible"})
         video_requests[1].responsible = user
         video_requests[1].save()
-        should_find.append({"id": video_requests[1].id, "position": "Felelős"})
+        should_find.append({"id": video_requests[1].id, "position": "Responsible"})
         video_requests[7].responsible = user
         video_requests[7].save()
-        should_find.append({"id": video_requests[7].id, "position": "Felelős"})
+        should_find.append({"id": video_requests[7].id, "position": "Responsible"})
 
     url = reverse("api:v1:admin:users:user-worked-on", kwargs={"pk": user.id})
 
