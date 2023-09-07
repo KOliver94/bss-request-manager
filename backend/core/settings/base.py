@@ -193,6 +193,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = []
 ADMIN_GROUP = config("ADMIN_GROUP", default="Administrators")
+SERVICE_ACCOUNTS_GROUP = config("SERVICE_ACCOUNTS_GROUP", default="Service Accounts")
 
 # Django Rest Framework Settings
 # https://www.django-rest-framework.org/

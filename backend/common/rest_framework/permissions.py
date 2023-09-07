@@ -26,7 +26,7 @@ class IsAuthenticated(BasePermission):
         return bool(
             request.user
             and request.user.is_authenticated
-            and not request.user.groups.filter(name="Service Accounts").exists()
+            and not request.user.is_service_account
         )
 
 
@@ -40,7 +40,7 @@ class IsStaffUser(BasePermission):
             request.user
             and request.user.is_authenticated
             and request.user.is_staff
-            and not request.user.groups.filter(name="Service Accounts").exists()
+            and not request.user.is_service_account
         )
 
 
@@ -54,7 +54,7 @@ class IsAdminUser(BasePermission):
             request.user
             and request.user.is_authenticated
             and is_admin(request.user)
-            and not request.user.groups.filter(name="Service Accounts").exists()
+            and not request.user.is_service_account
         )
 
 
@@ -67,7 +67,7 @@ class IsServiceAccount(BasePermission):
         return bool(
             request.user
             and request.user.is_authenticated
-            and request.user.groups.filter(name="Service Accounts").exists()
+            and request.user.is_service_account
         )
 
     def has_object_permission(self, request, view, obj):
@@ -114,7 +114,7 @@ class IsSelfOrStaff(BasePermission):
         return bool(
             request.user
             and request.user.is_authenticated
-            and not request.user.groups.filter(name="Service Accounts").exists()
+            and not request.user.is_service_account
         )
 
     def has_object_permission(self, request, view, obj):

@@ -33,9 +33,15 @@ def is_admin(self):
     )
 
 
+@property
+def is_service_account(self):
+    return self.groups.filter(name=settings.SERVICE_ACCOUNTS_GROUP).exists()
+
+
 User.add_to_class("role", role)
 User.add_to_class("get_full_name_eastern_order", get_full_name_eastern_order)
 User.add_to_class("is_admin", is_admin)
+User.add_to_class("is_service_account", is_service_account)
 
 
 ##############################
