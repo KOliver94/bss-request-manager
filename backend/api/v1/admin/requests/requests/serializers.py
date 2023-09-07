@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema_field
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.exceptions import ValidationError
@@ -111,13 +112,13 @@ class RequestAdminUpdateSerializer(ModelSerializer):
 
         if any(requester_data) and attrs.get("requester"):
             raise ValidationError(
-                "Either define the requester by its id or its details but not both."
-            )  # TODO: Translate
+                _("Either define the requester by its id or its details but not both.")
+            )
 
         if any(requester_data) and not all(requester_data):
             raise ValidationError(
-                "All requester data fields must be present if one is present."
-            )  # TODO: Translate
+                _("All requester data fields must be present if one is present.")
+            )
 
         return attrs
 

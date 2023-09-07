@@ -1,0 +1,83 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Olivér Kecskeméty <kecskemety.oliver@simonyi.bme.hu>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: BSS Request Manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-09-07 03:24+0200\n"
+"PO-Revision-Date: 2023-09-07 03:30+0200\n"
+"Last-Translator: Olivér Kecskeméty <kecskemety.oliver@simonyi.bme.hu>\n"
+"Language: Hungarian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\api\v1\admin\requests\ratings\views.py:60
+msgid "The video has not been edited yet."
+msgstr "A videó még nincs megvágva."
+
+#: .\api\v1\admin\requests\ratings\views.py:66
+#: .\api\v1\requests\ratings\views.py:54
+msgid "You have already posted a rating."
+msgstr "Már adtál le értékelést."
+
+#: .\api\v1\admin\requests\requests\serializers.py:115
+msgid "Either define the requester by its id or its details but not both."
+msgstr "A felkérőt vagy az id-ja vagy adatai segítségével add meg, de ne egyszerre mindkettővel."
+
+#: .\api\v1\admin\requests\requests\serializers.py:120
+msgid "All requester data fields must be present if one is present."
+msgstr "A felkérő minden adatát szükséges kitölteni ha bármely közülük meg van adva."
+
+#: .\api\v1\admin\users\views.py:135 .\api\v1\admin\users\views.py:149
+#: .\api\v1\admin\users\views.py:161
+msgid "Invalid filter."
+msgstr "Érvénytelen szűrő."
+
+#: .\api\v1\admin\users\views.py:169
+msgid "Must be earlier than start_datetime_before."
+msgstr "Korábbinak kell lennie mint a start_datetime_before."
+
+#: .\api\v1\admin\users\views.py:183
+msgid "Responsible"
+msgstr "Felelős"
+
+#: .\api\v1\admin\users\views.py:203
+msgid "Editor"
+msgstr "Vágó"
+
+#: .\api\v1\login\serializers.py:63 .\api\v1\me\views.py:76
+msgid "Invalid provider."
+msgstr "Érvénytelen szogláltató."
+
+#: .\api\v1\me\serializers.py:46
+msgid "Avatar does not exist for this provider."
+msgstr "Nem létezik avatar ehhez a szolgáltatóhoz."
+
+#: .\api\v1\requests\ratings\views.py:48
+msgid "The video has not been published yet."
+msgstr "A videó még nem került publikálásra."
+
+#: .\api\v1\requests\requests\serializers.py:74
+msgid "Must be later than current time."
+msgstr "Későbbinek kell lennie mint a jelenlegi idő."
+
+#: .\api\v1\requests\requests\serializers.py:82
+msgid "Please fill all data in your profile before sending a request."
+msgstr "Kérlek tölts ki minden adatot a profilodban mielőtt felkérést küldenél be."
+
+#: .\common\rest_framework\pagination.py:17
+msgid "Return paginated response."
+msgstr "Lapokra tördelt választ ad vissza."
+
+#: .\core\settings\base.py:233
+msgid "English"
+msgstr "angol"
+
+#: .\core\settings\base.py:234
+msgid "Hungarian"
+msgstr "magyar"

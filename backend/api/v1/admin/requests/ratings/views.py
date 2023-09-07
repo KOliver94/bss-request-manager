@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -56,14 +57,14 @@ class RatingAdminViewSet(ModelViewSet):
         if video.status < Video.Statuses.EDITED:
             # A video cannot be rated before being edited (reached status 3).
             raise ValidationError(
-                {"non_field_errors": ["The video has not been edited yet."]}
-            )  # TODO: Translate
+                {"non_field_errors": [_("The video has not been edited yet.")]}
+            )
 
         if Rating.objects.filter(author=self.request.user, video=video).exists():
             # Only one rating per user is permitted for a video.
             raise ValidationError(
-                {"non_field_errors": ["You have already posted a rating."]}
-            )  # TODO: Translate
+                {"non_field_errors": [_("You have already posted a rating.")]}
+            )
 
         serializer.save(author=self.request.user, video=video)
 

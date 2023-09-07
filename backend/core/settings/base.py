@@ -17,6 +17,7 @@ from celery.schedules import crontab
 from decouple import Csv, config
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.utils import get_random_secret_key
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BACKEND_DIR = os.path.dirname(
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -227,7 +229,12 @@ SIMPLE_JWT = {
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
+LANGUAGES = [
+    ("en", _("English")),
+    ("hu", _("Hungarian")),
+]
 LANGUAGE_CODE = config("LANGUAGE_CODE", default="en-us")
+LOCALE_PATHS = [os.path.join(BACKEND_DIR, "locale")]
 TIME_ZONE = config("TIME_ZONE", default="Europe/Budapest")
 USE_I18N = True
 USE_TZ = True

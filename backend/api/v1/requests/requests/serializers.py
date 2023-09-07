@@ -1,4 +1,5 @@
 from django.utils.timezone import localtime
+from django.utils.translation import gettext_lazy as _
 from drf_recaptcha.fields import ReCaptchaV2Field
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.exceptions import ValidationError
@@ -69,17 +70,15 @@ class RequestCreateSerializer(ModelSerializer):
     def validate(self, attrs):
         if attrs.get("start_datetime") < localtime():
             raise ValidationError(
-                {
-                    "start_datetime": "Must be later than current time."
-                }  # TODO: Translate
+                {"start_datetime": _("Must be later than current time.")}
             )
         user = self.context["request"].user
         if not user.is_anonymous and not all(
             [user.email, user.first_name, user.last_name, user.userprofile.phone_number]
         ):
             raise ValidationError(
-                "Please fill all data in your profile before sending a request."
-            )  # TODO: Translate
+                _("Please fill all data in your profile before sending a request.")
+            )
         return attrs
 
 
