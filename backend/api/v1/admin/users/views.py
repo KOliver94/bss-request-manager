@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models import Value
 from django.db.models.functions import Concat
 from django.utils.timezone import localdate
+from django.utils.translation import gettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -130,9 +131,7 @@ class UserAdminViewSet(
                 else start_datetime_before
             )
         except ValueError:
-            raise ValidationError(
-                {"start_datetime_before": ["Invalid filter."]}
-            )  # TODO: Translate
+            raise ValidationError({"start_datetime_before": [_("Invalid filter.")]})
 
         try:
             start_datetime_after = request.query_params.get(
@@ -144,9 +143,7 @@ class UserAdminViewSet(
                 else start_datetime_after
             )
         except ValueError:
-            raise ValidationError(
-                {"start_datetime_after": ["Invalid filter."]}
-            )  # TODO: Translate
+            raise ValidationError({"start_datetime_after": [_("Invalid filter.")]})
 
         try:
             is_responsible = request.query_params.get("is_responsible", True)
@@ -156,19 +153,17 @@ class UserAdminViewSet(
                 else is_responsible
             )
         except ValueError:
-            raise ValidationError(
-                {"is_responsible": ["Invalid filter."]}
-            )  # TODO: Translate
+            raise ValidationError({"is_responsible": [_("Invalid filter.")]})
 
         # Check if date range is valid
         if start_datetime_before < start_datetime_after:
             raise ValidationError(
                 {
                     "start_datetime_after": [
-                        "Must be earlier than start_datetime_before."
+                        _("Must be earlier than start_datetime_before.")
                     ]
                 }
-            )  # TODO: Translate
+            )
 
         if is_responsible:
             for request in Request.objects.filter(
@@ -178,9 +173,7 @@ class UserAdminViewSet(
                     start_datetime_before,
                 ],
             ):
-                worked_on.append(
-                    request.__dict__ | {"position": "Felelős"}
-                )  # TODO: Translate
+                worked_on.append(request.__dict__ | {"position": _("Responsible")})
 
         for crew in CrewMember.objects.filter(
             member=user,
@@ -198,9 +191,7 @@ class UserAdminViewSet(
                 start_datetime_before,
             ],
         ):
-            worked_on.append(
-                video.request.__dict__ | {"position": "Vágó"}
-            )  # TODO: Translate
+            worked_on.append(video.request.__dict__ | {"position": _("Editor")})
 
         serializer = UserAdminWorkedOnSerializer(worked_on, many=True)
         return Response(serializer.data)

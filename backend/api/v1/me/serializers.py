@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, ChoiceField, EmailField
@@ -42,8 +43,8 @@ class UserProfileSerializer(ModelSerializer):
         if "avatar_provider" in validated_data:
             if not instance.avatar.get(validated_data["avatar_provider"]):
                 raise ValidationError(
-                    {"avatar_provider": "Avatar does not exist for this provider."}
-                )  # TODO: Translate
+                    {"avatar_provider": _("Avatar does not exist for this provider.")}
+                )
             instance.avatar["provider"] = validated_data.pop("avatar_provider")
         return super().update(instance, validated_data)
 

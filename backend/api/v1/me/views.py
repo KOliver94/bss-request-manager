@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
@@ -72,7 +73,7 @@ class OAuth2ConnectDisconnectView(GenericAPIView):
     @staticmethod
     def validate_provider(provider):
         if provider not in settings.SOCIAL_AUTH_PROVIDERS:
-            raise ValidationError({"provider": "Invalid provider."})  # TODO: Translate
+            raise ValidationError({"provider": _("Invalid provider.")})
         return provider
 
     def delete(self, request, *args, **kwargs):

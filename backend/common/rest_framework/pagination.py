@@ -14,7 +14,7 @@ class ExtendedPagination(PageNumberPagination):
     # Client can control if they want pagination using this query parameter.
     # Default is True. If False is passed in, data is returned without pagination.
     pagination_query_param = "pagination"
-    pagination_query_description = _("Return paginated response.")  # TODO: Translate
+    pagination_query_description = _("Return paginated response.")
 
     def paginate_queryset(self, queryset, request, view=None):
         pagination = request.query_params.get(self.pagination_query_param, "true")

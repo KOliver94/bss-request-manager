@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
@@ -44,13 +45,13 @@ class RatingViewSet(ModelViewSet):
         if video.status < Video.Statuses.PUBLISHED:
             # A video cannot be rated before being published (reached status 5).
             raise ValidationError(
-                {"non_field_errors": ["The video has not been published yet."]}
-            )  # TODO: Translate
+                {"non_field_errors": [_("The video has not been published yet.")]}
+            )
 
         if Rating.objects.filter(author=self.request.user, video=video).exists():
             # Only one rating per user is permitted for a video.
             raise ValidationError(
-                {"non_field_errors": ["You have already posted a rating."]}
-            )  # TODO: Translate
+                {"non_field_errors": [_("You have already posted a rating.")]}
+            )
 
         serializer.save(author=self.request.user, video=video)

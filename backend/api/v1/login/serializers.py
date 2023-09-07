@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponse
+from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.fields import CharField
 from rest_framework.serializers import Serializer
@@ -59,7 +60,7 @@ class TokenObtainPairOAuth2Serializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
         if attrs["provider"] not in settings.SOCIAL_AUTH_PROVIDERS:
-            raise ValidationError({"provider": "Invalid provider."})  # TODO: Translate
+            raise ValidationError({"provider": _("Invalid provider.")})
 
         decorate_request(self.context["request"], attrs["provider"])
         user = self.get_user()
