@@ -116,7 +116,7 @@ def test_create_request(
     user,
     with_comment,
 ):
-    requested_by = do_login(api_client, request, user, token=True)
+    requested_by = do_login(api_client, request, user)
     user = baker.make(User, _fill_optional=["email"])
 
     if not new_user:
@@ -183,7 +183,7 @@ def test_retrieve_request(
     request,
     user,
 ):
-    user = do_login(api_client, request, user, token=True)
+    user = do_login(api_client, request, user)
 
     video_request = baker.make("video_requests.Request", requested_by=user)
 
@@ -216,7 +216,7 @@ def test_retrieve_request_errors(
     request,
     user,
 ):
-    user = do_login(api_client, request, user, token=True)
+    user = do_login(api_client, request, user)
 
     video_request_1 = baker.make("video_requests.Request", requester=user)
     video_request_2 = baker.make("video_requests.Request")
@@ -263,7 +263,7 @@ def test_create_comment(
     request,
     user,
 ):
-    user = do_login(api_client, request, user, token=True)
+    user = do_login(api_client, request, user)
 
     video_request = baker.make("video_requests.Request", requested_by=user)
 
@@ -299,7 +299,7 @@ def test_create_comment_errors(
     request,
     user,
 ):
-    user = do_login(api_client, request, user, token=True)
+    user = do_login(api_client, request, user)
 
     video_request_1 = baker.make("video_requests.Request", requester=user)
     video_request_2 = baker.make("video_requests.Request")

@@ -15,10 +15,10 @@ def authorize(client, user):
     client.credentials(HTTP_AUTHORIZATION=f"Token {token}")
 
 
-def do_login(api_client, request, user, token=False):
+def do_login(api_client, request, user):
     if user:
         user = request.getfixturevalue(user)
-        if token:
+        if user.is_service_account:
             authorize(api_client, user)
         else:
             login(api_client, user)

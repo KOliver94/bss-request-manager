@@ -68,7 +68,7 @@ def basic_user():
 
 
 @pytest.fixture
-def service_account():
+def service_account(settings):
     user = User.objects.create_user(
         email="service-account@example.com",
         first_name="Service",
@@ -78,7 +78,7 @@ def service_account():
         username="service-account",
     )
 
-    grp = Group.objects.get_or_create(name="Service Accounts")[0]
+    grp = Group.objects.get_or_create(name=settings.SERVICE_ACCOUNTS_GROUP)[0]
     user.groups.add(grp)
     user.save()
 
