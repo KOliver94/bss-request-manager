@@ -5,7 +5,10 @@ import { AdminApiFactory, LoginApiFactory, LogoutApiFactory } from './api';
 // TODO: Create some validation view to check if all local storage elements exists otherwise redirect to login
 
 const axiosInstance = axios.create({
-  headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+  headers: {
+    'Accept-Language': 'hu',
+    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+  },
 });
 
 const basePath = import.meta.env.VITE_API_URL;
