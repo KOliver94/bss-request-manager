@@ -7,6 +7,7 @@ from yaml.nodes import ScalarNode
 
 DEPENDENCIES_TO_IGNORE = [
     "@openapitools/openapi-generator-cli",
+    "@tanstack/react-query-devtools",
     "@types/node",
     "@types/react",
     "@types/react-dom",
