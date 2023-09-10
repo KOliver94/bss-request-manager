@@ -11,10 +11,8 @@ import { classNames } from 'primereact/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import AdditionalDataDialog from 'components/AdditionalDataDialog/AdditionalDataDialog';
 import AvatarGroupCrew from 'components/Avatar/AvatarGroupCrew';
 import DetailsRow from 'components/Details/DetailsRow';
-import AcceptRejectDialog from 'components/Details/Request/AcceptRejectDialog';
 import JumpButton from 'components/Details/Request/JumpButton';
 import {
   RecordingContent,
@@ -25,7 +23,6 @@ import {
   RequesterContentButtons,
 } from 'components/Details/Request/RequesterContent';
 import LinkButton from 'components/LinkButton/LinkButton';
-import RequestStatusHelperSlideover from 'components/StatusHelperSlideover/RequestStatusHelperSlideover';
 import { RequestStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
@@ -35,11 +32,20 @@ import {
 } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
 
+const AcceptRejectDialog = lazy(
+  () => import('components/Details/Request/AcceptRejectDialog'),
+);
+const AdditionalDataDialog = lazy(
+  () => import('components/AdditionalDataDialog/AdditionalDataDialog'),
+);
 const CommentCards = lazy(
   () => import('components/Details/Request/CommentCards'),
 );
 const CrewDataTable = lazy(
   () => import('components/Details/Request/Crew/CrewDataTable'),
+);
+const RequestStatusHelperSlideover = lazy(
+  () => import('components/StatusHelperSlideover/RequestStatusHelperSlideover'),
 );
 const VideosDataTable = lazy(
   () => import('components/VideosDataTable/VideosDataTable'),
@@ -300,30 +306,36 @@ const RequestDetailsPage = () => {
 
   return (
     <>
-      <RequestStatusHelperSlideover
-        adminStatusOverride={!!data.additional_data.status_by_admin?.status}
-        allVideosDone={false} //TODO: Check real videos
-        copiedToDrive={!!data.additional_data.recording?.copied_to_gdrive}
-        id="requestStatusHelper"
-        status={data.status}
-      />
       <ConfirmDialog />
-      <AdditionalDataDialog
-        data={data.additional_data}
-        loading={loading}
-        onHide={() => setAdditionalDataDialogOpen(false)}
-        onSave={onAdditionalDataSave}
-        visible={additionalDataDialogOpen}
-      />
-      <AcceptRejectDialog
-        accepted={data.additional_data.accepted}
-        canceled={data.additional_data.canceled}
-        loading={loading}
-        failed={data.additional_data.failed}
-        onHide={() => setAcceptRejectDialogOpen(false)}
-        onSave={onAcceptRejectSave}
-        visible={acceptRejectDialogOpen}
-      />
+      <Suspense>
+        <AcceptRejectDialog
+          accepted={data.additional_data.accepted}
+          canceled={data.additional_data.canceled}
+          loading={loading}
+          failed={data.additional_data.failed}
+          onHide={() => setAcceptRejectDialogOpen(false)}
+          onSave={onAcceptRejectSave}
+          visible={acceptRejectDialogOpen}
+        />
+      </Suspense>
+      <Suspense>
+        <AdditionalDataDialog
+          data={data.additional_data}
+          loading={loading}
+          onHide={() => setAdditionalDataDialogOpen(false)}
+          onSave={onAdditionalDataSave}
+          visible={additionalDataDialogOpen}
+        />
+      </Suspense>
+      <Suspense>
+        <RequestStatusHelperSlideover
+          adminStatusOverride={!!data.additional_data.status_by_admin?.status}
+          allVideosDone={false} //TODO: Check real videos
+          copiedToDrive={!!data.additional_data.recording?.copied_to_gdrive}
+          id="requestStatusHelper"
+          status={data.status}
+        />
+      </Suspense>
       <div className="p-3 sm:p-5 surface-ground">
         <div className="flex flex-column mb-3 sm:align-items-center sm:flex-row sm:justify-content-between">
           <div>
