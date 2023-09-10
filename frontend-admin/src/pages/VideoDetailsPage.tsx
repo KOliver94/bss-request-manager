@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { Suspense, lazy, useRef, useState } from 'react';
 
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
@@ -8,16 +8,23 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import AdditionalDataDialog from 'components/AdditionalDataDialog/AdditionalDataDialog';
 import DetailsRow from 'components/Details/DetailsRow';
-import AiredAddDialog from 'components/Details/Video/AiredAddDialog';
 import Ratings from 'components/Details/Video/Ratings';
 import LinkButton from 'components/LinkButton/LinkButton';
-import VideoStatusHelperSlideover from 'components/StatusHelperSlideover/VideoStatusHelperSlideover';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import useMobile from 'hooks/useMobile';
+
+const AdditionalDataDialog = lazy(
+  () => import('components/AdditionalDataDialog/AdditionalDataDialog'),
+);
+const AiredAddDialog = lazy(
+  () => import('components/Details/Video/AiredAddDialog'),
+);
+const VideoStatusHelperSlideover = lazy(
+  () => import('components/StatusHelperSlideover/VideoStatusHelperSlideover'),
+);
 
 export type VideoAdditionalDataType = {
   aired?: [string];
@@ -112,26 +119,32 @@ const VideoDetailsPage = () => {
 
   return (
     <>
-      <VideoStatusHelperSlideover
-        adminStatusOverride={!!data.additional_data.status_by_admin?.status}
-        editor={!!data.editor}
-        id="videoStatusHelper"
-        status={data.status}
-      />
-      <AiredAddDialog
-        loading={loading}
-        onHide={() => setAiredAddDialogOpen(false)}
-        onSave={onAiredDateSave}
-        visible={airedAddDialogOpen}
-      />
+      <Suspense>
+        <AdditionalDataDialog
+          data={data.additional_data}
+          loading={loading}
+          onHide={() => setAdditionalDataDialogOpen(false)}
+          onSave={onAdditionalDataSave}
+          visible={additionalDataDialogOpen}
+        />
+      </Suspense>
+      <Suspense>
+        <AiredAddDialog
+          loading={loading}
+          onHide={() => setAiredAddDialogOpen(false)}
+          onSave={onAiredDateSave}
+          visible={airedAddDialogOpen}
+        />
+      </Suspense>
+      <Suspense>
+        <VideoStatusHelperSlideover
+          adminStatusOverride={!!data.additional_data.status_by_admin?.status}
+          editor={!!data.editor}
+          id="videoStatusHelper"
+          status={data.status}
+        />
+      </Suspense>
       <ConfirmDialog />
-      <AdditionalDataDialog
-        data={data.additional_data}
-        loading={loading}
-        onHide={() => setAdditionalDataDialogOpen(false)}
-        onSave={onAdditionalDataSave}
-        visible={additionalDataDialogOpen}
-      />
       <div className="p-3 sm:p-5 surface-ground">
         <div className="flex flex-column mb-3 sm:align-items-center sm:flex-row sm:justify-content-between">
           <div>

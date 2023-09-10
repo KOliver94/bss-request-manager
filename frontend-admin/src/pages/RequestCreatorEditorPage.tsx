@@ -1,9 +1,12 @@
+import { Suspense, lazy } from 'react';
+
 import { Calendar } from 'primereact/calendar';
 import { Checkbox } from 'primereact/checkbox';
 import { Divider } from 'primereact/divider';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { ProgressBar } from 'primereact/progressbar';
 import { SelectButton } from 'primereact/selectbutton';
 import { SplitButton } from 'primereact/splitbutton';
 import { IconType } from 'primereact/utils';
@@ -13,11 +16,15 @@ import AutoCompleteStaff, {
   StaffUser,
 } from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
-import NewRequesterForm from 'components/RequestCreator/NewRequesterForm';
-import UsersDataTable, {
-  UsersDataType,
-} from 'components/UsersDataTable/UsersDataTable';
+import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import useMobile from 'hooks/useMobile';
+
+const NewRequesterForm = lazy(
+  () => import('components/RequestCreator/NewRequesterForm'),
+);
+const UsersDataTable = lazy(
+  () => import('components/UsersDataTable/UsersDataTable'),
+);
 
 export interface IRequestCreator {
   comment_text: string;
@@ -240,17 +247,21 @@ const RequestCreatorEditorPage = () => {
               control={control}
               render={({ field }) => (
                 <div className="col-12 field mb-0 mt-4">
-                  <UsersDataTable
-                    selectionMode="single"
-                    selection={field.value || undefined}
-                    onSelectionChange={(e) => field.onChange(e.value)}
-                  />
+                  <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+                    <UsersDataTable
+                      selectionMode="single"
+                      selection={field.value || undefined}
+                      onSelectionChange={(e) => field.onChange(e.value)}
+                    />
+                  </Suspense>
                 </div>
               )}
             />
           )}
           {watchRequesterType === 'new' && (
-            <NewRequesterForm control={control} />
+            <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+              <NewRequesterForm control={control} />
+            </Suspense>
           )}
           <Divider />
 
