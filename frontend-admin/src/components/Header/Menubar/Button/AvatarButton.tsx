@@ -1,11 +1,12 @@
 import { Ripple } from 'primereact/ripple';
 
 import Avatar from 'components/Avatar/Avatar';
+import { getAvatar, getGroups, getName } from 'helpers/LocalStorageHelper';
 
 const AvatarButton = () => {
-  const fullName = localStorage.getItem('name') || '';
-  const groupName = JSON.parse(localStorage.getItem('groups') || '[]');
-  const imgUrl = localStorage.getItem('avatar') || undefined;
+  const fullName = getName();
+  const groupName = getGroups();
+  const imgUrl = getAvatar();
 
   return (
     <li className="border-top-1 lg:border-top-none surface-border">
