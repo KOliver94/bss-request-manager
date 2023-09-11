@@ -1,5 +1,12 @@
 import axios from 'axios';
 
+import {
+  getAccessToken,
+  getRefreshToken,
+  setAccessToken,
+  setRefreshToken,
+} from 'helpers/LocalStorageHelper';
+
 import { AdminApiFactory, LoginApiFactory, LogoutApiFactory } from './api';
 
 // TODO: Create some validation view to check if all local storage elements exists otherwise redirect to login
@@ -7,7 +14,7 @@ import { AdminApiFactory, LoginApiFactory, LogoutApiFactory } from './api';
 const axiosInstance = axios.create({
   headers: {
     'Accept-Language': 'hu',
-    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+    Authorization: `Bearer ${getAccessToken()}`,
   },
 });
 
@@ -17,7 +24,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const refreshToken = localStorage.getItem('refresh_token');
+    const refreshToken = getRefreshToken();
 
     // If requests fail with 401 Unauthorized because JWT token is not valid try to get new token with refresh token.
     if (
@@ -34,8 +41,8 @@ axiosInstance.interceptors.response.use(
           refresh: refreshToken,
         });
         const accessToken = response.data.access;
-        localStorage.setItem('access_token', accessToken);
-        localStorage.setItem('refresh_token', response.data.refresh);
+        setAccessToken(accessToken);
+        setRefreshToken(response.data.refresh);
 
         axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;

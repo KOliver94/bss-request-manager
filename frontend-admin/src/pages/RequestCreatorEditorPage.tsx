@@ -17,6 +17,7 @@ import AutoCompleteStaff, {
 } from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
+import { getName } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 
 const NewRequesterForm = lazy(
@@ -82,7 +83,7 @@ const RequestCreatorEditorPage = () => {
   ];
 
   const requesterTypeOptions = [
-    { icon: 'pi pi-user', text: 'Kecskeméty Olivér', value: 'self' },
+    { icon: 'pi pi-user', text: getName(), value: 'self' },
     { icon: 'pi pi-search', text: 'Felhasználó keresése', value: 'search' },
     { icon: 'pi pi-plus', text: 'Új felhasználó hozzáadása', value: 'new' },
   ];

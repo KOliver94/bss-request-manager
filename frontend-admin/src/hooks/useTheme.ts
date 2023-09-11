@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 
-const DARK_MODE = 'dark-mode';
+import {
+  getDarkMode as getLocalStorageDarkMode,
+  setDarkMode as setLocalStorageDarkMode,
+} from 'helpers/LocalStorageHelper';
 
 const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -10,9 +13,8 @@ export const useTheme = () => {
   // If no previous setting was saved we check the browser's preference.
   // Saved option always overrides browser's preference.
   function getDarkMode(): boolean {
-    if (localStorage.getItem(DARK_MODE) === null)
-      return prefersDarkMode.matches;
-    return localStorage.getItem(DARK_MODE) === 'true';
+    if (getLocalStorageDarkMode() === null) return prefersDarkMode.matches;
+    return getLocalStorageDarkMode() === 'true';
   }
 
   // Save preferences on change if:
@@ -20,15 +22,14 @@ export const useTheme = () => {
   //  something else than browser's preference.
   // 2. User has a saved preference but changes to other theme.
   function savePreference() {
-    const darkModeSavedPref = localStorage.getItem(DARK_MODE);
+    const darkModeSavedPref = getLocalStorageDarkMode();
     const darkModeSavedPrefBool = darkModeSavedPref === 'true';
 
     if (darkModeSavedPref === null) {
       if (prefersDarkMode.matches !== darkMode)
-        localStorage.setItem(DARK_MODE, JSON.stringify(darkMode));
+        setLocalStorageDarkMode(darkMode);
     } else {
-      if (darkModeSavedPrefBool !== darkMode)
-        localStorage.setItem(DARK_MODE, JSON.stringify(darkMode));
+      if (darkModeSavedPrefBool !== darkMode) setLocalStorageDarkMode(darkMode);
     }
   }
 
@@ -46,7 +47,7 @@ export const useTheme = () => {
   useEffect(() => {
     function handlePreferredThemeChange() {
       if (
-        localStorage.getItem(DARK_MODE) === null &&
+        getLocalStorageDarkMode() === null &&
         darkMode !== prefersDarkMode.matches
       ) {
         setDarkMode(prefersDarkMode.matches);
