@@ -14,6 +14,7 @@ import TimeAgo from 'timeago-react';
 import * as yup from 'yup';
 
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
+import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 import { useTheme } from 'hooks/useTheme';
 import { UI_AVATAR_URL } from 'localConstants';
@@ -456,7 +457,6 @@ const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
             isRequester={requesterId === comment.author.id}
             key={comment.id}
             setEditing={setEditingId}
-            showButtons // TODO: Only show if own or admin
             text={comment.text}
           />
         ) : (
@@ -469,6 +469,7 @@ const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
             isRequester={requesterId === comment.author.id}
             key={comment.id}
             setEditing={setEditingId}
+            showButtons={comment.author.id === getUserId() || isAdmin()}
             text={comment.text}
           />
         ),

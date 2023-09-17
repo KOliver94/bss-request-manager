@@ -9,6 +9,7 @@ import TimeAgo from 'timeago-react';
 
 import RatingDialog from 'components/RatingDialog/RatingDialog';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
+import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
 import { UI_AVATAR_URL } from 'localConstants';
 
 interface RatingData {
@@ -262,6 +263,7 @@ const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
                 onEdit={() => onRatingEdit(rating.author.full_name, rating.id)}
                 rating={rating.rating}
                 review={rating.review}
+                showEdit={rating.author.id === getUserId() || isAdmin()}
               />
             ))}
         </div>
