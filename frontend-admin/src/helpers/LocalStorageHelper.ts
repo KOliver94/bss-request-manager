@@ -1,5 +1,5 @@
 export function getAccessToken() {
-  return localStorage.getItem('access_token');
+  return localStorage.getItem('access_token') || '';
 }
 
 export function getAvatar() {
@@ -19,7 +19,7 @@ export function getName() {
 }
 
 export function getRefreshToken() {
-  return localStorage.getItem('refresh_token');
+  return localStorage.getItem('refresh_token') || '';
 }
 
 export function getRole() {
@@ -27,7 +27,11 @@ export function getRole() {
 }
 
 export function getUserId() {
-  return localStorage.getItem('user_id') || 0;
+  return Number(localStorage.getItem('user_id'));
+}
+
+export function isAdmin() {
+  return getRole() === 'admin';
 }
 
 export function setAccessToken(accessToken: string) {
