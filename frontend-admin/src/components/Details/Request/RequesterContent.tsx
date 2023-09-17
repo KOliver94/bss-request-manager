@@ -7,7 +7,7 @@ import { Tooltip } from 'primereact/tooltip';
 import LinkButton from 'components/LinkButton/LinkButton';
 import User from 'components/User/User';
 import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
-import { RequestAdditionalDataType } from 'pages/RequestDetailsPage';
+import { RequestAdditionalDataType } from 'types/additionalDataTypes';
 
 type RequesterContentProps = {
   additionalData: RequestAdditionalDataType;

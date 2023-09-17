@@ -6,7 +6,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Controller, useForm } from 'react-hook-form';
 
 import useMobile from 'hooks/useMobile';
-import { RequestAdditionalDataType } from 'pages/RequestDetailsPage';
+import { RequestAdditionalDataType } from 'types/additionalDataTypes';
 
 interface AdditionalDataDialogProps extends DialogProps {
   data: RequestAdditionalDataType;
@@ -39,7 +39,6 @@ const AdditionalDataDialog = forwardRef<
   }, [visible]);
 
   const renderFooter = () => {
-    //TODO: Do not render if user is not an admin + disable textfield
     return (
       <div>
         <Button

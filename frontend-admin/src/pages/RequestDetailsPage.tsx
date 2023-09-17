@@ -31,6 +31,7 @@ import {
   dateToLocaleString,
 } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
+import { RequestAdditionalDataRecordingType } from 'types/additionalDataTypes';
 
 const AcceptRejectDialog = lazy(
   () => import('components/Details/Request/AcceptRejectDialog'),
