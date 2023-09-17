@@ -192,7 +192,7 @@ const RequestCreatorEditorPage = () => {
             label="Felelős"
             name="responsible"
           >
-            <AutoCompleteStaff placeholder="Főszerkesztő" />
+            <AutoCompleteStaff />
           </FormField>
           <FormField
             className="col-12 mb-0 md:col-6"
