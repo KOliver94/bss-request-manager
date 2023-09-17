@@ -1,6 +1,7 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+import { DefinedUseQueryResult, useQuery } from '@tanstack/react-query';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
@@ -13,6 +14,8 @@ import { Control, Controller, useForm } from 'react-hook-form';
 import TimeAgo from 'timeago-react';
 import * as yup from 'yup';
 
+import { CommentAdminListRetrieve } from 'api/models';
+import { requestCommentsListQuery } from 'api/queries';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
@@ -47,18 +50,6 @@ type CommentCardsProps = {
   requestId: number;
   requesterId: number;
 };
-
-interface CommentData {
-  id: number;
-  text: string;
-  internal: boolean;
-  created: Date;
-  author: {
-    id: number;
-    full_name: string;
-    avatar_url?: string;
-  };
-}
 
 interface IComment {
   internal: boolean;
@@ -434,15 +425,13 @@ const CommentCardNew = ({ authorName, avatarUrl }: CommentCardHeaderProps) => {
 };
 
 const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
-  const getComments = (data: CommentData[]) => {
+  const getComments = ({
+    data,
+  }: DefinedUseQueryResult<CommentAdminListRetrieve[]>) => {
     return data.map((el) => ({ ...el, created: new Date(el.created) }));
   };
-  const [data, setData] = useState<CommentData[]>(getComments([]));
+  const data = getComments(useQuery(requestCommentsListQuery(requestId)));
   const [editingId, setEditingId] = useState<number>(0);
-
-  useEffect(() => {
-    console.log('Loading comments for ' + requestId);
-  }, [requestId]);
 
   return (
     <>

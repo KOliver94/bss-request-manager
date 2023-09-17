@@ -4,19 +4,19 @@ import { Chip } from 'primereact/chip';
 import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
 
+import { UserNestedDetail } from 'api/models';
 import LinkButton from 'components/LinkButton/LinkButton';
 import User from 'components/User/User';
-import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import { RequestAdditionalDataType } from 'types/additionalDataTypes';
 
 type RequesterContentProps = {
   additionalData: RequestAdditionalDataType;
-  requester: UsersDataType;
+  requester: UserNestedDetail;
 };
 
 type RequesterContentButtonsProps = {
   requestTitle: string;
-  requester: UsersDataType;
+  requester: UserNestedDetail;
 };
 
 export const RequesterContent = ({
@@ -28,7 +28,7 @@ export const RequesterContent = ({
       <div className="align-items-center flex">
         <User
           className="mr-2"
-          imageUrl={requester.profile.avatar_url}
+          imageUrl={requester.avatar_url}
           name={requester.full_name}
         />
         <Fragment>
@@ -53,7 +53,7 @@ export const RequesterContent = ({
         <Chip
           className="mt-1 mr-2"
           icon="pi pi-phone"
-          label={requester.profile.phone_number}
+          label={requester.phone_number}
         />
         <Chip className="mt-1" icon="pi pi-envelope" label={requester.email} />
       </div>
@@ -73,7 +73,7 @@ export const RequesterContentButtons = ({
           icon: 'pi pi-phone',
           label: 'Hívás',
         }}
-        linkProps={{ to: `tel:${requester.profile.phone_number}` }}
+        linkProps={{ to: `tel:${requester.phone_number}` }}
       />
       <LinkButton
         buttonProps={{

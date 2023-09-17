@@ -1,5 +1,6 @@
 import { forwardRef, lazy, Suspense, useState } from 'react';
 
+import { DefinedUseQueryResult, useQuery } from '@tanstack/react-query';
 import { Badge } from 'primereact/badge';
 import { Column } from 'primereact/column';
 import {
@@ -11,10 +12,11 @@ import {
 import { ProgressBar } from 'primereact/progressbar';
 import { Skeleton } from 'primereact/skeleton';
 
+import { RequestAdminList } from 'api/models';
+import { requestsListQuery } from 'api/queries';
 import LinkButton from 'components/LinkButton/LinkButton';
 import { RequestStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
-import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
 
@@ -23,42 +25,33 @@ const VideosDataTable = lazy(
   () => import('components/VideosDataTable/VideosDataTable'),
 );
 
-export type RequestDataType = {
+interface RequestAdminListDates // TODO: Rename?
+  extends Omit<RequestAdminList, 'created' | 'start_datetime'> {
   created: Date;
-  crew?: {
-    full_name: string;
-    avatar_url: string | null;
-  }[];
-  end_datetime: Date;
-  id: number;
   start_datetime: Date;
-  status: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 9 | 10;
-  status_by_admin?: boolean;
-  responsible?: UsersDataType;
-  title: string;
-  videos: number;
-};
+}
 
 const RequestsDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
   DataTableProps<DataTableValueArray>
 >((props, ref) => {
+  const getRequests = ({
+    data: requests,
+  }: DefinedUseQueryResult<RequestAdminList[]>): RequestAdminListDates[] => {
+    return [...(requests || [])].map((request) => {
+      return {
+        ...request,
+        created: new Date(request.created),
+        start_datetime: new Date(request.start_datetime),
+      };
+    });
+  };
+  const data = getRequests(useQuery(requestsListQuery()));
   const isMobile = useMobile();
 
   const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows>({});
 
-  const getRequests = (data: RequestDataType[]) => {
-    return [...(data || [])].map((d) => {
-      d.created = new Date(d.created);
-      d.end_datetime = new Date(d.end_datetime);
-      d.start_datetime = new Date(d.start_datetime);
-      return d;
-    });
-  };
-
-  const [data, setData] = useState<RequestDataType[]>(getRequests([]));
-
-  const crewBodyTemplate = ({ crew }: RequestDataType) => {
+  const crewBodyTemplate = ({ crew }: RequestAdminListDates) => {
     return (
       crew && (
         <Suspense fallback={<Skeleton />}>
@@ -68,27 +61,30 @@ const RequestsDataTable = forwardRef<
     );
   };
 
-  const dateBodyTemplate = ({ start_datetime }: RequestDataType) => {
+  const dateBodyTemplate = ({ start_datetime }: RequestAdminListDates) => {
     return dateTimeToLocaleString(start_datetime, isMobile);
   };
 
-  const responsibleBodyTemplate = ({ responsible }: RequestDataType) => {
+  const responsibleBodyTemplate = ({ responsible }: RequestAdminListDates) => {
     return (
       responsible && (
         <User
           className="justify-content-center"
-          imageUrl={responsible.profile.avatar_url}
+          imageUrl={responsible.avatar_url}
           name={responsible.full_name}
         />
       )
     );
   };
 
-  const statusBodyTemplate = ({ status, status_by_admin }: RequestDataType) => {
+  const statusBodyTemplate = ({
+    status,
+    status_by_admin,
+  }: RequestAdminListDates) => {
     return <RequestStatusTag modified={status_by_admin} statusNum={status} />;
   };
 
-  const titleBodyTemplate = ({ created, title }: RequestDataType) => {
+  const titleBodyTemplate = ({ created, title }: RequestAdminListDates) => {
     const twoWeeksEarlier = new Date();
     twoWeeksEarlier.setDate(new Date().getDate() - 2 * 7);
 
@@ -104,7 +100,7 @@ const RequestsDataTable = forwardRef<
     );
   };
 
-  const actionBodyTemplate = ({ id }: RequestDataType) => {
+  const actionBodyTemplate = ({ id }: RequestAdminListDates) => {
     return (
       <LinkButton
         buttonProps={{
@@ -117,9 +113,9 @@ const RequestsDataTable = forwardRef<
     );
   };
 
-  const rowExpansionTemplate = ({ id, videos }: RequestDataType) => {
+  const rowExpansionTemplate = ({ id, video_count }: RequestAdminListDates) => {
     return (
-      videos && (
+      video_count && (
         <Suspense fallback={<ProgressBar mode="indeterminate" />}>
           <VideosDataTable requestId={id} />
         </Suspense>
@@ -148,7 +144,7 @@ const RequestsDataTable = forwardRef<
       {...ref}
     >
       <Column
-        expander={(rowData) => rowData.videos > 0}
+        expander={(rowData: RequestAdminListDates) => rowData.video_count > 0}
         style={{ width: '3em' }}
       />
       <Column

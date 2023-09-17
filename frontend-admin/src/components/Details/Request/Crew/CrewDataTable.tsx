@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
 import { AutoCompleteChangeEvent } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
 import {
@@ -12,6 +13,8 @@ import { DataTable, DataTableRowEditCompleteEvent } from 'primereact/datatable';
 import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
 
+import { CrewMemberAdminListRetrieve } from 'api/models';
+import { requestCrewListQuery } from 'api/queries';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import User from 'components/User/User';
 import useMobile from 'hooks/useMobile';
@@ -19,29 +22,24 @@ import useMobile from 'hooks/useMobile';
 import AddCrewDialog from './AddCrewDialog';
 import AutoCompleteCrewPosition from './AutoCompleteCrewPosition';
 
-type CrewDataType = {
-  member: {
-    full_name: string;
-    avatar_url: string;
-  };
-  id: number;
-  position: string;
-};
-
 type CrewDataTableProps = {
   requestId: number;
 };
 
 const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
-  const [addCrewDialogVisible, setAddCrewDialogVisible] =
-    useState<boolean>(false);
-  const [data, setData] = useState<CrewDataType[]>([
-    { id: 1, member: { avatar_url: '', full_name: 'Test' }, position: 'Test' },
-  ]);
-  const [loading, setLoading] = useState<boolean>(false);
   const isMobile = useMobile();
 
-  const deleteActionBodyTemplate = ({ member, id, position }: CrewDataType) => {
+  const { data } = useQuery(requestCrewListQuery(requestId));
+
+  const [addCrewDialogVisible, setAddCrewDialogVisible] =
+    useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const deleteActionBodyTemplate = ({
+    member,
+    id,
+    position,
+  }: CrewMemberAdminListRetrieve) => {
     return (
       <button
         className="p-link p-row-editor-init"
@@ -82,7 +80,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     </div>
   );
 
-  const memberBodyTemplate = ({ member }: CrewDataType) => {
+  const memberBodyTemplate = ({ member }: CrewMemberAdminListRetrieve) => {
     return <User imageUrl={member.avatar_url} name={member.full_name} />;
   };
 
@@ -104,20 +102,22 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
       return data;
     }
 
-    data.sort((a: CrewDataType, b: CrewDataType) => {
-      const _a = a.member.full_name;
-      const _b = b.member.full_name;
-      return order === -1
-        ? _b.localeCompare(_a, 'hu')
-        : _a.localeCompare(_b, 'hu');
-    });
+    data.sort(
+      (a: CrewMemberAdminListRetrieve, b: CrewMemberAdminListRetrieve) => {
+        const _a = a.member.full_name;
+        const _b = b.member.full_name;
+        return order === -1
+          ? _b.localeCompare(_a, 'hu')
+          : _a.localeCompare(_b, 'hu');
+      },
+    );
 
     return data;
   };
 
   const onRowDelete = (
     id: number,
-    { full_name }: CrewDataType['member'],
+    { full_name }: CrewMemberAdminListRetrieve['member'],
     position: string,
   ) => {
     confirmDialog({
@@ -134,9 +134,9 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     const _data = [...data];
     const { newData, index } = e;
 
-    _data[index] = newData as CrewDataType;
+    _data[index] = newData as CrewMemberAdminListRetrieve;
 
-    setData(_data);
+    // setData(_data);
     // TODO: Add API call
   };
 

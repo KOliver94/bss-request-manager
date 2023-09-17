@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+import { FetchQueryOptions, useQueryClient } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog, DialogProps } from 'primereact/dialog';
@@ -12,11 +13,18 @@ import { Tag } from 'primereact/tag';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
+import { RatingAdminListRetrieve, RatingRetrieve } from 'api/models';
+import {
+  requestVideoRatingRetrieveOwnQuery,
+  requestVideoRatingRetrieveQuery,
+} from 'api/queries';
 import useMobile from 'hooks/useMobile';
 
 interface RatingDialogProps extends DialogProps {
+  isRated?: boolean;
   ratingAuthorName?: string;
   ratingId?: number;
+  requestId: number;
   videoId: number;
   videoTitle: string;
 }
@@ -35,9 +43,11 @@ const validationSchema = yup
 const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
   (
     {
+      isRated,
       onHide,
       ratingAuthorName,
       ratingId: ratingIdParam,
+      requestId,
       videoId,
       videoTitle,
       visible,
@@ -46,6 +56,8 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
     ref,
   ) => {
     const isMobile = useMobile();
+    const queryClient = useQueryClient();
+
     const [loading, setLoading] = useState<boolean>(false);
     const [ratingId, setRatingId] = useState<number>(0);
 
@@ -61,6 +73,8 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
 
     useEffect(() => {
       if (visible) {
+        let query: FetchQueryOptions<RatingAdminListRetrieve | RatingRetrieve>;
+
         setLoading(true);
         setRatingId(ratingIdParam || 0);
         const defaultValues: IRating = {
@@ -69,24 +83,28 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
         };
         reset({ ...defaultValues });
 
-        // TODO: Replace with real API call (check for existing rating or load)
-        console.log('API load start');
-        const timer = setTimeout(() => {
+        if (ratingIdParam) {
+          query = requestVideoRatingRetrieveQuery(
+            requestId,
+            videoId,
+            ratingIdParam,
+          );
+          queryClient.fetchQuery(query).then((data) => {
+            setLoading(false);
+            reset({ ...data });
+          });
+        } else if (isRated) {
+          query = requestVideoRatingRetrieveOwnQuery(requestId, videoId);
+          queryClient.fetchQuery(query).then((data) => {
+            setLoading(false);
+            reset({ ...data });
+          });
+        } else {
           setLoading(false);
-          if (Math.floor(Math.random() * 3) || ratingId) {
-            if (!ratingId) {
-              setRatingId(456);
-            }
-            defaultValues.rating = 3;
-            defaultValues.review = 'Tetszett';
-          }
-          console.log('API load finished');
-          reset({ ...defaultValues });
-        }, 500);
+        }
 
         return () => {
-          // TODO: Cancel API call on close
-          clearTimeout(timer);
+          queryClient.cancelQueries(query?.queryKey);
         };
       }
     }, [ratingIdParam, videoId, visible]);

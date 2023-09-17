@@ -7,7 +7,12 @@ import {
   setRefreshToken,
 } from 'helpers/LocalStorageHelper';
 
-import { AdminApiFactory, LoginApiFactory, LogoutApiFactory } from './api';
+import {
+  AdminApiFactory,
+  LoginApiFactory,
+  LogoutApiFactory,
+  RequestsApiFactory,
+} from './api';
 
 // TODO: Create some validation view to check if all local storage elements exists otherwise redirect to login
 
@@ -61,3 +66,8 @@ axiosInstance.interceptors.response.use(
 
 export const adminApi = AdminApiFactory(undefined, basePath, axiosInstance);
 export const logoutApi = LogoutApiFactory(undefined, basePath, axiosInstance);
+export const requestsApi = RequestsApiFactory(
+  undefined,
+  basePath,
+  axiosInstance,
+);

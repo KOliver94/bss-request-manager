@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
 import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
 import {
   DataTable,
@@ -8,27 +9,20 @@ import {
 } from 'primereact/datatable';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 
+import { UserAdminList } from 'api/models';
+import { usersListQuery } from 'api/queries';
 import LinkButton from 'components/LinkButton/LinkButton';
 import User from 'components/User/User';
 
 import stylesModule from './UsersDataTable.module.css';
 
-export type UsersDataType = {
-  email: string;
-  full_name: string;
-  id: number;
-  is_staff: boolean;
-  profile: {
-    avatar_url: string;
-    phone_number: string;
-  };
-};
-
 const UsersDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
   DataTableProps<DataTableValueArray>
 >((props, ref) => {
-  const isStaffBodyTemplate = ({ is_staff }: UsersDataType) => {
+  const { data } = useQuery(usersListQuery());
+
+  const isStaffBodyTemplate = ({ is_staff }: UserAdminList) => {
     return (
       <i
         className={
@@ -40,11 +34,11 @@ const UsersDataTable = forwardRef<
     );
   };
 
-  const fullNameBodyTemplate = ({ full_name, profile }: UsersDataType) => {
-    return <User imageUrl={profile.avatar_url} name={full_name} />;
+  const fullNameBodyTemplate = ({ avatar_url, full_name }: UserAdminList) => {
+    return <User imageUrl={avatar_url} name={full_name} />;
   };
 
-  const actionBodyTemplate = ({ id }: UsersDataType) => {
+  const actionBodyTemplate = ({ id }: UserAdminList) => {
     return (
       <LinkButton
         buttonProps={{
@@ -90,7 +84,7 @@ const UsersDataTable = forwardRef<
       sortField="full_name"
       sortOrder={1}
       stripedRows
-      value={[]}
+      value={data}
       {...props}
       {...ref}
     >
