@@ -1,4 +1,14 @@
+import { requestsListQuery } from 'api/queries';
 import RequestsDataTable from 'components/RequestsDataTable/RequestsDataTable';
+import { queryClient } from 'router';
+
+export async function loader() {
+  const query = requestsListQuery();
+  return (
+    queryClient.getQueryData(query.queryKey) ??
+    (await queryClient.fetchQuery(query))
+  );
+}
 
 const RequestsListPage = () => {
   return (

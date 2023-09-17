@@ -8,7 +8,17 @@ import {
 } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
 
+import { usersListQuery } from 'api/queries';
 import UsersDataTable from 'components/UsersDataTable/UsersDataTable';
+import { queryClient } from 'router';
+
+export async function loader() {
+  const query = usersListQuery();
+  return (
+    queryClient.getQueryData(query.queryKey) ??
+    (await queryClient.fetchQuery(query))
+  );
+}
 
 const UsersListPage = () => {
   const [filters, setFilters] = useState<{

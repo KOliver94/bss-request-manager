@@ -3,18 +3,20 @@ import { Suspense, lazy, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { ProgressBar } from 'primereact/progressbar';
 import { StyleClass } from 'primereact/styleclass';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
 
+import { VideoAdminRetrieve } from 'api/models';
+import { requestVideoRetrieveQuery } from 'api/queries';
 import DetailsRow from 'components/Details/DetailsRow';
-import Ratings from 'components/Details/Video/Ratings';
 import LinkButton from 'components/LinkButton/LinkButton';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
-import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import useMobile from 'hooks/useMobile';
+import { queryClient } from 'router';
 
 const AdditionalDataDialog = lazy(
   () => import('components/AdditionalDataDialog/AdditionalDataDialog'),
@@ -22,43 +24,29 @@ const AdditionalDataDialog = lazy(
 const AiredAddDialog = lazy(
   () => import('components/Details/Video/AiredAddDialog'),
 );
+const Ratings = lazy(() => import('components/Details/Video/Ratings'));
 const VideoStatusHelperSlideover = lazy(
   () => import('components/StatusHelperSlideover/VideoStatusHelperSlideover'),
 );
 
-export type VideoAdditionalDataType = {
-  aired?: [string];
-  archiving?: {
-    hq_archive?: boolean;
-  };
-  coding?: {
-    website?: boolean;
-  };
-  editing_done: boolean;
-  length?: number | null;
-  publishing?: {
-    website?: string;
-  };
-  status_by_admin?: {
-    admin_id: number;
-    admin_name: string;
-    status: number | null;
-  };
-};
-
-export type VideoDataType = {
-  additional_data: VideoAdditionalDataType | Record<string, never>;
-  avg_rating: number;
-  editor?: UsersDataType;
-  id: number;
-  status: 1 | 2 | 3 | 4 | 5 | 6;
-  title: string;
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function loader({ params }: any) {
+  const query = requestVideoRetrieveQuery(
+    Number(params.requestId),
+    Number(params.videoId),
+  );
+  return (
+    queryClient.getQueryData(query.queryKey) ??
+    (await queryClient.fetchQuery(query))
+  );
+}
 
 const VideoDetailsPage = () => {
   const { requestId, videoId } = useParams();
   const isMobile = useMobile();
   const navigate = useNavigate();
+
+  const data = useLoaderData() as VideoAdminRetrieve;
 
   const [additionalDataDialogOpen, setAdditionalDataDialogOpen] =
     useState(false);
@@ -108,14 +96,6 @@ const VideoDetailsPage = () => {
       style: { width: isMobile ? '95vw' : '50vw' },
     });
   };
-
-  const [data, setData] = useState<VideoDataType>({
-    additional_data: {},
-    avg_rating: 5,
-    id: 1,
-    status: 5,
-    title: 'Test',
-  });
 
   return (
     <>
@@ -224,7 +204,7 @@ const VideoDetailsPage = () => {
                 data.editor ? (
                   <User
                     name={data.editor.full_name}
-                    imageUrl={data.editor.profile.avatar_url}
+                    imageUrl={data.editor.avatar_url}
                   />
                 ) : (
                   <Tag
@@ -297,7 +277,7 @@ const VideoDetailsPage = () => {
               content={
                 <div className="flex flex-wrap gap-2">
                   {data.additional_data.aired ? (
-                    data.additional_data.aired.map((value) => (
+                    data.additional_data.aired.map((value: string) => (
                       <Chip
                         key={value}
                         label={value}
@@ -365,9 +345,22 @@ const VideoDetailsPage = () => {
               label="Teendők"
             />
           </ul>
-          <div className="md:pt-6 pt-4 px-2">
-            <Ratings videoId={data.id} videoTitle={data.title} />
-          </div>
+          <Suspense
+            fallback={
+              <div className="pb-2 pt-4 px-2">
+                <ProgressBar mode="indeterminate" />
+              </div>
+            }
+          >
+            <div className="md:pt-6 pt-4 px-2">
+              <Ratings
+                avgRating={data.avg_rating}
+                requestId={Number(requestId)}
+                videoId={Number(videoId)}
+                videoTitle={data.title}
+              />
+            </div>
+          </Suspense>
         </div>
       </div>
     </>

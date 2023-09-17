@@ -9,8 +9,10 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
 
+import { RequestAdminRetrieve } from 'api/models';
+import { requestRetrieveQuery } from 'api/queries';
 import AvatarGroupCrew from 'components/Avatar/AvatarGroupCrew';
 import DetailsRow from 'components/Details/DetailsRow';
 import JumpButton from 'components/Details/Request/JumpButton';
@@ -25,12 +27,12 @@ import {
 import LinkButton from 'components/LinkButton/LinkButton';
 import { RequestStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
-import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import {
   dateTimeToLocaleString,
   dateToLocaleString,
 } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
+import { queryClient } from 'router';
 import { RequestAdditionalDataRecordingType } from 'types/additionalDataTypes';
 
 const AcceptRejectDialog = lazy(
@@ -52,65 +54,24 @@ const VideosDataTable = lazy(
   () => import('components/VideosDataTable/VideosDataTable'),
 );
 
-export type RequestAdditionalDataRecordingType = {
-  path?: string;
-  copied_to_gdrive?: boolean;
-  removed?: boolean;
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function loader({ params }: any) {
+  const query = requestRetrieveQuery(Number(params.requestId));
+  return (
+    queryClient.getQueryData(query.queryKey) ??
+    (await queryClient.fetchQuery(query))
+  );
+}
 
-export type RequestAdditionalDataType = {
-  status_by_admin?: {
-    status: number | null;
-    admin_id: number;
-    admin_name: string;
-  };
-  accepted?: boolean;
-  canceled?: boolean;
-  failed?: boolean;
-  recording?: RequestAdditionalDataRecordingType;
-  calendar_id?: string;
-  requester?: {
-    first_name: string;
-    last_name: string;
-    phone_number: string;
-  };
-  external?: {
-    sch_events_callback_url?: string;
-  };
-};
-
-export type RequestDataType = {
-  additional_data: RequestAdditionalDataType;
-  comments: number;
-  created: Date;
-  crew?: {
-    full_name: string;
-    avatar_url: string | null;
-  }[];
-  deadline: Date;
-  end_datetime: Date;
-  id: number;
-  place: string;
-  start_datetime: Date;
-  status: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 9 | 10;
-  status_by_admin?: boolean;
-  responsible?: UsersDataType;
-  requester: UsersDataType;
-  requested_by: UsersDataType;
-  title: string;
-  type: string;
-  videos: number;
-};
-
-interface RequestApiDataType
+interface RequestAdminRetrieveDates // TODO: Rename?
   extends Omit<
-    RequestDataType,
+    RequestAdminRetrieve,
     'created' | 'deadline' | 'end_datetime' | 'start_datetime'
   > {
-  created: string;
-  deadline: string;
-  end_datetime: string;
-  start_datetime: string;
+  created: Date;
+  deadline: Date;
+  end_datetime: Date;
+  start_datetime: Date;
 }
 
 const RequestDetailsPage = () => {
@@ -118,15 +79,9 @@ const RequestDetailsPage = () => {
   const isMobile = useMobile();
   const navigate = useNavigate();
 
-  const [acceptRejectDialogOpen, setAcceptRejectDialogOpen] = useState(false);
-  const [additionalDataDialogOpen, setAdditionalDataDialogOpen] =
-    useState(false);
-  const [recordingIsEditing, setRecordingIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
-  const statusHelperSlideoverOpenBtnRef = useRef(null);
-
-  const getRequest = (data: RequestApiDataType) => {
+  const getRequest = (
+    data: RequestAdminRetrieve,
+  ): RequestAdminRetrieveDates => {
     return {
       ...data,
       created: new Date(data.created),
@@ -135,6 +90,17 @@ const RequestDetailsPage = () => {
       start_datetime: new Date(data.start_datetime),
     };
   };
+
+  const queryResult = useLoaderData() as RequestAdminRetrieve;
+  const data = getRequest(queryResult);
+
+  const [acceptRejectDialogOpen, setAcceptRejectDialogOpen] = useState(false);
+  const [additionalDataDialogOpen, setAdditionalDataDialogOpen] =
+    useState(false);
+  const [recordingIsEditing, setRecordingIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [tabViewActiveIndex, setTabViewActiveIndex] = useState(0);
+  const statusHelperSlideoverOpenBtnRef = useRef(null);
 
   const generateRecordingPath = () => {
     return `N://${data.start_datetime
@@ -205,49 +171,6 @@ const RequestDetailsPage = () => {
       tabViewEl?.scrollIntoView({ behavior: 'smooth' });
     }, 5);
   };
-
-  const [data, setData] = useState<RequestDataType>(
-    getRequest({
-      additional_data: {},
-      comments: 2,
-      created: '2022-07-02T00:26:11.595881+02:00',
-      crew: [
-        {
-          avatar_url: null,
-          full_name: 'Kecskeméty Olivér',
-        },
-      ],
-      deadline: '2022-08-13',
-      end_datetime: '2022-07-23T02:30:00+02:00',
-      id: 17,
-      place: 'Schönherz',
-      requested_by: {
-        email: 'kecskemety.oliver@example.com',
-        full_name: 'Kecskeméty Olivér',
-        id: 61,
-        is_staff: false,
-        profile: {
-          avatar_url: '',
-          phone_number: '+36707755250',
-        },
-      },
-      requester: {
-        email: 'kecskemety.oliver@example.com',
-        full_name: 'Kecskeméty Olivér',
-        id: 61,
-        is_staff: false,
-        profile: {
-          avatar_url: '',
-          phone_number: '+36707755250',
-        },
-      },
-      start_datetime: '2022-07-22T18:05:00+02:00',
-      status: 1,
-      title: 'Parkett Klub - Salsa Party',
-      type: 'Előadás/rendezvény dokumentálás jellegű rögzítése',
-      videos: 1,
-    }),
-  );
 
   const videoDataHeader = (
     <div
@@ -452,7 +375,7 @@ const RequestDetailsPage = () => {
                 data.responsible ? (
                   <User
                     name={data.responsible.full_name}
-                    imageUrl={data.responsible.profile.avatar_url}
+                    imageUrl={data.responsible.avatar_url}
                   />
                 ) : (
                   <Tag
@@ -469,8 +392,8 @@ const RequestDetailsPage = () => {
               button={<JumpButton onClick={() => onJumpToTabView(0)} />}
               content={
                 <Badge
-                  severity={data.comments > 0 ? 'warning' : 'info'}
-                  value={data.comments}
+                  severity={data.comment_count > 0 ? 'warning' : 'info'}
+                  value={data.comment_count}
                 />
               }
               label="Hozzászólások"
@@ -521,8 +444,8 @@ const RequestDetailsPage = () => {
               button={<JumpButton onClick={() => onJumpToTabView(2)} />}
               content={
                 <Badge
-                  value={data.videos}
-                  severity={data.videos > 0 ? 'success' : 'danger'}
+                  value={data.video_count}
+                  severity={data.video_count > 0 ? 'success' : 'danger'}
                 />
               }
               label="Videók"
@@ -541,7 +464,7 @@ const RequestDetailsPage = () => {
               content={
                 <User
                   name={data.requested_by.full_name}
-                  imageUrl={data.requested_by.profile.avatar_url}
+                  imageUrl={data.requested_by.avatar_url}
                 />
               }
               label="Beküldő"

@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -5,7 +6,32 @@ import {
   Route,
 } from 'react-router-dom';
 
+import { RequestAdminRetrieve, VideoAdminRetrieve } from 'api/models';
+import { requestRetrieveQuery, requestVideoRetrieveQuery } from 'api/queries';
 import Layout from 'Layout';
+
+export const queryClient = new QueryClient();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function requestLoader({ params }: any) {
+  const query = requestRetrieveQuery(Number(params.requestId));
+  return (
+    queryClient.getQueryData(query.queryKey) ??
+    (await queryClient.fetchQuery(query))
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function requestVideoLoader({ params }: any) {
+  const query = requestVideoRetrieveQuery(
+    Number(params.requestId),
+    Number(params.videoId),
+  );
+  return (
+    queryClient.getQueryData(query.queryKey) ??
+    (await queryClient.fetchQuery(query))
+  );
+}
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,17 +54,26 @@ const router = createBrowserRouter(
         />
         <Route
           path=":requestId"
+          loader={requestLoader}
           handle={{
-            crumb: () => 'Teszt felkérés',
+            crumb: (data: RequestAdminRetrieve) => data.title,
           }}
         >
           <Route index lazy={() => import('pages/RequestDetailsPage')} />
+          <Route
+            path="edit"
+            lazy={() => import('pages/RequestCreatorEditorPage')}
+            handle={{
+              crumb: () => 'Szerkesztés',
+            }}
+          />
           <Route
             path="videos"
             handle={{
               crumb: () => 'Videók',
             }}
           >
+            <Route index lazy={() => import('pages/VideosListPage')} />
             <Route
               path="new"
               lazy={() => import('pages/VideoCreatorEditorPage')}
@@ -48,11 +83,20 @@ const router = createBrowserRouter(
             />
             <Route
               path=":videoId"
-              lazy={() => import('pages/VideoDetailsPage')}
+              loader={requestVideoLoader}
               handle={{
-                crumb: () => 'Teszt videó',
+                crumb: (data: VideoAdminRetrieve) => data.title,
               }}
-            />
+            >
+              <Route index lazy={() => import('pages/VideoDetailsPage')} />
+              <Route
+                path="edit"
+                lazy={() => import('pages/VideoCreatorEditorPage')}
+                handle={{
+                  crumb: () => 'Szerkesztés',
+                }}
+              />
+            </Route>
           </Route>
         </Route>
       </Route>

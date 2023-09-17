@@ -1,36 +1,38 @@
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useState } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
 import { AutoComplete, AutoCompleteProps } from 'primereact/autocomplete';
 
+import { UserAdminList } from 'api/models';
+import { usersStaffListQuery } from 'api/queries';
 import Avatar from 'components/Avatar/Avatar';
-
-export interface StaffUser {
-  // TODO: It will possibly change
-  first_name: string;
-  id: number;
-  last_name: string;
-  profile: {
-    avatar_url: string | null;
-  };
-}
+import { getUserId } from 'helpers/LocalStorageHelper';
 
 const AutoCompleteStaff = forwardRef<
   React.Ref<HTMLInputElement>,
   AutoCompleteProps
 >((props, ref) => {
-  const [filteredStaff, setFilteredStaff] = useState<StaffUser[]>([]);
-  const [staff, setStaff] = useState<StaffUser[]>([]);
+  const { data } = useQuery(usersStaffListQuery());
+  const [filteredStaff, setFilteredStaff] = useState<UserAdminList[]>([]);
 
-  const itemTemplate = (item: StaffUser) => {
+  const itemTemplate = (item: UserAdminList) => {
     return (
       <div className="align-items-center flex">
-        <Avatar className="mr-2" image={item.profile.avatar_url || undefined} />
-        <div>{item.last_name + ' ' + item.first_name}</div>
+        <Avatar className="mr-2" image={item.avatar_url || undefined} />
+        <div>{item.full_name}</div>
       </div>
     );
   };
 
   const searchStaff = (event: { query: string }) => {
+    function moveOwnUserToTop(users: UserAdminList[]) {
+      const index = users.findIndex(({ id }) => id === getUserId());
+      if (index !== -1) {
+        users.unshift(users.splice(index, 1)[0]);
+      }
+      return users;
+    }
+
     function normalizeString(input: string) {
       return input
         .trim()
@@ -40,14 +42,12 @@ const AutoCompleteStaff = forwardRef<
     }
 
     let _filteredStaff;
+    const _staff = moveOwnUserToTop(data);
     if (!event.query.trim().length) {
-      _filteredStaff = [...staff];
+      _filteredStaff = [..._staff];
     } else {
-      _filteredStaff = staff.filter((user) => {
-        const fullName = normalizeString(
-          user.last_name + ' ' + user.first_name,
-        );
-
+      _filteredStaff = _staff.filter((user) => {
+        const fullName = normalizeString(user.full_name);
         return fullName.includes(normalizeString(event.query));
       });
     }
@@ -55,23 +55,11 @@ const AutoCompleteStaff = forwardRef<
     setFilteredStaff(_filteredStaff);
   };
 
-  useEffect(() => {
-    /*setStaff(
-      staffResponse.sort(function (a, b) {
-        return (
-          a.last_name.localeCompare(b.last_name) ||
-          a.first_name.localeCompare(b.first_name)
-        );
-      })
-    );*/
-    setStaff([]);
-  }, []);
-
   return (
     <AutoComplete
       completeMethod={searchStaff}
       dropdown
-      field="username" // TODO: Change it to other field
+      field="full_name"
       forceSelection
       itemTemplate={itemTemplate}
       suggestions={filteredStaff}

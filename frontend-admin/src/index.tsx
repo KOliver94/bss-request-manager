@@ -1,6 +1,8 @@
 import { StrictMode } from 'react';
 
 import * as Sentry from '@sentry/react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as locales from 'primelocale/hu.json';
 import { PrimeReactProvider, addLocale, locale } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
@@ -10,7 +12,7 @@ import huLocal from 'timeago.js/lib/lang/hu';
 
 import { ThemeProvider } from 'providers/ThemeProvider';
 import { ToastProvider } from 'providers/ToastProvider';
-import router from 'router';
+import router, { queryClient } from 'router';
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'primeicons/primeicons.css';
@@ -35,7 +37,10 @@ root.render(
     <PrimeReactProvider>
       <ThemeProvider>
         <ToastProvider>
-          <RouterProvider router={router} />
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+            <ReactQueryDevtools />
+          </QueryClientProvider>
         </ToastProvider>
       </ThemeProvider>
     </PrimeReactProvider>

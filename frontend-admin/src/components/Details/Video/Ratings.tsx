@@ -1,5 +1,6 @@
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
@@ -7,21 +8,16 @@ import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 import TimeAgo from 'timeago-react';
 
+import { RatingAdminListRetrieve } from 'api/models';
+import { requestVideoRatingsListQuery } from 'api/queries';
 import RatingDialog from 'components/RatingDialog/RatingDialog';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
 import { UI_AVATAR_URL } from 'localConstants';
 
-interface RatingData {
-  author: {
-    id: number;
-    full_name: string;
-    avatar_url?: string;
-  };
+interface RatingAdminListDates // TODO: Rename?
+  extends Omit<RatingAdminListRetrieve, 'created'> {
   created: Date;
-  id: number;
-  rating: number;
-  review: string;
 }
 
 type RatingProps = {
@@ -31,6 +27,7 @@ type RatingProps = {
   onEdit: MouseEventHandler<HTMLButtonElement>;
   rating: number;
   review: string;
+  showEdit: boolean;
 };
 
 type RatingSummaryProps = {
@@ -39,6 +36,8 @@ type RatingSummaryProps = {
 };
 
 type RatingsProps = {
+  avgRating: number;
+  requestId: number;
   videoId: number;
   videoTitle: string;
 };
@@ -50,11 +49,8 @@ const Rating = ({
   onEdit,
   rating,
   review,
+  showEdit,
 }: RatingProps) => {
-  const showEditButton = () => {
-    return true;
-  };
-
   return (
     <div className="col-12 lg:col-6">
       <div className="p-2">
@@ -91,7 +87,7 @@ const Rating = ({
           <p className="comment-text line-height-3 m-0 p-0 text-600">
             {review}
           </p>
-          {showEditButton() && (
+          {showEdit && (
             <div className="flex flex-wrap justify-content-end">
               <Button
                 className="p-1"
@@ -125,9 +121,26 @@ const RatingSummary = ({ portion, rating }: RatingSummaryProps) => {
   );
 };
 
-const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
-  const [data, setData] = useState<RatingData[]>([]);
-  const [averageRating, setAverageRating] = useState<number>(0);
+const Ratings = ({
+  avgRating,
+  requestId,
+  videoId,
+  videoTitle,
+}: RatingsProps) => {
+  const getRatings = ({
+    data: ratings,
+  }: UseQueryResult<RatingAdminListRetrieve[]>): RatingAdminListDates[] => {
+    return [...(ratings || [])].map((rating) => {
+      return {
+        ...rating,
+        created: new Date(rating.created),
+      };
+    });
+  };
+  const data = getRatings(
+    useQuery(requestVideoRatingsListQuery(requestId, videoId)),
+  );
+
   const [ordering, setOrdering] = useState<
     'highest' | 'lowest' | 'oldest' | 'newest'
   >('newest');
@@ -156,14 +169,6 @@ const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
     setRatingDialogId(ratingId);
   };
 
-  useEffect(() => {
-    setAverageRating(
-      data
-        ? data.reduce((total, next) => total + next.rating, 0) / data.length
-        : 0,
-    );
-  }, [data]);
-
   const numberOfRating = (rating: number) => {
     return data
       ? data.reduce(
@@ -173,7 +178,7 @@ const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
       : 0;
   };
 
-  function compare(a: RatingData, b: RatingData) {
+  function compare(a: RatingAdminListDates, b: RatingAdminListDates) {
     if (ordering === 'highest') {
       if (a.rating - b.rating !== 0) {
         return b.rating - a.rating;
@@ -194,6 +199,7 @@ const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
         onHide={onRatingDialogHide}
         ratingAuthorName={ratingDialogAuthorName}
         ratingId={ratingDialogId}
+        requestId={requestId}
         videoId={videoId}
         videoTitle={videoTitle}
         visible={ratingDialogVisible}
@@ -216,15 +222,15 @@ const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
         </div>
         <div className="align-items-center flex flex-column justify-content-center md:mt-0 md:w-6 mt-4 w-full">
           <span className="font-medium mb-3 text-900 text-5xl">
-            {averageRating.toFixed(2)}
+            {(avgRating || 0).toFixed(2)}
           </span>
           <span className="mb-2">
             {[...Array(5).keys()].map((item) => (
               <i
                 className={classNames('pi pi-star-fill text-2xl', {
                   'mr-1': item < 4,
-                  'text-300': Math.round(averageRating) <= item,
-                  'text-yellow-500': Math.round(averageRating) > item,
+                  'text-300': Math.round(avgRating) <= item,
+                  'text-yellow-500': Math.round(avgRating) > item,
                 })}
                 key={item}
               ></i>
@@ -234,11 +240,11 @@ const Ratings = ({ videoId, videoTitle }: RatingsProps) => {
             tabIndex={0}
             className="cursor-pointer font-medium hover:text-blue-600 text-blue-500 transition-colors transition-duration-300"
           >
-            {`${data?.length || 0} Értékelés`}
+            {`${data.length} Értékelés`}
           </a>
         </div>
       </div>
-      <div className="border-top-1 mt-5 py-5 surface-border">
+      <div className="border-top-1 mt-5 pt-5 surface-border">
         <div className="align-items-center flex justify-content-between mb-5">
           <Button
             label="Értékelés írása"
