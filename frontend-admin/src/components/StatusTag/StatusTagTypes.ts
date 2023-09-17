@@ -23,7 +23,7 @@ export type StatusStyle = {
 
 export interface RequestStatusTagProps extends TagProps {
   modified?: boolean;
-  statusNum: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 9 | 10;
+  statusNum: number;
 }
 
 export interface StatusTagProps extends TagProps {
@@ -33,5 +33,5 @@ export interface StatusTagProps extends TagProps {
 
 export interface VideoStatusTagProps extends TagProps {
   modified?: boolean;
-  statusNum: 1 | 2 | 3 | 4 | 5 | 6;
+  statusNum: number;
 }
