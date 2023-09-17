@@ -1,3 +1,5 @@
+import { logoutApi } from 'api/http';
+import { getRefreshToken } from 'helpers/LocalStorageHelper';
 import { useTheme } from 'hooks/useTheme';
 
 import AvatarButton from './Button/AvatarButton';
@@ -11,8 +13,10 @@ const Menubar = () => {
   const [darkMode, setDarkMode] = useTheme();
 
   const signOut = () => {
-    localStorage.clear();
-    window.location.href = '/';
+    logoutApi.logoutCreate({ refresh: getRefreshToken() }).then(() => {
+      localStorage.clear();
+      window.location.href = '/';
+    });
   };
 
   return (
