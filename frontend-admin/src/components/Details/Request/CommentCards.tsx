@@ -16,8 +16,7 @@ import * as yup from 'yup';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
 import { useTheme } from 'hooks/useTheme';
-
-const UI_AVATAR_URL = 'https://ui-avatars.com/api/?background=random&name='; // TODO: make global
+import { UI_AVATAR_URL } from 'localConstants';
 
 // TODO: Review props
 type CommentCardProps = CommentCardHeaderProps & {
