@@ -1,5 +1,7 @@
 import { Fragment } from 'react';
 
+import { useIsFetching } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { Link, useMatches } from 'react-router-dom';
 
 type BreadcrumbsType = {
@@ -16,6 +18,7 @@ type ReactRouterUseMatchesType = {
 }[];
 
 const Breadcrumbs = () => {
+  const isFetching = useIsFetching();
   const matches = useMatches() as ReactRouterUseMatchesType;
 
   const breadcrumbs: BreadcrumbsType = matches
@@ -43,7 +46,7 @@ const Breadcrumbs = () => {
             <i className="pi pi-angle-right text-500"></i>
           </li>
 
-          {/* Texts - Last item different, no redirect*/}
+          {/* Texts - Last item different, no redirect */}
           <li className="px-2">
             {!Object.is(array.length - 1, index) ? (
               <Link
@@ -60,6 +63,16 @@ const Breadcrumbs = () => {
           </li>
         </Fragment>
       ))}
+      {/* Spinner indicator for network activity */}
+      {!!isFetching && (
+        <ProgressSpinner
+          style={{
+            height: '1.25rem',
+            marginLeft: '1rem',
+            width: '1.25rem',
+          }}
+        />
+      )}
     </ul>
   );
 };
