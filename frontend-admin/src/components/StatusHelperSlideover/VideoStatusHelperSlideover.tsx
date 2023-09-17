@@ -19,7 +19,7 @@ type VideoStatusHelperSlideoverProps = {
   adminStatusOverride: boolean;
   editor: boolean;
   id: string;
-  status: 1 | 2 | 3 | 4 | 5 | 6;
+  status: number;
 };
 
 const VideoStatusHelperSlideover = ({
