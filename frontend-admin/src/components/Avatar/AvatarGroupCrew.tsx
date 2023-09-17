@@ -5,7 +5,7 @@ import { AvatarGroup, AvatarGroupProps } from 'primereact/avatargroup';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 
-const UI_AVATAR_URL = 'https://ui-avatars.com/api/?background=random&name=';
+import { UI_AVATAR_URL } from 'localConstants';
 
 interface AvatarGroupCrewProps extends AvatarGroupProps {
   crew?: {

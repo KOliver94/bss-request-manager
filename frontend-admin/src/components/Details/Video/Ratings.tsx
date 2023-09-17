@@ -9,8 +9,7 @@ import TimeAgo from 'timeago-react';
 
 import RatingDialog from 'components/RatingDialog/RatingDialog';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
-
-const UI_AVATAR_URL = 'https://ui-avatars.com/api/?background=random&name='; // TODO: make global
+import { UI_AVATAR_URL } from 'localConstants';
 
 interface RatingData {
   author: {
