@@ -1,14 +1,18 @@
+import { useEffect } from 'react';
+
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { InputMask } from 'primereact/inputmask';
 import { InputText } from 'primereact/inputtext';
 import { ToggleButton } from 'primereact/togglebutton';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useLoaderData } from 'react-router-dom';
 
-import AutoCompleteStaff, {
-  StaffUser,
-} from 'components/AutoCompleteStaff/AutoCompleteStaff';
+import { UserNestedDetail, VideoAdminRetrieve } from 'api/models';
+import { requestVideoRetrieveQuery } from 'api/queries';
+import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
+import { queryClient } from 'router';
 
 export interface IVideoCreator {
   additional_data: {
@@ -19,14 +23,28 @@ export interface IVideoCreator {
       website: boolean;
     };
     editing_done: boolean;
-    length: number;
+    length?: string;
     publishing: {
       website: string;
     };
   };
-  editor: StaffUser | null;
-  id: number;
+  editor: UserNestedDetail | null;
   title: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function loader({ params }: any) {
+  if (params.requestId && params.videoId) {
+    const query = requestVideoRetrieveQuery(
+      Number(params.requestId),
+      Number(params.videoId),
+    );
+    return (
+      queryClient.getQueryData(query.queryKey) ??
+      (await queryClient.fetchQuery(query))
+    );
+  }
+  return null;
 }
 
 const VideoCreatorEditorPage = () => {
@@ -39,7 +57,7 @@ const VideoCreatorEditorPage = () => {
         website: false,
       },
       editing_done: false,
-      length: 0,
+      length: undefined,
       publishing: {
         website: '',
       },
@@ -49,10 +67,29 @@ const VideoCreatorEditorPage = () => {
     title: '',
   };
 
-  const { control, handleSubmit } = useForm<IVideoCreator>({
+  const loaderData = useLoaderData() as VideoAdminRetrieve;
+
+  const { control, handleSubmit, reset } = useForm<IVideoCreator>({
     defaultValues,
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    if (loaderData) {
+      reset({
+        ...defaultValues,
+        ...loaderData,
+        additional_data: {
+          ...loaderData.additional_data,
+          length: loaderData.additional_data.length
+            ? new Date(1000 * loaderData.additional_data.length)
+                .toISOString()
+                .substring(11, 19)
+            : undefined,
+        },
+      });
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<IVideoCreator> = (data) => {
     console.log(data);

@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 
 import { Calendar } from 'primereact/calendar';
 import { Checkbox } from 'primereact/checkbox';
@@ -11,14 +11,15 @@ import { SelectButton } from 'primereact/selectbutton';
 import { SplitButton } from 'primereact/splitbutton';
 import { IconType } from 'primereact/utils';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useLoaderData, useParams } from 'react-router-dom';
 
-import AutoCompleteStaff, {
-  StaffUser,
-} from 'components/AutoCompleteStaff/AutoCompleteStaff';
+import { RequestAdminRetrieve, UserNestedDetail } from 'api/models';
+import { requestRetrieveQuery } from 'api/queries';
+import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
-import { UsersDataType } from 'components/UsersDataTable/UsersDataTable';
 import { getName } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
+import { queryClient } from 'router';
 
 const NewRequesterForm = lazy(
   () => import('components/RequestCreator/NewRequesterForm'),
@@ -33,8 +34,8 @@ export interface IRequestCreator {
   deadline: Date | null;
   end_datetime: Date | null;
   place: string;
-  responsible: StaffUser | null;
-  requester: UsersDataType | null;
+  responsible: UserNestedDetail | null;
+  requester: UserNestedDetail | null;
   requester_email: string;
   requester_first_name: string;
   requester_last_name: string;
@@ -43,6 +44,18 @@ export interface IRequestCreator {
   start_datetime: Date | null;
   title: string;
   type: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function loader({ params }: any) {
+  if (params.requestId) {
+    const query = requestRetrieveQuery(Number(params.requestId));
+    return (
+      queryClient.getQueryData(query.queryKey) ??
+      (await queryClient.fetchQuery(query))
+    );
+  }
+  return null;
 }
 
 const RequestCreatorEditorPage = () => {
@@ -64,12 +77,26 @@ const RequestCreatorEditorPage = () => {
     type: '',
   };
 
-  const { control, handleSubmit, watch } = useForm<IRequestCreator>({
+  const { control, handleSubmit, reset, watch } = useForm<IRequestCreator>({
     defaultValues,
     mode: 'onChange',
   });
-  const watchRequesterType = watch('requesterType');
+  const { requestId } = useParams();
   const isMobile = useMobile();
+  const loaderData = useLoaderData() as RequestAdminRetrieve;
+  const watchRequesterType = watch('requesterType');
+
+  useEffect(() => {
+    if (loaderData) {
+      reset({
+        ...defaultValues,
+        ...loaderData,
+        deadline: new Date(loaderData.deadline),
+        end_datetime: new Date(loaderData.end_datetime),
+        start_datetime: new Date(loaderData.start_datetime),
+      });
+    }
+  }, []);
 
   const buttonOptions = [
     {
@@ -83,7 +110,11 @@ const RequestCreatorEditorPage = () => {
   ];
 
   const requesterTypeOptions = [
-    { icon: 'pi pi-user', text: getName(), value: 'self' },
+    {
+      icon: 'pi pi-user',
+      text: loaderData ? loaderData.requester.full_name : getName(),
+      value: 'self',
+    },
     { icon: 'pi pi-search', text: 'Felhasználó keresése', value: 'search' },
     { icon: 'pi pi-plus', text: 'Új felhasználó hozzáadása', value: 'new' },
   ];
@@ -177,15 +208,19 @@ const RequestCreatorEditorPage = () => {
           <Divider align="center" type="dashed">
             <b>Opcionális mezők</b>
           </Divider>
-          <FormField
-            className="col-12 mb-0"
-            control={control}
-            label="Megjegyzések"
-            name="comment_text"
-          >
-            <InputTextarea rows={isMobile ? 5 : 8} autoResize />
-          </FormField>
-          <Divider type="dashed" />
+          {!requestId && (
+            <>
+              <FormField
+                className="col-12 mb-0"
+                control={control}
+                label="Megjegyzések"
+                name="comment_text"
+              >
+                <InputTextarea rows={isMobile ? 5 : 8} autoResize />
+              </FormField>
+              <Divider type="dashed" />
+            </>
+          )}
           <FormField
             className="col-12 mb-4 md:col-6 md:mb-0"
             control={control}
