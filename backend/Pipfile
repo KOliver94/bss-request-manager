@@ -17,14 +17,14 @@ django-health-check = "==3.17.0"
 django-phonenumber-field = {extras = ["phonenumbers"],version = "==7.1.0"}
 django-simple-history = "==3.4.0"
 drf-recaptcha = "==3.0.0"
-drf-spectacular = "==0.26.4"
-google-api-python-client = "==2.99.0"
+drf-spectacular = "==0.26.5"
+google-api-python-client = "==2.100.0"
 google-auth-httplib2 = "==0.1.1"
 google-auth-oauthlib = "==1.1.0"
 gunicorn = "==21.2.0"
-jsonschema = {extras = ["format"],version = "==4.19.0"}
+jsonschema = {extras = ["format"],version = "==4.19.1"}
 libgravatar = "==1.0.4"
-psycopg = {extras = ["binary"],version = "==3.1.10"}
+psycopg = {extras = ["binary"],version = "==3.1.11"}
 python-decouple = "==3.8"
 python-ldap = "==3.4.3"
 requests = "==2.31.0"
@@ -41,7 +41,7 @@ pytest = "==7.4.2"
 pytest-cov = "==4.1.0"
 pytest-django = "==4.5.2"
 pytest-xdist = {extras = ["psutil"], version = "==3.3.1"}
-time-machine = "==2.12.0"
+time-machine = "==2.13.0"
 
 [requires]
 python_version = "3.10"
