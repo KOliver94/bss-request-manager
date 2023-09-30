@@ -1,7 +1,4 @@
-import { lazy, Suspense, useContext } from 'react';
-
-import { PrimeReactContext } from 'primereact/api';
-import { useMountEffect } from 'primereact/hooks';
+import { lazy, Suspense } from 'react';
 
 import { useTheme } from 'hooks/useTheme';
 
@@ -13,12 +10,7 @@ type ThemeProviderProps = {
 };
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const { setRipple } = useContext(PrimeReactContext);
   const [darkMode] = useTheme();
-
-  useMountEffect(() => {
-    setRipple(true);
-  });
 
   return (
     <Suspense fallback={<span />}>

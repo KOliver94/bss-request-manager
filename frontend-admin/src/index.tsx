@@ -31,10 +31,14 @@ locale('hu');
 
 register('hu_HU', huLocal);
 
+const primeReactSettings = {
+  ripple: true,
+};
+
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <StrictMode>
-    <PrimeReactProvider>
+    <PrimeReactProvider value={primeReactSettings}>
       <ThemeProvider>
         <ToastProvider>
           <QueryClientProvider client={queryClient}>
