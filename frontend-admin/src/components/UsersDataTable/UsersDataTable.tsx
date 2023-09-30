@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
+import { FilterMatchMode } from 'primereact/api';
 import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
 import {
   DataTable,
@@ -92,21 +93,21 @@ const UsersDataTable = forwardRef<
         body={fullNameBodyTemplate}
         field="full_name"
         filter
-        filterMatchMode="contains"
+        filterMatchMode={FilterMatchMode.CONTAINS}
         header="Név"
         sortable
       />
       <Column
         field="email"
         filter
-        filterMatchMode="contains"
+        filterMatchMode={FilterMatchMode.CONTAINS}
         header="E-mail"
         sortable
       />
       <Column
         field="profile.phone_number"
         filter
-        filterMatchMode="contains"
+        filterMatchMode={FilterMatchMode.CONTAINS}
         header="Telefonszám"
         sortable
       />
@@ -117,7 +118,7 @@ const UsersDataTable = forwardRef<
         field="is_staff"
         filter
         filterElement={isStaffFilterTemplate}
-        filterMatchMode="equals"
+        filterMatchMode={FilterMatchMode.EQUALS}
         filterMenuClassName={stylesModule.isStaffFilter}
         header="BSS tag"
         showFilterMenuOptions={false}
