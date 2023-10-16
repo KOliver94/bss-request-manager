@@ -33,7 +33,7 @@ repos:
         name: 'Upgrade Python syntax to newer versions'
         args: [--py310-plus]
   - repo: https://github.com/hadialqattan/pycln
-    rev: v2.2.2
+    rev: v2.3.0
     hooks:
       - id: pycln
         name: 'Remove unused Python imports'
