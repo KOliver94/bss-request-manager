@@ -104,7 +104,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
         }
 
         return () => {
-          queryClient.cancelQueries(query?.queryKey);
+          queryClient.cancelQueries({ queryKey: query?.queryKey });
         };
       }
     }, [ratingIdParam, videoId, visible]);
