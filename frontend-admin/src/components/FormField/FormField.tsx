@@ -13,6 +13,11 @@ interface FormFieldProps extends UseControllerProps<any> {
   label: string;
 }
 
+const errorMessages: Record<string, string> = {
+  maxLength: 'A mező túl hosszú',
+  required: 'A mező kitöltése kötelező',
+};
+
 const FormField = ({
   className,
   children,
@@ -20,6 +25,7 @@ const FormField = ({
   icon,
   label,
   name,
+  rules,
 }: FormFieldProps) => {
   return (
     <Controller
@@ -47,11 +53,12 @@ const FormField = ({
           </ConditionalWrapper>
           {fieldState.error && (
             <small className="block p-error" id={field.name + '-help'}>
-              {fieldState.error.message}
+              {fieldState.error.message || errorMessages[fieldState.error.type]}
             </small>
           )}
         </div>
       )}
+      rules={rules}
     />
   );
 };

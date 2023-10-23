@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect } from 'react';
 
+import { useMutation } from '@tanstack/react-query';
 import { Calendar } from 'primereact/calendar';
 import { Checkbox } from 'primereact/checkbox';
 import { Divider } from 'primereact/divider';
@@ -14,11 +15,13 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useLoaderData, useParams } from 'react-router-dom';
 
 import { RequestAdminRetrieve, UserNestedDetail } from 'api/models';
+import { requestCreateMutation, requestUpdateMutation } from 'api/mutations';
 import { requestRetrieveQuery } from 'api/queries';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import { getName } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
+import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
 const NewRequesterForm = lazy(
@@ -29,8 +32,8 @@ const UsersDataTable = lazy(
 );
 
 export interface IRequestCreator {
-  comment_text: string;
-  create_more: boolean;
+  comment: string;
+  createMore: boolean;
   deadline: Date | null;
   end_datetime: Date | null;
   place: string;
@@ -60,8 +63,8 @@ export async function loader({ params }: any) {
 
 const RequestCreatorEditorPage = () => {
   const defaultValues = {
-    comment_text: '',
-    create_more: false,
+    comment: '',
+    createMore: false,
     deadline: null,
     end_datetime: null,
     place: '',
@@ -77,13 +80,21 @@ const RequestCreatorEditorPage = () => {
     type: '',
   };
 
-  const { control, handleSubmit, reset, watch } = useForm<IRequestCreator>({
-    defaultValues,
-    mode: 'onChange',
-  });
+  const { control, handleSubmit, reset, setError, watch } =
+    useForm<IRequestCreator>({
+      defaultValues,
+      mode: 'onChange',
+    });
   const { requestId } = useParams();
+  const { showToast } = useToast();
   const isMobile = useMobile();
   const loaderData = useLoaderData() as RequestAdminRetrieve;
+  const mutation = useMutation(
+    requestId
+      ? requestUpdateMutation(Number(requestId))
+      : requestCreateMutation(),
+  );
+  const watchCreateMore = watch('createMore');
   const watchRequesterType = watch('requesterType');
 
   useEffect(() => {
@@ -98,12 +109,25 @@ const RequestCreatorEditorPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      if (!watchCreateMore) {
+        console.log('redirect here');
+      }
+      console.log('No redirect');
+    }
+    if (mutation.isError) {
+      // TODO: setError
+    }
+  }, [mutation.isSuccess, mutation.isError]);
+
   const buttonOptions = [
     {
       icon: 'pi pi-bell',
       label: 'Mentés értesítéssel',
     },
     {
+      command: () => reset(),
       icon: 'pi pi-replay',
       label: 'Visszaállítás',
     },
@@ -140,7 +164,49 @@ const RequestCreatorEditorPage = () => {
   };
 
   const onSubmit: SubmitHandler<IRequestCreator> = (data) => {
-    console.log(data);
+    if (!data.start_datetime || !data.end_datetime) return;
+
+    let requester = {};
+    if (data.requesterType == 'search') {
+      if (!data.requester) {
+        showToast({
+          detail: 'Nincs kijelölve felkérő',
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        });
+        return;
+      }
+      requester = {
+        requester: data.requester?.id,
+      };
+    } else if (data.requesterType == 'new') {
+      requester = {
+        requester_email: data.requester_email,
+        requester_first_name: data.requester_first_name,
+        requester_last_name: data.requester_last_name,
+        requester_mobile: data.requester_mobile,
+      };
+    }
+
+    let deadline = undefined;
+    if (data.deadline) {
+      const offset = data.deadline.getTimezoneOffset();
+      deadline = new Date(data.deadline.getTime() - offset * 60 * 1000);
+      deadline = deadline.toISOString().split('T')[0];
+    }
+
+    mutation.mutate({
+      ...requester,
+      comment: data.comment || undefined,
+      deadline: deadline,
+      end_datetime: data.end_datetime.toISOString(),
+      place: data.place,
+      responsible: data.responsible?.id || null,
+      start_datetime: data.start_datetime.toISOString(),
+      title: data.title,
+      type: data.type,
+    });
   };
 
   return (
@@ -155,6 +221,7 @@ const RequestCreatorEditorPage = () => {
             control={control}
             label="Esemény neve"
             name="title"
+            rules={{ maxLength: 200, required: true }}
           >
             <InputText autoFocus type="text" />
           </FormField>
@@ -163,6 +230,7 @@ const RequestCreatorEditorPage = () => {
             control={control}
             label="Kezdés időpontja"
             name="start_datetime"
+            rules={{ required: true }}
           >
             <Calendar
               dateFormat="yy.mm.dd"
@@ -178,6 +246,7 @@ const RequestCreatorEditorPage = () => {
             control={control}
             label="Befejezés időpontja"
             name="end_datetime"
+            rules={{ required: true }}
           >
             <Calendar
               dateFormat="yy.mm.dd"
@@ -194,6 +263,7 @@ const RequestCreatorEditorPage = () => {
             icon="pi-map-marker"
             label="Helyszín"
             name="place"
+            rules={{ maxLength: 150, required: true }}
           >
             <InputText type="text" />
           </FormField>
@@ -202,6 +272,7 @@ const RequestCreatorEditorPage = () => {
             control={control}
             label="Típus"
             name="type"
+            rules={{ maxLength: 50, required: true }}
           >
             <Dropdown editable options={typeOptions} />
           </FormField>
@@ -214,7 +285,7 @@ const RequestCreatorEditorPage = () => {
                 className="col-12 mb-0"
                 control={control}
                 label="Megjegyzések"
-                name="comment_text"
+                name="comment"
               >
                 <InputTextarea rows={isMobile ? 5 : 8} autoResize />
               </FormField>
@@ -238,7 +309,9 @@ const RequestCreatorEditorPage = () => {
             <Calendar
               dateFormat="yy.mm.dd"
               mask="9999.99.99."
-              placeholder="Az esemény vége után 3 hét"
+              placeholder={
+                requestId ? 'Nincs változás' : 'Az esemény vége után 3 hét'
+              }
               showIcon
               showOnFocus={false}
             />
@@ -265,12 +338,12 @@ const RequestCreatorEditorPage = () => {
               ) : (
                 <div className="col-12 mb-0">
                   <SelectButton
+                    allowEmpty={false}
                     id={field.name}
                     itemTemplate={requesterTypeOptionTemplate}
                     optionLabel="text"
                     optionValue="value"
                     options={requesterTypeOptions}
-                    unselectable={false}
                     {...field}
                   />
                 </div>
@@ -308,20 +381,22 @@ const RequestCreatorEditorPage = () => {
             model={buttonOptions}
             onClick={handleSubmit(onSubmit)}
           />
-          <div className="col-12 field-checkbox md:col-3 md:mb-0 md:mt-0 mt-3">
-            <Controller
-              name="create_more"
-              control={control}
-              render={({ field }) => (
-                <Checkbox
-                  checked={field.value}
-                  inputId={field.name}
-                  onChange={(e) => field.onChange(e.checked)}
-                />
-              )}
-            />
-            <label htmlFor="create_more">Több létrehozása</label>
-          </div>
+          {!requestId && (
+            <div className="col-12 field-checkbox md:col-3 md:mb-0 md:mt-0 mt-3">
+              <Controller
+                name="createMore"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    checked={field.value}
+                    inputId={field.name}
+                    onChange={(e) => field.onChange(e.checked)}
+                  />
+                )}
+              />
+              <label htmlFor="createMore">Több létrehozása</label>
+            </div>
+          )}
         </div>
       </form>
     </div>
