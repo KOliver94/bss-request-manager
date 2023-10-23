@@ -6,9 +6,10 @@ import { IRequestCreator } from 'pages/RequestCreatorEditorPage';
 
 type NewRequesterFormProps = {
   control: Control<IRequestCreator>;
+  disabled: boolean;
 };
 
-const NewRequesterForm = ({ control }: NewRequesterFormProps) => {
+const NewRequesterForm = ({ control, disabled }: NewRequesterFormProps) => {
   return (
     <>
       <FormField
@@ -17,7 +18,7 @@ const NewRequesterForm = ({ control }: NewRequesterFormProps) => {
         label="Vezetéknév"
         name="requester_last_name"
       >
-        <InputText type="text" />
+        <InputText disabled={disabled} type="text" />
       </FormField>
       <FormField
         className="col-12 mb-4 md:col-6 md:mt-4"
@@ -25,7 +26,7 @@ const NewRequesterForm = ({ control }: NewRequesterFormProps) => {
         label="Keresztnév"
         name="requester_first_name"
       >
-        <InputText type="text" />
+        <InputText disabled={disabled} type="text" />
       </FormField>
       <FormField
         className="col-12 mb-4 md:col-6 md:mb-0"
@@ -34,7 +35,7 @@ const NewRequesterForm = ({ control }: NewRequesterFormProps) => {
         label="E-mail cím"
         name="requester_email"
       >
-        <InputText type="email" />
+        <InputText disabled={disabled} type="email" />
       </FormField>
       <FormField
         className="col-12 mb-0 md:col-6"
@@ -43,7 +44,7 @@ const NewRequesterForm = ({ control }: NewRequesterFormProps) => {
         label="Telefonszám"
         name="requester_mobile"
       >
-        <InputText type="tel" />
+        <InputText disabled={disabled} type="tel" />
       </FormField>
     </>
   );
