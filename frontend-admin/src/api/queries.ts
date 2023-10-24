@@ -1,4 +1,5 @@
 import { adminApi, requestsApi } from './http';
+import { dummyRequest } from './placeholders';
 
 export const requestCommentsListQuery = (requestId: number) => ({
   initialData: [],
@@ -22,6 +23,7 @@ export const requestCrewListQuery = (requestId: number) => ({
 });
 
 export const requestRetrieveQuery = (requestId: number) => ({
+  initialData: dummyRequest,
   queryFn: async () => {
     const request = await adminApi.adminRequestsRetrieve(requestId);
     return request.data;
@@ -30,6 +32,7 @@ export const requestRetrieveQuery = (requestId: number) => ({
 });
 
 export const requestVideosListQuery = (requestId: number) => ({
+  initialData: [],
   queryFn: async () => {
     const videos = await adminApi.adminRequestsVideosList(requestId);
     return videos.data;
@@ -71,6 +74,7 @@ export const requestVideoRatingsListQuery = (
   requestId: number,
   videoId: number,
 ) => ({
+  initialData: [],
   queryFn: async () => {
     const ratings = await adminApi.adminRequestsVideosRatingsList(
       requestId,
@@ -109,6 +113,7 @@ export const requestsListQuery = () => ({
 });
 
 export const usersListQuery = () => ({
+  initialData: [],
   queryFn: async () => {
     const users = await adminApi.adminUsersList(
       undefined,

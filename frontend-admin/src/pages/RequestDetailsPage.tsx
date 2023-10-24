@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -9,7 +10,7 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { RequestAdminRetrieve } from 'api/models';
 import { requestRetrieveQuery } from 'api/queries';
@@ -91,7 +92,9 @@ const RequestDetailsPage = () => {
     };
   };
 
-  const queryResult = useLoaderData() as RequestAdminRetrieve;
+  const { data: queryResult } = useQuery(
+    requestRetrieveQuery(Number(requestId)),
+  );
   const data = getRequest(queryResult);
 
   const [acceptRejectDialogOpen, setAcceptRejectDialogOpen] = useState(false);
