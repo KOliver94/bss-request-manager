@@ -1,18 +1,24 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Calendar } from 'primereact/calendar';
 import { Checkbox } from 'primereact/checkbox';
 import { Divider } from 'primereact/divider';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { Message } from 'primereact/message';
 import { ProgressBar } from 'primereact/progressbar';
 import { SelectButton } from 'primereact/selectbutton';
 import { SplitButton } from 'primereact/splitbutton';
 import { IconType } from 'primereact/utils';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import {
+  useLoaderData,
+  useNavigate,
+  useParams,
+  useRevalidator,
+} from 'react-router-dom';
 
 import { RequestAdminRetrieve, UserNestedDetail } from 'api/models';
 import { requestCreateMutation, requestUpdateMutation } from 'api/mutations';
@@ -89,19 +95,28 @@ const RequestCreatorEditorPage = () => {
     });
   const { requestId } = useParams();
   const { showToast } = useToast();
-  const isMobile = useMobile();
-  const loaderData = useLoaderData() as RequestAdminRetrieve;
   const { isPending, mutateAsync } = useMutation(
     requestId
       ? requestUpdateMutation(Number(requestId))
       : requestCreateMutation(),
   );
+  const { data: queryData } = requestId
+    ? useQuery(requestRetrieveQuery(Number(requestId)))
+    : { data: undefined };
+
+  const [isDataChanged, setIsDataChanged] = useState<boolean>(false);
+
+  const isMobile = useMobile();
+  const loaderData = useLoaderData() as RequestAdminRetrieve;
   const navigate = useNavigate();
+  const revalidator = useRevalidator();
+
   const watchCreateMore = watch('createMore');
   const watchRequesterType = watch('requesterType');
 
   useEffect(() => {
     if (loaderData) {
+      setIsDataChanged(false);
       reset({
         ...defaultValues,
         ...loaderData,
@@ -110,7 +125,13 @@ const RequestCreatorEditorPage = () => {
         start_datetime: new Date(loaderData.start_datetime),
       });
     }
-  }, []);
+  }, [loaderData]);
+
+  useEffect(() => {
+    if (requestId && loaderData !== queryData) {
+      setIsDataChanged(true);
+    }
+  }, [queryData]);
 
   const buttonOptions = [
     {
@@ -156,6 +177,10 @@ const RequestCreatorEditorPage = () => {
         <span className="p-button-label p-c">{option.text}</span>
       </>
     );
+  };
+
+  const onReload = () => {
+    revalidator.revalidate();
   };
 
   const onSubmit: SubmitHandler<IRequestCreator> = async (data) => {
@@ -242,6 +267,20 @@ const RequestCreatorEditorPage = () => {
       </div>
       <form className="border-round p-3 p-fluid shadow-2 sm:p-4 surface-card">
         <div className="formgrid grid p-fluid">
+          {isDataChanged && (
+            <Message
+              className="mb-4 w-full"
+              severity="warn"
+              text={
+                <>
+                  Változás történt az adatokban.{' '}
+                  <a className="cursor-pointer underline" onClick={onReload}>
+                    Újratöltés
+                  </a>
+                </>
+              }
+            />
+          )}
           <FormField
             className="col-12 mb-4"
             control={control}
