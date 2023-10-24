@@ -236,6 +236,12 @@ const RequestCreatorEditorPage = () => {
           summary: 'Siker',
         });
 
+        if (requestId) {
+          queryClient.invalidateQueries({ queryKey: ['requests', requestId] });
+        } else {
+          queryClient.invalidateQueries({ queryKey: ['requests'] });
+        }
+
         if (watchCreateMore) {
           reset();
         } else {
