@@ -390,8 +390,8 @@ def test_create_update_request_date_validation(
     response = get_response(api_client, method, url, data)
     assert response.status_code == expected
     if response.status_code == HTTP_400_BAD_REQUEST:
-        assert response.data["start_datetime"][0] == ErrorDetail(
-            string="Must be earlier than end_datetime.", code="invalid"
+        assert response.data["end_datetime"][0] == ErrorDetail(
+            string="Must be later than the start of the event.", code="invalid"
         )
 
     data = deepcopy(request_create_data)
@@ -400,7 +400,7 @@ def test_create_update_request_date_validation(
     assert response.status_code == expected
     if response.status_code == HTTP_400_BAD_REQUEST:
         assert response.data["deadline"][0] == ErrorDetail(
-            string="Must be later than end of the event.", code="invalid"
+            string="Must be later than the end of the event.", code="invalid"
         )
 
 

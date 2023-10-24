@@ -297,8 +297,8 @@ def test_create_request_date_validation(
     response = api_client.post(url, data)
 
     assert response.status_code == HTTP_400_BAD_REQUEST
-    assert response.data["start_datetime"][0] == ErrorDetail(
-        string="Must be earlier than end_datetime.", code="invalid"
+    assert response.data["end_datetime"][0] == ErrorDetail(
+        string="Must be later than the start of the event.", code="invalid"
     )
 
 
