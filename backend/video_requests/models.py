@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import Avg, JSONField
+from django.utils.translation import gettext_lazy as _
 from jsonschema import FormatChecker
 from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
@@ -94,11 +95,11 @@ class Request(models.Model):
     def clean(self):
         if not (self.start_datetime <= self.end_datetime):
             raise ValidationError(
-                {"start_datetime": ["Must be earlier than end_datetime."]}
+                {"end_datetime": [_("Must be later than the start of the event.")]}
             )
         if self.deadline and not (self.end_datetime.date() < self.deadline):
             raise ValidationError(
-                {"deadline": ["Must be later than end of the event."]}
+                {"deadline": [_("Must be later than the end of the event.")]}
             )
 
     def save(self, *args, **kwargs):

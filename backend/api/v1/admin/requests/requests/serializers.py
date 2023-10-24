@@ -112,12 +112,24 @@ class RequestAdminUpdateSerializer(ModelSerializer):
 
         if any(requester_data) and attrs.get("requester"):
             raise ValidationError(
-                _("Either define the requester by its id or its details but not both.")
+                {
+                    "non_field_errors": [
+                        _(
+                            "Either define the requester by its id or its details but not both."
+                        )
+                    ]
+                }
             )
 
         if any(requester_data) and not all(requester_data):
             raise ValidationError(
-                _("All requester data fields must be present if one is present.")
+                {
+                    "non_field_errors": [
+                        _(
+                            "All requester data fields must be present if one is present."
+                        )
+                    ]
+                }
             )
 
         return attrs

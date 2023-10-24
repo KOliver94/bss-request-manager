@@ -5,6 +5,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import JSONField
+from django.utils.translation import gettext_lazy as _
 from jsonschema import FormatChecker
 from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
@@ -69,7 +70,7 @@ class Ban(models.Model):
 
     def clean(self):
         if self.receiver == self.creator:
-            raise ValidationError({"receiver": ["Users cannot ban themselves."]})
+            raise ValidationError({"receiver": [_("Users cannot ban themselves.")]})
 
     def save(self, *args, **kwargs):
         self.full_clean()

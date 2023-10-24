@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BSS Request Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-07 03:24+0200\n"
+"POT-Creation-Date: 2023-10-24 21:13+0200\n"
 "PO-Revision-Date: 2023-09-07 03:30+0200\n"
 "Last-Translator: Olivér Kecskeméty <kecskemety.oliver@simonyi.bme.hu>\n"
 "Language: Hungarian\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: .\api\v1\admin\requests\ratings\views.py:60
 msgid "The video has not been edited yet."
 msgstr "A videó még nincs megvágva."
@@ -25,7 +26,7 @@ msgstr "A videó még nincs megvágva."
 msgid "You have already posted a rating."
 msgstr "Már adtál le értékelést."
 
-#: .\api\v1\admin\requests\requests\serializers.py:115
+#: .\api\v1\admin\requests\requests\serializers.py:114
 msgid "Either define the requester by its id or its details but not both."
 msgstr "A felkérőt vagy az id-ja vagy adatai segítségével add meg, de ne egyszerre mindkettővel."
 
@@ -33,20 +34,20 @@ msgstr "A felkérőt vagy az id-ja vagy adatai segítségével add meg, de ne eg
 msgid "All requester data fields must be present if one is present."
 msgstr "A felkérő minden adatát szükséges kitölteni ha bármely közülük meg van adva."
 
-#: .\api\v1\admin\users\views.py:135 .\api\v1\admin\users\views.py:149
-#: .\api\v1\admin\users\views.py:161
+#: .\api\v1\admin\users\views.py:134 .\api\v1\admin\users\views.py:146
+#: .\api\v1\admin\users\views.py:156
 msgid "Invalid filter."
 msgstr "Érvénytelen szűrő."
 
-#: .\api\v1\admin\users\views.py:169
+#: .\api\v1\admin\users\views.py:163
 msgid "Must be earlier than start_datetime_before."
 msgstr "Korábbinak kell lennie mint a start_datetime_before."
 
-#: .\api\v1\admin\users\views.py:183
+#: .\api\v1\admin\users\views.py:176
 msgid "Responsible"
 msgstr "Felelős"
 
-#: .\api\v1\admin\users\views.py:203
+#: .\api\v1\admin\users\views.py:194
 msgid "Editor"
 msgstr "Vágó"
 
@@ -62,13 +63,17 @@ msgstr "Nem létezik avatar ehhez a szolgáltatóhoz."
 msgid "The video has not been published yet."
 msgstr "A videó még nem került publikálásra."
 
-#: .\api\v1\requests\requests\serializers.py:74
+#: .\api\v1\requests\requests\serializers.py:73
 msgid "Must be later than current time."
 msgstr "Későbbinek kell lennie mint a jelenlegi idő."
 
-#: .\api\v1\requests\requests\serializers.py:82
+#: .\api\v1\requests\requests\serializers.py:80
 msgid "Please fill all data in your profile before sending a request."
 msgstr "Kérlek tölts ki minden adatot a profilodban mielőtt felkérést küldenél be."
+
+#: .\common\models.py:73
+msgid "Users cannot ban themselves."
+msgstr "A felhasználók nem tilthatják ki saját magukat."
 
 #: .\common\rest_framework\pagination.py:17
 msgid "Return paginated response."
@@ -81,3 +86,11 @@ msgstr "angol"
 #: .\core\settings\base.py:234
 msgid "Hungarian"
 msgstr "magyar"
+
+#: .\video_requests\models.py:98
+msgid "Must be later than the start of the event."
+msgstr "Későbbinek kell lennie mint az esemény kezdése."
+
+#: .\video_requests\models.py:102
+msgid "Must be later than the end of the event."
+msgstr "Későbbinek kell lennie mint az esemény vége."

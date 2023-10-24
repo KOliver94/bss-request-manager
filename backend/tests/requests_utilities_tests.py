@@ -802,7 +802,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.data["deadline"][0],
-            "Must be later than end of the event.",
+            "Must be later than the end of the event.",
         )
         body = {
             "end_datetime": "2020-12-31T10:30:00+01:00",
@@ -812,7 +812,7 @@ class RequestsUtilitiesTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.data["deadline"][0],
-            "Must be later than end of the event.",
+            "Must be later than the end of the event.",
         )
 
     @time_machine.travel("2020-11-21 10:20:30 +0100")

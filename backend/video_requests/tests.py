@@ -80,7 +80,7 @@ class VideoRequestsTestCase(TestCase):
             self.request.end_datetime = self.request.start_datetime - timedelta(hours=5)
             self.request.full_clean()
         self.assertEqual(
-            context.exception.messages[0], "Must be earlier than end_datetime."
+            context.exception.messages[0], "Must be later than the start of the event."
         )
 
     def test_request_deadline_validation(self):
@@ -92,7 +92,7 @@ class VideoRequestsTestCase(TestCase):
             self.request.full_clean()
         self.assertEqual(
             context.exception.messages[0],
-            "Must be later than end of the event.",
+            "Must be later than the end of the event.",
         )
 
     def test_request_additional_data_validation(self):

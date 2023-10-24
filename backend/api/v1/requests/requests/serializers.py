@@ -77,7 +77,13 @@ class RequestCreateSerializer(ModelSerializer):
             [user.email, user.first_name, user.last_name, user.userprofile.phone_number]
         ):
             raise ValidationError(
-                _("Please fill all data in your profile before sending a request.")
+                {
+                    "non_field_errors": [
+                        _(
+                            "Please fill all data in your profile before sending a request."
+                        )
+                    ]
+                }
             )
         return attrs
 
