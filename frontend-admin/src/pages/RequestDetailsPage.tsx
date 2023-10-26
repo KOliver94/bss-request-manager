@@ -12,6 +12,7 @@ import { classNames } from 'primereact/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
 import { requestRetrieveQuery } from 'api/queries';
 import AvatarGroupCrew from 'components/Avatar/AvatarGroupCrew';
@@ -33,6 +34,7 @@ import {
   dateToLocaleString,
 } from 'helpers/DateToLocaleStringCoverters';
 import useMobile from 'hooks/useMobile';
+import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 import { RequestAdditionalDataRecordingType } from 'types/additionalDataTypes';
 
@@ -77,6 +79,7 @@ interface RequestAdminRetrieveDates // TODO: Rename?
 
 const RequestDetailsPage = () => {
   const { requestId } = useParams();
+  const { showToast } = useToast();
   const isMobile = useMobile();
   const navigate = useNavigate();
 
@@ -118,12 +121,22 @@ const RequestDetailsPage = () => {
   };
 
   const handleDelete = () => {
-    console.log('Deleting request...');
-
-    // TODO: Use real API call
-    setTimeout(() => {
-      navigate('/requests');
-    }, 1000);
+    setLoading(true);
+    adminApi
+      .adminRequestsDestroy(Number(requestId))
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ['requests'] });
+        navigate('/requests');
+      })
+      .catch((error) => {
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   const onAcceptRejectSave = (data: {
