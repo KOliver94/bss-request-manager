@@ -21,9 +21,6 @@ const AdditionalDataDialog = forwardRef<
   AdditionalDataDialogProps
 >(({ data, loading, onHide, onSave, visible, ...props }, ref) => {
   const isMobile = useMobile();
-  const defaultValues = {
-    additional_data: JSON.stringify(data, null, 2),
-  };
 
   const {
     control,
@@ -32,10 +29,13 @@ const AdditionalDataDialog = forwardRef<
     reset,
   } = useForm<{
     additional_data: string;
-  }>({ defaultValues });
+  }>();
 
   useEffect(() => {
-    reset();
+    const defaultValues = {
+      additional_data: JSON.stringify(data, null, 2),
+    };
+    reset({ ...defaultValues });
   }, [visible]);
 
   const renderFooter = () => {

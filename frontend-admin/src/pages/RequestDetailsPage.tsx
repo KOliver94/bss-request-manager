@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -14,6 +14,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
+import { requestUpdateMutation } from 'api/mutations';
 import { requestRetrieveQuery } from 'api/queries';
 import AvatarGroupCrew from 'components/Avatar/AvatarGroupCrew';
 import DetailsRow from 'components/Details/DetailsRow';
@@ -80,6 +81,7 @@ interface RequestAdminRetrieveDates // TODO: Rename?
 const RequestDetailsPage = () => {
   const { requestId } = useParams();
   const { showToast } = useToast();
+  const { mutateAsync } = useMutation(requestUpdateMutation(Number(requestId)));
   const isMobile = useMobile();
   const navigate = useNavigate();
 
@@ -128,14 +130,14 @@ const RequestDetailsPage = () => {
         queryClient.invalidateQueries({ queryKey: ['requests'] });
         navigate('/requests');
       })
-      .catch((error) => {
+      .catch((error) =>
         showToast({
           detail: error.message,
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        });
-      })
+        }),
+      )
       .finally(() => setLoading(false));
   };
 
@@ -144,25 +146,54 @@ const RequestDetailsPage = () => {
     canceled: boolean | null;
     failed: boolean | null;
   }) => {
-    console.log('Saving accept/reject...');
     setLoading(true);
 
-    // TODO: Use real API call
-    setTimeout(() => {
-      setAcceptRejectDialogOpen(false);
-      setLoading(false);
-    }, 1000);
+    // Do this to consistently remove unused keys
+    const _data = {
+      ...data,
+      canceled: data.canceled || null,
+      failed: data.failed || null,
+    };
+
+    mutateAsync({
+      additional_data: { ...queryResult.additional_data, ..._data },
+    })
+      .then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['requests', Number(requestId)],
+        });
+        setAcceptRejectDialogOpen(false);
+      })
+      .catch((error) =>
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
   const onAdditionalDataSave = (data: { additional_data: string }) => {
-    console.log('Saving additional_data...');
     setLoading(true);
 
-    // TODO: Use real API call
-    setTimeout(() => {
-      setAdditionalDataDialogOpen(false);
-      setLoading(false);
-    }, 1000);
+    mutateAsync({ additional_data: JSON.parse(data.additional_data) })
+      .then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['requests', Number(requestId)],
+        });
+        setAdditionalDataDialogOpen(false);
+      })
+      .catch((error) =>
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
   const onDelete = () => {
@@ -221,17 +252,32 @@ const RequestDetailsPage = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<RequestAdditionalDataRecordingType> = (
-    data,
-  ) => {
+  const onSubmitRecordingContent: SubmitHandler<
+    RequestAdditionalDataRecordingType
+  > = (data) => {
     setLoading(true);
-    console.log(data);
 
-    // TODO: Use real API call
-    setTimeout(() => {
-      setRecordingIsEditing(false);
-      setLoading(false);
-    }, 1000);
+    mutateAsync({
+      additional_data: {
+        ...queryResult.additional_data,
+        recording: { ...queryResult.additional_data?.recording, ...data },
+      },
+    })
+      .then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['requests', Number(requestId)],
+        });
+        setRecordingIsEditing(false);
+      })
+      .catch((error) =>
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
   const onRecordingDataCancel = () => {
@@ -436,7 +482,9 @@ const RequestDetailsPage = () => {
                   editing={recordingIsEditing}
                   editOnCancel={() => onRecordingDataCancel()}
                   editOnClick={() => setRecordingIsEditing(true)}
-                  editOnSave={recordingContentHandleSubmit(onSubmit)}
+                  editOnSave={recordingContentHandleSubmit(
+                    onSubmitRecordingContent,
+                  )}
                   loading={loading}
                   recordingPath={data.additional_data.recording?.path}
                 />

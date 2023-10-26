@@ -37,11 +37,6 @@ const AcceptRejectDialog = forwardRef<
     ref,
   ) => {
     const isMobile = useMobile();
-    const defaultValues = {
-      accepted: accepted || null,
-      canceled: canceled || null,
-      failed: failed || null,
-    };
 
     const {
       control,
@@ -52,10 +47,15 @@ const AcceptRejectDialog = forwardRef<
       accepted: boolean | null;
       canceled: boolean | null;
       failed: boolean | null;
-    }>({ defaultValues });
+    }>();
 
     useEffect(() => {
-      reset();
+      const defaultValues = {
+        accepted: accepted === undefined ? null : accepted,
+        canceled: canceled || null,
+        failed: failed || null,
+      };
+      reset({ ...defaultValues });
     }, [visible]);
 
     const acceptOptions: AcceptOption[] = [
