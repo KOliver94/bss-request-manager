@@ -16,12 +16,12 @@ export async function loader({ params }: any) {
 
 const VideosListPage = () => {
   const { requestId } = useParams();
-  const requestData = useQuery(requestRetrieveQuery(Number(requestId)));
+  const { data } = useQuery(requestRetrieveQuery(Number(requestId)));
 
   return (
     <div className="p-3 sm:p-5 surface-ground">
       <div className="font-medium mb-3 text-900 text-xl">
-        {requestData.data?.title} - Videók
+        {data?.title} - Videók
       </div>
       <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
         <VideosDataTable requestId={Number(requestId)} />
