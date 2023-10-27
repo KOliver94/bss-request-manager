@@ -7,6 +7,7 @@ import { ToggleButton } from 'primereact/togglebutton';
 import { classNames } from 'primereact/utils';
 import { Controller, useForm } from 'react-hook-form';
 
+import { isAdmin } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 
 interface AcceptRejectDialogProps extends DialogProps {
@@ -88,7 +89,8 @@ const AcceptRejectDialog = forwardRef<
     };
 
     const renderFooter = () => {
-      //TODO: Do not render if user is not an admin
+      if (!isAdmin()) return;
+
       return (
         <div>
           <Button
@@ -133,6 +135,7 @@ const AcceptRejectDialog = forwardRef<
           render={({ field }) => (
             <SelectButton
               className="my-2"
+              disabled={!isAdmin()}
               id={field.name}
               itemTemplate={acceptTemplate}
               optionLabel="label"
@@ -148,6 +151,7 @@ const AcceptRejectDialog = forwardRef<
             <ToggleButton
               checked={field.value || false}
               className="my-2"
+              disabled={!isAdmin()}
               id={field.name}
               offIcon="bi bi-person-fill-x"
               offLabel="Szervezők által lemondva"
@@ -164,6 +168,7 @@ const AcceptRejectDialog = forwardRef<
             <ToggleButton
               checked={field.value || false}
               className="mt-2"
+              disabled={!isAdmin()}
               id={field.name}
               offIcon="bi bi-fire"
               offLabel="Meghiúsult"
