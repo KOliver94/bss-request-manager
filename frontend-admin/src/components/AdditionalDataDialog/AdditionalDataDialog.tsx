@@ -10,16 +10,15 @@ import { RequestAdditionalDataType } from 'types/additionalDataTypes';
 
 interface AdditionalDataDialogProps extends DialogProps {
   data: RequestAdditionalDataType;
+  error?: string;
   loading: boolean;
   onSave(data: { additional_data: string }): void;
 }
 
-// TODO: Add yup validation
-
 const AdditionalDataDialog = forwardRef<
   React.Ref<HTMLDivElement>,
   AdditionalDataDialogProps
->(({ data, loading, onHide, onSave, visible, ...props }, ref) => {
+>(({ data, error, loading, onHide, onSave, visible, ...props }, ref) => {
   const isMobile = useMobile();
 
   const {
@@ -27,6 +26,7 @@ const AdditionalDataDialog = forwardRef<
     formState: { isDirty },
     handleSubmit,
     reset,
+    setError,
   } = useForm<{
     additional_data: string;
   }>();
@@ -37,6 +37,10 @@ const AdditionalDataDialog = forwardRef<
     };
     reset({ ...defaultValues });
   }, [visible]);
+
+  useEffect(() => {
+    setError('additional_data', { message: error, type: 'backend' });
+  }, [error]);
 
   const renderFooter = () => {
     return (
@@ -79,15 +83,22 @@ const AdditionalDataDialog = forwardRef<
       <Controller
         name="additional_data"
         control={control}
-        render={({ field }) => (
-          <InputTextarea
-            autoResize
-            className="w-full"
-            disabled={loading}
-            id={field.name}
-            rows={4}
-            {...field}
-          />
+        render={({ field, fieldState }) => (
+          <>
+            <InputTextarea
+              autoResize
+              className="w-full"
+              disabled={loading}
+              id={field.name}
+              rows={4}
+              {...field}
+            />
+            {fieldState.error && (
+              <small className="block p-error" id={field.name + '-help'}>
+                {fieldState.error.message}
+              </small>
+            )}
+          </>
         )}
       />
     </Dialog>

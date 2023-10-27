@@ -103,6 +103,8 @@ const RequestDetailsPage = () => {
   const data = getRequest(queryResult);
 
   const [acceptRejectDialogOpen, setAcceptRejectDialogOpen] = useState(false);
+  const [additionalDataDialogError, setAdditionalDataDialogError] =
+    useState(undefined);
   const [additionalDataDialogOpen, setAdditionalDataDialogOpen] =
     useState(false);
   const [recordingIsEditing, setRecordingIsEditing] = useState(false);
@@ -185,14 +187,18 @@ const RequestDetailsPage = () => {
         });
         setAdditionalDataDialogOpen(false);
       })
-      .catch((error) =>
-        showToast({
-          detail: error.message,
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        }),
-      )
+      .catch((error) => {
+        if (error?.response?.status === 400) {
+          setAdditionalDataDialogError(error?.response?.data?.additional_data);
+        } else {
+          showToast({
+            detail: error.message,
+            life: 3000,
+            severity: 'error',
+            summary: 'Hiba',
+          });
+        }
+      })
       .finally(() => setLoading(false));
   };
 
@@ -307,6 +313,7 @@ const RequestDetailsPage = () => {
       <Suspense>
         <AdditionalDataDialog
           data={data.additional_data}
+          error={additionalDataDialogError}
           loading={loading}
           onHide={() => setAdditionalDataDialogOpen(false)}
           onSave={onAdditionalDataSave}
