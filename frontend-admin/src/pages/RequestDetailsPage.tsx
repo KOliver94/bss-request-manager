@@ -166,6 +166,13 @@ const RequestDetailsPage = () => {
           queryKey: ['requests', Number(requestId)],
         });
         setAcceptRejectDialogOpen(false);
+        showToast({
+          detail:
+            'Állapotot változtattál. Ne felejtsd el értesíteni a felkérőt!',
+          severity: 'info',
+          sticky: true,
+          summary: 'Információ',
+        });
       })
       .catch((error) =>
         showToast({
