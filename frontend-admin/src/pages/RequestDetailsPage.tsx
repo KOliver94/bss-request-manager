@@ -34,6 +34,7 @@ import {
   dateTimeToLocaleString,
   dateToLocaleString,
 } from 'helpers/DateToLocaleStringCoverters';
+import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
@@ -377,6 +378,7 @@ const RequestDetailsPage = () => {
             />
             <Button
               className="p-button-danger p-button-rounded"
+              disabled={!isAdmin() && data.requested_by.id !== getUserId()}
               icon="pi pi-trash"
               onClick={onDelete}
             />
