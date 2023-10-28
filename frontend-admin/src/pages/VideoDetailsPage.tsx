@@ -357,6 +357,7 @@ const VideoDetailsPage = () => {
                 avgRating={data.avg_rating}
                 requestId={Number(requestId)}
                 videoId={Number(videoId)}
+                videoStatus={data.status}
                 videoTitle={data.title}
               />
             </div>
