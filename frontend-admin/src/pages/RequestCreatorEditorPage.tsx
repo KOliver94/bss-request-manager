@@ -292,7 +292,13 @@ const RequestCreatorEditorPage = () => {
             control={control}
             label="Esemény neve"
             name="title"
-            rules={{ maxLength: 200, required: true }}
+            rules={{
+              maxLength: 200,
+              required: true,
+              validate: (value) => {
+                return !!value.trim();
+              },
+            }}
           >
             <InputText autoFocus disabled={isPending} type="text" />
           </FormField>
@@ -336,7 +342,13 @@ const RequestCreatorEditorPage = () => {
             icon="pi-map-marker"
             label="Helyszín"
             name="place"
-            rules={{ maxLength: 150, required: true }}
+            rules={{
+              maxLength: 150,
+              required: true,
+              validate: (value) => {
+                return !!value.trim();
+              },
+            }}
           >
             <InputText disabled={isPending} type="text" />
           </FormField>
@@ -345,7 +357,13 @@ const RequestCreatorEditorPage = () => {
             control={control}
             label="Típus"
             name="type"
-            rules={{ maxLength: 50, required: true }}
+            rules={{
+              maxLength: 50,
+              required: true,
+              validate: (value) => {
+                return !!value.trim();
+              },
+            }}
           >
             <Dropdown disabled={isPending} editable options={typeOptions} />
           </FormField>
