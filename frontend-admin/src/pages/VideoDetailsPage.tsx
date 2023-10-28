@@ -1,5 +1,6 @@
 import { Suspense, lazy, useRef, useState } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -7,9 +8,8 @@ import { ProgressBar } from 'primereact/progressbar';
 import { StyleClass } from 'primereact/styleclass';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
-import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { VideoAdminRetrieve } from 'api/models';
 import { requestVideoRetrieveQuery } from 'api/queries';
 import DetailsRow from 'components/Details/DetailsRow';
 import LinkButton from 'components/LinkButton/LinkButton';
@@ -46,7 +46,9 @@ const VideoDetailsPage = () => {
   const isMobile = useMobile();
   const navigate = useNavigate();
 
-  const data = useLoaderData() as VideoAdminRetrieve;
+  const { data } = useQuery(
+    requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
+  );
 
   const [additionalDataDialogOpen, setAdditionalDataDialogOpen] =
     useState(false);
