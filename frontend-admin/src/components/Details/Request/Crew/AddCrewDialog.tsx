@@ -1,10 +1,8 @@
 import { forwardRef, useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from 'primereact/button';
 import { Dialog, DialogProps } from 'primereact/dialog';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import useMobile from 'hooks/useMobile';
@@ -16,23 +14,9 @@ interface AddCrewDialogProps extends DialogProps {
 }
 
 interface ICrewCreate {
-  member_id: number | null;
+  member: number | null;
   position: string;
 }
-
-const validationSchema = yup
-  .object({
-    member_id: yup
-      .number()
-      .required('A stábtag kiválasztása kötelező!')
-      .nullable(),
-    position: yup
-      .string()
-      .required('A pozíció megadása kötelező!')
-      .max(20, 'A pozíció túl hosszú!')
-      .trim(),
-  })
-  .required();
 
 const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
   ({ onHide, requestId, visible, ...props }, ref) => {
@@ -41,25 +25,16 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
 
     const {
       control,
-      formState: { errors, isDirty },
+      formState: { isDirty },
       handleSubmit,
     } = useForm<ICrewCreate>({
-      resolver: yupResolver(validationSchema),
       shouldFocusError: false,
     });
-
-    const getFormErrorMessage = (name: keyof ICrewCreate) => {
-      return errors[name] ? (
-        <small className="p-error">{errors[name]?.message}</small>
-      ) : (
-        <small className="p-error">&nbsp;</small>
-      );
-    };
 
     const onSubmit = (data: ICrewCreate) => {
       setLoading(true);
       console.log('Adding crew member to ' + requestId);
-      console.log(data.member_id + ' - ' + data.position);
+      console.log(data.member + ' - ' + data.position);
       setTimeout(() => {
         setLoading(false);
         onHide();
@@ -108,8 +83,8 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
             </label>
             <Controller
               control={control}
-              name="member_id"
-              render={({ field }) => (
+              name="member"
+              render={({ field, fieldState }) => (
                 <>
                   <AutoCompleteStaff
                     className="w-full"
@@ -117,9 +92,19 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
                     id={field.name}
                     {...field}
                   />
-                  {getFormErrorMessage(field.name)}
+                  {fieldState.error ? (
+                    <small className="p-error">
+                      {fieldState.error.message}
+                    </small>
+                  ) : (
+                    <small className="p-error">&nbsp;</small>
+                  )}
                 </>
               )}
+              rules={{
+                min: { message: 'A stábtag kiválasztása kötelező!', value: 0 },
+                required: 'A stábtag kiválasztása kötelező!',
+              }}
             />
           </div>
           <div className="field col-12">
@@ -129,7 +114,7 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
             <Controller
               control={control}
               name="position"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <>
                   <AutoCompleteCrewPosition
                     className="w-full"
@@ -137,9 +122,21 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
                     id={field.name}
                     {...field}
                   />
-                  {getFormErrorMessage(field.name)}
+                  {fieldState.error ? (
+                    <small className="p-error">
+                      {fieldState.error.message}
+                    </small>
+                  ) : (
+                    <small className="p-error">&nbsp;</small>
+                  )}
                 </>
               )}
+              rules={{
+                maxLength: { message: 'A pozíció túl hosszú!', value: 20 },
+                required: 'A pozíció megadása kötelező!',
+                validate: (value) =>
+                  !!value.trim() || 'A pozíció megadása kötelező!',
+              }}
             />
           </div>
         </form>
