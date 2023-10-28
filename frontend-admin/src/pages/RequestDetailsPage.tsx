@@ -125,9 +125,9 @@ const RequestDetailsPage = () => {
       .join('_')}`.replace(/_{2,}/, '_');
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setLoading(true);
-    adminApi
+    await adminApi
       .adminRequestsDestroy(Number(requestId))
       .then(() => {
         queryClient.invalidateQueries({ queryKey: ['requests'] });
@@ -144,7 +144,7 @@ const RequestDetailsPage = () => {
       .finally(() => setLoading(false));
   };
 
-  const onAcceptRejectSave = (data: {
+  const onAcceptRejectSave = async (data: {
     accepted: boolean | null;
     canceled: boolean | null;
     failed: boolean | null;
@@ -158,11 +158,11 @@ const RequestDetailsPage = () => {
       failed: data.failed || null,
     };
 
-    mutateAsync({
+    await mutateAsync({
       additional_data: { ...queryResult.additional_data, ..._data },
     })
-      .then(() => {
-        queryClient.invalidateQueries({
+      .then(async () => {
+        await queryClient.invalidateQueries({
           queryKey: ['requests', Number(requestId)],
         });
         setAcceptRejectDialogOpen(false);
@@ -185,12 +185,12 @@ const RequestDetailsPage = () => {
       .finally(() => setLoading(false));
   };
 
-  const onAdditionalDataSave = (data: { additional_data: string }) => {
+  const onAdditionalDataSave = async (data: { additional_data: string }) => {
     setLoading(true);
 
-    mutateAsync({ additional_data: JSON.parse(data.additional_data) })
-      .then(() => {
-        queryClient.invalidateQueries({
+    await mutateAsync({ additional_data: JSON.parse(data.additional_data) })
+      .then(async () => {
+        await queryClient.invalidateQueries({
           queryKey: ['requests', Number(requestId)],
         });
         setAdditionalDataDialogOpen(false);
@@ -268,17 +268,17 @@ const RequestDetailsPage = () => {
 
   const onSubmitRecordingContent: SubmitHandler<
     RequestAdditionalDataRecordingType
-  > = (data) => {
+  > = async (data) => {
     setLoading(true);
 
-    mutateAsync({
+    await mutateAsync({
       additional_data: {
         ...queryResult.additional_data,
         recording: { ...queryResult.additional_data?.recording, ...data },
       },
     })
-      .then(() => {
-        queryClient.invalidateQueries({
+      .then(async () => {
+        await queryClient.invalidateQueries({
           queryKey: ['requests', Number(requestId)],
         });
         setRecordingIsEditing(false);
