@@ -1,4 +1,5 @@
 import { RequestAdminRetrieve } from './models/request-admin-retrieve';
+import { VideoAdminRetrieve } from './models/video-admin-retrieve';
 
 export const dummyRequest: RequestAdminRetrieve = {
   additional_data: {},
@@ -39,4 +40,19 @@ export const dummyRequest: RequestAdminRetrieve = {
   title: '',
   type: '',
   video_count: 0,
+};
+
+export const dummyVideo: VideoAdminRetrieve = {
+  additional_data: {},
+  avg_rating: 0,
+  editor: {
+    avatar_url: '',
+    full_name: '',
+    id: 0,
+  },
+  id: 0,
+  rated: false,
+  status: 0,
+  status_by_admin: false,
+  title: '',
 };

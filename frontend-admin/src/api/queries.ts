@@ -1,5 +1,5 @@
 import { adminApi, requestsApi } from './http';
-import { dummyRequest } from './placeholders';
+import { dummyRequest, dummyVideo } from './placeholders';
 
 export const requestCommentsListQuery = (requestId: number) => ({
   initialData: [],
@@ -89,6 +89,7 @@ export const requestVideoRetrieveQuery = (
   requestId: number,
   videoId: number,
 ) => ({
+  initialData: dummyVideo,
   queryFn: async () => {
     const video = await adminApi.adminRequestsVideosRetrieve(
       videoId,
