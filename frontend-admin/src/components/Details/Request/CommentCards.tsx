@@ -198,15 +198,16 @@ const CommentCard = ({
   const isMobile = useMobile();
   const queryClient = useQueryClient();
 
-  const handleDelete = (commentId: number) => {
+  const handleDelete = async (commentId: number) => {
     setLoading(true);
 
-    adminApi
+    await adminApi
       .adminRequestsCommentsDestroy(commentId, requestId)
-      .then(() =>
-        queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'comments'],
-        }),
+      .then(
+        async () =>
+          await queryClient.invalidateQueries({
+            queryKey: ['requests', requestId, 'comments'],
+          }),
       )
       .catch((error) =>
         showToast({
@@ -291,12 +292,12 @@ const CommentCardEdit = ({
   );
   const queryClient = useQueryClient();
 
-  const onSubmit = (data: IComment) => {
+  const onSubmit = async (data: IComment) => {
     setLoading(true);
 
-    mutateAsync({ ...data })
-      .then(() => {
-        queryClient.invalidateQueries({
+    await mutateAsync({ ...data })
+      .then(async () => {
+        await queryClient.invalidateQueries({
           queryKey: ['requests', requestId, 'comments'],
         });
         setEditing(0);
@@ -388,12 +389,12 @@ const CommentCardNew = ({
   const { mutateAsync } = useMutation(requestCommentCreateMutation(requestId));
   const queryClient = useQueryClient();
 
-  const onSubmit = (data: IComment) => {
+  const onSubmit = async (data: IComment) => {
     setLoading(true);
 
-    mutateAsync({ ...data })
-      .then(() => {
-        queryClient.invalidateQueries({
+    await mutateAsync({ ...data })
+      .then(async () => {
+        await queryClient.invalidateQueries({
           queryKey: ['requests', requestId, 'comments'],
         });
         reset();

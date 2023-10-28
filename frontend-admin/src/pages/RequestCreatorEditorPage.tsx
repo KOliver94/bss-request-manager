@@ -228,7 +228,7 @@ const RequestCreatorEditorPage = () => {
       title: data.title,
       type: data.type,
     })
-      .then((response) => {
+      .then(async (response) => {
         showToast({
           detail: `Felkérés ${requestId ? 'módosítva' : 'létrehozva'}`,
           life: 3000,
@@ -237,9 +237,11 @@ const RequestCreatorEditorPage = () => {
         });
 
         if (requestId) {
-          queryClient.invalidateQueries({ queryKey: ['requests', requestId] });
+          await queryClient.invalidateQueries({
+            queryKey: ['requests', requestId],
+          });
         } else {
-          queryClient.invalidateQueries({ queryKey: ['requests'] });
+          await queryClient.invalidateQueries({ queryKey: ['requests'] });
         }
 
         if (watchCreateMore) {

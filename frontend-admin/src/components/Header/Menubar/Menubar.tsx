@@ -12,8 +12,8 @@ import SandwichMenu from './SandwichMenu';
 const Menubar = () => {
   const [darkMode, setDarkMode] = useTheme();
 
-  const signOut = () => {
-    logoutApi.logoutCreate({ refresh: getRefreshToken() }).then(() => {
+  const signOut = async () => {
+    await logoutApi.logoutCreate({ refresh: getRefreshToken() }).then(() => {
       localStorage.clear();
       window.location.href = '/';
     });
