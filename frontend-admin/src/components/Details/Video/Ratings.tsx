@@ -37,6 +37,7 @@ type RatingSummaryProps = {
 
 type RatingsProps = {
   avgRating: number;
+  isRated: boolean;
   requestId: number;
   videoId: number;
   videoStatus: number;
@@ -124,6 +125,7 @@ const RatingSummary = ({ portion, rating }: RatingSummaryProps) => {
 
 const Ratings = ({
   avgRating,
+  isRated,
   requestId,
   videoId,
   videoStatus,
@@ -249,7 +251,7 @@ const Ratings = ({
       <div className="border-top-1 mt-5 pt-5 surface-border">
         <div className="align-items-center flex justify-content-between mb-5">
           <Button
-            disabled={videoStatus < 3}
+            disabled={videoStatus < 3 || isRated}
             label="Értékelés írása"
             onClick={() => setRatingDialogVisible(true)}
           />

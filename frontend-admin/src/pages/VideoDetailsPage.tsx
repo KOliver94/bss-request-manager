@@ -355,6 +355,7 @@ const VideoDetailsPage = () => {
             <div className="md:pt-6 pt-4 px-2">
               <Ratings
                 avgRating={data.avg_rating}
+                isRated={data.rated}
                 requestId={Number(requestId)}
                 videoId={Number(videoId)}
                 videoStatus={data.status}
