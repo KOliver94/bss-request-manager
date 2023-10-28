@@ -1,7 +1,11 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
-import { DefinedUseQueryResult, useQuery } from '@tanstack/react-query';
+import {
+  DefinedUseQueryResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
@@ -12,23 +16,37 @@ import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 import { Control, Controller, useForm } from 'react-hook-form';
 import TimeAgo from 'timeago-react';
-import * as yup from 'yup';
 
+import { adminApi } from 'api/http';
 import { CommentAdminListRetrieve } from 'api/models';
+import {
+  requestCommentCreateMutation,
+  requestCommentUpdateMutation,
+} from 'api/mutations';
 import { requestCommentsListQuery } from 'api/queries';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
-import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import {
+  getAvatar,
+  getName,
+  getUserId,
+  isAdmin,
+} from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 import { useTheme } from 'hooks/useTheme';
 import { UI_AVATAR_URL } from 'localConstants';
+import { useToast } from 'providers/ToastProvider';
 
 // TODO: Review props
-type CommentCardProps = CommentCardHeaderProps & {
+type CommentCardProps = CommentCardCreateProps & {
   commentId: number;
   isInternal?: boolean;
   setEditing: Dispatch<SetStateAction<number>>;
   showButtons?: boolean;
   text: string;
+};
+
+type CommentCardCreateProps = CommentCardHeaderProps & {
+  requestId: number;
 };
 
 type CommentCardHeaderProps = {
@@ -61,11 +79,6 @@ interface InternalOption {
   icon: string;
   value: boolean;
 }
-
-const validationSchema = yup.object({
-  internal: yup.bool().required(),
-  text: yup.string().trim().required('Üres hozzászólás nem küldhető be!'),
-});
 
 const internalOptions = [
   { className: 'p-2', icon: 'pi pi-lock', value: true },
@@ -128,6 +141,7 @@ const CommentCardHeader = ({
             name="internal"
             render={({ field }) => (
               <SelectButton
+                allowEmpty={false}
                 className="ml-2"
                 itemTemplate={internalTemplate}
                 optionLabel="value"
@@ -174,21 +188,35 @@ const CommentCard = ({
   creationDate,
   isInternal,
   isRequester,
+  requestId,
   setEditing,
   showButtons,
   text,
 }: CommentCardProps) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const { showToast } = useToast();
   const isMobile = useMobile();
+  const queryClient = useQueryClient();
 
   const handleDelete = (commentId: number) => {
     setLoading(true);
-    console.log('Deleting comment... ' + commentId);
 
-    // TODO: Use real API call
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    adminApi
+      .adminRequestsCommentsDestroy(commentId, requestId)
+      .then(() =>
+        queryClient.invalidateQueries({
+          queryKey: ['requests', requestId, 'comments'],
+        }),
+      )
+      .catch((error) =>
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
   const onCommentDelete = () => {
@@ -249,30 +277,34 @@ const CommentCardEdit = ({
   creationDate,
   isInternal,
   isRequester,
+  requestId,
   setEditing,
   text,
 }: CommentCardProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { control, handleSubmit, watch } = useForm<IComment>({
+  const { control, handleSubmit, setError, watch } = useForm<IComment>({
     defaultValues: { internal: !!isInternal, text: text },
-    resolver: yupResolver(validationSchema),
     shouldFocusError: false,
   });
+  const { mutateAsync } = useMutation(
+    requestCommentUpdateMutation(requestId, commentId),
+  );
+  const queryClient = useQueryClient();
 
   const onSubmit = (data: IComment) => {
     setLoading(true);
-    console.log(
-      'Updating comment... ' +
-        commentId +
-        ' ' +
-        data.text +
-        ' ' +
-        data.internal,
-    );
-    setTimeout(() => {
-      setLoading(false);
-      setEditing(0);
-    }, 1000);
+
+    mutateAsync({ ...data })
+      .then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['requests', requestId, 'comments'],
+        });
+        setEditing(0);
+      })
+      .catch((error) =>
+        setError('text', { message: error?.response?.data, type: 'backend' }),
+      )
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -303,13 +335,18 @@ const CommentCardEdit = ({
               />
               {fieldState.error ? (
                 <small className="p-error pt-1 mr-1">
-                  {fieldState.error?.message}
+                  {fieldState.error.message}
                 </small>
               ) : (
                 <small className="p-error">&nbsp;</small>
               )}
             </>
           )}
+          rules={{
+            required: 'Üres hozzászólás nem küldhető be!',
+            validate: (value) =>
+              !!value.trim() || 'Üres hozzászólás nem küldhető be!',
+          }}
         />
         <div className="flex flex-wrap">
           <Button
@@ -338,21 +375,33 @@ const CommentCardEdit = ({
     </CommentCardWrapper>
   );
 };
-const CommentCardNew = ({ authorName, avatarUrl }: CommentCardHeaderProps) => {
+const CommentCardNew = ({
+  authorName,
+  avatarUrl,
+  requestId,
+}: CommentCardCreateProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { control, handleSubmit, reset, watch } = useForm<IComment>({
+  const { control, handleSubmit, reset, setError, watch } = useForm<IComment>({
     defaultValues: { internal: false, text: '' },
-    resolver: yupResolver(validationSchema),
     shouldFocusError: false,
   });
+  const { mutateAsync } = useMutation(requestCommentCreateMutation(requestId));
+  const queryClient = useQueryClient();
 
   const onSubmit = (data: IComment) => {
     setLoading(true);
-    console.log('Creating comment... ' + data.text + ' ' + data.internal);
-    setTimeout(() => {
-      setLoading(false);
-      reset();
-    }, 1000);
+
+    mutateAsync({ ...data })
+      .then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['requests', requestId, 'comments'],
+        });
+        reset();
+      })
+      .catch((error) =>
+        setError('text', { message: error?.response?.data, type: 'backend' }),
+      )
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -374,6 +423,7 @@ const CommentCardNew = ({ authorName, avatarUrl }: CommentCardHeaderProps) => {
             name="internal"
             render={({ field }) => (
               <SelectButton
+                allowEmpty={false}
                 itemTemplate={internalTemplate}
                 optionLabel="value"
                 options={internalOptions}
@@ -401,13 +451,18 @@ const CommentCardNew = ({ authorName, avatarUrl }: CommentCardHeaderProps) => {
               />
               {fieldState.error ? (
                 <small className="p-error pt-1 mr-1">
-                  {fieldState.error?.message}
+                  {fieldState.error.message}
                 </small>
               ) : (
                 <small className="p-error">&nbsp;</small>
               )}
             </>
           )}
+          rules={{
+            required: 'Üres hozzászólás nem küldhető be!',
+            validate: (value) =>
+              !!value.trim() || 'Üres hozzászólás nem küldhető be!',
+          }}
         />
         <Button
           className="p-1"
@@ -445,6 +500,7 @@ const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
             isInternal={comment.internal}
             isRequester={requesterId === comment.author.id}
             key={comment.id}
+            requestId={requestId}
             setEditing={setEditingId}
             text={comment.text}
           />
@@ -457,13 +513,18 @@ const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
             isInternal={comment.internal}
             isRequester={requesterId === comment.author.id}
             key={comment.id}
+            requestId={requestId}
             setEditing={setEditingId}
             showButtons={comment.author.id === getUserId() || isAdmin()}
             text={comment.text}
           />
         ),
       )}
-      <CommentCardNew authorName="Teszt Elek" />
+      <CommentCardNew
+        authorName={getName()}
+        avatarUrl={getAvatar()}
+        requestId={requestId}
+      />
     </>
   );
 };
