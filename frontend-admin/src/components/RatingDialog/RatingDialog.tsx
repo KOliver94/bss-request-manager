@@ -1,7 +1,10 @@
 import { forwardRef, useEffect, useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
-import { FetchQueryOptions, useQueryClient } from '@tanstack/react-query';
+import {
+  FetchQueryOptions,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog, DialogProps } from 'primereact/dialog';
@@ -11,9 +14,13 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 
+import { adminApi } from 'api/http';
 import { RatingAdminListRetrieve, RatingRetrieve } from 'api/models';
+import {
+  requestVideoRatingCreateMutation,
+  requestVideoRatingUpdateMutation,
+} from 'api/mutations';
 import {
   requestVideoRatingRetrieveOwnQuery,
   requestVideoRatingRetrieveQuery,
@@ -33,12 +40,6 @@ interface IRating {
   rating: number;
   review?: string;
 }
-
-const validationSchema = yup
-  .object({
-    rating: yup.number().min(1).max(5).integer().required(),
-  })
-  .required();
 
 const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
   (
@@ -66,10 +67,15 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
       formState: { isDirty },
       handleSubmit,
       reset,
+      setError,
     } = useForm<IRating>({
-      resolver: yupResolver(validationSchema),
       shouldFocusError: false,
     });
+    const { mutateAsync } = useMutation(
+      ratingId
+        ? requestVideoRatingUpdateMutation(requestId, videoId, ratingId)
+        : requestVideoRatingCreateMutation(requestId, videoId),
+    );
 
     useEffect(() => {
       if (visible) {
@@ -109,31 +115,46 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
       }
     }, [ratingIdParam, videoId, visible]);
 
-    const onSubmit = (data: IRating) => {
+    const onSubmit = async (data: IRating) => {
       setLoading(true);
-      console.log(data.rating + ' - ' + data.review);
-      if (ratingId) {
-        console.log('Updating rating... ' + ratingId);
-      } else {
-        console.log('Creating rating...');
-      }
-      setTimeout(() => {
-        setLoading(false);
-        if (!ratingId) {
-          setRatingId(123);
-        }
-        reset({ ...data });
-      }, 500);
+
+      await mutateAsync({ ...data })
+        .then(async (response) => {
+          await queryClient.invalidateQueries({
+            queryKey: ['requests', requestId, 'videos', videoId],
+          });
+          if (!ratingId) {
+            setRatingId(response.data.id);
+          }
+          reset({ ...data });
+        })
+        .catch((error) =>
+          setError('review', {
+            message: error?.response?.data,
+            type: 'backend',
+          }),
+        )
+        .finally(() => setLoading(false));
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
       setLoading(true);
-      console.log('Deleting rating...');
 
-      // TODO: Use real API call then close dialog
-      setTimeout(() => {
-        onHide();
-      }, 1000);
+      await adminApi
+        .adminRequestsVideosRatingsDestroy(ratingId, requestId, videoId)
+        .then(async () => {
+          await queryClient.invalidateQueries({
+            queryKey: ['requests', requestId, 'videos', videoId],
+          });
+          onHide();
+        })
+        .catch((error) => {
+          setError('review', {
+            message: error?.response?.data,
+            type: 'backend',
+          });
+          setLoading(false);
+        });
     };
 
     const onDelete = (
@@ -238,11 +259,12 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
                       className="block p-error pl-2"
                       id={field.name + '-help'}
                     >
-                      Üres értékelés nem adható!
+                      0 csillagos értékelés nem adható!
                     </small>
                   )}
                 </div>
               )}
+              rules={{ max: 5, min: 1, required: true }}
             />
           </div>
           <div className="field col-12">
@@ -252,14 +274,21 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
             <Controller
               control={control}
               name="review"
-              render={({ field }) => (
-                <InputTextarea
-                  autoResize
-                  disabled={loading}
-                  id={field.name}
-                  rows={5}
-                  {...field}
-                />
+              render={({ field, fieldState }) => (
+                <>
+                  <InputTextarea
+                    autoResize
+                    disabled={loading}
+                    id={field.name}
+                    rows={5}
+                    {...field}
+                  />
+                  {fieldState.error && (
+                    <small className="block p-error" id={field.name + '-help'}>
+                      {fieldState.error.message}
+                    </small>
+                  )}
+                </>
               )}
             />
           </div>

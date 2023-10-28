@@ -2,6 +2,7 @@ import { adminApi } from './http';
 import {
   CommentAdminCreateUpdateRequest,
   PatchedRequestAdminUpdateRequest,
+  RatingAdminCreateUpdateRequest,
   RequestAdminCreateRequest,
 } from './models';
 
@@ -33,5 +34,33 @@ export const requestCreateMutation = () => ({
 export const requestUpdateMutation = (requestId: number) => ({
   mutationFn: (updateRequest: PatchedRequestAdminUpdateRequest) => {
     return adminApi.adminRequestsPartialUpdate(requestId, updateRequest);
+  },
+});
+
+export const requestVideoRatingCreateMutation = (
+  requestId: number,
+  videoId: number,
+) => ({
+  mutationFn: (newRating: RatingAdminCreateUpdateRequest) => {
+    return adminApi.adminRequestsVideosRatingsCreate(
+      requestId,
+      videoId,
+      newRating,
+    );
+  },
+});
+
+export const requestVideoRatingUpdateMutation = (
+  requestId: number,
+  videoId: number,
+  ratingId: number,
+) => ({
+  mutationFn: (updateRating: RatingAdminCreateUpdateRequest) => {
+    return adminApi.adminRequestsVideosRatingsPartialUpdate(
+      ratingId,
+      requestId,
+      videoId,
+      updateRating,
+    );
   },
 });
