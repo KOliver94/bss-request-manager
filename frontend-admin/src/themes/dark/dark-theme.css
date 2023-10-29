@@ -1,6 +1,4 @@
-/* Don't change the imports otherwise the order of styles get messed up */
 @import '~primereact/resources/themes/lara-dark-blue/theme.css';
-@import '~primereact/resources/primereact.min.css';
 
 .p-inline-message.p-inline-message-warn {
   background: rgb(25, 18, 7);
