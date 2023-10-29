@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AutoCompleteChangeEvent } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
 import {
@@ -13,11 +13,13 @@ import { DataTable, DataTableRowEditCompleteEvent } from 'primereact/datatable';
 import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
 
+import { adminApi } from 'api/http';
 import { CrewMemberAdminListRetrieve } from 'api/models';
 import { requestCrewListQuery } from 'api/queries';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import User from 'components/User/User';
 import useMobile from 'hooks/useMobile';
+import { useToast } from 'providers/ToastProvider';
 
 import AddCrewDialog from './AddCrewDialog';
 import AutoCompleteCrewPosition from './AutoCompleteCrewPosition';
@@ -28,8 +30,10 @@ type CrewDataTableProps = {
 
 const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
   const isMobile = useMobile();
+  const queryClient = useQueryClient();
 
   const { data } = useQuery(requestCrewListQuery(requestId));
+  const { showToast } = useToast();
 
   const [addCrewDialogVisible, setAddCrewDialogVisible] =
     useState<boolean>(false);
@@ -54,14 +58,24 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     );
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     setLoading(true);
-    console.log('Deleting crew member... ' + id);
-
-    // TODO: Use real API call
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    await adminApi
+      .adminRequestsCrewDestroy(id, requestId)
+      .then(async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['requests', requestId, 'crew'],
+        });
+      })
+      .catch((error) =>
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
   const header = (
@@ -130,14 +144,31 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     });
   };
 
-  const onRowEditComplete = (e: DataTableRowEditCompleteEvent) => {
-    const _data = [...data];
-    const { newData, index } = e;
+  const onRowEditComplete = async (e: DataTableRowEditCompleteEvent) => {
+    const { newData } = e;
 
-    _data[index] = newData as CrewMemberAdminListRetrieve;
+    const { id, ...data } = newData as CrewMemberAdminListRetrieve;
 
-    // setData(_data);
-    // TODO: Add API call
+    setLoading(true);
+    await adminApi
+      .adminRequestsCrewPartialUpdate(id, requestId, {
+        ...data,
+        member: data.member.id,
+      })
+      .then(async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['requests', requestId, 'crew'],
+        });
+      })
+      .catch((error) =>
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
   const positionEditor = (options: ColumnEditorOptions) => {

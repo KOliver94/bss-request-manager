@@ -1,11 +1,15 @@
 import { forwardRef, useState } from 'react';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Dialog, DialogProps } from 'primereact/dialog';
 import { Controller, useForm } from 'react-hook-form';
 
+import { UserNestedDetail } from 'api/models/user-nested-detail';
+import { requestCrewCreateMutation } from 'api/mutations';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import useMobile from 'hooks/useMobile';
+import { useToast } from 'providers/ToastProvider';
 
 import AutoCompleteCrewPosition from './AutoCompleteCrewPosition';
 
@@ -14,31 +18,58 @@ interface AddCrewDialogProps extends DialogProps {
 }
 
 interface ICrewCreate {
-  member: number | null;
+  member: UserNestedDetail | null;
   position: string;
 }
 
 const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
   ({ onHide, requestId, visible, ...props }, ref) => {
     const isMobile = useMobile();
+    const queryClient = useQueryClient();
     const [loading, setLoading] = useState<boolean>(false);
 
     const {
       control,
       formState: { isDirty },
       handleSubmit,
+      setError,
+      reset,
     } = useForm<ICrewCreate>({
+      defaultValues: { member: null, position: '' },
       shouldFocusError: false,
     });
+    const { mutateAsync } = useMutation(requestCrewCreateMutation(requestId));
+    const { showToast } = useToast();
 
-    const onSubmit = (data: ICrewCreate) => {
+    const onSubmit = async (data: ICrewCreate) => {
+      if (!data.member) return;
+
       setLoading(true);
-      console.log('Adding crew member to ' + requestId);
-      console.log(data.member + ' - ' + data.position);
-      setTimeout(() => {
-        setLoading(false);
-        onHide();
-      }, 500);
+
+      await mutateAsync({ ...data, member: data.member.id })
+        .then(async () => {
+          await queryClient.invalidateQueries({
+            queryKey: ['requests', requestId, 'crew'],
+          });
+          onHide();
+          reset();
+        })
+        .catch((error) => {
+          if (error?.response?.status === 400) {
+            for (const [key, value] of Object.entries(error?.response?.data)) {
+              // @ts-expect-error: Correct types will be sent in the API error response
+              setError(key, { message: value, type: 'backend' });
+            }
+          } else {
+            showToast({
+              detail: error?.message,
+              life: 3000,
+              severity: 'error',
+              summary: 'Hiba',
+            });
+          }
+        })
+        .finally(() => setLoading(false));
     };
 
     const renderFooter = () => {

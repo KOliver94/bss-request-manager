@@ -1,6 +1,7 @@
 import { adminApi } from './http';
 import {
   CommentAdminCreateUpdateRequest,
+  CrewMemberAdminCreateUpdateRequest,
   PatchedRequestAdminUpdateRequest,
   RatingAdminCreateUpdateRequest,
   RequestAdminCreateRequest,
@@ -28,6 +29,12 @@ export const requestCommentUpdateMutation = (
 export const requestCreateMutation = () => ({
   mutationFn: (newRequest: RequestAdminCreateRequest) => {
     return adminApi.adminRequestsCreate(newRequest);
+  },
+});
+
+export const requestCrewCreateMutation = (requestId: number) => ({
+  mutationFn: (newCrewMember: CrewMemberAdminCreateUpdateRequest) => {
+    return adminApi.adminRequestsCrewCreate(requestId, newCrewMember);
   },
 });
 
