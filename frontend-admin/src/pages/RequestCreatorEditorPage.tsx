@@ -25,6 +25,7 @@ import { requestCreateMutation, requestUpdateMutation } from 'api/mutations';
 import { requestRetrieveQuery } from 'api/queries';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
+import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import { getName } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
@@ -100,9 +101,12 @@ const RequestCreatorEditorPage = () => {
       ? requestUpdateMutation(Number(requestId))
       : requestCreateMutation(),
   );
-  const { data: queryData } = requestId
-    ? useQuery(requestRetrieveQuery(Number(requestId)))
-    : { data: undefined };
+  const { data: queryData, dataUpdatedAt } = requestId
+    ? useQuery({
+        ...requestRetrieveQuery(Number(requestId)),
+        refetchInterval: 1000 * 30,
+      })
+    : { data: undefined, dataUpdatedAt: new Date() };
 
   const [isDataChanged, setIsDataChanged] = useState<boolean>(false);
 
@@ -282,7 +286,10 @@ const RequestCreatorEditorPage = () => {
               text={
                 <>
                   Változás történt az adatokban.{' '}
-                  <a className="cursor-pointer underline" onClick={onReload}>
+                  <a
+                    className="cursor-pointer hover:dashed underline"
+                    onClick={onReload}
+                  >
                     Újratöltés
                   </a>
                 </>
@@ -504,6 +511,7 @@ const RequestCreatorEditorPage = () => {
           )}
         </div>
       </form>
+      {requestId && <LastUpdatedAt lastUpdatedAt={new Date(dataUpdatedAt)} />}
     </div>
   );
 };

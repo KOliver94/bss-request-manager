@@ -11,6 +11,7 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import TimeAgo from 'timeago-react';
 
 import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
@@ -27,6 +28,7 @@ import {
   RequesterContent,
   RequesterContentButtons,
 } from 'components/Details/Request/RequesterContent';
+import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import LinkButton from 'components/LinkButton/LinkButton';
 import { RequestStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
@@ -98,9 +100,11 @@ const RequestDetailsPage = () => {
     };
   };
 
-  const { data: queryResult } = useQuery(
-    requestRetrieveQuery(Number(requestId)),
-  );
+  const {
+    data: queryResult,
+    dataUpdatedAt,
+    refetch,
+  } = useQuery(requestRetrieveQuery(Number(requestId)));
   const data = getRequest(queryResult);
 
   const [acceptRejectDialogOpen, setAcceptRejectDialogOpen] = useState(false);
@@ -587,6 +591,10 @@ const RequestDetailsPage = () => {
             </TabPanel>
           </TabView>
         </div>
+        <LastUpdatedAt
+          lastUpdatedAt={new Date(dataUpdatedAt)}
+          refetch={refetch}
+        />
       </div>
     </>
   );
