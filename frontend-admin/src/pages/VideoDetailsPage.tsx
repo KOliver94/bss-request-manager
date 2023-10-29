@@ -12,6 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { requestVideoRetrieveQuery } from 'api/queries';
 import DetailsRow from 'components/Details/DetailsRow';
+import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import LinkButton from 'components/LinkButton/LinkButton';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
@@ -46,7 +47,7 @@ const VideoDetailsPage = () => {
   const isMobile = useMobile();
   const navigate = useNavigate();
 
-  const { data } = useQuery(
+  const { data, dataUpdatedAt, refetch } = useQuery(
     requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
   );
 
@@ -366,6 +367,10 @@ const VideoDetailsPage = () => {
             </div>
           </Suspense>
         </div>
+        <LastUpdatedAt
+          lastUpdatedAt={new Date(dataUpdatedAt)}
+          refetch={refetch}
+        />
       </div>
     </>
   );

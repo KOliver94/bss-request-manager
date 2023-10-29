@@ -11,6 +11,7 @@ export const requestCommentsListQuery = (requestId: number) => ({
     return comments.data;
   },
   queryKey: ['requests', requestId, 'comments'],
+  refetchInterval: 1000 * 30,
 });
 
 export const requestCrewListQuery = (requestId: number) => ({
@@ -20,6 +21,7 @@ export const requestCrewListQuery = (requestId: number) => ({
     return crew.data;
   },
   queryKey: ['requests', requestId, 'crew'],
+  refetchInterval: 1000 * 30,
 });
 
 export const requestRetrieveQuery = (requestId: number) => ({
@@ -38,6 +40,7 @@ export const requestVideosListQuery = (requestId: number) => ({
     return videos.data;
   },
   queryKey: ['requests', requestId, 'videos'],
+  refetchInterval: 1000 * 30,
 });
 
 export const requestVideoRatingRetrieveOwnQuery = (
@@ -83,6 +86,7 @@ export const requestVideoRatingsListQuery = (
     return ratings.data;
   },
   queryKey: ['requests', requestId, 'videos', videoId, 'ratings'],
+  refetchInterval: 1000 * 30,
 });
 
 export const requestVideoRetrieveQuery = (
@@ -111,6 +115,7 @@ export const requestsListQuery = () => ({
     return requests.data.results || [];
   },
   queryKey: ['requests'],
+  refetchInterval: 1000 * 30,
 });
 
 export const usersListQuery = () => ({
@@ -126,9 +131,11 @@ export const usersListQuery = () => ({
     return users.data.results;
   },
   queryKey: ['users'],
+  refetchInterval: 1000 * 30,
 });
 
 export const usersStaffListQuery = () => ({
+  cacheTime: 1000 * 60 * 60,
   initialData: [],
   queryFn: async () => {
     const usersStaff = await adminApi.adminUsersList(

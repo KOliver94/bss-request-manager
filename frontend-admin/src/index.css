@@ -13,6 +13,10 @@ body {
   white-space: pre-wrap;
 }
 
+.hover\:dashed:hover {
+  text-decoration-style: dashed !important;
+}
+
 .hyphenate {
   hyphens: auto;
   overflow-wrap: break-word;
