@@ -1,6 +1,4 @@
-/* Don't change the imports otherwise the order of styles get messed up */
 @import '~primereact/resources/themes/lara-light-blue/theme.css';
-@import '~primereact/resources/primereact.min.css';
 
 .p-tabview .p-tabview-nav {
   background: #ffffff;
