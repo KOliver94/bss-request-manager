@@ -2,7 +2,10 @@ import { adminApi } from './http';
 import {
   CommentAdminCreateUpdateRequest,
   CrewMemberAdminCreateUpdateRequest,
+  PatchedCommentAdminCreateUpdateRequest,
+  PatchedRatingAdminCreateUpdateRequest,
   PatchedRequestAdminUpdateRequest,
+  PatchedVideoAdminCreateUpdateRequest,
   RatingAdminCreateUpdateRequest,
   RequestAdminCreateRequest,
   VideoAdminCreateUpdateRequest,
@@ -18,7 +21,7 @@ export const requestCommentUpdateMutation = (
   requestId: number,
   commentId: number,
 ) => ({
-  mutationFn: (updateComment: CommentAdminCreateUpdateRequest) => {
+  mutationFn: (updateComment: PatchedCommentAdminCreateUpdateRequest) => {
     return adminApi.adminRequestsCommentsPartialUpdate(
       commentId,
       requestId,
@@ -69,7 +72,7 @@ export const requestVideoRatingUpdateMutation = (
   videoId: number,
   ratingId: number,
 ) => ({
-  mutationFn: (updateRating: RatingAdminCreateUpdateRequest) => {
+  mutationFn: (updateRating: PatchedRatingAdminCreateUpdateRequest) => {
     return adminApi.adminRequestsVideosRatingsPartialUpdate(
       ratingId,
       requestId,
@@ -83,7 +86,7 @@ export const requestVideoUpdateMutation = (
   requestId: number,
   videoId: number,
 ) => ({
-  mutationFn: (updateVideo: VideoAdminCreateUpdateRequest) => {
+  mutationFn: (updateVideo: PatchedVideoAdminCreateUpdateRequest) => {
     return adminApi.adminRequestsVideosPartialUpdate(
       videoId,
       requestId,

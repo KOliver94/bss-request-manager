@@ -1,6 +1,6 @@
 import { Suspense, lazy, useRef, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -10,6 +10,8 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { adminApi } from 'api/http';
+import { requestVideoUpdateMutation } from 'api/mutations';
 import { requestVideoRetrieveQuery } from 'api/queries';
 import DetailsRow from 'components/Details/DetailsRow';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
@@ -17,6 +19,7 @@ import LinkButton from 'components/LinkButton/LinkButton';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
 import useMobile from 'hooks/useMobile';
+import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
 const AdditionalDataDialog = lazy(
@@ -44,48 +47,140 @@ export async function loader({ params }: any) {
 
 const VideoDetailsPage = () => {
   const { requestId, videoId } = useParams();
+  const { showToast } = useToast();
+  const { mutateAsync } = useMutation(
+    requestVideoUpdateMutation(Number(requestId), Number(videoId)),
+  );
   const isMobile = useMobile();
   const navigate = useNavigate();
 
-  const { data, dataUpdatedAt, refetch } = useQuery(
-    requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
-  );
+  const {
+    data: queryResult,
+    dataUpdatedAt,
+    refetch,
+  } = useQuery(requestVideoRetrieveQuery(Number(requestId), Number(videoId)));
 
+  const [additionalDataDialogError, setAdditionalDataDialogError] =
+    useState(undefined);
   const [additionalDataDialogOpen, setAdditionalDataDialogOpen] =
     useState(false);
   const [airedAddDialogOpen, setAiredAddDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const statusHelperSlideoverOpenBtnRef = useRef(null);
 
-  const handleDelete = () => {
-    console.log('Deleting video...');
-
-    // TODO: Use real API call
-    setTimeout(() => {
-      navigate('/requests/' + requestId);
-    }, 1000);
-  };
-
-  const onAdditionalDataSave = (data: { additional_data: string }) => {
-    console.log('Saving additional_data...');
+  const handleDelete = async () => {
     setLoading(true);
 
-    // TODO: Use real API call
-    setTimeout(() => {
-      setAdditionalDataDialogOpen(false);
-      setLoading(false);
-    }, 1000);
+    await adminApi
+      .adminRequestsVideosDestroy(Number(videoId), Number(requestId))
+      .then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['requests', Number(requestId), 'videos'],
+        });
+        navigate(`/requests/${requestId}/videos`);
+      })
+      .catch((error) =>
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
-  const onAiredDateSave = (data: { airedDate: Date }) => {
-    console.log('Saving new aired date...');
+  const onAdditionalDataSave = async (data: { additional_data: string }) => {
     setLoading(true);
 
-    // TODO: Use real API call
-    setTimeout(() => {
-      setAiredAddDialogOpen(false);
-      setLoading(false);
-    }, 1000);
+    await mutateAsync({ additional_data: JSON.parse(data.additional_data) })
+      .then(async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
+        });
+        setAdditionalDataDialogOpen(false);
+      })
+      .catch((error) => {
+        if (error?.response?.status === 400) {
+          setAdditionalDataDialogError(error?.response?.data?.additional_data);
+        } else {
+          showToast({
+            detail: error.message,
+            life: 3000,
+            severity: 'error',
+            summary: 'Hiba',
+          });
+        }
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const onAiredDateRemove = async (airedDate: string) => {
+    setLoading(true);
+
+    const aired = (queryResult.additional_data.aired || []).filter(
+      (element: string) => element !== airedDate,
+    );
+
+    await mutateAsync({
+      additional_data: {
+        ...queryResult.additional_data,
+        aired: aired,
+      },
+    })
+      .then(
+        async () =>
+          await queryClient.invalidateQueries({
+            queryKey: [
+              'requests',
+              Number(requestId),
+              'videos',
+              Number(videoId),
+            ],
+          }),
+      )
+      .catch((error) =>
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        }),
+      )
+      .finally(() => setLoading(false));
+  };
+
+  const onAiredDateSave = async (data: { airedDate: Date }) => {
+    setLoading(true);
+
+    const aired = queryResult.additional_data.aired || [];
+    const offset = data.airedDate.getTimezoneOffset();
+    const newAiredDate = new Date(
+      data.airedDate.getTime() - offset * 60 * 1000,
+    );
+    aired.push(newAiredDate.toISOString().split('T')[0]);
+
+    await mutateAsync({
+      additional_data: {
+        ...queryResult.additional_data,
+        aired: aired,
+      },
+    })
+      .then(async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
+        });
+        setAiredAddDialogOpen(false);
+      })
+      .catch((error) =>
+        showToast({
+          detail: error.message,
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
   const onDelete = () => {
@@ -104,7 +199,8 @@ const VideoDetailsPage = () => {
     <>
       <Suspense>
         <AdditionalDataDialog
-          data={data.additional_data}
+          data={queryResult.additional_data}
+          error={additionalDataDialogError}
           loading={loading}
           onHide={() => setAdditionalDataDialogOpen(false)}
           onSave={onAdditionalDataSave}
@@ -121,10 +217,12 @@ const VideoDetailsPage = () => {
       </Suspense>
       <Suspense>
         <VideoStatusHelperSlideover
-          adminStatusOverride={!!data.additional_data.status_by_admin?.status}
-          editor={!!data.editor}
+          adminStatusOverride={
+            !!queryResult.additional_data.status_by_admin?.status
+          }
+          editor={!!queryResult.editor}
           id="videoStatusHelper"
-          status={data.status}
+          status={queryResult.status}
         />
       </Suspense>
       <ConfirmDialog />
@@ -132,12 +230,12 @@ const VideoDetailsPage = () => {
         <div className="flex flex-column mb-3 sm:align-items-center sm:flex-row sm:justify-content-between">
           <div>
             <div className="font-medium mb-2 text-900 text-xl">
-              {data.title}
+              {queryResult.title}
             </div>
             <div className="font-medium mb-3 sm:mb-0 text-500 text-sm">
               <VideoStatusTag
-                modified={!!data.additional_data.status_by_admin?.status}
-                statusNum={data.status}
+                modified={!!queryResult.additional_data.status_by_admin?.status}
+                statusNum={queryResult.status}
               />
             </div>
           </div>
@@ -180,34 +278,40 @@ const VideoDetailsPage = () => {
         </div>
         <div className="border-round p-2 shadow-2 sm:p-3 surface-card">
           <ul className="list-none p-0 m-0">
-            <DetailsRow content={data.title} firstElement label="Videó címe" />
+            <DetailsRow
+              content={queryResult.title}
+              firstElement
+              label="Videó címe"
+            />
             <DetailsRow
               content={
                 <VideoStatusTag
-                  modified={!!data.additional_data.status_by_admin?.status}
-                  statusNum={data.status}
+                  modified={
+                    !!queryResult.additional_data.status_by_admin?.status
+                  }
+                  statusNum={queryResult.status}
                 />
               }
               label="Státusz"
             />
             <DetailsRow
               button={
-                data.editor && (
+                queryResult.editor && (
                   <LinkButton
                     buttonProps={{
                       className: 'p-button-sm p-button-text px-1 py-0',
                       icon: 'pi pi-user',
                       label: 'Profil',
                     }}
-                    linkProps={{ to: `/users/${data.editor?.id}` }}
+                    linkProps={{ to: `/users/${queryResult.editor?.id}` }}
                   />
                 )
               }
               content={
-                data.editor ? (
+                queryResult.editor ? (
                   <User
-                    name={data.editor.full_name}
-                    imageUrl={data.editor.avatar_url}
+                    name={queryResult.editor.full_name}
+                    imageUrl={queryResult.editor.avatar_url}
                   />
                 ) : (
                   <Tag
@@ -222,8 +326,8 @@ const VideoDetailsPage = () => {
             />
             <DetailsRow
               content={
-                data.additional_data.length ? (
-                  new Date(data.additional_data.length * 1000)
+                queryResult.additional_data.length ? (
+                  new Date(queryResult.additional_data.length * 1000)
                     .toISOString()
                     .slice(11, 19)
                 ) : (
@@ -239,7 +343,7 @@ const VideoDetailsPage = () => {
             />
             <DetailsRow
               button={
-                data.additional_data.publishing?.website ? (
+                queryResult.additional_data.publishing?.website ? (
                   <LinkButton
                     buttonProps={{
                       className: 'p-button-sm p-button-text px-1 py-0',
@@ -249,7 +353,7 @@ const VideoDetailsPage = () => {
                     linkProps={{
                       rel: 'noopener noreferrer',
                       target: '_blank',
-                      to: data.additional_data.publishing.website,
+                      to: queryResult.additional_data.publishing.website,
                     }}
                   />
                 ) : (
@@ -257,7 +361,7 @@ const VideoDetailsPage = () => {
                 )
               }
               content={
-                data.additional_data.publishing?.website || (
+                queryResult.additional_data.publishing?.website || (
                   <Tag
                     className="mr-2"
                     icon="pi pi-exclamation-triangle"
@@ -279,12 +383,13 @@ const VideoDetailsPage = () => {
               }
               content={
                 <div className="flex flex-wrap gap-2">
-                  {data.additional_data.aired ? (
-                    data.additional_data.aired.map((value: string) => (
+                  {queryResult.additional_data.aired ? (
+                    queryResult.additional_data.aired.map((value: string) => (
                       <Chip
                         key={value}
                         label={value}
                         icon={classNames({ 'pi pi-calendar': !isMobile })}
+                        onRemove={() => onAiredDateRemove(value)}
                         removable
                       />
                     ))
@@ -307,10 +412,12 @@ const VideoDetailsPage = () => {
                     className="mr-2"
                     icon="bi bi-scissors"
                     severity={
-                      data.additional_data.editing_done ? 'success' : 'warning'
+                      queryResult.additional_data.editing_done
+                        ? 'success'
+                        : 'warning'
                     }
                     value={
-                      data.additional_data.editing_done
+                      queryResult.additional_data.editing_done
                         ? 'Megvágva'
                         : 'Vágásra vár'
                     }
@@ -319,12 +426,12 @@ const VideoDetailsPage = () => {
                     className="mr-2"
                     icon="bi bi-file-earmark-play"
                     severity={
-                      data.additional_data.coding?.website
+                      queryResult.additional_data.coding?.website
                         ? 'success'
                         : 'warning'
                     }
                     value={
-                      data.additional_data.coding?.website
+                      queryResult.additional_data.coding?.website
                         ? 'Kikódolva'
                         : 'Nincs kikódolva'
                     }
@@ -333,12 +440,12 @@ const VideoDetailsPage = () => {
                     className="mr-2"
                     icon="bi bi-archive"
                     severity={
-                      data.additional_data.archiving?.hq_archive
+                      queryResult.additional_data.archiving?.hq_archive
                         ? 'success'
                         : 'warning'
                     }
                     value={
-                      data.additional_data.archiving?.hq_archive
+                      queryResult.additional_data.archiving?.hq_archive
                         ? 'Archiválva'
                         : 'Nincs archiválva'
                     }
@@ -357,12 +464,12 @@ const VideoDetailsPage = () => {
           >
             <div className="md:pt-6 pt-4 px-2">
               <Ratings
-                avgRating={data.avg_rating}
-                isRated={data.rated}
+                avgRating={queryResult.avg_rating}
+                isRated={queryResult.rated}
                 requestId={Number(requestId)}
                 videoId={Number(videoId)}
-                videoStatus={data.status}
-                videoTitle={data.title}
+                videoStatus={queryResult.status}
+                videoTitle={queryResult.title}
               />
             </div>
           </Suspense>
