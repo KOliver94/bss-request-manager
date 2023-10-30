@@ -166,6 +166,7 @@ def test_retrieve_user(
         assert_retrieve_response_keys(response.data)
 
         if banned:
+            ban.refresh_from_db()
             assert response.data["ban"]["created"] == localtime(ban.created).isoformat()
             assert (
                 response.data["ban"]["creator"]["avatar_url"]
