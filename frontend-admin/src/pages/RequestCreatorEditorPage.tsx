@@ -89,7 +89,7 @@ const RequestCreatorEditorPage = () => {
     type: '',
   };
 
-  const { control, handleSubmit, setError, setValue, reset, watch } =
+  const { control, handleSubmit, reset, setError, setValue, watch } =
     useForm<IRequestCreator>({
       defaultValues,
       mode: 'onChange',
@@ -242,7 +242,7 @@ const RequestCreatorEditorPage = () => {
 
         if (requestId) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId],
+            queryKey: ['requests', Number(requestId)],
           });
         } else {
           await queryClient.invalidateQueries({ queryKey: ['requests'] });
