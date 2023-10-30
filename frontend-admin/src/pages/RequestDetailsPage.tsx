@@ -11,7 +11,6 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import TimeAgo from 'timeago-react';
 
 import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
