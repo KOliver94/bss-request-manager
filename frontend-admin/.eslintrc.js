@@ -20,7 +20,6 @@ module.exports = {
   },
   plugins: ['@tanstack/query', '@typescript-eslint', 'prettier', 'react'],
   rules: {
-    '@typescript-eslint/no-unused-vars': 'warn', // TODO: Delete later
     'import/order': [
       'error',
       {
