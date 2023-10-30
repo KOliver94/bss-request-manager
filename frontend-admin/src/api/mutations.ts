@@ -5,6 +5,7 @@ import {
   PatchedRequestAdminUpdateRequest,
   RatingAdminCreateUpdateRequest,
   RequestAdminCreateRequest,
+  VideoAdminCreateUpdateRequest,
 } from './models';
 
 export const requestCommentCreateMutation = (requestId: number) => ({
@@ -44,6 +45,12 @@ export const requestUpdateMutation = (requestId: number) => ({
   },
 });
 
+export const requestVideoCreateMutation = (requestId: number) => ({
+  mutationFn: (createVideo: VideoAdminCreateUpdateRequest) => {
+    return adminApi.adminRequestsVideosCreate(requestId, createVideo);
+  },
+});
+
 export const requestVideoRatingCreateMutation = (
   requestId: number,
   videoId: number,
@@ -68,6 +75,19 @@ export const requestVideoRatingUpdateMutation = (
       requestId,
       videoId,
       updateRating,
+    );
+  },
+});
+
+export const requestVideoUpdateMutation = (
+  requestId: number,
+  videoId: number,
+) => ({
+  mutationFn: (updateVideo: VideoAdminCreateUpdateRequest) => {
+    return adminApi.adminRequestsVideosPartialUpdate(
+      videoId,
+      requestId,
+      updateVideo,
     );
   },
 });

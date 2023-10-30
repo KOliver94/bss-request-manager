@@ -1,17 +1,30 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { InputMask } from 'primereact/inputmask';
 import { InputText } from 'primereact/inputtext';
+import { Message } from 'primereact/message';
 import { ToggleButton } from 'primereact/togglebutton';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useLoaderData } from 'react-router-dom';
+import {
+  useLoaderData,
+  useNavigate,
+  useParams,
+  useRevalidator,
+} from 'react-router-dom';
 
 import { UserNestedDetail, VideoAdminRetrieve } from 'api/models';
+import {
+  requestVideoUpdateMutation,
+  requestVideoCreateMutation,
+} from 'api/mutations';
 import { requestVideoRetrieveQuery } from 'api/queries';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
+import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
+import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
 export interface IVideoCreator {
@@ -67,15 +80,34 @@ const VideoCreatorEditorPage = () => {
     title: '',
   };
 
-  const loaderData = useLoaderData() as VideoAdminRetrieve;
-
-  const { control, handleSubmit, reset } = useForm<IVideoCreator>({
+  const { control, handleSubmit, reset, setError } = useForm<IVideoCreator>({
     defaultValues,
     mode: 'onChange',
   });
+  const { requestId, videoId } = useParams();
+  const { showToast } = useToast();
+  const { isPending, mutateAsync } = useMutation(
+    requestId && videoId
+      ? requestVideoUpdateMutation(Number(requestId), Number(videoId))
+      : requestVideoCreateMutation(Number(requestId)),
+  );
+  const { data: queryData, dataUpdatedAt } =
+    requestId && videoId
+      ? useQuery({
+          ...requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
+          refetchInterval: 1000 * 30,
+        })
+      : { data: undefined, dataUpdatedAt: new Date() };
+
+  const [isDataChanged, setIsDataChanged] = useState<boolean>(false);
+
+  const loaderData = useLoaderData() as VideoAdminRetrieve;
+  const navigate = useNavigate();
+  const revalidator = useRevalidator();
 
   useEffect(() => {
     if (loaderData) {
+      setIsDataChanged(false);
       reset({
         ...defaultValues,
         ...loaderData,
@@ -89,10 +121,79 @@ const VideoCreatorEditorPage = () => {
         },
       });
     }
-  }, []);
+  }, [loaderData]);
 
-  const onSubmit: SubmitHandler<IVideoCreator> = (data) => {
-    console.log(data);
+  useEffect(() => {
+    if (requestId && videoId && loaderData !== queryData) {
+      setIsDataChanged(true);
+    }
+  }, [queryData]);
+
+  const onReload = () => {
+    revalidator.revalidate();
+  };
+
+  const onSubmit: SubmitHandler<IVideoCreator> = async (data) => {
+    const prevAdditionalData = videoId ? queryData?.additional_data : {};
+
+    let length = {};
+    if (data.additional_data.length) {
+      const [hours, minutes, seconds] = data.additional_data.length.split(':');
+      length = {
+        length:
+          Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds),
+      };
+    }
+
+    await mutateAsync({
+      ...data,
+      additional_data: {
+        ...prevAdditionalData,
+        ...data.additional_data,
+        ...length,
+      },
+      editor: data.editor?.id || null,
+    })
+      .then(async (response) => {
+        showToast({
+          detail: `Videó ${requestId ? 'módosítva' : 'létrehozva'}`,
+          life: 3000,
+          severity: 'success',
+          summary: 'Siker',
+        });
+
+        if (videoId) {
+          await queryClient.invalidateQueries({
+            queryKey: [
+              'requests',
+              Number(requestId),
+              'videos',
+              Number(videoId),
+            ],
+          });
+        } else {
+          await queryClient.invalidateQueries({
+            queryKey: ['requests', Number(requestId), 'videos'],
+          });
+        }
+
+        navigate(`/requests/${requestId}/videos/${response.data.id}`);
+      })
+      .catch((error) => {
+        if (error?.response?.status === 400) {
+          for (const [key, value] of Object.entries(error?.response?.data)) {
+            // @ts-expect-error: Correct types will be sent in the API error response
+            setError(key, { message: value, type: 'backend' });
+          }
+        } else {
+          showToast({
+            detail: error?.message,
+            life: 3000,
+            severity: 'error',
+            summary: 'Hiba',
+          });
+        }
+      });
   };
 
   return (
@@ -100,14 +201,39 @@ const VideoCreatorEditorPage = () => {
       <div className="font-medium mb-3 text-900 text-xl">Videó létrehozása</div>
       <form className="border-round p-3 p-fluid shadow-2 sm:p-4 surface-card">
         <div className="formgrid grid p-fluid">
+          {isDataChanged && (
+            <Message
+              className="mb-4 w-full"
+              severity="warn"
+              text={
+                <>
+                  Változás történt az adatokban.{' '}
+                  <a
+                    className="cursor-pointer hover:dashed underline"
+                    onClick={onReload}
+                  >
+                    Újratöltés
+                  </a>
+                </>
+              }
+            />
+          )}
           <FormField
             className="col-12 mb-0"
             control={control}
             label="Videó címe"
             name="title"
+            rules={{
+              maxLength: 200,
+              required: true,
+              validate: (value) => {
+                return !!value.trim();
+              },
+            }}
           >
             <InputText
               autoFocus
+              disabled={isPending}
               placeholder="Ahogy a weboldalra felkerül"
               type="text"
             />
@@ -121,7 +247,7 @@ const VideoCreatorEditorPage = () => {
             label="Vágó"
             name="editor"
           >
-            <AutoCompleteStaff />
+            <AutoCompleteStaff disabled={isPending} />
           </FormField>
           <FormField
             className="col-12 mb-4 md:col-6"
@@ -130,7 +256,12 @@ const VideoCreatorEditorPage = () => {
             label="Videó hossza"
             name="additional_data.length"
           >
-            <InputMask mask="99:99:99" placeholder="hh:mm:ss" type="text" />
+            <InputMask
+              disabled={isPending}
+              mask="99:99:99"
+              placeholder="hh:mm:ss"
+              type="text"
+            />
           </FormField>
           <FormField
             className="col-12 mb-0"
@@ -140,6 +271,7 @@ const VideoCreatorEditorPage = () => {
             name="additional_data.publishing.website"
           >
             <InputText
+              disabled={isPending}
               placeholder="A videó linkje (honlap, YouTube, Google Drive, stb.)"
               type="text"
             />
@@ -153,6 +285,7 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   checked={field.value || false}
                   className="w-full"
+                  disabled={isPending}
                   id={field.name}
                   offIcon="bi bi-scissors"
                   offLabel="Vágandó"
@@ -171,6 +304,7 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   checked={field.value || false}
                   className="w-full"
+                  disabled={isPending}
                   id={field.name}
                   offIcon="bi bi-file-earmark-play"
                   offLabel="Kódolásra vár"
@@ -189,6 +323,7 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   checked={field.value || false}
                   className="w-full"
+                  disabled={isPending}
                   id={field.name}
                   offIcon="bi bi-archive"
                   offLabel="Archiválandó"
@@ -204,10 +339,12 @@ const VideoCreatorEditorPage = () => {
             className="w-auto"
             icon="pi pi-save"
             label="Mentés"
+            loading={isPending}
             onClick={handleSubmit(onSubmit)}
           />
         </div>
       </form>
+      <LastUpdatedAt lastUpdatedAt={new Date(dataUpdatedAt)} />
     </div>
   );
 };
