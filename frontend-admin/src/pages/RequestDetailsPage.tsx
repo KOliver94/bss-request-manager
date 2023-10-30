@@ -108,7 +108,7 @@ const RequestDetailsPage = () => {
 
   const [acceptRejectDialogOpen, setAcceptRejectDialogOpen] = useState(false);
   const [additionalDataDialogError, setAdditionalDataDialogError] =
-    useState(undefined);
+    useState('');
   const [additionalDataDialogOpen, setAdditionalDataDialogOpen] =
     useState(false);
   const [recordingIsEditing, setRecordingIsEditing] = useState(false);
@@ -191,7 +191,19 @@ const RequestDetailsPage = () => {
   const onAdditionalDataSave = async (data: { additional_data: string }) => {
     setLoading(true);
 
-    await mutateAsync({ additional_data: JSON.parse(data.additional_data) })
+    let additional_data = {};
+
+    try {
+      additional_data = JSON.parse(data.additional_data);
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        setAdditionalDataDialogError(error.message);
+      }
+      setLoading(false);
+      return;
+    }
+
+    await mutateAsync({ additional_data: additional_data })
       .then(async () => {
         await queryClient.invalidateQueries({
           queryKey: ['requests', Number(requestId)],
