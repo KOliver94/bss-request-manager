@@ -31,6 +31,7 @@ export const requestRetrieveQuery = (requestId: number) => ({
     return request.data;
   },
   queryKey: ['requests', requestId],
+  refetchInterval: 1000 * 60 * 5,
 });
 
 export const requestVideosListQuery = (requestId: number) => ({
@@ -102,6 +103,7 @@ export const requestVideoRetrieveQuery = (
     return video.data;
   },
   queryKey: ['requests', requestId, 'videos', videoId],
+  refetchInterval: 1000 * 60 * 5,
 });
 
 export const requestsListQuery = () => ({

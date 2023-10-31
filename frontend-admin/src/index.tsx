@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect } from 'react';
 
 import * as Sentry from '@sentry/react';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -6,10 +6,17 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as locales from 'primelocale/hu.json';
 import { PrimeReactProvider, addLocale, locale } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
+import {
+  RouterProvider,
+  createRoutesFromChildren,
+  matchRoutes,
+  useLocation,
+  useNavigationType,
+} from 'react-router-dom';
 import { register } from 'timeago.js';
 import huLocal from 'timeago.js/lib/lang/hu';
 
+import { getName } from 'helpers/LocalStorageHelper';
 import { ThemeProvider } from 'providers/ThemeProvider';
 import { ToastProvider } from 'providers/ToastProvider';
 import router, { queryClient } from 'router';
@@ -22,7 +29,30 @@ import 'index.css';
 
 if (import.meta.env.PROD) {
   Sentry.init({
+    beforeSend(event) {
+      // Check if it is an exception, and if so, show the report dialog
+      if (event.exception) {
+        Sentry.showReportDialog({
+          eventId: event.event_id,
+          user: {
+            name: getName(),
+          },
+        });
+      }
+      return event;
+    },
     dsn: import.meta.env.VITE_SENTRY_URL,
+    integrations: [
+      new Sentry.BrowserTracing({
+        routingInstrumentation: Sentry.reactRouterV6Instrumentation(
+          useEffect,
+          useLocation,
+          useNavigationType,
+          createRoutesFromChildren,
+          matchRoutes,
+        ),
+      }),
+    ],
   });
 }
 

@@ -6,7 +6,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@tanstack/eslint-plugin-query/recommended',
-    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/strict', // TODO: Use strict-type-checked
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:react/recommended',
@@ -16,6 +16,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
+    project: ['tsconfig.json'],
     sourceType: 'module',
   },
   plugins: ['@tanstack/query', '@typescript-eslint', 'prettier', 'react'],

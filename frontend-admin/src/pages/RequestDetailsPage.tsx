@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -35,6 +36,7 @@ import {
   dateTimeToLocaleString,
   dateToLocaleString,
 } from 'helpers/DateToLocaleStringCoverters';
+import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
@@ -102,6 +104,7 @@ const RequestDetailsPage = () => {
   const {
     data: queryResult,
     dataUpdatedAt,
+    error,
     refetch,
   } = useQuery(requestRetrieveQuery(Number(requestId)));
   const data = getRequest(queryResult);
@@ -136,14 +139,19 @@ const RequestDetailsPage = () => {
         queryClient.invalidateQueries({ queryKey: ['requests'] });
         navigate('/requests');
       })
-      .catch((error) =>
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: ['requests', Number(requestId)],
+          });
+        }
         showToast({
-          detail: error.message,
+          detail: getErrorMessage(error),
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -177,14 +185,19 @@ const RequestDetailsPage = () => {
           summary: 'Információ',
         });
       })
-      .catch((error) =>
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: ['requests', Number(requestId)],
+          });
+        }
         showToast({
-          detail: error.message,
+          detail: getErrorMessage(error),
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -211,16 +224,22 @@ const RequestDetailsPage = () => {
         setAdditionalDataDialogOpen(false);
       })
       .catch((error) => {
-        if (error?.response?.status === 400) {
-          setAdditionalDataDialogError(error?.response?.data?.additional_data);
-        } else {
-          showToast({
-            detail: error.message,
-            life: 3000,
-            severity: 'error',
-            summary: 'Hiba',
-          });
+        if (isAxiosError(error)) {
+          if (error.response?.status === 404) {
+            queryClient.invalidateQueries({
+              queryKey: ['requests', Number(requestId)],
+            });
+          } else if (error.response?.status === 400) {
+            setAdditionalDataDialogError(error.response?.data?.additional_data);
+            return;
+          }
         }
+        showToast({
+          detail: getErrorMessage(error),
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        });
       })
       .finally(() => setLoading(false));
   };
@@ -298,14 +317,19 @@ const RequestDetailsPage = () => {
         });
         setRecordingIsEditing(false);
       })
-      .catch((error) =>
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: ['requests', Number(requestId)],
+          });
+        }
         showToast({
-          detail: error.message,
+          detail: getErrorMessage(error),
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -318,6 +342,24 @@ const RequestDetailsPage = () => {
     // Workaround for: https://github.com/primefaces/primereact/issues/4034
     window.scrollTo(0, 0);
   }, []);
+
+  if (error) {
+    if (isAxiosError(error)) {
+      navigate('/error', {
+        state: {
+          statusCode: error.response?.status,
+          statusText: error.response?.statusText,
+        },
+      });
+    } else {
+      showToast({
+        detail: getErrorMessage(error),
+        life: 3000,
+        severity: 'error',
+        summary: 'Hiba',
+      });
+    }
+  }
 
   return (
     <>

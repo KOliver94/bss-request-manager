@@ -1,6 +1,7 @@
 import { forwardRef, useState } from 'react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { Dialog, DialogProps } from 'primereact/dialog';
 import { Controller, useForm } from 'react-hook-form';
@@ -8,6 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { UserNestedDetail } from 'api/models/user-nested-detail';
 import { requestCrewCreateMutation } from 'api/mutations';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
+import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 
@@ -55,19 +57,26 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
           reset();
         })
         .catch((error) => {
-          if (error?.response?.status === 400) {
-            for (const [key, value] of Object.entries(error?.response?.data)) {
-              // @ts-expect-error: Correct types will be sent in the API error response
-              setError(key, { message: value, type: 'backend' });
+          if (isAxiosError(error)) {
+            if (error.response?.status === 404) {
+              queryClient.invalidateQueries({
+                queryKey: ['requests', requestId],
+              });
+              onHide();
+            } else if (error.response?.status === 400) {
+              for (const [key, value] of Object.entries(error.response.data)) {
+                // @ts-expect-error: Correct types will be sent in the API error response
+                setError(key, { message: value, type: 'backend' });
+              }
+              return;
             }
-          } else {
-            showToast({
-              detail: error?.message,
-              life: 3000,
-              severity: 'error',
-              summary: 'Hiba',
-            });
           }
+          showToast({
+            detail: getErrorMessage(error),
+            life: 3000,
+            severity: 'error',
+            summary: 'Hiba',
+          });
         })
         .finally(() => setLoading(false));
     };

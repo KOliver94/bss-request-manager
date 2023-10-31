@@ -1,3 +1,4 @@
+import { wrapCreateBrowserRouter } from '@sentry/react';
 import { QueryClient } from '@tanstack/react-query';
 import {
   createBrowserRouter,
@@ -9,6 +10,7 @@ import {
 import { RequestAdminRetrieve, VideoAdminRetrieve } from 'api/models';
 import { requestRetrieveQuery, requestVideoRetrieveQuery } from 'api/queries';
 import Layout from 'Layout';
+import ErrorPage from 'pages/ErrorPage';
 
 export const queryClient = new QueryClient();
 
@@ -33,9 +35,19 @@ async function requestVideoLoader({ params }: any) {
   );
 }
 
-const router = createBrowserRouter(
+const sentryCreateBrowserRouter = wrapCreateBrowserRouter(createBrowserRouter);
+
+const router = sentryCreateBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
+    <Route
+      path="/"
+      element={<Layout />}
+      errorElement={
+        <Layout>
+          <ErrorPage />
+        </Layout>
+      }
+    >
       <Route index lazy={() => import('App')} />
       <Route
         path="requests"
@@ -114,6 +126,7 @@ const router = createBrowserRouter(
           crumb: () => 'Felhasználók',
         }}
       />
+      <Route path="error" element={<ErrorPage />} />
     </Route>,
   ),
   {

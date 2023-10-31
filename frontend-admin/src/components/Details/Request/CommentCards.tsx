@@ -6,6 +6,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
@@ -25,6 +26,7 @@ import {
 } from 'api/mutations';
 import { requestCommentsListQuery } from 'api/queries';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
+import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import {
   getAvatar,
   getName,
@@ -209,14 +211,19 @@ const CommentCard = ({
             queryKey: ['requests', requestId, 'comments'],
           }),
       )
-      .catch((error) =>
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: ['requests', requestId, 'comments'],
+          });
+        }
         showToast({
-          detail: error.message,
+          detail: getErrorMessage(error),
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -302,9 +309,19 @@ const CommentCardEdit = ({
         });
         setEditing(0);
       })
-      .catch((error) =>
-        setError('text', { message: error?.response?.data, type: 'backend' }),
-      )
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: ['requests', requestId, 'comments'],
+          });
+          setEditing(0);
+        } else {
+          setError('text', {
+            message: getErrorMessage(error),
+            type: 'backend',
+          });
+        }
+      })
       .finally(() => setLoading(false));
   };
 
@@ -399,9 +416,18 @@ const CommentCardNew = ({
         });
         reset();
       })
-      .catch((error) =>
-        setError('text', { message: error?.response?.data, type: 'backend' }),
-      )
+      .catch((error) => {
+        // This should mean that the request no longer exists
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: ['requests', requestId],
+          });
+        }
+        setError('text', {
+          message: getErrorMessage(error),
+          type: 'backend',
+        });
+      })
       .finally(() => setLoading(false));
   };
 

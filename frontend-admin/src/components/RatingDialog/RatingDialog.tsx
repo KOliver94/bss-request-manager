@@ -5,6 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog, DialogProps } from 'primereact/dialog';
@@ -25,6 +26,7 @@ import {
   requestVideoRatingRetrieveOwnQuery,
   requestVideoRatingRetrieveQuery,
 } from 'api/queries';
+import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import useMobile from 'hooks/useMobile';
 
 interface RatingDialogProps extends DialogProps {
@@ -128,12 +130,18 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
           }
           reset({ ...data });
         })
-        .catch((error) =>
+        .catch((error) => {
+          // This should mean that the video no longer exists
+          if (isAxiosError(error) && error.response?.status === 404) {
+            queryClient.invalidateQueries({
+              queryKey: ['requests', requestId, 'videos', videoId],
+            });
+          }
           setError('review', {
-            message: error?.response?.data,
+            message: getErrorMessage(error),
             type: 'backend',
-          }),
-        )
+          });
+        })
         .finally(() => setLoading(false));
     };
 
@@ -149,8 +157,13 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
           onHide();
         })
         .catch((error) => {
+          if (isAxiosError(error) && error.response?.status === 404) {
+            queryClient.invalidateQueries({
+              queryKey: ['requests', requestId, 'videos', videoId],
+            });
+          }
           setError('review', {
-            message: error?.response?.data,
+            message: getErrorMessage(error),
             type: 'backend',
           });
           setLoading(false);

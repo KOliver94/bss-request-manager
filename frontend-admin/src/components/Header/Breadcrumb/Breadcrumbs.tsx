@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 
 import { useIsFetching } from '@tanstack/react-query';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Link, useMatches } from 'react-router-dom';
+import { Link, useMatches, useRouteError } from 'react-router-dom';
 
 type BreadcrumbsType = {
   name: string;
@@ -18,8 +18,9 @@ type ReactRouterUseMatchesType = {
 }[];
 
 const Breadcrumbs = () => {
+  const error = useRouteError();
   const isFetching = useIsFetching();
-  const matches = useMatches() as ReactRouterUseMatchesType;
+  const matches = error ? [] : (useMatches() as ReactRouterUseMatchesType);
 
   const breadcrumbs: BreadcrumbsType = matches
     // first get rid of any matches that don't have handle and crumb
@@ -31,7 +32,7 @@ const Breadcrumbs = () => {
     });
 
   return (
-    <ul className="align-items-center border-bottom-1 border-top-1 flex font-medium list-none m-0 overflow-x-auto px-3 py-3 sm:px-5 surface-border surface-section">
+    <ul className="align-items-center border-bottom-1 border-top-1 flex font-medium list-none m-0 overflow-x-auto px-3 py-3 sm:px-5 surface-border surface-card">
       {/* Home button */}
       <li className="pr-3">
         <Link className="cursor-pointer no-underline" to="/">

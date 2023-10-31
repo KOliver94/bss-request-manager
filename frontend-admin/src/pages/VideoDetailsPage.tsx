@@ -1,6 +1,7 @@
 import { Suspense, lazy, useRef, useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -18,6 +19,7 @@ import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import LinkButton from 'components/LinkButton/LinkButton';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
+import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
@@ -57,6 +59,7 @@ const VideoDetailsPage = () => {
   const {
     data: queryResult,
     dataUpdatedAt,
+    error,
     refetch,
   } = useQuery(requestVideoRetrieveQuery(Number(requestId), Number(videoId)));
 
@@ -79,14 +82,19 @@ const VideoDetailsPage = () => {
         });
         navigate(`/requests/${requestId}/videos`);
       })
-      .catch((error) =>
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: ['requests', Number(requestId), 'videos'],
+          });
+        }
         showToast({
-          detail: error.message,
+          detail: getErrorMessage(error),
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -112,16 +120,27 @@ const VideoDetailsPage = () => {
         setAdditionalDataDialogOpen(false);
       })
       .catch((error) => {
-        if (error?.response?.status === 400) {
-          setAdditionalDataDialogError(error?.response?.data?.additional_data);
-        } else {
-          showToast({
-            detail: error.message,
-            life: 3000,
-            severity: 'error',
-            summary: 'Hiba',
-          });
+        if (isAxiosError(error)) {
+          if (error.response?.status === 404) {
+            queryClient.invalidateQueries({
+              queryKey: [
+                'requests',
+                Number(requestId),
+                'videos',
+                Number(videoId),
+              ],
+            });
+          } else if (error.response?.status === 400) {
+            setAdditionalDataDialogError(error.response.data?.additional_data);
+            return;
+          }
         }
+        showToast({
+          detail: getErrorMessage(error),
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        });
       })
       .finally(() => setLoading(false));
   };
@@ -150,14 +169,24 @@ const VideoDetailsPage = () => {
             ],
           }),
       )
-      .catch((error) =>
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: [
+              'requests',
+              Number(requestId),
+              'videos',
+              Number(videoId),
+            ],
+          });
+        }
         showToast({
-          detail: error.message,
+          detail: getErrorMessage(error),
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -183,14 +212,24 @@ const VideoDetailsPage = () => {
         });
         setAiredAddDialogOpen(false);
       })
-      .catch((error) =>
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: [
+              'requests',
+              Number(requestId),
+              'videos',
+              Number(videoId),
+            ],
+          });
+        }
         showToast({
-          detail: error.message,
+          detail: getErrorMessage(error),
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -205,6 +244,24 @@ const VideoDetailsPage = () => {
       style: { width: isMobile ? '95vw' : '50vw' },
     });
   };
+
+  if (error) {
+    if (isAxiosError(error)) {
+      navigate('/error', {
+        state: {
+          statusCode: error.response?.status,
+          statusText: error.response?.statusText,
+        },
+      });
+    } else {
+      showToast({
+        detail: getErrorMessage(error),
+        life: 3000,
+        severity: 'error',
+        summary: 'Hiba',
+      });
+    }
+  }
 
   return (
     <>
