@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { AutoCompleteChangeEvent } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
 import {
@@ -18,6 +19,7 @@ import { CrewMemberAdminListRetrieve } from 'api/models';
 import { requestCrewListQuery } from 'api/queries';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import User from 'components/User/User';
+import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 
@@ -67,14 +69,19 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
           queryKey: ['requests', requestId, 'crew'],
         });
       })
-      .catch((error) =>
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: ['requests', requestId, 'crew'],
+          });
+        }
         showToast({
-          detail: error.message,
+          detail: getErrorMessage(error),
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -160,14 +167,19 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
           queryKey: ['requests', requestId, 'crew'],
         });
       })
-      .catch((error) =>
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          queryClient.invalidateQueries({
+            queryKey: ['requests', requestId, 'crew'],
+          });
+        }
         showToast({
-          detail: error.message,
+          detail: getErrorMessage(error),
           life: 3000,
           severity: 'error',
           summary: 'Hiba',
-        }),
-      )
+        });
+      })
       .finally(() => setLoading(false));
   };
 

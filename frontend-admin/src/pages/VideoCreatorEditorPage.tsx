@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { InputMask } from 'primereact/inputmask';
@@ -24,6 +25,7 @@ import { requestVideoRetrieveQuery } from 'api/queries';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
+import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
@@ -91,13 +93,16 @@ const VideoCreatorEditorPage = () => {
       ? requestVideoUpdateMutation(Number(requestId), Number(videoId))
       : requestVideoCreateMutation(Number(requestId)),
   );
-  const { data: queryData, dataUpdatedAt } =
-    requestId && videoId
-      ? useQuery({
-          ...requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
-          refetchInterval: 1000 * 30,
-        })
-      : { data: undefined, dataUpdatedAt: new Date() };
+  const {
+    data: queryData,
+    dataUpdatedAt,
+    error,
+  } = requestId && videoId
+    ? useQuery({
+        ...requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
+        refetchInterval: 1000 * 30,
+      })
+    : { data: undefined, dataUpdatedAt: new Date(), error: null };
 
   const [isDataChanged, setIsDataChanged] = useState<boolean>(false);
 
@@ -180,21 +185,45 @@ const VideoCreatorEditorPage = () => {
         navigate(`/requests/${requestId}/videos/${response.data.id}`);
       })
       .catch((error) => {
-        if (error?.response?.status === 400) {
-          for (const [key, value] of Object.entries(error?.response?.data)) {
-            // @ts-expect-error: Correct types will be sent in the API error response
-            setError(key, { message: value, type: 'backend' });
+        if (isAxiosError(error)) {
+          if (error.response?.status === 404) {
+            queryClient.invalidateQueries({
+              queryKey: ['requests', Number(requestId), 'videos'],
+            });
+          } else if (error.response?.status === 400) {
+            for (const [key, value] of Object.entries(error.response.data)) {
+              // @ts-expect-error: Correct types will be sent in the API error response
+              setError(key, { message: value, type: 'backend' });
+            }
+            return;
           }
-        } else {
-          showToast({
-            detail: error?.message,
-            life: 3000,
-            severity: 'error',
-            summary: 'Hiba',
-          });
         }
+        showToast({
+          detail: getErrorMessage(error),
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        });
       });
   };
+
+  if (error) {
+    if (isAxiosError(error)) {
+      navigate('/error', {
+        state: {
+          statusCode: error.response?.status,
+          statusText: error.response?.statusText,
+        },
+      });
+    } else {
+      showToast({
+        detail: getErrorMessage(error),
+        life: 3000,
+        severity: 'error',
+        summary: 'Hiba',
+      });
+    }
+  }
 
   return (
     <div className="p-3 sm:p-5 surface-ground">

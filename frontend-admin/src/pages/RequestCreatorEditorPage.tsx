@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { Calendar } from 'primereact/calendar';
 import { Checkbox } from 'primereact/checkbox';
 import { Divider } from 'primereact/divider';
@@ -26,6 +27,7 @@ import { requestRetrieveQuery } from 'api/queries';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
+import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getName } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
@@ -101,12 +103,16 @@ const RequestCreatorEditorPage = () => {
       ? requestUpdateMutation(Number(requestId))
       : requestCreateMutation(),
   );
-  const { data: queryData, dataUpdatedAt } = requestId
+  const {
+    data: queryData,
+    dataUpdatedAt,
+    error,
+  } = requestId
     ? useQuery({
         ...requestRetrieveQuery(Number(requestId)),
         refetchInterval: 1000 * 30,
       })
-    : { data: undefined, dataUpdatedAt: new Date() };
+    : { data: undefined, dataUpdatedAt: new Date(), error: null };
 
   const [isDataChanged, setIsDataChanged] = useState<boolean>(false);
 
@@ -255,22 +261,46 @@ const RequestCreatorEditorPage = () => {
         }
       })
       .catch((error) => {
-        if (error?.response?.status === 400) {
-          for (const [key, value] of Object.entries(error?.response?.data)) {
-            // @ts-expect-error: Correct types will be sent in the API error response
-            setError(key, { message: value, type: 'backend' });
+        if (isAxiosError(error)) {
+          if (error.response?.status === 404) {
+            queryClient.invalidateQueries({
+              queryKey: ['requests', Number(requestId)],
+            });
+          } else if (error.response?.status === 400) {
+            for (const [key, value] of Object.entries(error.response.data)) {
+              // @ts-expect-error: Correct types will be sent in the API error response
+              setError(key, { message: value, type: 'backend' });
+            }
+            return;
           }
-        } else {
-          showToast({
-            detail: error?.message,
-            life: 3000,
-            severity: 'error',
-            summary: 'Hiba',
-          });
         }
+        showToast({
+          detail: getErrorMessage(error),
+          life: 3000,
+          severity: 'error',
+          summary: 'Hiba',
+        });
       })
       .finally(() => setValue('send_notification', false));
   };
+
+  if (error) {
+    if (isAxiosError(error)) {
+      navigate('/error', {
+        state: {
+          statusCode: error.response?.status,
+          statusText: error.response?.statusText,
+        },
+      });
+    } else {
+      showToast({
+        detail: getErrorMessage(error),
+        life: 3000,
+        severity: 'error',
+        summary: 'Hiba',
+      });
+    }
+  }
 
   return (
     <div className="p-3 sm:p-5 surface-ground">
