@@ -152,7 +152,9 @@ const RequestDetailsPage = () => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onAcceptRejectSave = async (data: {
@@ -198,7 +200,9 @@ const RequestDetailsPage = () => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onAdditionalDataSave = async (data: { additional_data: string }) => {
@@ -230,7 +234,7 @@ const RequestDetailsPage = () => {
               queryKey: ['requests', Number(requestId)],
             });
           } else if (error.response?.status === 400) {
-            setAdditionalDataDialogError(error.response?.data?.additional_data);
+            setAdditionalDataDialogError(error.response.data?.additional_data);
             return;
           }
         }
@@ -241,7 +245,9 @@ const RequestDetailsPage = () => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onDelete = () => {
@@ -308,7 +314,7 @@ const RequestDetailsPage = () => {
     await mutateAsync({
       additional_data: {
         ...queryResult.additional_data,
-        recording: { ...queryResult.additional_data?.recording, ...data },
+        recording: { ...queryResult.additional_data.recording, ...data },
       },
     })
       .then(async () => {
@@ -330,7 +336,9 @@ const RequestDetailsPage = () => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onRecordingDataCancel = () => {
@@ -370,7 +378,9 @@ const RequestDetailsPage = () => {
           canceled={data.additional_data.canceled}
           loading={loading}
           failed={data.additional_data.failed}
-          onHide={() => setAcceptRejectDialogOpen(false)}
+          onHide={() => {
+            setAcceptRejectDialogOpen(false);
+          }}
           onSave={onAcceptRejectSave}
           visible={acceptRejectDialogOpen}
         />
@@ -380,7 +390,9 @@ const RequestDetailsPage = () => {
           data={data.additional_data}
           error={additionalDataDialogError}
           loading={loading}
-          onHide={() => setAdditionalDataDialogOpen(false)}
+          onHide={() => {
+            setAdditionalDataDialogOpen(false);
+          }}
           onSave={onAdditionalDataSave}
           visible={additionalDataDialogOpen}
         />
@@ -426,12 +438,16 @@ const RequestDetailsPage = () => {
             <Button
               className="mr-2 p-button-rounded p-button-secondary"
               icon="pi pi-sliders-h"
-              onClick={() => setAdditionalDataDialogOpen(true)}
+              onClick={() => {
+                setAdditionalDataDialogOpen(true);
+              }}
             />
             <Button
               className="mr-2 p-button-warning p-button-rounded"
               icon="pi pi-external-link"
-              onClick={() => setAcceptRejectDialogOpen(true)}
+              onClick={() => {
+                setAcceptRejectDialogOpen(true);
+              }}
             />
             <LinkButton
               buttonProps={{
@@ -502,7 +518,7 @@ const RequestDetailsPage = () => {
                       icon: 'pi pi-user',
                       label: 'Profil',
                     }}
-                    linkProps={{ to: `/users/${data.responsible?.id}` }}
+                    linkProps={{ to: `/users/${data.responsible.id}` }}
                   />
                 )
               }
@@ -524,7 +540,13 @@ const RequestDetailsPage = () => {
               label="Felelős"
             />
             <DetailsRow
-              button={<JumpButton onClick={() => onJumpToTabView(0)} />}
+              button={
+                <JumpButton
+                  onClick={() => {
+                    onJumpToTabView(0);
+                  }}
+                />
+              }
               content={
                 <Badge
                   severity={data.comment_count > 0 ? 'warning' : 'info'}
@@ -534,7 +556,13 @@ const RequestDetailsPage = () => {
               label="Hozzászólások"
             />
             <DetailsRow
-              button={<JumpButton onClick={() => onJumpToTabView(1)} />}
+              button={
+                <JumpButton
+                  onClick={() => {
+                    onJumpToTabView(1);
+                  }}
+                />
+              }
               content={
                 data.crew && data.crew.length > 0 ? (
                   <AvatarGroupCrew crew={data.crew} />
@@ -553,8 +581,12 @@ const RequestDetailsPage = () => {
               button={
                 <RecordingContentButtons
                   editing={recordingIsEditing}
-                  editOnCancel={() => onRecordingDataCancel()}
-                  editOnClick={() => setRecordingIsEditing(true)}
+                  editOnCancel={() => {
+                    onRecordingDataCancel();
+                  }}
+                  editOnClick={() => {
+                    setRecordingIsEditing(true);
+                  }}
                   editOnSave={recordingContentHandleSubmit(
                     onSubmitRecordingContent,
                   )}
@@ -578,7 +610,13 @@ const RequestDetailsPage = () => {
               label="Nyersek"
             />
             <DetailsRow
-              button={<JumpButton onClick={() => onJumpToTabView(2)} />}
+              button={
+                <JumpButton
+                  onClick={() => {
+                    onJumpToTabView(2);
+                  }}
+                />
+              }
               content={
                 <Badge
                   value={data.video_count}
@@ -615,7 +653,9 @@ const RequestDetailsPage = () => {
             activeIndex={tabViewActiveIndex}
             className="pt-3"
             id="comments-crew-videos-history-tabs"
-            onTabChange={(e) => setTabViewActiveIndex(e.index)}
+            onTabChange={(e) => {
+              setTabViewActiveIndex(e.index);
+            }}
             panelContainerClassName={classNames(
               'border-bottom-1 surface-border',
               { 'px-0 py-2': isMobile },

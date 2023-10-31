@@ -98,7 +98,9 @@ const AcceptRejectDialog = forwardRef<
             disabled={!isDirty || loading}
             icon="pi pi-refresh"
             label="Visszaállítás"
-            onClick={() => reset()}
+            onClick={() => {
+              reset();
+            }}
           />
           <Button
             className="p-button-text"

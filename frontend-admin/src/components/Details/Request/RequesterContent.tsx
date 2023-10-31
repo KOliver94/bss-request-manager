@@ -37,7 +37,7 @@ export const RequesterContent = ({
             position="top"
             target=".requester-different-data-tag"
           />
-          {additionalData?.requester && (
+          {additionalData.requester && (
             <Tag
               className="requester-different-data-tag"
               data-pr-tooltip={`Név: ${additionalData.requester.last_name} ${additionalData.requester.first_name}

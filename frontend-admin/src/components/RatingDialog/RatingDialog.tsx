@@ -112,7 +112,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
         }
 
         return () => {
-          queryClient.cancelQueries({ queryKey: query?.queryKey });
+          queryClient.cancelQueries({ queryKey: query.queryKey });
         };
       }
     }, [ratingIdParam, videoId, visible]);
@@ -142,7 +142,9 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
             type: 'backend',
           });
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);
+        });
     };
 
     const handleDelete = async () => {
@@ -170,9 +172,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
         });
     };
 
-    const onDelete = (
-      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    ) => {
+    const onDelete = (event: React.MouseEvent<HTMLButtonElement>) => {
       confirmPopup({
         accept: handleDelete,
         acceptClassName: 'p-button-danger',

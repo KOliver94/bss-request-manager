@@ -30,9 +30,7 @@ const IconButton = ({
 }: IconButtonProps) => {
   const navigate = useNavigate();
 
-  const handleClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-  ) => {
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     path && navigate(path);
     onClick && onClick(event);
@@ -42,7 +40,9 @@ const IconButton = ({
     <li>
       <a
         className="align-items-center border-left-2 border-transparent cursor-pointer flex font-medium h-full hover:border-primary hover:text-900 lg:border-bottom-2 lg:border-left-none lg:px-3 lg:py-2 p-3 p-ripple px-6 text-600 transition-colors transition-duration-150"
-        onClick={(event) => handleClick(event)}
+        onClick={(event) => {
+          handleClick(event);
+        }}
       >
         <i
           className={`lg:mr-0 lg:text-2xl mr-2 p-overlay-badge pi ${icon} text-base`}

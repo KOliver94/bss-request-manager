@@ -48,7 +48,9 @@ export const ToastProvider = (props: ToastProviderProps) => {
     }
 
     window.addEventListener('toast', callback);
-    return () => window.removeEventListener('toast', callback);
+    return () => {
+      window.removeEventListener('toast', callback);
+    };
   }, []);
 
   const clearToasts = () => toast.current?.clear();

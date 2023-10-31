@@ -205,12 +205,11 @@ const CommentCard = ({
 
     await adminApi
       .adminRequestsCommentsDestroy(commentId, requestId)
-      .then(
-        async () =>
-          await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'comments'],
-          }),
-      )
+      .then(async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['requests', requestId, 'comments'],
+        });
+      })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           queryClient.invalidateQueries({
@@ -224,7 +223,9 @@ const CommentCard = ({
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onCommentDelete = () => {
@@ -256,7 +257,9 @@ const CommentCard = ({
             icon="pi pi-trash"
             label="Törlés"
             loading={loading}
-            onClick={() => onCommentDelete()}
+            onClick={() => {
+              onCommentDelete();
+            }}
             severity="danger"
             size="small"
             text
@@ -266,7 +269,9 @@ const CommentCard = ({
             disabled={loading}
             icon="pi pi-pencil"
             label="Szerkesztés"
-            onClick={() => setEditing(commentId)}
+            onClick={() => {
+              setEditing(commentId);
+            }}
             size="small"
             text
           />
@@ -322,7 +327,9 @@ const CommentCardEdit = ({
           });
         }
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -372,7 +379,9 @@ const CommentCardEdit = ({
             disabled={loading}
             icon="pi pi-times"
             label="Mégsem"
-            onClick={() => setEditing(0)}
+            onClick={() => {
+              setEditing(0);
+            }}
             severity="secondary"
             size="small"
             text
@@ -428,7 +437,9 @@ const CommentCardNew = ({
           type: 'backend',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (

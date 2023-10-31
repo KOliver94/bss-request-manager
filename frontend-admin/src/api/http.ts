@@ -39,7 +39,7 @@ axiosInstance.interceptors.response.use(
     // If requests fail with 401 Unauthorized because JWT token is not valid try to get new token with refresh token.
     if (
       error.response?.status === 401 &&
-      error.response?.data?.code === 'token_not_valid' &&
+      error.response.data?.code === 'token_not_valid' &&
       !error.config?.url?.includes('/login/refresh') &&
       originalRequest &&
       refreshToken

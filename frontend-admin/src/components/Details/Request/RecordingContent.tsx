@@ -49,7 +49,9 @@ const RecordingContentEditing = ({
               className="flex-grow-1"
               disabled={loading}
               editable
-              onChange={(e) => field.onChange(e.value)}
+              onChange={(e) => {
+                field.onChange(e.value);
+              }}
               options={[recommendedPath]}
               placeholder="Elérési út"
               value={field.value}

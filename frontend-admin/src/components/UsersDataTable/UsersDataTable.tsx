@@ -66,7 +66,9 @@ const UsersDataTable = forwardRef<
     return (
       <div className="field-checkbox m-0">
         <TriStateCheckbox
-          onChange={(e) => options.filterCallback(e.value)}
+          onChange={(e) => {
+            options.filterCallback(e.value);
+          }}
           value={options.value}
         />
         <label>{getLabel(options.value)}</label>

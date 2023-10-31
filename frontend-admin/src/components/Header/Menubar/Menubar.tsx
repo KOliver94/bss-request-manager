@@ -44,7 +44,9 @@ const Menubar = () => {
           <IconButton
             icon={darkMode ? 'pi-sun' : 'pi-moon'}
             label={darkMode ? 'Világos téma' : 'Sötét téma'}
-            onClick={() => setDarkMode(!darkMode)}
+            onClick={() => {
+              setDarkMode(!darkMode);
+            }}
           />
           <IconButton
             icon="pi-sign-out"

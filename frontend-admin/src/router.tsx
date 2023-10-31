@@ -135,7 +135,9 @@ const router = sentryCreateBrowserRouter(
 );
 
 if (import.meta.hot) {
-  import.meta.hot.dispose(() => router.dispose());
+  import.meta.hot.dispose(() => {
+    router.dispose();
+  });
 }
 
 export default router;

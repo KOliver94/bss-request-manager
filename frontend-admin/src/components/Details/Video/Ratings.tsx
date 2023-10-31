@@ -216,7 +216,7 @@ const Ratings = ({
                 key={item}
                 portion={
                   data
-                    ? Math.round((numberOfRating(item + 1) / data?.length) * 12)
+                    ? Math.round((numberOfRating(item + 1) / data.length) * 12)
                     : 0
                 }
                 rating={item + 1}
@@ -253,30 +253,34 @@ const Ratings = ({
           <Button
             disabled={videoStatus < 3 || isRated}
             label="Értékelés írása"
-            onClick={() => setRatingDialogVisible(true)}
+            onClick={() => {
+              setRatingDialogVisible(true);
+            }}
           />
           <Dropdown
-            onChange={(e) => setOrdering(e.value)}
+            onChange={(e) => {
+              setOrdering(e.value);
+            }}
             options={orderingOptions}
             optionLabel="name"
             value={ordering}
           />
         </div>
         <div className="grid -ml-3 -mr-3 -mt-3">
-          {data
-            ?.sort(compare)
-            .map((rating) => (
-              <Rating
-                authorName={rating.author.full_name}
-                avatarUrl={rating.author.avatar_url}
-                creationDate={rating.created}
-                key={rating.id}
-                onEdit={() => onRatingEdit(rating.author.full_name, rating.id)}
-                rating={rating.rating}
-                review={rating.review}
-                showEdit={rating.author.id === getUserId() || isAdmin()}
-              />
-            ))}
+          {data.sort(compare).map((rating) => (
+            <Rating
+              authorName={rating.author.full_name}
+              avatarUrl={rating.author.avatar_url}
+              creationDate={rating.created}
+              key={rating.id}
+              onEdit={() => {
+                onRatingEdit(rating.author.full_name, rating.id);
+              }}
+              rating={rating.rating}
+              review={rating.review}
+              showEdit={rating.author.id === getUserId() || isAdmin()}
+            />
+          ))}
         </div>
       </div>
     </>

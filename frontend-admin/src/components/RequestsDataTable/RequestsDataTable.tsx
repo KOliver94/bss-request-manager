@@ -128,9 +128,9 @@ const RequestsDataTable = forwardRef<
       dataKey="id"
       emptyMessage="Nem található felkérés."
       expandedRows={expandedRows}
-      onRowToggle={(e: { data: DataTableExpandedRows }) =>
-        setExpandedRows(e.data)
-      }
+      onRowToggle={(e: { data: DataTableExpandedRows }) => {
+        setExpandedRows(e.data);
+      }}
       paginator
       rowExpansionTemplate={rowExpansionTemplate}
       rows={25}

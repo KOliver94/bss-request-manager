@@ -153,7 +153,9 @@ const RequestCreatorEditorPage = () => {
       label: 'Mentés értesítéssel',
     },
     {
-      command: () => reset(),
+      command: () => {
+        reset();
+      },
       icon: 'pi pi-replay',
       label: 'Visszaállítás',
     },
@@ -208,7 +210,7 @@ const RequestCreatorEditorPage = () => {
         return;
       }
       requester = {
-        requester: data.requester?.id,
+        requester: data.requester.id,
       };
     } else if (data.requesterType == 'new') {
       requester = {
@@ -281,7 +283,9 @@ const RequestCreatorEditorPage = () => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setValue('send_notification', false));
+      .finally(() => {
+        setValue('send_notification', false);
+      });
   };
 
   if (error) {
@@ -532,7 +536,9 @@ const RequestCreatorEditorPage = () => {
                     checked={field.value}
                     disabled={isPending}
                     inputId={field.name}
-                    onChange={(e) => field.onChange(e.checked)}
+                    onChange={(e) => {
+                      field.onChange(e.checked);
+                    }}
                   />
                 )}
               />
