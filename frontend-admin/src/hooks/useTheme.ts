@@ -56,8 +56,9 @@ export const useTheme = () => {
     }
 
     prefersDarkMode.addEventListener('change', handlePreferredThemeChange);
-    return () =>
+    return () => {
       prefersDarkMode.removeEventListener('change', handlePreferredThemeChange);
+    };
   }, []);
 
   return [darkMode, setDarkMode] as const;

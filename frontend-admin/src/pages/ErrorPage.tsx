@@ -69,12 +69,16 @@ const ErrorPage = () => {
             className="p-button-text mr-2"
             icon="pi pi-arrow-left"
             label="Vissza"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              navigate(-1);
+            }}
           />
           <Button
             icon="pi pi-home"
             label="Ugrás a Kezdőoldalra"
-            onClick={() => navigate('/', { replace: true })}
+            onClick={() => {
+              navigate('/', { replace: true });
+            }}
           />
         </div>
       </div>

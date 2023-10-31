@@ -47,7 +47,7 @@ const DropdownButton = ({
 
       {/* Dropdown items */}
       <ul className="border-50 border-round cursor-pointer hidden lg:absolute lg:border-1 lg:px-0 lg:shadow-2 lg:w-15rem list-none m-0 origin-top px-6 py-0 shadow-0 surface-overlay w-full">
-        {dropdownItems?.map((item, index) => (
+        {dropdownItems.map((item, index) => (
           <li key={`dropdown-${item.label}-${index}`}>
             <Link
               className="align-items-center border-left-2 border-transparent flex hover:border-primary hover:text-900 no-underline p-3 p-ripple text-600 transition-colors transition-duration-150"

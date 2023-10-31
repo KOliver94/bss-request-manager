@@ -78,7 +78,9 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
             summary: 'Hiba',
           });
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);
+        });
     };
 
     const renderFooter = () => {

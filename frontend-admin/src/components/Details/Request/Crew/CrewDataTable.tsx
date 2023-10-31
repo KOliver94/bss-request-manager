@@ -50,7 +50,9 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
       <button
         className="p-link p-row-editor-init"
         disabled={loading}
-        onClick={() => onRowDelete(id, member, position)}
+        onClick={() => {
+          onRowDelete(id, member, position);
+        }}
         name="row-delete"
         type="button"
       >
@@ -82,7 +84,9 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const header = (
@@ -96,7 +100,9 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
         className={isMobile ? 'w-full' : ''}
         icon="pi pi-plus"
         label="Új stábtag"
-        onClick={() => setAddCrewDialogVisible(true)}
+        onClick={() => {
+          setAddCrewDialogVisible(true);
+        }}
       />
     </div>
   );
@@ -180,7 +186,9 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const positionEditor = (options: ColumnEditorOptions) => {
@@ -237,7 +245,9 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
         />
       </DataTable>
       <AddCrewDialog
-        onHide={() => setAddCrewDialogVisible(false)}
+        onHide={() => {
+          setAddCrewDialogVisible(false);
+        }}
         requestId={requestId}
         visible={addCrewDialogVisible}
       />

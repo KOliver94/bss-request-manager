@@ -153,7 +153,9 @@ const VideosDataTable = forwardRef<
       <Suspense>
         <RatingDialog
           isRated={ratingDialogIsRated}
-          onHide={() => setRatingDialogVisible(false)}
+          onHide={() => {
+            setRatingDialogVisible(false);
+          }}
           requestId={requestId}
           videoId={ratingDialogVideoId}
           videoTitle={ratingDialogVideoTitle}

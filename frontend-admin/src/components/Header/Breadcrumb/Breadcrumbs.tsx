@@ -11,7 +11,7 @@ type BreadcrumbsType = {
 
 type ReactRouterUseMatchesType = {
   data: unknown;
-  handle: {
+  handle?: {
     crumb: (data?: unknown) => string;
   };
   pathname: string;
@@ -28,7 +28,10 @@ const Breadcrumbs = () => {
     // now map them into an array of elements, passing the loader
     // data to each one
     .map((match) => {
-      return { name: match.handle.crumb(match.data), path: match.pathname };
+      return {
+        name: match.handle?.crumb(match.data) || '',
+        path: match.pathname,
+      };
     });
 
   return (
@@ -40,7 +43,7 @@ const Breadcrumbs = () => {
         </Link>
       </li>
 
-      {breadcrumbs?.map((breadcrumb, index, array) => (
+      {breadcrumbs.map((breadcrumb, index, array) => (
         <Fragment key={`breadcrumb-fragment-${index}`}>
           {/* Right arrow (>) */}
           <li className="px-2">

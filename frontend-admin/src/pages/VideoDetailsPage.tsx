@@ -95,7 +95,9 @@ const VideoDetailsPage = () => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onAdditionalDataSave = async (data: { additional_data: string }) => {
@@ -142,7 +144,9 @@ const VideoDetailsPage = () => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onAiredDateRemove = async (airedDate: string) => {
@@ -158,17 +162,11 @@ const VideoDetailsPage = () => {
         aired: aired,
       },
     })
-      .then(
-        async () =>
-          await queryClient.invalidateQueries({
-            queryKey: [
-              'requests',
-              Number(requestId),
-              'videos',
-              Number(videoId),
-            ],
-          }),
-      )
+      .then(async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
+        });
+      })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           queryClient.invalidateQueries({
@@ -187,7 +185,9 @@ const VideoDetailsPage = () => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onAiredDateSave = async (data: { airedDate: Date }) => {
@@ -230,7 +230,9 @@ const VideoDetailsPage = () => {
           summary: 'Hiba',
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onDelete = () => {
@@ -270,7 +272,9 @@ const VideoDetailsPage = () => {
           data={queryResult.additional_data}
           error={additionalDataDialogError}
           loading={loading}
-          onHide={() => setAdditionalDataDialogOpen(false)}
+          onHide={() => {
+            setAdditionalDataDialogOpen(false);
+          }}
           onSave={onAdditionalDataSave}
           visible={additionalDataDialogOpen}
         />
@@ -278,7 +282,9 @@ const VideoDetailsPage = () => {
       <Suspense>
         <AiredAddDialog
           loading={loading}
-          onHide={() => setAiredAddDialogOpen(false)}
+          onHide={() => {
+            setAiredAddDialogOpen(false);
+          }}
           onSave={onAiredDateSave}
           visible={airedAddDialogOpen}
         />
@@ -326,7 +332,9 @@ const VideoDetailsPage = () => {
             <Button
               className="mr-2 p-button-rounded p-button-secondary"
               icon="pi pi-sliders-h"
-              onClick={() => setAdditionalDataDialogOpen(true)}
+              onClick={() => {
+                setAdditionalDataDialogOpen(true);
+              }}
             />
             <LinkButton
               buttonProps={{
@@ -371,7 +379,7 @@ const VideoDetailsPage = () => {
                       icon: 'pi pi-user',
                       label: 'Profil',
                     }}
-                    linkProps={{ to: `/users/${queryResult.editor?.id}` }}
+                    linkProps={{ to: `/users/${queryResult.editor.id}` }}
                   />
                 )
               }
@@ -446,7 +454,9 @@ const VideoDetailsPage = () => {
                   className="p-button-sm p-button-text px-1 py-0"
                   icon="pi pi-plus"
                   label="Hozzáadás"
-                  onClick={() => setAiredAddDialogOpen(true)}
+                  onClick={() => {
+                    setAiredAddDialogOpen(true);
+                  }}
                 />
               }
               content={
