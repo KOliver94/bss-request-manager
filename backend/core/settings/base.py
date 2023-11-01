@@ -24,6 +24,7 @@ BACKEND_DIR = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
 FRONTEND_DIR = os.path.abspath(os.path.join(BACKEND_DIR, "..", "frontend"))
+FRONTEND_ADMIN_DIR = os.path.abspath(os.path.join(BACKEND_DIR, "..", "frontend-admin"))
 
 # URL of the site such as: https://website.example.com
 BASE_URL_DOMAIN = config("BASE_URL_DOMAIN", default="localhost:8000")
@@ -86,6 +87,7 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(FRONTEND_DIR, "build"),
+            os.path.join(FRONTEND_ADMIN_DIR, "build"),
             os.path.join(BACKEND_DIR, "templates"),
         ],
         "APP_DIRS": True,
@@ -244,6 +246,7 @@ USE_TZ = True
 
 STATICFILES_DIRS = [
     os.path.join(FRONTEND_DIR, "build", "static"),
+    os.path.join(FRONTEND_ADMIN_DIR, "build", "static"),
     os.path.join(BACKEND_DIR, "templates", "static"),
 ]
 STATIC_ROOT = os.path.join(BACKEND_DIR, "staticfiles")
