@@ -4,19 +4,19 @@
 FROM node:20-alpine
 
 # Set work directory
-WORKDIR /app/frontend
+WORKDIR /app/frontend-admin
 
 # Copy package.json and package-lock.json to Docker environment
-COPY ./package*.json /app/frontend/
+COPY ./package*.json /app/frontend-admin/
 
 # Install all required node packages
 RUN npm install --silent
 
 # Copy everything over to Docker environment
-COPY . /app/frontend
+COPY . /app/frontend-admin
 
 # Open port
-EXPOSE 3000
+EXPOSE 5173
 
-# Start the frontend app
+# Start the frontend-admin app
 CMD ["npm", "start"]
