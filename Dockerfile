@@ -1,7 +1,7 @@
 # Stage 1 - Build Frontend
 
 # Pull base image
-FROM node:20-alpine AS react-build
+FROM node:20-alpine AS frontend-build
 
 # Build args
 ARG API_URL
@@ -36,7 +36,37 @@ RUN npm run build
 
 ##################################################
 
-# Stage 2 - The Production Environment
+# Stage 2 - Build Admin dashboard
+
+# Pull base image
+FROM node:20-alpine AS frontend-admin-build
+
+# Build args
+ARG API_URL
+ARG SENTRY_URL_ADMIN
+
+# Environment vars
+ENV VITE_API_URL=$API_URL
+ENV VITE_SENTRY_URL=$SENTRY_URL_ADMIN
+
+# Set work directory
+WORKDIR /app/frontend-admin
+
+# Copy package.json and package-lock.json to Docker environment
+COPY ./frontend-admin/package*.json /app/frontend-admin/
+
+# Update npm and install all required node packages
+RUN npm install -g npm@latest && npm install --silent
+
+# Copy everything over to Docker environment
+COPY ./frontend-admin /app/frontend-admin
+
+# Build the frontend
+RUN npm run build
+
+##################################################
+
+# Stage 3 - The Production Environment
 
 # Pull base image
 FROM python:3.10-alpine3.14 AS request-manager
@@ -81,11 +111,12 @@ COPY ./backend /app/backend
 
 # Copy built frontend assets
 RUN mkdir -p /app/frontend/build
-COPY --from=react-build /app/frontend/build /app/frontend/build
+COPY --from=frontend-build /app/frontend/build /app/frontend/build
+COPY --from=frontend-admin-build /app/frontend-admin/build /app/frontend-admin/build
 
 # Have to move all static files other than index.html to root/ for whitenoise middleware
 WORKDIR /app/frontend/build
-RUN mkdir root && mv *.ico *.json *.js *.txt root || :
+RUN mv index.html .index.html && mkdir root && mv * root || : && mv .index.html index.html
 
 # Change the owner of all files to the app user
 RUN chown -R appuser:appgroup /app
