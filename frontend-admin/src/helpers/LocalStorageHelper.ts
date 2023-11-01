@@ -42,6 +42,10 @@ export function setDarkMode(darkMode: boolean) {
   localStorage.setItem('dark-mode', JSON.stringify(darkMode));
 }
 
+export function setRedirectedFrom(redirectedFrom: string) {
+  localStorage.setItem('redirectedFrom', redirectedFrom);
+}
+
 export function setRefreshToken(refreshToken: string) {
   localStorage.setItem('refresh_token', refreshToken);
 }

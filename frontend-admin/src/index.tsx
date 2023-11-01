@@ -17,6 +17,7 @@ import { register } from 'timeago.js';
 import huLocal from 'timeago.js/lib/lang/hu';
 
 import { getName } from 'helpers/LocalStorageHelper';
+import { AuthenticationProvider } from 'providers/AuthenticationProvider';
 import { ThemeProvider } from 'providers/ThemeProvider';
 import { ToastProvider } from 'providers/ToastProvider';
 import router, { queryClient } from 'router';
@@ -68,15 +69,17 @@ const primeReactSettings = {
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <StrictMode>
-    <PrimeReactProvider value={primeReactSettings}>
-      <ThemeProvider>
-        <ToastProvider>
-          <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-            <ReactQueryDevtools />
-          </QueryClientProvider>
-        </ToastProvider>
-      </ThemeProvider>
-    </PrimeReactProvider>
+    <AuthenticationProvider>
+      <PrimeReactProvider value={primeReactSettings}>
+        <ThemeProvider>
+          <ToastProvider>
+            <QueryClientProvider client={queryClient}>
+              <RouterProvider router={router} />
+              <ReactQueryDevtools />
+            </QueryClientProvider>
+          </ToastProvider>
+        </ThemeProvider>
+      </PrimeReactProvider>
+    </AuthenticationProvider>
   </StrictMode>,
 );
