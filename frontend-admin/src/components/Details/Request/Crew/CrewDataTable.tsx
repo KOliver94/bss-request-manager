@@ -71,9 +71,9 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
           queryKey: ['requests', requestId, 'crew'],
         });
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: ['requests', requestId, 'crew'],
           });
         }
@@ -173,9 +173,9 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
           queryKey: ['requests', requestId, 'crew'],
         });
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: ['requests', requestId, 'crew'],
           });
         }

@@ -184,10 +184,10 @@ const VideoCreatorEditorPage = () => {
 
         navigate(`/requests/${requestId}/videos/${response.data.id}`);
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
               queryKey: ['requests', Number(requestId), 'videos'],
             });
           } else if (error.response?.status === 400) {
