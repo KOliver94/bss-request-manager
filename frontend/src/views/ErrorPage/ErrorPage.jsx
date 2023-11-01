@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Paper from '@mui/material/Paper';
-import changePageTitle from 'helpers/pageTitleHelper';
-import getErrorDetails from 'helpers/errorPageConstants';
-import 'assets/css/error-page.css';
+import changePageTitle from 'src/helpers/pageTitleHelper';
+import getErrorDetails from 'src/helpers/errorPageConstants';
+import 'src/assets/css/error-page.css';
 
 export default function ErrorPage({ type }) {
   const errorDetails = getErrorDetails(type);

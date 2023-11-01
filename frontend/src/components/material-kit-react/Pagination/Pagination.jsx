@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 
-import styles from 'assets/jss/material-kit-react/components/paginationStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/paginationStyle.js';
 
 const useStyles = makeStyles(styles);
 

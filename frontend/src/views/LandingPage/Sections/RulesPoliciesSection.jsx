@@ -6,11 +6,11 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import VerifiedUser from '@mui/icons-material/VerifiedUser';
 import CancelIcon from '@mui/icons-material/Cancel';
 // core components
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import InfoArea from 'components/material-kit-react/InfoArea/InfoArea';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import InfoArea from 'src/components/material-kit-react/InfoArea/InfoArea';
 
-import styles from 'assets/jss/material-kit-react/views/landingPageSections/productStyle';
+import styles from 'src/assets/jss/material-kit-react/views/landingPageSections/productStyle';
 
 const useStyles = makeStyles(styles);
 

@@ -30,16 +30,16 @@ import * as Yup from 'yup';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Helpers
-import stringToColor from 'helpers/stringToColor';
+import stringToColor from 'src/helpers/stringToColor';
 // API calls
 import {
   createCrewAdmin,
   updateCrewAdmin,
   deleteCrewAdmin,
-} from 'api/requestAdminApi';
-import compareValues from 'helpers/objectComperator';
-import handleError from 'helpers/errorHandler';
-import { crewPositionTypes } from 'helpers/enumConstants';
+} from 'src/api/requestAdminApi';
+import compareValues from 'src/helpers/objectComperator';
+import handleError from 'src/helpers/errorHandler';
+import { crewPositionTypes } from 'src/helpers/enumConstants';
 
 const useStyles = makeStyles((theme) => ({
   table: {

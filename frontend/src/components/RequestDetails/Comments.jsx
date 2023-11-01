@@ -9,19 +9,23 @@ import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 // Components
-import CommentDesktop from 'components/RequestDetails/CommentDesktop';
-import CommentMobile from 'components/RequestDetails/CommentMobile';
+import CommentDesktop from 'src/components/RequestDetails/CommentDesktop';
+import CommentMobile from 'src/components/RequestDetails/CommentMobile';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
-import { createComment, updateComment, deleteComment } from 'api/requestApi';
+import {
+  createComment,
+  updateComment,
+  deleteComment,
+} from 'src/api/requestApi';
 import {
   createCommentAdmin,
   updateCommentAdmin,
   deleteCommentAdmin,
-} from 'api/requestAdminApi';
-import compareValues from 'helpers/objectComperator';
-import handleError from 'helpers/errorHandler';
+} from 'src/api/requestAdminApi';
+import compareValues from 'src/helpers/objectComperator';
+import handleError from 'src/helpers/errorHandler';
 
 const useStyles = makeStyles(() => ({
   title: {

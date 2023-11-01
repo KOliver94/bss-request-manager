@@ -5,14 +5,14 @@ import { DateTimePicker } from 'formik-mui-x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { hu } from 'date-fns/locale';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import Button from 'components/material-kit-react/CustomButtons/Button';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import MUITextField from '@mui/material/TextField';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import makeStyles from '@mui/styles/makeStyles';
 import * as Yup from 'yup';
-import { requestTypes } from 'helpers/enumConstants';
+import { requestTypes } from 'src/helpers/enumConstants';
 
 const useStyles = makeStyles(() => ({
   button: {

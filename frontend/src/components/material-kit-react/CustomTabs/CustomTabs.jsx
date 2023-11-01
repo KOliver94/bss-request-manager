@@ -10,11 +10,11 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Icon from '@mui/material/Icon';
 // core components
-import Card from 'components/material-kit-react/Card/Card.js';
-import CardBody from 'components/material-kit-react/Card/CardBody.js';
-import CardHeader from 'components/material-kit-react/Card/CardHeader.js';
+import Card from 'src/components/material-kit-react/Card/Card';
+import CardBody from 'src/components/material-kit-react/Card/CardBody';
+import CardHeader from 'src/components/material-kit-react/Card/CardHeader';
 
-import styles from 'assets/jss/material-kit-react/components/customTabsStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/customTabsStyle.js';
 
 const useStyles = makeStyles(styles);
 

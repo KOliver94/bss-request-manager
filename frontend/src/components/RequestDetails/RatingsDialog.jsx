@@ -34,10 +34,10 @@ import {
   listRatingsAdmin,
   updateRatingAdmin,
   deleteRatingAdmin,
-} from 'api/requestAdminApi';
-import compareValues from 'helpers/objectComperator';
-import handleError from 'helpers/errorHandler';
-import { isSelf } from 'api/loginApi';
+} from 'src/api/requestAdminApi';
+import compareValues from 'src/helpers/objectComperator';
+import handleError from 'src/helpers/errorHandler';
+import { isSelf } from 'src/api/loginApi';
 
 export default function RatingsDialog({
   ratingsDialogData,

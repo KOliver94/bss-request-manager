@@ -54,22 +54,22 @@ import { hu } from 'date-fns/locale';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Helpers
-import stringToColor from 'helpers/stringToColor';
+import stringToColor from 'src/helpers/stringToColor';
 // API calls
 import {
   getRequestAdmin,
   updateRequestAdmin,
   deleteRequestAdmin,
-} from 'api/requestAdminApi';
-import { getRequest } from 'api/requestApi';
+} from 'src/api/requestAdminApi';
+import { getRequest } from 'src/api/requestApi';
 import {
   isAdmin,
   isPrivileged as isPrivilegedCheck,
   isSelf,
-} from 'api/loginApi';
-import { requestStatuses } from 'helpers/enumConstants';
-import handleError from 'helpers/errorHandler';
-import ConditionalWrapper from 'components/ConditionalWrapper';
+} from 'src/api/loginApi';
+import { requestStatuses } from 'src/helpers/enumConstants';
+import handleError from 'src/helpers/errorHandler';
+import ConditionalWrapper from 'src/components/ConditionalWrapper';
 
 const useStyles = makeStyles((theme) => ({
   title: {

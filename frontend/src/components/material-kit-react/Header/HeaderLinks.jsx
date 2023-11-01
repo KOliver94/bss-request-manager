@@ -14,13 +14,13 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 
 // core components
-import Button from 'components/material-kit-react/CustomButtons/Button.js';
-import CustomDropdown from 'components/material-kit-react/CustomDropdown/CustomDropdown.js';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
+import CustomDropdown from 'src/components/material-kit-react/CustomDropdown/CustomDropdown';
 
-import styles from 'assets/jss/material-kit-react/components/headerLinksStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/headerLinksStyle.js';
 
 import { useSnackbar } from 'notistack';
-import { logoutUser, isPrivileged } from 'api/loginApi';
+import { logoutUser, isPrivileged } from 'src/api/loginApi';
 
 const useStyles = makeStyles(styles);
 

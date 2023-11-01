@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 // @mui components
 import makeStyles from '@mui/styles/makeStyles';
 // core components
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 // logo
-import logo from 'assets/img/bss_logo.png';
+import logo from 'src/assets/img/bss_logo.png';
 
-import styles from 'assets/jss/material-kit-react/views/landingPageSections/postscriptStyle';
+import styles from 'src/assets/jss/material-kit-react/views/landingPageSections/postscriptStyle';
 
 const useStyles = makeStyles(styles);
 

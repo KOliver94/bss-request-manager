@@ -7,9 +7,9 @@ import { List, ListItem } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 // core components
-import Button from 'components/material-kit-react/CustomButtons/Button.js';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
 
-import styles from 'assets/jss/material-kit-react/components/footerStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/footerStyle.js';
 
 const useStyles = makeStyles(styles);
 

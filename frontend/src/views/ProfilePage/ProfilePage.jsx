@@ -28,14 +28,14 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 // core components
-import Header from 'components/material-kit-react/Header/Header';
-import Footer from 'components/material-kit-react/Footer/Footer';
-import Button from 'components/material-kit-react/CustomButtons/Button';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
-import Parallax from 'components/material-kit-react/Parallax/Parallax';
-import Badge from 'components/material-kit-react/Badge/Badge';
+import Header from 'src/components/material-kit-react/Header/Header';
+import Footer from 'src/components/material-kit-react/Footer/Footer';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
+import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
+import Badge from 'src/components/material-kit-react/Badge/Badge';
 // Formik
 import { Formik, Form } from 'formik';
 // Date fields
@@ -47,11 +47,11 @@ import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // Yup validations
 import * as Yup from 'yup';
-import isValidPhone from 'helpers/yupPhoneNumberValidator';
+import isValidPhone from 'src/helpers/yupPhoneNumberValidator';
 // Notistack
 import { useSnackbar } from 'notistack';
 // background
-import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
 // API calls
 import {
   getUser,
@@ -60,18 +60,18 @@ import {
   unbanUser,
   connectSocial,
   disconnectSocial,
-} from 'api/userApi';
-import { isAdmin, isPrivileged, isSelf } from 'api/loginApi';
-import handleError from 'helpers/errorHandler';
-import { userRoles, avatarProviders, groups } from 'helpers/enumConstants';
+} from 'src/api/userApi';
+import { isAdmin, isPrivileged, isSelf } from 'src/api/loginApi';
+import handleError from 'src/helpers/errorHandler';
+import { userRoles, avatarProviders, groups } from 'src/helpers/enumConstants';
 import {
   getOauthUrlAuthSch,
   getOauthUrlFacebook,
   getOauthUrlGoogle,
-} from 'helpers/oauthConstants';
-import changePageTitle from 'helpers/pageTitleHelper';
+} from 'src/helpers/oauthConstants';
+import changePageTitle from 'src/helpers/pageTitleHelper';
 // Style
-import styles from 'assets/jss/material-kit-react/views/profilePage';
+import styles from 'src/assets/jss/material-kit-react/views/profilePage';
 // Sections
 import PersonalDetailsNormal from './Sections/PersonalDetails/PersonalDetailsNormal';
 import PersonalDetailsMobile from './Sections/PersonalDetails/PersonalDetailsMobile';

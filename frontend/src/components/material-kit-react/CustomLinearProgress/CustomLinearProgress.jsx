@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import LinearProgress from '@mui/material/LinearProgress';
 // core components
-import styles from 'assets/jss/material-kit-react/components/customLinearProgressStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/customLinearProgressStyle.js';
 
 const useStyles = makeStyles(styles);
 

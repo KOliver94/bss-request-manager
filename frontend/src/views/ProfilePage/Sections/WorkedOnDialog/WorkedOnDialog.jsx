@@ -24,9 +24,9 @@ import { useSnackbar } from 'notistack';
 // Date format
 import { format } from 'date-fns';
 // API calls
-import { getUserWorkedOn } from 'api/userApi';
-import compareValues from 'helpers/objectComperator';
-import handleError from 'helpers/errorHandler';
+import { getUserWorkedOn } from 'src/api/userApi';
+import compareValues from 'src/helpers/objectComperator';
+import handleError from 'src/helpers/errorHandler';
 
 export default function WorkedOnDialog({
   workedOnDialogOpen,

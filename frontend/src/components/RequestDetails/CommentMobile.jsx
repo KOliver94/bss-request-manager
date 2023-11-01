@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // material-kit-react
-import Badge from 'components/material-kit-react/Badge/Badge';
+import Badge from 'src/components/material-kit-react/Badge/Badge';
 // MUI components
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
@@ -22,9 +22,9 @@ import * as Yup from 'yup';
 import { format, formatDistanceToNow } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // Helpers
-import stringToColor from 'helpers/stringToColor';
+import stringToColor from 'src/helpers/stringToColor';
 // API calls
-import { isAdmin, isSelf } from 'api/loginApi';
+import { isAdmin, isSelf } from 'src/api/loginApi';
 
 const useStyles = makeStyles(() => ({
   commentAuthor: {

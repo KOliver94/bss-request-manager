@@ -6,18 +6,18 @@ import classNames from 'classnames';
 // @mui components
 import makeStyles from '@mui/styles/makeStyles';
 // background
-import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
-import Header from 'components/material-kit-react/Header/Header';
-import Footer from 'components/material-kit-react/Footer/Footer';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import Button from 'components/material-kit-react/CustomButtons/Button';
-import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
-import Parallax from 'components/material-kit-react/Parallax/Parallax';
-import styles from 'assets/jss/material-kit-react/views/landingPage';
+import Header from 'src/components/material-kit-react/Header/Header';
+import Footer from 'src/components/material-kit-react/Footer/Footer';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
+import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
+import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
+import styles from 'src/assets/jss/material-kit-react/views/landingPage';
 // helpers
-import changePageTitle from 'helpers/pageTitleHelper';
+import changePageTitle from 'src/helpers/pageTitleHelper';
 // Sections for this page
 import RulesPoliciesSection from './Sections/RulesPoliciesSection';
 import ContactSection from './Sections/ContactSection';

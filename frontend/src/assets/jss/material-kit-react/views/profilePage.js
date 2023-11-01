@@ -4,9 +4,9 @@ import {
   title,
   primaryColor,
   successColor,
-} from 'assets/jss/material-kit-react';
+} from 'src/assets/jss/material-kit-react';
 
-import imagesStyle from 'assets/jss/material-kit-react/imagesStyles';
+import imagesStyle from 'src/assets/jss/material-kit-react/imagesStyles';
 
 const profilePageStyle = {
   container,

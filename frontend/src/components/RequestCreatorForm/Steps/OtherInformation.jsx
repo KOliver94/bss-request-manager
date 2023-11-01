@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import Button from 'components/material-kit-react/CustomButtons/Button';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles(() => ({

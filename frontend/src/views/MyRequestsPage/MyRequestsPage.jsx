@@ -17,28 +17,28 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 // background
-import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
-import Header from 'components/material-kit-react/Header/Header';
-import Footer from 'components/material-kit-react/Footer/Footer';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
-import Parallax from 'components/material-kit-react/Parallax/Parallax';
-import Badge from 'components/material-kit-react/Badge/Badge';
+import Header from 'src/components/material-kit-react/Header/Header';
+import Footer from 'src/components/material-kit-react/Footer/Footer';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
+import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
+import Badge from 'src/components/material-kit-react/Badge/Badge';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Date format
 import { format, isAfter, sub } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // API calls
-import { listRequests } from 'api/requestApi';
-import { listRequestsAdmin } from 'api/requestAdminApi';
-import { requestStatuses } from 'helpers/enumConstants';
-import handleError from 'helpers/errorHandler';
-import changePageTitle from 'helpers/pageTitleHelper';
+import { listRequests } from 'src/api/requestApi';
+import { listRequestsAdmin } from 'src/api/requestAdminApi';
+import { requestStatuses } from 'src/helpers/enumConstants';
+import handleError from 'src/helpers/errorHandler';
+import changePageTitle from 'src/helpers/pageTitleHelper';
 
-import styles from 'assets/jss/material-kit-react/views/myRequestsPage';
+import styles from 'src/assets/jss/material-kit-react/views/myRequestsPage';
 
 const useStyles = makeStyles(styles);
 

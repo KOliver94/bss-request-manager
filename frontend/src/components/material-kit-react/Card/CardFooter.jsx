@@ -6,29 +6,25 @@ import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 
 // core components
-import styles from 'assets/jss/material-kit-react/components/cardStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/cardFooterStyle.js';
 
 const useStyles = makeStyles(styles);
 
-export default function Card(props) {
+export default function CardFooter(props) {
   const classes = useStyles();
-  const { className, children, plain, carousel, ...rest } = props;
-  const cardClasses = classNames({
-    [classes.card]: true,
-    [classes.cardPlain]: plain,
-    [classes.cardCarousel]: carousel,
+  const { className, children, ...rest } = props;
+  const cardFooterClasses = classNames({
+    [classes.cardFooter]: true,
     [className]: className !== undefined,
   });
   return (
-    <div className={cardClasses} {...rest}>
+    <div className={cardFooterClasses} {...rest}>
       {children}
     </div>
   );
 }
 
-Card.propTypes = {
+CardFooter.propTypes = {
   className: PropTypes.string,
-  plain: PropTypes.bool,
-  carousel: PropTypes.bool,
   children: PropTypes.node,
 };

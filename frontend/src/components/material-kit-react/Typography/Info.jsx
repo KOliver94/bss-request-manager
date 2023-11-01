@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 // @mui components
 import makeStyles from '@mui/styles/makeStyles';
 // core components
-import styles from 'assets/jss/material-kit-react/components/typographyStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/typographyStyle.js';
 
 const useStyles = makeStyles(styles);
 
-export default function Warning(props) {
+export default function Info(props) {
   const classes = useStyles();
   const { children } = props;
   return (
-    <div className={classes.defaultFontStyle + ' ' + classes.warningText}>
+    <div className={classes.defaultFontStyle + ' ' + classes.infoText}>
       {children}
     </div>
   );
 }
 
-Warning.propTypes = {
+Info.propTypes = {
   children: PropTypes.node,
 };
