@@ -135,13 +135,13 @@ const RequestDetailsPage = () => {
     setLoading(true);
     await adminApi
       .adminRequestsDestroy(Number(requestId))
-      .then(() => {
-        queryClient.invalidateQueries({ queryKey: ['requests'] });
+      .then(async () => {
+        await queryClient.invalidateQueries({ queryKey: ['requests'] });
         navigate('/requests');
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: ['requests', Number(requestId)],
           });
         }
@@ -187,9 +187,9 @@ const RequestDetailsPage = () => {
           summary: 'Információ',
         });
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: ['requests', Number(requestId)],
           });
         }
@@ -227,10 +227,10 @@ const RequestDetailsPage = () => {
         });
         setAdditionalDataDialogOpen(false);
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
               queryKey: ['requests', Number(requestId)],
             });
           } else if (error.response?.status === 400) {
@@ -323,9 +323,9 @@ const RequestDetailsPage = () => {
         });
         setRecordingIsEditing(false);
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: ['requests', Number(requestId)],
           });
         }

@@ -209,7 +209,7 @@ const RecordingContentButtonsNonEditing = ({
             severity: 'info',
             summary: 'Információ',
           });
-          navigator.clipboard.writeText(_recordingPath);
+          void navigator.clipboard.writeText(_recordingPath);
         }}
       />
     </span>

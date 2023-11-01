@@ -56,10 +56,10 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
           onHide();
           reset();
         })
-        .catch((error) => {
+        .catch(async (error) => {
           if (isAxiosError(error)) {
             if (error.response?.status === 404) {
-              queryClient.invalidateQueries({
+              await queryClient.invalidateQueries({
                 queryKey: ['requests', requestId],
               });
               onHide();

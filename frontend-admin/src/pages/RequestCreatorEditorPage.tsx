@@ -145,9 +145,9 @@ const RequestCreatorEditorPage = () => {
 
   const buttonOptions = [
     {
-      command: () => {
+      command: async () => {
         setValue('send_notification', true);
-        handleSubmit(onSubmit)();
+        await handleSubmit(onSubmit)();
       },
       icon: 'pi pi-bell',
       label: 'Mentés értesítéssel',
@@ -262,10 +262,10 @@ const RequestCreatorEditorPage = () => {
           navigate('/requests/' + response.data.id);
         }
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
               queryKey: ['requests', Number(requestId)],
             });
           } else if (error.response?.status === 400) {

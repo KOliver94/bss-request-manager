@@ -80,9 +80,16 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
     );
 
     useEffect(() => {
-      if (visible) {
-        let query: FetchQueryOptions<RatingAdminListRetrieve | RatingRetrieve>;
+      const fetchData = async (
+        query: FetchQueryOptions<RatingAdminListRetrieve | RatingRetrieve>,
+      ) => {
+        await queryClient.fetchQuery(query).then((data) => {
+          setLoading(false);
+          reset({ ...data });
+        });
+      };
 
+      if (visible) {
         setLoading(true);
         setRatingId(ratingIdParam || 0);
         const defaultValues: IRating = {
@@ -91,28 +98,28 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
         };
         reset({ ...defaultValues });
 
+        let query:
+          | FetchQueryOptions<RatingAdminListRetrieve | RatingRetrieve>
+          | undefined = undefined;
         if (ratingIdParam) {
           query = requestVideoRatingRetrieveQuery(
             requestId,
             videoId,
             ratingIdParam,
           );
-          queryClient.fetchQuery(query).then((data) => {
-            setLoading(false);
-            reset({ ...data });
-          });
         } else if (isRated) {
           query = requestVideoRatingRetrieveOwnQuery(requestId, videoId);
-          queryClient.fetchQuery(query).then((data) => {
-            setLoading(false);
-            reset({ ...data });
-          });
-        } else {
-          setLoading(false);
         }
 
+        query && fetchData(query).catch(console.error);
+
+        setLoading(false);
+
         return () => {
-          queryClient.cancelQueries({ queryKey: query.queryKey });
+          query &&
+            queryClient
+              .cancelQueries({ queryKey: query.queryKey })
+              .catch(console.error);
         };
       }
     }, [ratingIdParam, videoId, visible]);
@@ -130,10 +137,10 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
           }
           reset({ ...data });
         })
-        .catch((error) => {
+        .catch(async (error) => {
           // This should mean that the video no longer exists
           if (isAxiosError(error) && error.response?.status === 404) {
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
               queryKey: ['requests', requestId, 'videos', videoId],
             });
           }
@@ -158,9 +165,9 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
           });
           onHide();
         })
-        .catch((error) => {
+        .catch(async (error) => {
           if (isAxiosError(error) && error.response?.status === 404) {
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
               queryKey: ['requests', requestId, 'videos', videoId],
             });
           }

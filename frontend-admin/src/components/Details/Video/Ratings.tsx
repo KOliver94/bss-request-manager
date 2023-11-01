@@ -174,12 +174,10 @@ const Ratings = ({
   };
 
   const numberOfRating = (rating: number) => {
-    return data
-      ? data.reduce(
-          (total, next) => (next.rating == rating ? ++total : total),
-          0,
-        )
-      : 0;
+    return data.reduce(
+      (total, next) => (next.rating == rating ? ++total : total),
+      0,
+    );
   };
 
   function compare(a: RatingAdminListDates, b: RatingAdminListDates) {
@@ -214,11 +212,9 @@ const Ratings = ({
             {[...Array(5).keys()].reverse().map((item) => (
               <RatingSummary
                 key={item}
-                portion={
-                  data
-                    ? Math.round((numberOfRating(item + 1) / data.length) * 12)
-                    : 0
-                }
+                portion={Math.round(
+                  (numberOfRating(item + 1) / data.length) * 12,
+                )}
                 rating={item + 1}
               />
             ))}

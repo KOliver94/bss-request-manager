@@ -38,7 +38,7 @@ const RequestsDataTable = forwardRef<
   const getRequests = ({
     data: requests,
   }: DefinedUseQueryResult<RequestAdminList[]>): RequestAdminListDates[] => {
-    return [...(requests || [])].map((request) => {
+    return [...requests].map((request) => {
       return {
         ...request,
         created: new Date(request.created),
@@ -53,7 +53,7 @@ const RequestsDataTable = forwardRef<
 
   const crewBodyTemplate = ({ crew }: RequestAdminListDates) => {
     return (
-      crew && (
+      crew.length && (
         <Suspense fallback={<Skeleton />}>
           <AvatarGroupCrew className="justify-content-center" crew={crew} />
         </Suspense>

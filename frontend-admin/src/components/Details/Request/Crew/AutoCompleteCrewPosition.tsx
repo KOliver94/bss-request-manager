@@ -45,7 +45,7 @@ const AutoCompleteCrewPosition = forwardRef<
         item.toLowerCase().includes(query.toLowerCase()),
       );
 
-      if (filteredItems && filteredItems.length) {
+      if (filteredItems.length) {
         _filteredPositions.push({ ...category, ...{ items: filteredItems } });
       }
     }

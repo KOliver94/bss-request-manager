@@ -31,7 +31,7 @@ const AvatarGroupCrew = forwardRef<
     (crewSize > 10 ? `\nés további ${crewSize - 10} ember...` : '');
 
   return (
-    uniqueCrewMembers && (
+    uniqueCrewMembers.length && (
       <AvatarGroup {...ref} {...props}>
         {uniqueCrewMembers.slice(0, 4).map((item, index) => (
           <Fragment key={encodeURIComponent(item.full_name) + '-fragment'}>

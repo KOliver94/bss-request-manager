@@ -76,15 +76,15 @@ const VideoDetailsPage = () => {
 
     await adminApi
       .adminRequestsVideosDestroy(Number(videoId), Number(requestId))
-      .then(() => {
-        queryClient.invalidateQueries({
+      .then(async () => {
+        await queryClient.invalidateQueries({
           queryKey: ['requests', Number(requestId), 'videos'],
         });
         navigate(`/requests/${requestId}/videos`);
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: ['requests', Number(requestId), 'videos'],
           });
         }
@@ -121,10 +121,10 @@ const VideoDetailsPage = () => {
         });
         setAdditionalDataDialogOpen(false);
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
               queryKey: [
                 'requests',
                 Number(requestId),
@@ -167,9 +167,9 @@ const VideoDetailsPage = () => {
           queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
         });
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: [
               'requests',
               Number(requestId),
@@ -212,9 +212,9 @@ const VideoDetailsPage = () => {
         });
         setAiredAddDialogOpen(false);
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: [
               'requests',
               Number(requestId),

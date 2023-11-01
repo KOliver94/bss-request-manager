@@ -210,9 +210,9 @@ const CommentCard = ({
           queryKey: ['requests', requestId, 'comments'],
         });
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: ['requests', requestId, 'comments'],
           });
         }
@@ -314,9 +314,9 @@ const CommentCardEdit = ({
         });
         setEditing(0);
       })
-      .catch((error) => {
+      .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: ['requests', requestId, 'comments'],
           });
           setEditing(0);
@@ -425,10 +425,10 @@ const CommentCardNew = ({
         });
         reset();
       })
-      .catch((error) => {
+      .catch(async (error) => {
         // This should mean that the request no longer exists
         if (isAxiosError(error) && error.response?.status === 404) {
-          queryClient.invalidateQueries({
+          await queryClient.invalidateQueries({
             queryKey: ['requests', requestId],
           });
         }

@@ -29,7 +29,7 @@ export const toast = new (class Toaster {
 
   showToast(message: MessageType) {
     this._currentEvent = new ToastEvent(message);
-    if (this._currentEvent) window.dispatchEvent(this._currentEvent);
+    window.dispatchEvent(this._currentEvent);
   }
 })();
 
