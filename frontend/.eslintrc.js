@@ -17,6 +17,7 @@ module.exports = {
   },
   plugins: ['jsx-a11y', 'prettier', 'react', 'react-hooks'],
   rules: {
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'react/forbid-prop-types': 'off',
     'react/jsx-no-useless-fragment': ['error', { allowExpressions: true }],

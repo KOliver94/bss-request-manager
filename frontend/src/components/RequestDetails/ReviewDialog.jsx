@@ -10,9 +10,9 @@ import TextField from '@mui/material/TextField';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
-import { updateRatingAdmin } from 'api/requestAdminApi';
-import { updateRating } from 'api/requestApi';
-import handleError from 'helpers/errorHandler';
+import { updateRatingAdmin } from 'src/api/requestAdminApi';
+import { updateRating } from 'src/api/requestApi';
+import handleError from 'src/helpers/errorHandler';
 
 export default function ReviewDialog({
   reviewDialogData,

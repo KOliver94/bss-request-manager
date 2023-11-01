@@ -6,25 +6,25 @@ import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 
 // core components
-import styles from 'assets/jss/material-kit-react/components/cardFooterStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/cardBodyStyle.js';
 
 const useStyles = makeStyles(styles);
 
-export default function CardFooter(props) {
+export default function CardBody(props) {
   const classes = useStyles();
   const { className, children, ...rest } = props;
-  const cardFooterClasses = classNames({
-    [classes.cardFooter]: true,
+  const cardBodyClasses = classNames({
+    [classes.cardBody]: true,
     [className]: className !== undefined,
   });
   return (
-    <div className={cardFooterClasses} {...rest}>
+    <div className={cardBodyClasses} {...rest}>
       {children}
     </div>
   );
 }
 
-CardFooter.propTypes = {
+CardBody.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
 };

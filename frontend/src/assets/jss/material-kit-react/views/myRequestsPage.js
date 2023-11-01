@@ -3,7 +3,7 @@ import {
   section,
   title,
   primaryColor,
-} from 'assets/jss/material-kit-react';
+} from 'src/assets/jss/material-kit-react';
 
 const myRequestsPageStyle = {
   container: {

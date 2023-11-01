@@ -10,10 +10,10 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 // core components
-import GridContainer from 'components/material-kit-react/Grid/GridContainer.js';
-import GridItem from 'components/material-kit-react/Grid/GridItem.js';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 
-import styles from 'assets/jss/material-kit-react/components/navPillsStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/navPillsStyle.js';
 
 const useStyles = makeStyles(styles);
 

@@ -1,4 +1,4 @@
-import { container, primaryColor } from 'assets/jss/material-kit-react';
+import { container, primaryColor } from 'src/assets/jss/material-kit-react';
 
 const loginPageStyle = {
   container: {

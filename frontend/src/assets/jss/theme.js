@@ -6,7 +6,7 @@ import {
   warningColor,
   infoColor,
   successColor,
-} from 'assets/jss/material-kit-react';
+} from 'src/assets/jss/material-kit-react';
 
 const theme = createTheme({
   components: {

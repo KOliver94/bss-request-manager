@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 
 // core components
-import styles from 'assets/jss/material-kit-react/components/parallaxStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/parallaxStyle.js';
 
 const useStyles = makeStyles(styles);
 

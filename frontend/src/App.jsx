@@ -1,25 +1,25 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
-import dialogOptions from 'helpers/sentryHelper';
-import { checkRefreshTokenValid } from 'api/loginApi';
+import dialogOptions from 'src/helpers/sentryHelper';
+import { checkRefreshTokenValid } from 'src/api/loginApi';
 
-import AuthenticatedRoute from 'components/AuthenticatedRoute';
-import PrivilegedRoute from 'components/PrivilegedRoute';
-import ScrollToTop from 'components/ScrollToTop';
+import AuthenticatedRoute from 'src/components/AuthenticatedRoute';
+import PrivilegedRoute from 'src/components/PrivilegedRoute';
+import ScrollToTop from 'src/components/ScrollToTop';
 
-import ErrorPage from 'views/ErrorPage/ErrorPage';
-import LandingPage from 'views/LandingPage/LandingPage';
-import LoginPage from 'views/LoginPage/LoginPage';
-import ProfilePage from 'views/ProfilePage/ProfilePage';
-import RequestCreatorPage from 'views/RequestCreatorPage/RequestCreatorPage';
-import MyRequestsPage from 'views/MyRequestsPage/MyRequestsPage';
-import RedirectPage from 'views/RedirectPage/RedirectPage';
-import RequestDetailPage from 'views/RequestDetailPage/RequestDetailPage';
-import PrivacyPolicyPage from 'views/PrivacyPolicyPage/PrivacyPolicyPage';
-import TermsOfServicePage from 'views/TermsOfServicePage/TermsOfServicePage';
+import ErrorPage from 'src/views/ErrorPage/ErrorPage';
+import LandingPage from 'src/views/LandingPage/LandingPage';
+import LoginPage from 'src/views/LoginPage/LoginPage';
+import ProfilePage from 'src/views/ProfilePage/ProfilePage';
+import RequestCreatorPage from 'src/views/RequestCreatorPage/RequestCreatorPage';
+import MyRequestsPage from 'src/views/MyRequestsPage/MyRequestsPage';
+import RedirectPage from 'src/views/RedirectPage/RedirectPage';
+import RequestDetailPage from 'src/views/RequestDetailPage/RequestDetailPage';
+import PrivacyPolicyPage from 'src/views/PrivacyPolicyPage/PrivacyPolicyPage';
+import TermsOfServicePage from 'src/views/TermsOfServicePage/TermsOfServicePage';
 
-import 'assets/scss/material-kit-react.scss';
+import 'src/assets/scss/material-kit-react.scss';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(

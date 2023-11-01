@@ -5,14 +5,14 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 // core components
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 // Formik
 import { Field } from 'formik';
 import { TextField } from 'formik-mui';
-import PhoneNumberInput from 'components/PhoneNumberInput';
+import PhoneNumberInput from 'src/components/PhoneNumberInput';
 
-import styles from 'assets/jss/material-kit-react/views/profilePage';
+import styles from 'src/assets/jss/material-kit-react/views/profilePage';
 
 const useStyles = makeStyles(styles);
 

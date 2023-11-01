@@ -14,28 +14,28 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 // background
-import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
-import Button from 'components/material-kit-react/CustomButtons/Button';
-import Header from 'components/material-kit-react/Header/Header';
-import Footer from 'components/material-kit-react/Footer/Footer';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
-import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
+import Header from 'src/components/material-kit-react/Header/Header';
+import Footer from 'src/components/material-kit-react/Footer/Footer';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
+import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 // Notistack
 import { useSnackbar } from 'notistack';
 // ReCAPTCHA
 import ReCAPTCHA from 'react-google-recaptcha';
 // Form
-import RequestCreatorForm from 'components/RequestCreatorForm/RequestCreatorForm';
+import RequestCreatorForm from 'src/components/RequestCreatorForm/RequestCreatorForm';
 // API calls
-import { getUser } from 'api/userApi';
-import { createRequest } from 'api/requestApi';
-import handleError from 'helpers/errorHandler';
-import changePageTitle from 'helpers/pageTitleHelper';
+import { getUser } from 'src/api/userApi';
+import { createRequest } from 'src/api/requestApi';
+import handleError from 'src/helpers/errorHandler';
+import changePageTitle from 'src/helpers/pageTitleHelper';
 
-import styles from 'assets/jss/material-kit-react/views/requestCreatorPage';
+import styles from 'src/assets/jss/material-kit-react/views/requestCreatorPage';
 
 const useStyles = makeStyles(styles);
 
@@ -320,7 +320,7 @@ export default function RequestCreatorPage({
             <ReCAPTCHA
               ref={recaptchaRef}
               size="invisible"
-              sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
             />
           )}
         </div>

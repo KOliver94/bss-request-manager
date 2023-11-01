@@ -4,7 +4,7 @@ import {
   dangerCardHeader,
   infoCardHeader,
   primaryCardHeader,
-} from 'assets/jss/material-kit-react';
+} from 'src/assets/jss/material-kit-react';
 
 const cardHeaderStyle = {
   cardHeader: {

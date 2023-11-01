@@ -92,6 +92,7 @@ repos:
             --fix,
           ]
         additional_dependencies:
+          - '@vitejs/plugin-basic-ssl@1.0.1'
           - eslint-config-airbnb@19.0.4
           - eslint-config-prettier@9.0.0
           - eslint-plugin-import@2.29.0
@@ -101,6 +102,7 @@ repos:
           - eslint-plugin-react@7.33.2
           - eslint@8.52.0
           - prettier@3.0.3
+          - vite-plugin-pwa@0.16.6
       - id: eslint
         name: 'Lint TypeScript code (Admin dashboard)'
         files: ^frontend-admin/.*\.(j|t)sx?$

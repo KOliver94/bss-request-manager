@@ -8,7 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Input from '@mui/material/Input';
 
-import styles from 'assets/jss/material-kit-react/components/customInputStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/customInputStyle.js';
 
 const useStyles = makeStyles(styles);
 

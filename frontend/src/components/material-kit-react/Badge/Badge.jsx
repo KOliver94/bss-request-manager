@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // @mui components
 import makeStyles from '@mui/styles/makeStyles';
 
-import styles from 'assets/jss/material-kit-react/components/badgeStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/badgeStyle.js';
 
 const useStyles = makeStyles(styles);
 

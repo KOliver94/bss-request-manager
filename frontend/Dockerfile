@@ -16,7 +16,7 @@ RUN npm install --silent
 COPY . /app/frontend
 
 # Open port
-EXPOSE 3000
+EXPOSE 5173
 
 # Start the frontend app
 CMD ["npm", "start"]

@@ -2,15 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
-import PhoneNumberInput from 'components/PhoneNumberInput';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import Button from 'components/material-kit-react/CustomButtons/Button';
+import PhoneNumberInput from 'src/components/PhoneNumberInput';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import MUIButton from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import makeStyles from '@mui/styles/makeStyles';
 import * as Yup from 'yup';
-import isValidPhone from 'helpers/yupPhoneNumberValidator';
+import isValidPhone from 'src/helpers/yupPhoneNumberValidator';
 
 const useStyles = makeStyles(() => ({
   button: {

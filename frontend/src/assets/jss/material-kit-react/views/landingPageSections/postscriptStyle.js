@@ -1,4 +1,4 @@
-import { section } from 'assets/jss/material-kit-react';
+import { section } from 'src/assets/jss/material-kit-react';
 
 const postscriptStyle = {
   section: {

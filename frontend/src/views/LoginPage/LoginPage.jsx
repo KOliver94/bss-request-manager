@@ -12,28 +12,28 @@ import People from '@mui/icons-material/People';
 // notistack (MUI Snackbars)
 import { useSnackbar } from 'notistack';
 // core components
-import Header from 'components/material-kit-react/Header/Header';
-import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
-import Footer from 'components/material-kit-react/Footer/Footer';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import Button from 'components/material-kit-react/CustomButtons/Button';
-import Card from 'components/material-kit-react/Card/Card';
-import CardBody from 'components/material-kit-react/Card/CardBody';
-import CardHeader from 'components/material-kit-react/Card/CardHeader';
-import CardFooter from 'components/material-kit-react/Card/CardFooter';
-import CustomInput from 'components/material-kit-react/CustomInput/CustomInput';
+import Header from 'src/components/material-kit-react/Header/Header';
+import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
+import Footer from 'src/components/material-kit-react/Footer/Footer';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
+import Card from 'src/components/material-kit-react/Card/Card';
+import CardBody from 'src/components/material-kit-react/Card/CardBody';
+import CardHeader from 'src/components/material-kit-react/Card/CardHeader';
+import CardFooter from 'src/components/material-kit-react/Card/CardFooter';
+import CustomInput from 'src/components/material-kit-react/CustomInput/CustomInput';
 // API calls and helpers
-import { loginLdap, loginSocial, isPrivileged } from 'api/loginApi';
+import { loginLdap, loginSocial, isPrivileged } from 'src/api/loginApi';
 import {
   getOauthUrlAuthSch,
   getOauthUrlFacebook,
   getOauthUrlGoogle,
-} from 'helpers/oauthConstants';
-import changePageTitle from 'helpers/pageTitleHelper';
+} from 'src/helpers/oauthConstants';
+import changePageTitle from 'src/helpers/pageTitleHelper';
 
-import styles from 'assets/jss/material-kit-react/views/loginPage';
-import background from 'assets/img/bg7.jpg';
+import styles from 'src/assets/jss/material-kit-react/views/loginPage';
+import background from 'src/assets/img/bg7.jpg';
 
 const useStyles = makeStyles(styles);
 

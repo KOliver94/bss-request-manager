@@ -33,7 +33,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import makeStyles from '@mui/styles/makeStyles';
 import MUITextField from '@mui/material/TextField';
 // Material React Kit components
-import Badge from 'components/material-kit-react/Badge/Badge';
+import Badge from 'src/components/material-kit-react/Badge/Badge';
 // Form components
 import { Formik, Form, Field, getIn } from 'formik';
 import { Autocomplete, TextField, CheckboxWithLabel, Select } from 'formik-mui';
@@ -46,7 +46,7 @@ import { hu } from 'date-fns/locale';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Helpers
-import stringToColor from 'helpers/stringToColor';
+import stringToColor from 'src/helpers/stringToColor';
 // API calls
 import {
   getRequestAdmin,
@@ -56,12 +56,12 @@ import {
   createRatingAdmin,
   updateRatingAdmin,
   deleteRatingAdmin,
-} from 'api/requestAdminApi';
-import { isAdmin, isSelf } from 'api/loginApi';
-import { createRating, updateRating, deleteRating } from 'api/requestApi';
-import { videoStatuses } from 'helpers/enumConstants';
-import compareValues from 'helpers/objectComperator';
-import handleError from 'helpers/errorHandler';
+} from 'src/api/requestAdminApi';
+import { isAdmin, isSelf } from 'src/api/loginApi';
+import { createRating, updateRating, deleteRating } from 'src/api/requestApi';
+import { videoStatuses } from 'src/helpers/enumConstants';
+import compareValues from 'src/helpers/objectComperator';
+import handleError from 'src/helpers/errorHandler';
 // Review component
 import ReviewDialog from './ReviewDialog';
 import RatingsDialog from './RatingsDialog';

@@ -1,4 +1,4 @@
-import { container, section, title } from 'assets/jss/material-kit-react';
+import { container, section, title } from 'src/assets/jss/material-kit-react';
 
 const pillsStyle = {
   section,

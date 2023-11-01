@@ -42,7 +42,7 @@ if (import.meta.env.PROD) {
       }
       return event;
     },
-    dsn: import.meta.env.VITE_SENTRY_URL,
+    dsn: import.meta.env.VITE_SENTRY_URL_ADMIN,
     integrations: [
       new Sentry.BrowserTracing({
         routingInstrumentation: Sentry.reactRouterV6Instrumentation(

@@ -12,12 +12,12 @@ ARG RECAPTCHA_SITE_KEY
 ARG SENTRY_URL
 
 # Environment vars
-ENV REACT_APP_API_URL=$API_URL
-ENV REACT_APP_AUTHSCH_CLIENT_ID=$AUTHSCH_CLIENT_ID
-ENV REACT_APP_FACEBOOK_CLIENT_ID=$FACEBOOK_CLIENT_ID
-ENV REACT_APP_GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
-ENV REACT_APP_RECAPTCHA_SITE_KEY=$RECAPTCHA_SITE_KEY
-ENV REACT_APP_SENTRY_URL=$SENTRY_URL
+ENV VITE_API_URL=$API_URL
+ENV VITE_AUTHSCH_CLIENT_ID=$AUTHSCH_CLIENT_ID
+ENV VITE_FACEBOOK_CLIENT_ID=$FACEBOOK_CLIENT_ID
+ENV VITE_GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+ENV VITE_RECAPTCHA_SITE_KEY=$RECAPTCHA_SITE_KEY
+ENV VITE_SENTRY_URL=$SENTRY_URL
 
 # Set work directory
 WORKDIR /app/frontend
@@ -92,15 +92,15 @@ RUN apk update \
     && pip install --no-cache-dir pipenv \
     && pipenv install --system --deploy --clear \
     && find /usr/local \
-        \( -type d -a -name test -o -name tests \) \
-        -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-        -exec rm -rf '{}' + \
+    \( -type d -a -name test -o -name tests \) \
+    -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+    -exec rm -rf '{}' + \
     && runDeps="$( \
-        scanelf --needed --nobanner --recursive /usr/local \
-                | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
-                | sort -u \
-                | xargs -r apk info --installed \
-                | sort -u \
+    scanelf --needed --nobanner --recursive /usr/local \
+    | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+    | sort -u \
+    | xargs -r apk info --installed \
+    | sort -u \
     )" \
     && apk add --virtual .rundeps $runDeps \
     && apk del .build-deps \

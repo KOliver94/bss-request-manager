@@ -10,34 +10,34 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Face from '@mui/icons-material/Face';
 import TheatersIcon from '@mui/icons-material/Theaters';
 // background
-import background from 'assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
-import Badge from 'components/material-kit-react/Badge/Badge';
-import CustomTabs from 'components/material-kit-react/CustomTabs/CustomTabs';
-import Header from 'components/material-kit-react/Header/Header';
-import Footer from 'components/material-kit-react/Footer/Footer';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
-import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import Badge from 'src/components/material-kit-react/Badge/Badge';
+import CustomTabs from 'src/components/material-kit-react/CustomTabs/CustomTabs';
+import Header from 'src/components/material-kit-react/Header/Header';
+import Footer from 'src/components/material-kit-react/Footer/Footer';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
+import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Page components
-import BasicInformation from 'components/RequestDetails/BasicInformation';
-import Comments from 'components/RequestDetails/Comments';
-import Crew from 'components/RequestDetails/Crew';
-import Videos from 'components/RequestDetails/Videos';
+import BasicInformation from 'src/components/RequestDetails/BasicInformation';
+import Comments from 'src/components/RequestDetails/Comments';
+import Crew from 'src/components/RequestDetails/Crew';
+import Videos from 'src/components/RequestDetails/Videos';
 // API calls
-import { getRequest } from 'api/requestApi';
-import { getRequestAdmin } from 'api/requestAdminApi';
-import { listStaffUsers } from 'api/userApi';
-import { requestStatuses } from 'helpers/enumConstants';
-import { isPrivileged as isPrivilegedCheck } from 'api/loginApi';
-import handleError from 'helpers/errorHandler';
-import changePageTitle from 'helpers/pageTitleHelper';
-import moveOwnUserToTop from 'helpers/sortingHelper';
+import { getRequest } from 'src/api/requestApi';
+import { getRequestAdmin } from 'src/api/requestAdminApi';
+import { listStaffUsers } from 'src/api/userApi';
+import { requestStatuses } from 'src/helpers/enumConstants';
+import { isPrivileged as isPrivilegedCheck } from 'src/api/loginApi';
+import handleError from 'src/helpers/errorHandler';
+import changePageTitle from 'src/helpers/pageTitleHelper';
+import moveOwnUserToTop from 'src/helpers/sortingHelper';
 
-import styles from 'assets/jss/material-kit-react/views/requestDetailPage';
+import styles from 'src/assets/jss/material-kit-react/views/requestDetailPage';
 
 const useStyles = makeStyles(styles);
 

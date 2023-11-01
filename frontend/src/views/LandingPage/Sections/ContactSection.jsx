@@ -2,16 +2,16 @@ import { useState, createRef } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import { useSnackbar } from 'notistack';
 
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import CustomInput from 'components/material-kit-react/CustomInput/CustomInput';
-import Button from 'components/material-kit-react/CustomButtons/Button';
+import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
+import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import CustomInput from 'src/components/material-kit-react/CustomInput/CustomInput';
+import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-import sendContactMessage from 'api/miscApi';
-import handleError from 'helpers/errorHandler';
+import sendContactMessage from 'src/api/miscApi';
+import handleError from 'src/helpers/errorHandler';
 
-import styles from 'assets/jss/material-kit-react/views/landingPageSections/workStyle';
+import styles from 'src/assets/jss/material-kit-react/views/landingPageSections/workStyle';
 
 const useStyles = makeStyles(styles);
 const emptyMessageData = {
@@ -136,7 +136,7 @@ export default function ContactSection() {
               <GridItem>
                 <ReCAPTCHA
                   ref={recaptchaRef}
-                  sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
                   onChange={handleCaptcha}
                 />
               </GridItem>

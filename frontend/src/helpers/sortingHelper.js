@@ -1,4 +1,4 @@
-import { isSelf } from 'api/loginApi';
+import { isSelf } from 'src/api/loginApi';
 
 function moveOwnUserToTop(listOfUsers) {
   listOfUsers.unshift(

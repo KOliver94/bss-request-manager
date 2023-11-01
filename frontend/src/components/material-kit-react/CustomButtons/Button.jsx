@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 
 // core components
 
-import buttonStyle from 'assets/jss/material-kit-react/components/buttonStyle.js';
+import buttonStyle from 'src/assets/jss/material-kit-react/components/buttonStyle.js';
 
 const makeComponentStyles = makeStyles(() => ({
   ...buttonStyle,

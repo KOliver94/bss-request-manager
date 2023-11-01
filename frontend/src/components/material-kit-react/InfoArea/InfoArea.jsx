@@ -5,7 +5,7 @@ import classNames from 'classnames';
 // @mui components
 import makeStyles from '@mui/styles/makeStyles';
 
-import styles from 'assets/jss/material-kit-react/components/infoStyle.js';
+import styles from 'src/assets/jss/material-kit-react/components/infoStyle.js';
 
 const useStyles = makeStyles(styles);
 
