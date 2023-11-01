@@ -13,7 +13,7 @@ const Menubar = () => {
   const [darkMode, setDarkMode] = useTheme();
 
   const signOut = async () => {
-    await logoutApi.logoutCreate({ refresh: getRefreshToken() }).then(() => {
+    await logoutApi.logoutCreate({ refresh: getRefreshToken() }).finally(() => {
       localStorage.clear();
       window.location.href = '/';
     });
