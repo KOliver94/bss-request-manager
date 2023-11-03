@@ -30,7 +30,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import makeStyles from '@mui/styles/makeStyles';
 import MUITextField from '@mui/material/TextField';
 // Material React Kit components
 import Badge from 'src/components/material-kit-react/Badge/Badge';
@@ -66,46 +65,7 @@ import handleError from 'src/helpers/errorHandler';
 import ReviewDialog from './ReviewDialog';
 import RatingsDialog from './RatingsDialog';
 
-const useStyles = makeStyles((theme) => ({
-  inputField: {
-    marginTop: '24px',
-  },
-  fab: {
-    top: '10px',
-    right: '10px',
-    bottom: 'auto',
-    left: 'auto',
-    position: 'absolute',
-  },
-  noVideosYet: {
-    textAlign: 'center',
-    paddingTop: '10px',
-    fontWeight: '300',
-  },
-  accordion: {
-    justifyContent: 'space-between',
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '70%',
-    flexShrink: 0,
-  },
-  statusBadge: {
-    display: 'block',
-    alignSelf: 'center',
-  },
-  adminEditButtons: {
-    paddingBottom: '0px',
-  },
-  tooltip: {
-    marginRight: 5,
-  },
-  smallAvatar: {
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    marginRight: 5,
-  },
-}));
+import stylesModule from './Videos.module.css';
 
 export default function Videos({
   requestId,
@@ -114,7 +74,6 @@ export default function Videos({
   staffMembers,
   isPrivileged,
 }) {
-  const classes = useStyles();
   const isInitialMount = useRef(true);
   const { enqueueSnackbar } = useSnackbar();
   const [videoDeleteLoading, setVideoDeleteLoading] = useState(false);
@@ -442,12 +401,12 @@ export default function Videos({
             >
               <AccordionSummary
                 expandIcon={requestData.videos.length > 1 && <ExpandMoreIcon />}
-                classes={{ content: classes.accordion }}
+                classes={{ content: stylesModule.accordion }}
               >
-                <Typography className={classes.heading}>
+                <Typography className={stylesModule.heading}>
                   {video.title}
                 </Typography>
-                <div className={classes.statusBadge}>
+                <div className={stylesModule.statusBadge}>
                   <Badge color="primary">
                     {videoStatuses.find((x) => x.id === video.status).text}
                   </Badge>
@@ -568,7 +527,7 @@ export default function Videos({
                                         ),
                                       }}
                                       src={option.profile.avatar_url}
-                                      className={classes.smallAvatar}
+                                      className={stylesModule.smallAvatar}
                                     >
                                       {option.first_name[0]}
                                     </Avatar>
@@ -687,12 +646,14 @@ export default function Videos({
                         <Divider />
                         <AccordionActions
                           className={
-                            video.status >= 3 ? classes.adminEditButtons : null
+                            video.status >= 3
+                              ? stylesModule.adminEditButtons
+                              : null
                           }
                         >
                           <Tooltip
                             title="Törlés"
-                            classes={{ tooltip: classes.tooltip }}
+                            classes={{ tooltip: stylesModule.tooltip }}
                             placement="left"
                             arrow
                           >
@@ -757,7 +718,7 @@ export default function Videos({
                             (video.avg_rating + Number.EPSILON) * 100,
                           ) / 100
                         }`}
-                        classes={{ tooltip: classes.tooltip }}
+                        classes={{ tooltip: stylesModule.tooltip }}
                         placement="left"
                         arrow
                       >
@@ -783,7 +744,7 @@ export default function Videos({
                     {getOwnRatingForVideo(video).rating > 0 && (
                       <Tooltip
                         title="Szöveges értékelés írása"
-                        classes={{ tooltip: classes.tooltip }}
+                        classes={{ tooltip: stylesModule.tooltip }}
                         placement="left"
                         arrow
                       >
@@ -815,7 +776,7 @@ export default function Videos({
       ) : (
         <>
           {!isPrivileged && (
-            <p className={classes.noVideosYet}>
+            <p className={stylesModule.noVideosYet}>
               Még nincsenek videók. <i className="fa-regular fa-circle-pause" />
             </p>
           )}
@@ -827,7 +788,7 @@ export default function Videos({
             <Fab
               color="primary"
               onClick={handleCreateVideoDialogOpen}
-              className={classes.fab}
+              className={stylesModule.fab}
             >
               <AddIcon />
             </Fab>
@@ -879,7 +840,7 @@ export default function Videos({
                                   ),
                                 }}
                                 src={option.profile.avatar_url}
-                                className={classes.smallAvatar}
+                                className={stylesModule.smallAvatar}
                               >
                                 {option.first_name[0]}
                               </Avatar>

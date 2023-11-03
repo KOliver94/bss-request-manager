@@ -1,0 +1,10 @@
+@import 'theme';
+
+:export {
+  @each $key, $value in $themeBreakpoints {
+    #{unquote($key)}: $value;
+  }
+  @each $key, $value in $themeColors {
+    #{unquote($key)}: $value;
+  }
+}

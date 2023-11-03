@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Alert from '@mui/material/Alert';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 // core components
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
@@ -12,12 +11,9 @@ import { Field } from 'formik';
 import { TextField } from 'formik-mui';
 import PhoneNumberInput from 'src/components/PhoneNumberInput';
 
-import styles from 'src/assets/jss/material-kit-react/views/profilePage';
-
-const useStyles = makeStyles(styles);
+import stylesModule from '../../ProfilePage.module.scss';
 
 export default function PersonalDetails({ errors, touched, disabled, isUser }) {
-  const classes = useStyles();
   const theme = useTheme();
   const isMobileView = !useMediaQuery(theme.breakpoints.up('md'));
 
@@ -27,7 +23,9 @@ export default function PersonalDetails({ errors, touched, disabled, isUser }) {
         {!isUser && (
           <Alert
             severity="warning"
-            className={isMobileView ? classes.alertAdMobile : classes.alertAd}
+            className={
+              isMobileView ? stylesModule.alertAdMobile : stylesModule.alertAd
+            }
           >
             Adataidat az Active Directoryban kell módosítani.
           </Alert>

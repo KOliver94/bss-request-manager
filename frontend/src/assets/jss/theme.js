@@ -1,12 +1,19 @@
 import { createTheme } from '@mui/material/styles';
-import {
-  primaryColor,
-  roseColor as secondaryColor,
-  dangerColor as errorColor,
-  warningColor,
-  infoColor,
-  successColor,
-} from 'src/assets/jss/material-kit-react';
+import variables from '../scss/theme.module.scss';
+
+const {
+  primary,
+  secondary,
+  error,
+  warning,
+  info,
+  success,
+  xs,
+  sm,
+  md,
+  lg,
+  xl,
+} = variables;
 
 const theme = createTheme({
   components: {
@@ -19,24 +26,33 @@ const theme = createTheme({
       },
     },
   },
+  breakpoints: {
+    values: {
+      xs: Number(xs.slice(0, -2)),
+      sm: Number(sm.slice(0, -2)),
+      md: Number(md.slice(0, -2)),
+      lg: Number(lg.slice(0, -2)),
+      xl: Number(xl.slice(0, -2)),
+    },
+  },
   palette: {
     primary: {
-      main: primaryColor,
+      main: primary,
     },
     secondary: {
-      main: secondaryColor,
+      main: secondary,
     },
     error: {
-      main: errorColor,
+      main: error,
     },
     warning: {
-      main: warningColor,
+      main: warning,
     },
     info: {
-      main: infoColor,
+      main: info,
     },
     success: {
-      main: successColor,
+      main: success,
     },
   },
 });

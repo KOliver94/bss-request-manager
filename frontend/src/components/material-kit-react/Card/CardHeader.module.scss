@@ -1,0 +1,45 @@
+@use '/src/assets/scss/theme';
+
+.cardHeader {
+  border-radius: 3px;
+  padding: 1rem 15px;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: -30px;
+  border: 0;
+  margin-bottom: 0;
+}
+.cardHeaderPlain {
+  margin-left: 0;
+  margin-right: 0;
+}
+.warningCardHeader {
+  color: #fff;
+  background: linear-gradient(60deg, #ffa726, #fb8c00);
+  @include theme.warningBoxShadow;
+}
+.successCardHeader {
+  color: #fff;
+  background: linear-gradient(60deg, #66bb6a, #43a047);
+  @include theme.successBoxShadow;
+}
+.dangerCardHeader {
+  color: #fff;
+  background: linear-gradient(60deg, #ef5350, #e53935);
+  @include theme.dangerBoxShadow;
+}
+.infoCardHeader {
+  color: #fff;
+  background: linear-gradient(60deg, #26c6da, #00acc1);
+  @include theme.infoBoxShadow;
+}
+.primaryCardHeader {
+  color: #fff;
+  background: linear-gradient(60deg, #ab47bc, #8e24aa);
+  @include theme.primaryBoxShadow;
+}
+.roseCardHeader {
+  color: #fff;
+  background: linear-gradient(60deg, #ec407a, #d81b60);
+  @include theme.roseBoxShadow;
+}

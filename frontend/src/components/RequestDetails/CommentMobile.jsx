@@ -13,7 +13,6 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
-import makeStyles from '@mui/styles/makeStyles';
 // New comment
 import { Formik, Form, Field } from 'formik';
 import { TextField, Checkbox } from 'formik-mui';
@@ -26,27 +25,7 @@ import stringToColor from 'src/helpers/stringToColor';
 // API calls
 import { isAdmin, isSelf } from 'src/api/loginApi';
 
-const useStyles = makeStyles(() => ({
-  commentAuthor: {
-    margin: 0,
-    textAlign: 'left',
-    fontWeight: 400,
-  },
-  commentText: {
-    textAlign: 'left',
-    whiteSpace: 'pre-wrap',
-  },
-  commentCreated: {
-    textAlign: 'left',
-    color: 'gray',
-  },
-  commentDivider: {
-    margin: '15px 0',
-  },
-  buttonStack: {
-    margin: '0 !important',
-  },
-}));
+import stylesModule from './Comment.module.css';
 
 export default function CommentMobile({
   comment,
@@ -59,7 +38,6 @@ export default function CommentMobile({
   requesterId,
   setEditingCommentId,
 }) {
-  const classes = useStyles();
   const userName = isNew
     ? localStorage.getItem('name')
     : ` ${comment.author.last_name} ${comment.author.first_name}`;
@@ -97,7 +75,7 @@ export default function CommentMobile({
                   >
                     {nameFirstLetter}
                   </Avatar>
-                  <h4 className={classes.commentAuthor}>{userName}</h4>
+                  <h4 className={stylesModule.commentAuthor}>{userName}</h4>
                 </Stack>
                 <Field
                   name="text"
@@ -114,7 +92,7 @@ export default function CommentMobile({
                   direction="row"
                   justifyContent="flex-end"
                   alignItems="center"
-                  className={classes.buttonStack}
+                  className={stylesModule.buttonStack}
                 >
                   {isPrivileged && (
                     <Tooltip
@@ -169,7 +147,7 @@ export default function CommentMobile({
               {nameFirstLetter}
             </Avatar>
             <Stack direction="column">
-              <h4 className={classes.commentAuthor}>{userName}</h4>
+              <h4 className={stylesModule.commentAuthor}>{userName}</h4>
               <Stack direction="row" alignItems="center">
                 {comment.author.id === requesterId && (
                   <Badge color="info">Felkérő</Badge>
@@ -178,14 +156,14 @@ export default function CommentMobile({
               </Stack>
             </Stack>
           </Stack>
-          <p className={classes.commentText}>{comment.text}</p>
+          <p className={stylesModule.commentText}>{comment.text}</p>
           <Tooltip
             title={format(new Date(comment.created), 'yyyy. MMMM d. H:mm:ss', {
               locale: hu,
             })}
             placement="bottom-start"
           >
-            <p className={classes.commentCreated}>
+            <p className={stylesModule.commentCreated}>
               {formatDistanceToNow(new Date(comment.created), {
                 locale: hu,
                 addSuffix: true,
@@ -197,7 +175,7 @@ export default function CommentMobile({
               direction="row"
               justifyContent="flex-end"
               alignItems="center"
-              className={classes.buttonStack}
+              className={stylesModule.buttonStack}
             >
               <Tooltip title="Törlés" arrow>
                 <span>
@@ -224,7 +202,10 @@ export default function CommentMobile({
         </Stack>
       )}
       {!isNew && (
-        <Divider variant="fullWidth" className={classes.commentDivider} />
+        <Divider
+          variant="fullWidth"
+          className={stylesModule.commentDividerMobile}
+        />
       )}
     </>
   );

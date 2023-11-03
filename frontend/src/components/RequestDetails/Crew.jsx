@@ -21,7 +21,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
-import makeStyles from '@mui/styles/makeStyles';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 // Form components
 import { Formik, Form, Field, getIn } from 'formik';
@@ -41,27 +40,7 @@ import compareValues from 'src/helpers/objectComperator';
 import handleError from 'src/helpers/errorHandler';
 import { crewPositionTypes } from 'src/helpers/enumConstants';
 
-const useStyles = makeStyles((theme) => ({
-  table: {
-    marginBottom: '25px',
-    width: 'auto',
-  },
-  inputField: {
-    marginTop: '24px',
-  },
-  fab: {
-    top: 'auto',
-    right: '10px',
-    bottom: '10px',
-    left: 'auto',
-    position: 'absolute',
-  },
-  smallAvatar: {
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    marginRight: 5,
-  },
-}));
+import stylesModule from './Crew.module.css';
 
 const filter = createFilterOptions();
 
@@ -72,7 +51,6 @@ export default function Crew({
   staffMembers,
   isPrivileged,
 }) {
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [editingCrewId, setEditingCrewId] = useState(-1);
@@ -194,7 +172,7 @@ export default function Crew({
     return (
       <div>
         {requestData.crew.length > 0 && (
-          <TableContainer className={classes.table}>
+          <TableContainer className={stylesModule.table}>
             <Table>
               <TableBody>
                 {requestData.crew
@@ -289,7 +267,7 @@ export default function Crew({
           <Fab
             color="primary"
             onClick={handleDialogOpen}
-            className={classes.fab}
+            className={stylesModule.fab}
           >
             <AddIcon />
           </Fab>
@@ -331,7 +309,7 @@ export default function Crew({
                                 ),
                               }}
                               src={option.profile.avatar_url}
-                              className={classes.smallAvatar}
+                              className={stylesModule.smallAvatar}
                             >
                               {option.first_name[0]}
                             </Avatar>

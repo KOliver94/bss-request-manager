@@ -14,7 +14,6 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
-import makeStyles from '@mui/styles/makeStyles';
 // New comment
 import { Formik, Form, Field } from 'formik';
 import { TextField, Checkbox } from 'formik-mui';
@@ -27,30 +26,7 @@ import stringToColor from 'src/helpers/stringToColor';
 // API calls
 import { isAdmin, isSelf } from 'src/api/loginApi';
 
-const useStyles = makeStyles(() => ({
-  commentAuthor: {
-    margin: 0,
-    textAlign: 'left',
-    fontWeight: 400,
-  },
-  commentText: {
-    textAlign: 'left',
-    whiteSpace: 'pre-wrap',
-  },
-  commentCreated: {
-    textAlign: 'left',
-    color: 'gray',
-  },
-  commentButtons: {
-    alignSelf: 'flex-end',
-  },
-  commentDivider: {
-    margin: '30px 0',
-  },
-  newComment: {
-    marginBottom: '1.125rem',
-  },
-}));
+import stylesModule from './Comment.module.css';
 
 export default function CommentDesktop({
   comment,
@@ -63,7 +39,6 @@ export default function CommentDesktop({
   requesterId,
   setEditingCommentId,
 }) {
-  const classes = useStyles();
   const userName = isNew
     ? localStorage.getItem('name')
     : ` ${comment.author.last_name} ${comment.author.first_name}`;
@@ -90,7 +65,7 @@ export default function CommentDesktop({
           validationSchema={validationSchema}
         >
           {({ isSubmitting, values, errors, touched }) => (
-            <Form className={isNew ? classes.newComment : ''}>
+            <Form className={isNew ? stylesModule.newComment : ''}>
               <Grid container spacing={2}>
                 <Grid item>
                   <Avatar
@@ -103,7 +78,7 @@ export default function CommentDesktop({
                   </Avatar>
                 </Grid>
                 <Grid item xs>
-                  <h4 className={classes.commentAuthor}>{userName}</h4>
+                  <h4 className={stylesModule.commentAuthor}>{userName}</h4>
                   <Field
                     name="text"
                     label={isNew ? 'Új hozzászólás' : 'Szerkesztés'}
@@ -116,7 +91,7 @@ export default function CommentDesktop({
                     helperText={touched.text && errors.text}
                   />
                 </Grid>
-                <Grid item className={classes.commentButtons}>
+                <Grid item className={stylesModule.commentButtons}>
                   {isPrivileged && (
                     <Tooltip
                       title={values.internal ? 'Belső' : 'Publikus'}
@@ -181,14 +156,14 @@ export default function CommentDesktop({
           </Grid>
           <Grid item xs>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <h4 className={classes.commentAuthor}>{userName}</h4>
+              <h4 className={stylesModule.commentAuthor}>{userName}</h4>
               {comment.author.id === requesterId && (
                 <Badge color="info">Felkérő</Badge>
               )}
               {comment.internal && <Badge color="danger">Belső</Badge>}
             </Stack>
 
-            <p className={classes.commentText}>{comment.text}</p>
+            <p className={stylesModule.commentText}>{comment.text}</p>
             <Tooltip
               title={format(
                 new Date(comment.created),
@@ -199,7 +174,7 @@ export default function CommentDesktop({
               )}
               placement="bottom-start"
             >
-              <p className={classes.commentCreated}>
+              <p className={stylesModule.commentCreated}>
                 {formatDistanceToNow(new Date(comment.created), {
                   locale: hu,
                   addSuffix: true,
@@ -209,7 +184,7 @@ export default function CommentDesktop({
           </Grid>
 
           {((isPrivileged && isAdmin()) || isSelf(comment.author.id)) && (
-            <Grid item className={classes.commentButtons}>
+            <Grid item className={stylesModule.commentButtons}>
               <Grid item>
                 <Tooltip title="Törlés" placement="left" arrow>
                   <span>
@@ -239,7 +214,7 @@ export default function CommentDesktop({
         </Grid>
       )}
       {!isNew && (
-        <Divider variant="fullWidth" className={classes.commentDivider} />
+        <Divider variant="fullWidth" className={stylesModule.commentDivider} />
       )}
     </>
   );

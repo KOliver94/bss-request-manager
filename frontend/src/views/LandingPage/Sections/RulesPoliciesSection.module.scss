@@ -1,0 +1,16 @@
+@use '/src/assets/scss/theme';
+
+.section {
+  @include theme.section;
+  text-align: center;
+}
+.title {
+  @include theme.title;
+  margin-bottom: 1rem;
+  margin-top: 30px;
+  min-height: 32px;
+  text-decoration: none;
+}
+.description {
+  color: #999;
+}

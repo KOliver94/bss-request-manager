@@ -16,8 +16,8 @@ import RequestCreatorPage from 'src/views/RequestCreatorPage/RequestCreatorPage'
 import MyRequestsPage from 'src/views/MyRequestsPage/MyRequestsPage';
 import RedirectPage from 'src/views/RedirectPage/RedirectPage';
 import RequestDetailPage from 'src/views/RequestDetailPage/RequestDetailPage';
-import PrivacyPolicyPage from 'src/views/PrivacyPolicyPage/PrivacyPolicyPage';
-import TermsOfServicePage from 'src/views/TermsOfServicePage/TermsOfServicePage';
+import PrivacyPolicyPage from 'src/views/PolicyPages/PrivacyPolicyPage';
+import TermsOfServicePage from 'src/views/PolicyPages/TermsOfServicePage';
 
 import 'src/assets/scss/material-kit-react.scss';
 

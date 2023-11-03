@@ -5,7 +5,6 @@ import classNames from 'classnames';
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
 // @mui components
-import makeStyles from '@mui/styles/makeStyles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -14,13 +13,10 @@ import Hidden from '@mui/material/Hidden';
 import Drawer from '@mui/material/Drawer';
 // @mui/icons-material
 import Menu from '@mui/icons-material/Menu';
-// core components
-import styles from 'src/assets/jss/material-kit-react/components/headerStyle.js';
 
-const useStyles = makeStyles(styles);
+import stylesModule from './Header.module.scss';
 
 export default function Header(props) {
-  const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
   useEffect(() => {
     if (props.changeColorOnScroll) {
@@ -41,36 +37,36 @@ export default function Header(props) {
     if (windowsScrollTop > changeColorOnScroll.height) {
       document.body
         .getElementsByTagName('header')[0]
-        .classList.remove(classes[color]);
+        .classList.remove(stylesModule[color]);
       document.body
         .getElementsByTagName('header')[0]
-        .classList.add(classes[changeColorOnScroll.color]);
+        .classList.add(stylesModule[changeColorOnScroll.color]);
     } else {
       document.body
         .getElementsByTagName('header')[0]
-        .classList.add(classes[color]);
+        .classList.add(stylesModule[color]);
       document.body
         .getElementsByTagName('header')[0]
-        .classList.remove(classes[changeColorOnScroll.color]);
+        .classList.remove(stylesModule[changeColorOnScroll.color]);
     }
   };
   const { color, rightLinks, leftLinks, brand, fixed, absolute } = props;
   const appBarClasses = classNames({
-    [classes.appBar]: true,
-    [classes[color]]: color,
-    [classes.absolute]: absolute,
-    [classes.fixed]: fixed,
+    [stylesModule.appBar]: true,
+    [stylesModule[color]]: color,
+    [stylesModule.absolute]: absolute,
+    [stylesModule.fixed]: fixed,
   });
   const brandComponent = (
-    <Link to="/" className={classes.titleLink}>
-      <Button className={classes.title}>{brand}</Button>
+    <Link to="/" className={stylesModule.titleLink}>
+      <Button className={stylesModule.title}>{brand}</Button>
     </Link>
   );
   return (
     <AppBar className={appBarClasses}>
-      <Toolbar className={classes.container}>
+      <Toolbar className={stylesModule.container}>
         {leftLinks !== undefined ? brandComponent : null}
-        <div className={classes.flex}>
+        <div className={stylesModule.flex}>
           {leftLinks !== undefined ? (
             <Hidden mdDown implementation="css">
               {leftLinks}
@@ -99,11 +95,11 @@ export default function Header(props) {
           anchor={'right'}
           open={mobileOpen}
           classes={{
-            paper: classes.drawerPaper,
+            paper: stylesModule.drawerPaper,
           }}
           onClose={handleDrawerToggle}
         >
-          <div className={classes.appResponsive}>
+          <div className={stylesModule.appResponsive}>
             {leftLinks}
             {rightLinks}
           </div>

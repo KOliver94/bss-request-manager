@@ -1,18 +1,14 @@
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
 
-// @mui components
-import makeStyles from '@mui/styles/makeStyles';
-
-import styles from 'src/assets/jss/material-kit-react/components/badgeStyle.js';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './Badge.module.scss';
 
 export default function Badge(props) {
-  const classes = useStyles();
   const { color, children } = props;
   return (
-    <span className={classes.badge + ' ' + classes[color]}>{children}</span>
+    <span className={stylesModule.badge + ' ' + stylesModule[color]}>
+      {children}
+    </span>
   );
 }
 

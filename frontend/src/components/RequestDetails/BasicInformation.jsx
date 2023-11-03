@@ -33,7 +33,6 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
-import makeStyles from '@mui/styles/makeStyles';
 import MUITextField from '@mui/material/TextField';
 // Form components
 import { Formik, Form, Field } from 'formik';
@@ -71,52 +70,7 @@ import { requestStatuses } from 'src/helpers/enumConstants';
 import handleError from 'src/helpers/errorHandler';
 import ConditionalWrapper from 'src/components/ConditionalWrapper';
 
-const useStyles = makeStyles((theme) => ({
-  title: {
-    padding: '10px 8px',
-  },
-  titleGrid: {
-    padding: '0 15px',
-  },
-  paper: {
-    padding: '15px',
-    margin: '16px',
-  },
-  formSection: {
-    padding: '15px 0px',
-  },
-  formSectionFirst: {
-    paddingBottom: '15px',
-  },
-  formSectionLast: {
-    paddingTop: '15px',
-  },
-  afterDivider: {
-    marginTop: 10,
-  },
-  chip: {
-    marginBottom: 10,
-  },
-  smallAvatar: {
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    marginRight: 5,
-  },
-  toggleButtonGroup: {
-    padding: '5px 0',
-  },
-  toggleButtonText: {
-    margin: 0,
-    lineHeight: 0,
-    paddingLeft: '2px',
-  },
-  beforeDividerTextField: {
-    margin: '16px 0',
-  },
-  snackbarButton: {
-    color: 'inherit',
-  },
-}));
+import stylesModule from './BasicInformation.module.css';
 
 export default function BasicInformation({
   requestId,
@@ -125,7 +79,6 @@ export default function BasicInformation({
   staffMembers,
   isPrivileged,
 }) {
-  const classes = useStyles();
   const formRef = useRef();
   const navigate = useNavigate();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -255,7 +208,7 @@ export default function BasicInformation({
                 <Button
                   size="small"
                   onClick={() => closeSnackbar(key)}
-                  className={classes.snackbarButton}
+                  className={stylesModule.snackbarButton}
                 >
                   Rendben
                 </Button>
@@ -303,10 +256,10 @@ export default function BasicInformation({
           direction="row"
           justifyContent="space-between"
           alignItems="center"
-          className={classes.titleGrid}
+          className={stylesModule.titleGrid}
         >
           <Grid item>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" className={stylesModule.title}>
               Alapinformációk
             </Typography>
           </Grid>
@@ -405,7 +358,7 @@ export default function BasicInformation({
         </Grid>
       </div>
       <Divider variant="middle" />
-      <Paper className={classes.paper} elevation={2}>
+      <Paper className={stylesModule.paper} elevation={2}>
         {editing ? (
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={hu}>
             <Formik
@@ -438,14 +391,14 @@ export default function BasicInformation({
             >
               {({ errors, touched }) => (
                 <Form>
-                  <div className={classes.formSectionFirst}>
+                  <div className={stylesModule.formSectionFirst}>
                     <Typography variant="h6">Részletek</Typography>
                     <Field
                       component={ToggleButtonGroup}
                       name="additional_data.accepted"
                       type="checkbox"
                       disabled={!isAdmin()}
-                      className={classes.toggleButtonGroup}
+                      className={stylesModule.toggleButtonGroup}
                       exclusive
                       fullWidth
                     >
@@ -457,7 +410,7 @@ export default function BasicInformation({
                         <SentimentVerySatisfiedIcon />
                         <Typography
                           variant="inherit"
-                          className={classes.toggleButtonText}
+                          className={stylesModule.toggleButtonText}
                         >
                           Elfogadva
                         </Typography>
@@ -470,7 +423,7 @@ export default function BasicInformation({
                         <SentimentVeryDissatisfiedIcon />
                         <Typography
                           variant="inherit"
-                          className={classes.toggleButtonText}
+                          className={stylesModule.toggleButtonText}
                         >
                           Elutasítva
                         </Typography>
@@ -481,7 +434,7 @@ export default function BasicInformation({
                       name="additional_data.canceled"
                       type="checkbox"
                       disabled={!isAdmin()}
-                      className={classes.toggleButtonGroup}
+                      className={stylesModule.toggleButtonGroup}
                       exclusive
                       fullWidth
                     >
@@ -489,7 +442,7 @@ export default function BasicInformation({
                         <NotInterestedIcon />
                         <Typography
                           variant="inherit"
-                          className={classes.toggleButtonText}
+                          className={stylesModule.toggleButtonText}
                         >
                           Lemondva
                         </Typography>
@@ -500,7 +453,7 @@ export default function BasicInformation({
                       name="additional_data.failed"
                       type="checkbox"
                       disabled={!isAdmin()}
-                      className={classes.toggleButtonGroup}
+                      className={stylesModule.toggleButtonGroup}
                       exclusive
                       fullWidth
                     >
@@ -508,7 +461,7 @@ export default function BasicInformation({
                         <ErrorOutlineIcon />
                         <Typography
                           variant="inherit"
-                          className={classes.toggleButtonText}
+                          className={stylesModule.toggleButtonText}
                         >
                           Meghiúsult
                         </Typography>
@@ -523,7 +476,7 @@ export default function BasicInformation({
                       formControl={{
                         fullWidth: true,
                         margin: 'normal',
-                        className: classes.beforeDividerTextField,
+                        className: stylesModule.beforeDividerTextField,
                       }}
                       formHelperText={{
                         children:
@@ -564,7 +517,7 @@ export default function BasicInformation({
                                 ),
                               }}
                               src={option.profile.avatar_url}
-                              className={classes.smallAvatar}
+                              className={stylesModule.smallAvatar}
                             >
                               {option.first_name[0]}
                             </Avatar>
@@ -606,7 +559,7 @@ export default function BasicInformation({
                     />
                   </div>
                   <Divider />
-                  <div className={classes.formSection}>
+                  <div className={stylesModule.formSection}>
                     <Typography variant="h6">Nyersek</Typography>
                     <Field
                       name="additional_data.recording.copied_to_gdrive"
@@ -658,7 +611,7 @@ export default function BasicInformation({
                     />
                   </div>
                   <Divider />
-                  <div className={classes.formSectionLast}>
+                  <div className={stylesModule.formSectionLast}>
                     <Typography variant="h6">Alapinformációk</Typography>
                     <Field
                       name="title"
@@ -777,7 +730,7 @@ export default function BasicInformation({
                     color="secondary"
                     size="small"
                     label="A felhasználó adatai és a felkéréskor beküldött adatok nem egyeznek!"
-                    className={classes.chip}
+                    className={stylesModule.chip}
                   />
                 </Tooltip>
               )}
@@ -833,7 +786,7 @@ export default function BasicInformation({
                 </p>
               )}
             <Divider />
-            <p className={classes.afterDivider}>
+            <p className={stylesModule.afterDivider}>
               Beküldve:{' '}
               <strong>
                 {format(

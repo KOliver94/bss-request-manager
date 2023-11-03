@@ -4,7 +4,6 @@ import classNames from 'classnames';
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
 // @mui components
-import makeStyles from '@mui/styles/makeStyles';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
@@ -19,9 +18,7 @@ import Button from 'src/components/material-kit-react/CustomButtons/Button';
 // Helpers
 import stringToColor from 'src/helpers/stringToColor';
 
-import styles from 'src/assets/jss/material-kit-react/components/customDropdownStyle.js';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './CustomDropdown.module.scss';
 
 export default function CustomDropdown(props) {
   const [open, setOpen] = useState(false);
@@ -38,7 +35,6 @@ export default function CustomDropdown(props) {
     }
     setOpen(false);
   };
-  const classes = useStyles();
   const {
     buttonText,
     buttonIcon,
@@ -53,15 +49,15 @@ export default function CustomDropdown(props) {
     noLiPadding,
   } = props;
   const caretClasses = classNames({
-    [classes.caret]: true,
-    [classes.caretActive]: open,
-    [classes.caretRTL]: rtlActive,
+    [stylesModule.caret]: true,
+    [stylesModule.caretActive]: open,
+    [stylesModule.caretRTL]: rtlActive,
   });
   const dropdownItem = classNames({
-    [classes.dropdownItem]: true,
-    [classes[hoverColor + 'Hover']]: true,
-    [classes.noLiPadding]: noLiPadding,
-    [classes.dropdownItemRTL]: rtlActive,
+    [stylesModule.dropdownItem]: true,
+    [stylesModule[hoverColor + 'Hover']]: true,
+    [stylesModule.noLiPadding]: noLiPadding,
+    [stylesModule.dropdownItemRTL]: rtlActive,
   });
   let icon;
   switch (typeof buttonIcon) {
@@ -72,7 +68,7 @@ export default function CustomDropdown(props) {
             sx={{
               bgcolor: stringToColor(buttonText),
             }}
-            className={classes.buttonAvatar}
+            className={stylesModule.buttonAvatar}
             src={buttonIcon.imgSrc}
           >
             {buttonIcon.fallback}
@@ -80,10 +76,12 @@ export default function CustomDropdown(props) {
         );
         break;
       }
-      icon = <props.buttonIcon className={classes.buttonIcon} />;
+      icon = <props.buttonIcon className={stylesModule.buttonIcon} />;
       break;
     case 'string':
-      icon = <Icon className={classes.buttonIcon}>{props.buttonIcon}</Icon>;
+      icon = (
+        <Icon className={stylesModule.buttonIcon}>{props.buttonIcon}</Icon>
+      );
       break;
     default:
       icon = null;
@@ -122,8 +120,8 @@ export default function CustomDropdown(props) {
             : 'bottom'
         }
         className={classNames({
-          [classes.popperClose]: !open,
-          [classes.popperResponsive]: true,
+          [stylesModule.popperClose]: !open,
+          [stylesModule.popperResponsive]: true,
         })}
       >
         {({ TransitionProps }) => (
@@ -137,13 +135,13 @@ export default function CustomDropdown(props) {
                 : { transformOrigin: '0 0 0' }
             }
           >
-            <Paper className={classes.dropdown}>
+            <Paper className={stylesModule.dropdown}>
               <ClickAwayListener onClickAway={handleCloseAway}>
-                <MenuList role="menu" className={classes.menuList}>
+                <MenuList role="menu" className={stylesModule.menuList}>
                   {dropdownHeader !== undefined ? (
                     <MenuItem
                       onClick={() => handleClose(dropdownHeader)}
-                      className={classes.dropdownHeader}
+                      className={stylesModule.dropdownHeader}
                     >
                       {dropdownHeader}
                     </MenuItem>
@@ -154,7 +152,7 @@ export default function CustomDropdown(props) {
                         return (
                           <Divider
                             key={key}
-                            className={classes.dropdownDividerItem}
+                            className={stylesModule.dropdownDividerItem}
                           />
                         );
                       }

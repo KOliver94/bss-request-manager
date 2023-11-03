@@ -2,19 +2,13 @@
 import classNames from 'classnames';
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
-// @mui components
-import makeStyles from '@mui/styles/makeStyles';
 
-// core components
-import styles from 'src/assets/jss/material-kit-react/components/cardBodyStyle.js';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './CardBody.module.scss';
 
 export default function CardBody(props) {
-  const classes = useStyles();
   const { className, children, ...rest } = props;
   const cardBodyClasses = classNames({
-    [classes.cardBody]: true,
+    [stylesModule.cardBody]: true,
     [className]: className !== undefined,
   });
   return (

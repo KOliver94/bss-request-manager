@@ -1,0 +1,10 @@
+@use '/src/assets/scss/theme';
+
+.section {
+  @include theme.section;
+  text-align: center;
+}
+.description {
+  color: #999;
+  font-size: 14px;
+}

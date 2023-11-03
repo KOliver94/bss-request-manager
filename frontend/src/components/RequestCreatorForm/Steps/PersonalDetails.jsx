@@ -8,21 +8,10 @@ import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import MUIButton from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import makeStyles from '@mui/styles/makeStyles';
 import * as Yup from 'yup';
 import isValidPhone from 'src/helpers/yupPhoneNumberValidator';
 
-const useStyles = makeStyles(() => ({
-  button: {
-    marginTop: '15px',
-  },
-  alert: {
-    marginTop: 8,
-    marginBottom: 2,
-    textAlign: 'left',
-    alignItems: 'center',
-  },
-}));
+import stylesModule from './PersonalDetails.module.css';
 
 Yup.addMethod(Yup.string, 'phone', isValidPhone);
 const validationSchema = Yup.object({
@@ -50,7 +39,6 @@ function PersonalDetails({
   handleNext,
   isAuthenticated,
 }) {
-  const classes = useStyles();
   const navigate = useNavigate();
 
   return (
@@ -69,7 +57,7 @@ function PersonalDetails({
               {isAuthenticated ? (
                 <Alert
                   severity="warning"
-                  className={classes.alert}
+                  className={stylesModule.alert}
                   action={
                     <MUIButton
                       color="inherit"
@@ -87,7 +75,7 @@ function PersonalDetails({
               ) : (
                 <Alert
                   severity="info"
-                  className={classes.alert}
+                  className={stylesModule.alert}
                   action={
                     <MUIButton
                       color="inherit"
@@ -169,7 +157,11 @@ function PersonalDetails({
           </GridContainer>
           <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={4}>
-              <Button type="submit" color="primary" className={classes.button}>
+              <Button
+                type="submit"
+                color="primary"
+                className={stylesModule.button}
+              >
                 Következő
               </Button>
             </GridItem>

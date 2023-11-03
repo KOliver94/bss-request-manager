@@ -2,33 +2,28 @@
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
-// @mui components
-import makeStyles from '@mui/styles/makeStyles';
 
-import styles from 'src/assets/jss/material-kit-react/components/infoStyle.js';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './InfoArea.module.scss';
 
 export default function InfoArea(props) {
-  const classes = useStyles();
   const { title, description, iconColor, vertical } = props;
   const iconWrapper = classNames({
-    [classes.iconWrapper]: true,
-    [classes[iconColor]]: true,
-    [classes.iconWrapperVertical]: vertical,
+    [stylesModule.iconWrapper]: true,
+    [stylesModule[iconColor]]: true,
+    [stylesModule.iconWrapperVertical]: vertical,
   });
   const iconClasses = classNames({
-    [classes.icon]: true,
-    [classes.iconVertical]: vertical,
+    [stylesModule.icon]: true,
+    [stylesModule.iconVertical]: vertical,
   });
   return (
-    <div className={classes.infoArea}>
+    <div className={stylesModule.infoArea}>
       <div className={iconWrapper}>
         <props.icon className={iconClasses} />
       </div>
-      <div className={classes.descriptionWrapper}>
-        <h4 className={classes.title}>{title}</h4>
-        <p className={classes.description}>{description}</p>
+      <div className={stylesModule.descriptionWrapper}>
+        <h4 className={stylesModule.title}>{title}</h4>
+        <p className={stylesModule.description}>{description}</p>
       </div>
     </div>
   );

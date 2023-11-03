@@ -1,0 +1,58 @@
+@use 'sass:map';
+@use '/src/assets/scss/theme';
+
+.infoArea {
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 0;
+}
+.iconWrapper {
+  float: left;
+  margin-top: 24px;
+  margin-right: 10px;
+}
+.primary {
+  color: map.get(theme.$themeColors, 'primary');
+}
+.warning {
+  color: map.get(theme.$themeColors, 'warning');
+}
+.danger {
+  color: map.get(theme.$themeColors, 'error');
+}
+.success {
+  color: map.get(theme.$themeColors, 'success');
+}
+.info {
+  color: map.get(theme.$themeColors, 'info');
+}
+.rose {
+  color: map.get(theme.$themeColors, 'secondary');
+}
+.gray {
+  color: map.get(theme.$themeColors, 'gray');
+}
+.icon {
+  width: 36px;
+  height: 36px;
+}
+.descriptionWrapper {
+  color: map.get(theme.$themeColors, 'gray');
+  overflow: hidden;
+}
+.description {
+  color: map.get(theme.$themeColors, 'gray');
+  overflow: hidden;
+  margin-top: 0;
+  font-size: 14px;
+}
+.iconWrapperVertical {
+  float: none;
+}
+.iconVertical {
+  width: 61px;
+  height: 61px;
+}
+.title {
+  @include theme.title;
+}

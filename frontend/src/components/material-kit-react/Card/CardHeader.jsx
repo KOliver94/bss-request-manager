@@ -2,21 +2,15 @@
 import classNames from 'classnames';
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
-// @mui components
-import makeStyles from '@mui/styles/makeStyles';
 
-// core components
-import styles from 'src/assets/jss/material-kit-react/components/cardHeaderStyle.js';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './CardHeader.module.scss';
 
 export default function CardHeader(props) {
-  const classes = useStyles();
   const { className, children, color, plain, ...rest } = props;
   const cardHeaderClasses = classNames({
-    [classes.cardHeader]: true,
-    [classes[color + 'CardHeader']]: color,
-    [classes.cardHeaderPlain]: plain,
+    [stylesModule.cardHeader]: true,
+    [stylesModule[color + 'CardHeader']]: color,
+    [stylesModule.cardHeaderPlain]: plain,
     [className]: className !== undefined,
   });
   return (

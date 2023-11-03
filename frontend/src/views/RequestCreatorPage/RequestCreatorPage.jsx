@@ -6,7 +6,6 @@ import classNames from 'classnames';
 // @mui components
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import makeStyles from '@mui/styles/makeStyles';
 import CircularProgress from '@mui/material/CircularProgress';
 import MobileStepper from '@mui/material/MobileStepper';
 import Stepper from '@mui/material/Stepper';
@@ -35,9 +34,7 @@ import { createRequest } from 'src/api/requestApi';
 import handleError from 'src/helpers/errorHandler';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
-import styles from 'src/assets/jss/material-kit-react/views/requestCreatorPage';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './RequestCreatorPage.module.scss';
 
 const steps = [
   'Személyes adatok',
@@ -67,7 +64,6 @@ export default function RequestCreatorPage({
   isAuthenticated,
   setIsAuthenticated,
 }) {
-  const classes = useStyles();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const recaptchaRef = createRef();
@@ -193,16 +189,18 @@ export default function RequestCreatorPage({
         }}
       />
       <Parallax small filter image={background}>
-        <div className={classes.container}>
+        <div className={stylesModule.container}>
           <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6}>
-              <h1 className={classes.title}>Új felkérés beküldése</h1>
+              <h1 className={stylesModule.title}>Új felkérés beküldése</h1>
             </GridItem>
           </GridContainer>
         </div>
       </Parallax>
-      <div className={classNames(classes.main, classes.mainRaised)}>
-        <div className={classNames(classes.container, classes.section)}>
+      <div className={classNames(stylesModule.main, stylesModule.mainRaised)}>
+        <div
+          className={classNames(stylesModule.container, stylesModule.section)}
+        >
           <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6}>
               {isMobileView ? (
@@ -220,13 +218,13 @@ export default function RequestCreatorPage({
                     steps={4}
                     position="static"
                     LinearProgressProps={{ sx: { width: 1 } }}
-                    className={classes.stepper}
+                    className={stylesModule.stepper}
                   />
                 </>
               ) : (
                 <Stepper
                   activeStep={activeStep}
-                  className={classes.stepper}
+                  className={stylesModule.stepper}
                   alternativeLabel
                 >
                   {steps.map((label) => (
@@ -234,9 +232,9 @@ export default function RequestCreatorPage({
                       <StepLabel
                         StepIconProps={{
                           classes: {
-                            root: classes.stepIcon,
-                            active: classes.activeIcon,
-                            completed: classes.completedIcon,
+                            root: stylesModule.stepIcon,
+                            active: stylesModule.activeIcon,
+                            completed: stylesModule.completedIcon,
                           },
                         }}
                       >
@@ -251,14 +249,19 @@ export default function RequestCreatorPage({
           {loading && activeStep === 0 ? (
             <GridContainer justifyContent="center">
               <CircularProgress
-                className={classes.circularProgress}
+                className={stylesModule.circularProgress}
                 size={60}
               />
             </GridContainer>
           ) : (
             <>
               <GridContainer justifyContent="center">
-                <GridItem xs={12} sm={12} md={6} className={classes.contentBox}>
+                <GridItem
+                  xs={12}
+                  sm={12}
+                  md={6}
+                  className={stylesModule.contentBox}
+                >
                   <RequestCreatorForm
                     step={activeStep}
                     formData={formData}
@@ -271,15 +274,15 @@ export default function RequestCreatorPage({
                 </GridItem>
               </GridContainer>
               <GridContainer justifyContent="center">
-                <GridItem xs={12} sm={12} className={classes.textCenter}>
+                <GridItem xs={12} sm={12} className={stylesModule.textCenter}>
                   {activeStep < steps.length ? (
                     <>
                       {activeStep === steps.length - 1 && (
-                        <div className={classes.wrapper}>
+                        <div className={stylesModule.wrapper}>
                           <Button
                             onClick={handleBack}
                             disabled={loading}
-                            className={classes.button}
+                            className={stylesModule.button}
                           >
                             Vissza
                           </Button>
@@ -287,14 +290,14 @@ export default function RequestCreatorPage({
                             onClick={handleSubmit}
                             color="success"
                             disabled={loading}
-                            className={classes.button}
+                            className={stylesModule.button}
                           >
                             Küldés
                           </Button>
                           {loading && (
                             <CircularProgress
                               size={24}
-                              className={classes.buttonProgress}
+                              className={stylesModule.buttonProgress}
                             />
                           )}
                         </div>
