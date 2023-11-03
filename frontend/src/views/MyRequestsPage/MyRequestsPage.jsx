@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
-import makeStyles from '@mui/styles/makeStyles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -38,16 +37,13 @@ import { requestStatuses } from 'src/helpers/enumConstants';
 import handleError from 'src/helpers/errorHandler';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
-import styles from 'src/assets/jss/material-kit-react/views/myRequestsPage';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './MyRequestsPage.module.scss';
 
 export default function MyRequestsPage({
   isAuthenticated,
   setIsAuthenticated,
   isPrivileged,
 }) {
-  const classes = useStyles();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
@@ -117,22 +113,29 @@ export default function MyRequestsPage({
         }}
       />
       <Parallax small filter image={background}>
-        <div className={classes.container}>
+        <div className={stylesModule.container}>
           <GridContainer justifyContent="center">
-            <GridItem xs={12} sm={12} md={6} className={classes.textCenter}>
-              <h1 className={classes.title}>
+            <GridItem
+              xs={12}
+              sm={12}
+              md={6}
+              className={stylesModule.textCenter}
+            >
+              <h1 className={stylesModule.title}>
                 {isPrivileged ? 'Felkérések' : 'Felkéréseim'}
               </h1>
             </GridItem>
           </GridContainer>
         </div>
       </Parallax>
-      <div className={classNames(classes.main, classes.mainRaised)}>
-        <div className={classNames(classes.container, classes.section)}>
+      <div className={classNames(stylesModule.main, stylesModule.mainRaised)}>
+        <div
+          className={classNames(stylesModule.container, stylesModule.section)}
+        >
           {loading ? (
             <GridContainer justifyContent="center">
               <CircularProgress
-                className={classes.circularProgress}
+                className={stylesModule.circularProgress}
                 size={60}
               />
             </GridContainer>
@@ -141,7 +144,10 @@ export default function MyRequestsPage({
               {data.results.length > 0 ? (
                 <>
                   <GridContainer justifyContent="center">
-                    <TableContainer component={Paper} className={classes.table}>
+                    <TableContainer
+                      component={Paper}
+                      className={stylesModule.table}
+                    >
                       <Table aria-label="simple table">
                         <TableHead>
                           <TableRow>
@@ -219,7 +225,7 @@ export default function MyRequestsPage({
                     <Pagination
                       count={data.total_pages}
                       onChange={handlePageChange}
-                      className={classes.pagination}
+                      className={stylesModule.pagination}
                     />
                   </GridContainer>
                 </>
@@ -227,7 +233,7 @@ export default function MyRequestsPage({
                 <GridContainer justifyContent="center">
                   <Typography
                     variant="h5"
-                    className={classes.notFound}
+                    className={stylesModule.notFound}
                     gutterBottom
                   >
                     Nincs beküldött felkérésed{' '}

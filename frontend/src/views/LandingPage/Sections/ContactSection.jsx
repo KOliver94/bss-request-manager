@@ -1,5 +1,4 @@
 import { useState, createRef } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import { useSnackbar } from 'notistack';
 
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
@@ -11,9 +10,8 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import sendContactMessage from 'src/api/miscApi';
 import handleError from 'src/helpers/errorHandler';
 
-import styles from 'src/assets/jss/material-kit-react/views/landingPageSections/workStyle';
+import stylesModule from './ContactSection.module.scss';
 
-const useStyles = makeStyles(styles);
 const emptyMessageData = {
   name: '',
   email: '',
@@ -22,7 +20,6 @@ const emptyMessageData = {
 };
 
 export default function ContactSection() {
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const recaptchaRef = createRef();
   const [loading, setLoading] = useState(false);
@@ -64,11 +61,11 @@ export default function ContactSection() {
   };
 
   return (
-    <div className={classes.section}>
+    <div className={stylesModule.section}>
       <GridContainer justifyContent="center">
         <GridItem cs={12} sm={12} md={8}>
-          <h2 className={classes.title}>Egyéb kérdések esetén</h2>
-          <h4 className={classes.description}>
+          <h2 className={stylesModule.title}>Egyéb kérdések esetén</h2>
+          <h4 className={stylesModule.description}>
             Ha olyan kérésed lenne amire nem kaptál itt választ vagy egyéb
             ügyben szeretnél felkeresni minket, alább lehetőséged van üzenetet
             küldeni nekünk vagy írj a{' '}
@@ -119,7 +116,7 @@ export default function ContactSection() {
                 id="message"
                 formControlProps={{
                   fullWidth: true,
-                  className: classes.textArea,
+                  className: stylesModule.textArea,
                 }}
                 labelProps={{
                   variant: 'standard',

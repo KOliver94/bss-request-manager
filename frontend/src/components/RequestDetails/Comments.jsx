@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
-import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 // Components
@@ -27,15 +26,7 @@ import {
 import compareValues from 'src/helpers/objectComperator';
 import handleError from 'src/helpers/errorHandler';
 
-const useStyles = makeStyles(() => ({
-  title: {
-    padding: '10px 23px',
-  },
-  paper: {
-    padding: '40px 20px',
-    margin: '16px',
-  },
-}));
+import stylesModule from './Comments.module.css';
 
 export default function Comments({
   requestId,
@@ -43,7 +34,6 @@ export default function Comments({
   setRequestData,
   isPrivileged,
 }) {
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(-1);
@@ -128,14 +118,14 @@ export default function Comments({
           alignItems="center"
         >
           <Grid item>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" className={stylesModule.title}>
               Hozzászólások
             </Typography>
           </Grid>
         </Grid>
       </div>
       <Divider variant="middle" />
-      <Paper className={classes.paper} elevation={2}>
+      <Paper className={stylesModule.paper} elevation={2}>
         {requestData.comments.length > 0 && (
           <>
             {requestData.comments

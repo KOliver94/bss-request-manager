@@ -26,7 +26,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 // core components
 import Header from 'src/components/material-kit-react/Header/Header';
 import Footer from 'src/components/material-kit-react/Footer/Footer';
@@ -70,28 +69,25 @@ import {
   getOauthUrlGoogle,
 } from 'src/helpers/oauthConstants';
 import changePageTitle from 'src/helpers/pageTitleHelper';
-// Style
-import styles from 'src/assets/jss/material-kit-react/views/profilePage';
 // Sections
 import PersonalDetailsNormal from './Sections/PersonalDetails/PersonalDetailsNormal';
 import PersonalDetailsMobile from './Sections/PersonalDetails/PersonalDetailsMobile';
 import WorkedOnDialog from './Sections/WorkedOnDialog/WorkedOnDialog';
 
-const useStyles = makeStyles(styles);
+import stylesModule from './ProfilePage.module.scss';
 
 export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const { code, provider } = { ...location.state };
-  const classes = useStyles();
   const theme = useTheme();
   const isMobileView = !useMediaQuery(theme.breakpoints.up('md'));
   const isXsView = !useMediaQuery(theme.breakpoints.up('sm'));
   const avatarClasses = classNames(
-    classes.imgRaised,
-    classes.imgRoundedCircle,
-    classes.avatar,
+    stylesModule.imgRaised,
+    stylesModule.imgRoundedCircle,
+    stylesModule.avatar,
   );
   const { enqueueSnackbar } = useSnackbar();
 
@@ -259,11 +255,13 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
         }}
       />
       <Parallax small filter image={background} />
-      <div className={classNames(classes.main, classes.mainRaised)}>
-        <div className={classNames(classes.container, classes.section)}>
+      <div className={classNames(stylesModule.main, stylesModule.mainRaised)}>
+        <div
+          className={classNames(stylesModule.container, stylesModule.section)}
+        >
           <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6}>
-              <div className={classes.profile}>
+              <div className={stylesModule.profile}>
                 <div>
                   {loading && id ? (
                     <Skeleton
@@ -283,8 +281,8 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                     />
                   )}
                 </div>
-                <div className={classes.name}>
-                  <h3 className={classes.title}>
+                <div className={stylesModule.name}>
+                  <h3 className={stylesModule.title}>
                     {loading && id ? (
                       <Skeleton width={200} />
                     ) : (
@@ -372,7 +370,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
           <GridContainer justifyContent="center">
             {loading ? (
               <CircularProgress
-                className={classes.circularProgress}
+                className={stylesModule.circularProgress}
                 size={60}
               />
             ) : (
@@ -389,7 +387,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                   <Form>
                     <GridContainer
                       justifyContent="center"
-                      className={classes.field}
+                      className={stylesModule.field}
                     >
                       {!isMobileView && (
                         <PersonalDetailsNormal
@@ -416,8 +414,8 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                           classes={
                             !isMobileView
                               ? {
-                                  rounded: classes.accordion,
-                                  expanded: classes.accordion,
+                                  rounded: stylesModule.accordion,
+                                  expanded: stylesModule.accordion,
                                 }
                               : {}
                           }
@@ -428,11 +426,13 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                           >
                             <Typography>Profilkép beállítások</Typography>
                           </AccordionSummary>
-                          <AccordionDetails className={classes.accordionAvatar}>
+                          <AccordionDetails
+                            className={stylesModule.accordionAvatar}
+                          >
                             {!Object.entries(userData.profile.avatar).length ? (
                               <Alert
                                 severity="warning"
-                                className={classes.alertAvatar}
+                                className={stylesModule.alertAvatar}
                               >
                                 <AlertTitle>Nincs elérhető kép</AlertTitle>
                                 Tölts fel egy képet{' '}
@@ -441,7 +441,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                 Google fiókoddal a lenti menüpont segítségével.
                                 <br />
                                 <em>
-                                  <small className={classes.smallAvatar}>
+                                  <small className={stylesModule.smallAvatar}>
                                     A Gravatarra feltöltött kép a következő
                                     bejelentkezés után lesz elérhető.
                                   </small>
@@ -465,7 +465,9 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                         sm={4}
                                         md={4}
                                         className={
-                                          isXsView ? classes.gridItemMobile : ''
+                                          isXsView
+                                            ? stylesModule.gridItemMobile
+                                            : ''
                                         }
                                       >
                                         <Card>
@@ -490,7 +492,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                               classes={{
                                                 media:
                                                   isXsView &&
-                                                  classes.cardMediaAvatar,
+                                                  stylesModule.cardMediaAvatar,
                                               }}
                                             />
                                             <CardContent>
@@ -498,7 +500,9 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                                 variant="h6"
                                                 component="h2"
                                                 display="block"
-                                                className={classes.textAvatar}
+                                                className={
+                                                  stylesModule.textAvatar
+                                                }
                                               >
                                                 {avatarProviders(avatar[0])}{' '}
                                                 {avatar[1] ===
@@ -506,7 +510,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                                     .avatar_url && (
                                                   <small
                                                     className={
-                                                      classes.selectedIconAvatar
+                                                      stylesModule.selectedIconAvatar
                                                     }
                                                   >
                                                     <i className="fa-solid fa-circle-check" />
@@ -655,7 +659,9 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                         xs={12}
                                         sm={6}
                                         className={
-                                          isXsView ? classes.gridItemMobile : ''
+                                          isXsView
+                                            ? stylesModule.gridItemMobile
+                                            : ''
                                         }
                                       >
                                         <DatePicker
@@ -676,7 +682,9 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                         xs={12}
                                         sm={6}
                                         className={
-                                          isXsView ? classes.gridItemMobile : ''
+                                          isXsView
+                                            ? stylesModule.gridItemMobile
+                                            : ''
                                         }
                                       >
                                         <DatePicker
@@ -698,8 +706,8 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                   <GridItem
                                     className={
                                       isXsView
-                                        ? classes.gridItemMobileNoTopPadding
-                                        : classes.gridItemMobile
+                                        ? stylesModule.gridItemMobileNoTopPadding
+                                        : stylesModule.gridItemMobile
                                     }
                                   >
                                     <GridContainer
@@ -713,7 +721,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                       </GridItem>
                                       <GridItem
                                         xs={6}
-                                        className={classes.gridEnd}
+                                        className={stylesModule.gridEnd}
                                       >
                                         <Switch
                                           checked={includeResponsible}
@@ -804,10 +812,10 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                     </GridContainer>
                     {userData.role === 'user' && (!id || isAdmin()) && (
                       <GridContainer justifyContent="center">
-                        <GridItem className={classes.textCenter}>
+                        <GridItem className={stylesModule.textCenter}>
                           <Button
                             color="danger"
-                            className={classes.button}
+                            className={stylesModule.button}
                             onClick={resetForm}
                             disabled={isSubmitting}
                           >
@@ -815,7 +823,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                           </Button>
                           <Button
                             color="success"
-                            className={classes.button}
+                            className={stylesModule.button}
                             onClick={submitForm}
                             disabled={isSubmitting}
                           >

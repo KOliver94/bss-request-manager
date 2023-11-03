@@ -8,44 +8,17 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
-import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    minWidth: 275,
-    marginBottom: 8,
-  },
-  first: {
-    minWidth: 275,
-    marginBottom: 8,
-    marginTop: 16,
-  },
-  content: {
-    paddingBottom: 0,
-    '&:last-child': {
-      paddingBottom: 16,
-    },
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  actions: {
-    display: 'inherit',
-  },
-}));
+import stylesModule from './Summary.module.css';
 
 function Summary({ formData, setActiveStep, isAuthenticated }) {
-  const classes = useStyles();
   return (
     <GridContainer justifyContent="center">
       <GridItem>
-        <Card className={classes.first} variant="outlined">
-          <CardContent className={classes.content}>
+        <Card className={stylesModule.first} variant="outlined">
+          <CardContent className={stylesModule.content}>
             <Typography
-              className={classes.title}
+              className={stylesModule.title}
               color="textSecondary"
               gutterBottom
             >
@@ -54,7 +27,7 @@ function Summary({ formData, setActiveStep, isAuthenticated }) {
             <Typography variant="h5" component="h2">
               {formData.title}
             </Typography>
-            <Typography className={classes.pos} color="textSecondary">
+            <Typography className={stylesModule.pos} color="textSecondary">
               {formData.type_obj.text} - <i>{formData.place}</i>
             </Typography>
             <Typography variant="caption" component="p">
@@ -82,16 +55,16 @@ function Summary({ formData, setActiveStep, isAuthenticated }) {
               <br />
             </Typography>
           </CardContent>
-          <CardActions className={classes.actions}>
+          <CardActions className={stylesModule.actions}>
             <Button size="small" onClick={() => setActiveStep(1)}>
               Módosítás
             </Button>
           </CardActions>
         </Card>
-        <Card className={classes.root} variant="outlined">
-          <CardContent className={classes.content}>
+        <Card className={stylesModule.root} variant="outlined">
+          <CardContent className={stylesModule.content}>
             <Typography
-              className={classes.title}
+              className={stylesModule.title}
               color="textSecondary"
               gutterBottom
             >
@@ -107,7 +80,7 @@ function Summary({ formData, setActiveStep, isAuthenticated }) {
             </Typography>
           </CardContent>
           {!isAuthenticated && (
-            <CardActions className={classes.actions}>
+            <CardActions className={stylesModule.actions}>
               <Button size="small" onClick={() => setActiveStep(0)}>
                 Módosítás
               </Button>
@@ -115,10 +88,10 @@ function Summary({ formData, setActiveStep, isAuthenticated }) {
           )}
         </Card>
         {formData.comment_text && (
-          <Card className={classes.root} variant="outlined">
-            <CardContent className={classes.content}>
+          <Card className={stylesModule.root} variant="outlined">
+            <CardContent className={stylesModule.content}>
               <Typography
-                className={classes.title}
+                className={stylesModule.title}
                 color="textSecondary"
                 gutterBottom
               >
@@ -128,7 +101,7 @@ function Summary({ formData, setActiveStep, isAuthenticated }) {
                 {formData.comment_text}
               </Typography>
             </CardContent>
-            <CardActions className={classes.actions}>
+            <CardActions className={stylesModule.actions}>
               <Button size="small" onClick={() => setActiveStep(2)}>
                 Módosítás
               </Button>

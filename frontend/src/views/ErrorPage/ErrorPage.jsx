@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import Paper from '@mui/material/Paper';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 import getErrorDetails from 'src/helpers/errorPageConstants';
-import 'src/assets/css/error-page.css';
+
+import stylesModule from './ErrorPage.module.css';
 
 export default function ErrorPage({ type }) {
   const errorDetails = getErrorDetails(type);
@@ -14,9 +15,9 @@ export default function ErrorPage({ type }) {
   }, []);
 
   return (
-    <Paper id="error" elevation={15}>
-      <div className="error">
-        <div className="error-code">
+    <Paper className={stylesModule.errorContainer} elevation={15}>
+      <div className={stylesModule.error}>
+        <div className={stylesModule.errorCode}>
           <h1>{errorDetails.code}</h1>
         </div>
         <h2>{errorDetails.title}</h2>
@@ -28,7 +29,7 @@ export default function ErrorPage({ type }) {
             <Link to="/">Vissza a főoldalra</Link>
           )}
         </p>
-        <div className="error-social">
+        <div className={stylesModule.errorSocial}>
           <a href="https://bsstudio.hu">
             <i className="fa-solid fa-earth-europe" />
           </a>

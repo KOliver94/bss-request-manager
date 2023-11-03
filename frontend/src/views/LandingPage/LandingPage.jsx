@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
-// @mui components
-import makeStyles from '@mui/styles/makeStyles';
 // background
 import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
@@ -15,7 +13,6 @@ import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
-import styles from 'src/assets/jss/material-kit-react/views/landingPage';
 // helpers
 import changePageTitle from 'src/helpers/pageTitleHelper';
 // Sections for this page
@@ -23,11 +20,9 @@ import RulesPoliciesSection from './Sections/RulesPoliciesSection';
 import ContactSection from './Sections/ContactSection';
 import PostscriptSection from './Sections/PostscriptSection';
 
-const useStyles = makeStyles(styles);
+import stylesModule from './LandingPage.module.scss';
 
 export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
-  const classes = useStyles();
-
   useEffect(() => {
     changePageTitle('Kezdőlap');
   }, []);
@@ -50,10 +45,10 @@ export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
         }}
       />
       <Parallax filter image={background}>
-        <div className={classes.container}>
+        <div className={stylesModule.container}>
           <GridContainer>
             <GridItem xs={12} sm={12} md={6}>
-              <h1 className={classes.title}>
+              <h1 className={stylesModule.title}>
                 Szeretnéd, hogy megörökítsük az eseményed?
               </h1>
               <h4>
@@ -83,8 +78,8 @@ export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
           </GridContainer>
         </div>
       </Parallax>
-      <div className={classNames(classes.main, classes.mainRaised)}>
-        <div className={classes.container}>
+      <div className={classNames(stylesModule.main, stylesModule.mainRaised)}>
+        <div className={stylesModule.container}>
           <RulesPoliciesSection />
           <ContactSection />
           <PostscriptSection />

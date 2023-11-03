@@ -4,16 +4,10 @@ import { TextField } from 'formik-mui';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import makeStyles from '@mui/styles/makeStyles';
 
-const useStyles = makeStyles(() => ({
-  button: {
-    marginTop: '15px',
-  },
-}));
+import stylesModule from './OtherInformation.module.css';
 
 function OtherInformation({ formData, setFormData, handleNext, handleBack }) {
-  const classes = useStyles();
   return (
     <Formik
       initialValues={formData}
@@ -40,10 +34,14 @@ function OtherInformation({ formData, setFormData, handleNext, handleBack }) {
           </GridContainer>
           <GridContainer justifyContent="center">
             <GridItem>
-              <Button onClick={handleBack} className={classes.button}>
+              <Button onClick={handleBack} className={stylesModule.button}>
                 Vissza
               </Button>
-              <Button type="submit" color="primary" className={classes.button}>
+              <Button
+                type="submit"
+                color="primary"
+                className={stylesModule.button}
+              >
                 Következő
               </Button>
             </GridItem>

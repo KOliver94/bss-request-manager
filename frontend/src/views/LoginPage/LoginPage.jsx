@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // @mui components
-import makeStyles from '@mui/styles/makeStyles';
 import CircularProgress from '@mui/material/CircularProgress';
 import InputAdornment from '@mui/material/InputAdornment';
 import Icon from '@mui/material/Icon';
@@ -32,17 +31,14 @@ import {
 } from 'src/helpers/oauthConstants';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
-import styles from 'src/assets/jss/material-kit-react/views/loginPage';
 import background from 'src/assets/img/bg7.jpg';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './LoginPage.module.scss';
 
 export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   const [cardAnimation, setCardAnimation] = useState('cardHidden');
   const [loginDetails, setLoginDetails] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
@@ -143,24 +139,27 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
         rightLinks={<HeaderLinks hideLogin />}
       />
       <div
-        className={classes.pageHeader}
+        className={stylesModule.pageHeader}
         style={{
           backgroundImage: `url(${background})`,
           backgroundSize: 'cover',
           backgroundPosition: 'top center',
         }}
       >
-        <div className={classes.container}>
+        <div className={stylesModule.container}>
           <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={4}>
-              <Card className={classes[cardAnimation]}>
-                <form className={classes.form} onSubmit={handleSubmit}>
-                  <CardHeader color="primary" className={classes.cardHeader}>
+              <Card className={stylesModule[cardAnimation]}>
+                <form className={stylesModule.form} onSubmit={handleSubmit}>
+                  <CardHeader
+                    color="primary"
+                    className={stylesModule.cardHeader}
+                  >
                     <h4>Bejelentkezés felkérőknek</h4>
-                    <div className={classes.socialLine}>
+                    <div className={stylesModule.socialLine}>
                       <Tooltip
                         title="AuthSCH"
-                        classes={{ tooltip: classes.tooltip }}
+                        classes={{ tooltip: stylesModule.tooltip }}
                         placement="top"
                         arrow
                       >
@@ -179,7 +178,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       </Tooltip>
                       <Tooltip
                         title="Facebook"
-                        classes={{ tooltip: classes.tooltip }}
+                        classes={{ tooltip: stylesModule.tooltip }}
                         placement="top"
                         arrow
                       >
@@ -198,7 +197,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       </Tooltip>
                       <Tooltip
                         title="Google"
-                        classes={{ tooltip: classes.tooltip }}
+                        classes={{ tooltip: stylesModule.tooltip }}
                         placement="top"
                         arrow
                       >
@@ -217,7 +216,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       </Tooltip>
                     </div>
                   </CardHeader>
-                  <p className={classes.divider}>valamint BSS Tagoknak</p>
+                  <p className={stylesModule.divider}>valamint BSS Tagoknak</p>
                   <CardBody>
                     <CustomInput
                       labelText="Felhasználónév"
@@ -236,7 +235,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         required: true,
                         endAdornment: (
                           <InputAdornment position="end">
-                            <People className={classes.inputIconsColor} />
+                            <People className={stylesModule.inputIconsColor} />
                           </InputAdornment>
                         ),
                       }}
@@ -258,7 +257,7 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                         required: true,
                         endAdornment: (
                           <InputAdornment position="end">
-                            <Icon className={classes.inputIconsColor}>
+                            <Icon className={stylesModule.inputIconsColor}>
                               lock_outline
                             </Icon>
                           </InputAdornment>
@@ -267,11 +266,11 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
                       }}
                     />
                   </CardBody>
-                  <CardFooter className={classes.cardFooter}>
+                  <CardFooter className={stylesModule.cardFooter}>
                     {loading ? (
-                      <div className={classes.circularProgressContainer}>
+                      <div className={stylesModule.circularProgressContainer}>
                         <CircularProgress
-                          className={classes.circularProgress}
+                          className={stylesModule.circularProgress}
                           size={30}
                         />
                       </div>

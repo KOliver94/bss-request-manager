@@ -2,24 +2,14 @@
 import PropTypes from 'prop-types';
 
 // @mui components
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
 
-const styles = {
-  grid: {
-    marginRight: '-15px',
-    marginLeft: '-15px',
-    width: 'auto',
-  },
-};
-
-const useStyles = makeStyles(styles);
+import stylesModule from './GridContainer.module.scss';
 
 export default function GridContainer(props) {
-  const classes = useStyles();
   const { children, className, ...rest } = props;
   return (
-    <Grid container {...rest} className={classes.grid + ' ' + className}>
+    <Grid container {...rest} className={stylesModule.grid + ' ' + className}>
       {children}
     </Grid>
   );

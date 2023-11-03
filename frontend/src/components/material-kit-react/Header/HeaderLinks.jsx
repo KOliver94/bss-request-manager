@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Link, useLocation } from 'react-router-dom';
 
 // @mui components
-import makeStyles from '@mui/styles/makeStyles';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -17,18 +16,15 @@ import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import CustomDropdown from 'src/components/material-kit-react/CustomDropdown/CustomDropdown';
 
-import styles from 'src/assets/jss/material-kit-react/components/headerLinksStyle.js';
-
 import { useSnackbar } from 'notistack';
 import { logoutUser, isPrivileged } from 'src/api/loginApi';
 
-const useStyles = makeStyles(styles);
+import stylesModule from './HeaderLinks.module.scss';
 
 const AdminButton = () => {
-  const classes = useStyles();
   if (isPrivileged()) {
     return (
-      <Link to="/admin/requests" className={classes.dropdownLink}>
+      <Link to="/admin/requests" className={stylesModule.dropdownLink}>
         <i className="fa-solid fa-screwdriver-wrench" /> Admin
       </Link>
     );
@@ -43,7 +39,6 @@ export default function HeaderLinks({
   hideLogin = false,
   dataChangeTrigger = false,
 }) {
-  const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const location = useLocation();
@@ -72,14 +67,14 @@ export default function HeaderLinks({
   }
 
   return (
-    <List className={classes.list}>
+    <List className={stylesModule.list}>
       {isAuthenticated && !hideLogin ? (
-        <ListItem className={classes.listItem}>
+        <ListItem className={stylesModule.listItem}>
           <CustomDropdown
             noLiPadding
             buttonText={localStorage.getItem('name')}
             buttonProps={{
-              className: classes.navLinkUserProfile,
+              className: stylesModule.navLinkUserProfile,
               color: 'transparent',
             }}
             buttonIcon={{
@@ -90,17 +85,17 @@ export default function HeaderLinks({
             dropdownList={[
               <AdminButton />,
               { divider: isPrivileged() },
-              <Link to="/profile" className={classes.dropdownLink}>
+              <Link to="/profile" className={stylesModule.dropdownLink}>
                 <i className="fa-solid fa-circle-user" /> Profilom
               </Link>,
-              <Link to="/my-requests" className={classes.dropdownLink}>
+              <Link to="/my-requests" className={stylesModule.dropdownLink}>
                 <i className="fa-solid fa-list-check" /> Felkéréseim
               </Link>,
               { divider: true },
               <Link
                 to="/"
                 onClick={handleLogout}
-                className={classes.dropdownLink}
+                className={stylesModule.dropdownLink}
               >
                 {loading ? (
                   <CircularProgress size={10} />
@@ -115,14 +110,15 @@ export default function HeaderLinks({
       ) : (
         <>
           {!hideLogin && (
-            <ListItem className={classes.listItem}>
+            <ListItem className={stylesModule.listItem}>
               <Link
                 to="/login"
                 state={{ from: location }}
-                className={classes.navReactRouterLink}
+                className={stylesModule.navReactRouterLink}
               >
-                <Button color="transparent" className={classes.navLink}>
-                  <LockOutlinedIcon className={classes.icons} /> Bejelentkezés
+                <Button color="transparent" className={stylesModule.navLink}>
+                  <LockOutlinedIcon className={stylesModule.icons} />{' '}
+                  Bejelentkezés
                 </Button>
               </Link>
             </ListItem>
@@ -133,10 +129,10 @@ export default function HeaderLinks({
       {hideNewRequest ? (
         <></>
       ) : (
-        <ListItem className={classes.listItem}>
-          <Link to="/new-request" className={classes.navReactRouterLink}>
-            <Button color="primary" className={classes.navLinkMain}>
-              <SendRoundedIcon className={classes.icons} />
+        <ListItem className={stylesModule.listItem}>
+          <Link to="/new-request" className={stylesModule.navReactRouterLink}>
+            <Button color="primary" className={stylesModule.navLinkMain}>
+              <SendRoundedIcon className={stylesModule.icons} />
               Felkérés beküldése
             </Button>
           </Link>

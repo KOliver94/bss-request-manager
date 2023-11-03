@@ -1,7 +1,7 @@
 @mixin shadow-big() {
   box-shadow:
     0 16px 38px -12px rgba(0, 0, 0, $bmd-shadow-penumbra-opacity * 4),
-    0 4px 25px 0px rgba(0, 0, 0, $bmd-shadow-ambient-opacity),
+    0 4px 25px 0 rgba(0, 0, 0, $bmd-shadow-ambient-opacity),
     0 8px 10px -5px rgba(0, 0, 0, $bmd-shadow-umbra-opacity);
 }
 
@@ -15,7 +15,7 @@
 @mixin shadow-big-navbar() {
   box-shadow:
     0 10px 20px -12px rgba(0, 0, 0, $bmd-shadow-penumbra-opacity * 3),
-    0 3px 20px 0px rgba(0, 0, 0, $bmd-shadow-ambient-opacity),
+    0 3px 20px 0 rgba(0, 0, 0, $bmd-shadow-ambient-opacity),
     0 8px 10px -5px rgba(0, 0, 0, $bmd-shadow-umbra-opacity);
 }
 
@@ -113,7 +113,7 @@
 @mixin button-shadow-color($color) {
   box-shadow:
     0 14px 26px -12px rgba($color, $bmd-shadow-penumbra-opacity * 3),
-    0 4px 23px 0px rgba(0, 0, 0, $bmd-shadow-ambient-opacity),
+    0 4px 23px 0 rgba(0, 0, 0, $bmd-shadow-ambient-opacity),
     0 8px 10px -5px rgba($color, $bmd-shadow-umbra-opacity);
 }
 

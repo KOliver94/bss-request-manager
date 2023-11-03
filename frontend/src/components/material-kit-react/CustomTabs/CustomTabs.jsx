@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 // @mui components
-import makeStyles from '@mui/styles/makeStyles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Icon from '@mui/material/Icon';
@@ -14,9 +13,7 @@ import Card from 'src/components/material-kit-react/Card/Card';
 import CardBody from 'src/components/material-kit-react/Card/CardBody';
 import CardHeader from 'src/components/material-kit-react/Card/CardHeader';
 
-import styles from 'src/assets/jss/material-kit-react/components/customTabsStyle.js';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './CustomTabs.module.scss';
 
 export default function CustomTabs(props) {
   const { headerColor, plainTabs, tabs, title, rtlActive, activeTab } = props;
@@ -25,21 +22,20 @@ export default function CustomTabs(props) {
   const handleChange = (event, value) => {
     setValue(value);
   };
-  const classes = useStyles();
   const cardTitle = classNames({
-    [classes.cardTitle]: true,
-    [classes.cardTitleRTL]: rtlActive,
+    [stylesModule.cardTitle]: true,
+    [stylesModule.cardTitleRTL]: rtlActive,
   });
   return (
-    <Card plain={plainTabs} className={classes.card}>
+    <Card plain={plainTabs} className={stylesModule.card}>
       <CardHeader color={headerColor} plain={plainTabs}>
         {title !== undefined ? <div className={cardTitle}>{title}</div> : null}
         <Tabs
           value={value}
           onChange={handleChange}
           classes={{
-            root: classes.tabsRoot,
-            indicator: classes.displayNone,
+            root: stylesModule.tabsRoot,
+            indicator: stylesModule.displayNone,
           }}
           textColor="inherit"
         >
@@ -58,11 +54,11 @@ export default function CustomTabs(props) {
             return (
               <Tab
                 classes={{
-                  root: classes.tabRootButton,
-                  selected: classes.tabSelected,
-                  wrapper: classes.tabWrapper,
-                  iconWrapper: classes.tabIconWrapper,
-                  textColorInherit: classes.tabTextColorInherit,
+                  root: stylesModule.tabRootButton,
+                  selected: stylesModule.tabSelected,
+                  wrapper: stylesModule.tabWrapper,
+                  iconWrapper: stylesModule.tabIconWrapper,
+                  textColorInherit: stylesModule.tabTextColorInherit,
                 }}
                 key={key}
                 label={prop.tabName}

@@ -1,6 +1,3 @@
-// @mui components
-import makeStyles from '@mui/styles/makeStyles';
-
 // @mui/icons-material
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import VerifiedUser from '@mui/icons-material/VerifiedUser';
@@ -10,18 +7,15 @@ import GridContainer from 'src/components/material-kit-react/Grid/GridContainer'
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import InfoArea from 'src/components/material-kit-react/InfoArea/InfoArea';
 
-import styles from 'src/assets/jss/material-kit-react/views/landingPageSections/productStyle';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './RulesPoliciesSection.module.scss';
 
 export default function RulesPoliciesSection() {
-  const classes = useStyles();
   return (
-    <div className={classes.section}>
+    <div className={stylesModule.section}>
       <GridContainer justifyContent="center">
         <GridItem xs={12} sm={12} md={8}>
-          <h2 className={classes.title}>Irányelvek és szabályzat</h2>
-          <h5 className={classes.description}>
+          <h2 className={stylesModule.title}>Irányelvek és szabályzat</h2>
+          <h5 className={stylesModule.description}>
             Az alábbi pontok segítenek eligazodni hogyan használd az oldalt és
             mit kell tenned ha szeretnéd, hogy megörökítsük az általad
             szervezett eseményt.

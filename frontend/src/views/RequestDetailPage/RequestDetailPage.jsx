@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
-import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Face from '@mui/icons-material/Face';
@@ -37,16 +36,13 @@ import handleError from 'src/helpers/errorHandler';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 import moveOwnUserToTop from 'src/helpers/sortingHelper';
 
-import styles from 'src/assets/jss/material-kit-react/views/requestDetailPage';
-
-const useStyles = makeStyles(styles);
+import stylesModule from './RequestDetailPage.module.scss';
 
 export default function RequestDetailPage({
   isAuthenticated,
   setIsAuthenticated,
   isPrivileged,
 }) {
-  const classes = useStyles();
   const navigate = useNavigate();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -132,7 +128,7 @@ export default function RequestDetailPage({
                     <Button
                       size="small"
                       onClick={() => closeSnackbar(key)}
-                      className={classes.snackbarButton}
+                      className={stylesModule.snackbarButton}
                     >
                       Rendben
                     </Button>
@@ -163,14 +159,7 @@ export default function RequestDetailPage({
 
     setLoading(true);
     loadData(id);
-  }, [
-    id,
-    isPrivileged,
-    enqueueSnackbar,
-    closeSnackbar,
-    navigate,
-    classes.snackbarButton,
-  ]);
+  }, [id, isPrivileged, enqueueSnackbar, closeSnackbar, navigate]);
 
   useEffect(() => {
     changePageTitle(!loading && data.title);
@@ -200,14 +189,19 @@ export default function RequestDetailPage({
         }}
       />
       <Parallax small filter image={background}>
-        <div className={classes.container}>
+        <div className={stylesModule.container}>
           <GridContainer justifyContent="center">
-            <GridItem className={classes.textCenter}>
-              <h1 className={classes.title}>
+            <GridItem className={stylesModule.textCenter}>
+              <h1 className={stylesModule.title}>
                 {loading ? 'Betöltés...' : data.title}
               </h1>
             </GridItem>
-            <GridItem xs={12} sm={12} md={6} className={classes.textCenter}>
+            <GridItem
+              xs={12}
+              sm={12}
+              md={6}
+              className={stylesModule.textCenter}
+            >
               {!loading && (
                 <Badge color="primary">
                   {requestStatuses.find((x) => x.id === data.status).text}
@@ -217,17 +211,22 @@ export default function RequestDetailPage({
           </GridContainer>
         </div>
       </Parallax>
-      <div className={classNames(classes.main, classes.mainRaised)}>
-        <div className={classNames(classes.container, classes.section)}>
+      <div className={classNames(stylesModule.main, stylesModule.mainRaised)}>
+        <div
+          className={classNames(stylesModule.container, stylesModule.section)}
+        >
           {loading ? (
             <GridContainer justifyContent="center">
               <CircularProgress
-                className={classes.circularProgress}
+                className={stylesModule.circularProgress}
                 size={60}
               />
             </GridContainer>
           ) : (
-            <GridContainer justifyContent="center" className={classes.content}>
+            <GridContainer
+              justifyContent="center"
+              className={stylesModule.content}
+            >
               <GridItem xs={12} sm={12} md={6}>
                 <BasicInformation
                   requestId={id}

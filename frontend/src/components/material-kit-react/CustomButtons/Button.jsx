@@ -5,16 +5,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // @mui components
-import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 
-// core components
-
-import buttonStyle from 'src/assets/jss/material-kit-react/components/buttonStyle.js';
-
-const makeComponentStyles = makeStyles(() => ({
-  ...buttonStyle,
-}));
+import stylesModule from './Button.module.scss';
 
 const RegularButton = forwardRef((props, ref) => {
   const {
@@ -32,19 +25,17 @@ const RegularButton = forwardRef((props, ref) => {
     ...rest
   } = props;
 
-  const classes = makeComponentStyles();
-
   const btnClasses = classNames({
-    [classes.button]: true,
-    [classes[size]]: size,
-    [classes[color]]: color,
-    [classes.round]: round,
-    [classes.fullWidth]: fullWidth,
-    [classes.disabled]: disabled,
-    [classes.simple]: simple,
-    [classes.block]: block,
-    [classes.link]: link,
-    [classes.justIcon]: justIcon,
+    [stylesModule.button]: true,
+    [stylesModule[size]]: size,
+    [stylesModule[color]]: color,
+    [stylesModule.round]: round,
+    [stylesModule.fullWidth]: fullWidth,
+    [stylesModule.disabled]: disabled,
+    [stylesModule.simple]: simple,
+    [stylesModule.block]: block,
+    [stylesModule.link]: link,
+    [stylesModule.justIcon]: justIcon,
     [className]: className,
   });
   return (

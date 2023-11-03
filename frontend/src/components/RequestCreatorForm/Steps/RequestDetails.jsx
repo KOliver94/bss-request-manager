@@ -10,15 +10,10 @@ import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import MUITextField from '@mui/material/TextField';
 import { createFilterOptions } from '@mui/material/Autocomplete';
-import makeStyles from '@mui/styles/makeStyles';
 import * as Yup from 'yup';
 import { requestTypes } from 'src/helpers/enumConstants';
 
-const useStyles = makeStyles(() => ({
-  button: {
-    marginTop: '15px',
-  },
-}));
+import stylesModule from './RequestDetails.module.css';
 
 const filter = createFilterOptions();
 
@@ -58,7 +53,6 @@ const validationSchema = Yup.object({
 });
 
 function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
-  const classes = useStyles();
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={hu}>
       <Formik
@@ -195,13 +189,13 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
             </GridContainer>
             <GridContainer justifyContent="center">
               <GridItem>
-                <Button onClick={handleBack} className={classes.button}>
+                <Button onClick={handleBack} className={stylesModule.button}>
                   Vissza
                 </Button>
                 <Button
                   type="submit"
                   color="primary"
-                  className={classes.button}
+                  className={stylesModule.button}
                 >
                   Következő
                 </Button>
