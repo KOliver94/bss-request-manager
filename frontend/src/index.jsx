@@ -1,5 +1,5 @@
 import { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 import * as Sentry from '@sentry/react';
@@ -13,7 +13,8 @@ if (import.meta.env.PROD) {
   });
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'));
+root.render(
   <StrictMode>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
@@ -31,5 +32,4 @@ ReactDOM.render(
       </ThemeProvider>
     </StyledEngineProvider>
   </StrictMode>,
-  document.getElementById('root'),
 );
