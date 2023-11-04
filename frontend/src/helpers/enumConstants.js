@@ -1,23 +1,23 @@
 export const requestStatuses = [
-  { id: 0, text: 'Elutasítva' },
-  { id: 1, text: 'Felkérés' },
-  { id: 2, text: 'Elvállalva' },
-  { id: 3, text: 'Leforgatva' },
-  { id: 4, text: 'Beírva' },
-  { id: 5, text: 'Megvágva' },
-  { id: 6, text: 'Archiválva' },
-  { id: 7, text: 'Lezárva' },
-  { id: 9, text: 'Szervezők által lemondva' },
-  { id: 10, text: 'Meghíúsult' },
+  { id: 0, text: 'Elutasítva', color: '#999999' },
+  { id: 1, text: 'Felkérés', color: '#F44336' },
+  { id: 2, text: 'Elvállalva', color: '#FF9800' },
+  { id: 3, text: 'Leforgatva', color: '#FFB400' },
+  { id: 4, text: 'Beírva', color: '#FFC200' },
+  { id: 5, text: 'Megvágva', color: '#FFD000' },
+  { id: 6, text: 'Archiválva', color: '#00ACC1' },
+  { id: 7, text: 'Lezárva', color: '#4CAF50' },
+  { id: 9, text: 'Szervezők által lemondva', color: '#999999' },
+  { id: 10, text: 'Meghíúsult', color: '#999999' },
 ];
 
 export const videoStatuses = [
-  { id: 1, text: 'Vágásra vár' },
-  { id: 2, text: 'Vágás alatt' },
-  { id: 3, text: 'Megvágva' },
-  { id: 4, text: 'Kikódolva' },
-  { id: 5, text: 'Közzétéve' },
-  { id: 6, text: 'Lezárva' },
+  { id: 1, text: 'Vágásra vár', color: '#F44336' },
+  { id: 2, text: 'Vágás alatt', color: '#FF9800' },
+  { id: 3, text: 'Megvágva', color: '#FFD000' },
+  { id: 4, text: 'Kikódolva', color: '#00ACC1' },
+  { id: 5, text: 'Közzétéve', color: '#2CC99F' },
+  { id: 6, text: 'Lezárva', color: '#4CAF50' },
 ];
 
 export const requestTypes = [
