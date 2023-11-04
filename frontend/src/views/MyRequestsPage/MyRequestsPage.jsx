@@ -32,7 +32,6 @@ import { format, isAfter, sub } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // API calls
 import { listRequests } from 'src/api/requestApi';
-import { listRequestsAdmin } from 'src/api/requestAdminApi';
 import { requestStatuses } from 'src/helpers/enumConstants';
 import handleError from 'src/helpers/errorHandler';
 import changePageTitle from 'src/helpers/pageTitleHelper';
@@ -42,7 +41,6 @@ import stylesModule from './MyRequestsPage.module.scss';
 export default function MyRequestsPage({
   isAuthenticated,
   setIsAuthenticated,
-  isPrivileged,
 }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -52,22 +50,18 @@ export default function MyRequestsPage({
 
   const loadData = useCallback(
     async (pageNumber) => {
-      try {
-        let result;
-        if (isPrivileged) {
-          result = await listRequestsAdmin(pageNumber, ordering);
-        } else {
-          result = await listRequests(pageNumber, ordering);
-        }
-        setData(result.data);
-        setLoading(false);
-      } catch (e) {
-        enqueueSnackbar(handleError(e), {
-          variant: 'error',
+      await listRequests(pageNumber, ordering)
+        .then((response) => {
+          setData(response.data);
+          setLoading(false);
+        })
+        .catch((e) => {
+          enqueueSnackbar(handleError(e), {
+            variant: 'error',
+          });
         });
-      }
     },
-    [enqueueSnackbar, isPrivileged, ordering],
+    [enqueueSnackbar, ordering],
   );
 
   const handlePageChange = (event, page) => {
@@ -75,7 +69,7 @@ export default function MyRequestsPage({
   };
 
   const handleRowClick = (id) => {
-    navigate(isPrivileged ? `/admin/requests/${id}` : `/my-requests/${id}`);
+    navigate(`/my-requests/${id}`);
   };
 
   const handleOrderingChange = (orderBy) => {
@@ -91,9 +85,9 @@ export default function MyRequestsPage({
   };
 
   useEffect(() => {
-    changePageTitle(isPrivileged ? 'Beküldött felkérések' : 'Felkéréseim');
+    changePageTitle('Felkéréseim');
     loadData(1);
-  }, [loadData, isPrivileged]);
+  }, [loadData]);
 
   return (
     <div>
@@ -121,9 +115,7 @@ export default function MyRequestsPage({
               md={6}
               className={stylesModule.textCenter}
             >
-              <h1 className={stylesModule.title}>
-                {isPrivileged ? 'Felkérések' : 'Felkéréseim'}
-              </h1>
+              <h1 className={stylesModule.title}>Felkéréseim</h1>
             </GridItem>
           </GridContainer>
         </div>
@@ -253,9 +245,4 @@ export default function MyRequestsPage({
 MyRequestsPage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   setIsAuthenticated: PropTypes.func.isRequired,
-  isPrivileged: PropTypes.bool,
-};
-
-MyRequestsPage.defaultProps = {
-  isPrivileged: false,
 };

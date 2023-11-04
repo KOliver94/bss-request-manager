@@ -4,8 +4,6 @@ import Badge from 'src/components/material-kit-react/Badge/Badge';
 // MUI components
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import LockIcon from '@mui/icons-material/Lock';
 import EditIcon from '@mui/icons-material/Edit';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
 // New comment
 import { Formik, Form, Field } from 'formik';
-import { TextField, Checkbox } from 'formik-mui';
+import { TextField } from 'formik-mui';
 import * as Yup from 'yup';
 // Date format
 import { format, formatDistanceToNow } from 'date-fns';
@@ -23,7 +21,7 @@ import { hu } from 'date-fns/locale';
 // Helpers
 import stringToColor from 'src/helpers/stringToColor';
 // API calls
-import { isAdmin, isSelf } from 'src/api/loginApi';
+import { isSelf } from 'src/api/loginApi';
 
 import stylesModule from './Comment.module.css';
 
@@ -33,7 +31,6 @@ export default function CommentMobile({
   handleSubmit,
   isEditing,
   isNew,
-  isPrivileged,
   loading,
   requesterId,
   setEditingCommentId,
@@ -63,7 +60,7 @@ export default function CommentMobile({
           }
           validationSchema={validationSchema}
         >
-          {({ isSubmitting, values, errors, touched }) => (
+          {({ isSubmitting, errors, touched }) => (
             <Form>
               <Stack direction="column" spacing={2}>
                 <Stack direction="row" alignItems="center" spacing={1.5}>
@@ -94,23 +91,6 @@ export default function CommentMobile({
                   alignItems="center"
                   className={stylesModule.buttonStack}
                 >
-                  {isPrivileged && (
-                    <Tooltip
-                      title={values.internal ? 'Belső' : 'Publikus'}
-                      arrow
-                    >
-                      <span>
-                        <Field
-                          component={Checkbox}
-                          type="checkbox"
-                          name="internal"
-                          color="secondary"
-                          icon={<LockOpenIcon />}
-                          checkedIcon={<LockIcon />}
-                        />
-                      </span>
-                    </Tooltip>
-                  )}
                   {!isNew && (
                     <Tooltip title="Elvetés" arrow>
                       <span>
@@ -170,7 +150,7 @@ export default function CommentMobile({
               })}
             </p>
           </Tooltip>
-          {((isPrivileged && isAdmin()) || isSelf(comment.author.id)) && (
+          {isSelf(comment.author.id) && (
             <Stack
               direction="row"
               justifyContent="flex-end"
@@ -223,7 +203,6 @@ CommentMobile.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   isEditing: PropTypes.bool,
   isNew: PropTypes.bool,
-  isPrivileged: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   requesterId: PropTypes.number,
   setEditingCommentId: PropTypes.func.isRequired,

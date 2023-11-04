@@ -10,14 +10,12 @@ import TextField from '@mui/material/TextField';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
-import { updateRatingAdmin } from 'src/api/requestAdminApi';
 import { updateRating } from 'src/api/requestApi';
 import handleError from 'src/helpers/errorHandler';
 
 export default function ReviewDialog({
   reviewDialogData,
   setReviewDialogData,
-  isPrivileged,
   requestData,
   setRequestData,
 }) {
@@ -51,21 +49,12 @@ export default function ReviewDialog({
     setLoading(true);
     let result;
     try {
-      if (isPrivileged) {
-        result = await updateRatingAdmin(
-          reviewDialogData.requestId,
-          reviewDialogData.videoId,
-          reviewDialogData.rating.id,
-          reviewData,
-        );
-      } else {
-        result = await updateRating(
-          reviewDialogData.requestId,
-          reviewDialogData.videoId,
-          reviewDialogData.rating.id,
-          reviewData,
-        );
-      }
+      result = await updateRating(
+        reviewDialogData.requestId,
+        reviewDialogData.videoId,
+        reviewDialogData.rating.id,
+        reviewData,
+      );
       setReviewDialogData({ ...reviewDialogData, open: false });
       setRequestData({
         ...requestData,
@@ -135,7 +124,6 @@ export default function ReviewDialog({
 ReviewDialog.propTypes = {
   reviewDialogData: PropTypes.object.isRequired,
   setReviewDialogData: PropTypes.func.isRequired,
-  isPrivileged: PropTypes.bool.isRequired,
   requestData: PropTypes.object.isRequired,
   setRequestData: PropTypes.func.isRequired,
 };

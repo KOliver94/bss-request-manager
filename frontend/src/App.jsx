@@ -5,7 +5,6 @@ import dialogOptions from 'src/helpers/sentryHelper';
 import { checkRefreshTokenValid } from 'src/api/loginApi';
 
 import AuthenticatedRoute from 'src/components/AuthenticatedRoute';
-import PrivilegedRoute from 'src/components/PrivilegedRoute';
 import ScrollToTop from 'src/components/ScrollToTop';
 
 import ErrorPage from 'src/views/ErrorPage/ErrorPage';
@@ -91,47 +90,6 @@ function App() {
                   isAuthenticated={isAuthenticated}
                   setIsAuthenticated={setIsAuthenticated}
                 />
-              </AuthenticatedRoute>
-            }
-          />
-          <Route
-            path="/admin/requests"
-            element={
-              <AuthenticatedRoute>
-                <PrivilegedRoute>
-                  <MyRequestsPage
-                    isAuthenticated={isAuthenticated}
-                    setIsAuthenticated={setIsAuthenticated}
-                    isPrivileged
-                  />
-                </PrivilegedRoute>
-              </AuthenticatedRoute>
-            }
-          />
-          <Route
-            path="/admin/requests/:id"
-            element={
-              <AuthenticatedRoute>
-                <PrivilegedRoute>
-                  <RequestDetailPage
-                    isAuthenticated={isAuthenticated}
-                    setIsAuthenticated={setIsAuthenticated}
-                    isPrivileged
-                  />
-                </PrivilegedRoute>
-              </AuthenticatedRoute>
-            }
-          />
-          <Route
-            path="/admin/users/:id"
-            element={
-              <AuthenticatedRoute>
-                <PrivilegedRoute>
-                  <ProfilePage
-                    isAuthenticated={isAuthenticated}
-                    setIsAuthenticated={setIsAuthenticated}
-                  />
-                </PrivilegedRoute>
               </AuthenticatedRoute>
             }
           />
