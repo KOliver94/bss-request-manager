@@ -25,6 +25,7 @@ import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 import Badge from 'src/components/material-kit-react/Badge/Badge';
+import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Date format
@@ -178,37 +179,38 @@ export default function MyRequestsPage({
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {data.results.map((item) => (
-                            <TableRow
-                              onClick={() => handleRowClick(item.id)}
-                              key={item.id}
-                              hover
-                            >
-                              <TableCell component="th" scope="row">
-                                {`${item.title} `}
-                                {isAfter(
-                                  new Date(item.created),
-                                  sub(new Date(), { days: 5 }),
-                                ) && <Badge color="info">Új</Badge>}
-                              </TableCell>
-                              <TableCell align="center">
-                                {format(
-                                  new Date(item.start_datetime),
-                                  'yyyy. MMMM d. (eeee) | H:mm',
-                                  { locale: hu },
-                                )}
-                              </TableCell>
-                              <TableCell align="center">
-                                <Badge color="primary">
-                                  {
-                                    requestStatuses.find(
-                                      (x) => x.id === item.status,
-                                    ).text
-                                  }
-                                </Badge>
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                          {data.results.map((item) => {
+                            const requestStatus = requestStatuses.find(
+                              (x) => x.id === item.status,
+                            );
+                            return (
+                              <TableRow
+                                onClick={() => handleRowClick(item.id)}
+                                key={item.id}
+                                hover
+                              >
+                                <TableCell component="th" scope="row">
+                                  {`${item.title} `}
+                                  {isAfter(
+                                    new Date(item.created),
+                                    sub(new Date(), { days: 5 }),
+                                  ) && <Badge color="info">Új</Badge>}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {format(
+                                    new Date(item.start_datetime),
+                                    'yyyy. MMMM d. (eeee) | H:mm',
+                                    { locale: hu },
+                                  )}
+                                </TableCell>
+                                <TableCell align="center">
+                                  <StatusBadge color={requestStatus.color}>
+                                    {requestStatus.text}
+                                  </StatusBadge>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                         </TableBody>
                       </Table>
                     </TableContainer>

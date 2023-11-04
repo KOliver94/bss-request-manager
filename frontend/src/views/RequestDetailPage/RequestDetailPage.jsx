@@ -9,7 +9,7 @@ import TheatersIcon from '@mui/icons-material/Theaters';
 // background
 import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
 // core components
-import Badge from 'src/components/material-kit-react/Badge/Badge';
+import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
 import CustomTabs from 'src/components/material-kit-react/CustomTabs/CustomTabs';
 import Header from 'src/components/material-kit-react/Header/Header';
 import Footer from 'src/components/material-kit-react/Footer/Footer';
@@ -55,6 +55,7 @@ export default function RequestDetailPage({
     videos: [],
     comments: [],
   });
+  const requestStatus = requestStatuses.find((x) => x.id === data.status);
 
   const tabsContent = () => {
     return [
@@ -125,9 +126,9 @@ export default function RequestDetailPage({
               className={stylesModule.textCenter}
             >
               {!loading && (
-                <Badge color="primary">
-                  {requestStatuses.find((x) => x.id === data.status).text}
-                </Badge>
+                <StatusBadge color={requestStatus.color}>
+                  {requestStatus.text}
+                </StatusBadge>
               )}
             </GridItem>
           </GridContainer>

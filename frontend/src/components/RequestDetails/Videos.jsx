@@ -19,7 +19,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Rating from '@mui/material/Rating';
 import Tooltip from '@mui/material/Tooltip';
 // Material React Kit components
-import Badge from 'src/components/material-kit-react/Badge/Badge';
+import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
@@ -197,78 +197,85 @@ export default function Videos({ requestId, requestData, setRequestData }) {
     <div>
       {requestData.videos.length > 0 ? (
         <>
-          {requestData.videos.sort(compareValues('id')).map((video) => (
-            <Accordion
-              key={`${video.id}-panel`}
-              expanded={`${video.id}-panel` === videoAccordionOpen}
-              onChange={() => {
-                handleVideoAccordionChange(`${video.id}-panel`);
-              }}
-            >
-              <AccordionSummary
-                expandIcon={requestData.videos.length > 1 && <ExpandMoreIcon />}
-                classes={{ content: stylesModule.accordion }}
+          {requestData.videos.sort(compareValues('id')).map((video) => {
+            const videoStatus = videoStatuses.find(
+              (x) => x.id === video.status,
+            );
+            return (
+              <Accordion
+                key={`${video.id}-panel`}
+                expanded={`${video.id}-panel` === videoAccordionOpen}
+                onChange={() => {
+                  handleVideoAccordionChange(`${video.id}-panel`);
+                }}
               >
-                <Typography className={stylesModule.heading}>
-                  {video.title}
-                </Typography>
-                <div className={stylesModule.statusBadge}>
-                  <Badge color="primary">
-                    {videoStatuses.find((x) => x.id === video.status).text}
-                  </Badge>
-                </div>
-              </AccordionSummary>
-
-              {video.video_url && (
-                <AccordionDetails>
-                  <Typography variant="body2" align="justify" gutterBottom>
-                    Az elkészült videót itt tekintheted meg:{' '}
-                    <a
-                      href={video.video_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {video.video_url}
-                    </a>
+                <AccordionSummary
+                  expandIcon={
+                    requestData.videos.length > 1 && <ExpandMoreIcon />
+                  }
+                  classes={{ content: stylesModule.accordion }}
+                >
+                  <Typography className={stylesModule.heading}>
+                    {video.title}
                   </Typography>
-                </AccordionDetails>
-              )}
+                  <div className={stylesModule.statusBadge}>
+                    <StatusBadge color={videoStatus.color}>
+                      {videoStatus.text}
+                    </StatusBadge>
+                  </div>
+                </AccordionSummary>
 
-              {video.status >= 5 && (
-                <>
-                  <Divider />
-                  <AccordionActions>
-                    {getOwnRatingForVideo(video).rating > 0 && (
-                      <Tooltip
-                        title="Szöveges értékelés írása"
-                        classes={{ tooltip: stylesModule.tooltip }}
-                        placement="left"
-                        arrow
+                {video.video_url && (
+                  <AccordionDetails>
+                    <Typography variant="body2" align="justify" gutterBottom>
+                      Az elkészült videót itt tekintheted meg:{' '}
+                      <a
+                        href={video.video_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
-                        <span>
-                          <IconButton
-                            onClick={() => handleReview(video)}
-                            disabled={reviewDialogData.open || ratingLoading}
-                            size="small"
-                          >
-                            <RateReviewIcon fontSize="small" />
-                          </IconButton>
-                        </span>
-                      </Tooltip>
-                    )}
-                    <Rating
-                      name={`${video.id}-own-rating`}
-                      value={getOwnRatingForVideo(video).rating}
-                      onChange={(event, value) =>
-                        handleRatingCreateUpdate(value, video)
-                      }
-                      disabled={reviewDialogData.open || ratingLoading}
-                    />
-                  </AccordionActions>
-                </>
-              )}
-            </Accordion>
-          ))}
+                        {video.video_url}
+                      </a>
+                    </Typography>
+                  </AccordionDetails>
+                )}
+
+                {video.status >= 5 && (
+                  <>
+                    <Divider />
+                    <AccordionActions>
+                      {getOwnRatingForVideo(video).rating > 0 && (
+                        <Tooltip
+                          title="Szöveges értékelés írása"
+                          classes={{ tooltip: stylesModule.tooltip }}
+                          placement="left"
+                          arrow
+                        >
+                          <span>
+                            <IconButton
+                              onClick={() => handleReview(video)}
+                              disabled={reviewDialogData.open || ratingLoading}
+                              size="small"
+                            >
+                              <RateReviewIcon fontSize="small" />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+                      )}
+                      <Rating
+                        name={`${video.id}-own-rating`}
+                        value={getOwnRatingForVideo(video).rating}
+                        onChange={(event, value) =>
+                          handleRatingCreateUpdate(value, video)
+                        }
+                        disabled={reviewDialogData.open || ratingLoading}
+                      />
+                    </AccordionActions>
+                  </>
+                )}
+              </Accordion>
+            );
+          })}
         </>
       ) : (
         <p className={stylesModule.noVideosYet}>
