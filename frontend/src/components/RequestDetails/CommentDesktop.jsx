@@ -4,8 +4,6 @@ import Badge from 'src/components/material-kit-react/Badge/Badge';
 // MUI components
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import LockIcon from '@mui/icons-material/Lock';
 import EditIcon from '@mui/icons-material/Edit';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -24,7 +22,7 @@ import { hu } from 'date-fns/locale';
 // Helpers
 import stringToColor from 'src/helpers/stringToColor';
 // API calls
-import { isAdmin, isSelf } from 'src/api/loginApi';
+import { isSelf } from 'src/api/loginApi';
 
 import stylesModule from './Comment.module.css';
 
@@ -34,7 +32,6 @@ export default function CommentDesktop({
   handleSubmit,
   isEditing,
   isNew,
-  isPrivileged,
   loading,
   requesterId,
   setEditingCommentId,
@@ -92,24 +89,6 @@ export default function CommentDesktop({
                   />
                 </Grid>
                 <Grid item className={stylesModule.commentButtons}>
-                  {isPrivileged && (
-                    <Tooltip
-                      title={values.internal ? 'Belső' : 'Publikus'}
-                      placement="left"
-                      arrow
-                    >
-                      <Grid item>
-                        <Field
-                          component={Checkbox}
-                          type="checkbox"
-                          name="internal"
-                          color="secondary"
-                          icon={<LockOpenIcon />}
-                          checkedIcon={<LockIcon />}
-                        />
-                      </Grid>
-                    </Tooltip>
-                  )}
                   {!isNew && (
                     <Grid item>
                       <Tooltip title="Elvetés" placement="left" arrow>
@@ -183,7 +162,7 @@ export default function CommentDesktop({
             </Tooltip>
           </Grid>
 
-          {((isPrivileged && isAdmin()) || isSelf(comment.author.id)) && (
+          {isSelf(comment.author.id) && (
             <Grid item className={stylesModule.commentButtons}>
               <Grid item>
                 <Tooltip title="Törlés" placement="left" arrow>
@@ -232,7 +211,6 @@ CommentDesktop.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   isEditing: PropTypes.bool,
   isNew: PropTypes.bool,
-  isPrivileged: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   requesterId: PropTypes.number,
   setEditingCommentId: PropTypes.func.isRequired,

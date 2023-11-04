@@ -18,22 +18,12 @@ import {
   updateComment,
   deleteComment,
 } from 'src/api/requestApi';
-import {
-  createCommentAdmin,
-  updateCommentAdmin,
-  deleteCommentAdmin,
-} from 'src/api/requestAdminApi';
 import compareValues from 'src/helpers/objectComperator';
 import handleError from 'src/helpers/errorHandler';
 
 import stylesModule from './Comments.module.css';
 
-export default function Comments({
-  requestId,
-  requestData,
-  setRequestData,
-  isPrivileged,
-}) {
+export default function Comments({ requestId, requestData, setRequestData }) {
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(-1);
@@ -50,15 +40,8 @@ export default function Comments({
     let result;
     try {
       if (editingCommentId > 0 && !newComment) {
-        if (isPrivileged) {
-          result = await updateCommentAdmin(
-            requestId,
-            editingCommentId,
-            values,
-          );
-        } else {
-          result = await updateComment(requestId, editingCommentId, values);
-        }
+        result = await updateComment(requestId, editingCommentId, values);
+
         setEditingCommentId(-1);
         setRequestData({
           ...requestData,
@@ -70,11 +53,8 @@ export default function Comments({
           }),
         });
       } else {
-        if (isPrivileged) {
-          result = await createCommentAdmin(requestId, values);
-        } else {
-          result = await createComment(requestId, values);
-        }
+        result = await createComment(requestId, values);
+
         setRequestData({
           ...requestData,
           comments: [...requestData.comments, result.data],
@@ -89,11 +69,7 @@ export default function Comments({
   const handleDelete = async (commentId) => {
     setLoading(true);
     try {
-      if (isPrivileged) {
-        await deleteCommentAdmin(requestId, commentId);
-      } else {
-        await deleteComment(requestId, commentId);
-      }
+      await deleteComment(requestId, commentId);
       setRequestData({
         ...requestData,
         comments: requestData.comments.filter(
@@ -138,7 +114,6 @@ export default function Comments({
                     handleDelete={handleDelete}
                     handleSubmit={handleSubmit}
                     isEditing={editingCommentId === comment.id}
-                    isPrivileged={isPrivileged}
                     loading={loading}
                     requesterId={requestData.requester.id}
                     setEditingCommentId={setEditingCommentId}
@@ -150,7 +125,6 @@ export default function Comments({
                     handleDelete={handleDelete}
                     handleSubmit={handleSubmit}
                     isEditing={editingCommentId === comment.id}
-                    isPrivileged={isPrivileged}
                     loading={loading}
                     requesterId={requestData.requester.id}
                     setEditingCommentId={setEditingCommentId}
@@ -164,7 +138,6 @@ export default function Comments({
             handleDelete={handleDelete}
             handleSubmit={handleSubmit}
             isNew
-            isPrivileged={isPrivileged}
             loading={loading}
             setEditingCommentId={setEditingCommentId}
           />
@@ -173,7 +146,6 @@ export default function Comments({
             handleDelete={handleDelete}
             handleSubmit={handleSubmit}
             isNew
-            isPrivileged={isPrivileged}
             loading={loading}
             setEditingCommentId={setEditingCommentId}
           />
@@ -187,5 +159,4 @@ Comments.propTypes = {
   requestId: PropTypes.string.isRequired,
   requestData: PropTypes.object.isRequired,
   setRequestData: PropTypes.func.isRequired,
-  isPrivileged: PropTypes.bool.isRequired,
 };

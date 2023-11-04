@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
-import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import Face from '@mui/icons-material/Face';
 import TheatersIcon from '@mui/icons-material/Theaters';
 // background
 import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
@@ -24,29 +22,22 @@ import { useSnackbar } from 'notistack';
 // Page components
 import BasicInformation from 'src/components/RequestDetails/BasicInformation';
 import Comments from 'src/components/RequestDetails/Comments';
-import Crew from 'src/components/RequestDetails/Crew';
 import Videos from 'src/components/RequestDetails/Videos';
 // API calls
 import { getRequest } from 'src/api/requestApi';
-import { getRequestAdmin } from 'src/api/requestAdminApi';
-import { listStaffUsers } from 'src/api/userApi';
 import { requestStatuses } from 'src/helpers/enumConstants';
-import { isPrivileged as isPrivilegedCheck } from 'src/api/loginApi';
 import handleError from 'src/helpers/errorHandler';
 import changePageTitle from 'src/helpers/pageTitleHelper';
-import moveOwnUserToTop from 'src/helpers/sortingHelper';
 
 import stylesModule from './RequestDetailPage.module.scss';
 
 export default function RequestDetailPage({
   isAuthenticated,
   setIsAuthenticated,
-  isPrivileged,
 }) {
   const navigate = useNavigate();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { id } = useParams();
-  const [snackbarId, setSnackbarId] = useState(0);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     id: 0,
@@ -64,91 +55,28 @@ export default function RequestDetailPage({
     videos: [],
     comments: [],
   });
-  const [staffMembers, setStaffMembers] = useState([]);
 
   const tabsContent = () => {
-    const content = [
+    return [
       {
         tabName: 'Videók',
         tabIcon: TheatersIcon,
         tabContent: (
-          <Videos
-            requestId={id}
-            requestData={data}
-            setRequestData={setData}
-            staffMembers={staffMembers}
-            isPrivileged={isPrivileged}
-          />
+          <Videos requestId={id} requestData={data} setRequestData={setData} />
         ),
       },
     ];
-    if (isPrivileged) {
-      content.unshift({
-        tabName: 'Stáb',
-        tabIcon: Face,
-        tabContent: (
-          <Crew
-            requestId={id}
-            requestData={data}
-            setRequestData={setData}
-            staffMembers={staffMembers}
-            isPrivileged={isPrivileged}
-          />
-        ),
-      });
-    }
-    return content;
   };
 
   useEffect(() => {
     async function loadData(requestId) {
       try {
-        let result;
-        if (isPrivileged) {
-          result = await getRequestAdmin(requestId);
-          await listStaffUsers().then((response) => {
-            setStaffMembers(moveOwnUserToTop(response.data));
-          });
-          if (
-            result.data.status === 3 &&
-            (!result.data.additional_data ||
-              (result.data.additional_data &&
-                !result.data.additional_data.recording) ||
-              (result.data.additional_data &&
-                result.data.additional_data.recording &&
-                !result.data.additional_data.recording.path))
-          ) {
-            setSnackbarId(
-              enqueueSnackbar(
-                'A nyersek helye még nincs megadva. Ne felejtsd el kitölteni!',
-                {
-                  variant: 'warning',
-                  persist: true,
-                  action: (key) => (
-                    <Button
-                      size="small"
-                      onClick={() => closeSnackbar(key)}
-                      className={stylesModule.snackbarButton}
-                    >
-                      Rendben
-                    </Button>
-                  ),
-                },
-              ),
-            );
-          }
-        } else {
-          result = await getRequest(requestId);
-        }
+        const result = await getRequest(requestId);
         setData(result.data);
         setLoading(false);
       } catch (e) {
         if (e.response && e.response.status === 404) {
-          if (!isPrivileged && isPrivilegedCheck()) {
-            navigate(`/admin/requests/${id}`, { replace: true });
-          } else {
-            navigate('/404', { replace: true });
-          }
+          navigate('/404', { replace: true });
         } else {
           enqueueSnackbar(handleError(e), {
             variant: 'error',
@@ -159,17 +87,11 @@ export default function RequestDetailPage({
 
     setLoading(true);
     loadData(id);
-  }, [id, isPrivileged, enqueueSnackbar, closeSnackbar, navigate]);
+  }, [id, enqueueSnackbar, closeSnackbar, navigate]);
 
   useEffect(() => {
     changePageTitle(!loading && data.title);
   }, [loading, data]);
-
-  useEffect(() => {
-    return function cleanup() {
-      closeSnackbar(snackbarId);
-    };
-  }, [snackbarId, closeSnackbar]);
 
   return (
     <div>
@@ -232,15 +154,13 @@ export default function RequestDetailPage({
                   requestId={id}
                   requestData={data}
                   setRequestData={setData}
-                  staffMembers={staffMembers}
-                  isPrivileged={isPrivileged}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomTabs
                   headerColor="primary"
                   tabs={tabsContent()}
-                  activeTab={isPrivileged && data.status >= 4 ? 1 : 0}
+                  activeTab={0}
                 />
               </GridItem>
               <GridItem>
@@ -248,7 +168,6 @@ export default function RequestDetailPage({
                   requestId={id}
                   requestData={data}
                   setRequestData={setData}
-                  isPrivileged={isPrivileged}
                 />
               </GridItem>
             </GridContainer>
@@ -263,9 +182,4 @@ export default function RequestDetailPage({
 RequestDetailPage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   setIsAuthenticated: PropTypes.func.isRequired,
-  isPrivileged: PropTypes.bool,
-};
-
-RequestDetailPage.defaultProps = {
-  isPrivileged: false,
 };
