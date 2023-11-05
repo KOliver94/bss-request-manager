@@ -291,7 +291,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                         <Badge color="primary">
                           {userRoles(userData.role)}
                         </Badge>
-                        {userData.ban && <Badge color="danger">Kitiltva</Badge>}
+                        {userData.ban && <Badge color="error">Kitiltva</Badge>}
                       </h6>
                       {userData.groups && (
                         <h6>
@@ -734,7 +734,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                   <GridContainer justifyContent="center">
                     <GridItem className={stylesModule.textCenter}>
                       <Button
-                        color="danger"
+                        color="error"
                         className={stylesModule.button}
                         onClick={reset}
                         disabled={isSubmitting}

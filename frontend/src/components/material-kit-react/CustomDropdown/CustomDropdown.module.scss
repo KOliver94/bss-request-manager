@@ -89,11 +89,11 @@
     @include theme.warningBoxShadow;
   }
 }
-.dangerHover {
+.errorHover {
   &:hover {
     background-color: map.get(theme.$themeColors, 'error');
     color: #ffffff;
-    @include theme.dangerBoxShadow;
+    @include theme.errorBoxShadow;
   }
 }
 .secondaryHover {

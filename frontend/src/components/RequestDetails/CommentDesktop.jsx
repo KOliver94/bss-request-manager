@@ -158,7 +158,7 @@ export default function CommentDesktop({
               {comment.author.id === requesterId && (
                 <Badge color="info">Felkérő</Badge>
               )}
-              {comment.internal && <Badge color="danger">Belső</Badge>}
+              {comment.internal && <Badge color="error">Belső</Badge>}
             </Stack>
 
             <p className={stylesModule.commentText}>{comment.text}</p>

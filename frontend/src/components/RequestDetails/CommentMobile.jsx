@@ -148,7 +148,7 @@ export default function CommentMobile({
                 {comment.author.id === requesterId && (
                   <Badge color="info">Felkérő</Badge>
                 )}
-                {comment.internal && <Badge color="danger">Belső</Badge>}
+                {comment.internal && <Badge color="error">Belső</Badge>}
               </Stack>
             </Stack>
           </Stack>

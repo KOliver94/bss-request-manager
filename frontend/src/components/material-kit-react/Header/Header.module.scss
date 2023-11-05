@@ -96,7 +96,7 @@
     0 4px 20px 0 rgba(0, 0, 0, 0.14),
     0 7px 12px -5px rgba(255, 152, 0, 0.46);
 }
-.danger {
+.error {
   background-color: map.get(theme.$themeColors, 'error');
   color: #ffffff;
   box-shadow:
