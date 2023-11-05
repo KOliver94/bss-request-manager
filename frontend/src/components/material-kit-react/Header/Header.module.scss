@@ -66,7 +66,14 @@
   color: #ffffff;
   box-shadow:
     0 4px 20px 0 rgba(0, 0, 0, 0.14),
-    0 7px 12px -5px rgba(156, 39, 176, 0.46);
+    0 7px 12px -5px rgba(30, 136, 229, 0.46);
+}
+.secondary {
+  background-color: map.get(theme.$themeColors, 'secondary');
+  color: #ffffff;
+  box-shadow:
+    0 4px 20px 0 rgba(0, 0, 0, 0.14),
+    0 7px 12px -5px rgba(255, 179, 0, 0.46);
 }
 .info {
   background-color: map.get(theme.$themeColors, 'info');
@@ -95,13 +102,6 @@
   box-shadow:
     0 4px 20px 0 rgba(0, 0, 0, 0.14),
     0 7px 12px -5px rgba(244, 67, 54, 0.46);
-}
-.secondary {
-  background-color: map.get(theme.$themeColors, 'secondary');
-  color: #ffffff;
-  box-shadow:
-    0 4px 20px 0 rgba(0, 0, 0, 0.14),
-    0 7px 12px -5px rgba(233, 30, 99, 0.46);
 }
 .transparent {
   background-color: transparent !important;

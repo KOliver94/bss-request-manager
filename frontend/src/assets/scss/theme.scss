@@ -14,14 +14,28 @@
 
  */
 
+// https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors
+// 2014 Material Design color palettes
 $themeColors: (
-  'primary': #9c27b0,
-  'secondary': #e91e63,
+  // Blue 50 600
+  // rgb(30, 136, 229)
+  'primary': #1e88e5,
+  // Amber 50 600
+  // rgb(255, 179, 0)
+  'secondary': #ffb300,
+  // Red 50 500
+  // rgb(244, 67, 54)
   'error': #f44336,
+  // Orange 50 500
+  // rgb(255, 152, 0)
   'warning': #ff9800,
-  'info': #00acc1,
+  // Cyan 50 500
+  // rgb(0, 188, 212)
+  'info': #00bcd4,
+  // Green 50 500
+  // rgb(76, 175, 80)
   'success': #4caf50,
-  'gray': #999999,
+  'gray': #999999
 );
 
 $themeBreakpoints: (
@@ -60,9 +74,14 @@ $themeBreakpoints: (
 
 @mixin primaryBoxShadow {
   box-shadow:
-    0 12px 20px -10px rgba(156, 39, 176, 0.28),
+    0 12px 20px -10px rgba(30, 136, 229, 0.28),
     0 4px 20px 0 rgba(0, 0, 0, 0.12),
-    0 7px 8px -5px rgba(156, 39, 176, 0.2);
+    0 7px 8px -5px rgba(30, 136, 229, 0.2);
+}
+@mixin secondaryBoxShadow {
+  box-shadow:
+    0 4px 20px 0 rgba(0, 0, 0, 0.14),
+    0 7px 10px -5px rgba(255, 179, 0, 0.4);
 }
 @mixin infoBoxShadow {
   box-shadow:
@@ -87,11 +106,6 @@ $themeBreakpoints: (
     0 12px 20px -10px rgba(244, 67, 54, 0.28),
     0 4px 20px 0 rgba(0, 0, 0, 0.12),
     0 7px 8px -5px rgba(244, 67, 54, 0.2);
-}
-@mixin secondaryBoxShadow {
-  box-shadow:
-    0 4px 20px 0 rgba(0, 0, 0, 0.14),
-    0 7px 10px -5px rgba(233, 30, 99, 0.4);
 }
 
 @mixin title {
