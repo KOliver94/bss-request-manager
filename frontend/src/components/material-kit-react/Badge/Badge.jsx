@@ -6,7 +6,7 @@ import stylesModule from './Badge.module.scss';
 export default function Badge(props) {
   const { color, children } = props;
   return (
-    <span className={stylesModule.badge + ' ' + stylesModule[color]}>
+    <span className={`${stylesModule.badge} ${stylesModule[color]}`}>
       {children}
     </span>
   );
@@ -23,7 +23,7 @@ Badge.propTypes = {
     'danger',
     'success',
     'info',
-    'rose',
+    'secondary',
     'gray',
   ]),
   children: PropTypes.node,

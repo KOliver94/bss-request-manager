@@ -92,7 +92,7 @@ export default function Header(props) {
       <Hidden mdUp implementation="js">
         <Drawer
           variant="temporary"
-          anchor={'right'}
+          anchor="right"
           open={mobileOpen}
           classes={{
             paper: stylesModule.drawerPaper,
@@ -122,7 +122,7 @@ Header.propTypes = {
     'danger',
     'transparent',
     'white',
-    'rose',
+    'secondary',
     'dark',
   ]),
   rightLinks: PropTypes.node,
@@ -146,7 +146,7 @@ Header.propTypes = {
       'danger',
       'transparent',
       'white',
-      'rose',
+      'secondary',
       'dark',
     ]).isRequired,
   }),

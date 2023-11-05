@@ -38,8 +38,8 @@
   background: linear-gradient(60deg, #ab47bc, #8e24aa);
   @include theme.primaryBoxShadow;
 }
-.roseCardHeader {
+.secondaryCardHeader {
   color: #fff;
   background: linear-gradient(60deg, #ec407a, #d81b60);
-  @include theme.roseBoxShadow;
+  @include theme.secondaryBoxShadow;
 }

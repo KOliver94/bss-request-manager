@@ -156,7 +156,7 @@
       0 8px 10px -5px rgba(244, 67, 54, 0.2);
   }
 }
-.rose {
+.secondary {
   background-color: map.get(theme.$themeColors, 'secondary');
   box-shadow:
     0 2px 2px 0 rgba(233, 30, 99, 0.14),
@@ -307,7 +307,7 @@
       color: map.get(theme.$themeColors, 'warning');
     }
   }
-  &.rose {
+  &.secondary {
     &,
     &:focus,
     &:hover,

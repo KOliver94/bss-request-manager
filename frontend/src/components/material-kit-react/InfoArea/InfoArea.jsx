@@ -43,7 +43,7 @@ InfoArea.propTypes = {
     'danger',
     'success',
     'info',
-    'rose',
+    'secondary',
     'gray',
   ]),
   vertical: PropTypes.bool,

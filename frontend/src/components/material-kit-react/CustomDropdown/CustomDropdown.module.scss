@@ -96,11 +96,11 @@
     @include theme.dangerBoxShadow;
   }
 }
-.roseHover {
+.secondaryHover {
   &:hover {
     background-color: map.get(theme.$themeColors, 'secondary');
     color: #ffffff;
-    @include theme.roseBoxShadow;
+    @include theme.secondaryBoxShadow;
   }
 }
 .dropdownItemRTL {
