@@ -18,8 +18,6 @@ import RequestDetailPage from 'src/views/RequestDetailPage/RequestDetailPage';
 import PrivacyPolicyPage from 'src/views/PolicyPages/PrivacyPolicyPage';
 import TermsOfServicePage from 'src/views/PolicyPages/TermsOfServicePage';
 
-import 'src/assets/scss/material-kit-react.scss';
-
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem('access_token') && checkRefreshTokenValid(),

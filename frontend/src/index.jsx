@@ -5,7 +5,9 @@ import { SnackbarProvider } from 'notistack';
 import * as Sentry from '@sentry/react';
 import App from './App';
 import theme from './assets/jss/theme';
-import './assets/css/style.css';
+
+import 'src/assets/scss/custom-icon-font.scss';
+import 'src/assets/scss/material-kit-react.scss';
 
 if (import.meta.env.PROD) {
   Sentry.init({
