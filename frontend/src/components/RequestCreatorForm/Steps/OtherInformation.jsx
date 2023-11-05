@@ -5,7 +5,7 @@ import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
 
 import { TextField } from '@mui/material';
-import stylesModule from './OtherInformation.module.css';
+import stylesModule from './OtherInformation.module.scss';
 
 function OtherInformation({ formData, setFormData, handleNext, handleBack }) {
   const { control, handleSubmit } = useForm({

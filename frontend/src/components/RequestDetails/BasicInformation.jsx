@@ -21,7 +21,7 @@ import { useSnackbar } from 'notistack';
 import { getRequest } from 'src/api/requestApi';
 import handleError from 'src/helpers/errorHandler';
 
-import stylesModule from './BasicInformation.module.css';
+import stylesModule from './BasicInformation.module.scss';
 
 export default function BasicInformation({
   requestId,

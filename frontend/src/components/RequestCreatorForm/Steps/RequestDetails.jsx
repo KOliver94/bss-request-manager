@@ -13,7 +13,7 @@ import { requestTypes } from 'src/helpers/enumConstants';
 
 import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers';
-import stylesModule from './RequestDetails.module.css';
+import stylesModule from './RequestDetails.module.scss';
 
 const filter = createFilterOptions();
 
