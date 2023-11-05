@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 // material-kit-react
 import Badge from 'src/components/material-kit-react/Badge/Badge';
@@ -11,9 +12,10 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
+import { TextField } from '@mui/material';
 // New comment
-import { Formik, Form, Field } from 'formik';
-import { TextField } from 'formik-mui';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 // Date format
 import { format, formatDistanceToNow } from 'date-fns';
@@ -50,71 +52,85 @@ export default function CommentMobile({
     text: Yup.string().trim().required('Üres hozzászólás nem küldhető be!'),
   });
 
+  const {
+    control,
+    handleSubmit: hooksSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+    defaultValues: comment,
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = async (data) => {
+    await handleSubmit(data, isNew);
+    reset();
+  };
+
+  useEffect(() => {
+    reset(comment);
+  }, [reset, comment]);
+
   return (
     <>
       {isEditing || isNew ? (
-        <Formik
-          initialValues={comment}
-          onSubmit={(values, resetForm) =>
-            handleSubmit(values, isNew, resetForm)
-          }
-          validationSchema={validationSchema}
-        >
-          {({ isSubmitting, errors, touched }) => (
-            <Form>
-              <Stack direction="column" spacing={2}>
-                <Stack direction="row" alignItems="center" spacing={1.5}>
-                  <Avatar
-                    src={avatarUrl}
-                    sx={{
-                      bgcolor: stringToColor(userName),
-                    }}
-                  >
-                    {nameFirstLetter}
-                  </Avatar>
-                  <h4 className={stylesModule.commentAuthor}>{userName}</h4>
-                </Stack>
-                <Field
-                  name="text"
+        <form onSubmit={hooksSubmit(onSubmit)}>
+          <Stack direction="column" spacing={2}>
+            <Stack direction="row" alignItems="center" spacing={1.5}>
+              <Avatar
+                src={avatarUrl}
+                sx={{
+                  bgcolor: stringToColor(userName),
+                }}
+              >
+                {nameFirstLetter}
+              </Avatar>
+              <h4 className={stylesModule.commentAuthor}>{userName}</h4>
+            </Stack>
+            <Controller
+              name="text"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
                   label={isNew ? 'Új hozzászólás' : 'Szerkesztés'}
                   margin="normal"
-                  component={TextField}
                   fullWidth
                   multiline
                   rows={5}
-                  error={touched.text && !!errors.text}
-                  helperText={touched.text && errors.text}
+                  error={!!errors.text}
+                  helperText={errors.text?.message}
                 />
-                <Stack
-                  direction="row"
-                  justifyContent="flex-end"
-                  alignItems="center"
-                  className={stylesModule.buttonStack}
-                >
-                  {!isNew && (
-                    <Tooltip title="Elvetés" arrow>
-                      <span>
-                        <IconButton
-                          onClick={() => setEditingCommentId(-1)}
-                          disabled={isSubmitting}
-                        >
-                          <ClearIcon />
-                        </IconButton>
-                      </span>
-                    </Tooltip>
-                  )}
-                  <Tooltip title={isNew ? 'Küldés' : 'Mentés'} arrow>
-                    <span>
-                      <IconButton type="submit" disabled={isSubmitting}>
-                        <SendIcon />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                </Stack>
-              </Stack>
-            </Form>
-          )}
-        </Formik>
+              )}
+            />
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+              className={stylesModule.buttonStack}
+            >
+              {!isNew && (
+                <Tooltip title="Elvetés" arrow>
+                  <span>
+                    <IconButton
+                      onClick={() => setEditingCommentId(-1)}
+                      disabled={isSubmitting}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              )}
+              <Tooltip title={isNew ? 'Küldés' : 'Mentés'} arrow>
+                <span>
+                  <IconButton type="submit" disabled={isSubmitting}>
+                    <SendIcon />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </Stack>
+          </Stack>
+        </form>
       ) : (
         <Stack direction="column" spacing={2}>
           <Stack direction="row" alignItems="center" spacing={1.5}>

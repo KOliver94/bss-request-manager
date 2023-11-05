@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 // @mui components
 import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Alert from '@mui/material/Alert';
@@ -18,10 +17,8 @@ import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MUIButton from '@mui/material/Button';
 import Skeleton from '@mui/material/Skeleton';
 import Switch from '@mui/material/Switch';
-import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -35,14 +32,14 @@ import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 import Badge from 'src/components/material-kit-react/Badge/Badge';
-// Formik
-import { Formik, Form } from 'formik';
+// React Hook Form
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 // Date fields
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import sub from 'date-fns/sub';
-import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // Yup validations
 import * as Yup from 'yup';
@@ -55,8 +52,6 @@ import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
 import {
   getUser,
   updateUser,
-  banUser,
-  unbanUser,
   connectSocial,
   disconnectSocial,
 } from 'src/api/userApi';
@@ -102,51 +97,38 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const [includeResponsible, setIncludeResponsible] = useState(true);
   const [headerDataChange, setHeaderDataChange] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(null);
-  const [banReason, setBanReason] = useState('');
-  const [banLoading, setBanLoading] = useState(false);
-  const [banChanged, setBanChanged] = useState(false);
+
+  Yup.addMethod(Yup.string, 'phone', isValidPhone);
+  const validationSchema = Yup.object({
+    first_name: Yup.string()
+      .min(2, 'Túl rövid keresztnév!')
+      .max(30, 'Túl hosszú keresztnév!')
+      .trim()
+      .required('A keresztnév megadása kötelező!'),
+    last_name: Yup.string()
+      .min(2, 'Túl rövid vezetéknév!')
+      .max(150, 'Túl hosszú vezetéknév!')
+      .trim()
+      .required('A vezetéknév megadása kötelező!'),
+    email: Yup.string()
+      .email('Érvénytelen e-mail cím!')
+      .required('Az e-mail cím megadása kötelező!'),
+    phone_number: Yup.string()
+      .phone('Érvénytelen telefonszám!')
+      .required('A telefonszám megadása kötelező!'),
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
   const handleCloseTooltip = (tooltip) =>
     tooltipOpen === tooltip && setTooltipOpen(null);
-
-  const handleSubmit = async (val) => {
-    const values = val;
-    try {
-      const result = id
-        ? await updateUser(id, values)
-        : await updateUser('me', values);
-      setUserData(result.data);
-      if (!id || isSelf(id)) {
-        localStorage.setItem(
-          'name',
-          `${result.data.last_name} ${result.data.first_name}`,
-        );
-        localStorage.setItem('avatar', result.data.profile.avatar_url);
-        setHeaderDataChange(!headerDataChange);
-      }
-    } catch (e) {
-      enqueueSnackbar(handleError(e), {
-        variant: 'error',
-      });
-    }
-  };
-
-  const handleBan = async () => {
-    setBanLoading(true);
-    try {
-      if (userData.ban) {
-        await unbanUser(id).then(setBanChanged(!banChanged));
-      } else {
-        await banUser(id, banReason).then(setBanChanged(!banChanged));
-      }
-    } catch (e) {
-      enqueueSnackbar(handleError(e), {
-        variant: 'error',
-      });
-    } finally {
-      setBanLoading(false);
-    }
-  };
 
   const handleDisconnect = async (val) => {
     setProfileConnecting(true);
@@ -181,6 +163,10 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
         const result = id ? await getUser(id) : await getUser('me');
         setUserData(result.data);
         setLoading(false);
+        reset({
+          ...result.data,
+          phone_number: result.data.profile.phone_number,
+        });
       } catch (e) {
         enqueueSnackbar(handleError(e), {
           variant: 'error',
@@ -189,7 +175,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     }
     setLoading(true);
     loadData();
-  }, [id, enqueueSnackbar, banChanged]);
+  }, [id, reset, enqueueSnackbar]);
 
   useEffect(() => {
     changePageTitle(!loading && `${userData.last_name} ${userData.first_name}`);
@@ -216,25 +202,31 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     }
   }, [code, provider, navigate, enqueueSnackbar]);
 
-  Yup.addMethod(Yup.string, 'phone', isValidPhone);
-  const validationSchema = Yup.object({
-    first_name: Yup.string()
-      .min(2, 'Túl rövid keresztnév!')
-      .max(30, 'Túl hosszú keresztnév!')
-      .trim()
-      .required('A keresztnév megadása kötelező!'),
-    last_name: Yup.string()
-      .min(2, 'Túl rövid vezetéknév!')
-      .max(150, 'Túl hosszú vezetéknév!')
-      .trim()
-      .required('A vezetéknév megadása kötelező!'),
-    email: Yup.string()
-      .email('Érvénytelen e-mail cím!')
-      .required('Az e-mail cím megadása kötelező!'),
-    phone_number: Yup.string()
-      .phone('Érvénytelen telefonszám!')
-      .required('A telefonszám megadása kötelező!'),
-  });
+  const onSubmit = async (data) => {
+    const values = data;
+    try {
+      const result = id
+        ? await updateUser(id, values)
+        : await updateUser('me', values);
+      setUserData(result.data);
+      if (!id || isSelf(id)) {
+        localStorage.setItem(
+          'name',
+          `${result.data.last_name} ${result.data.first_name}`,
+        );
+        localStorage.setItem('avatar', result.data.profile.avatar_url);
+        setHeaderDataChange(!headerDataChange);
+      }
+      reset({
+        ...userData,
+        phone_number: userData.profile.phone_number,
+      });
+    } catch (e) {
+      enqueueSnackbar(handleError(e), {
+        variant: 'error',
+      });
+    }
+  };
 
   return (
     <div>
@@ -374,467 +366,393 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                 size={60}
               />
             ) : (
-              <Formik
-                enableReinitialize
-                initialValues={{
-                  ...userData,
-                  phone_number: userData.profile.phone_number,
-                }}
-                onSubmit={(values) => handleSubmit(values)}
-                validationSchema={validationSchema}
-              >
-                {({ submitForm, resetForm, isSubmitting, errors, touched }) => (
-                  <Form>
-                    <GridContainer
-                      justifyContent="center"
-                      className={stylesModule.field}
-                    >
-                      {!isMobileView && (
-                        <PersonalDetailsNormal
-                          errors={errors}
-                          touched={touched}
-                          disabled={
-                            userData.role !== 'user' || (id && !isAdmin())
-                          }
-                          isUser={userData.role === 'user'}
-                        />
-                      )}
-                      <GridItem xs={12} sm={12} md={6}>
-                        {isMobileView && (
-                          <PersonalDetailsMobile
-                            errors={errors}
-                            touched={touched}
-                            disabled={
-                              userData.role !== 'user' || (id && !isAdmin())
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <GridContainer
+                  justifyContent="center"
+                  className={stylesModule.field}
+                >
+                  {!isMobileView && (
+                    <PersonalDetailsNormal
+                      control={control}
+                      errors={errors}
+                      disabled={userData.role !== 'user' || (id && !isAdmin())}
+                      isUser={userData.role === 'user'}
+                    />
+                  )}
+                  <GridItem xs={12} sm={12} md={6}>
+                    {isMobileView && (
+                      <PersonalDetailsMobile
+                        control={control}
+                        errors={errors}
+                        disabled={
+                          userData.role !== 'user' || (id && !isAdmin())
+                        }
+                        isUser={userData.role === 'user'}
+                      />
+                    )}
+                    <Accordion
+                      classes={
+                        !isMobileView
+                          ? {
+                              rounded: stylesModule.accordion,
+                              expanded: stylesModule.accordion,
                             }
-                            isUser={userData.role === 'user'}
-                          />
-                        )}
-                        <Accordion
-                          classes={
-                            !isMobileView
-                              ? {
-                                  rounded: stylesModule.accordion,
-                                  expanded: stylesModule.accordion,
-                                }
-                              : {}
-                          }
-                        >
-                          <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            id="profile-picture-header"
+                          : {}
+                      }
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        id="profile-picture-header"
+                      >
+                        <Typography>Profilkép beállítások</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails
+                        className={stylesModule.accordionAvatar}
+                      >
+                        {!Object.entries(userData.profile.avatar).length ? (
+                          <Alert
+                            severity="warning"
+                            className={stylesModule.alertAvatar}
                           >
-                            <Typography>Profilkép beállítások</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails
-                            className={stylesModule.accordionAvatar}
+                            <AlertTitle>Nincs elérhető kép</AlertTitle>
+                            Tölts fel egy képet{' '}
+                            <a href="https://gravatar.com">Gravatar</a>-ra vagy
+                            kapcsold össze profilod Facebook vagy Google
+                            fiókoddal a lenti menüpont segítségével.
+                            <br />
+                            <em>
+                              <small className={stylesModule.smallAvatar}>
+                                A Gravatarra feltöltött kép a következő
+                                bejelentkezés után lesz elérhető.
+                              </small>
+                            </em>
+                          </Alert>
+                        ) : (
+                          <GridContainer
+                            justifyContent="center"
+                            alignItems="center"
                           >
-                            {!Object.entries(userData.profile.avatar).length ? (
-                              <Alert
-                                severity="warning"
-                                className={stylesModule.alertAvatar}
-                              >
-                                <AlertTitle>Nincs elérhető kép</AlertTitle>
-                                Tölts fel egy képet{' '}
-                                <a href="https://gravatar.com">Gravatar</a>-ra
-                                vagy kapcsold össze profilod Facebook vagy
-                                Google fiókoddal a lenti menüpont segítségével.
-                                <br />
-                                <em>
-                                  <small className={stylesModule.smallAvatar}>
-                                    A Gravatarra feltöltött kép a következő
-                                    bejelentkezés után lesz elérhető.
-                                  </small>
-                                </em>
-                              </Alert>
-                            ) : (
-                              <GridContainer
-                                justifyContent="center"
-                                alignItems="center"
-                              >
-                                {Object.entries(userData.profile.avatar)
-                                  .filter(
-                                    (avatar) =>
-                                      avatar[0] !== 'provider' && avatar[1],
-                                  )
-                                  .map((avatar) => {
-                                    return (
-                                      <GridItem
-                                        key={avatar[0]}
-                                        xs={12}
-                                        sm={4}
-                                        md={4}
-                                        className={
-                                          isXsView
-                                            ? stylesModule.gridItemMobile
-                                            : ''
-                                        }
-                                      >
-                                        <Card>
-                                          <CardActionArea
-                                            onClick={() =>
-                                              handleSubmit({
-                                                avatar_provider: avatar[0],
-                                              })
-                                            }
-                                            disabled={
-                                              avatar[1] ===
-                                                userData.profile.avatar_url ||
-                                              (id && !isSelf(id))
-                                            }
-                                          >
-                                            <CardMedia
-                                              component="img"
-                                              alt={avatar[0]}
-                                              image={avatar[1]}
-                                              title={avatar[0]}
-                                              height="140"
-                                              classes={{
-                                                media:
-                                                  isXsView &&
-                                                  stylesModule.cardMediaAvatar,
-                                              }}
-                                            />
-                                            <CardContent>
-                                              <Typography
-                                                variant="h6"
-                                                component="h2"
-                                                display="block"
-                                                className={
-                                                  stylesModule.textAvatar
-                                                }
-                                              >
-                                                {avatarProviders(avatar[0])}{' '}
-                                                {avatar[1] ===
-                                                  userData.profile
-                                                    .avatar_url && (
-                                                  <small
-                                                    className={
-                                                      stylesModule.selectedIconAvatar
-                                                    }
-                                                  >
-                                                    <i className="fa-solid fa-circle-check" />
-                                                  </small>
-                                                )}
-                                              </Typography>
-                                            </CardContent>
-                                          </CardActionArea>
-                                        </Card>
-                                      </GridItem>
-                                    );
-                                  })}
-                              </GridContainer>
-                            )}
-                          </AccordionDetails>
-                        </Accordion>
-                        {(!id || isSelf(id)) && (
-                          <Accordion>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              id="social-profile-header"
-                            >
-                              <Typography>
-                                Közösségi profilok összekapcsolása
-                              </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <GridContainer>
-                                <GridItem>
-                                  {userData.social_accounts.some(
-                                    (x) => x.provider === 'facebook',
-                                  ) ? (
-                                    <Button
-                                      color="facebook"
-                                      fullWidth
-                                      disabled={profileConnecting}
-                                      onClick={() =>
-                                        handleDisconnect('facebook')
-                                      }
-                                    >
-                                      <i className="fa-brands fa-facebook" />{' '}
-                                      Kijelentkezés
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      color="facebook"
-                                      fullWidth
-                                      href={getOauthUrlFacebook({
-                                        operation: 'profile',
-                                      })}
-                                      target="_self"
-                                      disabled={profileConnecting}
-                                    >
-                                      <i className="fa-brands fa-facebook" />{' '}
-                                      Bejelenetkezés
-                                    </Button>
-                                  )}
-                                </GridItem>
-                                <GridItem>
-                                  {userData.social_accounts.some(
-                                    (x) => x.provider === 'google-oauth2',
-                                  ) ? (
-                                    <Button
-                                      color="google"
-                                      fullWidth
-                                      disabled={profileConnecting}
-                                      onClick={() =>
-                                        handleDisconnect('google-oauth2')
-                                      }
-                                    >
-                                      <i className="fa-brands fa-google" />{' '}
-                                      Kijelentkezés
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      color="google"
-                                      fullWidth
-                                      href={getOauthUrlGoogle({
-                                        operation: 'profile',
-                                      })}
-                                      target="_self"
-                                      disabled={profileConnecting}
-                                    >
-                                      <i className="fa-brands fa-google" />{' '}
-                                      Bejelenetkezés
-                                    </Button>
-                                  )}
-                                </GridItem>
-                                <GridItem>
-                                  {userData.social_accounts.some(
-                                    (x) => x.provider === 'authsch',
-                                  ) ? (
-                                    <Button
-                                      color="authsch"
-                                      fullWidth
-                                      disabled={profileConnecting}
-                                      onClick={() =>
-                                        handleDisconnect('authsch')
-                                      }
-                                    >
-                                      <i className="fa-brands icon-sch" />{' '}
-                                      Kijelentkezés
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      color="authsch"
-                                      fullWidth
-                                      href={getOauthUrlAuthSch({
-                                        operation: 'profile',
-                                      })}
-                                      target="_self"
-                                      disabled={profileConnecting}
-                                    >
-                                      <i className="fa-brands icon-sch" />{' '}
-                                      Bejelenetkezés
-                                    </Button>
-                                  )}
-                                </GridItem>
-                              </GridContainer>
-                            </AccordionDetails>
-                          </Accordion>
-                        )}
-                        {(((!id || isSelf(id)) && isPrivileged()) ||
-                          isAdmin()) && (
-                          <>
-                            <Accordion>
-                              <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                id="worked-on-header"
-                              >
-                                <Typography>
-                                  Készített anyagok kilistázása
-                                </Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                <GridContainer
-                                  justifyContent="center"
-                                  alignItems="center"
-                                >
-                                  <LocalizationProvider
-                                    dateAdapter={AdapterDateFns}
-                                    adapterLocale={hu}
-                                  >
-                                    <>
-                                      <GridItem
-                                        xs={12}
-                                        sm={6}
-                                        className={
-                                          isXsView
-                                            ? stylesModule.gridItemMobile
-                                            : ''
-                                        }
-                                      >
-                                        <DatePicker
-                                          label="Kezdő dátum"
-                                          toolbarTitle="Válaszd ki az időszak elejét"
-                                          okText="Rendben"
-                                          cancelText="Mégsem"
-                                          mask="____. __. __."
-                                          maxDate={new Date()}
-                                          value={selectedStartDate}
-                                          onChange={setSelectedStartDate}
-                                          renderInput={(params) => (
-                                            <TextField {...params} fullWidth />
-                                          )}
-                                        />
-                                      </GridItem>
-                                      <GridItem
-                                        xs={12}
-                                        sm={6}
-                                        className={
-                                          isXsView
-                                            ? stylesModule.gridItemMobile
-                                            : ''
-                                        }
-                                      >
-                                        <DatePicker
-                                          label="Vége dátum"
-                                          toolbarTitle="Válaszd ki az időszak végét"
-                                          okText="Rendben"
-                                          cancelText="Mégsem"
-                                          mask="____. __. __."
-                                          maxDate={new Date()}
-                                          value={selectedEndDate}
-                                          onChange={setSelectedEndDate}
-                                          renderInput={(params) => (
-                                            <TextField {...params} fullWidth />
-                                          )}
-                                        />
-                                      </GridItem>
-                                    </>
-                                  </LocalizationProvider>
+                            {Object.entries(userData.profile.avatar)
+                              .filter(
+                                (avatar) =>
+                                  avatar[0] !== 'provider' && avatar[1],
+                              )
+                              .map((avatar) => {
+                                return (
                                   <GridItem
+                                    key={avatar[0]}
+                                    xs={12}
+                                    sm={4}
+                                    md={4}
                                     className={
                                       isXsView
-                                        ? stylesModule.gridItemMobileNoTopPadding
-                                        : stylesModule.gridItemMobile
+                                        ? stylesModule.gridItemMobile
+                                        : ''
                                     }
                                   >
-                                    <GridContainer
-                                      justifyContent="space-between"
-                                      alignItems="center"
-                                    >
-                                      <GridItem xs={6}>
-                                        <Typography variant="body2">
-                                          Felelős pozíciók
-                                        </Typography>
-                                      </GridItem>
-                                      <GridItem
-                                        xs={6}
-                                        className={stylesModule.gridEnd}
+                                    <Card>
+                                      <CardActionArea
+                                        onClick={() =>
+                                          handleSubmit({
+                                            avatar_provider: avatar[0],
+                                          })
+                                        }
+                                        disabled={
+                                          avatar[1] ===
+                                            userData.profile.avatar_url ||
+                                          (id && !isSelf(id))
+                                        }
                                       >
-                                        <Switch
-                                          checked={includeResponsible}
-                                          onChange={(event) =>
-                                            setIncludeResponsible(
-                                              event.target.checked,
-                                            )
-                                          }
-                                          name="includeResponsible"
-                                          color="secondary"
+                                        <CardMedia
+                                          component="img"
+                                          alt={avatar[0]}
+                                          image={avatar[1]}
+                                          title={avatar[0]}
+                                          height="140"
+                                          classes={{
+                                            media:
+                                              isXsView &&
+                                              stylesModule.cardMediaAvatar,
+                                          }}
                                         />
-                                      </GridItem>
-                                    </GridContainer>
+                                        <CardContent>
+                                          <Typography
+                                            variant="h6"
+                                            component="h2"
+                                            display="block"
+                                            className={stylesModule.textAvatar}
+                                          >
+                                            {avatarProviders(avatar[0])}{' '}
+                                            {avatar[1] ===
+                                              userData.profile.avatar_url && (
+                                              <small
+                                                className={
+                                                  stylesModule.selectedIconAvatar
+                                                }
+                                              >
+                                                <i className="fa-solid fa-circle-check" />
+                                              </small>
+                                            )}
+                                          </Typography>
+                                        </CardContent>
+                                      </CardActionArea>
+                                    </Card>
                                   </GridItem>
-                                  <GridItem>
-                                    <Button
-                                      color="primary"
-                                      fullWidth
-                                      onClick={() =>
-                                        setWorkedOnDialogOpen(true)
+                                );
+                              })}
+                          </GridContainer>
+                        )}
+                      </AccordionDetails>
+                    </Accordion>
+                    {(!id || isSelf(id)) && (
+                      <Accordion>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          id="social-profile-header"
+                        >
+                          <Typography>
+                            Közösségi profilok összekapcsolása
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <GridContainer>
+                            <GridItem>
+                              {userData.social_accounts.some(
+                                (x) => x.provider === 'facebook',
+                              ) ? (
+                                <Button
+                                  color="facebook"
+                                  fullWidth
+                                  disabled={profileConnecting}
+                                  onClick={() => handleDisconnect('facebook')}
+                                >
+                                  <i className="fa-brands fa-facebook" />{' '}
+                                  Kijelentkezés
+                                </Button>
+                              ) : (
+                                <Button
+                                  color="facebook"
+                                  fullWidth
+                                  href={getOauthUrlFacebook({
+                                    operation: 'profile',
+                                  })}
+                                  target="_self"
+                                  disabled={profileConnecting}
+                                >
+                                  <i className="fa-brands fa-facebook" />{' '}
+                                  Bejelenetkezés
+                                </Button>
+                              )}
+                            </GridItem>
+                            <GridItem>
+                              {userData.social_accounts.some(
+                                (x) => x.provider === 'google-oauth2',
+                              ) ? (
+                                <Button
+                                  color="google"
+                                  fullWidth
+                                  disabled={profileConnecting}
+                                  onClick={() =>
+                                    handleDisconnect('google-oauth2')
+                                  }
+                                >
+                                  <i className="fa-brands fa-google" />{' '}
+                                  Kijelentkezés
+                                </Button>
+                              ) : (
+                                <Button
+                                  color="google"
+                                  fullWidth
+                                  href={getOauthUrlGoogle({
+                                    operation: 'profile',
+                                  })}
+                                  target="_self"
+                                  disabled={profileConnecting}
+                                >
+                                  <i className="fa-brands fa-google" />{' '}
+                                  Bejelenetkezés
+                                </Button>
+                              )}
+                            </GridItem>
+                            <GridItem>
+                              {userData.social_accounts.some(
+                                (x) => x.provider === 'authsch',
+                              ) ? (
+                                <Button
+                                  color="authsch"
+                                  fullWidth
+                                  disabled={profileConnecting}
+                                  onClick={() => handleDisconnect('authsch')}
+                                >
+                                  <i className="fa-brands icon-sch" />{' '}
+                                  Kijelentkezés
+                                </Button>
+                              ) : (
+                                <Button
+                                  color="authsch"
+                                  fullWidth
+                                  href={getOauthUrlAuthSch({
+                                    operation: 'profile',
+                                  })}
+                                  target="_self"
+                                  disabled={profileConnecting}
+                                >
+                                  <i className="fa-brands icon-sch" />{' '}
+                                  Bejelenetkezés
+                                </Button>
+                              )}
+                            </GridItem>
+                          </GridContainer>
+                        </AccordionDetails>
+                      </Accordion>
+                    )}
+                    {(((!id || isSelf(id)) && isPrivileged()) || isAdmin()) && (
+                      <>
+                        <Accordion>
+                          <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            id="worked-on-header"
+                          >
+                            <Typography>
+                              Készített anyagok kilistázása
+                            </Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <GridContainer
+                              justifyContent="center"
+                              alignItems="center"
+                            >
+                              <LocalizationProvider
+                                dateAdapter={AdapterDateFns}
+                                adapterLocale={hu}
+                              >
+                                <>
+                                  <GridItem
+                                    xs={12}
+                                    sm={6}
+                                    className={
+                                      isXsView
+                                        ? stylesModule.gridItemMobile
+                                        : ''
+                                    }
+                                  >
+                                    <DatePicker
+                                      label="Kezdő dátum"
+                                      maxDate={new Date()}
+                                      value={selectedStartDate}
+                                      onChange={setSelectedStartDate}
+                                      slotProps={{
+                                        textField: {
+                                          fullWidth: true,
+                                        },
+                                      }}
+                                    />
+                                  </GridItem>
+                                  <GridItem
+                                    xs={12}
+                                    sm={6}
+                                    className={
+                                      isXsView
+                                        ? stylesModule.gridItemMobile
+                                        : ''
+                                    }
+                                  >
+                                    <DatePicker
+                                      label="Vége dátum"
+                                      maxDate={new Date()}
+                                      value={selectedEndDate}
+                                      onChange={setSelectedEndDate}
+                                      slotProps={{
+                                        textField: {
+                                          fullWidth: true,
+                                        },
+                                      }}
+                                    />
+                                  </GridItem>
+                                </>
+                              </LocalizationProvider>
+                              <GridItem
+                                className={
+                                  isXsView
+                                    ? stylesModule.gridItemMobileNoTopPadding
+                                    : stylesModule.gridItemMobile
+                                }
+                              >
+                                <GridContainer
+                                  justifyContent="space-between"
+                                  alignItems="center"
+                                >
+                                  <GridItem xs={6}>
+                                    <Typography variant="body2">
+                                      Felelős pozíciók
+                                    </Typography>
+                                  </GridItem>
+                                  <GridItem
+                                    xs={6}
+                                    className={stylesModule.gridEnd}
+                                  >
+                                    <Switch
+                                      checked={includeResponsible}
+                                      onChange={(event) =>
+                                        setIncludeResponsible(
+                                          event.target.checked,
+                                        )
                                       }
-                                    >
-                                      Kilistázás
-                                    </Button>
+                                      name="includeResponsible"
+                                      color="secondary"
+                                    />
                                   </GridItem>
                                 </GridContainer>
-                              </AccordionDetails>
-                            </Accordion>
-                            <WorkedOnDialog
-                              workedOnDialogOpen={workedOnDialogOpen}
-                              setWorkedOnDialogOpen={setWorkedOnDialogOpen}
-                              userId={id || 'me'}
-                              selectedDateRange={[
-                                selectedStartDate,
-                                selectedEndDate,
-                              ]}
-                              includeResponsible={includeResponsible}
-                            />
-                          </>
-                        )}
-                        {id && !isSelf(id) && isAdmin() && (
-                          <Accordion>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              id="ban-header"
-                            >
-                              <Typography>Felhasználó kitiltása</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <TextField
-                                label="Indoklás"
-                                fullWidth
-                                multiline
-                                rows={5}
-                                value={
-                                  (userData.ban && userData.ban.reason) ||
-                                  banReason
-                                }
-                                onChange={(event) =>
-                                  setBanReason(event.target.value)
-                                }
-                                disabled={!!userData.ban}
-                                helperText={
-                                  userData.ban &&
-                                  `Létrehozva: ${format(
-                                    new Date(userData.ban.created),
-                                    'yyyy. MMMM d. H:mm',
-                                    {
-                                      locale: hu,
-                                    },
-                                  )}`
-                                }
-                              />
-                            </AccordionDetails>
-                            <AccordionActions>
-                              <MUIButton
-                                size="small"
-                                color={userData.ban ? 'warning' : 'error'}
-                                onClick={() => handleBan()}
-                                disabled={banLoading}
-                              >
-                                {userData.ban ? 'Feloldás' : 'Kitiltás'}
-                              </MUIButton>
-                            </AccordionActions>
-                          </Accordion>
-                        )}
-                      </GridItem>
-                    </GridContainer>
-                    {userData.role === 'user' && (!id || isAdmin()) && (
-                      <GridContainer justifyContent="center">
-                        <GridItem className={stylesModule.textCenter}>
-                          <Button
-                            color="danger"
-                            className={stylesModule.button}
-                            onClick={resetForm}
-                            disabled={isSubmitting}
-                          >
-                            Mégsem
-                          </Button>
-                          <Button
-                            color="success"
-                            className={stylesModule.button}
-                            onClick={submitForm}
-                            disabled={isSubmitting}
-                          >
-                            Mentés
-                          </Button>
-                        </GridItem>
-                      </GridContainer>
+                              </GridItem>
+                              <GridItem>
+                                <Button
+                                  color="primary"
+                                  fullWidth
+                                  onClick={() => setWorkedOnDialogOpen(true)}
+                                >
+                                  Kilistázás
+                                </Button>
+                              </GridItem>
+                            </GridContainer>
+                          </AccordionDetails>
+                        </Accordion>
+                        <WorkedOnDialog
+                          workedOnDialogOpen={workedOnDialogOpen}
+                          setWorkedOnDialogOpen={setWorkedOnDialogOpen}
+                          userId={id || 'me'}
+                          selectedDateRange={[
+                            selectedStartDate,
+                            selectedEndDate,
+                          ]}
+                          includeResponsible={includeResponsible}
+                        />
+                      </>
                     )}
-                  </Form>
+                  </GridItem>
+                </GridContainer>
+                {userData.role === 'user' && (!id || isAdmin()) && (
+                  <GridContainer justifyContent="center">
+                    <GridItem className={stylesModule.textCenter}>
+                      <Button
+                        color="danger"
+                        className={stylesModule.button}
+                        onClick={reset}
+                        disabled={isSubmitting}
+                      >
+                        Mégsem
+                      </Button>
+                      <Button
+                        color="success"
+                        className={stylesModule.button}
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        Mentés
+                      </Button>
+                    </GridItem>
+                  </GridContainer>
                 )}
-              </Formik>
+              </form>
             )}
           </GridContainer>
         </div>

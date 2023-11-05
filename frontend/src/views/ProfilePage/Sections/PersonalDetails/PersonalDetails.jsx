@@ -6,14 +6,13 @@ import { useTheme } from '@mui/material/styles';
 // core components
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-// Formik
-import { Field } from 'formik';
-import { TextField } from 'formik-mui';
+import { Controller } from 'react-hook-form';
 import PhoneNumberInput from 'src/components/PhoneNumberInput';
+import { TextField } from '@mui/material';
 
 import stylesModule from '../../ProfilePage.module.scss';
 
-export default function PersonalDetails({ errors, touched, disabled, isUser }) {
+export default function PersonalDetails({ control, errors, disabled, isUser }) {
   const theme = useTheme();
   const isMobileView = !useMediaQuery(theme.breakpoints.up('md'));
 
@@ -32,53 +31,73 @@ export default function PersonalDetails({ errors, touched, disabled, isUser }) {
         )}
       </GridItem>
       <GridItem xs={12} sm={6}>
-        <Field
+        <Controller
           name="last_name"
-          label="Vezetéknév"
-          margin="normal"
-          component={TextField}
-          fullWidth
-          disabled={disabled}
-          error={touched.last_name && !!errors.last_name}
-          helperText={touched.last_name && errors.last_name}
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Vezetéknév"
+              margin="normal"
+              fullWidth
+              disabled={disabled}
+              error={!!errors.last_name}
+              helperText={errors.last_name?.message}
+            />
+          )}
         />
       </GridItem>
       <GridItem xs={12} sm={6}>
-        <Field
+        <Controller
           name="first_name"
-          label="Keresztnév"
-          margin="normal"
-          component={TextField}
-          fullWidth
-          disabled={disabled}
-          error={touched.first_name && !!errors.first_name}
-          helperText={touched.first_name && errors.first_name}
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Keresztnév"
+              margin="normal"
+              fullWidth
+              disabled={disabled}
+              error={!!errors.first_name}
+              helperText={errors.first_name?.message}
+            />
+          )}
         />
       </GridItem>
       <GridItem>
-        <Field
-          type="email"
+        <Controller
           name="email"
-          label="E-mail cím"
-          margin="normal"
-          component={TextField}
-          fullWidth
-          disabled={disabled}
-          error={touched.email && !!errors.email}
-          helperText={touched.email && errors.email}
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              type="email"
+              label="E-mail cím"
+              margin="normal"
+              fullWidth
+              disabled={disabled}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+            />
+          )}
         />
       </GridItem>
       <GridItem>
-        <Field
+        <Controller
           name="phone_number"
-          label="Telefonszám"
-          margin="normal"
-          component={PhoneNumberInput}
-          variant="outlined"
-          fullWidth
-          disabled={disabled}
-          error={touched.phone_number && !!errors.phone_number}
-          helperText={touched.phone_number && errors.phone_number}
+          control={control}
+          render={({ field }) => (
+            <PhoneNumberInput
+              {...field}
+              type="tel"
+              label="Telefonszám"
+              margin="normal"
+              fullWidth
+              disabled={disabled}
+              error={!!errors.phone_number}
+              helperText={errors.phone_number?.message}
+            />
+          )}
         />
       </GridItem>
     </GridContainer>
@@ -86,17 +105,12 @@ export default function PersonalDetails({ errors, touched, disabled, isUser }) {
 }
 
 PersonalDetails.propTypes = {
+  control: PropTypes.object.isRequired,
   errors: PropTypes.shape({
     last_name: PropTypes.string,
     first_name: PropTypes.string,
     email: PropTypes.string,
     phone_number: PropTypes.string,
-  }).isRequired,
-  touched: PropTypes.shape({
-    last_name: PropTypes.bool,
-    first_name: PropTypes.bool,
-    email: PropTypes.bool,
-    phone_number: PropTypes.bool,
   }).isRequired,
   disabled: PropTypes.bool.isRequired,
   isUser: PropTypes.bool.isRequired,

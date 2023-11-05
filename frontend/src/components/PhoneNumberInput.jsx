@@ -1,6 +1,5 @@
 import { MuiTelInput } from 'mui-tel-input';
-import PropTypes from 'prop-types';
-import { fieldToTextField } from 'formik-mui';
+import { forwardRef } from 'react';
 import { styled } from '@mui/material/styles';
 
 const CustomizedMuiPhoneNumber = styled(MuiTelInput)`
@@ -10,30 +9,17 @@ const CustomizedMuiPhoneNumber = styled(MuiTelInput)`
   }
 `;
 
-export default function PhoneNumberInput(props) {
-  const {
-    form: { setFieldValue },
-    field: { name },
-    disabled,
-  } = props;
-
+const PhoneNumberInput = forwardRef((props, ref) => {
   return (
     <CustomizedMuiPhoneNumber
-      {...fieldToTextField(props)}
       defaultCountry="HU"
       preferredCountries={['HU', 'RO', 'SK', 'UA']}
       continents={['EU']}
       langOfCountryName="hu"
-      disableDropdown={disabled}
-      onChange={(value) => {
-        setFieldValue(name, value);
-      }}
+      {...props}
+      {...ref}
     />
   );
-}
+});
 
-PhoneNumberInput.propTypes = {
-  form: PropTypes.object.isRequired,
-  field: PropTypes.object.isRequired,
-  disabled: PropTypes.bool.isRequired,
-};
+export default PhoneNumberInput;

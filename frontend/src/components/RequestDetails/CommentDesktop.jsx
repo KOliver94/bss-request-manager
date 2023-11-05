@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 // material-kit-react
 import Badge from 'src/components/material-kit-react/Badge/Badge';
@@ -12,9 +13,10 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
+import { TextField } from '@mui/material';
 // New comment
-import { Formik, Form, Field } from 'formik';
-import { TextField, Checkbox } from 'formik-mui';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 // Date format
 import { format, formatDistanceToNow } from 'date-fns';
@@ -51,76 +53,93 @@ export default function CommentDesktop({
     text: Yup.string().trim().required('Üres hozzászólás nem küldhető be!'),
   });
 
+  const {
+    control,
+    handleSubmit: hooksSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+    defaultValues: comment,
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = async (data) => {
+    await handleSubmit(data, isNew);
+    reset();
+  };
+
+  useEffect(() => {
+    reset(comment);
+  }, [reset, comment]);
+
   return (
     <>
       {isEditing || isNew ? (
-        <Formik
-          initialValues={comment}
-          onSubmit={(values, resetForm) =>
-            handleSubmit(values, isNew, resetForm)
-          }
-          validationSchema={validationSchema}
+        <form
+          onSubmit={hooksSubmit(onSubmit)}
+          className={isNew ? stylesModule.newComment : ''}
         >
-          {({ isSubmitting, values, errors, touched }) => (
-            <Form className={isNew ? stylesModule.newComment : ''}>
-              <Grid container spacing={2}>
-                <Grid item>
-                  <Avatar
-                    src={avatarUrl}
-                    sx={{
-                      bgcolor: stringToColor(userName),
-                    }}
-                  >
-                    {nameFirstLetter}
-                  </Avatar>
-                </Grid>
-                <Grid item xs>
-                  <h4 className={stylesModule.commentAuthor}>{userName}</h4>
-                  <Field
-                    name="text"
+          <Grid container spacing={2}>
+            <Grid item>
+              <Avatar
+                src={avatarUrl}
+                sx={{
+                  bgcolor: stringToColor(userName),
+                }}
+              >
+                {nameFirstLetter}
+              </Avatar>
+            </Grid>
+            <Grid item xs>
+              <h4 className={stylesModule.commentAuthor}>{userName}</h4>
+              <Controller
+                name="text"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
                     label={isNew ? 'Új hozzászólás' : 'Szerkesztés'}
                     margin="normal"
-                    component={TextField}
                     fullWidth
                     multiline
                     rows={5}
-                    error={touched.text && !!errors.text}
-                    helperText={touched.text && errors.text}
+                    error={!!errors.text}
+                    helperText={errors.text?.message}
                   />
+                )}
+              />
+            </Grid>
+            <Grid item className={stylesModule.commentButtons}>
+              {!isNew && (
+                <Grid item>
+                  <Tooltip title="Elvetés" placement="left" arrow>
+                    <span>
+                      <IconButton
+                        onClick={() => setEditingCommentId(-1)}
+                        disabled={isSubmitting}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
                 </Grid>
-                <Grid item className={stylesModule.commentButtons}>
-                  {!isNew && (
-                    <Grid item>
-                      <Tooltip title="Elvetés" placement="left" arrow>
-                        <span>
-                          <IconButton
-                            onClick={() => setEditingCommentId(-1)}
-                            disabled={isSubmitting}
-                          >
-                            <ClearIcon />
-                          </IconButton>
-                        </span>
-                      </Tooltip>
-                    </Grid>
-                  )}
-                  <Grid item>
-                    <Tooltip
-                      title={isNew ? 'Küldés' : 'Mentés'}
-                      placement="left"
-                      arrow
-                    >
-                      <span>
-                        <IconButton type="submit" disabled={isSubmitting}>
-                          <SendIcon />
-                        </IconButton>
-                      </span>
-                    </Tooltip>
-                  </Grid>
-                </Grid>
+              )}
+              <Grid item>
+                <Tooltip
+                  title={isNew ? 'Küldés' : 'Mentés'}
+                  placement="left"
+                  arrow
+                >
+                  <span>
+                    <IconButton type="submit" disabled={isSubmitting}>
+                      <SendIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
               </Grid>
-            </Form>
-          )}
-        </Formik>
+            </Grid>
+          </Grid>
+        </form>
       ) : (
         <Grid container spacing={2}>
           <Grid item>

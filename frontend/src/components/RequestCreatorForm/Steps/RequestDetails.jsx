@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
-import { Formik, Form, Field, getIn } from 'formik';
-import { Autocomplete, TextField } from 'formik-mui';
-import { DateTimePicker } from 'formik-mui-x-date-pickers';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { hu } from 'date-fns/locale';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import MUITextField from '@mui/material/TextField';
-import { createFilterOptions } from '@mui/material/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import * as Yup from 'yup';
 import { requestTypes } from 'src/helpers/enumConstants';
 
+import TextField from '@mui/material/TextField';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import stylesModule from './RequestDetails.module.css';
 
 const filter = createFilterOptions();
@@ -26,7 +26,6 @@ const validationSchema = Yup.object({
   start_datetime: Yup.date()
     .min(new Date(), 'A mostaninál korábbi időpont nem adható meg!')
     .required('A kezdés időpontjának megadása kötelező!')
-    .nullable()
     .typeError('Hibás dátum formátum!'),
   end_datetime: Yup.date()
     .min(
@@ -34,7 +33,6 @@ const validationSchema = Yup.object({
       'A befejezés időpontja nem lehet korábbi mint a kezdés!',
     )
     .required('A várható befejezés megadása kötelező!')
-    .nullable()
     .typeError('Hibás dátum formátum!'),
   place: Yup.string()
     .min(1, 'Túl rövid helyszín!')
@@ -48,92 +46,109 @@ const validationSchema = Yup.object({
         .max(50, 'Túl hosszú típus!')
         .trim(),
     })
-    .required('A videó típusának megadása kötelező!')
-    .nullable(),
+    .required('A videó típusának megadása kötelező!'),
 });
 
 function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: formData,
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = (data) => {
+    setFormData(data);
+    handleNext();
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={hu}>
-      <Formik
-        initialValues={formData}
-        onSubmit={(values) => {
-          setFormData(values);
-          handleNext();
-        }}
-        validationSchema={validationSchema}
-      >
-        {({ errors, touched }) => (
-          <Form>
-            <GridContainer justifyContent="center">
-              <GridItem>
-                <Field
-                  name="title"
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <GridContainer justifyContent="center">
+          <GridItem>
+            <Controller
+              name="title"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
                   label="Esemény neve"
                   margin="normal"
-                  component={TextField}
                   fullWidth
-                  error={touched.title && !!errors.title}
-                  helperText={touched.title && errors.title}
+                  error={!!errors.title}
+                  helperText={errors.title?.message}
                 />
-              </GridItem>
-              <GridItem xs={12} sm={6}>
-                <Field
-                  name="start_datetime"
+              )}
+            />
+          </GridItem>
+          <GridItem xs={12} sm={6}>
+            <Controller
+              name="start_datetime"
+              control={control}
+              render={({ field }) => (
+                <DateTimePicker
+                  {...field}
                   label="Kezdés időpontja"
-                  toolbarTitle="Esemény kezdésének időpontja"
-                  okText="Rendben"
-                  cancelText="Mégsem"
-                  clearText="Törlés"
-                  component={DateTimePicker}
-                  clearable
                   disablePast
-                  inputFormat="yyyy.MM.dd. HH:mm"
-                  mask="____.__.__. __:__"
-                  textField={{
-                    margin: 'normal',
-                    fullWidth: true,
-                    error: touched.start_datetime && !!errors.start_datetime,
-                    helperText: touched.start_datetime && errors.start_datetime,
+                  slotProps={{
+                    textField: {
+                      margin: 'normal',
+                      fullWidth: true,
+                      error: !!errors.start_datetime,
+                      helperText: errors.start_datetime?.message,
+                    },
                   }}
                 />
-              </GridItem>
-              <GridItem xs={12} sm={6}>
-                <Field
-                  name="end_datetime"
+              )}
+            />
+          </GridItem>
+          <GridItem xs={12} sm={6}>
+            <Controller
+              name="end_datetime"
+              control={control}
+              render={({ field }) => (
+                <DateTimePicker
+                  {...field}
                   label="Várható befejezés"
-                  toolbarTitle="Esemény végének időpontja"
-                  okText="Rendben"
-                  cancelText="Mégsem"
-                  clearText="Törlés"
-                  component={DateTimePicker}
-                  clearable
                   disablePast
-                  inputFormat="yyyy.MM.dd. HH:mm"
-                  mask="____.__.__. __:__"
-                  textField={{
-                    margin: 'normal',
-                    fullWidth: true,
-                    error: touched.end_datetime && !!errors.end_datetime,
-                    helperText: touched.end_datetime && errors.end_datetime,
+                  slotProps={{
+                    textField: {
+                      margin: 'normal',
+                      fullWidth: true,
+                      error: !!errors.end_datetime,
+                      helperText: errors.end_datetime?.message,
+                    },
                   }}
                 />
-              </GridItem>
-              <GridItem xs={12} sm={6}>
-                <Field
-                  name="place"
+              )}
+            />
+          </GridItem>
+          <GridItem xs={12} sm={6}>
+            <Controller
+              name="place"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
                   label="Helyszín"
                   margin="normal"
-                  component={TextField}
                   fullWidth
-                  error={touched.place && !!errors.place}
-                  helperText={touched.place && errors.place}
+                  error={!!errors.place}
+                  helperText={errors.place?.message}
                 />
-              </GridItem>
-              <GridItem xs={12} sm={6}>
-                <Field
-                  name="type_obj"
-                  component={Autocomplete}
+              )}
+            />
+          </GridItem>
+          <GridItem xs={12} sm={6}>
+            <Controller
+              name="type_obj"
+              control={control}
+              render={({ field }) => (
+                <Autocomplete
+                  {...field}
                   options={requestTypes}
                   filterOptions={(options, params) => {
                     const filtered = filter(options, params);
@@ -171,39 +186,36 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
                   autoComplete
                   autoHighlight
                   renderInput={(params) => (
-                    <MUITextField
+                    <TextField
                       {...params}
                       name="type_obj"
                       label="Videó típusa"
                       margin="normal"
-                      error={touched.type_obj && !!errors.type_obj}
-                      helperText={
-                        touched.type_obj &&
-                        (getIn(errors, 'type_obj.text') ||
-                          getIn(errors, 'type_obj'))
-                      }
+                      error={!!errors.type_obj}
+                      helperText={errors.type_obj?.message}
                     />
                   )}
+                  onChange={(e, value) => field.onChange(value)}
                 />
-              </GridItem>
-            </GridContainer>
-            <GridContainer justifyContent="center">
-              <GridItem>
-                <Button onClick={handleBack} className={stylesModule.button}>
-                  Vissza
-                </Button>
-                <Button
-                  type="submit"
-                  color="primary"
-                  className={stylesModule.button}
-                >
-                  Következő
-                </Button>
-              </GridItem>
-            </GridContainer>
-          </Form>
-        )}
-      </Formik>
+              )}
+            />
+          </GridItem>
+        </GridContainer>
+        <GridContainer justifyContent="center">
+          <GridItem>
+            <Button onClick={handleBack} className={stylesModule.button}>
+              Vissza
+            </Button>
+            <Button
+              type="submit"
+              color="primary"
+              className={stylesModule.button}
+            >
+              Következő
+            </Button>
+          </GridItem>
+        </GridContainer>
+      </form>
     </LocalizationProvider>
   );
 }

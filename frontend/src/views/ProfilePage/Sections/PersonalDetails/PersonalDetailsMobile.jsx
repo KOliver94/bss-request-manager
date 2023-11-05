@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 import PersonalDetails from './PersonalDetails';
 
 export default function PersonalDetailsMobile({
+  control,
   errors,
-  touched,
   disabled,
   isUser,
 }) {
@@ -22,8 +22,8 @@ export default function PersonalDetailsMobile({
       </AccordionSummary>
       <AccordionDetails>
         <PersonalDetails
+          control={control}
           errors={errors}
-          touched={touched}
           disabled={disabled}
           isUser={isUser}
         />
@@ -33,17 +33,12 @@ export default function PersonalDetailsMobile({
 }
 
 PersonalDetailsMobile.propTypes = {
+  control: PropTypes.object.isRequired,
   errors: PropTypes.shape({
     last_name: PropTypes.string,
     first_name: PropTypes.string,
     email: PropTypes.string,
     phone_number: PropTypes.string,
-  }).isRequired,
-  touched: PropTypes.shape({
-    last_name: PropTypes.bool,
-    first_name: PropTypes.bool,
-    email: PropTypes.bool,
-    phone_number: PropTypes.bool,
   }).isRequired,
   disabled: PropTypes.bool,
   isUser: PropTypes.bool.isRequired,
