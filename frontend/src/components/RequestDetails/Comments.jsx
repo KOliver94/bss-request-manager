@@ -21,7 +21,7 @@ import {
 import compareValues from 'src/helpers/objectComperator';
 import handleError from 'src/helpers/errorHandler';
 
-import stylesModule from './Comments.module.css';
+import stylesModule from './Comments.module.scss';
 
 export default function Comments({ requestId, requestData, setRequestData }) {
   const { enqueueSnackbar } = useSnackbar();

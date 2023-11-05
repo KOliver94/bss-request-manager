@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 import getErrorDetails from 'src/helpers/errorPageConstants';
 
-import stylesModule from './ErrorPage.module.css';
+import stylesModule from './ErrorPage.module.scss';
 
 export default function ErrorPage({ type }) {
   const errorDetails = getErrorDetails(type);

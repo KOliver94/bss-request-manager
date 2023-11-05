@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
 
-import stylesModule from './Summary.module.css';
+import stylesModule from './Summary.module.scss';
 
 function Summary({ formData, setActiveStep, isAuthenticated }) {
   return (

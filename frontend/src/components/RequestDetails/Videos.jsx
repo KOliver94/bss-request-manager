@@ -31,7 +31,7 @@ import handleError from 'src/helpers/errorHandler';
 // Review component
 import ReviewDialog from './ReviewDialog';
 
-import stylesModule from './Videos.module.css';
+import stylesModule from './Videos.module.scss';
 
 export default function Videos({ requestId, requestData, setRequestData }) {
   const { enqueueSnackbar } = useSnackbar();

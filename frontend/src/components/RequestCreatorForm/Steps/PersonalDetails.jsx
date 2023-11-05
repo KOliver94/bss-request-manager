@@ -12,7 +12,7 @@ import * as Yup from 'yup';
 import isValidPhone from 'src/helpers/yupPhoneNumberValidator';
 
 import { TextField } from '@mui/material';
-import stylesModule from './PersonalDetails.module.css';
+import stylesModule from './PersonalDetails.module.scss';
 
 Yup.addMethod(Yup.string, 'phone', isValidPhone);
 const validationSchema = Yup.object({

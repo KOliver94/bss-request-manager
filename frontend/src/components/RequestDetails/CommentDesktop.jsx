@@ -26,7 +26,7 @@ import stringToColor from 'src/helpers/stringToColor';
 // API calls
 import { isSelf } from 'src/api/loginApi';
 
-import stylesModule from './Comment.module.css';
+import stylesModule from './Comment.module.scss';
 
 export default function CommentDesktop({
   comment,
