@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Formik, Form, Field } from 'formik';
-import { TextField } from 'formik-mui';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import PhoneNumberInput from 'src/components/PhoneNumberInput';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import * as Yup from 'yup';
 import isValidPhone from 'src/helpers/yupPhoneNumberValidator';
 
+import { TextField } from '@mui/material';
 import stylesModule from './PersonalDetails.module.css';
 
 Yup.addMethod(Yup.string, 'phone', isValidPhone);
@@ -41,134 +42,144 @@ function PersonalDetails({
 }) {
   const navigate = useNavigate();
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: formData,
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = (data) => {
+    setFormData(data);
+    handleNext();
+  };
+
   return (
-    <Formik
-      initialValues={formData}
-      onSubmit={(values) => {
-        setFormData(values);
-        handleNext();
-      }}
-      validationSchema={validationSchema}
-    >
-      {({ errors, touched }) => (
-        <Form>
-          <GridContainer justifyContent="center">
-            <GridItem>
-              {isAuthenticated ? (
-                <Alert
-                  severity="warning"
-                  className={stylesModule.alert}
-                  action={
-                    <MUIButton
-                      color="inherit"
-                      size="small"
-                      onClick={() => {
-                        navigate('/profile');
-                      }}
-                    >
-                      Ugrás
-                    </MUIButton>
-                  }
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <GridContainer justifyContent="center">
+        <GridItem>
+          {isAuthenticated ? (
+            <Alert
+              severity="warning"
+              className={stylesModule.alert}
+              action={
+                <MUIButton
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    navigate('/profile');
+                  }}
                 >
-                  Adataidat a profilodban módosíthatod.
-                </Alert>
-              ) : (
-                <Alert
-                  severity="info"
-                  className={stylesModule.alert}
-                  action={
-                    <MUIButton
-                      color="inherit"
-                      size="small"
-                      onClick={() => {
-                        navigate('/login', {
-                          state: { from: { pathname: '/new-request' } },
-                        });
-                      }}
-                    >
-                      Ugrás
-                    </MUIButton>
-                  }
+                  Ugrás
+                </MUIButton>
+              }
+            >
+              Adataidat a profilodban módosíthatod.
+            </Alert>
+          ) : (
+            <Alert
+              severity="info"
+              className={stylesModule.alert}
+              action={
+                <MUIButton
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    navigate('/login', {
+                      state: { from: { pathname: '/new-request' } },
+                    });
+                  }}
                 >
-                  Jelentkezz be az oldalra, hogy követhesd a felkérésed aktuális
-                  státuszát, írhass hozzászólást és értékelhesd az elkészült
-                  videót.
-                </Alert>
-              )}
-            </GridItem>
-            <GridItem xs={12} sm={6}>
-              <Field
-                name="requester_last_name"
+                  Ugrás
+                </MUIButton>
+              }
+            >
+              Jelentkezz be az oldalra, hogy követhesd a felkérésed aktuális
+              státuszát, írhass hozzászólást és értékelhesd az elkészült videót.
+            </Alert>
+          )}
+        </GridItem>
+        <GridItem xs={12} sm={6}>
+          <Controller
+            name="requester_last_name"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
                 label="Vezetéknév"
                 margin="normal"
-                component={TextField}
                 fullWidth
                 disabled={isAuthenticated}
-                error={
-                  touched.requester_last_name && !!errors.requester_last_name
-                }
-                helperText={
-                  touched.requester_last_name && errors.requester_last_name
-                }
+                error={!!errors.requester_last_name}
+                helperText={errors.requester_last_name?.message}
               />
-            </GridItem>
-            <GridItem xs={12} sm={6}>
-              <Field
-                name="requester_first_name"
+            )}
+          />
+        </GridItem>
+        <GridItem xs={12} sm={6}>
+          <Controller
+            name="requester_first_name"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
                 label="Keresztnév"
                 margin="normal"
-                component={TextField}
                 fullWidth
                 disabled={isAuthenticated}
-                error={
-                  touched.requester_first_name && !!errors.requester_first_name
-                }
-                helperText={
-                  touched.requester_first_name && errors.requester_first_name
-                }
+                error={!!errors.requester_first_name}
+                helperText={errors.requester_first_name?.message}
               />
-            </GridItem>
-            <GridItem>
-              <Field
+            )}
+          />
+        </GridItem>
+        <GridItem>
+          <Controller
+            name="requester_email"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
                 type="email"
-                name="requester_email"
                 label="E-mail cím"
                 margin="normal"
-                component={TextField}
                 fullWidth
                 disabled={isAuthenticated}
-                error={touched.requester_email && !!errors.requester_email}
-                helperText={touched.requester_email && errors.requester_email}
+                error={!!errors.requester_email}
+                helperText={errors.requester_email?.message}
               />
-            </GridItem>
-            <GridItem>
-              <Field
-                name="requester_mobile"
+            )}
+          />
+        </GridItem>
+        <GridItem>
+          <Controller
+            name="requester_mobile"
+            control={control}
+            render={({ field }) => (
+              <PhoneNumberInput
+                {...field}
+                type="tel"
                 label="Telefonszám"
                 margin="normal"
-                component={PhoneNumberInput}
-                variant="outlined"
                 fullWidth
                 disabled={isAuthenticated}
-                error={touched.requester_mobile && !!errors.requester_mobile}
-                helperText={touched.requester_mobile && errors.requester_mobile}
+                error={!!errors.requester_mobile}
+                helperText={errors.requester_mobile?.message}
               />
-            </GridItem>
-          </GridContainer>
-          <GridContainer justifyContent="center">
-            <GridItem xs={12} sm={12} md={4}>
-              <Button
-                type="submit"
-                color="primary"
-                className={stylesModule.button}
-              >
-                Következő
-              </Button>
-            </GridItem>
-          </GridContainer>
-        </Form>
-      )}
-    </Formik>
+            )}
+          />
+        </GridItem>
+      </GridContainer>
+      <GridContainer justifyContent="center">
+        <GridItem xs={12} sm={12} md={4}>
+          <Button type="submit" color="primary" className={stylesModule.button}>
+            Következő
+          </Button>
+        </GridItem>
+      </GridContainer>
+    </form>
   );
 }
 

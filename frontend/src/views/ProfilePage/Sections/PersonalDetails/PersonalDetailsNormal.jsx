@@ -3,16 +3,16 @@ import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import PersonalDetails from './PersonalDetails';
 
 export default function PersonalDetailsNormal({
+  control,
   errors,
-  touched,
   disabled,
   isUser,
 }) {
   return (
     <GridItem xs={12} sm={12} md={6}>
       <PersonalDetails
+        control={control}
         errors={errors}
-        touched={touched}
         disabled={disabled}
         isUser={isUser}
       />
@@ -21,17 +21,12 @@ export default function PersonalDetailsNormal({
 }
 
 PersonalDetailsNormal.propTypes = {
+  control: PropTypes.object.isRequired,
   errors: PropTypes.shape({
     last_name: PropTypes.string,
     first_name: PropTypes.string,
     email: PropTypes.string,
     phone_number: PropTypes.string,
-  }).isRequired,
-  touched: PropTypes.shape({
-    last_name: PropTypes.bool,
-    first_name: PropTypes.bool,
-    email: PropTypes.bool,
-    phone_number: PropTypes.bool,
   }).isRequired,
   disabled: PropTypes.bool,
   isUser: PropTypes.bool.isRequired,

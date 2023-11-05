@@ -36,7 +36,7 @@ export default function Comments({ requestId, requestData, setRequestData }) {
     });
   };
 
-  const handleSubmit = async (values, newComment, { resetForm }) => {
+  const handleSubmit = async (values, newComment) => {
     let result;
     try {
       if (editingCommentId > 0 && !newComment) {
@@ -59,7 +59,6 @@ export default function Comments({ requestId, requestData, setRequestData }) {
           ...requestData,
           comments: [...requestData.comments, result.data],
         });
-        resetForm();
       }
     } catch (e) {
       showError(e);
