@@ -1,5 +1,5 @@
 $bmd-label-color-focus: $brand-primary !default;
-$bmd-invalid-underline: $brand-danger !default;
+$bmd-invalid-underline: $brand-error !default;
 $bmd-readonly-underline: $input-border-color !default;
 
 //---
@@ -75,12 +75,12 @@ $pale-bg: #f9f7f3 !default;
 $font-color: #66615b !default;
 
 $brand-default: #cecece !default;
-$brand-primary: $purple !default;
+$brand-primary: $blue-600 !default;
+$brand-secondary: $amber-600 !default;
 $brand-success: $green !default;
-$brand-danger: $red !default;
+$brand-error: $red !default;
 $brand-warning: $orange !default;
 $brand-info: $cyan !default;
-$brand-rose: $pink !default;
 
 $black-color: #3c4858 !default;
 
@@ -143,10 +143,10 @@ $tooltip-font-size: 0.75rem !default;
 
 // Background colors
 $bg-primary: $brand-primary;
-$bg-danger: $brand-danger;
+$bg-secondary: $brand-secondary;
+$bg-error: $brand-error;
 $bg-warning: $brand-warning;
 $bg-info: $brand-info;
-$bg-rose: $brand-rose;
 $bg-success: $brand-success;
 $bg-dark: $grey-900;
 
