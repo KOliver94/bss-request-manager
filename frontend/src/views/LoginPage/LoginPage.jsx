@@ -31,7 +31,7 @@ import {
 } from 'src/helpers/oauthConstants';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
-import background from 'src/assets/img/bg7.jpg';
+import background from 'src/assets/img/login.jpg';
 import stylesModule from './LoginPage.module.scss';
 
 export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {

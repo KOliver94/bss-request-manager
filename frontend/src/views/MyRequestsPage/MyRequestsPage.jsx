@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 // background
-import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/header.jpg';
 // core components
 import Header from 'src/components/material-kit-react/Header/Header';
 import Footer from 'src/components/material-kit-react/Footer/Footer';
