@@ -297,7 +297,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                         <h6>
                           {userData.groups.map((group) => {
                             return (
-                              <Badge color="rose" key={group}>
+                              <Badge color="secondary" key={group}>
                                 {groups(group)}
                               </Badge>
                             );

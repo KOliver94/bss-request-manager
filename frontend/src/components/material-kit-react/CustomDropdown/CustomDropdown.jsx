@@ -55,7 +55,7 @@ export default function CustomDropdown(props) {
   });
   const dropdownItem = classNames({
     [stylesModule.dropdownItem]: true,
-    [stylesModule[hoverColor + 'Hover']]: true,
+    [stylesModule[`${hoverColor}Hover`]]: true,
     [stylesModule.noLiPadding]: noLiPadding,
     [stylesModule.dropdownItemRTL]: rtlActive,
   });
@@ -191,7 +191,7 @@ CustomDropdown.propTypes = {
     'success',
     'warning',
     'danger',
-    'rose',
+    'secondary',
   ]),
   buttonText: PropTypes.node,
   buttonIcon: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),

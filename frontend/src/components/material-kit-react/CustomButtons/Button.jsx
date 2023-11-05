@@ -52,7 +52,7 @@ RegularButton.propTypes = {
     'success',
     'warning',
     'danger',
-    'rose',
+    'secondary',
     'white',
     'authsch',
     'facebook',
