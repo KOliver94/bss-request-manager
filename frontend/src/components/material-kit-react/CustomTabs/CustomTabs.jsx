@@ -85,7 +85,7 @@ CustomTabs.propTypes = {
   headerColor: PropTypes.oneOf([
     'warning',
     'success',
-    'danger',
+    'error',
     'info',
     'primary',
     'secondary',

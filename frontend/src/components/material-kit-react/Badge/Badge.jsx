@@ -20,7 +20,7 @@ Badge.propTypes = {
   color: PropTypes.oneOf([
     'primary',
     'warning',
-    'danger',
+    'error',
     'success',
     'info',
     'secondary',

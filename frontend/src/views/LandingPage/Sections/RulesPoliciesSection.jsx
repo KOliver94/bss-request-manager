@@ -47,7 +47,7 @@ export default function RulesPoliciesSection() {
               title="Felkérések elutasítása"
               description="Mi is egyetemi hallgatók vagyunk. Amennyiben a Stúdiónak nincs megfelelő emberi és/vagy technikai erőforrása egy anyag elkészítéséhez, akkor azt nem áll módunkban elvállalni."
               icon={CancelIcon}
-              iconColor="danger"
+              iconColor="error"
               vertical
             />
           </GridItem>

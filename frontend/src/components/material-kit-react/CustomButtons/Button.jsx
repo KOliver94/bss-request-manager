@@ -51,7 +51,7 @@ RegularButton.propTypes = {
     'info',
     'success',
     'warning',
-    'danger',
+    'error',
     'secondary',
     'white',
     'authsch',

@@ -40,7 +40,7 @@ InfoArea.propTypes = {
   iconColor: PropTypes.oneOf([
     'primary',
     'warning',
-    'danger',
+    'error',
     'success',
     'info',
     'secondary',

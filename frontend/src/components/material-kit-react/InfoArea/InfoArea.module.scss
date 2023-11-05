@@ -17,7 +17,7 @@
 .warning {
   color: map.get(theme.$themeColors, 'warning');
 }
-.danger {
+.error {
   color: map.get(theme.$themeColors, 'error');
 }
 .success {

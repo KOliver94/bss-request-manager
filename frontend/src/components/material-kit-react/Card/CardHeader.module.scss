@@ -23,10 +23,10 @@
   background: linear-gradient(60deg, #66bb6a, #43a047);
   @include theme.successBoxShadow;
 }
-.dangerCardHeader {
+.errorCardHeader {
   color: #fff;
   background: linear-gradient(60deg, #ef5350, #e53935);
-  @include theme.dangerBoxShadow;
+  @include theme.errorBoxShadow;
 }
 .infoCardHeader {
   color: #fff;

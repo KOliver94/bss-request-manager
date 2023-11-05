@@ -190,7 +190,7 @@ CustomDropdown.propTypes = {
     'info',
     'success',
     'warning',
-    'danger',
+    'error',
     'secondary',
   ]),
   buttonText: PropTypes.node,
