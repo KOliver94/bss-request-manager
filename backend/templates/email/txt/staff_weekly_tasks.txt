@@ -2,8 +2,8 @@
 
 {% if recording %}
 Közetkező heti forgatások:
-Esemény neve | Dátum | URL
-{% for request in recording %}{{ request.title }} | {% language 'hu' %}{{ request.start_datetime|date:"N j l, H:i" }}{% endlanguage %} | {{ request.admin_url }}
+Esemény neve | Dátum | | Stáb | URL
+{% for request in recording %}{{ request.title }} | {% language 'hu' %}{{ request.start_datetime|date:"N j l, H:i" }}{% endlanguage %} | {{ request.crew.count }} | {{ request.admin_url }}
 {% endfor %}
 {% endif %}
 

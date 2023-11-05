@@ -329,6 +329,9 @@ class EmailSendingTestCase(APITestCase):
                 Request.Statuses.ACCEPTED,
                 start="2020-11-21T21:41:57+0100",
             )
+            # Add some crew members
+            create_crew(120, rec1, self.staff_user, "Cameraman")
+            create_crew(121, rec1, self.normal_user, "Reporter")
             # Should not be included
             rec3 = create_request(
                 102, self.normal_user, start="2020-11-15T10:01:24+0100"
