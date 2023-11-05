@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import CircularProgress from '@mui/material/CircularProgress';
 import TheatersIcon from '@mui/icons-material/Theaters';
 // background
-import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/header.jpg';
 // core components
 import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
 import CustomTabs from 'src/components/material-kit-react/CustomTabs/CustomTabs';

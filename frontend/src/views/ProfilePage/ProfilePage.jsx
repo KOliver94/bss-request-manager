@@ -47,7 +47,7 @@ import isValidPhone from 'src/helpers/yupPhoneNumberValidator';
 // Notistack
 import { useSnackbar } from 'notistack';
 // background
-import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/header.jpg';
 // API calls
 import {
   getUser,

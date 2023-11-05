@@ -13,7 +13,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 // background
-import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/header.jpg';
 // core components
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import Header from 'src/components/material-kit-react/Header/Header';

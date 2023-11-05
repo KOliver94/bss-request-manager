@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // background
-import background from 'src/assets/img/BSS_csoportkep_2019osz.jpg';
+import background from 'src/assets/img/header.jpg';
 // core components
 import Header from 'src/components/material-kit-react/Header/Header';
 import Footer from 'src/components/material-kit-react/Footer/Footer';
