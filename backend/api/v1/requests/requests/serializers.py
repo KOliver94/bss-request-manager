@@ -6,7 +6,10 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, DateTimeField, EmailField, IntegerField
 from rest_framework.serializers import ModelSerializer, Serializer
 
-from api.v1.admin.users.serializers import UserNestedDetailSerializer
+from api.v1.admin.users.serializers import (
+    UserNestedDetailSerializer,
+    UserNestedListSerializer,
+)
 from api.v1.requests.utilities import create_user
 from common.models import get_anonymous_user
 from common.utilities import create_calendar_event
@@ -26,7 +29,7 @@ class RequestRetrieveSerializer(RequestListSerializer):
     end_datetime = DateTimeField(read_only=True)
     place = CharField(read_only=True)
     requester = UserNestedDetailSerializer(read_only=True)
-    requested_by = UserNestedDetailSerializer(read_only=True)
+    requested_by = UserNestedListSerializer(read_only=True)
     responsible = UserNestedDetailSerializer(read_only=True)
     type = CharField(read_only=True)
 

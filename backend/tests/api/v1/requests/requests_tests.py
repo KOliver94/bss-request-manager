@@ -60,7 +60,7 @@ def assert_retrieve_response_keys(video_request):
     assert_user_details(requester)
 
     requested_by = video_request.get("requested_by")
-    assert_user_details(requested_by)
+    assert_requested_by_details(requested_by)
 
     responsible = video_request.get("responsible")
     if responsible:
@@ -71,6 +71,10 @@ def assert_user_details(user):
     assert_fields_exist(
         user, ["avatar_url", "email", "full_name", "id", "is_staff", "phone_number"]
     )
+
+
+def assert_requested_by_details(user):
+    assert_fields_exist(user, ["avatar_url", "full_name", "id"])
 
 
 @pytest.fixture
