@@ -1,5 +1,8 @@
+import logging
+
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics
+from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
@@ -9,8 +12,17 @@ from api.v1.external.sch_events.serializers import (
 )
 from api.v1.requests.comments.serializers import CommentCreateUpdateSerializer
 from api.v1.requests.requests.serializers import RequestRetrieveSerializer
+from common.rest_framework.exception import exception_handler
 from common.rest_framework.permissions import IsServiceAccount
 from video_requests.models import Request
+
+logger = logging.getLogger("external.sch-events.views")
+
+
+def external_api_exception_handler(exc, context):
+    if isinstance(exc, ValidationError) or isinstance(exc, ParseError):
+        logger.exception("SCH Events (bejelentes.sch) bad request received.")
+    return exception_handler(exc, context)
 
 
 @extend_schema(
@@ -33,6 +45,9 @@ class RequestExternalSchEventsCreateView(CreateAPIView):
             output_serializer.data, status=HTTP_201_CREATED, headers=headers
         )
 
+    def get_exception_handler(self):
+        return external_api_exception_handler
+
 
 class RequestExternalSchEventsRetrieveView(RetrieveAPIView):
     permission_classes = [IsServiceAccount]
@@ -45,6 +60,9 @@ class RequestExternalSchEventsRetrieveView(RetrieveAPIView):
 class CommentExternalSchEventsCreateView(generics.CreateAPIView):
     permission_classes = [IsServiceAccount]
     serializer_class = CommentCreateUpdateSerializer
+
+    def get_exception_handler(self):
+        return external_api_exception_handler
 
     def perform_create(self, serializer):
         serializer.save(
