@@ -11,6 +11,9 @@ from video_requests.models import Comment, Request
 class RequestExternalSchEventsCreateSerializer(ModelSerializer):
     callback_url = URLField()
     comment = CharField(required=False)
+    comment_text = CharField(
+        required=False
+    )  # TODO: Backwards compatibility. Remove later.
     requester_email = EmailField()
     requester_first_name = CharField()
     requester_last_name = CharField()
@@ -21,6 +24,7 @@ class RequestExternalSchEventsCreateSerializer(ModelSerializer):
         fields = (
             "callback_url",
             "comment",
+            "comment_text",  # TODO: Backwards compatibility. Remove later.
             "end_datetime",
             "place",
             "requester_first_name",
@@ -42,7 +46,9 @@ class RequestExternalSchEventsCreateSerializer(ModelSerializer):
         return comment
 
     def create(self, validated_data):
-        comment_text = validated_data.pop("comment", None)
+        comment_text = validated_data.pop(
+            "comment", validated_data.pop("comment_text", None)
+        )  # TODO: Backwards compatibility. Remove comment_text part later.
         callback_url = validated_data.pop("callback_url")
         validated_data["requester"], additional_data = create_user(validated_data)
         validated_data["requested_by"] = self.context["request"].user
