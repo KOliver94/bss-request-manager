@@ -28,7 +28,7 @@ from video_requests.emails import (
 )
 from video_requests.models import Request, Video
 
-EMAIL_FILE = config("EMAIL_FILE", default=False, cast=bool)
+EMAIL_FILE = config("EMAIL_FILE", default=True, cast=bool)
 
 
 @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
