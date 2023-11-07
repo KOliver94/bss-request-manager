@@ -21,16 +21,16 @@ import { logoutUser, isPrivileged } from 'src/api/loginApi';
 
 import stylesModule from './HeaderLinks.module.scss';
 
-const AdminButton = () => {
+function AdminButton() {
   if (isPrivileged()) {
     return (
-      <Link to="/admin/requests" className={stylesModule.dropdownLink}>
+      <Link to="/admin" className={stylesModule.dropdownLink} reloadDocument>
         <i className="fa-solid fa-screwdriver-wrench" /> Admin
       </Link>
     );
   }
   return null;
-};
+}
 
 export default function HeaderLinks({
   isAuthenticated = false,
@@ -126,9 +126,7 @@ export default function HeaderLinks({
         </>
       )}
 
-      {hideNewRequest ? (
-        <></>
-      ) : (
+      {!hideNewRequest && (
         <ListItem className={stylesModule.listItem}>
           <Link to="/new-request" className={stylesModule.navReactRouterLink}>
             <Button color="primary" className={stylesModule.navLinkMain}>
