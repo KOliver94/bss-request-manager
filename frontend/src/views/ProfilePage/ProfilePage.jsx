@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
@@ -17,7 +17,6 @@ import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Skeleton from '@mui/material/Skeleton';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -50,12 +49,12 @@ import { useSnackbar } from 'notistack';
 import background from 'src/assets/img/header.jpg';
 // API calls
 import {
-  getUser,
-  updateUser,
   connectSocial,
   disconnectSocial,
-} from 'src/api/userApi';
-import { isAdmin, isPrivileged, isSelf } from 'src/api/loginApi';
+  getMe,
+  updateMe,
+} from 'src/api/meApi';
+import { isPrivileged } from 'src/api/loginApi';
 import handleError from 'src/helpers/errorHandler';
 import { userRoles, avatarProviders, groups } from 'src/helpers/enumConstants';
 import {
@@ -72,7 +71,6 @@ import WorkedOnDialog from './Sections/WorkedOnDialog/WorkedOnDialog';
 import stylesModule from './ProfilePage.module.scss';
 
 export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
-  const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const { code, provider } = { ...location.state };
@@ -113,9 +111,11 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     email: Yup.string()
       .email('Érvénytelen e-mail cím!')
       .required('Az e-mail cím megadása kötelező!'),
-    phone_number: Yup.string()
-      .phone('Érvénytelen telefonszám!')
-      .required('A telefonszám megadása kötelező!'),
+    profile: Yup.object({
+      phone_number: Yup.string()
+        .phone('Érvénytelen telefonszám!')
+        .required('A telefonszám megadása kötelező!'),
+    }),
   });
 
   const {
@@ -160,12 +160,11 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   useEffect(() => {
     async function loadData() {
       try {
-        const result = id ? await getUser(id) : await getUser('me');
+        const result = await getMe();
         setUserData(result.data);
         setLoading(false);
         reset({
           ...result.data,
-          phone_number: result.data.profile.phone_number,
         });
       } catch (e) {
         enqueueSnackbar(handleError(e), {
@@ -175,7 +174,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
     }
     setLoading(true);
     loadData();
-  }, [id, reset, enqueueSnackbar]);
+  }, [reset, enqueueSnackbar]);
 
   useEffect(() => {
     changePageTitle(!loading && `${userData.last_name} ${userData.first_name}`);
@@ -205,21 +204,16 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   const onSubmit = async (data) => {
     const values = data;
     try {
-      const result = id
-        ? await updateUser(id, values)
-        : await updateUser('me', values);
+      const result = await updateMe(values);
       setUserData(result.data);
-      if (!id || isSelf(id)) {
-        localStorage.setItem(
-          'name',
-          `${result.data.last_name} ${result.data.first_name}`,
-        );
-        localStorage.setItem('avatar', result.data.profile.avatar_url);
-        setHeaderDataChange(!headerDataChange);
-      }
+      localStorage.setItem(
+        'name',
+        `${result.data.last_name} ${result.data.first_name}`,
+      );
+      localStorage.setItem('avatar', result.data.profile.avatar_url);
+      setHeaderDataChange(!headerDataChange);
       reset({
-        ...userData,
-        phone_number: userData.profile.phone_number,
+        ...result.data,
       });
     } catch (e) {
       enqueueSnackbar(handleError(e), {
@@ -255,35 +249,22 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
             <GridItem xs={12} sm={12} md={6}>
               <div className={stylesModule.profile}>
                 <div>
-                  {loading && id ? (
-                    <Skeleton
-                      variant="circular"
-                      className={avatarClasses}
-                      width={160}
-                      height={160}
-                    />
-                  ) : (
-                    <Avatar
-                      className={avatarClasses}
-                      src={
-                        loading
-                          ? localStorage.getItem('avatar')
-                          : userData.profile.avatar_url
-                      }
-                    />
-                  )}
+                  <Avatar
+                    className={avatarClasses}
+                    src={
+                      loading
+                        ? localStorage.getItem('avatar')
+                        : userData.profile.avatar_url
+                    }
+                  />
                 </div>
                 <div className={stylesModule.name}>
                   <h3 className={stylesModule.title}>
-                    {loading && id ? (
-                      <Skeleton width={200} />
-                    ) : (
-                      <>
-                        {loading
-                          ? localStorage.getItem('name')
-                          : `${userData.last_name} ${userData.first_name}`}
-                      </>
-                    )}
+                    <>
+                      {loading
+                        ? localStorage.getItem('name')
+                        : `${userData.last_name} ${userData.first_name}`}
+                    </>
                   </h3>
                   {!loading && (
                     <>
@@ -375,7 +356,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                     <PersonalDetailsNormal
                       control={control}
                       errors={errors}
-                      disabled={userData.role !== 'user' || (id && !isAdmin())}
+                      disabled={userData.role !== 'user'}
                       isUser={userData.role === 'user'}
                     />
                   )}
@@ -384,9 +365,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                       <PersonalDetailsMobile
                         control={control}
                         errors={errors}
-                        disabled={
-                          userData.role !== 'user' || (id && !isAdmin())
-                        }
+                        disabled={userData.role !== 'user'}
                         isUser={userData.role === 'user'}
                       />
                     )}
@@ -459,8 +438,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                                         }
                                         disabled={
                                           avatar[1] ===
-                                            userData.profile.avatar_url ||
-                                          (id && !isSelf(id))
+                                          userData.profile.avatar_url
                                         }
                                       >
                                         <CardMedia
@@ -504,109 +482,108 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                         )}
                       </AccordionDetails>
                     </Accordion>
-                    {(!id || isSelf(id)) && (
-                      <Accordion>
-                        <AccordionSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          id="social-profile-header"
-                        >
-                          <Typography>
-                            Közösségi profilok összekapcsolása
-                          </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <GridContainer>
-                            <GridItem>
-                              {userData.social_accounts.some(
-                                (x) => x.provider === 'facebook',
-                              ) ? (
-                                <Button
-                                  color="facebook"
-                                  fullWidth
-                                  disabled={profileConnecting}
-                                  onClick={() => handleDisconnect('facebook')}
-                                >
-                                  <i className="fa-brands fa-facebook" />{' '}
-                                  Kijelentkezés
-                                </Button>
-                              ) : (
-                                <Button
-                                  color="facebook"
-                                  fullWidth
-                                  href={getOauthUrlFacebook({
-                                    operation: 'profile',
-                                  })}
-                                  target="_self"
-                                  disabled={profileConnecting}
-                                >
-                                  <i className="fa-brands fa-facebook" />{' '}
-                                  Bejelenetkezés
-                                </Button>
-                              )}
-                            </GridItem>
-                            <GridItem>
-                              {userData.social_accounts.some(
-                                (x) => x.provider === 'google-oauth2',
-                              ) ? (
-                                <Button
-                                  color="google"
-                                  fullWidth
-                                  disabled={profileConnecting}
-                                  onClick={() =>
-                                    handleDisconnect('google-oauth2')
-                                  }
-                                >
-                                  <i className="fa-brands fa-google" />{' '}
-                                  Kijelentkezés
-                                </Button>
-                              ) : (
-                                <Button
-                                  color="google"
-                                  fullWidth
-                                  href={getOauthUrlGoogle({
-                                    operation: 'profile',
-                                  })}
-                                  target="_self"
-                                  disabled={profileConnecting}
-                                >
-                                  <i className="fa-brands fa-google" />{' '}
-                                  Bejelenetkezés
-                                </Button>
-                              )}
-                            </GridItem>
-                            <GridItem>
-                              {userData.social_accounts.some(
-                                (x) => x.provider === 'authsch',
-                              ) ? (
-                                <Button
-                                  color="authsch"
-                                  fullWidth
-                                  disabled={profileConnecting}
-                                  onClick={() => handleDisconnect('authsch')}
-                                >
-                                  <i className="fa-brands icon-sch" />{' '}
-                                  Kijelentkezés
-                                </Button>
-                              ) : (
-                                <Button
-                                  color="authsch"
-                                  fullWidth
-                                  href={getOauthUrlAuthSch({
-                                    operation: 'profile',
-                                  })}
-                                  target="_self"
-                                  disabled={profileConnecting}
-                                >
-                                  <i className="fa-brands icon-sch" />{' '}
-                                  Bejelenetkezés
-                                </Button>
-                              )}
-                            </GridItem>
-                          </GridContainer>
-                        </AccordionDetails>
-                      </Accordion>
-                    )}
-                    {(((!id || isSelf(id)) && isPrivileged()) || isAdmin()) && (
+
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        id="social-profile-header"
+                      >
+                        <Typography>
+                          Közösségi profilok összekapcsolása
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <GridContainer>
+                          <GridItem>
+                            {userData.social_accounts.some(
+                              (x) => x.provider === 'facebook',
+                            ) ? (
+                              <Button
+                                color="facebook"
+                                fullWidth
+                                disabled={profileConnecting}
+                                onClick={() => handleDisconnect('facebook')}
+                              >
+                                <i className="fa-brands fa-facebook" />{' '}
+                                Kijelentkezés
+                              </Button>
+                            ) : (
+                              <Button
+                                color="facebook"
+                                fullWidth
+                                href={getOauthUrlFacebook({
+                                  operation: 'profile',
+                                })}
+                                target="_self"
+                                disabled={profileConnecting}
+                              >
+                                <i className="fa-brands fa-facebook" />{' '}
+                                Bejelenetkezés
+                              </Button>
+                            )}
+                          </GridItem>
+                          <GridItem>
+                            {userData.social_accounts.some(
+                              (x) => x.provider === 'google-oauth2',
+                            ) ? (
+                              <Button
+                                color="google"
+                                fullWidth
+                                disabled={profileConnecting}
+                                onClick={() =>
+                                  handleDisconnect('google-oauth2')
+                                }
+                              >
+                                <i className="fa-brands fa-google" />{' '}
+                                Kijelentkezés
+                              </Button>
+                            ) : (
+                              <Button
+                                color="google"
+                                fullWidth
+                                href={getOauthUrlGoogle({
+                                  operation: 'profile',
+                                })}
+                                target="_self"
+                                disabled={profileConnecting}
+                              >
+                                <i className="fa-brands fa-google" />{' '}
+                                Bejelenetkezés
+                              </Button>
+                            )}
+                          </GridItem>
+                          <GridItem>
+                            {userData.social_accounts.some(
+                              (x) => x.provider === 'authsch',
+                            ) ? (
+                              <Button
+                                color="authsch"
+                                fullWidth
+                                disabled={profileConnecting}
+                                onClick={() => handleDisconnect('authsch')}
+                              >
+                                <i className="fa-brands icon-sch" />{' '}
+                                Kijelentkezés
+                              </Button>
+                            ) : (
+                              <Button
+                                color="authsch"
+                                fullWidth
+                                href={getOauthUrlAuthSch({
+                                  operation: 'profile',
+                                })}
+                                target="_self"
+                                disabled={profileConnecting}
+                              >
+                                <i className="fa-brands icon-sch" />{' '}
+                                Bejelenetkezés
+                              </Button>
+                            )}
+                          </GridItem>
+                        </GridContainer>
+                      </AccordionDetails>
+                    </Accordion>
+                    {isPrivileged() && (
                       <>
                         <Accordion>
                           <AccordionSummary
@@ -719,7 +696,6 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                         <WorkedOnDialog
                           workedOnDialogOpen={workedOnDialogOpen}
                           setWorkedOnDialogOpen={setWorkedOnDialogOpen}
-                          userId={id || 'me'}
                           selectedDateRange={[
                             selectedStartDate,
                             selectedEndDate,
@@ -730,13 +706,13 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
                     )}
                   </GridItem>
                 </GridContainer>
-                {userData.role === 'user' && (!id || isAdmin()) && (
+                {userData.role === 'user' && (
                   <GridContainer justifyContent="center">
                     <GridItem className={stylesModule.textCenter}>
                       <Button
                         color="error"
                         className={stylesModule.button}
-                        onClick={reset}
+                        onClick={() => reset()}
                         disabled={isSubmitting}
                       >
                         Mégsem

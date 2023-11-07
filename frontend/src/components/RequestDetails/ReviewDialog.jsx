@@ -7,31 +7,18 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-// Notistack
-import { useSnackbar } from 'notistack';
-// API calls
-import { updateRating } from 'src/api/requestApi';
-import handleError from 'src/helpers/errorHandler';
 
 export default function ReviewDialog({
   reviewDialogData,
   setReviewDialogData,
-  requestData,
-  setRequestData,
+  handleRatingReviewSubmit,
 }) {
-  const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [reviewData, setReviewData] = useState({});
 
   useEffect(() => {
     setReviewData({ review: reviewDialogData.rating.review });
   }, [reviewDialogData]);
-
-  const showError = (e) => {
-    enqueueSnackbar(handleError(e), {
-      variant: 'error',
-    });
-  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -47,38 +34,8 @@ export default function ReviewDialog({
 
   const handleSave = async () => {
     setLoading(true);
-    let result;
-    try {
-      result = await updateRating(
-        reviewDialogData.requestId,
-        reviewDialogData.videoId,
-        reviewDialogData.rating.id,
-        reviewData,
-      );
-      setReviewDialogData({ ...reviewDialogData, open: false });
-      setRequestData({
-        ...requestData,
-        videos: requestData.videos.map((vid) => {
-          if (vid.id !== reviewDialogData.videoId) {
-            return vid;
-          }
-
-          return {
-            ...vid,
-            ratings: vid.ratings.map((rat) => {
-              if (rat.id === reviewDialogData.rating.id) {
-                return result.data;
-              }
-              return rat;
-            }),
-          };
-        }),
-      });
-    } catch (e) {
-      showError(e);
-    } finally {
-      setLoading(false);
-    }
+    await handleRatingReviewSubmit(reviewData);
+    setLoading(false);
   };
 
   return (
@@ -124,6 +81,5 @@ export default function ReviewDialog({
 ReviewDialog.propTypes = {
   reviewDialogData: PropTypes.object.isRequired,
   setReviewDialogData: PropTypes.func.isRequired,
-  requestData: PropTypes.object.isRequired,
-  setRequestData: PropTypes.func.isRequired,
+  handleRatingReviewSubmit: PropTypes.func.isRequired,
 };

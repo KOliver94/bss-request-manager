@@ -39,21 +39,19 @@ export default function RequestDetailPage({
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
   const [data, setData] = useState({
     id: 0,
     title: '',
     created: '',
     start_datetime: '',
     end_datetime: '',
-    deadline: '',
     type: '',
     place: '',
     status: 1,
     reponsible: {},
     requester: {},
     requested_by: {},
-    videos: [],
-    comments: [],
   });
   const requestStatus = requestStatuses.find((x) => x.id === data.status);
 
@@ -62,9 +60,7 @@ export default function RequestDetailPage({
       {
         tabName: 'Videók',
         tabIcon: TheatersIcon,
-        tabContent: (
-          <Videos requestId={id} requestData={data} setRequestData={setData} />
-        ),
+        tabContent: <Videos requestId={id} reload={reload} />,
       },
     ];
   };
@@ -155,6 +151,8 @@ export default function RequestDetailPage({
                   requestId={id}
                   requestData={data}
                   setRequestData={setData}
+                  reload={reload}
+                  setReload={setReload}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -167,8 +165,8 @@ export default function RequestDetailPage({
               <GridItem>
                 <Comments
                   requestId={id}
-                  requestData={data}
-                  setRequestData={setData}
+                  requesterId={data.requester.id}
+                  reload={reload}
                 />
               </GridItem>
             </GridContainer>

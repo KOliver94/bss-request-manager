@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // MUI components
 import Typography from '@mui/material/Typography';
@@ -17,18 +17,20 @@ import {
   createComment,
   updateComment,
   deleteComment,
+  listComments,
 } from 'src/api/requestApi';
 import compareValues from 'src/helpers/objectComperator';
 import handleError from 'src/helpers/errorHandler';
 
 import stylesModule from './Comments.module.scss';
 
-export default function Comments({ requestId, requestData, setRequestData }) {
+export default function Comments({ requestId, requesterId, reload }) {
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(-1);
   const theme = useTheme();
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
+  const [data, setData] = useState([]);
 
   const showError = (e) => {
     enqueueSnackbar(handleError(e), {
@@ -43,22 +45,17 @@ export default function Comments({ requestId, requestData, setRequestData }) {
         result = await updateComment(requestId, editingCommentId, values);
 
         setEditingCommentId(-1);
-        setRequestData({
-          ...requestData,
-          comments: requestData.comments.map((comment) => {
+        setData([
+          ...data.map((comment) => {
             if (comment.id === editingCommentId) {
               return result.data;
             }
             return comment;
           }),
-        });
+        ]);
       } else {
         result = await createComment(requestId, values);
-
-        setRequestData({
-          ...requestData,
-          comments: [...requestData.comments, result.data],
-        });
+        setData([...data, result.data]);
       }
     } catch (e) {
       showError(e);
@@ -69,18 +66,30 @@ export default function Comments({ requestId, requestData, setRequestData }) {
     setLoading(true);
     try {
       await deleteComment(requestId, commentId);
-      setRequestData({
-        ...requestData,
-        comments: requestData.comments.filter(
-          (comment) => comment.id !== commentId,
-        ),
-      });
+      setData([...data.filter((comment) => comment.id !== commentId)]);
     } catch (e) {
       showError(e);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    async function loadData(reqId) {
+      try {
+        const result = await listComments(reqId);
+        setData(result.data);
+        setLoading(false);
+      } catch (e) {
+        enqueueSnackbar(handleError(e), {
+          variant: 'error',
+        });
+      }
+    }
+
+    setLoading(true);
+    loadData(requestId);
+  }, [requestId, enqueueSnackbar, reload]);
 
   return (
     <div>
@@ -101,9 +110,9 @@ export default function Comments({ requestId, requestData, setRequestData }) {
       </div>
       <Divider variant="middle" />
       <Paper className={stylesModule.paper} elevation={2}>
-        {requestData.comments.length > 0 && (
+        {data.length > 0 && (
           <>
-            {requestData.comments
+            {data
               .sort(compareValues('id'))
               .map((comment) =>
                 isMobileView ? (
@@ -114,7 +123,7 @@ export default function Comments({ requestId, requestData, setRequestData }) {
                     handleSubmit={handleSubmit}
                     isEditing={editingCommentId === comment.id}
                     loading={loading}
-                    requesterId={requestData.requester.id}
+                    requesterId={requesterId}
                     setEditingCommentId={setEditingCommentId}
                   />
                 ) : (
@@ -125,7 +134,7 @@ export default function Comments({ requestId, requestData, setRequestData }) {
                     handleSubmit={handleSubmit}
                     isEditing={editingCommentId === comment.id}
                     loading={loading}
-                    requesterId={requestData.requester.id}
+                    requesterId={requesterId}
                     setEditingCommentId={setEditingCommentId}
                   />
                 ),
@@ -156,6 +165,6 @@ export default function Comments({ requestId, requestData, setRequestData }) {
 
 Comments.propTypes = {
   requestId: PropTypes.string.isRequired,
-  requestData: PropTypes.object.isRequired,
-  setRequestData: PropTypes.func.isRequired,
+  requesterId: PropTypes.number.isRequired,
+  reload: PropTypes.bool.isRequired,
 };

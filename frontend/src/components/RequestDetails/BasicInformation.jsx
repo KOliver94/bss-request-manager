@@ -27,6 +27,8 @@ export default function BasicInformation({
   requestId,
   requestData,
   setRequestData,
+  reload,
+  setReload,
 }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -34,6 +36,7 @@ export default function BasicInformation({
 
   const handleReload = async () => {
     setLoading(true);
+    setReload(!reload);
     try {
       await getRequest(requestId).then((response) => {
         setLoading(false);
@@ -121,21 +124,18 @@ export default function BasicInformation({
           Videó típusa: <strong>{requestData.type}</strong>
         </p>
         <p>
-          Felkérő:{' '}
-          <strong>
-            {`${requestData.requester.last_name} ${requestData.requester.first_name}`}
-          </strong>
+          Felkérő: <strong>{requestData.requester.full_name}</strong>
           <br />
           <strong>
             (
             <a href={`mailto:${requestData.requester.email}`}>
               {requestData.requester.email}
             </a>
-            {requestData.requester.profile.phone_number && (
+            {requestData.requester.phone_number && (
               <>
                 {', '}
-                <a href={`tel:${requestData.requester.profile.phone_number}`}>
-                  {requestData.requester.profile.phone_number}
+                <a href={`tel:${requestData.requester.phone_number}`}>
+                  {requestData.requester.phone_number}
                 </a>
               </>
             )}
@@ -145,10 +145,7 @@ export default function BasicInformation({
         {requestData.requested_by &&
           requestData.requested_by.id !== requestData.requester.id && (
             <p>
-              Beküldő:{' '}
-              <strong>
-                {`${requestData.requested_by.last_name} ${requestData.requested_by.first_name}`}
-              </strong>
+              Beküldő: <strong>{requestData.requested_by.full_name}</strong>
             </p>
           )}
         <Divider />
@@ -166,23 +163,18 @@ export default function BasicInformation({
         </p>
         {requestData.responsible && (
           <p>
-            Felelős:{' '}
-            <strong>
-              {`${requestData.responsible.last_name} ${requestData.responsible.first_name}`}
-            </strong>
+            Felelős: <strong>{requestData.responsible.full_name}</strong>
             <br />
             <strong>
               (
               <a href={`mailto:${requestData.responsible.email}`}>
                 {requestData.responsible.email}
               </a>
-              {requestData.responsible.profile.phone_number && (
+              {requestData.responsible.phone_number && (
                 <>
                   {', '}
-                  <a
-                    href={`tel:${requestData.responsible.profile.phone_number}`}
-                  >
-                    {requestData.responsible.profile.phone_number}
+                  <a href={`tel:${requestData.responsible.phone_number}`}>
+                    {requestData.responsible.phone_number}
                   </a>
                 </>
               )}
@@ -199,4 +191,6 @@ BasicInformation.propTypes = {
   requestId: PropTypes.string.isRequired,
   requestData: PropTypes.object.isRequired,
   setRequestData: PropTypes.func.isRequired,
+  reload: PropTypes.bool.isRequired,
+  setReload: PropTypes.func.isRequired,
 };

@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
+import { redirectDocument } from 'react-router-dom';
 
 const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1/`,
@@ -20,54 +21,42 @@ axiosInstance.interceptors.request.use((config) => {
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => {
-    const originalRequest = error.config;
-
-    if (error.code === 'ECONNABORTED') {
-      // console.error(`A timeout happened on url ${error.config.url}`);
-    } else if (!error.response) {
-      // console.error(`${error.message}`);
+  async (error) => {
+    if (!isAxiosError(error)) {
+      return Promise.reject(error);
     }
+
+    const originalRequest = error.config;
+    const refreshToken = localStorage.getItem('refresh_token');
 
     // If requests fail with 401 Unauthorized because JWT token is not valid try to get new token with refresh token.
-    else if (
-      error.response.status === 401 &&
-      error.response.data.code === 'token_not_valid' &&
-      error.config.url !== '/login/refresh' &&
-      localStorage.getItem('refresh_token')
+    if (
+      error.response?.status === 401 &&
+      error.response.data?.code === 'token_not_valid' &&
+      !error.config?.url?.includes('login/refresh') &&
+      originalRequest &&
+      refreshToken
     ) {
-      const refreshToken = localStorage.getItem('refresh_token');
-
-      return axiosInstance
-        .post('/login/refresh', { refresh: refreshToken })
-        .then((response) => {
-          const accessToken = response.data.access
-            ? response.data.access
-            : response.data.token;
-          localStorage.setItem('access_token', accessToken);
-          localStorage.setItem('refresh_token', response.data.refresh);
-
-          axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-
-          return axiosInstance(originalRequest);
-        })
-        .catch(() => {
-          // If an error occurs during token refresh log the user out.
-          try {
-            // Send the refresh token to the server to blacklist it.
-            axiosInstance.post('/logout', {
-              refresh: localStorage.getItem('refresh_token'),
-            });
-          } finally {
-            // Remove tokens and auth header.
-            axiosInstance.defaults.headers.Authorization = null;
-            localStorage.clear();
-            // console.error(`API call failed. User has been logged out. ${err}`);
-            window.location.replace('/');
-          }
+      try {
+        const response = axiosInstance.post('login/refresh', {
+          refresh: refreshToken,
         });
+        const accessToken = response.data.access;
+        localStorage.setItem('access_token', accessToken);
+        localStorage.setItem('refresh_token', response.data.refresh);
+
+        axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return await axiosInstance(originalRequest);
+      } catch {
+        // If an error occurs during token refresh log the user out.
+        // Remove tokens and auth header.
+        axiosInstance.defaults.headers.Authorization = null;
+        localStorage.clear();
+        redirectDocument('/');
+      }
     }
+
     return Promise.reject(error);
   },
 );

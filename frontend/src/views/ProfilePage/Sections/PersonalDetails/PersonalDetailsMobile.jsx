@@ -38,7 +38,7 @@ PersonalDetailsMobile.propTypes = {
     last_name: PropTypes.string,
     first_name: PropTypes.string,
     email: PropTypes.string,
-    phone_number: PropTypes.string,
+    profile: PropTypes.shape({ phone_number: PropTypes.string }),
   }).isRequired,
   disabled: PropTypes.bool,
   isUser: PropTypes.bool.isRequired,

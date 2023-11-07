@@ -84,7 +84,7 @@ export default function PersonalDetails({ control, errors, disabled, isUser }) {
       </GridItem>
       <GridItem>
         <Controller
-          name="phone_number"
+          name="profile.phone_number"
           control={control}
           render={({ field }) => (
             <PhoneNumberInput
@@ -94,8 +94,8 @@ export default function PersonalDetails({ control, errors, disabled, isUser }) {
               margin="normal"
               fullWidth
               disabled={disabled}
-              error={!!errors.phone_number}
-              helperText={errors.phone_number?.message}
+              error={!!errors.profile?.phone_number}
+              helperText={errors.profile?.phone_number?.message}
             />
           )}
         />
@@ -110,7 +110,7 @@ PersonalDetails.propTypes = {
     last_name: PropTypes.string,
     first_name: PropTypes.string,
     email: PropTypes.string,
-    phone_number: PropTypes.string,
+    profile: PropTypes.shape({ phone_number: PropTypes.string }),
   }).isRequired,
   disabled: PropTypes.bool.isRequired,
   isUser: PropTypes.bool.isRequired,
