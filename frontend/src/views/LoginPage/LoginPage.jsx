@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, redirectDocument } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // @mui components
 import CircularProgress from '@mui/material/CircularProgress';
@@ -118,6 +118,9 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
     if (isAuthenticated) {
       if (from.pathname === '/' && isPrivileged()) {
         from.pathname = '/admin/requests';
+      }
+      if (from.pathname && from.pathname.startsWith('/admin')) {
+        redirectDocument(from.pathname);
       }
       navigate(from, { replace: true });
     }
