@@ -1,21 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
 import CircularProgress from '@mui/material/CircularProgress';
 import TheatersIcon from '@mui/icons-material/Theaters';
-// background
-import background from 'src/assets/img/header.jpg';
 // core components
 import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
 import CustomTabs from 'src/components/material-kit-react/CustomTabs/CustomTabs';
-import Header from 'src/components/material-kit-react/Header/Header';
-import Footer from 'src/components/material-kit-react/Footer/Footer';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 // Notistack
 import { useSnackbar } from 'notistack';
@@ -31,10 +25,7 @@ import changePageTitle from 'src/helpers/pageTitleHelper';
 
 import stylesModule from './RequestDetailPage.module.scss';
 
-export default function RequestDetailPage({
-  isAuthenticated,
-  setIsAuthenticated,
-}) {
+export default function RequestDetailPage() {
   const navigate = useNavigate();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -91,23 +82,8 @@ export default function RequestDetailPage({
   }, [loading, data]);
 
   return (
-    <div>
-      <Header
-        color="transparent"
-        brand="BSS Felkéréskezelő"
-        rightLinks={
-          <HeaderLinks
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        }
-        fixed
-        changeColorOnScroll={{
-          height: 200,
-          color: 'white',
-        }}
-      />
-      <Parallax small filter image={background}>
+    <>
+      <Parallax small filter>
         <div className={stylesModule.container}>
           <GridContainer justifyContent="center">
             <GridItem className={stylesModule.textCenter}>
@@ -173,12 +149,6 @@ export default function RequestDetailPage({
           )}
         </div>
       </div>
-      <Footer />
-    </div>
+    </>
   );
 }
-
-RequestDetailPage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  setIsAuthenticated: PropTypes.func.isRequired,
-};

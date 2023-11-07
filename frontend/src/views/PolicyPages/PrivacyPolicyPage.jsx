@@ -1,48 +1,24 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
-// background
-import background from 'src/assets/img/header.jpg';
 // core components
-import Header from 'src/components/material-kit-react/Header/Header';
-import Footer from 'src/components/material-kit-react/Footer/Footer';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 // helpers
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
 import stylesModule from './PolicyPages.module.scss';
 
-export default function PrivacyPolicyPage({
-  isAuthenticated,
-  setIsAuthenticated,
-}) {
+function PrivacyPolicyPage() {
   useEffect(() => {
     changePageTitle('Adatvédelmi irányelvek');
   }, []);
 
   return (
-    <div>
-      <Header
-        color="transparent"
-        brand="BSS Felkéréskezelő"
-        rightLinks={
-          <HeaderLinks
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        }
-        fixed
-        changeColorOnScroll={{
-          height: 200,
-          color: 'white',
-        }}
-      />
-      <Parallax small filter image={background} />
+    <>
+      <Parallax small filter />
       <div className={classNames(stylesModule.main, stylesModule.mainRaised)}>
         <div
           className={classNames(stylesModule.container, stylesModule.section)}
@@ -178,12 +154,9 @@ export default function PrivacyPolicyPage({
           </GridContainer>
         </div>
       </div>
-      <Footer />
-    </div>
+    </>
   );
 }
 
-PrivacyPolicyPage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  setIsAuthenticated: PropTypes.func.isRequired,
-};
+// eslint-disable-next-line import/prefer-default-export
+export { PrivacyPolicyPage as Component };

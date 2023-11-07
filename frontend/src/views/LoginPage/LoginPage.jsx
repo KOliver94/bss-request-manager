@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation, redirectDocument } from 'react-router-dom';
-import PropTypes from 'prop-types';
 // @mui components
 import CircularProgress from '@mui/material/CircularProgress';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -11,9 +10,6 @@ import People from '@mui/icons-material/People';
 // notistack (MUI Snackbars)
 import { useSnackbar } from 'notistack';
 // core components
-import Header from 'src/components/material-kit-react/Header/Header';
-import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
-import Footer from 'src/components/material-kit-react/Footer/Footer';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
@@ -22,8 +18,14 @@ import CardBody from 'src/components/material-kit-react/Card/CardBody';
 import CardHeader from 'src/components/material-kit-react/Card/CardHeader';
 import CardFooter from 'src/components/material-kit-react/Card/CardFooter';
 import CustomInput from 'src/components/material-kit-react/CustomInput/CustomInput';
+import Footer from 'src/components/material-kit-react/Footer/Footer';
 // API calls and helpers
-import { loginLdap, loginSocial, isPrivileged } from 'src/api/loginApi';
+import {
+  loginLdap,
+  loginSocial,
+  isPrivileged,
+  isAuthenticated,
+} from 'src/api/loginApi';
 import {
   getOauthUrlAuthSch,
   getOauthUrlFacebook,
@@ -34,7 +36,7 @@ import changePageTitle from 'src/helpers/pageTitleHelper';
 import background from 'src/assets/img/login.jpg';
 import stylesModule from './LoginPage.module.scss';
 
-export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
+function LoginPage() {
   const [cardAnimation, setCardAnimation] = useState('cardHidden');
   const [loginDetails, setLoginDetails] = useState({});
   const [loading, setLoading] = useState(false);
@@ -42,22 +44,38 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
-
-  const from = (location.state && location.state.from) || {
-    pathname: localStorage.getItem('redirectedFrom') || '/',
-  };
   const { code, provider } = { ...location.state };
+
+  const from = useCallback(
+    () =>
+      location.state?.from || {
+        pathname:
+          localStorage.getItem('redirectedFrom') || isPrivileged()
+            ? '/admin'
+            : '/',
+      },
+    [location],
+  );
+
+  const redirect = useCallback(() => {
+    if (isAuthenticated()) {
+      if (from.pathname?.startsWith('/admin')) {
+        redirectDocument(from.pathname);
+      }
+      navigate(from, { replace: true });
+    }
+  }, [navigate, from]);
 
   const handleLogin = useCallback(
     async (type, data) => {
       setLoading(true);
 
       const handleSuccess = () => {
-        setIsAuthenticated(true);
         localStorage.removeItem('redirectedFrom');
         enqueueSnackbar('Sikeres bejelentkezés', {
           variant: 'success',
         });
+        redirect();
       };
 
       try {
@@ -78,11 +96,11 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
             horizontal: 'center',
           },
         });
+      } finally {
         setLoading(false);
-        navigate({ replace: true });
       }
     },
-    [enqueueSnackbar, navigate, setIsAuthenticated],
+    [enqueueSnackbar, redirect],
   );
 
   const handleSubmit = (event) => {
@@ -108,23 +126,12 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
 
   useEffect(() => {
     changePageTitle('Bejelentkezés');
+    redirect();
     const timer = setTimeout(() => setCardAnimation(''), 700);
     return () => {
       clearTimeout(timer);
     };
-  }, []);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      if (from.pathname === '/' && isPrivileged()) {
-        from.pathname = '/admin/requests';
-      }
-      if (from.pathname && from.pathname.startsWith('/admin')) {
-        redirectDocument(from.pathname);
-      }
-      navigate(from, { replace: true });
-    }
-  });
+  }, [redirect]);
 
   useEffect(() => {
     if (code && provider) {
@@ -134,167 +141,154 @@ export default function LoginPage({ isAuthenticated, setIsAuthenticated }) {
   }, [code, provider, handleLogin]);
 
   return (
-    <div>
-      <Header
-        absolute
-        color="transparent"
-        brand="BSS Felkéréskezelő"
-        rightLinks={<HeaderLinks hideLogin />}
-      />
-      <div
-        className={stylesModule.pageHeader}
-        style={{
-          backgroundImage: `url(${background})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'top center',
-        }}
-      >
-        <div className={stylesModule.container}>
-          <GridContainer justifyContent="center">
-            <GridItem xs={12} sm={12} md={4}>
-              <Card className={stylesModule[cardAnimation]}>
-                <form className={stylesModule.form} onSubmit={handleSubmit}>
-                  <CardHeader
-                    color="primary"
-                    className={stylesModule.cardHeader}
-                  >
-                    <h4>Bejelentkezés felkérőknek</h4>
-                    <div className={stylesModule.socialLine}>
-                      <Tooltip
-                        title="AuthSCH"
-                        classes={{ tooltip: stylesModule.tooltip }}
-                        placement="top"
-                        arrow
-                      >
-                        <span>
-                          <Button
-                            justIcon
-                            href={getOauthUrlAuthSch({ operation: 'login' })}
-                            onClick={handleButtonClick}
-                            target="_self"
-                            color="transparent"
-                            disabled={loading}
-                          >
-                            <i className="fa-brands icon-sch" />
-                          </Button>
-                        </span>
-                      </Tooltip>
-                      <Tooltip
-                        title="Facebook"
-                        classes={{ tooltip: stylesModule.tooltip }}
-                        placement="top"
-                        arrow
-                      >
-                        <span>
-                          <Button
-                            justIcon
-                            href={getOauthUrlFacebook({ operation: 'login' })}
-                            onClick={handleButtonClick}
-                            target="_self"
-                            color="transparent"
-                            disabled={loading}
-                          >
-                            <i className="fa-brands fa-facebook" />
-                          </Button>
-                        </span>
-                      </Tooltip>
-                      <Tooltip
-                        title="Google"
-                        classes={{ tooltip: stylesModule.tooltip }}
-                        placement="top"
-                        arrow
-                      >
-                        <span>
-                          <Button
-                            justIcon
-                            href={getOauthUrlGoogle({ operation: 'login' })}
-                            onClick={handleButtonClick}
-                            target="_self"
-                            color="transparent"
-                            disabled={loading}
-                          >
-                            <i className="fa-brands fa-google" />
-                          </Button>
-                        </span>
-                      </Tooltip>
+    <div
+      className={stylesModule.pageHeader}
+      style={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'top center',
+      }}
+    >
+      <div className={stylesModule.container}>
+        <GridContainer justifyContent="center">
+          <GridItem xs={12} sm={12} md={4}>
+            <Card className={stylesModule[cardAnimation]}>
+              <form className={stylesModule.form} onSubmit={handleSubmit}>
+                <CardHeader color="primary" className={stylesModule.cardHeader}>
+                  <h4>Bejelentkezés felkérőknek</h4>
+                  <div className={stylesModule.socialLine}>
+                    <Tooltip
+                      title="AuthSCH"
+                      classes={{ tooltip: stylesModule.tooltip }}
+                      placement="top"
+                      arrow
+                    >
+                      <span>
+                        <Button
+                          justIcon
+                          href={getOauthUrlAuthSch({ operation: 'login' })}
+                          onClick={handleButtonClick}
+                          target="_self"
+                          color="transparent"
+                          disabled={loading}
+                        >
+                          <i className="fa-brands icon-sch" />
+                        </Button>
+                      </span>
+                    </Tooltip>
+                    <Tooltip
+                      title="Facebook"
+                      classes={{ tooltip: stylesModule.tooltip }}
+                      placement="top"
+                      arrow
+                    >
+                      <span>
+                        <Button
+                          justIcon
+                          href={getOauthUrlFacebook({ operation: 'login' })}
+                          onClick={handleButtonClick}
+                          target="_self"
+                          color="transparent"
+                          disabled={loading}
+                        >
+                          <i className="fa-brands fa-facebook" />
+                        </Button>
+                      </span>
+                    </Tooltip>
+                    <Tooltip
+                      title="Google"
+                      classes={{ tooltip: stylesModule.tooltip }}
+                      placement="top"
+                      arrow
+                    >
+                      <span>
+                        <Button
+                          justIcon
+                          href={getOauthUrlGoogle({ operation: 'login' })}
+                          onClick={handleButtonClick}
+                          target="_self"
+                          color="transparent"
+                          disabled={loading}
+                        >
+                          <i className="fa-brands fa-google" />
+                        </Button>
+                      </span>
+                    </Tooltip>
+                  </div>
+                </CardHeader>
+                <p className={stylesModule.divider}>valamint BSS Tagoknak</p>
+                <CardBody>
+                  <CustomInput
+                    labelText="Felhasználónév"
+                    id="username"
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    labelProps={{
+                      variant: 'standard',
+                    }}
+                    inputProps={{
+                      type: 'username',
+                      name: 'username',
+                      onChange: (e) => handleChange(e),
+                      disabled: loading,
+                      required: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <People className={stylesModule.inputIconsColor} />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <CustomInput
+                    labelText="Jelszó"
+                    id="pass"
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    labelProps={{
+                      variant: 'standard',
+                    }}
+                    inputProps={{
+                      type: 'password',
+                      name: 'password',
+                      onChange: (e) => handleChange(e),
+                      disabled: loading,
+                      required: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Icon className={stylesModule.inputIconsColor}>
+                            lock_outline
+                          </Icon>
+                        </InputAdornment>
+                      ),
+                      autoComplete: 'off',
+                    }}
+                  />
+                </CardBody>
+                <CardFooter className={stylesModule.cardFooter}>
+                  {loading ? (
+                    <div className={stylesModule.circularProgressContainer}>
+                      <CircularProgress
+                        className={stylesModule.circularProgress}
+                        size={30}
+                      />
                     </div>
-                  </CardHeader>
-                  <p className={stylesModule.divider}>valamint BSS Tagoknak</p>
-                  <CardBody>
-                    <CustomInput
-                      labelText="Felhasználónév"
-                      id="username"
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                      labelProps={{
-                        variant: 'standard',
-                      }}
-                      inputProps={{
-                        type: 'username',
-                        name: 'username',
-                        onChange: (e) => handleChange(e),
-                        disabled: loading,
-                        required: true,
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <People className={stylesModule.inputIconsColor} />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                    <CustomInput
-                      labelText="Jelszó"
-                      id="pass"
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                      labelProps={{
-                        variant: 'standard',
-                      }}
-                      inputProps={{
-                        type: 'password',
-                        name: 'password',
-                        onChange: (e) => handleChange(e),
-                        disabled: loading,
-                        required: true,
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Icon className={stylesModule.inputIconsColor}>
-                              lock_outline
-                            </Icon>
-                          </InputAdornment>
-                        ),
-                        autoComplete: 'off',
-                      }}
-                    />
-                  </CardBody>
-                  <CardFooter className={stylesModule.cardFooter}>
-                    {loading ? (
-                      <div className={stylesModule.circularProgressContainer}>
-                        <CircularProgress
-                          className={stylesModule.circularProgress}
-                          size={30}
-                        />
-                      </div>
-                    ) : (
-                      <Button simple color="primary" size="lg" type="submit">
-                        Küldés
-                      </Button>
-                    )}
-                  </CardFooter>
-                </form>
-              </Card>
-            </GridItem>
-          </GridContainer>
-        </div>
-        <Footer whiteFont />
+                  ) : (
+                    <Button simple color="primary" size="lg" type="submit">
+                      Küldés
+                    </Button>
+                  )}
+                </CardFooter>
+              </form>
+            </Card>
+          </GridItem>
+        </GridContainer>
       </div>
+      <Footer whiteFont />
     </div>
   );
 }
 
-LoginPage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  setIsAuthenticated: PropTypes.func.isRequired,
-};
+// eslint-disable-next-line import/prefer-default-export
+export { LoginPage as Component };

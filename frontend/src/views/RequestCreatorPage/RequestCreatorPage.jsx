@@ -1,6 +1,5 @@
 import { useState, useEffect, createRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
@@ -12,15 +11,10 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
-// background
-import background from 'src/assets/img/header.jpg';
 // core components
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import Header from 'src/components/material-kit-react/Header/Header';
-import Footer from 'src/components/material-kit-react/Footer/Footer';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 // Notistack
 import { useSnackbar } from 'notistack';
@@ -31,6 +25,7 @@ import RequestCreatorForm from 'src/components/RequestCreatorForm/RequestCreator
 // API calls
 import { getMe } from 'src/api/meApi';
 import { createRequest } from 'src/api/requestApi';
+import { isAuthenticated } from 'src/api/loginApi';
 import handleError from 'src/helpers/errorHandler';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
@@ -60,10 +55,7 @@ const formInitialState = {
   comment: '',
 };
 
-export default function RequestCreatorPage({
-  isAuthenticated,
-  setIsAuthenticated,
-}) {
+function RequestCreatorPage() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const recaptchaRef = createRef();
@@ -97,7 +89,7 @@ export default function RequestCreatorPage({
     setLoading(true);
     try {
       formData.type = formData.type_obj.text;
-      if (!isAuthenticated) {
+      if (!isAuthenticated()) {
         formData.recaptcha = await recaptchaRef.current.executeAsync();
       }
       await createRequest(formData).then((response) => {
@@ -158,37 +150,21 @@ export default function RequestCreatorPage({
       }
     }
 
-    if (isAuthenticated) {
+    if (isAuthenticated()) {
       setLoading(true);
       loadUserData();
     } else {
       setLoading(false);
     }
-  }, [isAuthenticated, enqueueSnackbar, navigate]);
+  }, [enqueueSnackbar, navigate]);
 
   useEffect(() => {
     changePageTitle('Felkérés beküldése');
   }, []);
 
   return (
-    <div>
-      <Header
-        color="transparent"
-        brand="BSS Felkéréskezelő"
-        rightLinks={
-          <HeaderLinks
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-            hideNewRequest
-          />
-        }
-        fixed
-        changeColorOnScroll={{
-          height: 200,
-          color: 'white',
-        }}
-      />
-      <Parallax small filter image={background}>
+    <>
+      <Parallax small filter>
         <div className={stylesModule.container}>
           <GridContainer justifyContent="center">
             <GridItem xs={12} sm={12} md={6}>
@@ -269,7 +245,7 @@ export default function RequestCreatorPage({
                     handleNext={handleNext}
                     handleBack={handleBack}
                     setActiveStep={setActiveStep}
-                    isAuthenticated={isAuthenticated}
+                    isAuthenticated={isAuthenticated()}
                   />
                 </GridItem>
               </GridContainer>
@@ -308,7 +284,7 @@ export default function RequestCreatorPage({
                       <Button onClick={handleReset} color="primary">
                         Új felkérés beküldése
                       </Button>
-                      {isAuthenticated && (
+                      {isAuthenticated() && (
                         <Button onClick={handleShowCreated} color="secondary">
                           Felkérés megtekintése
                         </Button>
@@ -319,7 +295,7 @@ export default function RequestCreatorPage({
               </GridContainer>
             </>
           )}
-          {!isAuthenticated && (
+          {!isAuthenticated() && (
             <ReCAPTCHA
               ref={recaptchaRef}
               size="invisible"
@@ -328,12 +304,9 @@ export default function RequestCreatorPage({
           )}
         </div>
       </div>
-      <Footer />
-    </div>
+    </>
   );
 }
 
-RequestCreatorPage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  setIsAuthenticated: PropTypes.func.isRequired,
-};
+// eslint-disable-next-line import/prefer-default-export
+export { RequestCreatorPage as Component };

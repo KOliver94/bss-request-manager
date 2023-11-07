@@ -3,19 +3,24 @@ import { useState, useEffect } from 'react';
 import classNames from 'classnames';
 // nodejs library to set properties for components
 import PropTypes from 'prop-types';
+import background from 'src/assets/img/header.jpg';
 
 import stylesModule from './Parallax.module.scss';
 
 export default function Parallax(props) {
   let windowScrollTop;
   if (window.innerWidth >= 768) {
-    windowScrollTop = window.pageYOffset / 3;
+    windowScrollTop = window.scrollY / 3;
   } else {
     windowScrollTop = 0;
   }
   const [transform, setTransform] = useState(
-    'translate3d(0,' + windowScrollTop + 'px,0)',
+    `translate3d(0,${windowScrollTop}px,0)`,
   );
+  const resetTransform = () => {
+    const scrollTop = window.scrollY / 3;
+    setTransform(`translate3d(0,${scrollTop}px,0)`);
+  };
   useEffect(() => {
     if (window.innerWidth >= 768) {
       window.addEventListener('scroll', resetTransform);
@@ -26,11 +31,8 @@ export default function Parallax(props) {
       }
     };
   });
-  const resetTransform = () => {
-    const windowScrollTop = window.pageYOffset / 3;
-    setTransform('translate3d(0,' + windowScrollTop + 'px,0)');
-  };
-  const { filter, className, children, style, image, small } = props;
+
+  const { filter, className, children, style, small } = props;
 
   const parallaxClasses = classNames({
     [stylesModule.parallax]: true,
@@ -38,13 +40,18 @@ export default function Parallax(props) {
     [stylesModule.small]: small,
     [className]: className !== undefined,
   });
+
+  useEffect(() => {
+    resetTransform();
+  }, [small]);
+
   return (
     <div
       className={parallaxClasses}
       style={{
         ...style,
-        backgroundImage: 'url(' + image + ')',
-        transform: transform,
+        backgroundImage: `url(${background})`,
+        transform,
       }}
     >
       {children}
@@ -57,6 +64,5 @@ Parallax.propTypes = {
   filter: PropTypes.bool,
   children: PropTypes.node,
   style: PropTypes.string,
-  image: PropTypes.string,
   small: PropTypes.bool,
 };
