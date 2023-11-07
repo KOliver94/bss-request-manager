@@ -22,7 +22,7 @@ function OtherInformation({ formData, setFormData, handleNext, handleBack }) {
       <GridContainer justifyContent="center">
         <GridItem>
           <Controller
-            name="comment_text"
+            name="comment"
             control={control}
             render={({ field }) => (
               <TextField

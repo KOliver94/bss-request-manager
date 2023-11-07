@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // MUI components
 import IconButton from '@mui/material/IconButton';
@@ -23,8 +23,12 @@ import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
-import { isSelf } from 'src/api/loginApi';
-import { createRating, updateRating, deleteRating } from 'src/api/requestApi';
+import {
+  createRating,
+  updateRating,
+  deleteRating,
+  listVideos,
+} from 'src/api/requestApi';
 import { videoStatuses } from 'src/helpers/enumConstants';
 import compareValues from 'src/helpers/objectComperator';
 import handleError from 'src/helpers/errorHandler';
@@ -33,17 +37,13 @@ import ReviewDialog from './ReviewDialog';
 
 import stylesModule from './Videos.module.scss';
 
-export default function Videos({ requestId, requestData, setRequestData }) {
+export default function Videos({ requestId, reload }) {
   const { enqueueSnackbar } = useSnackbar();
+  const [data, setData] = useState([]);
   const [ratingLoading, setRatingLoading] = useState(false);
-  const [videoAccordionOpen, setVideoAccordionOpen] = useState(
-    requestData.videos.length === 1
-      ? `${requestData.videos[0].id}-panel`
-      : null,
-  );
+  const [videoAccordionOpen, setVideoAccordionOpen] = useState(null);
   const [ratingRemoveDialog, setRatingRemoveDialog] = useState({
     videoId: 0,
-    ratingId: 0,
     open: false,
     loading: false,
   });
@@ -61,74 +61,59 @@ export default function Videos({ requestId, requestData, setRequestData }) {
     }
   };
 
-  const getOwnRatingForVideo = (video) => {
-    let found = null;
-    if (video.ratings.length > 0) {
-      found = video.ratings.find((rating) => isSelf(rating.author.id));
-    }
-    return found || { rating: 0, review: '' };
-  };
-
   const showError = (e) => {
     enqueueSnackbar(handleError(e), {
       variant: 'error',
     });
   };
 
-  const handleReview = (video, rating = getOwnRatingForVideo(video)) => {
+  const handleReview = (video) => {
     setReviewDialogData({
       ...reviewDialogData,
       ...{
         videoId: video.id,
-        rating,
+        rating: video.rating,
         open: true,
       },
     });
   };
 
   const handleRatingCreateUpdate = async (value, video) => {
-    const rating = getOwnRatingForVideo(video);
     let result;
     if (value) {
       setRatingLoading(true);
       try {
-        if (rating.rating === 0) {
+        if (!video.rating.rating) {
           result = await createRating(requestId, video.id, { rating: value });
           handleReview(video, result.data);
-          setRequestData({
-            ...requestData,
-            videos: requestData.videos.map((vid) => {
+          setData([
+            ...data.map((vid) => {
               if (vid.id !== video.id) {
                 return vid;
               }
 
               return {
                 ...vid,
-                ratings: [...vid.ratings, result.data],
+                rating: result.data,
               };
             }),
-          });
+          ]);
         } else {
-          result = await updateRating(requestId, video.id, rating.id, {
+          result = await updateRating(requestId, video.id, {
             rating: value,
           });
-          setRequestData({
-            ...requestData,
-            videos: requestData.videos.map((vid) => {
+          setData([
+            ...data.map((vid) => {
               if (vid.id !== video.id) {
                 return vid;
               }
+
               return {
                 ...vid,
-                ratings: vid.ratings.map((rat) => {
-                  if (rat.id === rating.id) {
-                    return result.data;
-                  }
-                  return rat;
-                }),
+                rating: result.data,
               };
             }),
-          });
+          ]);
         }
       } catch (e) {
         showError(e);
@@ -138,7 +123,6 @@ export default function Videos({ requestId, requestData, setRequestData }) {
     } else {
       setRatingRemoveDialog({
         videoId: video.id,
-        ratingId: rating.id,
         open: true,
       });
     }
@@ -150,29 +134,21 @@ export default function Videos({ requestId, requestData, setRequestData }) {
       loading: true,
     });
     try {
-      await deleteRating(
-        requestId,
-        ratingRemoveDialog.videoId,
-        ratingRemoveDialog.ratingId,
-      );
-      setRequestData({
-        ...requestData,
-        videos: requestData.videos.map((video) => {
-          if (video.id !== ratingRemoveDialog.videoId) {
-            return video;
+      await deleteRating(requestId, ratingRemoveDialog.videoId);
+      setData([
+        ...data.map((vid) => {
+          if (vid.id !== ratingRemoveDialog.videoId) {
+            return vid;
           }
 
           return {
-            ...video,
-            ratings: video.ratings.filter(
-              (rating) => rating.id !== ratingRemoveDialog.ratingId,
-            ),
+            ...vid,
+            rating: {},
           };
         }),
-      });
+      ]);
       setRatingRemoveDialog({
         videoId: 0,
-        ratingId: 0,
         open: false,
         loading: false,
       });
@@ -185,19 +161,57 @@ export default function Videos({ requestId, requestData, setRequestData }) {
     }
   };
 
+  const handleRatingReviewSubmit = async (review) => {
+    await updateRating(requestId, reviewDialogData.videoId, review)
+      .then((response) => {
+        setData([
+          ...data.map((vid) => {
+            if (vid.id !== reviewDialogData.videoId) {
+              return vid;
+            }
+
+            return {
+              ...vid,
+              rating: response.data,
+            };
+          }),
+        ]);
+        setReviewDialogData({ ...reviewDialogData, open: false });
+      })
+      .catch((e) => showError(e));
+  };
+
   const handleRatingRemoveDialogClose = () => {
     setRatingRemoveDialog({
       videoId: 0,
-      ratingId: 0,
       open: false,
     });
   };
 
+  useEffect(() => {
+    async function loadData(reqId) {
+      try {
+        const result = await listVideos(reqId);
+        setData(result.data);
+        setVideoAccordionOpen(
+          result.data.length === 1 && `${result.data[0].id}-panel`,
+        );
+      } catch (e) {
+        enqueueSnackbar(handleError(e), {
+          variant: 'error',
+        });
+      }
+      return [];
+    }
+
+    loadData(requestId);
+  }, [requestId, enqueueSnackbar, setVideoAccordionOpen, reload]);
+
   return (
     <div>
-      {requestData.videos.length > 0 ? (
+      {data.length > 0 ? (
         <>
-          {requestData.videos.sort(compareValues('id')).map((video) => {
+          {data.sort(compareValues('id')).map((video) => {
             const videoStatus = videoStatuses.find(
               (x) => x.id === video.status,
             );
@@ -210,9 +224,7 @@ export default function Videos({ requestId, requestData, setRequestData }) {
                 }}
               >
                 <AccordionSummary
-                  expandIcon={
-                    requestData.videos.length > 1 && <ExpandMoreIcon />
-                  }
+                  expandIcon={data.length > 1 && <ExpandMoreIcon />}
                   classes={{ content: stylesModule.accordion }}
                 >
                   <Typography className={stylesModule.heading}>
@@ -224,7 +236,6 @@ export default function Videos({ requestId, requestData, setRequestData }) {
                     </StatusBadge>
                   </div>
                 </AccordionSummary>
-
                 {video.video_url && (
                   <AccordionDetails>
                     <Typography variant="body2" align="justify" gutterBottom>
@@ -239,12 +250,11 @@ export default function Videos({ requestId, requestData, setRequestData }) {
                     </Typography>
                   </AccordionDetails>
                 )}
-
                 {video.status >= 5 && (
                   <>
                     <Divider />
                     <AccordionActions>
-                      {getOwnRatingForVideo(video).rating > 0 && (
+                      {video.rating.rating > 0 && (
                         <Tooltip
                           title="Szöveges értékelés írása"
                           classes={{ tooltip: stylesModule.tooltip }}
@@ -264,7 +274,7 @@ export default function Videos({ requestId, requestData, setRequestData }) {
                       )}
                       <Rating
                         name={`${video.id}-own-rating`}
-                        value={getOwnRatingForVideo(video).rating}
+                        value={video.rating.rating || 0}
                         onChange={(event, value) =>
                           handleRatingCreateUpdate(value, video)
                         }
@@ -317,8 +327,7 @@ export default function Videos({ requestId, requestData, setRequestData }) {
       <ReviewDialog
         reviewDialogData={reviewDialogData}
         setReviewDialogData={setReviewDialogData}
-        requestData={requestData}
-        setRequestData={setRequestData}
+        handleRatingReviewSubmit={handleRatingReviewSubmit}
       />
     </div>
   );
@@ -326,6 +335,5 @@ export default function Videos({ requestId, requestData, setRequestData }) {
 
 Videos.propTypes = {
   requestId: PropTypes.string.isRequired,
-  requestData: PropTypes.object.isRequired,
-  setRequestData: PropTypes.func.isRequired,
+  reload: PropTypes.bool.isRequired,
 };

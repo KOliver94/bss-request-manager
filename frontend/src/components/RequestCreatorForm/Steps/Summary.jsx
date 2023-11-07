@@ -87,7 +87,7 @@ function Summary({ formData, setActiveStep, isAuthenticated }) {
             </CardActions>
           )}
         </Card>
-        {formData.comment_text && (
+        {formData.comment && (
           <Card className={stylesModule.root} variant="outlined">
             <CardContent className={stylesModule.content}>
               <Typography
@@ -98,7 +98,7 @@ function Summary({ formData, setActiveStep, isAuthenticated }) {
                 Megjegyzés
               </Typography>
               <Typography variant="body2" component="p">
-                {formData.comment_text}
+                {formData.comment}
               </Typography>
             </CardContent>
             <CardActions className={stylesModule.actions}>

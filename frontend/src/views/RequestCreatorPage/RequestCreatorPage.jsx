@@ -29,7 +29,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 // Form
 import RequestCreatorForm from 'src/components/RequestCreatorForm/RequestCreatorForm';
 // API calls
-import { getUser } from 'src/api/userApi';
+import { getMe } from 'src/api/meApi';
 import { createRequest } from 'src/api/requestApi';
 import handleError from 'src/helpers/errorHandler';
 import changePageTitle from 'src/helpers/pageTitleHelper';
@@ -57,7 +57,7 @@ const formInitialState = {
   type_obj: null,
   type: '',
   // Other Information
-  comment_text: '',
+  comment: '',
 };
 
 export default function RequestCreatorPage({
@@ -116,7 +116,7 @@ export default function RequestCreatorPage({
   useEffect(() => {
     async function loadUserData() {
       try {
-        await getUser('me').then((result) => {
+        await getMe().then((result) => {
           const userData = {
             requester_first_name: result.data.first_name,
             requester_last_name: result.data.last_name,
@@ -309,7 +309,7 @@ export default function RequestCreatorPage({
                         Új felkérés beküldése
                       </Button>
                       {isAuthenticated && (
-                        <Button onClick={handleShowCreated} color="info">
+                        <Button onClick={handleShowCreated} color="secondary">
                           Felkérés megtekintése
                         </Button>
                       )}

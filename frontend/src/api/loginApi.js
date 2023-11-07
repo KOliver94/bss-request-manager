@@ -21,7 +21,7 @@ async function handleLogin(response) {
 
 export async function loginLdap(loginDetails) {
   await axiosInstance
-    .post('/login', loginDetails)
+    .post('login', loginDetails)
     .then(handleLogin)
     .catch((error) => {
       if (error.response && error.response.status === 401) {
@@ -33,7 +33,7 @@ export async function loginLdap(loginDetails) {
 
 export async function loginSocial(provider, code) {
   await axiosInstance
-    .post(`/login/social/${provider}`, { code })
+    .post('login/social', { provider, code })
     .then(handleLogin)
     .catch(() => {
       throw new Error('Network response was not ok.');
@@ -42,7 +42,7 @@ export async function loginSocial(provider, code) {
 
 export async function logoutUser() {
   await axiosInstance
-    .post('/logout', {
+    .post('logout', {
       refresh: localStorage.getItem('refresh_token'),
     })
     .then((response) => {
@@ -64,11 +64,6 @@ export function isAuthenticated() {
 export function isPrivileged() {
   const role = localStorage.getItem('role');
   return role && ['admin', 'staff'].includes(role.toLowerCase());
-}
-
-export function isAdmin() {
-  const role = localStorage.getItem('role');
-  return role && role.toLowerCase() === 'admin';
 }
 
 export function isSelf(userId) {

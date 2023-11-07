@@ -40,15 +40,12 @@ export default function CommentDesktop({
 }) {
   const userName = isNew
     ? localStorage.getItem('name')
-    : ` ${comment.author.last_name} ${comment.author.first_name}`;
-  const nameFirstLetter = isNew
-    ? localStorage.getItem('name') &&
-      localStorage.getItem('name').split(' ')[1] &&
-      localStorage.getItem('name').split(' ')[1][0]
-    : comment.author.first_name && comment.author.first_name[0];
+    : comment.author.full_name;
+  const name = isNew ? localStorage.getItem('name') : comment.author.full_name;
+  const nameFirstLetter = name.split(' ')[1] && name.split(' ')[1][0];
   const avatarUrl = isNew
     ? localStorage.getItem('avatar')
-    : comment.author.profile.avatar_url;
+    : comment.author.avatar_url;
   const validationSchema = Yup.object({
     text: Yup.string().trim().required('Üres hozzászólás nem küldhető be!'),
   });
@@ -158,7 +155,6 @@ export default function CommentDesktop({
               {comment.author.id === requesterId && (
                 <Badge color="info">Felkérő</Badge>
               )}
-              {comment.internal && <Badge color="error">Belső</Badge>}
             </Stack>
 
             <p className={stylesModule.commentText}>{comment.text}</p>
@@ -223,7 +219,6 @@ CommentDesktop.propTypes = {
     PropTypes.instanceOf(Comment),
     PropTypes.shape({
       text: PropTypes.string,
-      internal: PropTypes.bool,
     }),
   ]),
   handleDelete: PropTypes.func.isRequired,
@@ -238,7 +233,6 @@ CommentDesktop.propTypes = {
 CommentDesktop.defaultProps = {
   comment: {
     text: '',
-    internal: false,
   },
   isEditing: false,
   isNew: false,

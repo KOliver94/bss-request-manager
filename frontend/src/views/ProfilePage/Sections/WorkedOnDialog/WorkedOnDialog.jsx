@@ -24,14 +24,13 @@ import { useSnackbar } from 'notistack';
 // Date format
 import { format } from 'date-fns';
 // API calls
-import { getUserWorkedOn } from 'src/api/userApi';
 import compareValues from 'src/helpers/objectComperator';
 import handleError from 'src/helpers/errorHandler';
+import { getMeWorkedOn } from 'src/api/meApi';
 
 export default function WorkedOnDialog({
   workedOnDialogOpen,
   setWorkedOnDialogOpen,
-  userId,
   selectedDateRange,
   includeResponsible,
 }) {
@@ -72,15 +71,10 @@ export default function WorkedOnDialog({
   };
 
   useEffect(() => {
-    async function loadData(user, fromData, toDate, responsible) {
+    async function loadData(fromData, toDate, responsible) {
       try {
         setLoading(true);
-        const result = await getUserWorkedOn(
-          user,
-          fromData,
-          toDate,
-          responsible,
-        );
+        const result = await getMeWorkedOn(fromData, toDate, responsible);
         setRequests(result.data);
         setLoading(false);
       } catch (e) {
@@ -91,7 +85,6 @@ export default function WorkedOnDialog({
     }
     if (workedOnDialogOpen) {
       loadData(
-        userId,
         format(selectedDateRange[0], 'yyyy-MM-dd'),
         format(selectedDateRange[1], 'yyyy-MM-dd'),
         includeResponsible,
@@ -99,7 +92,6 @@ export default function WorkedOnDialog({
     }
   }, [
     workedOnDialogOpen,
-    userId,
     selectedDateRange,
     includeResponsible,
     enqueueSnackbar,
@@ -200,5 +192,4 @@ WorkedOnDialog.propTypes = {
   setWorkedOnDialogOpen: PropTypes.func.isRequired,
   selectedDateRange: PropTypes.arrayOf(Date).isRequired,
   includeResponsible: PropTypes.bool.isRequired,
-  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
