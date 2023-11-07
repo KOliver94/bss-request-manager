@@ -35,11 +35,11 @@
 }
 .primaryCardHeader {
   color: #fff;
-  background: linear-gradient(60deg, #ab47bc, #8e24aa);
+  background: linear-gradient(60deg, #2196f3, #1976d2);
   @include theme.primaryBoxShadow;
 }
 .secondaryCardHeader {
   color: #fff;
-  background: linear-gradient(60deg, #ec407a, #d81b60);
+  background: linear-gradient(60deg, #ffc107, #ffa000);
   @include theme.secondaryBoxShadow;
 }
