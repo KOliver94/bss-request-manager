@@ -1,9 +1,16 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import {
+  RouterProvider,
+  createRoutesFromChildren,
+  matchRoutes,
+  useLocation,
+  useNavigationType,
+} from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 import * as Sentry from '@sentry/react';
-import App from './App';
+import router from './router';
 import theme from './assets/jss/theme';
 
 import 'src/assets/scss/custom-icon-font.scss';
@@ -11,7 +18,27 @@ import 'src/assets/scss/material-kit-react.scss';
 
 if (import.meta.env.PROD) {
   Sentry.init({
+    beforeSend(event) {
+      // Check if it is an exception, and if so, show the report dialog
+      if (event.exception) {
+        Sentry.showReportDialog({
+          eventId: event.event_id,
+        });
+      }
+      return event;
+    },
     dsn: import.meta.env.VITE_SENTRY_URL,
+    integrations: [
+      new Sentry.BrowserTracing({
+        routingInstrumentation: Sentry.reactRouterV6Instrumentation(
+          useEffect,
+          useLocation,
+          useNavigationType,
+          createRoutesFromChildren,
+          matchRoutes,
+        ),
+      }),
+    ],
   });
 }
 
@@ -29,7 +56,7 @@ root.render(
             horizontal: 'right',
           }}
         >
-          <App />
+          <RouterProvider router={router} />
         </SnackbarProvider>
       </ThemeProvider>
     </StyledEngineProvider>

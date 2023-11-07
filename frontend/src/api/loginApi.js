@@ -16,6 +16,7 @@ async function handleLogin(response) {
   localStorage.setItem('name', decoded.name);
   localStorage.setItem('user_id', decoded.user_id);
   localStorage.setItem('role', decoded.role);
+  window.dispatchEvent(new Event('storage'));
   return response;
 }
 

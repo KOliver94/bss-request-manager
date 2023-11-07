@@ -15,7 +15,7 @@
   color: #ffffff;
   text-decoration: none;
   @media (max-width: map.get(theme.$themeBreakpoints, 'md')) {
-    fontsize: 2.5rem !important;
+    font-size: 2.5rem !important;
   }
 }
 .subtitle {

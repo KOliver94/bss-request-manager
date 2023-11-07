@@ -1,17 +1,11 @@
 import { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
-// background
-import background from 'src/assets/img/header.jpg';
 // core components
-import Header from 'src/components/material-kit-react/Header/Header';
-import Footer from 'src/components/material-kit-react/Footer/Footer';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 // helpers
 import changePageTitle from 'src/helpers/pageTitleHelper';
@@ -22,29 +16,14 @@ import PostscriptSection from './Sections/PostscriptSection';
 
 import stylesModule from './LandingPage.module.scss';
 
-export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
+function LandingPage() {
   useEffect(() => {
     changePageTitle('Kezdőlap');
   }, []);
 
   return (
-    <div>
-      <Header
-        color="transparent"
-        brand="BSS Felkéréskezelő"
-        rightLinks={
-          <HeaderLinks
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        }
-        fixed
-        changeColorOnScroll={{
-          height: 400,
-          color: 'white',
-        }}
-      />
-      <Parallax filter image={background}>
+    <>
+      <Parallax filter>
         <div className={stylesModule.container}>
           <GridContainer>
             <GridItem xs={12} sm={12} md={6}>
@@ -85,12 +64,9 @@ export default function LandingPage({ isAuthenticated, setIsAuthenticated }) {
           <PostscriptSection />
         </div>
       </div>
-      <Footer />
-    </div>
+    </>
   );
 }
 
-LandingPage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  setIsAuthenticated: PropTypes.func.isRequired,
-};
+// eslint-disable-next-line import/prefer-default-export
+export { LandingPage as Component };

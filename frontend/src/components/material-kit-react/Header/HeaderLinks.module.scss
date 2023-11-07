@@ -169,6 +169,12 @@
     padding: 10px 20px;
   }
 }
+button.dropdownLink {
+  border: unset;
+  background: unset;
+  font: unset;
+  cursor: pointer;
+}
 .tooltip {
   padding: 10px 15px;
   min-width: 130px;

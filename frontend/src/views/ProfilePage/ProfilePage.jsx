@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
@@ -23,12 +22,9 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 // core components
-import Header from 'src/components/material-kit-react/Header/Header';
-import Footer from 'src/components/material-kit-react/Footer/Footer';
 import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 import Badge from 'src/components/material-kit-react/Badge/Badge';
 // React Hook Form
@@ -45,8 +41,6 @@ import * as Yup from 'yup';
 import isValidPhone from 'src/helpers/yupPhoneNumberValidator';
 // Notistack
 import { useSnackbar } from 'notistack';
-// background
-import background from 'src/assets/img/header.jpg';
 // API calls
 import {
   connectSocial,
@@ -70,7 +64,7 @@ import WorkedOnDialog from './Sections/WorkedOnDialog/WorkedOnDialog';
 
 import stylesModule from './ProfilePage.module.scss';
 
-export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
+export default function ProfilePage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { code, provider } = { ...location.state };
@@ -211,6 +205,7 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
         `${result.data.last_name} ${result.data.first_name}`,
       );
       localStorage.setItem('avatar', result.data.profile.avatar_url);
+      window.dispatchEvent(new Event('storage'));
       setHeaderDataChange(!headerDataChange);
       reset({
         ...result.data,
@@ -223,24 +218,8 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
   };
 
   return (
-    <div>
-      <Header
-        color="transparent"
-        brand="BSS Felkéréskezelő"
-        rightLinks={
-          <HeaderLinks
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-            dataChangeTrigger={headerDataChange}
-          />
-        }
-        fixed
-        changeColorOnScroll={{
-          height: 200,
-          color: 'white',
-        }}
-      />
-      <Parallax small filter image={background} />
+    <>
+      <Parallax small filter />
       <div className={classNames(stylesModule.main, stylesModule.mainRaised)}>
         <div
           className={classNames(stylesModule.container, stylesModule.section)}
@@ -733,12 +712,6 @@ export default function ProfilePage({ isAuthenticated, setIsAuthenticated }) {
           </GridContainer>
         </div>
       </div>
-      <Footer />
-    </div>
+    </>
   );
 }
-
-ProfilePage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  setIsAuthenticated: PropTypes.func.isRequired,
-};

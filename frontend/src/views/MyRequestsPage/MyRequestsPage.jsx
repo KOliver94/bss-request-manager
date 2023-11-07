@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
@@ -15,14 +14,9 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
-// background
-import background from 'src/assets/img/header.jpg';
 // core components
-import Header from 'src/components/material-kit-react/Header/Header';
-import Footer from 'src/components/material-kit-react/Footer/Footer';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
 import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
 import Badge from 'src/components/material-kit-react/Badge/Badge';
 import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
@@ -39,10 +33,7 @@ import changePageTitle from 'src/helpers/pageTitleHelper';
 
 import stylesModule from './MyRequestsPage.module.scss';
 
-export default function MyRequestsPage({
-  isAuthenticated,
-  setIsAuthenticated,
-}) {
+export default function MyRequestsPage() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
@@ -91,23 +82,8 @@ export default function MyRequestsPage({
   }, [loadData]);
 
   return (
-    <div>
-      <Header
-        color="transparent"
-        brand="BSS Felkéréskezelő"
-        rightLinks={
-          <HeaderLinks
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-        }
-        fixed
-        changeColorOnScroll={{
-          height: 200,
-          color: 'white',
-        }}
-      />
-      <Parallax small filter image={background}>
+    <>
+      <Parallax small filter>
         <div className={stylesModule.container}>
           <GridContainer justifyContent="center">
             <GridItem
@@ -239,12 +215,6 @@ export default function MyRequestsPage({
           )}
         </div>
       </div>
-      <Footer />
-    </div>
+    </>
   );
 }
-
-MyRequestsPage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  setIsAuthenticated: PropTypes.func.isRequired,
-};
