@@ -107,7 +107,7 @@ const UsersDataTable = forwardRef<
         sortable
       />
       <Column
-        field="profile.phone_number"
+        field="phone_number"
         filter
         filterMatchMode={FilterMatchMode.CONTAINS}
         header="Telefonszám"

@@ -43,7 +43,7 @@ const UsersListPage = () => {
       },
       global: { matchMode: FilterMatchMode.CONTAINS, value: null },
       is_staff: { matchMode: FilterMatchMode.EQUALS, value: null },
-      'profile.phone_number': {
+      phone_number: {
         constraints: [{ matchMode: FilterMatchMode.CONTAINS, value: null }],
         operator: FilterOperator.AND,
       },
@@ -92,7 +92,7 @@ const UsersListPage = () => {
       <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
         <UsersDataTable
           filters={filters}
-          globalFilterFields={['full_name', 'email', 'profile.phone_number']}
+          globalFilterFields={['full_name', 'email', 'phone_number']}
           header={renderHeader()}
         />
       </div>
