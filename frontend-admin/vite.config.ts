@@ -14,6 +14,7 @@ export default defineConfig({
         app: './admin.html',
       },
     },
+    // sourcemap: true, // When you want to use source-map-explorer
   },
   plugins: [react(), tsconfigPaths()],
   resolve: {

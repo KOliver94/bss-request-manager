@@ -8,6 +8,7 @@ export default defineConfig(() => {
     build: {
       assetsDir: 'static/frontend',
       outDir: 'build',
+      // sourcemap: true, // When you want to use source-map-explorer
     },
     loader: { '.js': 'jsx' },
     plugins: [basicSsl(), react(), VitePWA()],

@@ -30,7 +30,7 @@
     "start:network": "vite dev --host",
     "build": "vite build",
     "preview": "vite preview",
-    "analyze": "source-map-explorer 'build/static/frontend/*.js'",
+    "analyze": "source-map-explorer 'build/static/frontend/*.js' --no-border-checks",
     "format": "prettier --write src/**/*.{js,jsx,json,css,scss}",
     "lint": "eslint src/",
     "lint:fix": "eslint --fix --ext .js,.jsx src/",
