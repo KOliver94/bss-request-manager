@@ -11,7 +11,15 @@ export default defineConfig(() => {
       // sourcemap: true, // When you want to use source-map-explorer
     },
     loader: { '.js': 'jsx' },
-    plugins: [basicSsl(), react(), VitePWA()],
+    plugins: [
+      basicSsl(),
+      react(),
+      VitePWA({
+        workbox: {
+          navigateFallbackDenylist: [/^\/admin/, /^\/api/, /^\/django-admin/],
+        },
+      }),
+    ],
     resolve: {
       alias: {
         src: '/src',
