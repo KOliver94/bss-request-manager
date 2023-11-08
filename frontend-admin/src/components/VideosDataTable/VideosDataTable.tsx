@@ -37,14 +37,13 @@ const VideosDataTable = forwardRef<
     useState<boolean>(false);
 
   const editorBodyTemplate = ({ editor }: VideoAdminRetrieve) => {
+    if (!editor) return;
     return (
-      editor && (
-        <User
-          className="justify-content-center"
-          imageUrl={editor.avatar_url}
-          name={editor.full_name}
-        />
-      )
+      <User
+        className="justify-content-center"
+        imageUrl={editor.avatar_url}
+        name={editor.full_name}
+      />
     );
   };
 
