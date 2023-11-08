@@ -126,7 +126,7 @@ USER appuser
 
 # Collect static files
 WORKDIR /app/backend
-RUN python manage.py collectstatic --no-input --clear --settings=core.settings.common
+RUN python manage.py collectstatic --no-input --clear --settings=core.settings.base
 
 # Open port
 EXPOSE 8000
