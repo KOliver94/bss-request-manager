@@ -111,12 +111,12 @@ COPY ./backend /app/backend
 
 # Copy built frontend assets
 RUN mkdir -p /app/frontend/build
-COPY --from=frontend-build /app/frontend/build /app/frontend/build
+COPY --from=frontend-build /app/frontend/build /app/frontend/build-temp
 COPY --from=frontend-admin-build /app/frontend-admin/build /app/frontend-admin/build
 
 # Have to move all static files other than index.html to root/ for whitenoise middleware
-WORKDIR /app/frontend/build
-RUN mv index.html .index.html && mkdir root && mv * root || : && mv .index.html index.html
+WORKDIR /app/frontend
+RUN mkdir build/root && mv build-temp/index.html build/index.html && mv build-temp/static build/static && mv build-temp/* build/root && rm -r build-temp
 
 # Change the owner of all files to the app user
 RUN chown -R appuser:appgroup /app
