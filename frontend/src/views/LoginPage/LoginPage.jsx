@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation, redirectDocument } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 // @mui components
 import CircularProgress from '@mui/material/CircularProgress';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -46,25 +46,26 @@ function LoginPage() {
   const { enqueueSnackbar } = useSnackbar();
   const { code, provider } = { ...location.state };
 
-  const from = useCallback(
+  const redirectedFrom = useCallback(
     () =>
       location.state?.from || {
-        pathname:
-          localStorage.getItem('redirectedFrom') || isPrivileged()
-            ? '/admin'
-            : '/',
+        pathname: localStorage.getItem('redirectedFrom') || '/',
       },
     [location],
   );
 
   const redirect = useCallback(() => {
     if (isAuthenticated()) {
-      if (from.pathname?.startsWith('/admin')) {
-        redirectDocument(from.pathname);
+      if (redirectedFrom().pathname === '/' && isPrivileged()) {
+        redirectedFrom().pathname = '/admin';
       }
-      navigate(from, { replace: true });
+      if (redirectedFrom().pathname?.startsWith('/admin')) {
+        window.location.replace(redirectedFrom().pathname);
+      } else {
+        navigate(redirectedFrom(), { replace: true });
+      }
     }
-  }, [navigate, from]);
+  }, [navigate, redirectedFrom]);
 
   const handleLogin = useCallback(
     async (type, data) => {
@@ -117,10 +118,10 @@ function LoginPage() {
   };
 
   const handleButtonClick = () => {
-    if (from.pathname) {
-      localStorage.setItem('redirectedFrom', from.pathname);
-    } else if (from) {
-      localStorage.setItem('redirectedFrom', from);
+    if (redirectedFrom().pathname) {
+      localStorage.setItem('redirectedFrom', redirectedFrom().pathname);
+    } else if (redirectedFrom()) {
+      localStorage.setItem('redirectedFrom', redirectedFrom());
     }
   };
 
