@@ -52,12 +52,11 @@ const RequestsDataTable = forwardRef<
   const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows>({});
 
   const crewBodyTemplate = ({ crew }: RequestAdminListDates) => {
+    if (!crew.length) return;
     return (
-      crew.length && (
-        <Suspense fallback={<Skeleton />}>
-          <AvatarGroupCrew className="justify-content-center" crew={crew} />
-        </Suspense>
-      )
+      <Suspense fallback={<Skeleton />}>
+        <AvatarGroupCrew className="justify-content-center" crew={crew} />
+      </Suspense>
     );
   };
 
@@ -66,14 +65,13 @@ const RequestsDataTable = forwardRef<
   };
 
   const responsibleBodyTemplate = ({ responsible }: RequestAdminListDates) => {
+    if (!responsible) return;
     return (
-      responsible && (
-        <User
-          className="justify-content-center"
-          imageUrl={responsible.avatar_url}
-          name={responsible.full_name}
-        />
-      )
+      <User
+        className="justify-content-center"
+        imageUrl={responsible.avatar_url}
+        name={responsible.full_name}
+      />
     );
   };
 
@@ -114,12 +112,11 @@ const RequestsDataTable = forwardRef<
   };
 
   const rowExpansionTemplate = ({ id, video_count }: RequestAdminListDates) => {
+    if (!video_count) return;
     return (
-      video_count && (
-        <Suspense fallback={<ProgressBar mode="indeterminate" />}>
-          <VideosDataTable requestId={id} />
-        </Suspense>
-      )
+      <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+        <VideosDataTable requestId={id} />
+      </Suspense>
     );
   };
 
