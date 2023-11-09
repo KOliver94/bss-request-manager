@@ -34,7 +34,9 @@ const ErrorPage = () => {
     }
   } else if (isAxiosError(error) && error.response) {
     statusCode = error.response.status.toString();
-    if (error.response.status == 404) {
+    if (error.response.status == 401) {
+      window.location.href = '/';
+    } else if (error.response.status == 404) {
       ({ message, statusText } = errorTranslation[error.response.status]);
     } else {
       statusText = error.response.statusText;
