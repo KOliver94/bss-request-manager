@@ -131,6 +131,18 @@ const RequestDetailsPage = () => {
       .join('_')}`.replace(/_{2,}/, '_');
   };
 
+  const getCalendarUrl = () => {
+    const endDate = data.end_datetime
+      .toISOString()
+      .slice(0, 10)
+      .replace(/-/g, '');
+    const startDate = data.start_datetime
+      .toISOString()
+      .slice(0, 10)
+      .replace(/-/g, '');
+    return `https://calendar.google.com/calendar/embed?src=8kvtmormo2672mftkmmhc8qvk4@group.calendar.google.com&ctz=Europe/Budapest&mode=week&dates=${startDate}/${endDate}`;
+  };
+
   const handleDelete = async () => {
     setLoading(true);
     await adminApi
@@ -482,6 +494,20 @@ const RequestDetailsPage = () => {
               label="Státusz"
             />
             <DetailsRow
+              button={
+                <LinkButton
+                  buttonProps={{
+                    className: 'p-button-sm p-button-text px-1 py-0',
+                    icon: 'pi pi-calendar',
+                    label: 'Naptár',
+                  }}
+                  linkProps={{
+                    rel: 'noopener noreferrer',
+                    target: '_blank',
+                    to: getCalendarUrl(),
+                  }}
+                />
+              }
               content={dateTimeToLocaleString(data.start_datetime)}
               label="Kezdés időpontja"
             />
