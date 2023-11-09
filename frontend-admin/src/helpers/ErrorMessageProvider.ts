@@ -4,7 +4,7 @@ import { isAxiosError } from 'axios';
 export function getErrorMessage(error: any) {
   if (isAxiosError(error)) {
     if (error.response) {
-      return error.response.data;
+      return JSON.stringify(error.response.data);
     }
     return error.message;
   } else if (error instanceof Error) {
