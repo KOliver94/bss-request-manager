@@ -46,15 +46,15 @@ const RecordingContentEditing = ({
           name="path"
           render={({ field }) => (
             <Dropdown
+              {...field}
               className="flex-grow-1"
-              disabled={loading}
+              disabled={field.disabled || loading}
               editable
               onChange={(e) => {
                 field.onChange(e.value);
               }}
               options={[recommendedPath]}
               placeholder="Elérési út"
-              value={field.value}
             />
           )}
         />
@@ -65,6 +65,7 @@ const RecordingContentEditing = ({
           name="copied_to_gdrive"
           render={({ field }) => (
             <Tag
+              {...field}
               className="cursor-pointer mr-2 mt-2"
               icon="pi pi-cloud-upload"
               onClick={() => {
@@ -84,6 +85,7 @@ const RecordingContentEditing = ({
           name="removed"
           render={({ field }) => (
             <Tag
+              {...field}
               className="cursor-pointer mt-2"
               icon="pi pi-trash"
               onClick={() => {

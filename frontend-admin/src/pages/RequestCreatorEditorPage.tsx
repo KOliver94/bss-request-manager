@@ -465,27 +465,27 @@ const RequestCreatorEditorPage = () => {
               isMobile ? (
                 <div className="col-12 mb-0">
                   <Dropdown
-                    disabled={isPending}
+                    {...field}
+                    disabled={field.disabled || isPending}
                     id={field.name}
                     itemTemplate={requesterTypeOptionTemplate}
                     optionLabel="text"
                     optionValue="value"
                     options={requesterTypeOptions}
                     valueTemplate={requesterTypeOptionTemplate}
-                    {...field}
                   />
                 </div>
               ) : (
                 <div className="col-12 mb-0">
                   <SelectButton
+                    {...field}
                     allowEmpty={false}
-                    disabled={isPending}
+                    disabled={field.disabled || isPending}
                     id={field.name}
                     itemTemplate={requesterTypeOptionTemplate}
                     optionLabel="text"
                     optionValue="value"
                     options={requesterTypeOptions}
-                    {...field}
                   />
                 </div>
               )
@@ -533,8 +533,9 @@ const RequestCreatorEditorPage = () => {
                 control={control}
                 render={({ field }) => (
                   <Checkbox
+                    {...field}
                     checked={field.value}
-                    disabled={isPending}
+                    disabled={field.disabled || isPending}
                     inputId={field.name}
                     onChange={(e) => {
                       field.onChange(e.checked);

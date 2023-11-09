@@ -62,13 +62,7 @@ const AiredAddDialog = forwardRef<
         name="airedDate"
         control={control}
         render={({ field }) => (
-          <Calendar
-            inline
-            inputId={field.name}
-            locale="hu"
-            onChange={field.onChange}
-            value={field.value}
-          />
+          <Calendar {...field} inline inputId={field.name} locale="hu" />
         )}
       />
     </Dialog>

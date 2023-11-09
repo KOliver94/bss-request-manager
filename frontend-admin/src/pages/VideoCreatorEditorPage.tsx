@@ -314,7 +314,7 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   checked={field.value || false}
                   className="w-full"
-                  disabled={isPending}
+                  disabled={field.disabled || isPending}
                   id={field.name}
                   offIcon="bi bi-scissors"
                   offLabel="Vágandó"
@@ -333,7 +333,7 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   checked={field.value || false}
                   className="w-full"
-                  disabled={isPending}
+                  disabled={field.disabled || isPending}
                   id={field.name}
                   offIcon="bi bi-file-earmark-play"
                   offLabel="Kódolásra vár"
@@ -352,7 +352,7 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   checked={field.value || false}
                   className="w-full"
-                  disabled={isPending}
+                  disabled={field.disabled || isPending}
                   id={field.name}
                   offIcon="bi bi-archive"
                   offLabel="Archiválandó"

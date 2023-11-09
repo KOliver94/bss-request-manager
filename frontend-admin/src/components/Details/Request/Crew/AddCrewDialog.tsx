@@ -129,10 +129,10 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
               render={({ field, fieldState }) => (
                 <>
                   <AutoCompleteStaff
-                    className="w-full"
-                    disabled={loading}
-                    id={field.name}
                     {...field}
+                    className="w-full"
+                    disabled={field.disabled || loading}
+                    id={field.name}
                   />
                   {fieldState.error ? (
                     <small className="p-error">
@@ -159,10 +159,10 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
               render={({ field, fieldState }) => (
                 <>
                   <AutoCompleteCrewPosition
-                    className="w-full"
-                    disabled={loading}
-                    id={field.name}
                     {...field}
+                    className="w-full"
+                    disabled={field.disabled || loading}
+                    id={field.name}
                   />
                   {fieldState.error ? (
                     <small className="p-error">

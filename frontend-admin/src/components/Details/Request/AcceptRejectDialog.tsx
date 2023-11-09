@@ -136,13 +136,13 @@ const AcceptRejectDialog = forwardRef<
           control={control}
           render={({ field }) => (
             <SelectButton
+              {...field}
               className="my-2"
-              disabled={!isAdmin()}
+              disabled={field.disabled || !isAdmin()}
               id={field.name}
               itemTemplate={acceptTemplate}
               optionLabel="label"
               options={acceptOptions}
-              {...field}
             />
           )}
         />
@@ -153,7 +153,7 @@ const AcceptRejectDialog = forwardRef<
             <ToggleButton
               checked={field.value || false}
               className="my-2"
-              disabled={!isAdmin()}
+              disabled={field.disabled || !isAdmin()}
               id={field.name}
               offIcon="bi bi-person-fill-x"
               offLabel="Szervezők által lemondva"
@@ -170,7 +170,7 @@ const AcceptRejectDialog = forwardRef<
             <ToggleButton
               checked={field.value || false}
               className="mt-2"
-              disabled={!isAdmin()}
+              disabled={field.disabled || !isAdmin()}
               id={field.name}
               offIcon="bi bi-fire"
               offLabel="Meghiúsult"
