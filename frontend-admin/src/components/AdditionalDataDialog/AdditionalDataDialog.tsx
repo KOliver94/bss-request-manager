@@ -88,12 +88,12 @@ const AdditionalDataDialog = forwardRef<
         render={({ field, fieldState }) => (
           <>
             <InputTextarea
+              {...field}
               autoResize
               className="w-full"
-              disabled={loading}
+              disabled={field.disabled || loading}
               id={field.name}
               rows={4}
-              {...field}
             />
             {fieldState.error && (
               <small className="block p-error" id={field.name + '-help'}>

@@ -143,12 +143,12 @@ const CommentCardHeader = ({
             name="internal"
             render={({ field }) => (
               <SelectButton
+                {...field}
                 allowEmpty={false}
                 className="ml-2"
                 itemTemplate={internalTemplate}
                 optionLabel="value"
                 options={internalOptions}
-                {...field}
               />
             )}
           />
@@ -349,14 +349,14 @@ const CommentCardEdit = ({
           render={({ field, fieldState }) => (
             <>
               <InputTextarea
+                {...field}
                 autoResize
                 className={classNames('mb-2 w-full', {
                   'p-invalid': fieldState.error,
                 })}
-                disabled={loading}
+                disabled={field.disabled || loading}
                 id={field.name}
                 rows={5}
-                {...field}
               />
               {fieldState.error ? (
                 <small className="p-error pt-1 mr-1">
@@ -461,11 +461,11 @@ const CommentCardNew = ({
             name="internal"
             render={({ field }) => (
               <SelectButton
+                {...field}
                 allowEmpty={false}
                 itemTemplate={internalTemplate}
                 optionLabel="value"
                 options={internalOptions}
-                {...field}
               />
             )}
           />
@@ -478,14 +478,14 @@ const CommentCardNew = ({
           render={({ field, fieldState }) => (
             <>
               <InputTextarea
+                {...field}
                 autoResize
                 className={classNames('mb-2 w-full', {
                   'p-invalid': fieldState.error,
                 })}
-                disabled={loading}
+                disabled={field.disabled || loading}
                 id={field.name}
                 rows={5}
-                {...field}
               />
               {fieldState.error ? (
                 <small className="p-error pt-1 mr-1">
