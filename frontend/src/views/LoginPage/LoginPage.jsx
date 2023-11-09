@@ -46,33 +46,42 @@ function LoginPage() {
   const { enqueueSnackbar } = useSnackbar();
   const { code, provider } = { ...location.state };
 
-  const redirectedFrom = useCallback(
-    () =>
-      location.state?.from || {
-        pathname: localStorage.getItem('redirectedFrom') || '/',
-      },
-    [location],
-  );
+  const getRedirectedFrom = useCallback(() => {
+    if (localStorage.getItem('redirectedFrom')) {
+      return { pathname: localStorage.getItem('redirectedFrom') };
+    }
+    return location.state?.from || { pathname: '/' };
+  }, [location]);
 
   const redirect = useCallback(() => {
     if (isAuthenticated()) {
-      if (redirectedFrom().pathname === '/' && isPrivileged()) {
-        redirectedFrom().pathname = '/admin';
+      const redirectedFrom = getRedirectedFrom();
+      localStorage.removeItem('redirectedFrom');
+
+      if (isPrivileged()) {
+        if (redirectedFrom.pathname === '/') {
+          redirectedFrom.pathname = '/admin';
+        } else if (redirectedFrom.pathname?.startsWith('/my-requests')) {
+          redirectedFrom.pathname = redirectedFrom.pathname.replace(
+            '/my-requests',
+            '/admin/requests',
+          );
+        }
       }
-      if (redirectedFrom().pathname?.startsWith('/admin')) {
-        window.location.replace(redirectedFrom().pathname);
+
+      if (redirectedFrom.pathname?.startsWith('/admin')) {
+        window.location.replace(redirectedFrom.pathname);
       } else {
-        navigate(redirectedFrom(), { replace: true });
+        navigate(redirectedFrom, { replace: true });
       }
     }
-  }, [navigate, redirectedFrom]);
+  }, [navigate, getRedirectedFrom]);
 
   const handleLogin = useCallback(
     async (type, data) => {
       setLoading(true);
 
       const handleSuccess = () => {
-        localStorage.removeItem('redirectedFrom');
         enqueueSnackbar('Sikeres bejelentkezés', {
           variant: 'success',
         });
@@ -118,10 +127,10 @@ function LoginPage() {
   };
 
   const handleButtonClick = () => {
-    if (redirectedFrom().pathname) {
-      localStorage.setItem('redirectedFrom', redirectedFrom().pathname);
-    } else if (redirectedFrom()) {
-      localStorage.setItem('redirectedFrom', redirectedFrom());
+    if (getRedirectedFrom().pathname) {
+      localStorage.setItem('redirectedFrom', getRedirectedFrom().pathname);
+    } else if (getRedirectedFrom()) {
+      localStorage.setItem('redirectedFrom', getRedirectedFrom());
     }
   };
 
