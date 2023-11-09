@@ -76,15 +76,16 @@ const VideoDetailsPage = () => {
 
     await adminApi
       .adminRequestsVideosDestroy(Number(videoId), Number(requestId))
-      .then(async () => {
-        await queryClient.invalidateQueries({
+      .then(() => {
+        navigate(`/requests/${requestId}/videos`, { replace: true });
+        void queryClient.invalidateQueries({
           queryKey: ['requests', Number(requestId), 'videos'],
         });
-        navigate(`/requests/${requestId}/videos`);
       })
-      .catch(async (error) => {
+      .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          await queryClient.invalidateQueries({
+          navigate(`/requests/${requestId}/videos`, { replace: true });
+          void queryClient.invalidateQueries({
             queryKey: ['requests', Number(requestId), 'videos'],
           });
         }
