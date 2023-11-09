@@ -48,19 +48,13 @@ export default function HeaderLinks({ hideNewRequest, hideLogin }) {
     event.preventDefault();
     setLoading(true);
 
-    try {
-      await logoutUser();
+    logoutUser().finally(() => {
       enqueueSnackbar('Sikeres kijelentkezés', {
         variant: 'success',
       });
       navigate('/', { replace: true });
-    } catch (e) {
-      enqueueSnackbar(e.message, {
-        variant: 'error',
-      });
-    } finally {
       setLoading(false);
-    }
+    });
   }
 
   function storageEventHandler() {
