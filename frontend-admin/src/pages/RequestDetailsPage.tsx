@@ -135,13 +135,14 @@ const RequestDetailsPage = () => {
     setLoading(true);
     await adminApi
       .adminRequestsDestroy(Number(requestId))
-      .then(async () => {
-        await queryClient.invalidateQueries({ queryKey: ['requests'] });
-        navigate('/requests');
+      .then(() => {
+        navigate('/requests', { replace: true });
+        void queryClient.invalidateQueries({ queryKey: ['requests'] });
       })
-      .catch(async (error) => {
+      .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          await queryClient.invalidateQueries({
+          navigate('/requests', { replace: true });
+          void queryClient.invalidateQueries({
             queryKey: ['requests', Number(requestId)],
           });
         }
