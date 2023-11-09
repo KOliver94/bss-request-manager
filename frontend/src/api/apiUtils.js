@@ -1,5 +1,4 @@
 import axios, { isAxiosError } from 'axios';
-import { redirectDocument } from 'react-router-dom';
 
 const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1/`,
@@ -53,7 +52,7 @@ axiosInstance.interceptors.response.use(
         // Remove tokens and auth header.
         axiosInstance.defaults.headers.Authorization = null;
         localStorage.clear();
-        redirectDocument('/');
+        window.location.href = '/';
       }
     }
 

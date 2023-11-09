@@ -1,5 +1,4 @@
 import axios, { isAxiosError } from 'axios';
-import { redirectDocument } from 'react-router-dom';
 
 import {
   getAccessToken,
@@ -63,7 +62,7 @@ axiosInstance.interceptors.response.use(
         // Remove tokens and auth header.
         axiosInstance.defaults.headers.Authorization = null;
         localStorage.clear();
-        redirectDocument('/');
+        window.location.href = '/';
       }
     }
 
