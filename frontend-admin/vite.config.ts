@@ -22,4 +22,7 @@ export default defineConfig({
       '~primereact': path.resolve(__dirname, 'node_modules/primereact'),
     },
   },
+  server: {
+    port: 5174,
+  },
 });

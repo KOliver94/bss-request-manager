@@ -16,7 +16,7 @@ RUN npm install --silent
 COPY . /app/frontend-admin
 
 # Open port
-EXPOSE 5173
+EXPOSE 5174
 
 # Start the frontend-admin app
 CMD ["npm", "start"]
