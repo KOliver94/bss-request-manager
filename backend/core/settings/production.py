@@ -26,10 +26,6 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 DEFAULT_REPLY_EMAIL = config("DEFAULT_REPLY_EMAIL")
 WEEKLY_TASK_EMAIL = config("WEEKLY_TASK_EMAIL")
 
-DEBUG_EMAIL = config(
-    "DEBUG_EMAIL", default=None
-)  # if set all e-mails will be sent to this address only
-
 # External services:
 SCH_EVENTS_TOKEN = config("SCH_EVENTS_TOKEN")
 
