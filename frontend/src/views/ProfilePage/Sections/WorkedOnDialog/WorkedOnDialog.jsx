@@ -49,7 +49,6 @@ export default function WorkedOnDialog({
     { id: 'title', label: 'Felkérés' },
     { id: 'position', label: 'Pozíció' },
     { id: 'start_datetime', label: 'Kezdés időpontja' },
-    { id: 'end_datetime', label: 'Befejezetés időpontja' },
   ];
 
   const closeDialog = () => {
@@ -166,12 +165,6 @@ export default function WorkedOnDialog({
                         <TableCell align="center">
                           {format(
                             new Date(request.start_datetime),
-                            'yyyy.MM.dd. HH:mm',
-                          )}
-                        </TableCell>
-                        <TableCell align="center">
-                          {format(
-                            new Date(request.end_datetime),
                             'yyyy.MM.dd. HH:mm',
                           )}
                         </TableCell>
