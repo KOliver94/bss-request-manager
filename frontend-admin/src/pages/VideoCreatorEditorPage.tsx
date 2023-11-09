@@ -139,15 +139,12 @@ const VideoCreatorEditorPage = () => {
   };
 
   const onSubmit: SubmitHandler<IVideoCreator> = async (data) => {
-    const prevAdditionalData = videoId ? queryData?.additional_data : {};
+    const prevAdditionalData = videoId ? loaderData.additional_data : {};
 
-    let length = {};
+    let length = null;
     if (data.additional_data.length) {
       const [hours, minutes, seconds] = data.additional_data.length.split(':');
-      length = {
-        length:
-          Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds),
-      };
+      length = Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds);
     }
 
     await mutateAsync({
@@ -155,7 +152,7 @@ const VideoCreatorEditorPage = () => {
       additional_data: {
         ...prevAdditionalData,
         ...data.additional_data,
-        ...length,
+        length: length,
       },
       editor: data.editor?.id || null,
     })
