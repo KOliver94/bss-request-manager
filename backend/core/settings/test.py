@@ -64,7 +64,6 @@ EMAIL_BACKEND_LIST = [
     "django.core.mail.backends.locmem.EmailBackend",
 ]
 EMAIL_FILE_PATH = "logs/emails"
-DEBUG_EMAIL = None
 DEFAULT_REPLY_EMAIL = "reply@example.com"
 WEEKLY_TASK_EMAIL = "weekly@example.com"
 

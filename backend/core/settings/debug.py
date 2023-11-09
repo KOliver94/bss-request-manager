@@ -30,8 +30,6 @@ if EMAIL_BACKEND_TYPE.casefold() == "console":
 elif EMAIL_BACKEND_TYPE.casefold() == "file":
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = "logs/emails"
-else:
-    EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
 # Extend JWT access token lifetime
 SIMPLE_JWT.update(
