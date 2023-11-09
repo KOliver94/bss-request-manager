@@ -65,7 +65,7 @@ const RecordingContentEditing = ({
           name="copied_to_gdrive"
           render={({ field }) => (
             <Tag
-              className="mr-2 mt-2"
+              className="cursor-pointer mr-2 mt-2"
               icon="pi pi-cloud-upload"
               onClick={() => {
                 if (!loading) field.onChange(!field.value);
@@ -84,7 +84,7 @@ const RecordingContentEditing = ({
           name="removed"
           render={({ field }) => (
             <Tag
-              className="mt-2"
+              className="cursor-pointer mt-2"
               icon="pi pi-trash"
               onClick={() => {
                 if (!loading) field.onChange(!field.value);
