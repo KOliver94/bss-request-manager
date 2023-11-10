@@ -2063,6 +2063,74 @@ export const AdminApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {number} requestId
+     * @param {number} videoId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsVideosRatingsOwnRetrieve: async (
+      requestId: number,
+      videoId: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'requestId' is not null or undefined
+      assertParamExists(
+        'adminRequestsVideosRatingsOwnRetrieve',
+        'requestId',
+        requestId,
+      );
+      // verify required parameter 'videoId' is not null or undefined
+      assertParamExists(
+        'adminRequestsVideosRatingsOwnRetrieve',
+        'videoId',
+        videoId,
+      );
+      const localVarPath =
+        `/api/v1/admin/requests/{request_id}/videos/{video_id}/ratings/own`
+          .replace(`{${'request_id'}}`, encodeURIComponent(String(requestId)))
+          .replace(`{${'video_id'}}`, encodeURIComponent(String(videoId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {number} id A unique integer value identifying this rating.
      * @param {number} requestId
      * @param {number} videoId
@@ -3920,6 +3988,36 @@ export const AdminApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {number} requestId
+     * @param {number} videoId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminRequestsVideosRatingsOwnRetrieve(
+      requestId: number,
+      videoId: number,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<RatingAdminListRetrieve>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminRequestsVideosRatingsOwnRetrieve(
+          requestId,
+          videoId,
+          options,
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
      * @param {number} id A unique integer value identifying this rating.
      * @param {number} requestId
      * @param {number} videoId
@@ -4909,6 +5007,22 @@ export const AdminApiFactory = function (
     },
     /**
      *
+     * @param {number} requestId
+     * @param {number} videoId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsVideosRatingsOwnRetrieve(
+      requestId: number,
+      videoId: number,
+      options?: any,
+    ): AxiosPromise<RatingAdminListRetrieve> {
+      return localVarFp
+        .adminRequestsVideosRatingsOwnRetrieve(requestId, videoId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {number} id A unique integer value identifying this rating.
      * @param {number} requestId
      * @param {number} videoId
@@ -5791,6 +5905,24 @@ export class AdminApi extends BaseAPI {
   ) {
     return AdminApiFp(this.configuration)
       .adminRequestsVideosRatingsList(requestId, videoId, ordering, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} requestId
+   * @param {number} videoId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminRequestsVideosRatingsOwnRetrieve(
+    requestId: number,
+    videoId: number,
+    options?: AxiosRequestConfig,
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminRequestsVideosRatingsOwnRetrieve(requestId, videoId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

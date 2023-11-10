@@ -1,4 +1,4 @@
-import { adminApi, requestsApi } from './http';
+import { adminApi } from './http';
 import { dummyRequest, dummyVideo } from './placeholders';
 
 export const requestCommentsListQuery = (requestId: number) => ({
@@ -49,7 +49,7 @@ export const requestVideoRatingRetrieveOwnQuery = (
   videoId: number,
 ) => ({
   queryFn: async () => {
-    const rating = await requestsApi.requestsVideosRatingRetrieve(
+    const rating = await adminApi.adminRequestsVideosRatingsOwnRetrieve(
       requestId,
       videoId,
     );

@@ -15,6 +15,9 @@
 // May contain unused imports in some cases
 // @ts-ignore
 import { UserNestedDetail } from './user-nested-detail';
+// May contain unused imports in some cases
+// @ts-ignore
+import { UserNestedList } from './user-nested-list';
 
 /**
  *
@@ -72,10 +75,10 @@ export interface RequestRetrieve {
   requester: UserNestedDetail;
   /**
    *
-   * @type {UserNestedDetail}
+   * @type {UserNestedList}
    * @memberof RequestRetrieve
    */
-  requested_by: UserNestedDetail;
+  requested_by: UserNestedList;
   /**
    *
    * @type {UserNestedDetail}
