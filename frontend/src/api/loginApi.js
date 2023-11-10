@@ -1,4 +1,5 @@
 import { jwtDecode } from 'jwt-decode';
+import { groups as getGroupName } from 'src/helpers/enumConstants';
 import axiosInstance from './apiUtils';
 
 async function handleLogin(response) {
@@ -16,6 +17,10 @@ async function handleLogin(response) {
   localStorage.setItem('name', decoded.name);
   localStorage.setItem('user_id', decoded.user_id);
   localStorage.setItem('role', decoded.role);
+
+  const groups = decoded.groups?.map((group) => getGroupName(group));
+  localStorage.setItem('groups', JSON.stringify(groups || []));
+
   window.dispatchEvent(new Event('storage'));
   return response;
 }
