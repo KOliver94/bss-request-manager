@@ -291,6 +291,43 @@ def test_retrieve_rating(api_client, expected, request, user):
         (None, HTTP_401_UNAUTHORIZED),
     ],
 )
+def test_retrieve_own_rating(api_client, expected, request, user):
+    user = do_login(api_client, request, user)
+
+    video_request = baker.make("video_requests.Request")
+    video = baker.make(
+        "video_requests.Video", request=video_request, status=Video.Statuses.DONE
+    )
+    rating = baker.make(
+        "video_requests.Rating", author=user, rating=randint(1, 5), video=video
+    )
+
+    url = reverse(
+        "api:v1:admin:requests:request:video:rating-own",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id},
+    )
+    response = api_client.get(url)
+
+    assert response.status_code == expected
+
+    if is_success(response.status_code):
+        assert_response_keys(response.data)
+        assert response.data["rating"] == rating.rating
+        assert response.data["review"] == rating.review
+
+        assert response.data["author"]["id"] == user.id
+
+
+@pytest.mark.parametrize(
+    "user,expected",
+    [
+        ("admin_user", HTTP_200_OK),
+        ("staff_user", HTTP_200_OK),
+        ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
+        (None, HTTP_401_UNAUTHORIZED),
+    ],
+)
 @pytest.mark.parametrize("method", ["PATCH", "PUT"])
 def test_update_own_rating(api_client, expected, method, rating_data, request, user):
     video_request = baker.make("video_requests.Request")
@@ -556,6 +593,38 @@ def test_retrieve_update_destroy_rating_error(
     response = get_response(api_client, method, url, rating_data)
 
     assert response.status_code == expected
+
+
+@pytest.mark.parametrize(
+    "user,expected",
+    [
+        ("admin_user", HTTP_404_NOT_FOUND),
+        ("staff_user", HTTP_404_NOT_FOUND),
+        ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
+        (None, HTTP_401_UNAUTHORIZED),
+    ],
+)
+def test_retrieve_own_rating_error(api_client, expected, request, user):
+    # Create a rating but not by our own user
+    video_request = baker.make("video_requests.Request")
+    video = baker.make(
+        "video_requests.Video", request=video_request, status=Video.Statuses.DONE
+    )
+    baker.make("video_requests.Rating", rating=randint(1, 5), video=video)
+
+    do_login(api_client, request, user)
+
+    url = reverse(
+        "api:v1:admin:requests:request:video:rating-own",
+        kwargs={"request_pk": video_request.id, "video_pk": video.id},
+    )
+    response = api_client.get(url)
+
+    assert response.status_code == expected
+
+    if is_success(response.status_code):
+        assert_response_keys(response.data)
 
 
 @pytest.mark.parametrize(

@@ -79,3 +79,15 @@ class RatingAdminViewSet(ModelViewSet):
             .order_by("-history_date")
         )
         return Response(serialize_history(history_objects))
+
+    @extend_schema(responses=RatingAdminListRetrieveSerializer())
+    @action(detail=False, filter_backends=[], pagination_class=None)
+    def own(self, request, request_pk=None, video_pk=None):
+        rating = get_object_or_404(
+            Rating,
+            author=request.user,
+            video__pk=video_pk,
+            video__request__pk=request_pk,
+        )
+        serializer = RatingAdminListRetrieveSerializer(rating)
+        return Response(serializer.data)
