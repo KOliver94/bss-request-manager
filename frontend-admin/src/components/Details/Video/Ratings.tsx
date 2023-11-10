@@ -198,6 +198,7 @@ const Ratings = ({
   return (
     <>
       <RatingDialog
+        isRated={isRated}
         onHide={onRatingDialogHide}
         ratingAuthorName={ratingDialogAuthorName}
         ratingId={ratingDialogId}
@@ -247,8 +248,8 @@ const Ratings = ({
       <div className="border-top-1 mt-5 pt-5 surface-border">
         <div className="align-items-center flex justify-content-between mb-5">
           <Button
-            disabled={videoStatus < 3 || isRated}
-            label="Értékelés írása"
+            disabled={videoStatus < 3}
+            label={isRated ? 'Értékelés szerkesztése' : 'Értékelés írása'}
             onClick={() => {
               setRatingDialogVisible(true);
             }}

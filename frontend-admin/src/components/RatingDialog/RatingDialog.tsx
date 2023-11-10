@@ -17,7 +17,7 @@ import { Tag } from 'primereact/tag';
 import { Controller, useForm } from 'react-hook-form';
 
 import { adminApi } from 'api/http';
-import { RatingAdminListRetrieve, RatingRetrieve } from 'api/models';
+import { RatingAdminListRetrieve } from 'api/models';
 import {
   requestVideoRatingCreateMutation,
   requestVideoRatingUpdateMutation,
@@ -81,26 +81,28 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
 
     useEffect(() => {
       const fetchData = async (
-        query: FetchQueryOptions<RatingAdminListRetrieve | RatingRetrieve>,
+        query: FetchQueryOptions<RatingAdminListRetrieve>,
       ) => {
         await queryClient.fetchQuery(query).then((data) => {
+          setRatingId(data.id);
           setLoading(false);
           reset({ ...data });
         });
       };
 
+      let query: FetchQueryOptions<RatingAdminListRetrieve> | undefined =
+        undefined;
+
       if (visible) {
-        setLoading(true);
-        setRatingId(ratingIdParam || 0);
         const defaultValues: IRating = {
           rating: 0,
           review: '',
         };
         reset({ ...defaultValues });
 
-        let query:
-          | FetchQueryOptions<RatingAdminListRetrieve | RatingRetrieve>
-          | undefined = undefined;
+        if (!ratingIdParam && !isRated) return;
+
+        setLoading(true);
         if (ratingIdParam) {
           query = requestVideoRatingRetrieveQuery(
             requestId,
@@ -111,15 +113,21 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
           query = requestVideoRatingRetrieveOwnQuery(requestId, videoId);
         }
 
-        query && fetchData(query).catch(console.error);
+        if (query) {
+          fetchData(query).catch(console.error);
+        }
 
         setLoading(false);
 
         return () => {
-          query &&
+          if (query) {
             queryClient
               .cancelQueries({ queryKey: query.queryKey })
               .catch(console.error);
+          }
+          setTimeout(() => {
+            setRatingId(0);
+          }, 500);
         };
       }
     }, [ratingIdParam, videoId, visible]);

@@ -35,6 +35,12 @@ export interface RequestExternalSchEventsCreateRequest {
    * @type {string}
    * @memberof RequestExternalSchEventsCreateRequest
    */
+  comment_text?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof RequestExternalSchEventsCreateRequest
+   */
   end_datetime: string;
   /**
    *
