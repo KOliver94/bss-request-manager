@@ -183,6 +183,8 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
             message: getErrorMessage(error),
             type: 'backend',
           });
+        })
+        .finally(() => {
           setLoading(false);
         });
     };
