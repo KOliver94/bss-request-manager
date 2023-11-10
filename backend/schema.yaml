@@ -1111,6 +1111,32 @@ paths:
                 items:
                   $ref: '#/components/schemas/History'
           description: ''
+  /api/v1/admin/requests/{request_id}/videos/{video_id}/ratings/own:
+    get:
+      operationId: admin_requests_videos_ratings_own_retrieve
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingAdminListRetrieve'
+          description: ''
   /api/v1/admin/users:
     get:
       operationId: admin_users_list
@@ -3219,6 +3245,9 @@ components:
         comment:
           type: string
           minLength: 1
+        comment_text:
+          type: string
+          minLength: 1
         end_datetime:
           type: string
           format: date-time
@@ -3320,7 +3349,7 @@ components:
           readOnly: true
         requested_by:
           allOf:
-            - $ref: '#/components/schemas/UserNestedDetail'
+            - $ref: '#/components/schemas/UserNestedList'
           readOnly: true
         responsible:
           allOf:
