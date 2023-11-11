@@ -4,11 +4,15 @@ import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 
 import { requestsListQuery } from 'api/queries';
 import RequestsDataTable from 'components/RequestsDataTable/RequestsDataTable';
-import { Semester, getSemesters } from 'helpers/SemesterHelper';
+import {
+  Semester,
+  getLatestSemester,
+  getSemesters,
+} from 'helpers/SemesterHelper';
 import { queryClient } from 'router';
 
 export async function loader() {
-  const query = requestsListQuery(getSemesters()[0]);
+  const query = requestsListQuery(getLatestSemester());
   return (
     queryClient.getQueryData(query.queryKey) ??
     (await queryClient.fetchQuery(query))
@@ -17,7 +21,7 @@ export async function loader() {
 
 const RequestsListPage = () => {
   const [selectedSemester, setSelectedSemester] = useState<Semester | null>(
-    getSemesters()[0],
+    getLatestSemester(),
   );
 
   return (
