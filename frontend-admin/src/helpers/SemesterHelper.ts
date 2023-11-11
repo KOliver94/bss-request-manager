@@ -4,7 +4,9 @@ export type Semester = {
   name: string;
 };
 
-export function getLatestSemester() {}
+export function getLatestSemester() {
+  return getSemesters()[1];
+}
 
 export function getSemesters() {
   const semesters: Semester[] = [];
@@ -39,6 +41,16 @@ export function getSemesters() {
         name: `${year}/${(year + 1).toString().slice(-2)}/1`,
       });
   }
+
+  const lastSemester = semesters[semesters.length - 1];
+  const laterAfterDate = new Date(lastSemester.beforeDate);
+  laterAfterDate.setDate(laterAfterDate.getDate() + 1);
+
+  semesters.push({
+    afterDate: laterAfterDate,
+    beforeDate: new Date('2100-12-31'),
+    name: 'Későbbi',
+  });
 
   return semesters.reverse();
 }
