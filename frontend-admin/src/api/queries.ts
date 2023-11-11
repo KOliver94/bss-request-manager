@@ -1,3 +1,5 @@
+import { Semester } from 'helpers/SemesterHelper';
+
 import { adminApi } from './http';
 import { dummyRequest, dummyVideo } from './placeholders';
 
@@ -106,19 +108,46 @@ export const requestVideoRetrieveQuery = (
   refetchInterval: 1000 * 60 * 5,
 });
 
-export const requestsListQuery = () => ({
-  initialData: [],
-  queryFn: async () => {
-    const requests = await adminApi.adminRequestsList(
-      undefined,
-      undefined,
-      1000,
-    );
-    return requests.data.results || [];
-  },
-  queryKey: ['requests'],
-  refetchInterval: 1000 * 30,
-});
+export const requestsListQuery = (semester: Semester | null) => {
+  if (semester) {
+    return {
+      initialData: [],
+      queryFn: async () => {
+        const requests = await adminApi.adminRequestsList(
+          undefined,
+          undefined,
+          200,
+          undefined,
+          undefined,
+          semester.afterDate.toISOString().split('T')[0],
+          semester.beforeDate.toISOString().split('T')[0],
+        );
+        return requests.data.results || [];
+      },
+      queryKey: [
+        'requests',
+        `${semester.afterDate.toISOString().split('T')[0]}/${
+          semester.beforeDate.toISOString().split('T')[0]
+        }`,
+      ],
+      refetchInterval: 1000 * 30,
+    };
+  }
+
+  return {
+    initialData: [],
+    queryFn: async () => {
+      const requests = await adminApi.adminRequestsList(
+        undefined,
+        undefined,
+        10000,
+      );
+      return requests.data.results || [];
+    },
+    queryKey: ['requests'],
+    refetchInterval: 1000 * 30,
+  };
+};
 
 export const usersListQuery = () => ({
   initialData: [],

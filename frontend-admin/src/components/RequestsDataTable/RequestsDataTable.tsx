@@ -18,6 +18,7 @@ import LinkButton from 'components/LinkButton/LinkButton';
 import { RequestStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
+import { Semester } from 'helpers/SemesterHelper';
 import useMobile from 'hooks/useMobile';
 
 const AvatarGroupCrew = lazy(() => import('components/Avatar/AvatarGroupCrew'));
@@ -31,10 +32,14 @@ interface RequestAdminListDates // TODO: Rename?
   start_datetime: Date;
 }
 
+type RequestsDataTableProps = DataTableProps<DataTableValueArray> & {
+  semester: Semester | null;
+};
+
 const RequestsDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
-  DataTableProps<DataTableValueArray>
->((props, ref) => {
+  RequestsDataTableProps
+>(({ semester, ...props }, ref) => {
   const getRequests = ({
     data: requests,
   }: DefinedUseQueryResult<RequestAdminList[]>): RequestAdminListDates[] => {
@@ -46,7 +51,7 @@ const RequestsDataTable = forwardRef<
       };
     });
   };
-  const data = getRequests(useQuery(requestsListQuery()));
+  const data = getRequests(useQuery(requestsListQuery(semester)));
   const isMobile = useMobile();
 
   const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows>({});
