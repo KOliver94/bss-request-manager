@@ -309,6 +309,7 @@ const VideoCreatorEditorPage = () => {
             render={({ field }) => (
               <div className="col-12 mb-3 md:col-4 md:mb-0">
                 <ToggleButton
+                  {...field}
                   checked={field.value || false}
                   className="w-full"
                   disabled={field.disabled || isPending}
@@ -318,6 +319,7 @@ const VideoCreatorEditorPage = () => {
                   onChange={field.onChange}
                   onIcon="bi bi-scissors"
                   onLabel="Megvágva"
+                  value={undefined}
                 />
               </div>
             )}
@@ -328,6 +330,7 @@ const VideoCreatorEditorPage = () => {
             render={({ field }) => (
               <div className="col-12 mb-3 md:col-4 md:mb-0">
                 <ToggleButton
+                  {...field}
                   checked={field.value || false}
                   className="w-full"
                   disabled={field.disabled || isPending}
@@ -337,6 +340,7 @@ const VideoCreatorEditorPage = () => {
                   onChange={field.onChange}
                   onIcon="bi bi-file-earmark-play"
                   onLabel="Kikódolva"
+                  value={undefined}
                 />
               </div>
             )}
@@ -347,6 +351,7 @@ const VideoCreatorEditorPage = () => {
             render={({ field }) => (
               <div className="col-12 md:col-4">
                 <ToggleButton
+                  {...field}
                   checked={field.value || false}
                   className="w-full"
                   disabled={field.disabled || isPending}
@@ -356,6 +361,7 @@ const VideoCreatorEditorPage = () => {
                   onChange={field.onChange}
                   onIcon="bi bi-archive"
                   onLabel="Archiválva"
+                  value={undefined}
                 />
               </div>
             )}
