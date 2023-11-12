@@ -12,6 +12,10 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import { UserNestedList } from './user-nested-list';
+
 /**
  *
  * @export
@@ -24,6 +28,12 @@ export interface VideoAdminSearch {
    * @memberof VideoAdminSearch
    */
   avg_rating: number;
+  /**
+   *
+   * @type {UserNestedList}
+   * @memberof VideoAdminSearch
+   */
+  editor: UserNestedList;
   /**
    *
    * @type {number}
@@ -42,6 +52,12 @@ export interface VideoAdminSearch {
    * @memberof VideoAdminSearch
    */
   length: number;
+  /**
+   *
+   * @type {number}
+   * @memberof VideoAdminSearch
+   */
+  request_id: number;
   /**
    *
    * @type {string}

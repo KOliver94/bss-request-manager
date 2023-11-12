@@ -1,6 +1,5 @@
 import { forwardRef, lazy, Suspense, useState } from 'react';
 
-import { DefinedUseQueryResult, useQuery } from '@tanstack/react-query';
 import { Badge } from 'primereact/badge';
 import { Column } from 'primereact/column';
 import {
@@ -13,12 +12,10 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Skeleton } from 'primereact/skeleton';
 
 import { RequestAdminList } from 'api/models';
-import { requestsListQuery } from 'api/queries';
 import LinkButton from 'components/LinkButton/LinkButton';
 import { RequestStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
-import { Semester } from 'helpers/SemesterHelper';
 import useMobile from 'hooks/useMobile';
 
 const AvatarGroupCrew = lazy(() => import('components/Avatar/AvatarGroupCrew'));
@@ -33,16 +30,16 @@ interface RequestAdminListDates // TODO: Rename?
 }
 
 type RequestsDataTableProps = DataTableProps<DataTableValueArray> & {
-  semester: Semester | null;
+  requests: RequestAdminList[];
 };
 
 const RequestsDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
   RequestsDataTableProps
->(({ semester, ...props }, ref) => {
-  const getRequests = ({
-    data: requests,
-  }: DefinedUseQueryResult<RequestAdminList[]>): RequestAdminListDates[] => {
+>(({ requests, ...props }, ref) => {
+  const getRequests = (
+    requests: RequestAdminList[],
+  ): RequestAdminListDates[] => {
     return [...requests].map((request) => {
       return {
         ...request,
@@ -51,7 +48,7 @@ const RequestsDataTable = forwardRef<
       };
     });
   };
-  const data = getRequests(useQuery(requestsListQuery(semester)));
+  const data = getRequests(requests);
   const isMobile = useMobile();
 
   const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows>({});

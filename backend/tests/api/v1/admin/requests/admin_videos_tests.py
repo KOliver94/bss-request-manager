@@ -539,9 +539,11 @@ def test_list_all_videos(api_client, expected, pagination, request, user):
                 video,
                 [
                     "avg_rating",
+                    "editor",
                     "id",
                     "last_aired",
                     "length",
+                    "request_id",
                     "request_start_datetime",
                     "status",
                     "status_by_admin",

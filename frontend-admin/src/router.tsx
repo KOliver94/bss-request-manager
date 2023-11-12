@@ -114,7 +114,7 @@ const router = sentryCreateBrowserRouter(
       </Route>
       <Route
         path="search"
-        lazy={() => import('App')}
+        lazy={() => import('pages/SearchPage')}
         handle={{
           crumb: () => 'Keresés',
         }}
