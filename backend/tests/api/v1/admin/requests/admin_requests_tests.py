@@ -20,7 +20,7 @@ from rest_framework.status import (
 )
 
 from tests.api.helpers import assert_fields_exist, do_login, get_response
-from video_requests.models import Comment
+from video_requests.models import Comment, Video
 
 pytestmark = pytest.mark.django_db
 
@@ -72,6 +72,7 @@ def assert_retrieve_response_keys(video_request):
             "title",
             "type",
             "video_count",
+            "videos_edited",
         ],
     )
 
@@ -515,6 +516,70 @@ def test_retrieve_request_status_by_admin(api_client, expected, request, user):
 
         assert not response_1.data.get("status_by_admin")
         assert response_2.data.get("status_by_admin")
+
+
+@pytest.mark.parametrize(
+    "user,expected",
+    [
+        ("admin_user", HTTP_200_OK),
+        ("staff_user", HTTP_200_OK),
+        ("basic_user", HTTP_403_FORBIDDEN),
+        ("service_account", HTTP_403_FORBIDDEN),
+        (None, HTTP_401_UNAUTHORIZED),
+    ],
+)
+def test_retrieve_request_videos_edited(api_client, expected, request, user):
+    video_request = baker.make("video_requests.Request")
+    do_login(api_client, request, user)
+
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+    )
+
+    response = api_client.get(url)
+    assert response.status_code == expected
+    if is_success(response.status_code):
+        assert_retrieve_response_keys(response.data)
+        assert not response.data.get("videos_edited")
+        assert response.data.get("video_count") == 0
+
+    video_1 = baker.make(
+        "video_requests.Video", request=video_request, status=Video.Statuses.IN_PROGRESS
+    )
+    response = api_client.get(url)
+    assert response.status_code == expected
+    if is_success(response.status_code):
+        assert_retrieve_response_keys(response.data)
+        assert not response.data.get("videos_edited")
+        assert response.data.get("video_count") == 1
+
+    video_1.status = Video.Statuses.EDITED
+    video_1.save()
+    response = api_client.get(url)
+    assert response.status_code == expected
+    if is_success(response.status_code):
+        assert_retrieve_response_keys(response.data)
+        assert response.data.get("videos_edited")
+        assert response.data.get("video_count") == 1
+
+    video_2 = baker.make(
+        "video_requests.Video", request=video_request, status=Video.Statuses.PENDING
+    )
+    response = api_client.get(url)
+    assert response.status_code == expected
+    if is_success(response.status_code):
+        assert_retrieve_response_keys(response.data)
+        assert not response.data.get("videos_edited")
+        assert response.data.get("video_count") == 2
+
+    video_2.status = Video.Statuses.DONE
+    video_2.save()
+    response = api_client.get(url)
+    assert response.status_code == expected
+    if is_success(response.status_code):
+        assert_retrieve_response_keys(response.data)
+        assert response.data.get("videos_edited")
+        assert response.data.get("video_count") == 2
 
 
 @pytest.mark.parametrize(
