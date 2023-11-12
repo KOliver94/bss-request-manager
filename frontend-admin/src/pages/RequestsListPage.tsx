@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 
 import { requestsListQuery } from 'api/queries';
+import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import RequestsDataTable from 'components/RequestsDataTable/RequestsDataTable';
 import {
   Semester,
@@ -24,7 +25,9 @@ const RequestsListPage = () => {
   const [selectedSemester, setSelectedSemester] = useState<Semester | null>(
     getLatestSemester(),
   );
-  const { data } = useQuery(requestsListQuery(selectedSemester));
+  const { data, dataUpdatedAt, refetch } = useQuery(
+    requestsListQuery(selectedSemester),
+  );
 
   return (
     <div className="p-3 sm:p-5 surface-ground">
@@ -44,6 +47,10 @@ const RequestsListPage = () => {
       <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
         <RequestsDataTable requests={data} />
       </div>
+      <LastUpdatedAt
+        lastUpdatedAt={new Date(dataUpdatedAt)}
+        refetch={refetch}
+      />
     </div>
   );
 };
