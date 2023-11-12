@@ -151,6 +151,7 @@ const AcceptRejectDialog = forwardRef<
           control={control}
           render={({ field }) => (
             <ToggleButton
+              {...field}
               checked={field.value || false}
               className="my-2"
               disabled={field.disabled || !isAdmin()}
@@ -160,6 +161,7 @@ const AcceptRejectDialog = forwardRef<
               onChange={field.onChange}
               onIcon="bi bi-person-fill-x"
               onLabel="Szervezők által lemondva"
+              value={undefined}
             />
           )}
         />
