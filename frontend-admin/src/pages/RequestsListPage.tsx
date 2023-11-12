@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 
 import { requestsListQuery } from 'api/queries';
@@ -23,6 +24,7 @@ const RequestsListPage = () => {
   const [selectedSemester, setSelectedSemester] = useState<Semester | null>(
     getLatestSemester(),
   );
+  const { data } = useQuery(requestsListQuery(selectedSemester));
 
   return (
     <div className="p-3 sm:p-5 surface-ground">
@@ -40,7 +42,7 @@ const RequestsListPage = () => {
         />
       </div>
       <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
-        <RequestsDataTable semester={selectedSemester} />
+        <RequestsDataTable requests={data} />
       </div>
     </div>
   );

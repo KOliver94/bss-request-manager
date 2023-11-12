@@ -3798,6 +3798,10 @@ components:
           format: double
           readOnly: true
           default: 0.0
+        editor:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
         id:
           type: integer
           readOnly: true
@@ -3806,6 +3810,9 @@ components:
           format: date
           readOnly: true
         length:
+          type: integer
+          readOnly: true
+        request_id:
           type: integer
           readOnly: true
         request_start_datetime:
@@ -3823,9 +3830,11 @@ components:
           readOnly: true
       required:
         - avg_rating
+        - editor
         - id
         - last_aired
         - length
+        - request_id
         - request_start_datetime
         - status
         - status_by_admin

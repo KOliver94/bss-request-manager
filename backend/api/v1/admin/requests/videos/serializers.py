@@ -60,9 +60,11 @@ class VideoAdminCreateUpdateSerializer(ModelSerializer):
 
 class VideoAdminSearchSerializer(Serializer):
     avg_rating = FloatField(default=0.0, read_only=True)
+    editor = UserNestedListSerializer(read_only=True)
     id = IntegerField(read_only=True)
     last_aired = DateField(read_only=True)
     length = IntegerField(read_only=True)
+    request_id = IntegerField(read_only=True)
     request_start_datetime = DateTimeField(
         read_only=True, source="request.start_datetime"
     )
