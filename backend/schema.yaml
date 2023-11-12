@@ -3084,6 +3084,9 @@ components:
         type:
           type: string
           readOnly: true
+        videos_edited:
+          type: boolean
+          readOnly: true
       required:
         - additional_data
         - comment_count
@@ -3102,6 +3105,7 @@ components:
         - title
         - type
         - video_count
+        - videos_edited
     RequestAdminUpdateRequest:
       type: object
       properties:

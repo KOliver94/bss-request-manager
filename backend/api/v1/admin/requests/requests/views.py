@@ -95,6 +95,7 @@ class RequestAdminViewSet(ModelViewSet):
                     queryset=CrewMember.objects.select_related("member__userprofile"),
                 ),
             )
+            .prefetch_related("videos")
             .annotate(comment_count=Count("comments"), video_count=Count("videos"))
         )
 

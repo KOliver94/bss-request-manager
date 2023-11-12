@@ -27,7 +27,7 @@ from api.v1.admin.users.serializers import (
 )
 from common.utilities import create_calendar_event, update_calendar_event
 from video_requests.emails import email_user_new_request_confirmation
-from video_requests.models import Comment, Request
+from video_requests.models import Comment, Request, Video
 from video_requests.utilities import recalculate_deadline, update_request_status
 
 
@@ -64,6 +64,13 @@ class RequestAdminRetrieveSerializer(RequestAdminListSerializer):
     requested_by = UserNestedDetailSerializer(read_only=True)
     responsible = UserNestedDetailSerializer(read_only=True)
     type = CharField(read_only=True)
+    videos_edited = SerializerMethodField(read_only=True)
+
+    @staticmethod
+    def get_videos_edited(obj) -> bool:
+        return obj.videos.exists() and all(
+            video.status >= Video.Statuses.EDITED for video in obj.videos.all()
+        )
 
 
 class RequestAdminUpdateSerializer(ModelSerializer):

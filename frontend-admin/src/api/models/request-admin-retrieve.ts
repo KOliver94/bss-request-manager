@@ -127,4 +127,10 @@ export interface RequestAdminRetrieve {
    * @memberof RequestAdminRetrieve
    */
   type: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof RequestAdminRetrieve
+   */
+  videos_edited: boolean;
 }

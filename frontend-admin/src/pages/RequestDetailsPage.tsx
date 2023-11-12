@@ -413,7 +413,7 @@ const RequestDetailsPage = () => {
       <Suspense>
         <RequestStatusHelperSlideover
           adminStatusOverride={!!data.additional_data.status_by_admin?.status}
-          allVideosDone={false} //TODO: Check real videos
+          allVideosDone={data.videos_edited}
           copiedToDrive={!!data.additional_data.recording?.copied_to_gdrive}
           id="requestStatusHelper"
           status={data.status}
