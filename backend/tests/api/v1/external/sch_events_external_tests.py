@@ -393,9 +393,6 @@ def test_external_callback_on_status_changes(admin_user, api_client, settings):
     HTTPretty.reset()
 
 
-@pytest.mark.skip(
-    reason="Celery does not populate name field for eager tasks. PR: https://github.com/celery/celery/pull/8383"
-)
 @pytest.mark.parametrize("accepted", [True, False])
 def test_external_callback_on_status_changes_redirect_and_result(
     accepted, admin_user, api_client, settings
@@ -457,9 +454,6 @@ def test_external_callback_on_status_changes_redirect_and_result(
             ) == {"status": "ok"}
 
 
-@pytest.mark.skip(
-    reason="Celery does not populate name field for eager tasks. PR: https://github.com/celery/celery/pull/8383"
-)
 def test_external_callback_retry(admin_user, api_client, settings):
     settings.CELERY_TASK_ALWAYS_EAGER = True
     settings.CELERY_TASK_STORE_EAGER_RESULT = True
