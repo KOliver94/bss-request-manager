@@ -40,6 +40,7 @@ export const dummyRequest: RequestAdminRetrieve = {
   title: '',
   type: '',
   video_count: 0,
+  videos_edited: false,
 };
 
 export const dummyVideo: VideoAdminRetrieve = {
