@@ -40,7 +40,7 @@ class RequestAdminViewSet(ModelViewSet):
         "title",
     ]
     pagination_class = ExtendedPagination
-    search_fields = ["@title"]
+    search_fields = ["title"]
 
     @extend_schema(
         request=RequestAdminCreateSerializer,

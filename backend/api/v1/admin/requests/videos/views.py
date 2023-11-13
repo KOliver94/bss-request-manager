@@ -128,7 +128,7 @@ class VideoAdminSearchListAPIView(ListAPIView):
     ]
     pagination_class = ExtendedPagination
     permission_classes = [IsStaffUser]
-    search_fields = ["@title"]
+    search_fields = ["title"]
     serializer_class = VideoAdminSearchSerializer
 
     def get_queryset(self):
