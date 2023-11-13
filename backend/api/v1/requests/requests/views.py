@@ -30,7 +30,7 @@ class RequestViewSet(CreateModelMixin, ReadOnlyModelViewSet):
         "title",
     ]
     pagination_class = ExtendedPagination
-    search_fields = ["@title", "@videos__title"]
+    search_fields = ["title", "videos__title"]
 
     @extend_schema(
         request=PolymorphicProxySerializer(
