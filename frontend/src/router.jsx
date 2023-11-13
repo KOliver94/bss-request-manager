@@ -11,12 +11,12 @@ import LoadingPage from 'src/views/LoadingPage/LoadingPage';
 import RedirectPage from 'src/views/RedirectPage/RedirectPage';
 import Layout from './Layout';
 
-const MyRequestsPage = lazy(() =>
-  import('src/views/MyRequestsPage/MyRequestsPage'),
+const MyRequestsPage = lazy(
+  () => import('src/views/MyRequestsPage/MyRequestsPage'),
 );
 const ProfilePage = lazy(() => import('src/views/ProfilePage/ProfilePage'));
-const RequestDetailPage = lazy(() =>
-  import('src/views/RequestDetailPage/RequestDetailPage'),
+const RequestDetailPage = lazy(
+  () => import('src/views/RequestDetailPage/RequestDetailPage'),
 );
 
 const sentryCreateBrowserRouter = wrapCreateBrowserRouter(createBrowserRouter);

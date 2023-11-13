@@ -116,8 +116,8 @@ export default function CustomDropdown(props) {
               ? 'top-start'
               : 'top'
             : left
-            ? 'bottom-start'
-            : 'bottom'
+              ? 'bottom-start'
+              : 'bottom'
         }
         className={classNames({
           [stylesModule.popperClose]: !open,
