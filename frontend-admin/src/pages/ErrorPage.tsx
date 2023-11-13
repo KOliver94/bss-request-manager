@@ -8,6 +8,11 @@ import {
 } from 'react-router-dom';
 
 const errorTranslation = {
+  401: {
+    message:
+      'Az oldal megtekintéséhez be kell jelentkezned. Lehet, hogy a korábbi munkameneted lejárt.',
+    statusText: 'Bejelentkezés szükséges',
+  },
   404: {
     message:
       'Az általad keresett oldal nem létezik. Lehet, hogy törlésre került, megváltozott a címe vagy ideiglenesen nem elérhető.',
