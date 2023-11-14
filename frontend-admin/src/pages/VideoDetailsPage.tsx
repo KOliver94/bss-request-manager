@@ -7,6 +7,7 @@ import { Chip } from 'primereact/chip';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { ProgressBar } from 'primereact/progressbar';
 import { StyleClass } from 'primereact/styleclass';
+import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -31,6 +32,7 @@ const AiredAddDialog = lazy(
   () => import('components/Details/Video/AiredAddDialog'),
 );
 const Ratings = lazy(() => import('components/Details/Video/Ratings'));
+const VideoHistory = lazy(() => import('components/History/VideoHistory'));
 const VideoStatusHelperSlideover = lazy(
   () => import('components/StatusHelperSlideover/VideoStatusHelperSlideover'),
 );
@@ -534,24 +536,37 @@ const VideoDetailsPage = () => {
               label="Teendők"
             />
           </ul>
-          <Suspense
-            fallback={
-              <div className="pb-2 pt-4 px-2">
-                <ProgressBar mode="indeterminate" />
-              </div>
-            }
+          <TabView
+            className="pt-3"
+            id="ratings-history-tabs"
+            panelContainerClassName={classNames(
+              'border-bottom-1 surface-border',
+              { 'px-0 py-2': isMobile },
+            )}
           >
-            <div className="md:pt-6 pt-4 px-2">
-              <Ratings
-                avgRating={queryResult.avg_rating}
-                isRated={queryResult.rated}
-                requestId={Number(requestId)}
-                videoId={Number(videoId)}
-                videoStatus={queryResult.status}
-                videoTitle={queryResult.title}
-              />
-            </div>
-          </Suspense>
+            <TabPanel header="Értékelések" leftIcon="pi pi-star-fill mr-2">
+              <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+                <div className="md:px-0 pt-3 px-2">
+                  <Ratings
+                    avgRating={queryResult.avg_rating}
+                    isRated={queryResult.rated}
+                    requestId={Number(requestId)}
+                    videoId={Number(videoId)}
+                    videoStatus={queryResult.status}
+                    videoTitle={queryResult.title}
+                  />
+                </div>
+              </Suspense>
+            </TabPanel>
+            <TabPanel header="Előzmények" leftIcon="pi pi-history mr-2">
+              <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+                <VideoHistory
+                  requestId={Number(requestId)}
+                  videoId={Number(videoId)}
+                />
+              </Suspense>
+            </TabPanel>
+          </TabView>
         </div>
         <LastUpdatedAt
           lastUpdatedAt={new Date(dataUpdatedAt)}

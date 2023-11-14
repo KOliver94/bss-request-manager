@@ -55,6 +55,7 @@ const CommentCards = lazy(
 const CrewDataTable = lazy(
   () => import('components/Details/Request/Crew/CrewDataTable'),
 );
+const RequestHistory = lazy(() => import('components/History/RequestHistory'));
 const RequestStatusHelperSlideover = lazy(
   () => import('components/StatusHelperSlideover/RequestStatusHelperSlideover'),
 );
@@ -707,7 +708,9 @@ const RequestDetailsPage = () => {
               </Suspense>
             </TabPanel>
             <TabPanel header="Előzmények" leftIcon="pi pi-history mr-2">
-              <p className="m-0">Hamarosan...</p>
+              <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+                <RequestHistory requestId={data.id} />
+              </Suspense>
             </TabPanel>
           </TabView>
         </div>
