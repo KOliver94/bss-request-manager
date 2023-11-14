@@ -26,6 +26,15 @@ export const requestCrewListQuery = (requestId: number) => ({
   refetchInterval: 1000 * 30,
 });
 
+export const requestHistoryListQuery = (requestId: number) => ({
+  initialData: [],
+  queryFn: async () => {
+    const history = await adminApi.adminRequestsHistoryList(requestId);
+    return history.data;
+  },
+  queryKey: ['requests', requestId, 'history'],
+});
+
 export const requestRetrieveQuery = (requestId: number) => ({
   initialData: dummyRequest,
   queryFn: async () => {
@@ -34,6 +43,21 @@ export const requestRetrieveQuery = (requestId: number) => ({
   },
   queryKey: ['requests', requestId],
   refetchInterval: 1000 * 60 * 5,
+});
+
+export const requestVideoHistoryListQuery = (
+  requestId: number,
+  videoId: number,
+) => ({
+  initialData: [],
+  queryFn: async () => {
+    const history = await adminApi.adminRequestsVideosHistoryList(
+      videoId,
+      requestId,
+    );
+    return history.data;
+  },
+  queryKey: ['requests', requestId, 'videos', videoId, 'history'],
 });
 
 export const requestVideosListQuery = (requestId: number) => ({
