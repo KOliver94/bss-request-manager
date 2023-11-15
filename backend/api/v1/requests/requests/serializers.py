@@ -35,7 +35,7 @@ class RequestRetrieveSerializer(RequestListSerializer):
 
 
 class RequestCreateSerializer(ModelSerializer):
-    comment = CharField(required=False)
+    comment = CharField(allow_blank=True, required=False)
 
     class Meta:
         model = Request

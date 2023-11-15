@@ -10,9 +10,9 @@ from video_requests.models import Comment, Request
 
 class RequestExternalSchEventsCreateSerializer(ModelSerializer):
     callback_url = URLField()
-    comment = CharField(required=False)
+    comment = CharField(allow_blank=True, required=False)
     comment_text = CharField(
-        required=False
+        allow_blank=True, required=False
     )  # TODO: Backwards compatibility. Remove later.
     requester_email = EmailField()
     requester_first_name = CharField()
