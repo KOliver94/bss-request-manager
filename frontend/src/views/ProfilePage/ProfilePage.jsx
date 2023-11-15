@@ -411,8 +411,10 @@ export default function ProfilePage() {
                                     <Card>
                                       <CardActionArea
                                         onClick={() =>
-                                          handleSubmit({
-                                            avatar_provider: avatar[0],
+                                          onSubmit({
+                                            profile: {
+                                              avatar_provider: avatar[0],
+                                            },
                                           })
                                         }
                                         disabled={
