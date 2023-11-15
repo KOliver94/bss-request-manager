@@ -143,7 +143,7 @@ class RequestAdminUpdateSerializer(ModelSerializer):
 
 
 class RequestAdminCreateSerializer(RequestAdminUpdateSerializer):
-    comment = CharField(required=False)
+    comment = CharField(allow_blank=True, required=False)
     send_notification = BooleanField(required=False)
 
     class Meta:
