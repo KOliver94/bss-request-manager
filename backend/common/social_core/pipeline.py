@@ -118,9 +118,9 @@ def get_avatar(backend, response, user, *args, **kwargs):
     if backend.name == "facebook":
         try:
             if not response.get("picture").get("data").get("is_silhouette"):
-                user.userprofile.avatar["facebook"] = (
-                    response.get("picture").get("data").get("url")
-                )
+                user.userprofile.avatar[
+                    "facebook"
+                ] = f"https://graph.facebook.com/{response.get('id')}/picture?height=480&width=480"
         except AttributeError:
             pass
     elif backend.name == "google-oauth2" and response.get("picture"):
