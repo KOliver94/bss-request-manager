@@ -1,7 +1,10 @@
+from urllib.parse import urljoin, urlparse
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
+from django.utils.encoding import iri_to_uri
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
 from drf_spectacular.types import OpenApiTypes
@@ -93,6 +96,15 @@ class OAuth2ConnectDisconnectView(GenericAPIView):
         provider = self.validate_provider(self.kwargs.get("provider"))
 
         decorate_request(request, provider)
+
+        origin = self.request.strategy.request.META.get("HTTP_ORIGIN")
+        if origin:
+            relative_path = urlparse(self.request.backend.redirect_uri).path
+            url = urlparse(origin)
+            origin_scheme_host = f"{url.scheme}://{url.netloc}"
+            location = urljoin(origin_scheme_host, relative_path)
+            self.request.backend.redirect_uri = iri_to_uri(location)
+
         try:
             request.backend.REDIRECT_STATE = False
             request.backend.STATE_PARAMETER = False

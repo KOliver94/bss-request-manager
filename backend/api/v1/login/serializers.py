@@ -1,5 +1,8 @@
+from urllib.parse import urljoin, urlparse
+
 from django.conf import settings
 from django.http import HttpResponse
+from django.utils.encoding import iri_to_uri
 from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.fields import CharField
@@ -47,8 +50,13 @@ class TokenObtainPairOAuth2Serializer(TokenObtainPairSerializer):
         super(TokenObtainSerializer, self).__init__(*args, **kwargs)
 
     def get_user(self):
-        # Getting origin from HTTP request was removed as not needed. If still needed check:
-        # https://github.com/st4lk/django-rest-social-auth/blob/ba02233f5d13e7431d53690bb9ed7beca7f5596f/rest_social_auth/views.py#L142-L149
+        origin = self.context["request"].strategy.request.META.get("HTTP_ORIGIN")
+        if origin:
+            relative_path = urlparse(self.context["request"].backend.redirect_uri).path
+            url = urlparse(origin)
+            origin_scheme_host = f"{url.scheme}://{url.netloc}"
+            location = urljoin(origin_scheme_host, relative_path)
+            self.context["request"].backend.redirect_uri = iri_to_uri(location)
 
         # skip checking state by setting following params to False
         # it is responsibility of front-end to check state
