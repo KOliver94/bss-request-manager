@@ -47,7 +47,9 @@ class BaseBackendTest(APITestCase, SocialCoreBaseBackendTest):
     @staticmethod
     def mock_gravatar():
         HTTPretty.register_uri(
-            HTTPretty.GET, re.compile("https://www.gravatar.com/avatar/.*"), status=404
+            HTTPretty.GET,
+            re.compile(r"https://(www|secure)\.gravatar\.com/avatar/.*"),
+            status=404,
         )
 
 
