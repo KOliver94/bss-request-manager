@@ -177,7 +177,8 @@ export default function ProfilePage() {
   useEffect(() => {
     async function connectSocialProfile() {
       try {
-        const result = await connectSocial(provider, code);
+        await connectSocial(provider, code);
+        const result = await getMe();
         setUserData(result.data);
       } catch (e) {
         enqueueSnackbar(handleError(e), {
