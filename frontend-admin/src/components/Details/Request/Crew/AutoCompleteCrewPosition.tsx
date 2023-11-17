@@ -18,6 +18,7 @@ const positionSuggestions = [
       'Díszletes',
       'Fénytechnikus',
       'Hangtechnikus',
+      'Képmérnök',
       'Képvágó',
       'Mikroportos',
       'Rendező',
