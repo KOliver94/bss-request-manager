@@ -31,6 +31,7 @@ def assert_list_response_keys(video_request):
         [
             "created",
             "crew",
+            "deadline",
             "id",
             "start_datetime",
             "status",

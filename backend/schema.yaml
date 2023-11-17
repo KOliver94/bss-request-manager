@@ -13,6 +13,16 @@ paths:
     get:
       operationId: admin_requests_list
       parameters:
+        - in: query
+          name: deadline_after
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: deadline_before
+          schema:
+            type: string
+            format: date
         - name: ordering
           required: false
           in: query
@@ -2925,7 +2935,6 @@ components:
           additionalProperties: {}
         comment:
           type: string
-          minLength: 1
         deadline:
           type: string
           format: date
@@ -2986,6 +2995,10 @@ components:
             allOf:
               - $ref: '#/components/schemas/UserNestedList'
           readOnly: true
+        deadline:
+          type: string
+          format: date
+          readOnly: true
         id:
           type: integer
           readOnly: true
@@ -3012,6 +3025,7 @@ components:
       required:
         - created
         - crew
+        - deadline
         - id
         - responsible
         - start_datetime
@@ -3031,6 +3045,10 @@ components:
           items:
             allOf:
               - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        deadline:
+          type: string
+          format: date
           readOnly: true
         id:
           type: integer
@@ -3061,10 +3079,6 @@ components:
           readOnly: true
         comment_count:
           type: integer
-          readOnly: true
-        deadline:
-          type: string
-          format: date
           readOnly: true
         end_datetime:
           type: string
@@ -3162,7 +3176,6 @@ components:
       properties:
         comment:
           type: string
-          minLength: 1
         end_datetime:
           type: string
           format: date-time
@@ -3214,7 +3227,6 @@ components:
       properties:
         comment:
           type: string
-          minLength: 1
         end_datetime:
           type: string
           format: date-time
@@ -3248,10 +3260,8 @@ components:
           minLength: 1
         comment:
           type: string
-          minLength: 1
         comment_text:
           type: string
-          minLength: 1
         end_datetime:
           type: string
           format: date-time

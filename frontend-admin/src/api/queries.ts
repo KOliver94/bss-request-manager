@@ -140,6 +140,8 @@ export const requestsListQuery = (semester: Semester | null) => {
         const requests = await adminApi.adminRequestsList(
           undefined,
           undefined,
+          undefined,
+          undefined,
           200,
           undefined,
           undefined,
@@ -162,6 +164,8 @@ export const requestsListQuery = (semester: Semester | null) => {
     initialData: [],
     queryFn: async () => {
       const requests = await adminApi.adminRequestsList(
+        undefined,
+        undefined,
         undefined,
         undefined,
         10000,

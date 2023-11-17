@@ -36,6 +36,12 @@ export interface RequestAdminList {
   crew: Array<UserNestedList>;
   /**
    *
+   * @type {string}
+   * @memberof RequestAdminList
+   */
+  deadline: string;
+  /**
+   *
    * @type {number}
    * @memberof RequestAdminList
    */

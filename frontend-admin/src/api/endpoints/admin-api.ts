@@ -1145,6 +1145,8 @@ export const AdminApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} [deadlineAfter]
+     * @param {string} [deadlineBefore]
      * @param {string} [ordering] Which field to use when ordering the results.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -1157,6 +1159,8 @@ export const AdminApiAxiosParamCreator = function (
      * @throws {RequiredError}
      */
     adminRequestsList: async (
+      deadlineAfter?: string,
+      deadlineBefore?: string,
       ordering?: string,
       page?: number,
       pageSize?: number,
@@ -1193,6 +1197,20 @@ export const AdminApiAxiosParamCreator = function (
       // authentication jwtAuth required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (deadlineAfter !== undefined) {
+        localVarQueryParameter['deadline_after'] =
+          (deadlineAfter as any) instanceof Date
+            ? (deadlineAfter as any).toISOString().substring(0, 10)
+            : deadlineAfter;
+      }
+
+      if (deadlineBefore !== undefined) {
+        localVarQueryParameter['deadline_before'] =
+          (deadlineBefore as any) instanceof Date
+            ? (deadlineBefore as any).toISOString().substring(0, 10)
+            : deadlineBefore;
+      }
 
       if (ordering !== undefined) {
         localVarQueryParameter['ordering'] = ordering;
@@ -3583,6 +3601,8 @@ export const AdminApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} [deadlineAfter]
+     * @param {string} [deadlineBefore]
      * @param {string} [ordering] Which field to use when ordering the results.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -3595,6 +3615,8 @@ export const AdminApiFp = function (configuration?: Configuration) {
      * @throws {RequiredError}
      */
     async adminRequestsList(
+      deadlineAfter?: string,
+      deadlineBefore?: string,
       ordering?: string,
       page?: number,
       pageSize?: number,
@@ -3612,6 +3634,8 @@ export const AdminApiFp = function (configuration?: Configuration) {
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.adminRequestsList(
+          deadlineAfter,
+          deadlineBefore,
           ordering,
           page,
           pageSize,
@@ -4751,6 +4775,8 @@ export const AdminApiFactory = function (
     },
     /**
      *
+     * @param {string} [deadlineAfter]
+     * @param {string} [deadlineBefore]
      * @param {string} [ordering] Which field to use when ordering the results.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -4763,6 +4789,8 @@ export const AdminApiFactory = function (
      * @throws {RequiredError}
      */
     adminRequestsList(
+      deadlineAfter?: string,
+      deadlineBefore?: string,
       ordering?: string,
       page?: number,
       pageSize?: number,
@@ -4775,6 +4803,8 @@ export const AdminApiFactory = function (
     ): AxiosPromise<PaginatedRequestAdminListList> {
       return localVarFp
         .adminRequestsList(
+          deadlineAfter,
+          deadlineBefore,
           ordering,
           page,
           pageSize,
@@ -5635,6 +5665,8 @@ export class AdminApi extends BaseAPI {
 
   /**
    *
+   * @param {string} [deadlineAfter]
+   * @param {string} [deadlineBefore]
    * @param {string} [ordering] Which field to use when ordering the results.
    * @param {number} [page] A page number within the paginated result set.
    * @param {number} [pageSize] Number of results to return per page.
@@ -5648,6 +5680,8 @@ export class AdminApi extends BaseAPI {
    * @memberof AdminApi
    */
   public adminRequestsList(
+    deadlineAfter?: string,
+    deadlineBefore?: string,
     ordering?: string,
     page?: number,
     pageSize?: number,
@@ -5660,6 +5694,8 @@ export class AdminApi extends BaseAPI {
   ) {
     return AdminApiFp(this.configuration)
       .adminRequestsList(
+        deadlineAfter,
+        deadlineBefore,
         ordering,
         page,
         pageSize,

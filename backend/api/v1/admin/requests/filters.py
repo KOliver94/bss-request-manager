@@ -23,6 +23,7 @@ class IntegerFilter(Filter):
 
 
 class RequestFilter(FilterSet):
+    deadline = DateFromToRangeFilter()
     start_datetime = DateFromToRangeFilter()
     status = MultipleChoiceFilter(choices=Request.Statuses.choices)
 
