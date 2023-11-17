@@ -41,6 +41,7 @@ class CrewMembersListingField(RelatedField):
 class RequestAdminListSerializer(Serializer):
     created = DateTimeField(read_only=True)
     crew = CrewMembersListingField(many=True, read_only=True)
+    deadline = DateField(read_only=True)
     id = IntegerField(read_only=True)
     start_datetime = DateTimeField(read_only=True)
     status = IntegerField(read_only=True)
@@ -57,7 +58,6 @@ class RequestAdminListSerializer(Serializer):
 class RequestAdminRetrieveSerializer(RequestAdminListSerializer):
     additional_data = JSONField(read_only=True)
     comment_count = IntegerField(read_only=True, source="comments.count")
-    deadline = DateField(read_only=True)
     end_datetime = DateTimeField(read_only=True)
     place = CharField(read_only=True)
     requester = UserNestedDetailSerializer(read_only=True)

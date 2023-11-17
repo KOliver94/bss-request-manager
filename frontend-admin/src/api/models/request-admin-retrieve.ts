@@ -39,6 +39,12 @@ export interface RequestAdminRetrieve {
   crew: Array<UserNestedList>;
   /**
    *
+   * @type {string}
+   * @memberof RequestAdminRetrieve
+   */
+  deadline: string;
+  /**
+   *
    * @type {number}
    * @memberof RequestAdminRetrieve
    */
@@ -91,12 +97,6 @@ export interface RequestAdminRetrieve {
    * @memberof RequestAdminRetrieve
    */
   comment_count: number;
-  /**
-   *
-   * @type {string}
-   * @memberof RequestAdminRetrieve
-   */
-  deadline: string;
   /**
    *
    * @type {string}

@@ -292,6 +292,15 @@ def test_order_ratings(admin_user, api_client, expected, ordering, time_machine)
 @pytest.mark.parametrize(
     "filters,expected",
     [
+        ({"deadline_after": "2003-08-25"}, 5),
+        ({"deadline_before": "2009-10-03"}, 3),
+        (
+            {
+                "deadline_after": "2008-03-02",
+                "deadline_before": "2015-04-05",
+            },
+            3,
+        ),
         ({"start_datetime_after": "2007-08-25"}, 4),
         ({"start_datetime_before": "2012-01-01"}, 4),
         (
@@ -371,6 +380,7 @@ def test_filter_requests_multiple_status(admin_user, api_client, pagination):
     "ordering,expected",
     [
         ("created", [6, 2, 3, 1, 5, 4]),
+        ("deadline", [4, 6, 2, 3, 1, 5]),
         # There can be a difference in ordering of similar object if pagination is enabled.
         # Add created as secondary ordering field to make tests consistent.
         ("responsible__first_name,created", [6, 2, 5, 3, 1, 4]),
@@ -399,7 +409,7 @@ def test_order_requests(
     requests.append(
         baker.make(
             "video_requests.Request",
-            end_datetime=start_date,
+            end_datetime=start_date - timedelta(days=3),
             start_datetime=start_date - timedelta(days=4),
             status=Request.Statuses.DONE,
             title="CCCC",
@@ -410,7 +420,7 @@ def test_order_requests(
     requests.append(
         baker.make(
             "video_requests.Request",
-            end_datetime=start_date,
+            end_datetime=start_date - timedelta(days=9),
             responsible=test_responsible_1,
             start_datetime=start_date - timedelta(days=10),
             status=Request.Statuses.RECORDED,
@@ -422,7 +432,7 @@ def test_order_requests(
     requests.append(
         baker.make(
             "video_requests.Request",
-            end_datetime=start_date,
+            end_datetime=start_date - timedelta(days=7),
             responsible=test_responsible_2,
             start_datetime=start_date - timedelta(days=8),
             status=Request.Statuses.DENIED,
@@ -434,7 +444,7 @@ def test_order_requests(
     requests.append(
         baker.make(
             "video_requests.Request",
-            end_datetime=start_date,
+            end_datetime=start_date - timedelta(days=14),
             start_datetime=start_date - timedelta(days=15),
             status=Request.Statuses.UPLOADED,
             title="BBBB",
@@ -445,7 +455,7 @@ def test_order_requests(
     requests.append(
         baker.make(
             "video_requests.Request",
-            end_datetime=start_date,
+            end_datetime=start_date - timedelta(days=1),
             responsible=test_responsible_3,
             start_datetime=start_date - timedelta(days=2),
             status=Request.Statuses.CANCELED,
@@ -457,7 +467,7 @@ def test_order_requests(
     requests.append(
         baker.make(
             "video_requests.Request",
-            end_datetime=start_date,
+            end_datetime=start_date - timedelta(days=12),
             responsible=test_responsible_3,
             start_datetime=start_date - timedelta(days=13),
             status=Request.Statuses.ACCEPTED,

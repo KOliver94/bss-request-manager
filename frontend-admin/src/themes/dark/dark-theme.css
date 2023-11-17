@@ -104,3 +104,31 @@
 .p-toast .p-toast-message.p-toast-message-warn .p-toast-icon-close {
   color: rgb(255, 167, 38);
 }
+
+.p-statistics.p-statistics-blue {
+  background-color: var(--blue-900) !important;
+  > i {
+    color: var(--blue-200) !important;
+  }
+}
+
+.p-statistics.p-statistics-cyan {
+  background-color: var(--cyan-900) !important;
+  > i {
+    color: var(--cyan-200) !important;
+  }
+}
+
+.p-statistics.p-statistics-orange {
+  background-color: var(--orange-900) !important;
+  > i {
+    color: var(--orange-200) !important;
+  }
+}
+
+.p-statistics.p-statistics-purple {
+  background-color: var(--purple-900) !important;
+  > i {
+    color: var(--purple-200) !important;
+  }
+}

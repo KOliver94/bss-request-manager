@@ -48,7 +48,7 @@ const router = sentryCreateBrowserRouter(
         </Layout>
       }
     >
-      <Route index lazy={() => import('App')} />
+      <Route index lazy={() => import('pages/LandingPage')} />
       <Route
         path="requests"
         element={<Outlet />}
