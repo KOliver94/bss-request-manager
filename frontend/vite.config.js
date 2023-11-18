@@ -25,8 +25,5 @@ export default defineConfig(() => {
         src: '/src',
       },
     },
-    server: {
-      https: true,
-    },
   };
 });
