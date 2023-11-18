@@ -11,13 +11,14 @@ DEPENDENCIES_TO_IGNORE = [
     "@types/node",
     "@types/react",
     "@types/react-dom",
+    "@vitejs/plugin-basic-ssl",
     "@vitejs/plugin-react",
     "autoprefixer",
     "cssnano",
     "source-map-explorer",
     "postcss",
-    "react-scripts",
     "vite",
+    "vite-plugin-pwa",
     "vite-tsconfig-paths",
 ]
 REPOS_TO_CHECK = ["eslint"]
