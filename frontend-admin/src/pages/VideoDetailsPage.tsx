@@ -246,7 +246,7 @@ const VideoDetailsPage = () => {
       icon: 'pi pi-exclamation-triangle',
       message:
         'A videó törlésével az összes értékelés is törlésre kerül. A művelet visszavonhatatlan!',
-      style: { width: isMobile ? '95vw' : '50vw' },
+      style: { width: '50vw' },
     });
   };
 
@@ -302,7 +302,7 @@ const VideoDetailsPage = () => {
           status={queryResult.status}
         />
       </Suspense>
-      <ConfirmDialog />
+      <ConfirmDialog breakpoints={{ '768px': '95vw' }} />
       <div className="p-3 sm:p-5 surface-ground">
         <div className="flex flex-column mb-3 sm:align-items-center sm:flex-row sm:justify-content-between">
           <div>

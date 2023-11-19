@@ -27,7 +27,6 @@ import {
   requestVideoRatingRetrieveQuery,
 } from 'api/queries';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
-import useMobile from 'hooks/useMobile';
 
 interface RatingDialogProps extends DialogProps {
   isRated?: boolean;
@@ -58,7 +57,6 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
     },
     ref,
   ) => {
-    const isMobile = useMobile();
     const queryClient = useQueryClient();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -257,10 +255,11 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
     return (
       <Dialog
         closeOnEscape={!isDirty}
+        breakpoints={{ '768px': '95vw' }}
         footer={renderFooter}
         header={renderHeader}
         onHide={onHide}
-        style={{ width: isMobile ? '95vw' : '50vw' }}
+        style={{ width: '50vw' }}
         visible={visible}
         {...props}
         {...ref}

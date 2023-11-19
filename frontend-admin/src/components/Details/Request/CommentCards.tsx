@@ -33,7 +33,6 @@ import {
   getUserId,
   isAdmin,
 } from 'helpers/LocalStorageHelper';
-import useMobile from 'hooks/useMobile';
 import { useTheme } from 'hooks/useTheme';
 import { UI_AVATAR_URL } from 'localConstants';
 import { useToast } from 'providers/ToastProvider';
@@ -197,7 +196,6 @@ const CommentCard = ({
 }: CommentCardProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { showToast } = useToast();
-  const isMobile = useMobile();
   const queryClient = useQueryClient();
 
   const handleDelete = async (commentId: number) => {
@@ -237,7 +235,7 @@ const CommentCard = ({
       message:
         'Az alábbi hozzászólás visszavonhatatlanul törlés fog kerülni:\n\n' +
         text,
-      style: { whiteSpace: 'pre-wrap', width: isMobile ? '95vw' : '50vw' },
+      style: { whiteSpace: 'pre-wrap', width: '50vw' },
     });
   };
 

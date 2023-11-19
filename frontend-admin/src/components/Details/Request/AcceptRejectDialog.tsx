@@ -8,7 +8,6 @@ import { classNames } from 'primereact/utils';
 import { Controller, useForm } from 'react-hook-form';
 
 import { isAdmin } from 'helpers/LocalStorageHelper';
-import useMobile from 'hooks/useMobile';
 
 interface AcceptRejectDialogProps extends DialogProps {
   accepted: boolean | null | undefined;
@@ -37,8 +36,6 @@ const AcceptRejectDialog = forwardRef<
     { accepted, canceled, failed, loading, onHide, onSave, visible, ...props },
     ref,
   ) => {
-    const isMobile = useMobile();
-
     const {
       control,
       formState: { isDirty },
@@ -123,10 +120,11 @@ const AcceptRejectDialog = forwardRef<
     return (
       <Dialog
         contentClassName="align-item-center flex flex-column justify-content-center"
+        breakpoints={{ '768px': '95vw' }}
         footer={renderFooter}
         header="Felkérés elfogadása"
         onHide={onHide}
-        style={{ width: isMobile ? '95vw' : '50vw' }}
+        style={{ width: '50vw' }}
         visible={visible}
         {...props}
         {...ref}
