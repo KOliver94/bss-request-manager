@@ -23,6 +23,7 @@ export default defineConfig({
     },
   },
   server: {
+    open: '/admin',
     port: 5174,
   },
 });
