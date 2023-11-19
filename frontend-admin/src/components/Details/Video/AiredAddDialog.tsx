@@ -5,8 +5,6 @@ import { Calendar } from 'primereact/calendar';
 import { Dialog, DialogProps } from 'primereact/dialog';
 import { Controller, useForm } from 'react-hook-form';
 
-import useMobile from 'hooks/useMobile';
-
 interface AcceptRejectDialogProps extends DialogProps {
   loading: boolean;
   onSave(data: { airedDate: Date }): void;
@@ -16,8 +14,6 @@ const AiredAddDialog = forwardRef<
   React.Ref<HTMLDivElement>,
   AcceptRejectDialogProps
 >(({ loading, onHide, onSave, visible, ...props }, ref) => {
-  const isMobile = useMobile();
-
   const { control, handleSubmit, reset } = useForm<{
     airedDate: Date;
   }>();
@@ -50,10 +46,11 @@ const AiredAddDialog = forwardRef<
   return (
     <Dialog
       contentClassName="align-item-center flex flex-column justify-content-center"
+      breakpoints={{ '768px': '95vw' }}
       footer={renderFooter}
       header="Adásba kerülés hozzáadása"
       onHide={onHide}
-      style={{ width: isMobile ? '95vw' : '50vw' }}
+      style={{ width: '50vw' }}
       visible={visible}
       {...props}
       {...ref}

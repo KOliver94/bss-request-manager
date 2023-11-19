@@ -153,7 +153,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
       header: 'Biztosan törölni akarod a stábtagot?',
       icon: 'pi pi-exclamation-triangle',
       message: `"${full_name} - ${position}" visszavonhatatlanul törlés fog kerülni!`,
-      style: { width: isMobile ? '95vw' : '50vw' },
+      style: { width: '50vw' },
     });
   };
 

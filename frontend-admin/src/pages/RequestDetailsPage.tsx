@@ -272,7 +272,7 @@ const RequestDetailsPage = () => {
       icon: 'pi pi-exclamation-triangle',
       message:
         'A felkérés törlésével az összes videó, stábtag, hozzászólás és értékelés is törlésre kerül. A művelet visszavonhatatlan!',
-      style: { width: isMobile ? '95vw' : '50vw' },
+      style: { width: '50vw' },
     });
   };
 
@@ -385,7 +385,7 @@ const RequestDetailsPage = () => {
 
   return (
     <>
-      <ConfirmDialog />
+      <ConfirmDialog breakpoints={{ '768px': '95vw' }} />
       <Suspense>
         <AcceptRejectDialog
           accepted={data.additional_data.accepted}

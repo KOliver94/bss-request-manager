@@ -10,7 +10,6 @@ import { UserNestedDetail } from 'api/models/user-nested-detail';
 import { requestCrewCreateMutation } from 'api/mutations';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
-import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 
 import AutoCompleteCrewPosition from './AutoCompleteCrewPosition';
@@ -26,7 +25,6 @@ interface ICrewCreate {
 
 const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
   ({ onHide, requestId, visible, ...props }, ref) => {
-    const isMobile = useMobile();
     const queryClient = useQueryClient();
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -107,10 +105,11 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
     return (
       <Dialog
         closeOnEscape={!isDirty}
+        breakpoints={{ '768px': '95vw' }}
         footer={renderFooter}
         header="Új stábtag hozzáadása"
         onHide={onHide}
-        style={{ width: isMobile ? '95vw' : '50vw' }}
+        style={{ width: '50vw' }}
         visible={visible}
         {...props}
         {...ref}

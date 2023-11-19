@@ -5,7 +5,6 @@ import { Dialog, DialogProps } from 'primereact/dialog';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Controller, useForm } from 'react-hook-form';
 
-import useMobile from 'hooks/useMobile';
 import { RequestAdditionalDataType } from 'types/additionalDataTypes';
 
 interface AdditionalDataDialogProps extends DialogProps {
@@ -19,8 +18,6 @@ const AdditionalDataDialog = forwardRef<
   React.Ref<HTMLDivElement>,
   AdditionalDataDialogProps
 >(({ data, error, loading, onHide, onSave, visible, ...props }, ref) => {
-  const isMobile = useMobile();
-
   const {
     control,
     formState: { isDirty },
@@ -74,10 +71,11 @@ const AdditionalDataDialog = forwardRef<
 
   return (
     <Dialog
+      breakpoints={{ '768px': '95vw' }}
       footer={renderFooter}
       header="További adatok szerkesztése"
       onHide={onHide}
-      style={{ width: isMobile ? '95vw' : '50vw' }}
+      style={{ width: '50vw' }}
       visible={visible}
       {...props}
       {...ref}
