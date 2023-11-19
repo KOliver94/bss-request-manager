@@ -244,14 +244,19 @@ const LandingPage = () => {
   return (
     <>
       <Statistics statistics={statistics} />
-      <div className="px-3 py-5 sm:px-5 surface-ground">
-        <div className="grid">
-          <div className="col-12 mb-4 md:col-6 surface-ground">
-            <div className="align-items-center flex font-medium mb-3 text-900 text-lg">
-              <div>Válaszra váró felkérések</div>
-            </div>
-            <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
-              <DataTable loading={notAnsweredLoading} value={notAnsweredData}>
+      <div className="p-3 sm:p-5 surface-ground">
+        <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
+          <div className="grid">
+            <div className="col-12 mb-4 md:col-6">
+              <div className="align-items-center flex font-medium mb-3 text-900 text-lg">
+                <div>Válaszra váró felkérések</div>
+              </div>
+              <DataTable
+                loading={notAnsweredLoading}
+                showGridlines
+                stripedRows
+                value={notAnsweredData}
+              >
                 <Column header="Esemény neve" field="title" />
                 <Column
                   align="center"
@@ -267,14 +272,14 @@ const LandingPage = () => {
                 />
               </DataTable>
             </div>
-          </div>
-          <div className="col-12 mb-4 md:col-6 surface-ground">
-            <div className="align-items-center flex font-medium mb-3 text-900 text-lg">
-              <div>Forgatások a következő két hétben</div>
-            </div>
-            <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
+            <div className="col-12 mb-4 md:col-6">
+              <div className="align-items-center flex font-medium mb-3 text-900 text-lg">
+                <div>Forgatások a következő két hétben</div>
+              </div>
               <DataTable
                 loading={upcomingRecordingLoading}
+                showGridlines
+                stripedRows
                 value={upcomingRecordingData}
               >
                 <Column header="Esemény neve" field="title" />
@@ -298,14 +303,14 @@ const LandingPage = () => {
                 />
               </DataTable>
             </div>
-          </div>
-          <div className="col-12 mb-4 md:col-6 surface-ground">
-            <div className="align-items-center flex font-medium mb-3 text-900 text-lg">
-              <div>Közelgő vagy lejárt határidők</div>
-            </div>
-            <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
+            <div className="col-12 mb-4 md:col-6">
+              <div className="align-items-center flex font-medium mb-3 text-900 text-lg">
+                <div>Közelgő vagy lejárt határidők</div>
+              </div>
               <DataTable
                 loading={upcomingDeadlingLoading}
+                showGridlines
+                stripedRows
                 value={upcomingDeadlineData}
               >
                 <Column header="Esemény neve" field="title" />
@@ -329,14 +334,14 @@ const LandingPage = () => {
                 />
               </DataTable>
             </div>
-          </div>
-          <div className="col-12 mb-4 md:col-6 surface-ground">
-            <div className="align-items-center flex font-medium mb-3 text-900 text-lg">
-              <div>Vágandó videók</div>
-            </div>
-            <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
+            <div className="col-12 mb-4 md:col-6">
+              <div className="align-items-center flex font-medium mb-3 text-900 text-lg">
+                <div>Vágandó videók</div>
+              </div>
               <DataTable
                 loading={notEditedVideosLoading}
+                showGridlines
+                stripedRows
                 value={notEditedVideosData}
               >
                 <Column header="Videó címe" field="title" />
@@ -364,6 +369,8 @@ const LandingPage = () => {
               </p>
               <DataTable
                 loading={requestsWithoutVideosLoading}
+                showGridlines
+                stripedRows
                 value={requestsWithoutVideosData}
               >
                 <Column header="Esemény neve" field="title" />
