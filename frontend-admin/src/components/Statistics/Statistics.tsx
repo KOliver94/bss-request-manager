@@ -49,7 +49,7 @@ const StatisticsField = ({
 
 const Statistics = ({ statistics }: StatisticsProps) => {
   return (
-    <div className="px-3 pt-5 sm:px-5 surface-ground">
+    <div className="pt-5 px-3 sm:px-5 surface-ground">
       <div className="grid">
         {statistics.map((statistic, index) => (
           <StatisticsField
