@@ -33,7 +33,7 @@ repos:
         name: 'Upgrade Python syntax to newer versions'
         args: [--py310-plus]
   - repo: https://github.com/hadialqattan/pycln
-    rev: v2.3.0
+    rev: v2.4.0
     hooks:
       - id: pycln
         name: 'Remove unused Python imports'
@@ -76,7 +76,7 @@ repos:
         exclude: (^backend/templates/)|((\.py|Pipfile(\.lock)?|package(-lock)?\.json)$)
         args: [--config, ./frontend/.prettierrc]
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.53.0
+    rev: v8.54.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
