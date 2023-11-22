@@ -64,31 +64,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install Poetry
+        run: pipx install poetry
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pipenv'
-          cache-dependency-path: backend/Pipfile.lock
-      - name: Install pipenv, libpq and ldap system dependencies
+          cache: 'poetry'
+          cache-dependency-path: backend/poetry.lock
+      - name: Install python-ldap build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install libpq-dev python3-dev libldap2-dev libsasl2-dev -y
-          pip install tblib
-          pip install pipenv
-          pipenv --python ${{ matrix.python-version }}
+          sudo apt-get install libldap2-dev libsasl2-dev -y
       - name: Install dependencies
-        run: pipenv install --dev
+        run: poetry install
       - name: Check for model changes without migration
-        run: pipenv run python manage.py makemigrations --check
+        run: poetry run python manage.py makemigrations --check
       - name: Synchronize database state and collect static files
         run: |
-          pipenv run python manage.py migrate --no-input
-          pipenv run python manage.py collectstatic --no-input --clear --link
+          poetry run python manage.py migrate --no-input
+          poetry run python manage.py collectstatic --no-input --clear --link
       - name: Run tests
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
         run: |
-          pipenv run pytest --cov --cov-report html --cov-report term --cov-report xml -n auto
+          poetry run pytest --cov --cov-report html --cov-report term --cov-report xml -n auto
       - name: Upload coverage to Codecov
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
         uses: codecov/codecov-action@v3.1.4
@@ -105,7 +104,7 @@ jobs:
         env:
           BASE_URL_DOMAIN: felkeres.bsstudio.hu
           EMAIL_FILE: True
-        run: pipenv run python manage.py test tests.email_sending_tests
+        run: poetry run python manage.py test tests.email_sending_tests
       - name: Archive sent e-mails
         if: ${{ github.event.inputs.generate-emails == 'true' }}
         uses: actions/upload-artifact@v3
