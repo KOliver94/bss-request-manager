@@ -30,11 +30,11 @@
       "addLabels": ["github_actions"]
     },
     {
-      "description": "Group all minor and patch updates together for Pipenv in /backend.",
+      "description": "Group all minor and patch updates together for Poetry in /backend.",
       "addLabels": ["python"],
       "groupName": "all non-major backend dependencies",
       "groupSlug": "all-minor-patch-backend",
-      "matchManagers": ["pipenv"],
+      "matchManagers": ["poetry"],
       "matchPaths": ["backend/**"],
       "matchUpdateTypes": ["minor", "patch"]
     },
