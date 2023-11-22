@@ -1,45 +1,80 @@
+# syntax=docker/dockerfile:1
+# Keep this syntax directive! It's used to enable Docker BuildKit
+# Based on https://gist.github.com/usr-ein/c42d98abca3cb4632ab0c2c6aff8c88a
+
 ###################################
 #  FOR DEVELOPMENT PURPOSES ONLY  #
 ###################################
-FROM python:3.10-alpine3.14
+
+##################################################
+
+# Stage 1 - Backend base
+FROM python:3.12-alpine3.18 as backend-base
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100 \
+    \
+    POETRY_VERSION=1.7.1 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    POETRY_NO_INTERACTION=1 \
+    \
+    PYSETUP_PATH="/opt/pysetup" \
+    VIRTUAL_ENV="/opt/pysetup/.venv"
+
+# Add Poetry and Venv to Path
+ENV PATH="$POETRY_HOME/bin:$VIRTUAL_ENV/bin:$PATH"
+
+##################################################
+
+# Stage 2 - Backend builder
+
+# Use backend-base image as base
+FROM python-base as backend-builder
+
+# Install build dependencies
+RUN apk update && apk add curl postgresql-dev \
+    build-base openldap-dev  # required for python-ldap
+
+# Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
+# The --mount will mount the buildx cache directory to where
+# Poetry and Pip store their cache so that they can re-use it
+RUN --mount=type=cache,target=/root/.cache \
+    curl -sSL https://install.python-poetry.org | python3 -
 
 # Set work directory
-WORKDIR /app/backend
+WORKDIR $PYSETUP_PATH
 
-# Copy Pipfile and Pipfile.lock to Docker environment
-COPY ./Pipfile* /app/backend/
+# Copy project requirement files here to ensure they will be cached
+COPY poetry.lock pyproject.toml ./
 
-# Install dependencies
-RUN apk update \
-    && apk add --no-cache --virtual .build-deps \
-    postgresql-dev gcc python3-dev musl-dev libffi-dev openssl-dev cargo openldap-dev build-base \
-    && python -m pip install --upgrade pip \
-    && pip install --no-cache-dir pipenv \
-    && pipenv install --system --deploy --clear \
-    && find /usr/local \
-        \( -type d -a -name test -o -name tests \) \
-        -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-        -exec rm -rf '{}' + \
-    && runDeps="$( \
-        scanelf --needed --nobanner --recursive /usr/local \
-                | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
-                | sort -u \
-                | xargs -r apk info --installed \
-                | sort -u \
-    )" \
-    && apk add --virtual .rundeps $runDeps \
-    && apk del .build-deps \
-    && pip uninstall pipenv -y
+# Install runtime dependencies
+RUN --mount=type=cache,target=/root/.cache \
+    poetry install --without=dev,test --with=prod
+
+##################################################
+
+# Stage 3 - Final image
+
+# Use backend-base image as base
+FROM python-base as production
+
+# Copy built runtime dependencies from builder container
+COPY --from=backend-builder $PYSETUP_PATH $PYSETUP_PATH
+
+# Install runtime dependency for psycopg[c] and python-ldap
+RUN apk update && apk add --no-cache libldap libpq
 
 # Copy everything over to Docker environment
 COPY . /app/backend
 
 # Collect static files
-RUN python manage.py collectstatic --no-input --clear --settings=core.settings.test
+WORKDIR /app/backend
+RUN python manage.py collectstatic --no-input --clear --settings=core.settings.base
 
 # Open port
 EXPOSE 8000

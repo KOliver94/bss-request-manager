@@ -1,3 +1,9 @@
+# syntax=docker/dockerfile:1
+# Keep this syntax directive! It's used to enable Docker BuildKit
+# Based on: https://gist.github.com/usr-ein/c42d98abca3cb4632ab0c2c6aff8c88a
+
+##################################################
+
 # Stage 1 - Build Frontend
 
 # Pull base image
@@ -66,45 +72,72 @@ RUN npm run build
 
 ##################################################
 
-# Stage 3 - The Production Environment
+# Stage 3 - Backend base
 
 # Pull base image
-FROM python:3.10-alpine3.14 AS request-manager
+FROM python:3.11-alpine3.18 as backend-base
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100 \
+    \
+    POETRY_VERSION=1.7.1 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    POETRY_NO_INTERACTION=1 \
+    \
+    PYSETUP_PATH="/opt/pysetup" \
+    VIRTUAL_ENV="/opt/pysetup/.venv"
+
+# Add Poetry and Venv to Path
+ENV PATH="$POETRY_HOME/bin:$VIRTUAL_ENV/bin:$PATH"
+
+##################################################
+
+# Stage 4 - Backend builder
+
+# Use backend-base image as base
+FROM backend-base as backend-builder
+
+# Install build dependencies
+RUN apk update && apk add curl postgresql-dev \
+    build-base openldap-dev  # required for python-ldap
+
+# Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
+# The --mount will mount the buildx cache directory to where
+# Poetry and Pip store their cache so that they can re-use it
+RUN --mount=type=cache,target=/root/.cache \
+    curl -sSL https://install.python-poetry.org | python3 -
 
 # Set work directory
-WORKDIR /app/backend
+WORKDIR $PYSETUP_PATH
+
+# Copy project requirement files here to ensure they will be cached
+COPY backend/poetry.lock $PYSETUP_PATH
+COPY backend/pyproject.toml $PYSETUP_PATH
+
+# Install runtime dependencies
+RUN --mount=type=cache,target=/root/.cache \
+    poetry install --without=debug,dev,test --with=prod
+
+##################################################
+
+# Stage 5 - The Production Environment
+
+# Use backend-base image as base
+FROM backend-base as request-manager-production
 
 # Create the app user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Copy Pipfile and Pipfile.lock to Docker environment
-COPY ./backend/Pipfile* /app/backend/
+# Copy built runtime dependencies from builder container
+COPY --from=backend-builder $PYSETUP_PATH $PYSETUP_PATH
 
-# Install dependencies
-RUN apk update \
-    && apk add --no-cache --virtual .build-deps \
-    postgresql-dev gcc python3-dev musl-dev libffi-dev openssl-dev cargo openldap-dev build-base \
-    && python -m pip install --upgrade pip \
-    && pip install --no-cache-dir pipenv \
-    && pipenv install --system --deploy --clear \
-    && find /usr/local \
-    \( -type d -a -name test -o -name tests \) \
-    -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-    -exec rm -rf '{}' + \
-    && runDeps="$( \
-    scanelf --needed --nobanner --recursive /usr/local \
-    | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
-    | sort -u \
-    | xargs -r apk info --installed \
-    | sort -u \
-    )" \
-    && apk add --virtual .rundeps $runDeps \
-    && apk del .build-deps \
-    && pip uninstall pipenv -y
+# Install runtime dependency for psycopg[c] and python-ldap
+RUN apk update && apk add --no-cache libldap libpq
 
 # Copy everything over to Docker environment
 COPY ./backend /app/backend
@@ -131,8 +164,9 @@ RUN python manage.py collectstatic --no-input --clear --settings=core.settings.b
 # Open port
 EXPOSE 8000
 
-# Copy and run entrypoint.sh
+# Copy and run entrypoint.sh (make sure line endings are UNIX style)
 COPY --chown=appuser:appgroup ./docker-entrypoint.sh /app/entrypoint.sh
+RUN dos2unix /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["/app/entrypoint.sh"]
 
