@@ -1,24 +1,6 @@
-[tool.flake8]
-max-line-length = 88
-max-complexity = 15
-ignore = ["E203", "E501", "W503"]
-per-file-ignores = [
-    "backend/core/settings/*.py: F403,F405",
-    "backend/common/apps.py: F401",
-    "backend/video_requests/apps.py: F401"
-]
-
-[tool.isort]
-profile = "black"
-
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "core.settings.test"
-python_files = "tests.py test_*.py *_tests.py"
-python_classes= ""
-
-[tool.coverage.run]
-branch = true
-source = ["."]
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.coverage.report]
 fail_under = 90
@@ -40,3 +22,82 @@ exclude_lines = [
     'if getattr.*"swagger_fake_view".*',
     "return .*[.]none[(][)]]",
 ]
+
+[tool.coverage.run]
+branch = true
+source = ["."]
+
+[tool.flake8]
+max-line-length = 88
+max-complexity = 15
+ignore = ["E203", "E501", "W503"]
+per-file-ignores = [
+    "backend/core/settings/*.py: F403,F405",
+    "backend/common/apps.py: F401",
+    "backend/video_requests/apps.py: F401"
+]
+
+[tool.isort]
+profile = "black"
+
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = "Workflow Support System for managing video shooting, filming and live streaming requests of Budavári Schönherz Stúdió."
+authors = ["Olivér Kecskeméty <kecskemety.oliver@simonyi.bme.hu>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+celery = {extras = ["redis"], version = "5.3.5"}
+django = "4.2.7"
+djangorestframework = "3.14.0"
+djangorestframework_simplejwt = "5.3.0"
+django-auth-ldap = "4.6.0"
+django-cacheops = "7.0.2"
+django-celery-results = "2.5.1"
+django-cors-headers = "4.3.1"
+django-filter = "23.4"
+django-health-check = "3.17.0"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "7.2.0"}
+django-simple-history = "3.4.0"
+drf-recaptcha = "3.0.0"
+drf-spectacular = "0.26.5"
+google-api-python-client = "2.108.0"
+google-auth-httplib2 = "0.1.1"
+google-auth-oauthlib = "1.1.0"
+jsonschema = {extras = ["format"], version = "4.20.0"}
+libgravatar = "1.0.4"
+python-decouple = "3.8"
+python-ldap = "3.4.4"
+requests = "2.31.0"
+sentry-sdk = "1.35.0"
+social-auth-app-django = "5.4.0"
+whitenoise = {extras = ["brotli"], version = "6.6.0"}
+
+[tool.poetry.group.debug.dependencies]
+django-debug-toolbar = "4.2.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "3.5.0"
+psycopg = {extras = ["binary"], version = "3.1.12"}
+
+[tool.poetry.group.prod]
+optional = true
+
+[tool.poetry.group.prod.dependencies]
+gunicorn = "21.2.0"
+psycopg = {extras = ["c"], version = "3.1.12"}
+
+[tool.poetry.group.test.dependencies]
+httpretty = "1.1.4"
+model_bakery = "1.17.0"
+pytest = "7.4.3"
+pytest-cov = "4.1.0"
+pytest-django = "4.7.0"
+pytest-xdist = {extras = ["psutil"], version = "3.4.0"}
+time-machine = "2.13.0"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings.test"
+python_files = "tests.py test_*.py *_tests.py"
+python_classes= ""
