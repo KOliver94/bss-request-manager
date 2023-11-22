@@ -27,20 +27,19 @@ Dockerfile
 backend/**/*.pyc
 backend/**/__pycache__
 backend/.coverage
-backend/.flake8
 backend/.pytest_cache
 backend/health_check_storage_test
 backend/htmlcov
 backend/logs/**/*.log
 backend/logs/**/*.err
 backend/staticfiles
-backend/pyproject.toml
+backend/schema.yaml
 
 # React
-frontend/.eslintcache
-frontend/.pnp
-frontend/.pnp.js
-frontend/build
-frontend/coverage
-frontend/node_modules
-frontend/*.log*
+frontend*/.eslintcache
+frontend*/.pnp
+frontend*/.pnp.js
+frontend*/build
+frontend*/coverage
+frontend*/node_modules
+frontend*/*.log*

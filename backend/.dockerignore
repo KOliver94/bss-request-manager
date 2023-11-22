@@ -19,6 +19,9 @@ logs/**/*.err
 # static
 staticfiles
 
+# openapi schema
+schema.yaml
+
 # misc
 .DS_Store
 .dockerignore
