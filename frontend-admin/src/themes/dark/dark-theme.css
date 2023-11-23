@@ -1,4 +1,4 @@
-@import '~primereact/resources/themes/lara-dark-blue/theme.css';
+@import 'theme.css';
 
 .p-inline-message.p-inline-message-warn {
   background: rgb(25, 18, 7);
