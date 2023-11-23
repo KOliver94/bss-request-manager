@@ -77,7 +77,7 @@ const VideosDataTable = forwardRef<
       <div>
         <Button
           aria-label="Értékelés"
-          className="mr-2 p-button-info p-button-outlined"
+          className="mr-2 p-button-outlined"
           disabled={status < 3}
           icon={rated ? 'pi pi-star-fill' : 'pi pi-star'}
           onClick={() => {
@@ -90,7 +90,7 @@ const VideosDataTable = forwardRef<
         <LinkButton
           buttonProps={{
             'aria-label': 'Ugrás a videóhoz',
-            className: 'p-button-info p-button-outlined',
+            className: 'p-button-outlined',
             icon: 'pi pi-sign-in',
           }}
           linkProps={{ to: `/requests/${requestId}/videos/${id}` }}

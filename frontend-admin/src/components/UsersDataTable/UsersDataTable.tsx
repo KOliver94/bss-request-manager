@@ -44,7 +44,7 @@ const UsersDataTable = forwardRef<
       <LinkButton
         buttonProps={{
           'aria-label': 'Ugrás a profilra',
-          className: 'p-button-info p-button-outlined',
+          className: 'p-button-outlined',
           icon: 'pi pi-id-card',
         }}
         linkProps={{ to: `/users/${id}` }}
