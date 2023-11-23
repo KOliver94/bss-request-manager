@@ -93,7 +93,7 @@ const VideoSearchDataTable = forwardRef<
       <LinkButton
         buttonProps={{
           'aria-label': 'Ugrás a videóhoz',
-          className: 'p-button-info p-button-outlined',
+          className: 'p-button-outlined',
           icon: 'pi pi-sign-in',
         }}
         linkProps={{ to: `/requests/${request_id}/videos/${id}` }}
