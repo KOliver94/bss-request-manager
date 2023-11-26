@@ -30,11 +30,8 @@ repos:
     rev: 1.7.1
     hooks:
       - id: poetry-check
-        name: 'Check Poetry config'
-        args: ['-C', './backend']
-      - id: poetry-lock
-        name: 'Make sure Poetry lock file is up-to-date'
-        args: ['-C', './backend']
+        name: 'Check Poetry config and verify that lockfile is consistent with pyproject.toml'
+        args: ['-C', './backend', '--lock']
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.15.0
     hooks:
