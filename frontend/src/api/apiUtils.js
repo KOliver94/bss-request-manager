@@ -52,7 +52,8 @@ axiosInstance.interceptors.response.use(
         // Remove tokens and auth header.
         axiosInstance.defaults.headers.Authorization = null;
         localStorage.clear();
-        window.location.href = '/';
+        localStorage.setItem('redirectedFrom', window.location.pathname);
+        window.location.href = '/login';
       }
     }
 
