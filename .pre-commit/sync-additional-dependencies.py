@@ -11,6 +11,7 @@ DEPENDENCIES_TO_IGNORE = [
     "@types/node",
     "@types/react",
     "@types/react-dom",
+    "@vite-pwa/assets-generator",
     "@vitejs/plugin-basic-ssl",
     "@vitejs/plugin-react",
     "autoprefixer",
