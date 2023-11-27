@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from re import match
 
 from celery.schedules import crontab
@@ -223,6 +224,8 @@ REST_FRAMEWORK = {
 # https://github.com/davesque/django-rest-framework-simplejwt
 
 SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=6),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "USER_AUTHENTICATION_RULE": "common.rest_framework.authentication.default_user_authentication_rule",
