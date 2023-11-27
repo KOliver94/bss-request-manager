@@ -1,4 +1,5 @@
 import axios, { isAxiosError } from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 import {
   getAccessToken,
@@ -6,6 +7,7 @@ import {
   setAccessToken,
   setRedirectedFrom,
   setRefreshToken,
+  setRefreshTokenExpirationTime,
 } from 'helpers/LocalStorageHelper';
 
 import {
@@ -52,8 +54,11 @@ axiosInstance.interceptors.response.use(
           refresh: refreshToken,
         });
         const accessToken = response.data.access;
+        const newRefreshToken = response.data.refresh;
+
         setAccessToken(accessToken);
-        setRefreshToken(response.data.refresh);
+        setRefreshToken(newRefreshToken);
+        setRefreshTokenExpirationTime(jwtDecode(newRefreshToken).exp);
 
         axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
