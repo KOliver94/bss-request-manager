@@ -22,6 +22,10 @@ export function getRefreshToken() {
   return localStorage.getItem('refresh_token') || '';
 }
 
+export function getRefreshTokenExpirationTime() {
+  return localStorage.getItem('refresh_exp');
+}
+
 export function getRole() {
   return localStorage.getItem('role') || '';
 }
@@ -48,4 +52,8 @@ export function setRedirectedFrom(redirectedFrom: string) {
 
 export function setRefreshToken(refreshToken: string) {
   localStorage.setItem('refresh_token', refreshToken);
+}
+
+export function setRefreshTokenExpirationTime(refreshTokenExpTime?: number) {
+  return localStorage.setItem('refresh_exp', String(refreshTokenExpTime));
 }

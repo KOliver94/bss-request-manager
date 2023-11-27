@@ -3,13 +3,13 @@ import { groups as getGroupName } from 'src/helpers/enumConstants';
 import axiosInstance from './apiUtils';
 
 async function handleLogin(response) {
-  const accessToken = response.data.access
-    ? response.data.access
-    : response.data.token;
+  const accessToken = response.data.access;
+  const refreshToken = response.data.refresh;
+
   // Set auth header and save the tokens.
   axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
   localStorage.setItem('access_token', accessToken);
-  localStorage.setItem('refresh_token', response.data.refresh);
+  localStorage.setItem('refresh_token', refreshToken);
 
   // Decode the JWT token and save the name of the user, his role and his avatar.
   const decoded = jwtDecode(accessToken);
@@ -20,6 +20,8 @@ async function handleLogin(response) {
 
   const groups = decoded.groups?.map((group) => getGroupName(group));
   localStorage.setItem('groups', JSON.stringify(groups || []));
+
+  localStorage.setItem('refresh_exp', jwtDecode(refreshToken).exp);
 
   window.dispatchEvent(new Event('storage'));
   return response;
@@ -64,7 +66,12 @@ export async function logoutUser() {
 }
 
 export function isAuthenticated() {
-  return !!localStorage.getItem('access_token');
+  const expirationTime = Number(localStorage.getItem('refresh_exp'));
+  return (
+    !!localStorage.getItem('access_token') &&
+    !Number.isNaN(expirationTime) &&
+    expirationTime > Date.now() / 1000
+  );
 }
 
 export function isPrivileged() {
@@ -75,19 +82,4 @@ export function isPrivileged() {
 export function isSelf(userId) {
   const ownUserId = localStorage.getItem('user_id');
   return userId.toString() === ownUserId;
-}
-
-export function checkRefreshTokenValid() {
-  const refreshToken = localStorage.getItem('refresh_token');
-  if (refreshToken) {
-    const decoded = jwtDecode(refreshToken);
-    const now = Date.now() / 1000;
-    if (decoded && decoded.exp && decoded.exp < now) {
-      axiosInstance.defaults.headers.Authorization = null;
-      localStorage.clear();
-      return false;
-    }
-    return true;
-  }
-  return false;
 }

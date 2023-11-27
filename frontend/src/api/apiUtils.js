@@ -1,4 +1,5 @@
 import axios, { isAxiosError } from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1/`,
@@ -41,8 +42,11 @@ axiosInstance.interceptors.response.use(
           refresh: refreshToken,
         });
         const accessToken = response.data.access;
+        const newRefreshToken = response.data.refresh;
+
         localStorage.setItem('access_token', accessToken);
-        localStorage.setItem('refresh_token', response.data.refresh);
+        localStorage.setItem('refresh_token', newRefreshToken);
+        localStorage.setItem('refresh_exp', jwtDecode(newRefreshToken).exp);
 
         axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
