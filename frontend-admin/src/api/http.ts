@@ -4,6 +4,7 @@ import {
   getAccessToken,
   getRefreshToken,
   setAccessToken,
+  setRedirectedFrom,
   setRefreshToken,
 } from 'helpers/LocalStorageHelper';
 
@@ -62,7 +63,8 @@ axiosInstance.interceptors.response.use(
         // Remove tokens and auth header.
         axiosInstance.defaults.headers.Authorization = null;
         localStorage.clear();
-        window.location.href = '/';
+        setRedirectedFrom(window.location.pathname);
+        window.location.href = '/login';
       }
     }
 
