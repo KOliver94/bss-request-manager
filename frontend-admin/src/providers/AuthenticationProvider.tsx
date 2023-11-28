@@ -23,6 +23,7 @@ export const AuthenticationProvider = ({
     localStorage.clear();
     setRedirectedFrom(window.location.pathname);
     window.location.replace('/login');
+    return;
   }
 
   return children;
