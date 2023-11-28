@@ -15,14 +15,14 @@ export default defineConfig(() => {
       basicSsl(),
       react(),
       VitePWA({
-        background_color: '#f0e7db',
-        display: 'standalone',
         includeAssests: [
           'apple-touch-icon.png',
           'favicon.ico',
           'mask-icon.svg',
         ],
         manifest: {
+          background_color: '#f0e7db',
+          display: 'standalone',
           description:
             'A Budavári Schönherz Stúdió forgatási és élő közvetítési felkéréseit kezelő rendszere.',
           icons: [
