@@ -23,6 +23,7 @@ import { requestStatuses } from 'src/helpers/enumConstants';
 import handleError from 'src/helpers/errorHandler';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
+import { isPrivileged } from 'src/helpers/authenticationHelper';
 import stylesModule from './RequestDetailPage.module.scss';
 
 export default function RequestDetailPage() {
@@ -64,7 +65,11 @@ export default function RequestDetailPage() {
         setLoading(false);
       } catch (e) {
         if (e.response && e.response.status === 404) {
-          navigate('/404', { replace: true });
+          if (isPrivileged()) {
+            window.location.replace(`/admin/requests/${requestId}`);
+          } else {
+            navigate('/404', { replace: true });
+          }
         } else {
           enqueueSnackbar(handleError(e), {
             variant: 'error',
