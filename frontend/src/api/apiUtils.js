@@ -1,5 +1,6 @@
 import axios, { isAxiosError } from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { isRefreshTokenExpired } from 'src/helpers/authenticationHelper';
 
 const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1/`,
@@ -35,7 +36,8 @@ axiosInstance.interceptors.response.use(
       error.response.data?.code === 'token_not_valid' &&
       !error.config?.url?.includes('login/refresh') &&
       originalRequest &&
-      refreshToken
+      refreshToken &&
+      !isRefreshTokenExpired()
     ) {
       try {
         const response = axiosInstance.post('login/refresh', {

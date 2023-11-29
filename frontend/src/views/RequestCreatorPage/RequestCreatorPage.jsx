@@ -25,7 +25,7 @@ import RequestCreatorForm from 'src/components/RequestCreatorForm/RequestCreator
 // API calls
 import { getMe } from 'src/api/meApi';
 import { createRequest } from 'src/api/requestApi';
-import { isAuthenticated } from 'src/api/loginApi';
+import { isAuthenticated } from 'src/helpers/authenticationHelper';
 import handleError from 'src/helpers/errorHandler';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 

@@ -38,6 +38,11 @@ export function isAdmin() {
   return getRole() === 'admin';
 }
 
+export function isRefreshTokenExpired() {
+  const expirationTime = Number(getRefreshTokenExpirationTime());
+  return isNaN(expirationTime) || expirationTime < Date.now() / 1000;
+}
+
 export function setAccessToken(accessToken: string) {
   localStorage.setItem('access_token', accessToken);
 }

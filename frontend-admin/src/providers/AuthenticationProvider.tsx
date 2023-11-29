@@ -1,6 +1,6 @@
 import {
   getAccessToken,
-  getRefreshTokenExpirationTime,
+  isRefreshTokenExpired,
   setRedirectedFrom,
 } from 'helpers/LocalStorageHelper';
 
@@ -11,11 +11,6 @@ type AuthenticationProviderProps = {
 export const AuthenticationProvider = ({
   children,
 }: AuthenticationProviderProps) => {
-  const isRefreshTokenExpired = () => {
-    const expirationTime = Number(getRefreshTokenExpirationTime());
-    return !isNaN(expirationTime) && expirationTime < Date.now() / 1000;
-  };
-
   if (
     (!getAccessToken() || isRefreshTokenExpired()) &&
     window.location.pathname.startsWith('/admin')

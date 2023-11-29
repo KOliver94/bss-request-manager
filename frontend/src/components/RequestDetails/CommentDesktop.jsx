@@ -23,8 +23,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // Helpers
 import stringToColor from 'src/helpers/stringToColor';
-// API calls
-import { isSelf } from 'src/api/loginApi';
+import { isSelf } from 'src/helpers/authenticationHelper';
 
 import stylesModule from './Comment.module.scss';
 

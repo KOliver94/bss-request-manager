@@ -4,6 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import {
   getAccessToken,
   getRefreshToken,
+  isRefreshTokenExpired,
   setAccessToken,
   setRedirectedFrom,
   setRefreshToken,
@@ -44,7 +45,8 @@ axiosInstance.interceptors.response.use(
       error.response.data?.code === 'token_not_valid' &&
       !error.config?.url?.includes('/login/refresh') &&
       originalRequest &&
-      refreshToken
+      refreshToken &&
+      !isRefreshTokenExpired()
     ) {
       try {
         const response = await LoginApiFactory(
