@@ -60,10 +60,10 @@ function LoginPage() {
       if (isPrivileged()) {
         if (redirectedFrom.pathname === '/') {
           redirectedFrom.pathname = '/admin';
-        } else if (redirectedFrom.pathname?.startsWith('/my-requests')) {
+        } else if (redirectedFrom.pathname?.startsWith('/my-requests/')) {
           redirectedFrom.pathname = redirectedFrom.pathname.replace(
-            '/my-requests',
-            '/admin/requests',
+            '/my-requests/',
+            '/admin/requests/',
           );
         }
       }
