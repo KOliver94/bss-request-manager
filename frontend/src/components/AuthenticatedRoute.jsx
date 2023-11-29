@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { isAuthenticated } from 'src/api/loginApi';
+import { isAuthenticated } from 'src/helpers/authenticationHelper';
 
 export default function AuthenticatedRoute({ children }) {
   const location = useLocation();

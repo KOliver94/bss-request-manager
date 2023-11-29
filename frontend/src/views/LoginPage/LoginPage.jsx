@@ -20,12 +20,11 @@ import CardFooter from 'src/components/material-kit-react/Card/CardFooter';
 import CustomInput from 'src/components/material-kit-react/CustomInput/CustomInput';
 import Footer from 'src/components/material-kit-react/Footer/Footer';
 // API calls and helpers
+import { loginLdap, loginSocial } from 'src/api/loginApi';
 import {
-  loginLdap,
-  loginSocial,
-  isPrivileged,
   isAuthenticated,
-} from 'src/api/loginApi';
+  isPrivileged,
+} from 'src/helpers/authenticationHelper';
 import {
   getOauthUrlAuthSch,
   getOauthUrlFacebook,

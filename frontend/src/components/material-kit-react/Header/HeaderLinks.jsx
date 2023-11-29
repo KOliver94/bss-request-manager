@@ -17,7 +17,11 @@ import Button from 'src/components/material-kit-react/CustomButtons/Button';
 import CustomDropdown from 'src/components/material-kit-react/CustomDropdown/CustomDropdown';
 
 import { useSnackbar } from 'notistack';
-import { logoutUser, isPrivileged, isAuthenticated } from 'src/api/loginApi';
+import { logoutUser } from 'src/api/loginApi';
+import {
+  isAuthenticated,
+  isPrivileged,
+} from 'src/helpers/authenticationHelper';
 
 import stylesModule from './HeaderLinks.module.scss';
 
