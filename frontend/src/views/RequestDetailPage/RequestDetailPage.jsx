@@ -58,9 +58,13 @@ export default function RequestDetailPage() {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadData(requestId) {
       try {
-        const result = await getRequest(requestId);
+        const result = await getRequest(requestId, {
+          signal: controller.signal,
+        });
         setData(result.data);
         setLoading(false);
       } catch (e) {
@@ -71,15 +75,22 @@ export default function RequestDetailPage() {
             navigate('/404', { replace: true });
           }
         } else {
-          enqueueSnackbar(handleError(e), {
-            variant: 'error',
-          });
+          const errorMessage = handleError(e);
+          if (errorMessage) {
+            enqueueSnackbar(errorMessage, {
+              variant: 'error',
+            });
+          }
         }
       }
     }
 
     setLoading(true);
     loadData(id);
+
+    return () => {
+      controller.abort();
+    };
   }, [id, enqueueSnackbar, closeSnackbar, navigate]);
 
   useEffect(() => {

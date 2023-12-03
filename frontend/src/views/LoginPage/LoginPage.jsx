@@ -33,6 +33,7 @@ import {
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
 import background from 'src/assets/img/login.jpg';
+import { CanceledError } from 'axios';
 import stylesModule from './LoginPage.module.scss';
 
 function LoginPage() {
@@ -77,7 +78,7 @@ function LoginPage() {
   }, [navigate, getRedirectedFrom]);
 
   const handleLogin = useCallback(
-    async (type, data) => {
+    async (type, data, signal) => {
       setLoading(true);
 
       const handleSuccess = () => {
@@ -89,15 +90,18 @@ function LoginPage() {
 
       try {
         if (type === 'ldap') {
-          await loginLdap(data).then(() => {
+          await loginLdap(data, { signal }).then(() => {
             handleSuccess();
           });
         } else {
-          await loginSocial(type, data).then(() => {
+          await loginSocial(type, data, { signal }).then(() => {
             handleSuccess();
           });
         }
       } catch (e) {
+        if (CanceledError(e)) {
+          return;
+        }
         enqueueSnackbar(e.message, {
           variant: 'error',
           anchorOrigin: {
@@ -143,10 +147,16 @@ function LoginPage() {
   }, [redirect]);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     if (code && provider) {
       setLoading(true);
-      handleLogin(provider, code);
+      handleLogin(provider, code, controller.signal);
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [code, provider, handleLogin]);
 
   return (

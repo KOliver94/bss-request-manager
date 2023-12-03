@@ -106,9 +106,13 @@ function RequestCreatorPage() {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadUserData() {
       try {
-        await getMe().then((result) => {
+        await getMe({
+          signal: controller.signal,
+        }).then((result) => {
           const userData = {
             requester_first_name: result.data.first_name,
             requester_last_name: result.data.last_name,
@@ -156,6 +160,10 @@ function RequestCreatorPage() {
     } else {
       setLoading(false);
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [enqueueSnackbar, navigate]);
 
   useEffect(() => {

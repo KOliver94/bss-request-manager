@@ -38,7 +38,7 @@ export default function BasicInformation({
     setLoading(true);
     setReload(!reload);
     try {
-      await getRequest(requestId).then((response) => {
+      await getRequest(requestId, null).then((response) => {
         setLoading(false);
         setRequestData(response.data);
       });

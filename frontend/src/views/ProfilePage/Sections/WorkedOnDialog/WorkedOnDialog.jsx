@@ -70,16 +70,23 @@ export default function WorkedOnDialog({
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadData(fromData, toDate, responsible) {
       try {
         setLoading(true);
-        const result = await getMeWorkedOn(fromData, toDate, responsible);
+        const result = await getMeWorkedOn(fromData, toDate, responsible, {
+          signal: controller.signal,
+        });
         setRequests(result.data);
         setLoading(false);
       } catch (e) {
-        enqueueSnackbar(handleError(e), {
-          variant: 'error',
-        });
+        const errorMessage = handleError(e);
+        if (errorMessage) {
+          enqueueSnackbar(errorMessage, {
+            variant: 'error',
+          });
+        }
       }
     }
     if (workedOnDialogOpen) {
@@ -89,6 +96,10 @@ export default function WorkedOnDialog({
         includeResponsible,
       );
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [
     workedOnDialogOpen,
     selectedDateRange,

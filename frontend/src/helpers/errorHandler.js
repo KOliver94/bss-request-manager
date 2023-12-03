@@ -1,4 +1,9 @@
+import { isCancel } from 'axios';
+
 function handleError(error) {
+  if (isCancel(error)) {
+    return null;
+  }
   if (error.code === 'ECONNABORTED') {
     return 'A kapcsolat időtúllépés miatt megszakadt.';
   }

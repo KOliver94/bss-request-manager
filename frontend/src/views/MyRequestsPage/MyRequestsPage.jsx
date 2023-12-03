@@ -41,16 +41,19 @@ export default function MyRequestsPage() {
   const [ordering, setOrdering] = useState('-start_datetime');
 
   const loadData = useCallback(
-    async (pageNumber) => {
-      await listRequests(pageNumber, ordering)
+    async (pageNumber, signal) => {
+      await listRequests(pageNumber, { signal }, ordering)
         .then((response) => {
           setData(response.data);
           setLoading(false);
         })
         .catch((e) => {
-          enqueueSnackbar(handleError(e), {
-            variant: 'error',
-          });
+          const errorMessage = handleError(e);
+          if (errorMessage) {
+            enqueueSnackbar(errorMessage, {
+              variant: 'error',
+            });
+          }
         });
     },
     [enqueueSnackbar, ordering],
@@ -77,8 +80,14 @@ export default function MyRequestsPage() {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     changePageTitle('Felkéréseim');
-    loadData(1);
+    loadData(1, controller.signal);
+
+    return () => {
+      controller.abort();
+    };
   }, [loadData]);
 
   return (

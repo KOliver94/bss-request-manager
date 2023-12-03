@@ -189,22 +189,33 @@ export default function Videos({ requestId, reload }) {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadData(reqId) {
       try {
-        const result = await listVideos(reqId);
+        const result = await listVideos(reqId, {
+          signal: controller.signal,
+        });
         setData(result.data);
         setVideoAccordionOpen(
           result.data.length === 1 && `${result.data[0].id}-panel`,
         );
       } catch (e) {
-        enqueueSnackbar(handleError(e), {
-          variant: 'error',
-        });
+        const errorMessage = handleError(e);
+        if (errorMessage) {
+          enqueueSnackbar(errorMessage, {
+            variant: 'error',
+          });
+        }
       }
       return [];
     }
 
     loadData(requestId);
+
+    return () => {
+      controller.abort();
+    };
   }, [requestId, enqueueSnackbar, setVideoAccordionOpen, reload]);
 
   return (

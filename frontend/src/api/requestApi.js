@@ -7,14 +7,15 @@ export async function createRequest(requestData) {
   return axiosInstance.post('requests', requestData);
 }
 
-export async function listRequests(page, ordering = '-created') {
+export async function listRequests(page, config, ordering = '-created') {
   return axiosInstance.get('requests', {
+    ...config,
     params: { page, ordering },
   });
 }
 
-export async function getRequest(requestId) {
-  return axiosInstance.get(`requests/${requestId}`);
+export async function getRequest(requestId, config) {
+  return axiosInstance.get(`requests/${requestId}`, config);
 }
 
 /*
@@ -24,8 +25,8 @@ export async function createComment(requestId, commentData) {
   return axiosInstance.post(`requests/${requestId}/comments`, commentData);
 }
 
-export async function listComments(requestId) {
-  return axiosInstance.get(`requests/${requestId}/comments`);
+export async function listComments(requestId, config) {
+  return axiosInstance.get(`requests/${requestId}/comments`, config);
 }
 
 export async function updateComment(requestId, commentId, commentData) {
@@ -43,8 +44,8 @@ export async function deleteComment(requestId, commentId) {
  * Ratings API calls
  */
 
-export async function listVideos(requestId) {
-  return axiosInstance.get(`requests/${requestId}/videos`);
+export async function listVideos(requestId, config) {
+  return axiosInstance.get(`requests/${requestId}/videos`, config);
 }
 
 /*
