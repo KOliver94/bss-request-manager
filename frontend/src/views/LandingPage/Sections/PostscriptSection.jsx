@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
 import GridItem from 'src/components/material-kit-react/Grid/GridItem';
 // logo
-import logo from 'src/assets/img/bss_logo.png';
+import logo from 'src/assets/img/bss_logo.webp';
 
 import stylesModule from './PostscriptSection.module.scss';
 

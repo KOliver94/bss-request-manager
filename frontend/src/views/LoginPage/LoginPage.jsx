@@ -32,7 +32,7 @@ import {
 } from 'src/helpers/oauthConstants';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
-import background from 'src/assets/img/login.jpg';
+import background from 'src/assets/img/login.webp';
 import { CanceledError } from 'axios';
 import stylesModule from './LoginPage.module.scss';
 
