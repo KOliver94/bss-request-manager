@@ -20,6 +20,20 @@ axiosInstance.interceptors.request.use((config) => {
   return myConfig;
 });
 
+let refreshTokenPromise;
+
+async function fetchRefreshToken(refreshToken) {
+  const response = await axiosInstance.post('login/refresh', {
+    refresh: refreshToken,
+  });
+
+  const accessToken = response.data.access;
+  axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
+  refreshTokenPromise = null;
+
+  return response;
+}
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -30,39 +44,55 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     const refreshToken = localStorage.getItem('refresh_token');
 
-    // If requests fail with 401 Unauthorized because JWT token is not valid try to get new token with refresh token.
     if (
       error.response?.status === 401 &&
-      error.response.data?.code === 'token_not_valid' &&
-      !error.config?.url?.includes('login/refresh') &&
-      originalRequest &&
-      refreshToken &&
-      !isRefreshTokenExpired()
+      error.response.data?.code === 'token_not_valid'
     ) {
-      try {
-        const response = axiosInstance.post('login/refresh', {
-          refresh: refreshToken,
-        });
+      if (error.config?.url?.includes('logout') && originalRequest) {
+        // If the access token expired on logout refresh the tokens
+        // which will create a new refresh token so try to blacklist the new refresh token.
+        refreshTokenPromise ??= fetchRefreshToken(refreshToken);
+        const response = await refreshTokenPromise;
+
         const accessToken = response.data.access;
         const newRefreshToken = response.data.refresh;
 
-        localStorage.setItem('access_token', accessToken);
-        localStorage.setItem('refresh_token', newRefreshToken);
-        localStorage.setItem('refresh_exp', jwtDecode(newRefreshToken).exp);
-
-        axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        return await axiosInstance(originalRequest);
-      } catch {
-        // If an error occurs during token refresh log the user out.
-        // Remove tokens and auth header.
+        originalRequest.data = { refresh: newRefreshToken };
+        return axiosInstance(originalRequest);
+      }
+
+      if (error.config?.url?.includes('/login/refresh')) {
+        // This should be the case when the refresh token is not valid or blacklisted.
+        // Redirect the user to the login page.
         axiosInstance.defaults.headers.Authorization = null;
         localStorage.clear();
         localStorage.setItem('redirectedFrom', window.location.pathname);
         window.location.href = '/login';
+        return Promise.reject(error);
+      }
+
+      if (originalRequest && refreshToken && !isRefreshTokenExpired()) {
+        // If requests fail with 401 Unauthorized because JWT token is not valid
+        // try to get new token with refresh token.
+        try {
+          refreshTokenPromise ??= fetchRefreshToken(refreshToken);
+          const response = await refreshTokenPromise;
+
+          const accessToken = response.data.access;
+          const newRefreshToken = response.data.refresh;
+
+          localStorage.setItem('access_token', accessToken);
+          localStorage.setItem('refresh_token', newRefreshToken);
+          localStorage.setItem('refresh_exp', jwtDecode(newRefreshToken).exp);
+
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          return axiosInstance(originalRequest);
+        } catch (err) {
+          return Promise.reject(err);
+        }
       }
     }
-
     return Promise.reject(error);
   },
 );
