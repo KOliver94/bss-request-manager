@@ -27,9 +27,9 @@ async function handleLogin(response) {
   return response;
 }
 
-export async function loginLdap(loginDetails) {
+export async function loginLdap(loginDetails, config) {
   await axiosInstance
-    .post('login', loginDetails)
+    .post('login', loginDetails, config)
     .then(handleLogin)
     .catch((error) => {
       if (error.response && error.response.status === 401) {
@@ -39,9 +39,9 @@ export async function loginLdap(loginDetails) {
     });
 }
 
-export async function loginSocial(provider, code) {
+export async function loginSocial(provider, code, config) {
   await axiosInstance
-    .post('login/social', { provider, code })
+    .post('login/social', { provider, code }, config)
     .then(handleLogin)
     .catch(() => {
       throw new Error('Network response was not ok.');

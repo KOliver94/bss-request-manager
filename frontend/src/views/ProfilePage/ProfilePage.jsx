@@ -152,22 +152,33 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadData() {
       try {
-        const result = await getMe();
+        const result = await getMe({
+          signal: controller.signal,
+        });
         setUserData(result.data);
         setLoading(false);
         reset({
           ...result.data,
         });
       } catch (e) {
-        enqueueSnackbar(handleError(e), {
-          variant: 'error',
-        });
+        const errorMessage = handleError(e);
+        if (errorMessage) {
+          enqueueSnackbar(errorMessage, {
+            variant: 'error',
+          });
+        }
       }
     }
     setLoading(true);
     loadData();
+
+    return () => {
+      controller.abort();
+    };
   }, [reset, enqueueSnackbar]);
 
   useEffect(() => {
@@ -175,15 +186,24 @@ export default function ProfilePage() {
   }, [loading, userData]);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function connectSocialProfile() {
       try {
-        await connectSocial(provider, code);
-        const result = await getMe();
+        await connectSocial(provider, code, {
+          signal: controller.signal,
+        });
+        const result = await getMe({
+          signal: controller.signal,
+        });
         setUserData(result.data);
       } catch (e) {
-        enqueueSnackbar(handleError(e), {
-          variant: 'error',
-        });
+        const errorMessage = handleError(e);
+        if (errorMessage) {
+          enqueueSnackbar(errorMessage, {
+            variant: 'error',
+          });
+        }
       } finally {
         setProfileConnecting(false);
         navigate({ replace: true });
@@ -194,6 +214,10 @@ export default function ProfilePage() {
       setProfileConnecting(true);
       connectSocialProfile();
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [code, provider, navigate, enqueueSnackbar]);
 
   const onSubmit = async (data) => {

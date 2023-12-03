@@ -75,20 +75,31 @@ export default function Comments({ requestId, requesterId, reload }) {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadData(reqId) {
       try {
-        const result = await listComments(reqId);
+        const result = await listComments(reqId, {
+          signal: controller.signal,
+        });
         setData(result.data);
         setLoading(false);
       } catch (e) {
-        enqueueSnackbar(handleError(e), {
-          variant: 'error',
-        });
+        const errorMessage = handleError(e);
+        if (errorMessage) {
+          enqueueSnackbar(errorMessage, {
+            variant: 'error',
+          });
+        }
       }
     }
 
     setLoading(true);
     loadData(requestId);
+
+    return () => {
+      controller.abort();
+    };
   }, [requestId, enqueueSnackbar, reload]);
 
   return (
