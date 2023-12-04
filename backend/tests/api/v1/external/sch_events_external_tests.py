@@ -441,6 +441,7 @@ def test_external_callback_on_status_changes_redirect_and_result(
                 headers={
                     "Accept": "application/json",
                     "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
+                    "Content-Type": "application/json",
                 },
                 allow_redirects=False,
                 timeout=30,
