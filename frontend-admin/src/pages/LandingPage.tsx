@@ -21,6 +21,9 @@ const AvatarGroupCrew = lazy(() => import('components/Avatar/AvatarGroupCrew'));
 
 const LandingPage = () => {
   const currentDate = new Date().toISOString().split('T')[0];
+  const oneWeekLaterDate = new Date(Date.now() + 6048e5)
+    .toISOString()
+    .split('T')[0];
   const twoWeeksLaterDate = new Date(Date.now() + 12096e5)
     .toISOString()
     .split('T')[0];
@@ -68,7 +71,7 @@ const LandingPage = () => {
       queryFn: async () => {
         const requests = await adminApi.adminRequestsList(
           undefined,
-          twoWeeksLaterDate,
+          oneWeekLaterDate,
           'deadline',
           undefined,
           undefined,
@@ -80,7 +83,7 @@ const LandingPage = () => {
         );
         return requests.data.results || [];
       },
-      queryKey: ['requests', 'deadline', twoWeeksLaterDate],
+      queryKey: ['requests', 'deadline', oneWeekLaterDate],
     });
 
   const {
