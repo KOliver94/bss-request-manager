@@ -238,6 +238,7 @@ def notify_sch_event_management_system(self, request_id):
     headers = {
         "Accept": "application/json",
         "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
+        "Content-Type": "application/json",
     }
     data = json.dumps({"accept": accept})
     url = requests.head(url, headers=headers, allow_redirects=True, timeout=10).url
