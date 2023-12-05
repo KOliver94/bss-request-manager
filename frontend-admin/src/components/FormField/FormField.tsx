@@ -40,10 +40,12 @@ const FormField = ({
           <ConditionalWrapper
             condition={!!icon}
             wrapper={(children) => (
-              <span className="p-input-icon-right">
-                <i className={`pi ${icon}`} />
+              <div className="p-inputgroup">
+                <span className="p-inputgroup-addon">
+                  <i className={`pi ${icon}`} />
+                </span>
                 {children}
-              </span>
+              </div>
             )}
           >
             {cloneElement(children, {
