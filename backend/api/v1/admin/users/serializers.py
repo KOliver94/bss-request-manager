@@ -42,7 +42,7 @@ class BanUserSerializer(ModelSerializer):
         read_only_fields = ("created", "creator")
 
 
-class UserAdminDetailSerializer(UserSerializer):
+class UserAdminRetrieveUpdateSerializer(UserSerializer):
     ban = BanUserSerializer(read_only=True)
 
     class Meta:

@@ -1221,7 +1221,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserAdminDetail'
+                $ref: '#/components/schemas/UserAdminRetrieveUpdate'
           description: ''
     put:
       operationId: admin_users_update
@@ -1238,13 +1238,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserAdminDetailRequest'
+              $ref: '#/components/schemas/UserAdminRetrieveUpdateRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserAdminDetailRequest'
+              $ref: '#/components/schemas/UserAdminRetrieveUpdateRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserAdminDetailRequest'
+              $ref: '#/components/schemas/UserAdminRetrieveUpdateRequest'
         required: true
       security:
         - jwtAuth: []
@@ -1254,7 +1254,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserAdminDetail'
+                $ref: '#/components/schemas/UserAdminRetrieveUpdate'
           description: ''
     patch:
       operationId: admin_users_partial_update
@@ -1271,13 +1271,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedUserAdminDetailRequest'
+              $ref: '#/components/schemas/PatchedUserAdminRetrieveUpdateRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedUserAdminDetailRequest'
+              $ref: '#/components/schemas/PatchedUserAdminRetrieveUpdateRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedUserAdminDetailRequest'
+              $ref: '#/components/schemas/PatchedUserAdminRetrieveUpdateRequest'
       security:
         - jwtAuth: []
         - tokenAuth: []
@@ -1286,7 +1286,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserAdminDetail'
+                $ref: '#/components/schemas/UserAdminRetrieveUpdate'
           description: ''
   /api/v1/admin/users/{id}/ban:
     post:
@@ -2770,7 +2770,7 @@ components:
           type: string
           minLength: 1
           maxLength: 50
-    PatchedUserAdminDetailRequest:
+    PatchedUserAdminRetrieveUpdateRequest:
       type: object
       properties:
         email:
@@ -3493,7 +3493,37 @@ components:
         - role
         - social_accounts
         - username
-    UserAdminDetail:
+    UserAdminList:
+      type: object
+      properties:
+        avatar_url:
+          type: string
+          format: uri
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        is_staff:
+          type: boolean
+          readOnly: true
+        phone_number:
+          type: string
+          readOnly: true
+      required:
+        - avatar_url
+        - email
+        - full_name
+        - id
+        - is_staff
+        - phone_number
+    UserAdminRetrieveUpdate:
       type: object
       properties:
         ban:
@@ -3541,7 +3571,7 @@ components:
         - role
         - social_accounts
         - username
-    UserAdminDetailRequest:
+    UserAdminRetrieveUpdateRequest:
       type: object
       properties:
         email:
@@ -3560,36 +3590,6 @@ components:
           $ref: '#/components/schemas/UserProfileRequest'
       required:
         - profile
-    UserAdminList:
-      type: object
-      properties:
-        avatar_url:
-          type: string
-          format: uri
-          readOnly: true
-        email:
-          type: string
-          format: email
-          readOnly: true
-        full_name:
-          type: string
-          readOnly: true
-        id:
-          type: integer
-          readOnly: true
-        is_staff:
-          type: boolean
-          readOnly: true
-        phone_number:
-          type: string
-          readOnly: true
-      required:
-        - avatar_url
-        - email
-        - full_name
-        - id
-        - is_staff
-        - phone_number
     UserAdminWorkedOn:
       type: object
       properties:

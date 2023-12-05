@@ -25,67 +25,67 @@ import { UserSocialAuth } from './user-social-auth';
 /**
  *
  * @export
- * @interface UserAdminDetail
+ * @interface UserAdminRetrieveUpdate
  */
-export interface UserAdminDetail {
+export interface UserAdminRetrieveUpdate {
   /**
    *
    * @type {BanUser}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   ban: BanUser;
   /**
    *
    * @type {string}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   email?: string;
   /**
    *
    * @type {string}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   first_name?: string;
   /**
    *
    * @type {Array<string>}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   groups: Array<string>;
   /**
    *
    * @type {number}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   id: number;
   /**
    *
    * @type {string}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   last_name?: string;
   /**
    *
    * @type {UserProfile}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   profile: UserProfile;
   /**
    *
    * @type {string}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   role: string;
   /**
    *
    * @type {Array<UserSocialAuth>}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   social_accounts: Array<UserSocialAuth>;
   /**
    * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
    * @type {string}
-   * @memberof UserAdminDetail
+   * @memberof UserAdminRetrieveUpdate
    */
   username: string;
 }

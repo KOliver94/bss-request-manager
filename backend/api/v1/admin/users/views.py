@@ -21,8 +21,8 @@ from rest_framework.viewsets import GenericViewSet
 from api.v1.admin.users.filters import UserFilter
 from api.v1.admin.users.serializers import (
     BanUserSerializer,
-    UserAdminDetailSerializer,
     UserAdminListSerializer,
+    UserAdminRetrieveUpdateSerializer,
     UserAdminWorkedOnSerializer,
 )
 from common.models import Ban as BanModel
@@ -71,7 +71,7 @@ class UserAdminViewSet(
     def get_serializer_class(self):
         if self.action == "list":
             return UserAdminListSerializer
-        return UserAdminDetailSerializer
+        return UserAdminRetrieveUpdateSerializer
 
     @extend_schema(request=BanUserSerializer, responses=BanUserSerializer)
     @action(detail=True, filter_backends=[], methods=["post"], pagination_class=None)
