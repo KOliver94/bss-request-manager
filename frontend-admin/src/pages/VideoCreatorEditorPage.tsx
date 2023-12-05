@@ -247,6 +247,7 @@ const VideoCreatorEditorPage = () => {
           <FormField
             className="col-12 mb-0"
             control={control}
+            disabled={isPending}
             label="Videó címe"
             name="title"
             rules={{
@@ -259,7 +260,6 @@ const VideoCreatorEditorPage = () => {
           >
             <InputText
               autoFocus
-              disabled={isPending}
               placeholder="Ahogy a weboldalra felkerül"
               type="text"
             />
@@ -270,34 +270,31 @@ const VideoCreatorEditorPage = () => {
           <FormField
             className="col-12 mb-4 md:col-6"
             control={control}
+            disabled={isPending}
             label="Vágó"
             name="editor"
           >
-            <AutoCompleteStaff disabled={isPending} />
+            <AutoCompleteStaff />
           </FormField>
           <FormField
             className="col-12 mb-4 md:col-6"
             control={control}
+            disabled={isPending}
             icon="pi-clock"
             label="Videó hossza"
             name="additional_data.length"
           >
-            <InputMask
-              disabled={isPending}
-              mask="99:99:99"
-              placeholder="hh:mm:ss"
-              type="text"
-            />
+            <InputMask mask="99:99:99" placeholder="hh:mm:ss" type="text" />
           </FormField>
           <FormField
             className="col-12 mb-0"
             control={control}
+            disabled={isPending}
             icon="pi-globe"
             label="Videó elérési útja"
             name="additional_data.publishing.website"
           >
             <InputText
-              disabled={isPending}
               placeholder="A videó linkje (honlap, YouTube, Google Drive, stb.)"
               type="text"
             />
@@ -305,6 +302,7 @@ const VideoCreatorEditorPage = () => {
           <Divider />
           <Controller
             control={control}
+            disabled={isPending}
             name="additional_data.editing_done"
             render={({ field }) => (
               <div className="col-12 mb-3 md:col-4 md:mb-0">
@@ -312,7 +310,6 @@ const VideoCreatorEditorPage = () => {
                   {...field}
                   checked={field.value || false}
                   className="w-full"
-                  disabled={field.disabled || isPending}
                   id={field.name}
                   offIcon="bi bi-scissors"
                   offLabel="Vágandó"
@@ -326,6 +323,7 @@ const VideoCreatorEditorPage = () => {
           />
           <Controller
             control={control}
+            disabled={isPending}
             name="additional_data.coding.website"
             render={({ field }) => (
               <div className="col-12 mb-3 md:col-4 md:mb-0">
@@ -333,7 +331,6 @@ const VideoCreatorEditorPage = () => {
                   {...field}
                   checked={field.value || false}
                   className="w-full"
-                  disabled={field.disabled || isPending}
                   id={field.name}
                   offIcon="bi bi-file-earmark-play"
                   offLabel="Kódolásra vár"
@@ -347,6 +344,7 @@ const VideoCreatorEditorPage = () => {
           />
           <Controller
             control={control}
+            disabled={isPending}
             name="additional_data.archiving.hq_archive"
             render={({ field }) => (
               <div className="col-12 md:col-4">
@@ -354,7 +352,6 @@ const VideoCreatorEditorPage = () => {
                   {...field}
                   checked={field.value || false}
                   className="w-full"
-                  disabled={field.disabled || isPending}
                   id={field.name}
                   offIcon="bi bi-archive"
                   offLabel="Archiválandó"

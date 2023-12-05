@@ -81,15 +81,15 @@ const AdditionalDataDialog = forwardRef<
       {...ref}
     >
       <Controller
-        name="additional_data"
         control={control}
+        disabled={loading}
+        name="additional_data"
         render={({ field, fieldState }) => (
           <>
             <InputTextarea
               {...field}
               autoResize
               className="w-full"
-              disabled={field.disabled || loading}
               id={field.name}
               rows={4}
             />
