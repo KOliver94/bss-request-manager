@@ -3530,6 +3530,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/BanUser'
           readOnly: true
+          nullable: true
         email:
           type: string
           format: email
