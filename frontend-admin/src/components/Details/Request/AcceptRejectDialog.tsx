@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { Dialog, DialogProps } from 'primereact/dialog';
 import { SelectButton } from 'primereact/selectbutton';
 import { ToggleButton } from 'primereact/togglebutton';
-import { classNames } from 'primereact/utils';
+import { IconType, classNames } from 'primereact/utils';
 import { Controller, useForm } from 'react-hook-form';
 
 import { isAdmin } from 'helpers/LocalStorageHelper';
@@ -23,7 +23,7 @@ interface AcceptRejectDialogProps extends DialogProps {
 
 type AcceptOption = {
   className: string;
-  icon: string;
+  icon: IconType<AcceptOption>;
   label: string;
   value: boolean;
 };

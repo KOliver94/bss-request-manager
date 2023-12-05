@@ -14,7 +14,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { SelectButton } from 'primereact/selectbutton';
 import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
-import { classNames } from 'primereact/utils';
+import { IconType, classNames } from 'primereact/utils';
 import { Control, Controller, useForm } from 'react-hook-form';
 import TimeAgo from 'timeago-react';
 
@@ -77,7 +77,7 @@ interface IComment {
 
 interface InternalOption {
   className: string;
-  icon: string;
+  icon: IconType<InternalOption>;
   value: boolean;
 }
 

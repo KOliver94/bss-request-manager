@@ -1,4 +1,5 @@
 import { TagProps } from 'primereact/tag';
+import { IconType } from 'primereact/utils';
 
 export type Status = {
   [key: number]: StatusStyle;
@@ -17,7 +18,7 @@ export type StatusStyle = {
     | 'red'
     | 'teal'
     | 'yellow';
-  icon: string;
+  icon: IconType<StatusStyle>;
   text: string;
 };
 

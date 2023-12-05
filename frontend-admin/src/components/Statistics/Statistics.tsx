@@ -1,9 +1,10 @@
 import { Skeleton } from 'primereact/skeleton';
+import { IconType } from 'primereact/utils';
 
 export type StatisticsFieldProps = {
   color: 'blue' | 'cyan' | 'orange' | 'purple';
   description: string;
-  icon: string;
+  icon: IconType<StatisticsFieldProps>;
   loading: boolean;
   title: string;
   value: string;
