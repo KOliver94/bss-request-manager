@@ -15,36 +15,40 @@ const NewRequesterForm = ({ control, disabled }: NewRequesterFormProps) => {
       <FormField
         className="col-12 mb-4 md:col-6 mt-4"
         control={control}
+        disabled={disabled}
         label="Vezetéknév"
         name="requester_last_name"
       >
-        <InputText disabled={disabled} type="text" />
+        <InputText type="text" />
       </FormField>
       <FormField
         className="col-12 mb-4 md:col-6 md:mt-4"
         control={control}
+        disabled={disabled}
         label="Keresztnév"
         name="requester_first_name"
       >
-        <InputText disabled={disabled} type="text" />
+        <InputText type="text" />
       </FormField>
       <FormField
         className="col-12 mb-4 md:col-6 md:mb-0"
         control={control}
+        disabled={disabled}
         icon="pi-envelope"
         label="E-mail cím"
         name="requester_email"
       >
-        <InputText disabled={disabled} type="email" />
+        <InputText type="email" />
       </FormField>
       <FormField
         className="col-12 mb-0 md:col-6"
         control={control}
+        disabled={disabled}
         icon="pi-phone"
         label="Telefonszám"
         name="requester_mobile"
       >
-        <InputText disabled={disabled} type="tel" />
+        <InputText type="tel" />
       </FormField>
     </>
   );

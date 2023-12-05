@@ -43,12 +43,12 @@ const RecordingContentEditing = ({
       <div className="align-items-center flex">
         <Controller
           control={control}
+          disabled={loading}
           name="path"
           render={({ field }) => (
             <Dropdown
               {...field}
               className="flex-grow-1"
-              disabled={field.disabled || loading}
               editable
               onChange={(e) => {
                 field.onChange(e.value);

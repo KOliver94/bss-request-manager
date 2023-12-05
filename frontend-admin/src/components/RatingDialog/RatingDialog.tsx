@@ -274,15 +274,11 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
             </label>
             <Controller
               control={control}
+              disabled={loading}
               name="rating"
               render={({ field, fieldState }) => (
                 <div className="align-items-center flex justify-content-start">
-                  <Rating
-                    {...field}
-                    cancel={false}
-                    disabled={field.disabled || loading}
-                    id={field.name}
-                  />
+                  <Rating {...field} cancel={false} id={field.name} />
                   {fieldState.error && (
                     <small
                       className="block p-error pl-2"
@@ -302,13 +298,13 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
             </label>
             <Controller
               control={control}
+              disabled={loading}
               name="review"
               render={({ field, fieldState }) => (
                 <>
                   <InputTextarea
                     {...field}
                     autoResize
-                    disabled={field.disabled || loading}
                     id={field.name}
                     rows={5}
                   />

@@ -22,16 +22,13 @@ const errorMessages: Record<string, string> = {
 const FormField = ({
   className,
   children,
-  control,
   icon,
   label,
-  name,
-  rules,
+  ...controllerProps
 }: FormFieldProps) => {
   return (
     <Controller
-      control={control}
-      name={name}
+      {...controllerProps}
       render={({ field, fieldState }) => (
         <div className={classNames('field', className)}>
           <label className="font-medium text-900" htmlFor={field.name}>
@@ -61,7 +58,6 @@ const FormField = ({
           )}
         </div>
       )}
-      rules={rules}
     />
   );
 };

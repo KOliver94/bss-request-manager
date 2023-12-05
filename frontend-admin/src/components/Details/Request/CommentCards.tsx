@@ -343,6 +343,7 @@ const CommentCardEdit = ({
       <form className="align-content-center flex flex-wrap justify-content-between">
         <Controller
           control={control}
+          disabled={loading}
           name="text"
           render={({ field, fieldState }) => (
             <>
@@ -352,7 +353,6 @@ const CommentCardEdit = ({
                 className={classNames('mb-2 w-full', {
                   'p-invalid': fieldState.error,
                 })}
-                disabled={field.disabled || loading}
                 id={field.name}
                 rows={5}
               />
@@ -472,6 +472,7 @@ const CommentCardNew = ({
       <form className="align-content-center flex flex-wrap justify-content-between">
         <Controller
           control={control}
+          disabled={loading}
           name="text"
           render={({ field, fieldState }) => (
             <>
@@ -481,7 +482,6 @@ const CommentCardNew = ({
                 className={classNames('mb-2 w-full', {
                   'p-invalid': fieldState.error,
                 })}
-                disabled={field.disabled || loading}
                 id={field.name}
                 rows={5}
               />

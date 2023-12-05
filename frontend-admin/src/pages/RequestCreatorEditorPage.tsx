@@ -333,6 +333,7 @@ const RequestCreatorEditorPage = () => {
           <FormField
             className="col-12 mb-4"
             control={control}
+            disabled={isPending}
             label="Esemény neve"
             name="title"
             rules={{
@@ -343,18 +344,18 @@ const RequestCreatorEditorPage = () => {
               },
             }}
           >
-            <InputText autoFocus disabled={isPending} type="text" />
+            <InputText autoFocus type="text" />
           </FormField>
           <FormField
             className="col-12 mb-4 md:col-6"
             control={control}
+            disabled={isPending}
             label="Kezdés időpontja"
             name="start_datetime"
             rules={{ required: true }}
           >
             <Calendar
               dateFormat="yy.mm.dd"
-              disabled={isPending}
               mask="9999.99.99 99:99"
               showButtonBar
               showIcon
@@ -365,13 +366,13 @@ const RequestCreatorEditorPage = () => {
           <FormField
             className="col-12 mb-4 md:col-6"
             control={control}
+            disabled={isPending}
             label="Befejezés időpontja"
             name="end_datetime"
             rules={{ required: true }}
           >
             <Calendar
               dateFormat="yy.mm.dd"
-              disabled={isPending}
               mask="9999.99.99 99:99"
               showButtonBar
               showIcon
@@ -382,6 +383,7 @@ const RequestCreatorEditorPage = () => {
           <FormField
             className="col-12 mb-4 md:col-6 md:mb-0"
             control={control}
+            disabled={isPending}
             icon="pi-map-marker"
             label="Helyszín"
             name="place"
@@ -393,11 +395,12 @@ const RequestCreatorEditorPage = () => {
               },
             }}
           >
-            <InputText disabled={isPending} type="text" />
+            <InputText type="text" />
           </FormField>
           <FormField
             className="col-12 mb-0 md:col-6"
             control={control}
+            disabled={isPending}
             label="Típus"
             name="type"
             rules={{
@@ -408,7 +411,7 @@ const RequestCreatorEditorPage = () => {
               },
             }}
           >
-            <Dropdown disabled={isPending} editable options={typeOptions} />
+            <Dropdown editable options={typeOptions} />
           </FormField>
           <Divider align="center" type="dashed">
             <b>Opcionális mezők</b>
@@ -418,14 +421,11 @@ const RequestCreatorEditorPage = () => {
               <FormField
                 className="col-12 mb-0"
                 control={control}
+                disabled={isPending}
                 label="Megjegyzések"
                 name="comment"
               >
-                <InputTextarea
-                  autoResize
-                  disabled={isPending}
-                  rows={isMobile ? 5 : 8}
-                />
+                <InputTextarea autoResize rows={isMobile ? 5 : 8} />
               </FormField>
               <Divider type="dashed" />
             </>
@@ -433,20 +433,21 @@ const RequestCreatorEditorPage = () => {
           <FormField
             className="col-12 mb-4 md:col-6 md:mb-0"
             control={control}
+            disabled={isPending}
             label="Felelős"
             name="responsible"
           >
-            <AutoCompleteStaff disabled={isPending} />
+            <AutoCompleteStaff />
           </FormField>
           <FormField
             className="col-12 mb-0 md:col-6"
             control={control}
+            disabled={isPending}
             label="Határidő"
             name="deadline"
           >
             <Calendar
               dateFormat="yy.mm.dd"
-              disabled={isPending}
               mask="9999.99.99."
               placeholder={
                 requestId ? 'Nincs változás' : 'Az esemény vége után 3 hét'
@@ -460,13 +461,13 @@ const RequestCreatorEditorPage = () => {
           </Divider>
           <Controller
             control={control}
+            disabled={isPending}
             name="requesterType"
             render={({ field }) =>
               isMobile ? (
                 <div className="col-12 mb-0">
                   <Dropdown
                     {...field}
-                    disabled={field.disabled || isPending}
                     id={field.name}
                     itemTemplate={requesterTypeOptionTemplate}
                     optionLabel="text"
@@ -480,7 +481,6 @@ const RequestCreatorEditorPage = () => {
                   <SelectButton
                     {...field}
                     allowEmpty={false}
-                    disabled={field.disabled || isPending}
                     id={field.name}
                     itemTemplate={requesterTypeOptionTemplate}
                     optionLabel="text"
@@ -529,13 +529,13 @@ const RequestCreatorEditorPage = () => {
           {!requestId && (
             <div className="col-12 field-checkbox md:col-3 md:mb-0 md:mt-0 mt-3">
               <Controller
-                name="createMore"
                 control={control}
+                disabled={isPending}
+                name="createMore"
                 render={({ field }) => (
                   <Checkbox
                     {...field}
                     checked={field.value}
-                    disabled={field.disabled || isPending}
                     inputId={field.name}
                     onChange={(e) => {
                       field.onChange(e.checked);
