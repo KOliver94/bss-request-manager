@@ -68,7 +68,7 @@ import { PatchedRatingAdminCreateUpdateRequest } from '../models';
 // @ts-ignore
 import { PatchedRequestAdminUpdateRequest } from '../models';
 // @ts-ignore
-import { PatchedUserAdminDetailRequest } from '../models';
+import { PatchedUserAdminRetrieveUpdateRequest } from '../models';
 // @ts-ignore
 import { PatchedVideoAdminCreateUpdateRequest } from '../models';
 // @ts-ignore
@@ -84,9 +84,9 @@ import { RequestAdminRetrieve } from '../models';
 // @ts-ignore
 import { RequestAdminUpdateRequest } from '../models';
 // @ts-ignore
-import { UserAdminDetail } from '../models';
+import { UserAdminRetrieveUpdate } from '../models';
 // @ts-ignore
-import { UserAdminDetailRequest } from '../models';
+import { UserAdminRetrieveUpdateRequest } from '../models';
 // @ts-ignore
 import { UserAdminWorkedOn } from '../models';
 // @ts-ignore
@@ -2734,13 +2734,13 @@ export const AdminApiAxiosParamCreator = function (
     /**
      *
      * @param {number} id A unique integer value identifying this user.
-     * @param {PatchedUserAdminDetailRequest} [patchedUserAdminDetailRequest]
+     * @param {PatchedUserAdminRetrieveUpdateRequest} [patchedUserAdminRetrieveUpdateRequest]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     adminUsersPartialUpdate: async (
       id: number,
-      patchedUserAdminDetailRequest?: PatchedUserAdminDetailRequest,
+      patchedUserAdminRetrieveUpdateRequest?: PatchedUserAdminRetrieveUpdateRequest,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
@@ -2786,7 +2786,7 @@ export const AdminApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        patchedUserAdminDetailRequest,
+        patchedUserAdminRetrieveUpdateRequest,
         localVarRequestOptions,
         configuration,
       );
@@ -2855,22 +2855,22 @@ export const AdminApiAxiosParamCreator = function (
     /**
      *
      * @param {number} id A unique integer value identifying this user.
-     * @param {UserAdminDetailRequest} userAdminDetailRequest
+     * @param {UserAdminRetrieveUpdateRequest} userAdminRetrieveUpdateRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     adminUsersUpdate: async (
       id: number,
-      userAdminDetailRequest: UserAdminDetailRequest,
+      userAdminRetrieveUpdateRequest: UserAdminRetrieveUpdateRequest,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists('adminUsersUpdate', 'id', id);
-      // verify required parameter 'userAdminDetailRequest' is not null or undefined
+      // verify required parameter 'userAdminRetrieveUpdateRequest' is not null or undefined
       assertParamExists(
         'adminUsersUpdate',
-        'userAdminDetailRequest',
-        userAdminDetailRequest,
+        'userAdminRetrieveUpdateRequest',
+        userAdminRetrieveUpdateRequest,
       );
       const localVarPath = `/api/v1/admin/users/{id}`.replace(
         `{${'id'}}`,
@@ -2913,7 +2913,7 @@ export const AdminApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        userAdminDetailRequest,
+        userAdminRetrieveUpdateRequest,
         localVarRequestOptions,
         configuration,
       );
@@ -4303,24 +4303,24 @@ export const AdminApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {number} id A unique integer value identifying this user.
-     * @param {PatchedUserAdminDetailRequest} [patchedUserAdminDetailRequest]
+     * @param {PatchedUserAdminRetrieveUpdateRequest} [patchedUserAdminRetrieveUpdateRequest]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async adminUsersPartialUpdate(
       id: number,
-      patchedUserAdminDetailRequest?: PatchedUserAdminDetailRequest,
+      patchedUserAdminRetrieveUpdateRequest?: PatchedUserAdminRetrieveUpdateRequest,
       options?: AxiosRequestConfig,
     ): Promise<
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<UserAdminDetail>
+      ) => AxiosPromise<UserAdminRetrieveUpdate>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.adminUsersPartialUpdate(
           id,
-          patchedUserAdminDetailRequest,
+          patchedUserAdminRetrieveUpdateRequest,
           options,
         );
       return createRequestFunction(
@@ -4343,7 +4343,7 @@ export const AdminApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<UserAdminDetail>
+      ) => AxiosPromise<UserAdminRetrieveUpdate>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.adminUsersRetrieve(id, options);
@@ -4357,24 +4357,24 @@ export const AdminApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {number} id A unique integer value identifying this user.
-     * @param {UserAdminDetailRequest} userAdminDetailRequest
+     * @param {UserAdminRetrieveUpdateRequest} userAdminRetrieveUpdateRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async adminUsersUpdate(
       id: number,
-      userAdminDetailRequest: UserAdminDetailRequest,
+      userAdminRetrieveUpdateRequest: UserAdminRetrieveUpdateRequest,
       options?: AxiosRequestConfig,
     ): Promise<
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<UserAdminDetail>
+      ) => AxiosPromise<UserAdminRetrieveUpdate>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.adminUsersUpdate(
           id,
-          userAdminDetailRequest,
+          userAdminRetrieveUpdateRequest,
           options,
         );
       return createRequestFunction(
@@ -5225,17 +5225,21 @@ export const AdminApiFactory = function (
     /**
      *
      * @param {number} id A unique integer value identifying this user.
-     * @param {PatchedUserAdminDetailRequest} [patchedUserAdminDetailRequest]
+     * @param {PatchedUserAdminRetrieveUpdateRequest} [patchedUserAdminRetrieveUpdateRequest]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     adminUsersPartialUpdate(
       id: number,
-      patchedUserAdminDetailRequest?: PatchedUserAdminDetailRequest,
+      patchedUserAdminRetrieveUpdateRequest?: PatchedUserAdminRetrieveUpdateRequest,
       options?: any,
-    ): AxiosPromise<UserAdminDetail> {
+    ): AxiosPromise<UserAdminRetrieveUpdate> {
       return localVarFp
-        .adminUsersPartialUpdate(id, patchedUserAdminDetailRequest, options)
+        .adminUsersPartialUpdate(
+          id,
+          patchedUserAdminRetrieveUpdateRequest,
+          options,
+        )
         .then((request) => request(axios, basePath));
     },
     /**
@@ -5247,7 +5251,7 @@ export const AdminApiFactory = function (
     adminUsersRetrieve(
       id: number,
       options?: any,
-    ): AxiosPromise<UserAdminDetail> {
+    ): AxiosPromise<UserAdminRetrieveUpdate> {
       return localVarFp
         .adminUsersRetrieve(id, options)
         .then((request) => request(axios, basePath));
@@ -5255,17 +5259,17 @@ export const AdminApiFactory = function (
     /**
      *
      * @param {number} id A unique integer value identifying this user.
-     * @param {UserAdminDetailRequest} userAdminDetailRequest
+     * @param {UserAdminRetrieveUpdateRequest} userAdminRetrieveUpdateRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     adminUsersUpdate(
       id: number,
-      userAdminDetailRequest: UserAdminDetailRequest,
+      userAdminRetrieveUpdateRequest: UserAdminRetrieveUpdateRequest,
       options?: any,
-    ): AxiosPromise<UserAdminDetail> {
+    ): AxiosPromise<UserAdminRetrieveUpdate> {
       return localVarFp
-        .adminUsersUpdate(id, userAdminDetailRequest, options)
+        .adminUsersUpdate(id, userAdminRetrieveUpdateRequest, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -6152,18 +6156,22 @@ export class AdminApi extends BaseAPI {
   /**
    *
    * @param {number} id A unique integer value identifying this user.
-   * @param {PatchedUserAdminDetailRequest} [patchedUserAdminDetailRequest]
+   * @param {PatchedUserAdminRetrieveUpdateRequest} [patchedUserAdminRetrieveUpdateRequest]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof AdminApi
    */
   public adminUsersPartialUpdate(
     id: number,
-    patchedUserAdminDetailRequest?: PatchedUserAdminDetailRequest,
+    patchedUserAdminRetrieveUpdateRequest?: PatchedUserAdminRetrieveUpdateRequest,
     options?: AxiosRequestConfig,
   ) {
     return AdminApiFp(this.configuration)
-      .adminUsersPartialUpdate(id, patchedUserAdminDetailRequest, options)
+      .adminUsersPartialUpdate(
+        id,
+        patchedUserAdminRetrieveUpdateRequest,
+        options,
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -6183,18 +6191,18 @@ export class AdminApi extends BaseAPI {
   /**
    *
    * @param {number} id A unique integer value identifying this user.
-   * @param {UserAdminDetailRequest} userAdminDetailRequest
+   * @param {UserAdminRetrieveUpdateRequest} userAdminRetrieveUpdateRequest
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof AdminApi
    */
   public adminUsersUpdate(
     id: number,
-    userAdminDetailRequest: UserAdminDetailRequest,
+    userAdminRetrieveUpdateRequest: UserAdminRetrieveUpdateRequest,
     options?: AxiosRequestConfig,
   ) {
     return AdminApiFp(this.configuration)
-      .adminUsersUpdate(id, userAdminDetailRequest, options)
+      .adminUsersUpdate(id, userAdminRetrieveUpdateRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

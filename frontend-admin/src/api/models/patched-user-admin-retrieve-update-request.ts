@@ -19,31 +19,31 @@ import { UserProfileRequest } from './user-profile-request';
 /**
  *
  * @export
- * @interface PatchedUserAdminDetailRequest
+ * @interface PatchedUserAdminRetrieveUpdateRequest
  */
-export interface PatchedUserAdminDetailRequest {
+export interface PatchedUserAdminRetrieveUpdateRequest {
   /**
    *
    * @type {string}
-   * @memberof PatchedUserAdminDetailRequest
+   * @memberof PatchedUserAdminRetrieveUpdateRequest
    */
   email?: string;
   /**
    *
    * @type {string}
-   * @memberof PatchedUserAdminDetailRequest
+   * @memberof PatchedUserAdminRetrieveUpdateRequest
    */
   first_name?: string;
   /**
    *
    * @type {string}
-   * @memberof PatchedUserAdminDetailRequest
+   * @memberof PatchedUserAdminRetrieveUpdateRequest
    */
   last_name?: string;
   /**
    *
    * @type {UserProfileRequest}
-   * @memberof PatchedUserAdminDetailRequest
+   * @memberof PatchedUserAdminRetrieveUpdateRequest
    */
   profile?: UserProfileRequest;
 }

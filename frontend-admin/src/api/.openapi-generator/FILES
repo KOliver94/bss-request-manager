@@ -41,7 +41,7 @@ models/patched-crew-member-admin-create-update-request.ts
 models/patched-rating-admin-create-update-request.ts
 models/patched-rating-create-update-request.ts
 models/patched-request-admin-update-request.ts
-models/patched-user-admin-detail-request.ts
+models/patched-user-admin-retrieve-update-request.ts
 models/patched-user-request.ts
 models/patched-video-admin-create-update-request.ts
 models/polymorphic-proxy-request.ts
@@ -66,9 +66,9 @@ models/token-obtain-pair-request.ts
 models/token-obtain-response.ts
 models/token-refresh-request.ts
 models/token-refresh.ts
-models/user-admin-detail-request.ts
-models/user-admin-detail.ts
 models/user-admin-list.ts
+models/user-admin-retrieve-update-request.ts
+models/user-admin-retrieve-update.ts
 models/user-admin-worked-on.ts
 models/user-nested-detail.ts
 models/user-nested-list.ts
