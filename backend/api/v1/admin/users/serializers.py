@@ -43,7 +43,7 @@ class BanUserSerializer(ModelSerializer):
 
 
 class UserAdminRetrieveUpdateSerializer(UserSerializer):
-    ban = BanUserSerializer(read_only=True)
+    ban = BanUserSerializer(allow_null=True, read_only=True)
 
     class Meta:
         model = User

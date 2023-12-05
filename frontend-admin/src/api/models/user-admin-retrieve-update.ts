@@ -33,7 +33,7 @@ export interface UserAdminRetrieveUpdate {
    * @type {BanUser}
    * @memberof UserAdminRetrieveUpdate
    */
-  ban: BanUser;
+  ban: BanUser | null;
   /**
    *
    * @type {string}
