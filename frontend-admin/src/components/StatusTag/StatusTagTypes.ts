@@ -18,7 +18,7 @@ export type StatusStyle = {
     | 'red'
     | 'teal'
     | 'yellow';
-  icon: IconType<StatusStyle>;
+  icon: IconType<TagProps>;
   text: string;
 };
 
