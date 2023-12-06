@@ -1,5 +1,6 @@
 import { classNames, IconType } from 'primereact/utils';
 
+import { StatusStyle } from 'components/StatusTag/StatusTagTypes';
 import { useTheme } from 'hooks/useTheme';
 
 type ActiveTaskItemProps = {
@@ -8,12 +9,12 @@ type ActiveTaskItemProps = {
 
 type ActiveTaskProps = {
   children: JSX.Element[] | JSX.Element;
-  icon: IconType<TaskProps>;
+  icon: IconType<StatusStyle>;
   label: string;
 };
 
 type TaskProps = {
-  icon?: IconType<TaskProps>;
+  icon?: IconType<StatusStyle>;
   label: string;
   type: 'complete' | 'failed' | 'pending';
 };
