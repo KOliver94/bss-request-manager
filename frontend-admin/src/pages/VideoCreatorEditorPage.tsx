@@ -225,7 +225,10 @@ const VideoCreatorEditorPage = () => {
   return (
     <div className="p-3 sm:p-5 surface-ground">
       <div className="font-medium mb-3 text-900 text-xl">Videó létrehozása</div>
-      <form className="border-round p-3 p-fluid shadow-2 sm:p-4 surface-card">
+      <form
+        className="border-round p-3 p-fluid shadow-2 sm:p-4 surface-card"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className="formgrid grid p-fluid">
           {isDataChanged && (
             <Message
@@ -369,7 +372,7 @@ const VideoCreatorEditorPage = () => {
             icon="pi pi-save"
             label="Mentés"
             loading={isPending}
-            onClick={handleSubmit(onSubmit)}
+            type="submit"
           />
         </div>
       </form>

@@ -83,7 +83,7 @@ const RequestSearchForm = ({
   };
 
   return (
-    <form className="formgrid grid p-fluid">
+    <form className="formgrid grid p-fluid" onSubmit={handleSubmit(onSubmit)}>
       <Controller
         control={control}
         name="title"
@@ -149,7 +149,6 @@ const RequestSearchForm = ({
           className="mr-1"
           icon="pi pi-search"
           label="Keresés"
-          onClick={handleSubmit(onSubmit)}
           type="submit"
         />
         <Button
