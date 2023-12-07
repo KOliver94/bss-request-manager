@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
-import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Divider } from 'primereact/divider';
 import { InputMask } from 'primereact/inputmask';
 import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
+import { SplitButton } from 'primereact/splitbutton';
 import { Controller, useForm } from 'react-hook-form';
 
 import { AdminVideosListStatusEnum } from 'api/endpoints/admin-api';
@@ -50,6 +50,18 @@ const VideoSearchForm = ({ setVideoSearchResults }: VideoSearchFormProps) => {
   const { control, handleSubmit, reset } = useForm<IVideoSearchForm>({
     defaultValues,
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const searchButtonItems = [
+    {
+      command: () => {
+        reset();
+        setVideoSearchResults([]);
+      },
+      icon: 'pi pi-refresh',
+      label: 'Visszaállítás',
+    },
+  ];
 
   const statusTemplate = (option: SearchStatusDropdownType) => {
     return <VideoStatusTag statusNum={option.status} />;
@@ -61,6 +73,7 @@ const VideoSearchForm = ({ setVideoSearchResults }: VideoSearchFormProps) => {
   };
 
   const onSubmit = async (data: IVideoSearchForm) => {
+    setIsLoading(true);
     const last_aired = data.last_aired
       ? data.last_aired.toISOString().split('T')[0]
       : undefined;
@@ -97,11 +110,14 @@ const VideoSearchForm = ({ setVideoSearchResults }: VideoSearchFormProps) => {
       )
       .then((response) => {
         setVideoSearchResults(response.data.results || []);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
   return (
-    <form className="formgrid grid p-fluid" onSubmit={handleSubmit(onSubmit)}>
+    <form className="formgrid grid p-fluid">
       <Controller
         control={control}
         name="title"
@@ -207,25 +223,15 @@ const VideoSearchForm = ({ setVideoSearchResults }: VideoSearchFormProps) => {
         )}
       />
       <Divider />
-      <div className="col-12 flex flex-no-wrap justify-content-start md:col-4">
-        <Button
-          autoFocus
-          className="mr-1"
-          icon="pi pi-search"
-          label="Keresés"
-          type="submit"
-        />
-        <Button
-          className="p-button-secondary p-button-text"
-          icon="pi pi-refresh"
-          label="Visszaállítás"
-          onClick={() => {
-            reset();
-            setVideoSearchResults([]);
-          }}
-          type="reset"
-        />
-      </div>
+      <SplitButton
+        autoFocus
+        className="col-6 lg:col-2 md:col-4"
+        icon="pi pi-search"
+        label="Keresés"
+        loading={isLoading}
+        model={searchButtonItems}
+        onClick={handleSubmit(onSubmit)}
+      />
     </form>
   );
 };
