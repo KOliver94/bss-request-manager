@@ -340,7 +340,10 @@ const CommentCardEdit = ({
         isEditing
         isRequester={isRequester}
       />
-      <form className="align-content-center flex flex-wrap justify-content-between">
+      <form
+        className="align-content-center flex flex-wrap justify-content-between"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <Controller
           control={control}
           disabled={loading}
@@ -390,10 +393,9 @@ const CommentCardEdit = ({
             icon="pi pi-save"
             label="Mentés"
             loading={loading}
-            onClick={handleSubmit(onSubmit)}
             size="small"
             text
-            type="button"
+            type="submit"
           />
         </div>
       </form>
@@ -469,7 +471,10 @@ const CommentCardNew = ({
           />
         </div>
       </div>
-      <form className="align-content-center flex flex-wrap justify-content-between">
+      <form
+        className="align-content-center flex flex-wrap justify-content-between"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <Controller
           control={control}
           disabled={loading}
@@ -505,10 +510,9 @@ const CommentCardNew = ({
           icon="pi pi-send"
           label="Küldés"
           loading={loading}
-          onClick={handleSubmit(onSubmit)}
           size="small"
           text
-          type="button"
+          type="submit"
         />
       </form>
     </CommentCardWrapper>
