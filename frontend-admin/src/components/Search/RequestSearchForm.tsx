@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
-import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Divider } from 'primereact/divider';
 import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
+import { SplitButton } from 'primereact/splitbutton';
 import { Controller, useForm } from 'react-hook-form';
 
 import { AdminRequestsListStatusEnum } from 'api/endpoints/admin-api';
@@ -47,12 +47,25 @@ const RequestSearchForm = ({
   const { control, handleSubmit, reset } = useForm<IRequesterSearchForm>({
     defaultValues,
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const searchButtonItems = [
+    {
+      command: () => {
+        reset();
+        setRequestSearchResults([]);
+      },
+      icon: 'pi pi-refresh',
+      label: 'Visszaállítás',
+    },
+  ];
 
   const statusTemplate = (option: SearchStatusDropdownType) => {
     return <RequestStatusTag statusNum={option.status} />;
   };
 
   const onSubmit = async (data: IRequesterSearchForm) => {
+    setIsLoading(true);
     const title = data.title || undefined;
     const start_datetime_after = data.start_datetime_after
       ? data.start_datetime_after.toISOString().split('T')[0]
@@ -79,11 +92,14 @@ const RequestSearchForm = ({
       )
       .then((response) => {
         setRequestSearchResults(response.data.results || []);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
   return (
-    <form className="formgrid grid p-fluid" onSubmit={handleSubmit(onSubmit)}>
+    <form className="formgrid grid p-fluid">
       <Controller
         control={control}
         name="title"
@@ -143,25 +159,15 @@ const RequestSearchForm = ({
         )}
       />
       <Divider />
-      <div className="col-12 flex flex-no-wrap justify-content-start md:col-4">
-        <Button
-          autoFocus
-          className="mr-1"
-          icon="pi pi-search"
-          label="Keresés"
-          type="submit"
-        />
-        <Button
-          className="p-button-secondary p-button-text"
-          icon="pi pi-refresh"
-          label="Visszaállítás"
-          onClick={() => {
-            reset();
-            setRequestSearchResults([]);
-          }}
-          type="reset"
-        />
-      </div>
+      <SplitButton
+        autoFocus
+        className="col-6 lg:col-2 md:col-4"
+        icon="pi pi-search"
+        label="Keresés"
+        loading={isLoading}
+        model={searchButtonItems}
+        onClick={handleSubmit(onSubmit)}
+      />
     </form>
   );
 };
