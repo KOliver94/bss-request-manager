@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { InputMask } from 'primereact/inputmask';
 import { InputText } from 'primereact/inputtext';
 import { Message } from 'primereact/message';
+import { SplitButton } from 'primereact/splitbutton';
 import { ToggleButton } from 'primereact/togglebutton';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import {
@@ -109,6 +109,16 @@ const VideoCreatorEditorPage = () => {
   const loaderData = useLoaderData() as VideoAdminRetrieve;
   const navigate = useNavigate();
   const revalidator = useRevalidator();
+
+  const saveButtonItems = [
+    {
+      command: () => {
+        reset();
+      },
+      icon: 'pi pi-refresh',
+      label: 'Visszaállítás',
+    },
+  ];
 
   useEffect(() => {
     if (loaderData) {
@@ -225,10 +235,7 @@ const VideoCreatorEditorPage = () => {
   return (
     <div className="p-3 sm:p-5 surface-ground">
       <div className="font-medium mb-3 text-900 text-xl">Videó létrehozása</div>
-      <form
-        className="border-round p-3 p-fluid shadow-2 sm:p-4 surface-card"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="border-round p-3 p-fluid shadow-2 sm:p-4 surface-card">
         <div className="formgrid grid p-fluid">
           {isDataChanged && (
             <Message
@@ -367,12 +374,13 @@ const VideoCreatorEditorPage = () => {
             )}
           />
           <Divider />
-          <Button
+          <SplitButton
             className="w-auto"
             icon="pi pi-save"
             label="Mentés"
             loading={isPending}
-            type="submit"
+            model={saveButtonItems}
+            onClick={handleSubmit(onSubmit)}
           />
         </div>
       </form>
