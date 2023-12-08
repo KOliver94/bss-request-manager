@@ -1,3 +1,4 @@
+import { UserAdminRetrieveUpdate } from './models';
 import { RequestAdminRetrieve } from './models/request-admin-retrieve';
 import { VideoAdminRetrieve } from './models/video-admin-retrieve';
 
@@ -41,6 +42,23 @@ export const dummyRequest: RequestAdminRetrieve = {
   type: '',
   video_count: 0,
   videos_edited: false,
+};
+
+export const dummyUser: UserAdminRetrieveUpdate = {
+  ban: null,
+  email: 'dummy@example.com',
+  first_name: 'Dummy',
+  groups: [],
+  id: 0,
+  last_name: 'User',
+  profile: {
+    avatar: {},
+    avatar_url: '',
+    phone_number: '+36701234567',
+  },
+  role: '',
+  social_accounts: [],
+  username: 'dummy',
 };
 
 export const dummyVideo: VideoAdminRetrieve = {
