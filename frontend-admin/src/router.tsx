@@ -7,7 +7,11 @@ import {
   Route,
 } from 'react-router-dom';
 
-import { RequestAdminRetrieve, VideoAdminRetrieve } from 'api/models';
+import {
+  RequestAdminRetrieve,
+  UserAdminRetrieveUpdate,
+  VideoAdminRetrieve,
+} from 'api/models';
 import { requestRetrieveQuery, requestVideoRetrieveQuery } from 'api/queries';
 import Layout from 'Layout';
 import ErrorPage from 'pages/ErrorPage';
@@ -121,11 +125,20 @@ const router = sentryCreateBrowserRouter(
       />
       <Route
         path="users"
-        lazy={() => import('pages/UsersListPage')}
         handle={{
           crumb: () => 'Felhasználók',
         }}
-      />
+      >
+        <Route index lazy={() => import('pages/UsersListPage')} />
+        <Route
+          path=":userId"
+          lazy={() => import('pages/UserProfilePage')}
+          handle={{
+            crumb: (data: UserAdminRetrieveUpdate) =>
+              `${data.last_name} ${data.first_name}`,
+          }}
+        />
+      </Route>
       <Route path="error" element={<ErrorPage />} />
     </Route>,
   ),

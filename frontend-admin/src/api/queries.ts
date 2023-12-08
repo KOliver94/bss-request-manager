@@ -1,7 +1,7 @@
 import { Semester } from 'helpers/SemesterHelper';
 
 import { adminApi } from './http';
-import { dummyRequest, dummyVideo } from './placeholders';
+import { dummyRequest, dummyUser, dummyVideo } from './placeholders';
 
 export const requestCommentsListQuery = (requestId: number) => ({
   initialData: [],
@@ -191,6 +191,16 @@ export const usersListQuery = () => ({
   },
   queryKey: ['users'],
   refetchInterval: 1000 * 30,
+});
+
+export const usersRetrieveQuery = (userId: number) => ({
+  initialData: dummyUser,
+  queryFn: async () => {
+    const user = await adminApi.adminUsersRetrieve(userId);
+    return user.data;
+  },
+  queryKey: ['users', userId],
+  refetchInterval: 1000 * 60 * 5,
 });
 
 export const usersStaffListQuery = () => ({

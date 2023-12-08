@@ -8,6 +8,7 @@ import {
   PatchedVideoAdminCreateUpdateRequest,
   RatingAdminCreateUpdateRequest,
   RequestAdminCreateRequest,
+  UserAdminRetrieveUpdateRequest,
   VideoAdminCreateUpdateRequest,
 } from './models';
 
@@ -92,5 +93,11 @@ export const requestVideoUpdateMutation = (
       requestId,
       updateVideo,
     );
+  },
+});
+
+export const userUpdateMutation = (userId: number) => ({
+  mutationFn: (updateUser: UserAdminRetrieveUpdateRequest) => {
+    return adminApi.adminUsersPartialUpdate(userId, updateUser);
   },
 });
