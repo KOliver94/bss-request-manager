@@ -90,7 +90,7 @@ repos:
         args:
           [
             --config,
-            ./frontend/.eslintrc.js,
+            ./frontend/.eslintrc.cjs,
             --ignore-path,
             ./frontend/.eslintignore,
             --rule,
@@ -113,7 +113,7 @@ repos:
         args:
           [
             --config,
-            ./frontend-admin/.eslintrc.js,
+            ./frontend-admin/.eslintrc.cjs,
             --ignore-path,
             ./frontend-admin/.eslintignore,
             --fix,

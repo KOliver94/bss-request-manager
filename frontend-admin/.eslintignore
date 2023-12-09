@@ -1,2 +1,2 @@
-.eslintrc.js
-postcss.config.js
+.eslintrc.cjs
+postcss.config.cjs
