@@ -2,6 +2,7 @@
   "name": "frontend-admin",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@sentry/react": "7.84.0",
     "@tanstack/react-query": "5.12.2",
