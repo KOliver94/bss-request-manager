@@ -36,7 +36,7 @@
     "lint": "eslint src/",
     "lint:fix": "eslint --fix --ext .js,.jsx src/",
     "check-eslint-config": "eslint-config-prettier src/index.js",
-    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg"
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 public/logo.svg"
   },
   "browserslist": {
     "production": [
