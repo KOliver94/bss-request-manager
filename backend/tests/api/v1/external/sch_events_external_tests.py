@@ -3,10 +3,10 @@ from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
+import responses
 from django.contrib.auth.models import User
 from django.utils.timezone import localtime
 from django_celery_results.models import TaskResult
-from httpretty import HTTPretty
 from model_bakery import baker
 from requests import Response
 from rest_framework.reverse import reverse
@@ -333,6 +333,7 @@ def test_create_comment_errors(
     assert response.status_code == expected
 
 
+@responses.activate
 def test_external_callback_on_status_changes(admin_user, api_client, settings):
     settings.CELERY_TASK_ALWAYS_EAGER = True
 
@@ -351,15 +352,10 @@ def test_external_callback_on_status_changes(admin_user, api_client, settings):
         additional_data={"external": {"sch_events_callback_url": external_url_2}},
     )
 
-    HTTPretty.enable(allow_net_connect=False)
-    HTTPretty.register_uri(HTTPretty.HEAD, external_url_1)
-    HTTPretty.register_uri(HTTPretty.HEAD, external_url_2)
-    HTTPretty.register_uri(
-        HTTPretty.POST, external_url_1, body=json.dumps({"status": "ok"})
-    )
-    HTTPretty.register_uri(
-        HTTPretty.POST, external_url_2, body=json.dumps({"status": "ok"})
-    )
+    responses.head(external_url_1)
+    responses.head(external_url_2)
+    response1 = responses.post(external_url_1, json={"status": "ok"})
+    response2 = responses.post(external_url_2, json={"status": "ok"})
 
     url = reverse(
         "api:v1:admin:requests:request-detail", kwargs={"pk": video_request_1.id}
@@ -367,13 +363,13 @@ def test_external_callback_on_status_changes(admin_user, api_client, settings):
 
     # Request changed from Requested to Accepted
     api_client.patch(url, {"additional_data": {"accepted": True}})
-    assert HTTPretty.last_request.url == external_url_1
-    assert json.loads(HTTPretty.last_request.body.decode()) == {"accept": True}
+    assert response1.call_count == 1
+    assert json.loads(response1.calls[0].request.body) == {"accept": True}
 
     # Request changed from Accepted to Denied
     api_client.patch(url, {"additional_data": {"accepted": False}})
-    assert HTTPretty.last_request.url == external_url_1
-    assert json.loads(HTTPretty.last_request.body.decode()) == {"accept": False}
+    assert response1.call_count == 2
+    assert json.loads(response1.calls[1].request.body) == {"accept": False}
 
     url = reverse(
         "api:v1:admin:requests:request-detail", kwargs={"pk": video_request_2.id}
@@ -381,16 +377,13 @@ def test_external_callback_on_status_changes(admin_user, api_client, settings):
 
     # Request changed from Requested to Denied
     api_client.patch(url, {"additional_data": {"accepted": False}})
-    assert HTTPretty.last_request.url == external_url_2
-    assert json.loads(HTTPretty.last_request.body.decode()) == {"accept": False}
+    assert response2.call_count == 1
+    assert json.loads(response2.calls[0].request.body) == {"accept": False}
 
     # Request changed from Denied to Accepted
     api_client.patch(url, {"additional_data": {"accepted": True}})
-    assert HTTPretty.last_request.url == external_url_2
-    assert json.loads(HTTPretty.last_request.body.decode()) == {"accept": True}
-
-    HTTPretty.disable()
-    HTTPretty.reset()
+    assert response2.call_count == 2
+    assert json.loads(response2.calls[1].request.body) == {"accept": True}
 
 
 @pytest.mark.parametrize("accepted", [True, False])

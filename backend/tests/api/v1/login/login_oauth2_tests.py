@@ -1,17 +1,15 @@
-import json
 import random
 import re
 from string import ascii_letters, digits
+from urllib.parse import urlparse
 
+import responses
 from django.test import override_settings
-from httpretty import HTTPretty
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from social_core.backends.facebook import API_VERSION as FACEBOOK_API_VERSION
 from social_core.backends.utils import load_backends
-from social_core.tests.backends.base import BaseBackendTest as SocialCoreBaseBackendTest
-from social_core.tests.backends.oauth import OAuth2Test as SocialCoreOAuth2Test
 from social_core.tests.models import (
     TestAssociation,
     TestCode,
@@ -19,14 +17,20 @@ from social_core.tests.models import (
     TestUserSocialAuth,
     User,
 )
-from social_core.utils import module_member
+from social_core.utils import module_member, parse_qs, url_add_parameters
 
 from common.social_core.helpers import load_strategy
 
 
-class BaseBackendTest(APITestCase, SocialCoreBaseBackendTest):
+class BaseBackendTest(APITestCase):
+    backend = None
+    backend_path = None
+    name = None
+    strategy = None
+    complete_url = ""
+    raw_complete_url = "/complete/{0}"
+
     def setUp(self):
-        HTTPretty.enable(allow_net_connect=False)
         self.mock_gravatar()
         Backend = module_member(self.backend_path)
         self.strategy = load_strategy()
@@ -44,20 +48,71 @@ class BaseBackendTest(APITestCase, SocialCoreBaseBackendTest):
         TestAssociation.reset_cache()
         TestCode.reset_cache()
 
+    def tearDown(self):
+        self.backend = None
+        self.strategy = None
+        self.name = None
+        self.complete_url = None
+        User.reset_cache()
+        TestUserSocialAuth.reset_cache()
+        TestNonce.reset_cache()
+        TestAssociation.reset_cache()
+        TestCode.reset_cache()
+
     @staticmethod
     def mock_gravatar():
-        HTTPretty.register_uri(
-            HTTPretty.GET,
-            re.compile(r"https://(www|secure)\.gravatar\.com/avatar/.*"),
-            status=404,
+        responses.get(
+            re.compile(r"https://(www|secure)\.gravatar\.com/avatar/.*"), status=404
         )
 
 
-class OAuth2Test(BaseBackendTest, SocialCoreOAuth2Test):
+class OAuth2Test(BaseBackendTest):
+    user_data_body = None
+    user_data_url = ""
+    access_token_body = None
+    access_token_status = 200
+
+    @staticmethod
+    def _method(method):
+        return {"GET": responses.GET, "POST": responses.POST}[method]
+
+    def handle_state(self, start_url, target_url):
+        start_query = parse_qs(urlparse(start_url).query)
+        redirect_uri = start_query.get("redirect_uri")
+
+        if getattr(self.backend, "STATE_PARAMETER", False) and start_query.get("state"):
+            target_url = url_add_parameters(target_url, {"state": start_query["state"]})
+
+        if redirect_uri and getattr(self.backend, "REDIRECT_STATE", False):
+            redirect_query = parse_qs(urlparse(redirect_uri).query)
+            if redirect_query.get("redirect_state"):
+                target_url = url_add_parameters(
+                    target_url, {"redirect_state": redirect_query["redirect_state"]}
+                )
+        return target_url
+
+    def auth_handlers(self, start_url):
+        target_url = self.handle_state(
+            start_url, self.strategy.build_absolute_uri(self.complete_url)
+        )
+        responses.get(start_url, status=301, headers={"Location": target_url})
+        responses.get(target_url, status=200, body="foobar")
+        if self.user_data_url:
+            responses.get(self.user_data_url, json=self.user_data_body)
+        return target_url
+
+    def pre_complete_callback(self):
+        responses.add(
+            self._method(self.backend.ACCESS_TOKEN_METHOD),
+            self.backend.access_token_url(),
+            status=self.access_token_status,
+            json=self.access_token_body,
+        )
+
     def do_rest_login(self, provider):
         start_url = self.backend.start().url
         self.auth_handlers(start_url)
-        self.pre_complete_callback(start_url)
+        self.pre_complete_callback()
 
         url = reverse("api:v1:login:obtain_jwt_pair_social")
         response = self.client.post(
@@ -84,104 +139,96 @@ class OAuth2Test(BaseBackendTest, SocialCoreOAuth2Test):
 
 @override_settings(SOCIAL_AUTH_PROVIDERS=["facebook"])
 class FacebookOAuth2Test(OAuth2Test):
-    access_token_body = json.dumps({"access_token": "foobar", "token_type": "bearer"})
+    access_token_body = {"access_token": "foobar", "token_type": "bearer"}
     backend_path = "social_core.backends.facebook.FacebookOAuth2"
-    user_data_body = json.dumps(
-        {
-            "email": "foobar@example.com",
-            "first_name": "Foo",
-            "id": "110011001100010",
-            "last_name": "Bar",
-            "name": "Foo Bar",
-            "picture": {
-                "height": 500,
-                "is_silhouette": False,
-                "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/"
-                "?asid=79043988521909457&height=500&width=500&ext=1691584443&hash=4SFjpKn6eDtdHXiIrST",
-                "width": 500,
-            },
-            "username": "foobar",
-        }
-    )
+    user_data_body = {
+        "email": "foobar@example.com",
+        "first_name": "Foo",
+        "id": "110011001100010",
+        "last_name": "Bar",
+        "name": "Foo Bar",
+        "picture": {
+            "height": 500,
+            "is_silhouette": False,
+            "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/"
+            "?asid=79043988521909457&height=500&width=500&ext=1691584443&hash=4SFjpKn6eDtdHXiIrST",
+            "width": 500,
+        },
+        "username": "foobar",
+    }
     user_data_url = "https://graph.facebook.com/v{version}/me".format(
         version=FACEBOOK_API_VERSION
     )
 
+    @responses.activate
     def test_login(self):
         self.do_rest_login("facebook")
 
 
 @override_settings(SOCIAL_AUTH_PROVIDERS=["google-oauth2"])
 class GoogleOAuth2Test(OAuth2Test):
-    access_token_body = json.dumps({"access_token": "foobar", "token_type": "bearer"})
+    access_token_body = {"access_token": "foobar", "token_type": "bearer"}
     backend_path = "social_core.backends.google.GoogleOAuth2"
-    phone_data_body = json.dumps(
-        {
-            "etag": "%Q307aI9ABA8FgzBDoJx71iyhrZWyM3HsaWwP",
-            "phoneNumbers": [
-                {
-                    "canonicalForm": "+36509999999",
-                    "formattedType": "Mobile",
-                    "metadata": {
-                        "primary": True,
-                        "source": {"type": "PROFILE", "id": "961158263084132371526"},
-                        "verified": True,
-                    },
-                    "type": "mobile",
-                    "value": "+36509999999",
-                }
-            ],
-            "resourceName": "people/961158263084132371526",
-        }
-    )
+    phone_data_body = {
+        "etag": "%Q307aI9ABA8FgzBDoJx71iyhrZWyM3HsaWwP",
+        "phoneNumbers": [
+            {
+                "canonicalForm": "+36509999999",
+                "formattedType": "Mobile",
+                "metadata": {
+                    "primary": True,
+                    "source": {"type": "PROFILE", "id": "961158263084132371526"},
+                    "verified": True,
+                },
+                "type": "mobile",
+                "value": "+36509999999",
+            }
+        ],
+        "resourceName": "people/961158263084132371526",
+    }
+
     phone_data_url = "https://people.googleapis.com/v1/people/me"
-    user_data_body = json.dumps(
-        {
-            "email": "foo@bar.com",
-            "email_verified": True,
-            "family_name": "Bar",
-            "given_name": "Foo",
-            "locale": "en",
-            "name": "Foo Bar",
-            "picture": "https://lh5.googleusercontent.com/-ui-GqpNh5Ms/"
-            "AAAAAAAAAAI/AAAAAAAAAZw/a7puhHMO_fg/photo.jpg",
-            "scope": [  # TODO: Check if it's really returned in real call
-                "https://www.googleapis.com/auth/userinfo.profile",
-                "https://www.googleapis.com/auth/userinfo.email",
-                "https://www.googleapis.com/auth/user.phonenumbers.read",
-            ],
-            "sub": "101010101010101010101",
-        }
-    )
+    user_data_body = {
+        "email": "foo@bar.com",
+        "email_verified": True,
+        "family_name": "Bar",
+        "given_name": "Foo",
+        "locale": "en",
+        "name": "Foo Bar",
+        "picture": "https://lh5.googleusercontent.com/-ui-GqpNh5Ms/"
+        "AAAAAAAAAAI/AAAAAAAAAZw/a7puhHMO_fg/photo.jpg",
+        "scope": [  # TODO: Check if it's really returned in real call
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/user.phonenumbers.read",
+        ],
+        "sub": "101010101010101010101",
+    }
     user_data_url = "https://www.googleapis.com/oauth2/v3/userinfo"
 
     def setUp(self):
-        HTTPretty.register_uri(
-            HTTPretty.GET,
-            re.compile(f"{self.phone_data_url}.*"),
-            body=self.phone_data_body,
-        )
+        responses.get(re.compile(f"{self.phone_data_url}.*"), json=self.phone_data_body)
         super().setUp()
 
+    @responses.activate
     def test_login(self):
         self.do_rest_login("google-oauth2")
 
 
 @override_settings(SOCIAL_AUTH_PROVIDERS=["authsch"])
 class AuthSCHOAuth2Test(OAuth2Test):
-    access_token_body = json.dumps({"access_token": "foobar", "token_type": "bearer"})
+    access_token_body = {"access_token": "foobar", "token_type": "bearer"}
     backend_path = "common.social_core.backends.AuthSCHOAuth2"
-    user_data_body = json.dumps(
-        {
-            "basic": "foobar",
-            "displayName": "Foo Bar",
-            "givenName": "Bar",
-            "mail": "foobar@example.com",
-            "mobile": "+36509999999",
-            "sn": "Foo",
-        }
-    )
+    user_data_body = {
+        "basic": "foobar",
+        "displayName": "Foo Bar",
+        "givenName": "Bar",
+        "mail": "foobar@example.com",
+        "mobile": "+36509999999",
+        "sn": "Foo",
+    }
     user_data_url = "https://auth.sch.bme.hu/api/profile/"
 
+    @responses.activate
     def test_login(self):
         self.do_rest_login("authsch")
