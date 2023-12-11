@@ -9,7 +9,7 @@
 ##################################################
 
 # Stage 1 - Backend base
-FROM python:3.12-alpine3.18 as backend-base
+FROM python:3.12 as backend-base
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \

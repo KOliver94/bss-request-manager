@@ -75,7 +75,7 @@ RUN npm run build
 # Stage 3 - Backend base
 
 # Pull base image
-FROM python:3.11-alpine3.18 as backend-base
+FROM python:3.12-alpine as backend-base
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
