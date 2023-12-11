@@ -79,7 +79,8 @@ repos:
     hooks:
       - id: prettier
         name: 'Format JavaScript and TypeScript code'
-        exclude: (^backend/templates/)|((\.py|poetry\.lock|package(-lock)?\.json)$)
+        exclude: (^backend/templates/)|((poetry\.lock|package(-lock)?\.json)$)
+        exclude_types: [python]
         args: [--config, ./frontend/.prettierrc]
         additional_dependencies: # TODO: Remove when prettier v4 is released
           - prettier@3.1.1
@@ -88,7 +89,8 @@ repos:
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
-        files: ^frontend/.*\.jsx?$
+        files: ^frontend/
+        types_or: [javascript, jsx]
         args:
           [
             --config,
@@ -111,7 +113,8 @@ repos:
           - prettier@3.1.1
       - id: eslint
         name: 'Lint TypeScript code (Admin dashboard)'
-        files: ^frontend-admin/.*\.(j|t)sx?$
+        files: ^frontend-admin/
+        types_or: [javascript, jsx, ts, tsx]
         args:
           [
             --config,
