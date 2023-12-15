@@ -1,16 +1,23 @@
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import { ProgressBar } from 'primereact/progressbar';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { usersRetrieveQuery } from 'api/queries';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import NavigationButton from 'components/UserProfile/NavigationButton';
-import ProfileSection from 'components/UserProfile/ProfileSection';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
+
+const ProfileSection = lazy(
+  () => import('components/UserProfile/ProfileSection'),
+);
+const WorkedOnSection = lazy(
+  () => import('components/UserProfile/WorkedOnSection'),
+);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function loader({ params }: any) {
@@ -71,12 +78,17 @@ const UserProfilePage = () => {
         </ul>
         <div className="flex-auto">
           <div className="border-round shadow-2 surface-card p-5">
-            {section === 'profile' && <ProfileSection userData={data} />}
+            <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+              {section === 'profile' && <ProfileSection userData={data} />}
+              {section === 'workedOn' && <WorkedOnSection userId={data.id} />}
+            </Suspense>
           </div>
-          <LastUpdatedAt
-            lastUpdatedAt={new Date(dataUpdatedAt)}
-            refetch={refetch}
-          />
+          {section !== 'workedOn' && (
+            <LastUpdatedAt
+              lastUpdatedAt={new Date(dataUpdatedAt)}
+              refetch={refetch}
+            />
+          )}
         </div>
       </div>
     </div>
