@@ -80,9 +80,10 @@ repos:
       - id: prettier
         name: 'Format JavaScript and TypeScript code'
         exclude: (^backend/templates/)|((poetry\.lock|package(-lock)?\.json)$)
-        exclude_types: [python]
+        exclude_types:
+          - python
         args: [--config, ./frontend/.prettierrc]
-        additional_dependencies: # TODO: Remove when prettier v4 is released
+        additional_dependencies:
           - prettier@3.1.1
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.55.0
@@ -90,7 +91,9 @@ repos:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
         files: ^frontend/
-        types_or: [javascript, jsx]
+        types_or:
+          - javascript
+          - jsx
         args:
           [
             --config,
@@ -104,17 +107,21 @@ repos:
         additional_dependencies:
           - eslint-config-airbnb@19.0.4
           - eslint-config-prettier@9.1.0
-          - eslint-plugin-import@2.29.0
+          - eslint-plugin-import@2.29.1
           - eslint-plugin-jsx-a11y@6.8.0
           - eslint-plugin-prettier@5.0.1
           - eslint-plugin-react-hooks@4.6.0
           - eslint-plugin-react@7.33.2
-          - eslint@8.55.0
+          - eslint@8.56.0
           - prettier@3.1.1
       - id: eslint
         name: 'Lint TypeScript code (Admin dashboard)'
         files: ^frontend-admin/
-        types_or: [javascript, jsx, ts, tsx]
+        types_or:
+          - javascript
+          - jsx
+          - ts
+          - tsx
         args:
           [
             --config,
