@@ -11,15 +11,15 @@ from common.models import Ban, UserProfile
 USER_MODEL = get_user_model()
 
 
+@admin.register(UserProfile)
 class UserProfileAdmin(ModelAdmin):
     list_display = ["user", "phone_number", "avatar_url", "user_link"]
     search_fields = ["user__username"]
 
+    @admin.display(description="Link to User")
     def user_link(self, obj):
         url = reverse("admin:auth_user_change", args=(obj.user.id,))
         return format_html(f'<a href="{url}">{obj.user.get_full_name()}</a>')
-
-    user_link.short_description = "Link to User"
 
 
 class ExtendedUserAdmin(UserAdmin):
@@ -45,12 +45,10 @@ class ExtendedUserAdmin(UserAdmin):
         self.message_user(request, "Successfully banned selected users.")
 
 
+@admin.register(Ban)
 class BanAdmin(admin.ModelAdmin):
     list_display = ("receiver", "created", "reason", "creator")
 
 
 admin.site.unregister(USER_MODEL)
 admin.site.register(USER_MODEL, ExtendedUserAdmin)
-
-admin.site.register(UserProfile, UserProfileAdmin)
-admin.site.register(Ban, BanAdmin)
