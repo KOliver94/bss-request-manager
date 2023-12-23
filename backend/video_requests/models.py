@@ -59,7 +59,7 @@ class Request(models.Model):
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
     status = models.PositiveSmallIntegerField(
-        choices=Statuses.choices, default=Statuses.REQUESTED
+        choices=Statuses, default=Statuses.REQUESTED
     )
     responsible = models.ForeignKey(
         User,
@@ -138,7 +138,7 @@ class Video(models.Model):
         User, on_delete=models.SET(get_sentinel_user), blank=True, null=True
     )
     status = models.PositiveSmallIntegerField(
-        choices=Statuses.choices, default=Statuses.PENDING
+        choices=Statuses, default=Statuses.PENDING
     )
     additional_data = JSONField(
         encoder=DjangoJSONEncoder,
