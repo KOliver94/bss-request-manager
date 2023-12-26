@@ -13,10 +13,10 @@ export type SearchStatusDropdownType = Status & { status: number };
 
 const SearchPage = () => {
   const [searchVideo, setSearchVideo] = useState<boolean>(false);
-  const [requestSearchResult, setRequestSearchResults] = useState<
+  const [requestSearchResults, setRequestSearchResults] = useState<
     RequestAdminList[]
   >([]);
-  const [videoSearchResult, setVideoSearchResults] = useState<
+  const [videoSearchResults, setVideoSearchResults] = useState<
     VideoAdminSearch[]
   >([]);
 
@@ -46,9 +46,9 @@ const SearchPage = () => {
       <div className="font-medium mb-3 mt-5 text-900 text-xl">Találatok</div>
       <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
         {searchVideo ? (
-          <VideoSearchDataTable videos={videoSearchResult} />
+          <VideoSearchDataTable videos={videoSearchResults} />
         ) : (
-          <RequestsDataTable requests={requestSearchResult} />
+          <RequestsDataTable requests={requestSearchResults} />
         )}
       </div>
     </div>
