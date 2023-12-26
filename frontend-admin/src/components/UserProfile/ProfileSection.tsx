@@ -56,7 +56,8 @@ function getGroup(group: string) {
   }
 }
 
-function getUserRole(role: string) {
+function getUserRole(role: string, banned: boolean) {
+  if (banned) return 'Kitiltva';
   switch (role) {
     case 'admin':
       return 'Adminisztrátor';
@@ -242,7 +243,9 @@ const ProfileSection = ({ userData }: ProfileSectionProps) => {
           >
             <label className="font-medium text-900">Jogosultság</label>
             <div className="card flex flex-wrap gap-2">
-              <Tag>{getUserRole(userData.role)}</Tag>
+              <Tag severity={userData.ban ? 'danger' : null}>
+                {getUserRole(userData.role, !!userData.ban)}
+              </Tag>
             </div>
           </div>
           {userData.groups.length > 0 && (
