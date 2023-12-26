@@ -12,6 +12,7 @@ import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
+const BanSection = lazy(() => import('components/UserProfile/BanSection'));
 const ProfileSection = lazy(
   () => import('components/UserProfile/ProfileSection'),
 );
@@ -79,6 +80,9 @@ const UserProfilePage = () => {
         <div className="flex-auto">
           <div className="border-round shadow-2 surface-card p-5">
             <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+              {section === 'ban' && (
+                <BanSection banData={data.ban} userId={data.id} />
+              )}
               {section === 'profile' && <ProfileSection userData={data} />}
               {section === 'workedOn' && <WorkedOnSection userId={data.id} />}
             </Suspense>
