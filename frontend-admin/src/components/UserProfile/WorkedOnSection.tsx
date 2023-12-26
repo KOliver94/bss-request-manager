@@ -200,7 +200,6 @@ const WorkedOnSection = ({ userId }: WorkedOnSectionProps) => {
       </form>
       <Divider />
       <DataTable
-        dataKey="id"
         emptyMessage="Nincs találat."
         header={header}
         paginator
