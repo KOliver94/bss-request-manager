@@ -18,6 +18,9 @@ REST_FRAMEWORK.setdefault("DEFAULT_RENDERER_CLASSES", []).append(
 # Enable CORS requests from anywhere
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Run Celery tasks synchronously in eager mode
+# CELERY_TASK_ALWAYS_EAGER = True
+
 # Enable Django Debug Toolbar
 INSTALLED_APPS += ["debug_toolbar"]
 MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
