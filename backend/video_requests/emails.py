@@ -3,7 +3,6 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
-from common.emails import debug_email
 from common.utilities import (
     get_editor_in_chief,
     get_pr_responsible,
@@ -30,17 +29,13 @@ def email_user_new_request_confirmation(request_id):
     subject = f"{request.title} | Forgatási felkérésedet fogadtuk"
     editor_in_chief_email_address = [user.email for user in get_editor_in_chief()]
 
-    msg = (
-        EmailMultiAlternatives(
-            subject=subject,
-            body=msg_plain,
-            to=[request.requester.email],
-            cc=[settings.DEFAULT_REPLY_EMAIL],
-            bcc=editor_in_chief_email_address,
-            reply_to=[settings.DEFAULT_REPLY_EMAIL],
-        )
-        if not settings.DEBUG_EMAIL
-        else debug_email(subject, msg_plain)
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=[request.requester.email],
+        cc=[settings.DEFAULT_REPLY_EMAIL],
+        bcc=editor_in_chief_email_address,
+        reply_to=[settings.DEFAULT_REPLY_EMAIL],
     )
 
     msg.attach_alternative(msg_html, TEXT_HTML)
@@ -62,16 +57,12 @@ def email_user_video_published(video_id):
     subject = f"{video.request.title} | Új videót publikáltunk"
     pr_responsible_email_address = [user.email for user in get_pr_responsible()]
 
-    msg = (
-        EmailMultiAlternatives(
-            subject=subject,
-            body=msg_plain,
-            to=[video.request.requester.email],
-            bcc=pr_responsible_email_address,
-            reply_to=[settings.DEFAULT_REPLY_EMAIL],
-        )
-        if not settings.DEBUG_EMAIL
-        else debug_email(subject, msg_plain)
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=[video.request.requester.email],
+        bcc=pr_responsible_email_address,
+        reply_to=[settings.DEFAULT_REPLY_EMAIL],
     )
 
     msg.attach_alternative(msg_html, TEXT_HTML)
@@ -95,15 +86,11 @@ def email_user_new_comment(comment_id):
 
     subject = f"{comment.request.title} | Hozzászólás érkezett"
 
-    msg = (
-        EmailMultiAlternatives(
-            subject=subject,
-            body=msg_plain,
-            to=[comment.request.requester.email],
-            reply_to=[settings.DEFAULT_REPLY_EMAIL],
-        )
-        if not settings.DEBUG_EMAIL
-        else debug_email(subject, msg_plain)
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=[comment.request.requester.email],
+        reply_to=[settings.DEFAULT_REPLY_EMAIL],
     )
 
     msg.attach_alternative(msg_html, TEXT_HTML)
@@ -123,15 +110,11 @@ def email_staff_weekly_tasks(recording, editing_no_vids, editing_unedited_vids):
 
     subject = "Eheti forgatások és vágandó anyagok"
 
-    msg = (
-        EmailMultiAlternatives(
-            subject=subject,
-            body=msg_plain,
-            to=[settings.WEEKLY_TASK_EMAIL],
-            reply_to=[settings.WEEKLY_TASK_EMAIL],
-        )
-        if not settings.DEBUG_EMAIL
-        else debug_email(subject, msg_plain)
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=[settings.WEEKLY_TASK_EMAIL],
+        reply_to=[settings.WEEKLY_TASK_EMAIL],
     )
 
     msg.attach_alternative(msg_html, TEXT_HTML)
@@ -147,14 +130,10 @@ def email_crew_daily_reminder(request, crew_members):
 
     subject = f"Emlékeztető | {request.title} | Mai forgatás"
 
-    msg = (
-        EmailMultiAlternatives(
-            subject=subject,
-            body=msg_plain,
-            to=[user.member.email for user in crew_members],
-        )
-        if not settings.DEBUG_EMAIL
-        else debug_email(subject, msg_plain)
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=[user.member.email for user in crew_members],
     )
 
     msg.attach_alternative(msg_html, TEXT_HTML)
@@ -183,17 +162,11 @@ def email_crew_new_comment(comment_id):
         user.member.email for user in comment.request.crew.filter(member__is_staff=True)
     ]
 
-    msg = (
-        EmailMultiAlternatives(
-            subject=subject,
-            body=msg_plain,
-            to=crew_members_email_addresses,
-            cc=list(
-                set().union(editor_in_chief_email_address, responsible_email_address)
-            ),
-        )
-        if not settings.DEBUG_EMAIL
-        else debug_email(subject, msg_plain)
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=crew_members_email_addresses,
+        cc=list(set().union(editor_in_chief_email_address, responsible_email_address)),
     )
 
     msg.attach_alternative(msg_html, TEXT_HTML)
@@ -227,17 +200,11 @@ def email_crew_request_modified(
         user.member.email for user in request.crew.filter(member__is_staff=True)
     ]
 
-    msg = (
-        EmailMultiAlternatives(
-            subject=subject,
-            body=msg_plain,
-            to=crew_members_email_addresses,
-            cc=list(
-                set().union(editor_in_chief_email_address, responsible_email_address)
-            ),
-        )
-        if not settings.DEBUG_EMAIL
-        else debug_email(subject, msg_plain)
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=crew_members_email_addresses,
+        cc=list(set().union(editor_in_chief_email_address, responsible_email_address)),
     )
 
     msg.attach_alternative(msg_html, TEXT_HTML)
@@ -258,14 +225,10 @@ def email_production_manager_unfinished_requests(requests):
     subject = "Lezáratlan anyagok"
     production_manager_email_address = [user.email for user in get_production_manager()]
 
-    msg = (
-        EmailMultiAlternatives(
-            subject=subject,
-            body=msg_plain,
-            to=production_manager_email_address,
-        )
-        if not settings.DEBUG_EMAIL
-        else debug_email(subject, msg_plain)
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=production_manager_email_address,
     )
 
     msg.attach_alternative(msg_html, TEXT_HTML)
@@ -287,19 +250,13 @@ def email_responsible_overdue_request(request):
     editor_in_chief_email_address = [user.email for user in get_editor_in_chief()]
     production_manager_email_address = [user.email for user in get_production_manager()]
 
-    msg = (
-        EmailMultiAlternatives(
-            subject=subject,
-            body=msg_plain,
-            to=responsible_email_address,
-            cc=list(
-                set().union(
-                    editor_in_chief_email_address, production_manager_email_address
-                )
-            ),
-        )
-        if not settings.DEBUG_EMAIL
-        else debug_email(subject, msg_plain)
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=responsible_email_address,
+        cc=list(
+            set().union(editor_in_chief_email_address, production_manager_email_address)
+        ),
     )
 
     msg.attach_alternative(msg_html, TEXT_HTML)
