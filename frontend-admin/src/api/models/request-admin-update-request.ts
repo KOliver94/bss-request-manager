@@ -20,10 +20,10 @@
 export interface RequestAdminUpdateRequest {
   /**
    *
-   * @type {{ [key: string]: any; }}
+   * @type {any}
    * @memberof RequestAdminUpdateRequest
    */
-  additional_data?: { [key: string]: any };
+  additional_data?: any;
   /**
    *
    * @type {string}
@@ -78,6 +78,12 @@ export interface RequestAdminUpdateRequest {
    * @memberof RequestAdminUpdateRequest
    */
   responsible?: number | null;
+  /**
+   *
+   * @type {boolean}
+   * @memberof RequestAdminUpdateRequest
+   */
+  send_notification?: boolean;
   /**
    *
    * @type {string}

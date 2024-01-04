@@ -66,8 +66,8 @@ export interface VideoAdminRetrieve {
   title: string;
   /**
    *
-   * @type {{ [key: string]: any; }}
+   * @type {any}
    * @memberof VideoAdminRetrieve
    */
-  additional_data: { [key: string]: any };
+  additional_data: any;
 }

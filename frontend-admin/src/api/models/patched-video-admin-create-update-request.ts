@@ -20,10 +20,10 @@
 export interface PatchedVideoAdminCreateUpdateRequest {
   /**
    *
-   * @type {{ [key: string]: any; }}
+   * @type {any}
    * @memberof PatchedVideoAdminCreateUpdateRequest
    */
-  additional_data?: { [key: string]: any };
+  additional_data?: any;
   /**
    *
    * @type {number}

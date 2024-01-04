@@ -2728,9 +2728,7 @@ components:
     PatchedRequestAdminUpdateRequest:
       type: object
       properties:
-        additional_data:
-          type: object
-          additionalProperties: {}
+        additional_data: {}
         deadline:
           type: string
           format: date
@@ -2759,6 +2757,8 @@ components:
         responsible:
           type: integer
           nullable: true
+        send_notification:
+          type: boolean
         start_datetime:
           type: string
           format: date-time
@@ -2807,9 +2807,7 @@ components:
     PatchedVideoAdminCreateUpdateRequest:
       type: object
       properties:
-        additional_data:
-          type: object
-          additionalProperties: {}
+        additional_data: {}
         editor:
           type: integer
           nullable: true
@@ -2930,9 +2928,7 @@ components:
     RequestAdminCreateRequest:
       type: object
       properties:
-        additional_data:
-          type: object
-          additionalProperties: {}
+        additional_data: {}
         comment:
           type: string
         deadline:
@@ -3074,8 +3070,6 @@ components:
           type: integer
           readOnly: true
         additional_data:
-          type: object
-          additionalProperties: {}
           readOnly: true
         comment_count:
           type: integer
@@ -3123,9 +3117,7 @@ components:
     RequestAdminUpdateRequest:
       type: object
       properties:
-        additional_data:
-          type: object
-          additionalProperties: {}
+        additional_data: {}
         deadline:
           type: string
           format: date
@@ -3154,6 +3146,8 @@ components:
         responsible:
           type: integer
           nullable: true
+        send_notification:
+          type: boolean
         start_datetime:
           type: string
           format: date-time
@@ -3663,8 +3657,6 @@ components:
       type: object
       properties:
         avatar:
-          type: object
-          additionalProperties: {}
           readOnly: true
         avatar_url:
           type: string
@@ -3718,9 +3710,7 @@ components:
     VideoAdminCreateUpdateRequest:
       type: object
       properties:
-        additional_data:
-          type: object
-          additionalProperties: {}
+        additional_data: {}
         editor:
           type: integer
           nullable: true
@@ -3793,8 +3783,6 @@ components:
           type: string
           readOnly: true
         additional_data:
-          type: object
-          additionalProperties: {}
           readOnly: true
       required:
         - additional_data

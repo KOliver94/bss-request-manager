@@ -20,10 +20,10 @@
 export interface UserProfile {
   /**
    *
-   * @type {{ [key: string]: any; }}
+   * @type {any}
    * @memberof UserProfile
    */
-  avatar: { [key: string]: any };
+  avatar: any;
   /**
    *
    * @type {string}

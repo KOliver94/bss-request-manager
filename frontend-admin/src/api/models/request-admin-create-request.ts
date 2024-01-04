@@ -20,10 +20,10 @@
 export interface RequestAdminCreateRequest {
   /**
    *
-   * @type {{ [key: string]: any; }}
+   * @type {any}
    * @memberof RequestAdminCreateRequest
    */
-  additional_data?: { [key: string]: any };
+  additional_data?: any;
   /**
    *
    * @type {string}
