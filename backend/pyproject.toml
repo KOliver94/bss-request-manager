@@ -67,7 +67,10 @@ google-auth-oauthlib = "1.2.0"
 jsonschema = {extras = ["format"], version = "4.20.0"}
 libgravatar = "1.0.4"
 python-decouple = "3.8"
-python-ldap = "3.4.4"
+python-ldap = [
+    { markers = "sys_platform == 'win32'", url = "https://github.com/cgohlke/python-ldap-build/releases/download/v3.4.4/python_ldap-3.4.4-cp312-cp312-win_amd64.whl" },
+    { markers = "sys_platform != 'win32'", source = "pypi", version = "3.4.4" },
+]
 requests = "2.31.0"
 sentry-sdk = "1.39.1"
 social-auth-app-django = "5.4.0"

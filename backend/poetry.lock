@@ -1719,6 +1719,24 @@ pyasn1 = ">=0.3.7"
 pyasn1_modules = ">=0.1.5"
 
 [[package]]
+name = "python-ldap"
+version = "3.4.4"
+description = "Python modules for implementing LDAP clients"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "python_ldap-3.4.4-cp312-cp312-win_amd64.whl", hash = "sha256:94d2ca2b3ced81c9d89aa5c79d4965d03053e1ffdcfae73e9fac85d25b692e85"},
+]
+
+[package.dependencies]
+pyasn1 = ">=0.3.7"
+pyasn1-modules = ">=0.1.5"
+
+[package.source]
+type = "url"
+url = "https://github.com/cgohlke/python-ldap-build/releases/download/v3.4.4/python_ldap-3.4.4-cp312-cp312-win_amd64.whl"
+
+[[package]]
 name = "python3-openid"
 version = "3.2.0"
 description = "OpenID support for modern servers and consumers."
@@ -2389,4 +2407,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "5bd74c1b13e8a672edcd4c943237ba5743df28577afeffc324d1dad057495145"
+content-hash = "735096dee5fc743263ccaf47be0899bd5f60337b3b8057bef66de6e88c6c0cea"
