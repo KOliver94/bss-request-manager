@@ -20,10 +20,10 @@
 export interface PatchedRequestAdminUpdateRequest {
   /**
    *
-   * @type {{ [key: string]: any; }}
+   * @type {any}
    * @memberof PatchedRequestAdminUpdateRequest
    */
-  additional_data?: { [key: string]: any };
+  additional_data?: any;
   /**
    *
    * @type {string}
@@ -78,6 +78,12 @@ export interface PatchedRequestAdminUpdateRequest {
    * @memberof PatchedRequestAdminUpdateRequest
    */
   responsible?: number | null;
+  /**
+   *
+   * @type {boolean}
+   * @memberof PatchedRequestAdminUpdateRequest
+   */
+  send_notification?: boolean;
   /**
    *
    * @type {string}

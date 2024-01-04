@@ -87,10 +87,10 @@ export interface RequestAdminRetrieve {
   video_count: number;
   /**
    *
-   * @type {{ [key: string]: any; }}
+   * @type {any}
    * @memberof RequestAdminRetrieve
    */
-  additional_data: { [key: string]: any };
+  additional_data: any;
   /**
    *
    * @type {number}
