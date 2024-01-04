@@ -1,7 +1,7 @@
 {% extends 'email/html/email_base.html' %}
 {% load i18n %}
 {% load static %}
-{% load settings %}
+{% load extra_tags %}
 {% block title %}Új hozzászólás érkezett{% endblock %}
 {% block preheader %}Szia! A(z) {{ comment.request.title }} felkéréshez új {% if comment.internal %}belső {% endif %}hozzászólás érkezett.{% endblock %}
 {% block hero %}Szia!{% endblock %}

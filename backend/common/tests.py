@@ -8,7 +8,7 @@ from django.test import TestCase
 from rest_framework import status
 
 from common.models import Ban, get_sentinel_user
-from common.templatetags.settings import settings_value
+from common.templatetags.extra_tags import settings_value
 from tests.helpers.users_test_utils import create_user
 from tests.helpers.video_requests_test_utils import (
     create_comment,
