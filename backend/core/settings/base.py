@@ -312,9 +312,6 @@ LOGGING = {
 # https://docs.djangoproject.com/en/3.0/topics/email/
 
 EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
-DEBUG_EMAIL = config(
-    "DEBUG_EMAIL", default=None
-)  # if set all e-mails will be sent to this address only
 
 # Enable Django's admin site
 DJANGO_ADMIN = config("DJANGO_ADMIN", default=True, cast=bool)
