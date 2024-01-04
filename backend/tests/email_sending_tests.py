@@ -22,6 +22,7 @@ from tests.helpers.video_requests_test_utils import (
 )
 from video_requests.emails import (
     email_crew_daily_reminder,
+    email_crew_request_modified,
     email_production_manager_unfinished_requests,
     email_responsible_overdue_request,
     email_staff_weekly_tasks,
@@ -306,6 +307,162 @@ class EmailSendingTestCase(APITestCase):
         self.assertEqual(
             mail.outbox[0].subject, f"{request.title} | Hozzászólás érkezett"
         )
+
+    def test_request_modified_email_sent_when_send_notification_checked(self):
+        # Setup data - Create a Request, add Crew members and Responsible
+        crew_member1 = create_user(is_staff=True)
+        crew_member2 = create_user(is_staff=True)
+        responsible = create_user(is_staff=True)
+        request = create_request(100, self.normal_user, responsible=responsible)
+        create_crew(200, request, crew_member1, "Cameraman")
+        create_crew(201, request, crew_member2, "Reporter")
+
+        # Modify request and send notification
+        self.authorize_user(self.staff_user)
+        data = {
+            "title": "Test Request Modified",
+            "start_datetime": localtime() + timedelta(minutes=10),
+            "end_datetime": localtime() + timedelta(days=3),
+            "place": "New place",
+            "type": "New type",
+            "send_notification": True,
+        }
+        url = reverse("api:v1:admin:requests:request-detail", kwargs={"pk": request.id})
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check if e-mail was sent to the right people
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(crew_member1.email, mail.outbox[0].to)
+        self.assertIn(crew_member2.email, mail.outbox[0].to)
+        self.assertIn(responsible.email, mail.outbox[0].cc)
+        self.assertIn(self.editor_in_chief.email, mail.outbox[0].cc)
+        self.assertEqual(
+            mail.outbox[0].subject, f"{data['title']} | Felkérés módosítva"
+        )
+
+    @patch(
+        "video_requests.emails.email_crew_request_modified.delay",
+        wraps=email_crew_request_modified,
+    )
+    def test_request_modified_email_sending_called_with_right_values(
+        self, mock_email_crew_request_modified
+    ):
+        request = create_request(100, self.normal_user)
+        url = reverse("api:v1:admin:requests:request-detail", kwargs={"pk": request.id})
+
+        self.authorize_user(self.staff_user)
+
+        # Change deadline - Should not send e-mail
+        data = {
+            "deadline": (request.end_datetime + timedelta(weeks=1)).date(),
+            "send_notification": True,
+        }
+
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        mock_email_crew_request_modified.assert_not_called()
+
+        # Change title - Should work
+        data = {"title": "TC1", "send_notification": True}
+
+        changed_values = [
+            {"name": "Esemény neve", "next": data["title"], "previous": request.title}
+        ]
+
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        mock_email_crew_request_modified.assert_called_once()
+
+        self.assertEqual(mock_email_crew_request_modified.call_args.args[0], request.id)
+        self.assertEqual(
+            mock_email_crew_request_modified.call_args.args[1],
+            self.staff_user.get_full_name_eastern_order(),
+        )
+        self.assertEqual(
+            mock_email_crew_request_modified.call_args.args[3], changed_values
+        )
+
+        mock_email_crew_request_modified.reset_mock()
+
+        # Change title and deadline - Only title should be included
+        data = {
+            "title": "TC2",
+            "deadline": (request.end_datetime + timedelta(weeks=2)).date(),
+            "send_notification": True,
+        }
+
+        changed_values = [
+            {
+                "name": "Esemény neve",
+                "next": data["title"],
+                "previous": response.data["title"],
+            }
+        ]
+
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        mock_email_crew_request_modified.assert_called_once()
+
+        self.assertEqual(mock_email_crew_request_modified.call_args.args[0], request.id)
+        self.assertEqual(
+            mock_email_crew_request_modified.call_args.args[1],
+            self.staff_user.get_full_name_eastern_order(),
+        )
+        self.assertEqual(
+            mock_email_crew_request_modified.call_args.args[3], changed_values
+        )
+
+        mock_email_crew_request_modified.reset_mock()
+
+        # Change multiple values
+        data = {
+            "title": "TC3",
+            "start_datetime": request.start_datetime + timedelta(minutes=5),
+            "end_datetime": request.end_datetime + timedelta(minutes=5),
+            "place": "TC3 - Place",
+            "type": "TC3 - Type",
+            "send_notification": True,
+        }
+
+        changed_values = [
+            {
+                "name": "Esemény neve",
+                "next": data["title"],
+                "previous": response.data["title"],
+            },
+            {
+                "name": "Esemény kezdésének ideje",
+                "next": data["start_datetime"],
+                "previous": request.start_datetime,
+            },
+            {
+                "name": "Esemény várható befejezése",
+                "next": data["end_datetime"],
+                "previous": request.end_datetime,
+            },
+            {"name": "Helyszín", "next": data["place"], "previous": request.place},
+            {"name": "Videó típusa", "next": data["type"], "previous": request.type},
+        ]
+
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        mock_email_crew_request_modified.assert_called_once()
+
+        self.assertEqual(mock_email_crew_request_modified.call_args.args[0], request.id)
+        self.assertEqual(
+            mock_email_crew_request_modified.call_args.args[1],
+            self.staff_user.get_full_name_eastern_order(),
+        )
+        self.assertEqual(
+            mock_email_crew_request_modified.call_args.args[3], changed_values
+        )
+
+        mock_email_crew_request_modified.reset_mock()
 
     """
     SCHEDULED TASKS

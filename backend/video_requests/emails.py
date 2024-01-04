@@ -201,6 +201,50 @@ def email_crew_new_comment(comment_id):
     return f"New comment e-mail was sent to {[crew_members_email_addresses, editor_in_chief_email_address, responsible_email_address]} successfully."
 
 
+@shared_task
+def email_crew_request_modified(
+    request_id, changed_by_name, changed_datetime, changed_values
+):
+    request = Request.objects.get(pk=request_id)
+    context = {
+        "changed_by_name": changed_by_name,
+        "changed_datetime": changed_datetime,
+        "changed_values": changed_values,
+        "request": request,
+    }
+
+    msg_plain = render_to_string("email/txt/crew_request_modified.txt", context)
+    msg_html = render_to_string("email/html/crew_request_modified.html", context)
+
+    subject = f"{request.title} | Felkérés módosítva"
+    editor_in_chief_email_address = [user.email for user in get_editor_in_chief()]
+    responsible_email_address = (
+        [request.responsible.email]
+        if request.responsible and request.responsible.is_staff
+        else []
+    )
+    crew_members_email_addresses = [
+        user.member.email for user in request.crew.filter(member__is_staff=True)
+    ]
+
+    msg = (
+        EmailMultiAlternatives(
+            subject=subject,
+            body=msg_plain,
+            to=crew_members_email_addresses,
+            cc=list(
+                set().union(editor_in_chief_email_address, responsible_email_address)
+            ),
+        )
+        if not settings.DEBUG_EMAIL
+        else debug_email(subject, msg_plain)
+    )
+
+    msg.attach_alternative(msg_html, TEXT_HTML)
+    msg.send()
+    return f"Request modified notification e-mail was sent to {[crew_members_email_addresses, editor_in_chief_email_address, responsible_email_address]} successfully."
+
+
 def email_production_manager_unfinished_requests(requests):
     context = {"requests": requests}
 

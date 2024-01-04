@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema_field
 from phonenumber_field.serializerfields import PhoneNumberField
@@ -26,7 +27,10 @@ from api.v1.admin.users.serializers import (
     UserNestedListSerializer,
 )
 from common.utilities import create_calendar_event, update_calendar_event
-from video_requests.emails import email_user_new_request_confirmation
+from video_requests.emails import (
+    email_crew_request_modified,
+    email_user_new_request_confirmation,
+)
 from video_requests.models import Comment, Request, Video
 from video_requests.utilities import recalculate_deadline, update_request_status
 
@@ -79,6 +83,7 @@ class RequestAdminUpdateSerializer(ModelSerializer):
     requester_first_name = CharField(required=False)
     requester_last_name = CharField(required=False)
     requester_mobile = PhoneNumberField(required=False)
+    send_notification = BooleanField(required=False)
 
     class Meta:
         model = Request
@@ -93,18 +98,51 @@ class RequestAdminUpdateSerializer(ModelSerializer):
             "requester_last_name",
             "requester_mobile",
             "responsible",
+            "send_notification",
             "start_datetime",
             "title",
             "type",
         )
 
+    field_name_translations = {
+        "end_datetime": "Esemény várható befejezése",
+        "place": "Helyszín",
+        "start_datetime": "Esemény kezdésének ideje",
+        "title": "Esemény neve",
+        "type": "Videó típusa",
+    }
+
+    def get_changed_values(self, instance, validated_data):
+        fields_to_check = ["title", "start_datetime", "end_datetime", "place", "type"]
+        changed = []
+        for field in fields_to_check:
+            next_value = validated_data.get(field, None)
+            prev_value = getattr(instance, field)
+            if next_value and prev_value != next_value:
+                changed_field = dict()
+                changed_field["name"] = self.field_name_translations[field]
+                changed_field["previous"] = prev_value
+                changed_field["next"] = next_value
+                changed.append(changed_field)
+        return changed
+
     def update(self, instance, validated_data):
+        send_notification = validated_data.pop("send_notification", None)
         recalculate_deadline(instance, validated_data)
         handle_additional_data(validated_data, self.context["request"].user, instance)
         if validated_data.get("requester_email"):
             # As validate() should have already run if any of requester attribute exists all should exist.
             get_or_create_requester_from_data(validated_data, instance)
+        changed_datetime = now()
+        changed_by = self.context["request"].user.get_full_name_eastern_order()
+        changed_values = None
+        if send_notification:
+            changed_values = self.get_changed_values(instance, validated_data)
         request = super().update(instance, validated_data)
+        if send_notification and changed_values:
+            email_crew_request_modified.delay(
+                request.id, changed_by, changed_datetime, changed_values
+            )
         update_request_status(request)
         update_calendar_event.delay(request.id)
         return request
@@ -144,7 +182,6 @@ class RequestAdminUpdateSerializer(ModelSerializer):
 
 class RequestAdminCreateSerializer(RequestAdminUpdateSerializer):
     comment = CharField(allow_blank=True, required=False)
-    send_notification = BooleanField(required=False)
 
     class Meta:
         model = Request

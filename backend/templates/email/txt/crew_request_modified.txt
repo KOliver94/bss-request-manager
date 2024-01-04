@@ -1,0 +1,10 @@
+{% load i18n %}{% load extra_tags %}Szia!
+
+{% language 'hu' %}{{ changed_by_name }} módosította a(z) {{ request.title }} felkérést {{ changed_datetime|date:"DATETIME_FORMAT" }}-kor.
+
+{% for changed_value in changed_values %}{{ changed_value|get_item:"name" }}: {{ changed_value|get_item:"previous"|date_fallback }} -> {{ changed_value|get_item:"next"|date_fallback }}
+{% endfor %}{% endlanguage %}
+Ugrás a felkéréshez: {{ request.admin_url }}
+
+Üdv:
+Felkéréskezelő robotka
