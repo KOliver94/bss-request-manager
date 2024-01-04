@@ -137,9 +137,9 @@ repos:
             --fix,
           ]
         additional_dependencies:
-          - '@tanstack/eslint-plugin-query@5.14.6'
-          - '@typescript-eslint/eslint-plugin@6.15.0'
-          - '@typescript-eslint/parser@6.15.0'
+          - '@tanstack/eslint-plugin-query@5.17.1'
+          - '@typescript-eslint/eslint-plugin@6.17.0'
+          - '@typescript-eslint/parser@6.17.0'
           - eslint-config-prettier@9.1.0
           - eslint-import-resolver-typescript@3.6.1
           - eslint-plugin-import@2.29.1
