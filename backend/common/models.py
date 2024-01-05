@@ -65,7 +65,7 @@ class Ban(models.Model):
         blank=True,
         null=True,
     )
-    reason = models.CharField(max_length=100, blank=True, null=True)
+    reason = models.CharField(max_length=100, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
