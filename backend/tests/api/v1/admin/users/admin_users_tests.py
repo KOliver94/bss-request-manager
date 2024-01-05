@@ -414,7 +414,7 @@ def test_create_user_ban(api_client, data, expected, request, user):
         )
 
         data = data or {}
-        assert response.data["reason"] == data.get("reason")
+        assert response.data["reason"] == data.get("reason", "")
         assert response.data["creator"]["avatar_url"] == own_user.userprofile.avatar_url
         assert (
             response.data["creator"]["full_name"]
