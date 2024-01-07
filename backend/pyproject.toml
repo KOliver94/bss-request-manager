@@ -61,7 +61,7 @@ django-phonenumber-field = {extras = ["phonenumbers"], version = "7.3.0"}
 django-simple-history = "3.4.0"
 drf-recaptcha = "3.0.0"
 drf-spectacular = "0.27.0"
-google-api-python-client = "2.111.0"
+google-api-python-client = "2.112.0"
 google-auth-httplib2 = "0.2.0"
 google-auth-oauthlib = "1.2.0"
 jsonschema = {extras = ["format"], version = "4.20.0"}
@@ -81,14 +81,14 @@ django-debug-toolbar = "4.2.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "3.6.0"
-psycopg = {extras = ["binary"], version = "3.1.16"}
+psycopg = {extras = ["binary"], version = "3.1.17"}
 
 [tool.poetry.group.prod]
 optional = true
 
 [tool.poetry.group.prod.dependencies]
 gunicorn = "21.2.0"
-psycopg = {extras = ["c"], version = "3.1.16"}
+psycopg = {extras = ["c"], version = "3.1.17"}
 
 [tool.poetry.group.test.dependencies]
 model_bakery = "1.17.0"
