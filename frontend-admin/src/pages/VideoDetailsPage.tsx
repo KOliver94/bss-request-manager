@@ -242,6 +242,7 @@ const VideoDetailsPage = () => {
     confirmDialog({
       accept: handleDelete,
       acceptClassName: 'p-button-danger',
+      breakpoints: { '768px': '95vw' },
       defaultFocus: 'reject',
       header: 'Biztosan törölni akarod a videót?',
       icon: 'pi pi-exclamation-triangle',
@@ -303,7 +304,7 @@ const VideoDetailsPage = () => {
           status={queryResult.status}
         />
       </Suspense>
-      <ConfirmDialog breakpoints={{ '768px': '95vw' }} />
+      <ConfirmDialog />
       <div className="p-3 sm:p-5 surface-ground">
         <div className="flex flex-column mb-3 sm:align-items-center sm:flex-row sm:justify-content-between">
           <div>

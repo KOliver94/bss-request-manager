@@ -268,6 +268,7 @@ const RequestDetailsPage = () => {
     confirmDialog({
       accept: handleDelete,
       acceptClassName: 'p-button-danger',
+      breakpoints: { '768px': '95vw' },
       defaultFocus: 'reject',
       header: 'Biztosan törölni akarod a felkérést?',
       icon: 'pi pi-exclamation-triangle',
@@ -386,7 +387,7 @@ const RequestDetailsPage = () => {
 
   return (
     <>
-      <ConfirmDialog breakpoints={{ '768px': '95vw' }} />
+      <ConfirmDialog />
       <Suspense>
         <AcceptRejectDialog
           accepted={data.additional_data.accepted}
