@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as locales from 'primelocale/hu.json';
-import { PrimeReactProvider, addLocale, locale } from 'primereact/api';
+import { PrimeReactProvider, addLocale } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
 import {
   RouterProvider,
@@ -57,11 +57,11 @@ if (import.meta.env.PROD) {
 }
 
 addLocale('hu', locales['hu']);
-locale('hu');
 
 register('hu_HU', huLocal);
 
 const primeReactSettings = {
+  locale: 'hu',
   ripple: true,
 };
 
