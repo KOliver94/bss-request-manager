@@ -230,6 +230,7 @@ const CommentCard = ({
     confirmDialog({
       accept: () => handleDelete(commentId),
       acceptClassName: 'p-button-danger',
+      defaultFocus: 'reject',
       header: 'Biztosan törölni akarod a hozzászólást?',
       icon: 'pi pi-exclamation-triangle',
       message:

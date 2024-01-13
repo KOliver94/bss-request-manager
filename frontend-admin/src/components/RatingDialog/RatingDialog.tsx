@@ -191,6 +191,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
       confirmPopup({
         accept: handleDelete,
         acceptClassName: 'p-button-danger',
+        defaultFocus: 'reject',
         icon: 'pi pi-exclamation-triangle',
         message: 'Biztosan törölni akarod az értékelést?',
         target: event.currentTarget,
