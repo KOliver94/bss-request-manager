@@ -150,6 +150,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     confirmDialog({
       accept: () => handleDelete(id),
       acceptClassName: 'p-button-danger',
+      breakpoints: { '768px': '95vw' },
       defaultFocus: 'reject',
       header: 'Biztosan törölni akarod a stábtagot?',
       icon: 'pi pi-exclamation-triangle',
