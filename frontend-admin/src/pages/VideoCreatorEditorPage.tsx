@@ -16,7 +16,7 @@ import {
   useRevalidator,
 } from 'react-router-dom';
 
-import { UserNestedDetail, VideoAdminRetrieve } from 'api/models';
+import { UserNestedList, VideoAdminRetrieve } from 'api/models';
 import {
   requestVideoUpdateMutation,
   requestVideoCreateMutation,
@@ -43,7 +43,7 @@ export interface IVideoCreator {
       website: string;
     };
   };
-  editor: UserNestedDetail | null;
+  editor: UserNestedList | null;
   title: string;
 }
 
