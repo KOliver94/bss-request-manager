@@ -242,6 +242,7 @@ const VideoDetailsPage = () => {
     confirmDialog({
       accept: handleDelete,
       acceptClassName: 'p-button-danger',
+      defaultFocus: 'reject',
       header: 'Biztosan törölni akarod a videót?',
       icon: 'pi pi-exclamation-triangle',
       message:

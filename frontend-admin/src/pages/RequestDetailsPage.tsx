@@ -268,6 +268,7 @@ const RequestDetailsPage = () => {
     confirmDialog({
       accept: handleDelete,
       acceptClassName: 'p-button-danger',
+      defaultFocus: 'reject',
       header: 'Biztosan törölni akarod a felkérést?',
       icon: 'pi pi-exclamation-triangle',
       message:
