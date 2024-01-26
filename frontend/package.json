@@ -7,13 +7,13 @@
     "@emotion/react": "11.11.3",
     "@emotion/styled": "11.11.0",
     "@hookform/resolvers": "3.3.4",
-    "@mui/icons-material": "5.15.5",
-    "@mui/material": "5.15.5",
-    "@mui/x-date-pickers": "6.19.0",
-    "@sentry/react": "7.94.1",
-    "axios": "1.6.5",
+    "@mui/icons-material": "5.15.6",
+    "@mui/material": "5.15.6",
+    "@mui/x-date-pickers": "6.19.2",
+    "@sentry/react": "7.98.0",
+    "axios": "1.6.7",
     "classnames": "2.5.1",
-    "date-fns": "3.3.0",
+    "date-fns": "3.3.1",
     "jwt-decode": "4.0.0",
     "mui-tel-input": "5.0.0",
     "notistack": "3.0.1",
@@ -65,6 +65,6 @@
     "prettier": "3.2.4",
     "source-map-explorer": "2.5.3",
     "vite": "5.0.12",
-    "vite-plugin-pwa": "0.17.4"
+    "vite-plugin-pwa": "0.17.5"
   }
 }
