@@ -737,13 +737,13 @@ Django = ">=3.2"
 
 [[package]]
 name = "django-health-check"
-version = "3.17.0"
+version = "3.18.0"
 description = "Run checks on services like databases, queue servers, celery processes, etc."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django-health-check-3.17.0.tar.gz", hash = "sha256:d1b8671e79d1de6e3dd1a9c69566222b0bfcfacca8b90511a4407b2d0d3d2778"},
-    {file = "django_health_check-3.17.0-py2.py3-none-any.whl", hash = "sha256:20dc5ccb516a4e7163593fd4026f0a7531e3027b47d23ebe3bd9dbc99ac4354c"},
+    {file = "django-health-check-3.18.0.tar.gz", hash = "sha256:523e71b7bd18512679a1cd0e64e450b9938d0cdb5c4143abc5b5b89fa12b6d68"},
+    {file = "django_health_check-3.18.0-py2.py3-none-any.whl", hash = "sha256:ef538d5ba82fee85bfde95a09939514893e6661b9309a685f82b6208344367b5"},
 ]
 
 [package.dependencies]
@@ -951,13 +951,13 @@ grpcio-gcp = ["grpcio-gcp (>=0.2.2,<1.0.dev0)"]
 
 [[package]]
 name = "google-api-python-client"
-version = "2.114.0"
+version = "2.115.0"
 description = "Google API Client Library for Python"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "google-api-python-client-2.114.0.tar.gz", hash = "sha256:e041bbbf60e682261281e9d64b4660035f04db1cccba19d1d68eebc24d1465ed"},
-    {file = "google_api_python_client-2.114.0-py2.py3-none-any.whl", hash = "sha256:690e0bb67d70ff6dea4e8a5d3738639c105a478ac35da153d3b2a384064e9e1a"},
+    {file = "google-api-python-client-2.115.0.tar.gz", hash = "sha256:96af11376535236ba600ebbe23588cfe003ec9b74e66dd6ddb53aa3ec87e1b52"},
+    {file = "google_api_python_client-2.115.0-py2.py3-none-any.whl", hash = "sha256:26178e33684763099142e2cad201057bd27d4efefd859a495aac21ab3e6129c2"},
 ]
 
 [package.dependencies]
@@ -2408,4 +2408,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "13f73aba8aaa77fc260df3df6e7a1dbd5f4fe0d9b0a2cfaa6dc500970723b03b"
+content-hash = "3450c66e3798898131bf4b7908196fba04c42c21e3acbcbfe5f3eadd447c7c3b"
