@@ -56,7 +56,7 @@ repos:
         name: 'Sort Python imports'
         args: [--settings, ./backend/pyproject.toml]
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 23.12.1
+    rev: 24.1.1
     hooks:
       - id: black
         name: 'Format Python code'
@@ -75,7 +75,7 @@ repos:
         additional_dependencies:
           - Flake8-pyproject
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.6
+    rev: 1.7.7
     hooks:
       - id: bandit
         name: 'Check Python security issues'
@@ -92,7 +92,7 @@ repos:
         additional_dependencies:
           - prettier@3.1.1
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.0.0-alpha.1
+    rev: v9.0.0-alpha.2
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
