@@ -61,10 +61,10 @@ def get_or_create_requester_from_data(validated_data, instance=None):
 
 def handle_additional_data(validated_data, user, original_data=None):
     if "additional_data" in validated_data:
-        validated_data[
-            "additional_data"
-        ] = check_and_remove_unauthorized_additional_data(
-            validated_data["additional_data"], user, original_data
+        validated_data["additional_data"] = (
+            check_and_remove_unauthorized_additional_data(
+                validated_data["additional_data"], user, original_data
+            )
         )
         if original_data:
             validated_data["additional_data"] = update_additional_data(
