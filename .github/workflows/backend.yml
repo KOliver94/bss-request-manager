@@ -90,7 +90,7 @@ jobs:
           poetry run pytest --cov --cov-report html --cov-report term --cov-report xml -n auto
       - name: Upload coverage to Codecov
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
-        uses: codecov/codecov-action@v4.0.0
+        uses: codecov/codecov-action@v4.0.1
         with:
           directory: backend/
         env:
