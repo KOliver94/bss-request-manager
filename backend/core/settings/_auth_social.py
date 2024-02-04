@@ -76,9 +76,9 @@ SOCIAL_AUTH_PIPELINE = (
     # Custom action: Set user to active when first logs in.
     "common.social_core.pipeline.set_user_active_when_first_logs_in",
     # Custom action: Check if admin/staff user is still in Active Directory.
-    "common.social_core.pipeline.check_if_admin_or_staff_user_is_still_privileged",
+    # "common.social_core.pipeline.check_if_admin_or_staff_user_is_still_privileged",
     # Custom action: Check if admin/staff user has already associated social profile to his/her account.
-    "common.social_core.pipeline.check_if_admin_or_staff_user_already_associated",
+    # "common.social_core.pipeline.check_if_admin_or_staff_user_already_associated",
     # Create a user account if we haven't found one yet.
     "social_core.pipeline.user.create_user",
     # Create the record that associates the social account with the user.

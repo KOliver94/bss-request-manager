@@ -250,7 +250,7 @@ function LoginPage() {
                       type: 'username',
                       name: 'username',
                       onChange: (e) => handleChange(e),
-                      disabled: loading,
+                      disabled: true,
                       required: true,
                       endAdornment: (
                         <InputAdornment position="end">
@@ -272,7 +272,7 @@ function LoginPage() {
                       type: 'password',
                       name: 'password',
                       onChange: (e) => handleChange(e),
-                      disabled: loading,
+                      disabled: true,
                       required: true,
                       endAdornment: (
                         <InputAdornment position="end">

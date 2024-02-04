@@ -4,7 +4,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import ignore_logger
 from sentry_sdk.integrations.redis import RedisIntegration
 
-from core.settings._auth_ldap import *
+# from core.settings._auth_ldap import *
 from core.settings._auth_social import *
 
 # E-mail settings
