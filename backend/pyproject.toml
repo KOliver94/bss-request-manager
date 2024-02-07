@@ -48,7 +48,7 @@ authors = ["Olivér Kecskeméty <kecskemety.oliver@simonyi.bme.hu>"]
 [tool.poetry.dependencies]
 python = "^3.12"
 celery = {extras = ["redis"], version = "5.3.6"}
-django = "5.0.1"
+django = "5.0.2"
 djangorestframework = "3.14.0"
 djangorestframework_simplejwt = "5.3.1"
 django-auth-ldap = "4.6.0"
