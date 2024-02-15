@@ -28,24 +28,13 @@ async function handleLogin(response) {
 }
 
 export async function loginLdap(loginDetails, config) {
-  await axiosInstance
-    .post('login', loginDetails, config)
-    .then(handleLogin)
-    .catch((error) => {
-      if (error.response && error.response.status === 401) {
-        throw new Error('Hibás felhasználónév vagy jelszó!');
-      }
-      throw new Error('Network response was not ok.');
-    });
+  await axiosInstance.post('login', loginDetails, config).then(handleLogin);
 }
 
 export async function loginSocial(provider, code, config) {
   await axiosInstance
     .post('login/social', { provider, code }, config)
-    .then(handleLogin)
-    .catch(() => {
-      throw new Error('Network response was not ok.');
-    });
+    .then(handleLogin);
 }
 
 export async function logoutUser() {
