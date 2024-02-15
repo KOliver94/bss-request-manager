@@ -33,7 +33,7 @@ import {
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
 import background from 'src/assets/img/login.webp';
-import { CanceledError } from 'axios';
+import { isCancel } from 'axios';
 import stylesModule from './LoginPage.module.scss';
 
 function LoginPage() {
@@ -85,6 +85,7 @@ function LoginPage() {
         enqueueSnackbar('Sikeres bejelentkezés', {
           variant: 'success',
         });
+        setLoading(false);
         redirect();
       };
 
@@ -99,17 +100,21 @@ function LoginPage() {
           });
         }
       } catch (e) {
-        if (CanceledError(e)) {
+        if (isCancel(e)) {
           return;
         }
-        enqueueSnackbar(e.message, {
+
+        let message = 'Sikertelen bejelentkezés.';
+        if (e.response && e.response.status === 401) {
+          message = 'Hibás felhasználónév vagy jelszó!';
+        }
+        enqueueSnackbar(message, {
           variant: 'error',
           anchorOrigin: {
             vertical: 'bottom',
             horizontal: 'center',
           },
         });
-      } finally {
         setLoading(false);
       }
     },
