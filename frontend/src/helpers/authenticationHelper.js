@@ -4,7 +4,18 @@ export function isRefreshTokenExpired() {
 }
 
 export function isAuthenticated() {
-  return !!localStorage.getItem('access_token') && !isRefreshTokenExpired();
+  if (!localStorage.getItem('access_token')) {
+    return false;
+  }
+
+  if (isRefreshTokenExpired()) {
+    const redirectedFrom = localStorage.getItem('redirectedFrom');
+    localStorage.clear();
+    if (redirectedFrom) localStorage.setItem('redirectedFrom', redirectedFrom);
+    return false;
+  }
+
+  return true;
 }
 
 export function isPrivileged() {
