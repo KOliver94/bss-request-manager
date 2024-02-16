@@ -21,9 +21,9 @@ type AvatarOptionProps = {
 };
 
 const avatarProvider: Record<string, string> = {
-  facebook: 'Facebook',
   'google-oauth2': 'Google',
   gravatar: 'Gravatar',
+  'microsoft-graph': 'Microsoft',
 };
 
 const AvatarOption = ({
@@ -120,7 +120,7 @@ const AvatarDialog = forwardRef<React.Ref<HTMLDivElement>, AvatarDialogProps>(
         {...ref}
       >
         <div className="grid">
-          {['facebook', 'google-oauth2', 'gravatar'].map((provider) => (
+          {['google-oauth2', 'gravatar', 'microsoft-graph'].map((provider) => (
             <AvatarOption
               key={provider}
               image={userData.profile.avatar[provider]}

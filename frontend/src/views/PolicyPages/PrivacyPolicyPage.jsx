@@ -88,10 +88,10 @@ function PrivacyPolicyPage() {
                 </li>
               </ul>
               <p>
-                If you sign in using Google, Facebook or AuthSCH, we collect
-                these data with your consent from the selected provider. We also
-                store a link to your profile picture from the selected provider
-                if available.
+                If you sign in using your AuthSCH, Google or Microsoft account,
+                we collect these data with your consent from the selected
+                provider. We also store a link to your profile picture from the
+                selected provider if available.
               </p>
               <h3>Use of Your Personal Data</h3>
               <p>We may use Personal Data for the following purposes:</p>

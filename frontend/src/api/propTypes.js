@@ -10,9 +10,9 @@ const UserProfile = PropTypes.shape({
   avatar_url: PropTypes.string,
   phone_number: PropTypes.string,
   avatar: PropTypes.shape({
-    facebook: PropTypes.string,
     'google-oauth2': PropTypes.string,
     gravatar: PropTypes.string,
+    'microsoft-graph': PropTypes.string,
     provider: PropTypes.string,
   }),
 });

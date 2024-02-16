@@ -249,21 +249,21 @@
       0 8px 10px -5px rgba(66, 133, 244, 0.2);
   }
 }
-.github {
-  background-color: #333333;
+.microsoft {
+  background-color: #2f2f2f;
   color: #fff;
   box-shadow:
-    0 2px 2px 0 rgba(51, 51, 51, 0.14),
-    0 3px 1px -2px rgba(51, 51, 51, 0.2),
-    0 1px 5px 0 rgba(51, 51, 51, 0.12);
+    0 2px 2px 0 rgba(47, 47, 47, 0.14),
+    0 3px 1px -2px rgba(47, 47, 47, 0.2),
+    0 1px 5px 0 rgba(47, 47, 47, 0.12);
   &:hover,
   &:focus {
-    background-color: #333333;
+    background-color: #2f2f2f;
     color: #fff;
     box-shadow:
-      0 14px 26px -12px rgba(51, 51, 51, 0.42),
+      0 14px 26px -12px rgba(47, 47, 47, 0.42),
       0 4px 23px 0 rgba(0, 0, 0, 0.12),
-      0 8px 10px -5px rgba(51, 51, 51, 0.2);
+      0 8px 10px -5px rgba(47, 47, 47, 0.2);
   }
 }
 .simple {
@@ -347,12 +347,12 @@
       color: #4285f4;
     }
   }
-  &.github {
+  &.microsoft {
     &,
     &:focus,
     &:hover,
     &:visited {
-      color: #333333;
+      color: #2f2f2f;
     }
   }
 }

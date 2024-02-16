@@ -52,7 +52,7 @@ def create_user(
     # Set user's profile
     user.userprofile.avatar = {
         "provider": "gravatar",
-        "facebook": "https://via.placeholder.com/150",
+        "microsoft-graph": "https://via.placeholder.com/150",
         "gravatar": "https://via.placeholder.com/200",
     }
     user.userprofile.phone_number = "+36701234567"

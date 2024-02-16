@@ -2326,14 +2326,14 @@ components:
   schemas:
     AvatarProviderEnum:
       enum:
-        - facebook
         - google-oauth2
         - gravatar
+        - microsoft-graph
       type: string
       description: |-
-        * `facebook` - Facebook
         * `google-oauth2` - Google
         * `gravatar` - Gravatar
+        * `microsoft-graph` - Microsoft
     BanUser:
       type: object
       properties:
@@ -2347,7 +2347,6 @@ components:
           readOnly: true
         reason:
           type: string
-          nullable: true
           maxLength: 100
       required:
         - created
@@ -2357,7 +2356,6 @@ components:
       properties:
         reason:
           type: string
-          nullable: true
           maxLength: 100
     CommentAdminCreateUpdate:
       type: object

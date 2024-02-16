@@ -53,8 +53,8 @@ import handleError from 'src/helpers/errorHandler';
 import { userRoles, avatarProviders, groups } from 'src/helpers/enumConstants';
 import {
   getOauthUrlAuthSch,
-  getOauthUrlFacebook,
   getOauthUrlGoogle,
+  getOauthUrlMicrosoft,
 } from 'src/helpers/oauthConstants';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 // Sections
@@ -295,11 +295,11 @@ export default function ProfilePage() {
                           case 'authsch':
                             icon = 'fa-brands icon-sch';
                             break;
-                          case 'facebook':
-                            icon = 'fa-brands fa-facebook';
-                            break;
                           case 'google-oauth2':
                             icon = 'fa-brands fa-google';
+                            break;
+                          case 'microsoft-graph':
+                            icon = 'fa-brands fa-microsoft';
                             break;
                           default:
                             break;
@@ -400,7 +400,7 @@ export default function ProfilePage() {
                             <AlertTitle>Nincs elérhető kép</AlertTitle>
                             Tölts fel egy képet{' '}
                             <a href="https://gravatar.com">Gravatar</a>-ra vagy
-                            kapcsold össze profilod Facebook vagy Google
+                            kapcsold össze profilod Google vagy Microsoft
                             fiókoddal a lenti menüpont segítségével.
                             <br />
                             <em>
@@ -502,28 +502,28 @@ export default function ProfilePage() {
                         <GridContainer>
                           <GridItem>
                             {userData.social_accounts.some(
-                              (x) => x.provider === 'facebook',
+                              (x) => x.provider === 'authsch',
                             ) ? (
                               <Button
-                                color="facebook"
+                                color="authsch"
                                 fullWidth
                                 disabled={profileConnecting}
-                                onClick={() => handleDisconnect('facebook')}
+                                onClick={() => handleDisconnect('authsch')}
                               >
-                                <i className="fa-brands fa-facebook" />{' '}
+                                <i className="fa-brands icon-sch" />{' '}
                                 Kijelentkezés
                               </Button>
                             ) : (
                               <Button
-                                color="facebook"
+                                color="authsch"
                                 fullWidth
-                                href={getOauthUrlFacebook({
+                                href={getOauthUrlAuthSch({
                                   operation: 'profile',
                                 })}
                                 target="_self"
                                 disabled={profileConnecting}
                               >
-                                <i className="fa-brands fa-facebook" />{' '}
+                                <i className="fa-brands icon-sch" />{' '}
                                 Bejelenetkezés
                               </Button>
                             )}
@@ -560,28 +560,30 @@ export default function ProfilePage() {
                           </GridItem>
                           <GridItem>
                             {userData.social_accounts.some(
-                              (x) => x.provider === 'authsch',
+                              (x) => x.provider === 'microsoft-graph',
                             ) ? (
                               <Button
-                                color="authsch"
+                                color="microsoft"
                                 fullWidth
                                 disabled={profileConnecting}
-                                onClick={() => handleDisconnect('authsch')}
+                                onClick={() =>
+                                  handleDisconnect('microsoft-graph')
+                                }
                               >
-                                <i className="fa-brands icon-sch" />{' '}
+                                <i className="fa-brands fa-microsoft" />{' '}
                                 Kijelentkezés
                               </Button>
                             ) : (
                               <Button
-                                color="authsch"
+                                color="microsoft"
                                 fullWidth
-                                href={getOauthUrlAuthSch({
+                                href={getOauthUrlMicrosoft({
                                   operation: 'profile',
                                 })}
                                 target="_self"
                                 disabled={profileConnecting}
                               >
-                                <i className="fa-brands icon-sch" />{' '}
+                                <i className="fa-brands fa-microsoft" />{' '}
                                 Bejelenetkezés
                               </Button>
                             )}

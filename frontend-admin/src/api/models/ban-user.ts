@@ -39,5 +39,5 @@ export interface BanUser {
    * @type {string}
    * @memberof BanUser
    */
-  reason?: string | null;
+  reason?: string;
 }

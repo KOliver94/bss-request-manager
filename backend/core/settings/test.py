@@ -14,9 +14,9 @@ except AttributeError:
 # Use the default Django authentication backend
 AUTHENTICATION_BACKENDS += ["django.contrib.auth.backends.ModelBackend"]
 
-# Facebook OAuth2 settings:
-SOCIAL_AUTH_FACEBOOK_KEY = "123456789012345"  # nosec
-SOCIAL_AUTH_FACEBOOK_SECRET = "1234567890abcdef1234567890abcdef"  # nosec
+# AuthSCH OAuth2 settings:
+SOCIAL_AUTH_AUTHSCH_KEY = "12345678901234567890"  # nosec
+SOCIAL_AUTH_AUTHSCH_SECRET = "TNcJ3UoBMUqpfYLBqlGlqN0Lsw1LHyIFvEtMTatL65RtTKAc6JnAYyNdDHX2DLFxkWLHpef8Wu8GHIAr"  # nosec
 
 # Google OAuth2 settings:
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
@@ -24,9 +24,9 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
 )
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "27c7dFrK6aYsuvHLmV5Be3zU"  # nosec
 
-# AuthSCH OAuth2 settings:
-SOCIAL_AUTH_AUTHSCH_KEY = "12345678901234567890"  # nosec
-SOCIAL_AUTH_AUTHSCH_SECRET = "TNcJ3UoBMUqpfYLBqlGlqN0Lsw1LHyIFvEtMTatL65RtTKAc6JnAYyNdDHX2DLFxkWLHpef8Wu8GHIAr"  # nosec
+# Microsoft OAuth2 settings:
+SOCIAL_AUTH_MICROSOFT_GRAPH_KEY = "9cf7a0de-7bb8-0bd1-ec3a-925173e652ee"  # nosec
+SOCIAL_AUTH_MICROSOFT_GRAPH_SECRET = "FYT8Q~pV~qBOa0jEr9N8yf0qOa7yPnZa1xf1daNF"  # nosec
 
 # Use faster password hashing algorithm
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
