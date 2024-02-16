@@ -88,6 +88,9 @@ def check_if_admin_or_staff_user_already_associated(
 
 
 def add_phone_number_to_profile(backend, details, response, user, *args, **kwargs):
+    if user.userprofile.phone_number:
+        return
+
     phone_number = None
 
     # AuthSCH
