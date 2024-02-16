@@ -16,9 +16,9 @@ class OAuth2ConnectSerializer(Serializer):
 
 class UserProfileSerializer(ModelSerializer):
     AVATAR_PROVIDER_CHOICES = (
-        ("facebook", "Facebook"),
         ("google-oauth2", "Google"),
         ("gravatar", "Gravatar"),
+        ("microsoft-graph", "Microsoft"),
     )
 
     avatar_provider = ChoiceField(

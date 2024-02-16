@@ -31,13 +31,13 @@ const socialAccounts: Record<string, { icon: string; label: string }> = {
     icon: 'pi icon-sch',
     label: 'AuthSCH',
   },
-  facebook: {
-    icon: 'pi pi-facebook',
-    label: 'Facebook',
-  },
   'google-oauth2': {
     icon: 'pi pi-google',
     label: 'Google',
+  },
+  'microsoft-graph': {
+    icon: 'pi pi-microsoft',
+    label: 'Microsoft',
   },
 };
 

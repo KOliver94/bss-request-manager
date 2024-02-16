@@ -13,15 +13,15 @@
  */
 
 /**
- * * `facebook` - Facebook * `google-oauth2` - Google * `gravatar` - Gravatar
+ * * `google-oauth2` - Google * `gravatar` - Gravatar * `microsoft-graph` - Microsoft
  * @export
  * @enum {string}
  */
 
 export const AvatarProviderEnum = {
-  Facebook: 'facebook',
   GoogleOauth2: 'google-oauth2',
   Gravatar: 'gravatar',
+  MicrosoftGraph: 'microsoft-graph',
 } as const;
 
 export type AvatarProviderEnum =

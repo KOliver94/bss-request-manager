@@ -16,19 +16,11 @@ SOCIAL_AUTH_USER_FIELDS = ["username", "email", "first_name", "last_name"]
 SOCIAL_AUTH_IMMUTABLE_USER_FIELDS = ["first_name", "last_name"]
 
 # Available OAuth2 providers
-SOCIAL_AUTH_PROVIDERS = ["authsch", "facebook", "google-oauth2"]
+SOCIAL_AUTH_PROVIDERS = ["authsch", "google-oauth2", "microsoft-graph"]
 
-# Facebook OAuth2 settings:
-SOCIAL_AUTH_FACEBOOK_KEY = config("AUTH_FACEBOOK_APP_ID", default=None)
-SOCIAL_AUTH_FACEBOOK_SECRET = config("AUTH_FACEBOOK_APP_SECRET", default=None)
-SOCIAL_AUTH_FACEBOOK_SCOPE = ["email"]
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    "fields": "id, name, email, picture.width(500)"
-}
-SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
-    ("name", "name"),
-    ("email", "email"),
-]
+# AuthSCH OAuth2 settings:
+SOCIAL_AUTH_AUTHSCH_KEY = config("AUTH_SCH_CLIENT_ID", default=None)
+SOCIAL_AUTH_AUTHSCH_SECRET = config("AUTH_SCH_CLIENT_SECRET", default=None)
 
 # Google OAuth2 settings:
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("AUTH_GOOGLE_CLIENT_ID", default=None)
@@ -44,9 +36,11 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [
     ("mobile", "mobile"),
 ]
 
-# AuthSCH OAuth2 settings:
-SOCIAL_AUTH_AUTHSCH_KEY = config("AUTH_SCH_CLIENT_ID", default=None)
-SOCIAL_AUTH_AUTHSCH_SECRET = config("AUTH_SCH_CLIENT_SECRET", default=None)
+# Microsoft OAuth2 settings:
+SOCIAL_AUTH_MICROSOFT_GRAPH_KEY = config("AUTH_MICROSOFT_CLIENT_ID", default=None)
+SOCIAL_AUTH_MICROSOFT_GRAPH_SECRET = config(
+    "AUTH_MICROSOFT_CLIENT_SECRET", default=None
+)
 
 SOCIAL_AUTH_PIPELINE = (
     # Get the information we can about the user and return it in a simple
@@ -111,6 +105,6 @@ SOCIAL_AUTH_DISCONNECT_PIPELINE = (
 
 AUTHENTICATION_BACKENDS += [
     "common.social_core.backends.AuthSCHOAuth2",
-    "social_core.backends.facebook.FacebookOAuth2",
     "social_core.backends.google.GoogleOAuth2",
+    "social_core.backends.microsoft.MicrosoftOAuth2",
 ]

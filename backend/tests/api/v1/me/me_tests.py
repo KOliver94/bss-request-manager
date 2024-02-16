@@ -184,9 +184,9 @@ def test_update_me_avatar(api_client, method, user, request):
     user = do_login(api_client, request, user)
 
     avatar_data = {
-        "provider": "facebook",
-        "facebook": "https://example.com/picture1.png",
+        "provider": "microsoft-graph",
         "gravatar": "https://example.com/picture2.png",
+        "microsoft-graph": "https://example.com/picture1.png",
     }
 
     user.userprofile.avatar = avatar_data
@@ -199,8 +199,8 @@ def test_update_me_avatar(api_client, method, user, request):
 
     assert response.status_code == HTTP_200_OK
 
-    assert response.data["profile"]["avatar"]["provider"] == "facebook"
-    assert response.data["profile"]["avatar_url"] == avatar_data["facebook"]
+    assert response.data["profile"]["avatar"]["provider"] == "microsoft-graph"
+    assert response.data["profile"]["avatar_url"] == avatar_data["microsoft-graph"]
 
     # Modify avatar provider
     response = get_response(

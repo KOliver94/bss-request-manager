@@ -27,8 +27,8 @@ import {
 } from 'src/helpers/authenticationHelper';
 import {
   getOauthUrlAuthSch,
-  getOauthUrlFacebook,
   getOauthUrlGoogle,
+  getOauthUrlMicrosoft,
 } from 'src/helpers/oauthConstants';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 
@@ -201,25 +201,6 @@ function LoginPage() {
                       </span>
                     </Tooltip>
                     <Tooltip
-                      title="Facebook"
-                      classes={{ tooltip: stylesModule.tooltip }}
-                      placement="top"
-                      arrow
-                    >
-                      <span>
-                        <Button
-                          justIcon
-                          href={getOauthUrlFacebook({ operation: 'login' })}
-                          onClick={handleButtonClick}
-                          target="_self"
-                          color="transparent"
-                          disabled={loading}
-                        >
-                          <i className="fa-brands fa-facebook" />
-                        </Button>
-                      </span>
-                    </Tooltip>
-                    <Tooltip
                       title="Google"
                       classes={{ tooltip: stylesModule.tooltip }}
                       placement="top"
@@ -235,6 +216,25 @@ function LoginPage() {
                           disabled={loading}
                         >
                           <i className="fa-brands fa-google" />
+                        </Button>
+                      </span>
+                    </Tooltip>
+                    <Tooltip
+                      title="Microsoft"
+                      classes={{ tooltip: stylesModule.tooltip }}
+                      placement="top"
+                      arrow
+                    >
+                      <span>
+                        <Button
+                          justIcon
+                          href={getOauthUrlMicrosoft({ operation: 'login' })}
+                          onClick={handleButtonClick}
+                          target="_self"
+                          color="transparent"
+                          disabled={loading}
+                        >
+                          <i className="fa-brands fa-microsoft" />
                         </Button>
                       </span>
                     </Tooltip>

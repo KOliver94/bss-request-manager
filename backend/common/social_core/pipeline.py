@@ -1,4 +1,5 @@
 import logging
+from base64 import b64encode
 
 import requests
 from django_auth_ldap.backend import LDAPBackend
@@ -106,7 +107,18 @@ def add_phone_number_to_profile(backend, details, response, user, *args, **kwarg
         )
         if resp.status_code == 200 and len(resp.json().get("phoneNumbers", [])) > 0:
             phone_number = resp.json()["phoneNumbers"][0]["value"]
-            response["mobile"] = resp.json()["phoneNumbers"][0]["value"]
+
+    elif backend.name == "microsoft-graph":
+        if response["mobilePhone"]:
+            phone_number = response["mobilePhone"]
+        else:
+            resp = requests.get(
+                "https://graph.microsoft.com/beta/me/profile/phones",
+                headers={"Authorization": f"Bearer {response['access_token']}"},
+                timeout=5,
+            )
+            if resp.status_code == 200 and len(resp.json().get("value", [])) > 0:
+                phone_number = f"+{resp.json()['value'][0]['number']}"
 
     # Set phone number
     if not user.userprofile.phone_number and phone_number:
@@ -115,16 +127,22 @@ def add_phone_number_to_profile(backend, details, response, user, *args, **kwarg
 
 
 def get_avatar(backend, response, user, *args, **kwargs):
-    if backend.name == "facebook":
-        try:
-            if not response.get("picture").get("data").get("is_silhouette"):
-                user.userprofile.avatar["facebook"] = (
-                    f"https://graph.facebook.com/{response.get('id')}/picture?height=480&width=480"
-                )
-        except AttributeError:
-            pass
-    elif backend.name == "google-oauth2" and response.get("picture"):
+    if backend.name == "google-oauth2" and response.get("picture"):
         user.userprofile.avatar["google-oauth2"] = response["picture"][:-6]
+
+    elif backend.name == "microsoft-graph":
+        resp = requests.get(
+            "https://graph.microsoft.com/v1.0/me/photos/504x504/$value",
+            headers={
+                "Authorization": f"Bearer {response['access_token']}",
+                "Content-Type": "image/jpg",
+            },
+            timeout=5,
+        )
+        if resp.status_code == 200:
+            user.userprofile.avatar["microsoft-graph"] = (
+                f"data:image/jpg;base64,{b64encode(resp.content).decode('utf-8')}"
+            )
 
     url = Gravatar(sanitize_email(user.email)).get_image(
         size=500, use_ssl=True, default="404"
@@ -139,8 +157,8 @@ def get_avatar(backend, response, user, *args, **kwargs):
         pass
 
     if not user.userprofile.avatar.get("provider", None) and backend.name in [
-        "facebook",
         "google-oauth2",
+        "microsoft-graph",
     ]:
         user.userprofile.avatar["provider"] = backend.name
 

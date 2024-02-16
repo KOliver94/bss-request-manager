@@ -36,7 +36,7 @@ export default function RulesPoliciesSection() {
           <GridItem xs={12} sm={12} md={4}>
             <InfoArea
               title="Bejelentkezett felhasználók"
-              description="Az oldalra lehetőséged van bejelentkezni Google, Facebook valamint AuthSCH segítségével. Ekkor a rendszer a személyes adataidat kitölti helyetted, valamint megtekintheted az összes korábbi általad beküldött felkérést, értékelheted az elkészült videókat és írhatsz hozzászólást."
+              description="Az oldalra lehetőséged van bejelentkezni AuthSCH, Google, valamint Microsoft fiók segítségével. Ekkor a rendszer a személyes adataidat kitölti helyetted, valamint megtekintheted az összes korábbi általad beküldött felkérést, értékelheted az elkészült videókat és írhatsz hozzászólást."
               icon={VerifiedUser}
               iconColor="success"
               vertical

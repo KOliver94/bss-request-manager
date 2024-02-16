@@ -4,7 +4,7 @@ Felkérésedhez új videót publikáltunk {{ video.title }} címmel, melyet az a
 
 Kiváncsiak vagyunk a véleményedre. Kérjük a következő linken értékeld az elkészült videót és a munkánkat: {{ video.request.url }}
 {% if not is_registered %}
-Az oldalra a felkéréshez megadott e-mail címedet használó Facebook, Google vagy AuthSCH fiókkal tudsz belépni.
+Az oldalra a felkéréshez megadott e-mail címedet használó AuthSCH, Google vagy Microsoft fiókkal tudsz belépni.
 {% endif %}
 
 Üdvözlettel:
