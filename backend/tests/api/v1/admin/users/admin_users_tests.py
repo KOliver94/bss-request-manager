@@ -324,9 +324,9 @@ def test_update_user_avatar(admin_user, api_client, method):
     user = baker.make(User, _fill_optional=True)
 
     avatar_data = {
-        "provider": "facebook",
-        "facebook": "https://example.com/picture1.png",
+        "provider": "microsoft-graph",
         "gravatar": "https://example.com/picture2.png",
+        "microsoft-graph": "https://example.com/picture1.png",
     }
 
     user.userprofile.avatar = avatar_data
@@ -339,8 +339,8 @@ def test_update_user_avatar(admin_user, api_client, method):
 
     assert response.status_code == HTTP_200_OK
 
-    assert response.data["profile"]["avatar"]["provider"] == "facebook"
-    assert response.data["profile"]["avatar_url"] == avatar_data["facebook"]
+    assert response.data["profile"]["avatar"]["provider"] == "microsoft-graph"
+    assert response.data["profile"]["avatar_url"] == avatar_data["microsoft-graph"]
 
     # Modify avatar provider
     response = get_response(

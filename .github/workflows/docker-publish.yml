@@ -85,8 +85,8 @@ jobs:
           build-args: |
             "API_URL=https://felkeres.bsstudio.hu"
             "AUTHSCH_CLIENT_ID=60451969490994503646"
-            "FACEBOOK_CLIENT_ID=817759665400170"
             "GOOGLE_CLIENT_ID=593937386712-8pu2vh1ukq17oidh9f4snkjf9oa88tvb.apps.googleusercontent.com"
+            "MICROSOFT_CLIENT_ID=0e576fd5-f891-4e67-8738-38eabe902271"
             "RECAPTCHA_SITE_KEY=6LfoyF4aAAAAAN1m2mr_A7inOhPD428_y8pYKKr7"
             "SENTRY_URL=https://5d84e5aa35114e5bbe49ca9b8a013440@o354977.ingest.sentry.io/5989036"
             "SENTRY_URL_ADMIN=https://7465a5ea2a94e1a874b64fd3c71f920a@o354977.ingest.sentry.io/4506152601845760"

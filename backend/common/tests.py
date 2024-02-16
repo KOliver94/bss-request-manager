@@ -99,13 +99,13 @@ class CommonTestCase(TestCase):
             self.user.userprofile.avatar = {"provider": "randomValue"}
             self.user.userprofile.full_clean()
         self.assertIn(
-            "'randomValue' is not one of ['facebook', 'google-oauth2', 'gravatar']",
+            "'randomValue' is not one of ['google-oauth2', 'gravatar', 'microsoft-graph']",
             context.exception.messages[0],
         )
 
         with self.assertRaises(ValidationError) as context:
             self.user.userprofile.avatar = {
-                "provider": "facebook",
+                "provider": "microsoft-graph",
                 "randomKey": "randomValue",
             }
             self.user.userprofile.full_clean()
@@ -116,8 +116,8 @@ class CommonTestCase(TestCase):
 
         with self.assertRaises(ValidationError) as context:
             self.user.userprofile.avatar = {
-                "provider": "facebook",
-                "facebook": "randomValue",
+                "provider": "microsoft-graph",
+                "microsoft-graph": "randomValue",
             }
             self.user.userprofile.full_clean()
         self.assertIn(

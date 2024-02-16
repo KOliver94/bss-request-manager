@@ -1,14 +1,16 @@
+import os
 import random
 import re
+from base64 import b64encode
 from string import ascii_letters, digits
 from urllib.parse import urlparse
 
 import responses
+from django.conf import settings
 from django.test import override_settings
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
-from social_core.backends.facebook import API_VERSION as FACEBOOK_API_VERSION
 from social_core.backends.utils import load_backends
 from social_core.tests.models import (
     TestAssociation,
@@ -137,32 +139,23 @@ class OAuth2Test(BaseBackendTest):
         self.assertIsNone(access_token.verify())
 
 
-@override_settings(SOCIAL_AUTH_PROVIDERS=["facebook"])
-class FacebookOAuth2Test(OAuth2Test):
+@override_settings(SOCIAL_AUTH_PROVIDERS=["authsch"])
+class AuthSCHOAuth2Test(OAuth2Test):
     access_token_body = {"access_token": "foobar", "token_type": "bearer"}
-    backend_path = "social_core.backends.facebook.FacebookOAuth2"
+    backend_path = "common.social_core.backends.AuthSCHOAuth2"
     user_data_body = {
-        "email": "foobar@example.com",
-        "first_name": "Foo",
-        "id": "110011001100010",
-        "last_name": "Bar",
-        "name": "Foo Bar",
-        "picture": {
-            "height": 500,
-            "is_silhouette": False,
-            "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/"
-            "?asid=79043988521909457&height=500&width=500&ext=1691584443&hash=4SFjpKn6eDtdHXiIrST",
-            "width": 500,
-        },
-        "username": "foobar",
+        "basic": "foobar",
+        "displayName": "Foo Bar",
+        "givenName": "Bar",
+        "mail": "foobar@example.com",
+        "mobile": "+36509999999",
+        "sn": "Foo",
     }
-    user_data_url = "https://graph.facebook.com/v{version}/me".format(
-        version=FACEBOOK_API_VERSION
-    )
+    user_data_url = "https://auth.sch.bme.hu/api/profile/"
 
     @responses.activate
     def test_login(self):
-        self.do_rest_login("facebook")
+        self.do_rest_login("authsch")
 
 
 @override_settings(SOCIAL_AUTH_PROVIDERS=["google-oauth2"])
@@ -186,7 +179,6 @@ class GoogleOAuth2Test(OAuth2Test):
         ],
         "resourceName": "people/961158263084132371526",
     }
-
     phone_data_url = "https://people.googleapis.com/v1/people/me"
     user_data_body = {
         "email": "foo@bar.com",
@@ -215,20 +207,74 @@ class GoogleOAuth2Test(OAuth2Test):
         self.do_rest_login("google-oauth2")
 
 
-@override_settings(SOCIAL_AUTH_PROVIDERS=["authsch"])
-class AuthSCHOAuth2Test(OAuth2Test):
-    access_token_body = {"access_token": "foobar", "token_type": "bearer"}
-    backend_path = "common.social_core.backends.AuthSCHOAuth2"
+class MicrosoftOAuth2Test(OAuth2Test):
+    backend_path = "social_core.backends.microsoft.MicrosoftOAuth2"
+    user_data_url = "https://graph.microsoft.com/v1.0/me"
     user_data_body = {
-        "basic": "foobar",
-        "displayName": "Foo Bar",
-        "givenName": "Bar",
-        "mail": "foobar@example.com",
-        "mobile": "+36509999999",
-        "sn": "Foo",
+        "displayName": "foo bar",
+        "givenName": "foobar",
+        "jobTitle": "Auditor",
+        "mail": "foobar@foobar.com",
+        "mobilePhone": None,
+        "officeLocation": "12/1110",
+        "preferredLanguage": "en-US",
+        "surname": "Bowen",
+        "userPrincipalName": "foobar",
+        "id": "48d31887-5fad-4d73-a9f5-3c356e68a038",
     }
-    user_data_url = "https://auth.sch.bme.hu/api/profile/"
+    access_token_body = {
+        "access_token": "foobar",
+        "token_type": "bearer",
+        "id_token": "",
+        "expires_in": 3600,
+        "expires_on": 1423650396,
+        "not_before": 1423646496,
+    }
+    phone_data_body = {
+        "@odata.context": "https://graph.microsoft.com/beta/$metadata#users('foobar%40foobar.com')/profile/phones",
+        "value": [
+            {
+                "displayName": None,
+                "type": "other",
+                "number": "36509999999",
+                "allowedAudiences": "me",
+                "createdDateTime": "2022-05-06T12:58:14.336767Z",
+                "lastModifiedDateTime": "2022-05-06T12:58:14.336767Z",
+                "id": "d1e8c842-c150-590a-1cd5-a64d2da05457",
+                "isSearchable": False,
+                "inference": None,
+                "createdBy": {
+                    "user": None,
+                    "device": None,
+                    "application": {"displayName": "MSA", "id": None},
+                },
+                "lastModifiedBy": {
+                    "user": None,
+                    "device": None,
+                    "application": {"displayName": "MSA", "id": None},
+                },
+                "source": {"type": ["MSA"]},
+            }
+        ],
+    }
+    phone_data_url = "https://graph.microsoft.com/beta/me/profile/phones"
+    avatar_image_url = "https://graph.microsoft.com/v1.0/me/photos/504x504/$value"
+
+    def setUp(self):
+        with open(
+            os.path.join(
+                settings.BACKEND_DIR,
+                "templates",
+                "static",
+                "images",
+                "default_avatar.png",
+            ),
+            "rb",
+        ) as image_file:
+            responses.get(self.avatar_image_url, body=b64encode(image_file.read()))
+        responses.get(self.phone_data_url, json=self.phone_data_body)
+        super().setUp()
 
     @responses.activate
     def test_login(self):
-        self.do_rest_login("authsch")
+        self.do_rest_login("microsoft-graph")

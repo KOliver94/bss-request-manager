@@ -58,8 +58,8 @@ export const avatarProviders = (provider) => {
   switch (provider) {
     case 'google-oauth2':
       return 'Google';
-    case 'facebook':
-      return 'Facebook';
+    case 'microsoft-graph':
+      return 'Microsoft';
     default:
       return 'Gravatar';
   }
