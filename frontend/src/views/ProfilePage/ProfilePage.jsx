@@ -189,25 +189,31 @@ export default function ProfilePage() {
     const controller = new AbortController();
 
     async function connectSocialProfile() {
-      try {
-        await connectSocial(provider, code, {
-          signal: controller.signal,
-        });
-        const result = await getMe({
-          signal: controller.signal,
-        });
-        setUserData(result.data);
-      } catch (e) {
+      function handleSocialError(e) {
         const errorMessage = handleError(e);
         if (errorMessage) {
           enqueueSnackbar(errorMessage, {
             variant: 'error',
           });
+          setProfileConnecting(false);
         }
-      } finally {
-        setProfileConnecting(false);
-        navigate({ replace: true });
       }
+
+      connectSocial(provider, code, {
+        signal: controller.signal,
+      })
+        .then(() => {
+          getMe({
+            signal: controller.signal,
+          })
+            .then((result) => {
+              setUserData(result.data);
+              setProfileConnecting(false);
+              navigate({ replace: true });
+            })
+            .catch((e) => handleSocialError(e));
+        })
+        .catch((e) => handleSocialError(e));
     }
 
     if (code && provider) {
