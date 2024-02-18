@@ -4,19 +4,19 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sentry/react": "7.100.1",
-    "@tanstack/react-query": "5.20.1",
+    "@sentry/react": "7.101.1",
+    "@tanstack/react-query": "5.21.7",
     "axios": "1.6.7",
     "bootstrap-icons": "1.11.3",
     "jwt-decode": "4.0.0",
     "primeflex": "3.3.1",
     "primeicons": "6.0.1",
     "primelocale": "primefaces/primelocale",
-    "primereact": "10.5.0",
+    "primereact": "10.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "7.50.1",
-    "react-router-dom": "6.22.0",
+    "react-router-dom": "6.22.1",
     "timeago-react": "3.0.6"
   },
   "scripts": {
@@ -46,9 +46,9 @@
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "2.9.0",
     "@tanstack/eslint-plugin-query": "5.20.1",
-    "@tanstack/react-query-devtools": "5.20.1",
-    "@types/node": "20.11.17",
-    "@types/react": "18.2.55",
+    "@tanstack/react-query-devtools": "5.21.7",
+    "@types/node": "20.11.19",
+    "@types/react": "18.2.56",
     "@types/react-dom": "18.2.19",
     "@typescript-eslint/eslint-plugin": "7.0.1",
     "@typescript-eslint/parser": "7.0.1",
@@ -66,7 +66,7 @@
     "prettier": "3.2.5",
     "source-map-explorer": "2.5.3",
     "typescript": "5.3.3",
-    "vite": "5.1.1",
+    "vite": "5.1.3",
     "vite-tsconfig-paths": "4.3.1"
   }
 }
