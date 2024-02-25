@@ -58,10 +58,10 @@ django-cors-headers = "4.3.1"
 django-filter = "23.5"
 django-health-check = "3.18.1"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "7.3.0"}
-django-simple-history = "3.4.0"
+django-simple-history = "3.5.0"
 drf-recaptcha = "3.0.0"
 drf-spectacular = "0.27.1"
-google-api-python-client = "2.118.0"
+google-api-python-client = "2.119.0"
 google-auth-httplib2 = "0.2.0"
 google-auth-oauthlib = "1.2.0"
 jsonschema = {extras = ["format"], version = "4.21.1"}
@@ -72,7 +72,7 @@ python-ldap = [
     { markers = "sys_platform != 'win32'", source = "pypi", version = "3.4.4" },
 ]
 requests = "2.31.0"
-sentry-sdk = "1.40.4"
+sentry-sdk = "1.40.5"
 social-auth-app-django = "5.4.0"
 whitenoise = {extras = ["brotli"], version = "6.6.0"}
 
@@ -92,7 +92,7 @@ psycopg = {extras = ["c"], version = "3.1.18"}
 
 [tool.poetry.group.test.dependencies]
 model_bakery = "1.17.0"
-pytest = "8.0.1"
+pytest = "8.0.2"
 pytest-cov = "4.1.0"
 pytest-django = "4.8.0"
 pytest-xdist = {extras = ["psutil"], version = "3.5.0"}
