@@ -75,6 +75,12 @@ sentry-sdk = "1.40.6"
 social-auth-app-django = "5.4.0"
 whitenoise = {extras = ["brotli"], version = "6.6.0"}
 
+[tool.poetry.group.ci]
+optional = true
+
+[tool.poetry.group.ci.dependencies]
+pytest-github-actions-annotate-failures = "0.2.0"
+
 [tool.poetry.group.debug.dependencies]
 django-debug-toolbar = "4.3.0"
 
