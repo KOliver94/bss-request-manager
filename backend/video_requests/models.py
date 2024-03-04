@@ -12,7 +12,12 @@ from jsonschema import ValidationError as JsonValidationError
 from jsonschema import validate
 from simple_history.models import HistoricalRecords
 
-from common.models import AbstractComment, AbstractRating, get_sentinel_user
+from common.models import (
+    AbstractComment,
+    AbstractRating,
+    AbstractTodo,
+    get_sentinel_user,
+)
 from video_requests.schemas import (
     REQUEST_ADDITIONAL_DATA_SCHEMA,
     VIDEO_ADDITIONAL_DATA_SCHEMA,
@@ -186,3 +191,18 @@ class Rating(AbstractRating):
 
     def __str__(self):
         return f"{self.video.title} || {self.author.get_full_name_eastern_order()} ({self.rating})"
+
+
+class Todo(AbstractTodo):
+    class Statuses(models.IntegerChoices):
+        OPEN = 1, "Nyitva"
+        CLOSED = 2, "Lezárva"
+
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="todos")
+    video = models.ForeignKey(
+        Video, on_delete=models.CASCADE, related_name="todos", blank=True, null=True
+    )
+    status = models.PositiveSmallIntegerField(choices=Statuses, default=Statuses.OPEN)
+
+    def __str__(self):
+        return f"Todo || {self.request.title} - {self.description[0:25]}[...]"
