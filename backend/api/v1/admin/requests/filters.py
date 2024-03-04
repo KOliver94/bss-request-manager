@@ -10,7 +10,7 @@ from django_filters.rest_framework import (
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
 
-from video_requests.models import Request, Video
+from video_requests.models import Request, Todo, Video
 
 
 class IntegerFilter(Filter):
@@ -26,6 +26,10 @@ class RequestFilter(FilterSet):
     deadline = DateFromToRangeFilter()
     start_datetime = DateFromToRangeFilter()
     status = MultipleChoiceFilter(choices=Request.Statuses.choices)
+
+
+class TodoFilter(FilterSet):
+    status = MultipleChoiceFilter(choices=Todo.Statuses.choices)
 
 
 class VideoFilter(FilterSet):

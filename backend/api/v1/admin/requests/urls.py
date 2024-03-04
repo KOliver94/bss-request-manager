@@ -9,6 +9,7 @@ from api.v1.admin.requests.videos.views import (
     VideoAdminSearchListAPIView,
     VideoAdminViewSet,
 )
+from api.v1.admin.todos.views import TodoAdminRequestVideoViewSet
 
 router = SimpleRouter(trailing_slash=False)
 router.register(r"requests", RequestAdminViewSet, basename="request")
@@ -16,10 +17,12 @@ router.register(r"requests", RequestAdminViewSet, basename="request")
 request_router = SimpleRouter(trailing_slash=False)
 request_router.register(r"comments", CommentAdminViewSet, basename="comment")
 request_router.register(r"crew", CrewMemberAdminViewSet, basename="crew")
+request_router.register(r"todos", TodoAdminRequestVideoViewSet, basename="todo")
 request_router.register(r"videos", VideoAdminViewSet, basename="video")
 
 video_router = SimpleRouter(trailing_slash=False)
 video_router.register(r"ratings", RatingAdminViewSet, basename="rating")
+video_router.register(r"todos", TodoAdminRequestVideoViewSet, basename="todo")
 
 request_urlpatterns = [
     path("", include(request_router.urls)),
