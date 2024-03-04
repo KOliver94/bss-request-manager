@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework.permissions import BasePermission
 
-from video_requests.models import Comment, Rating, Request, Video
+from video_requests.models import Comment, Rating, Request, Todo, Video
 
 
 def is_admin(user):
@@ -94,6 +94,8 @@ class IsSelf(IsAuthenticated):
             return bool(obj.request.requester == request.user)
         elif isinstance(obj, Comment) or isinstance(obj, Rating):
             return bool(obj.author == request.user)
+        elif isinstance(obj, Todo):
+            return bool(obj.creator == request.user)
         elif isinstance(obj, User):
             return bool(obj == request.user)
         else:
