@@ -3,7 +3,7 @@ from random import randint
 
 from django.utils import timezone
 
-from video_requests.models import Comment, CrewMember, Rating, Request, Video
+from video_requests.models import Comment, CrewMember, Rating, Request, Todo, Video
 
 
 def create_request(
@@ -79,3 +79,14 @@ def create_rating(rating_id, video, user, rating_num=None):
     rating.review = "Sample text - " + user.username
     rating.save()
     return rating
+
+
+def create_todo(todo_id, description, request, creator, video=None):
+    todo = Todo()
+    todo.id = todo_id
+    todo.description = description
+    todo.request = request
+    todo.creator = creator
+    todo.video = video
+    todo.save()
+    return todo

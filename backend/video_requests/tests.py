@@ -10,6 +10,7 @@ from tests.helpers.video_requests_test_utils import (
     create_crew,
     create_rating,
     create_request,
+    create_todo,
     create_video,
 )
 
@@ -22,6 +23,7 @@ class VideoRequestsTestCase(TestCase):
         self.video = create_video(300, self.request)
         self.comment = create_comment(400, self.request, user, False)
         self.rating = create_rating(500, self.video, user)
+        self.todo = create_todo(600, "Test todo", self.request, user)
 
     def test_request_to_str(self):
         self.assertEqual(
@@ -70,6 +72,12 @@ class VideoRequestsTestCase(TestCase):
         self.assertEqual(
             str(self.rating),
             f"{self.rating.video.title} || {self.rating.author.get_full_name_eastern_order()} ({self.rating.rating})",
+        )
+
+    def test_todo_to_str(self):
+        self.assertEqual(
+            str(self.todo),
+            f"Todo || {self.request.title} - {self.todo.description[0:25]}[...]",
         )
 
     def test_request_date_validation(self):
