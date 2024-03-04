@@ -4,7 +4,7 @@ import pytest
 from django.contrib.auth.models import Group, User
 from rest_framework.test import APIClient
 
-from video_requests.models import Comment, Request, Video
+from video_requests.models import Comment, Request, Todo, Video
 
 
 @pytest.fixture
@@ -93,6 +93,14 @@ def not_existing_comment_id():
     while True:
         non_existing_id = randint(1000, 100000)
         if not Comment.objects.filter(pk=non_existing_id).exists():
+            return non_existing_id
+
+
+@pytest.fixture
+def not_existing_todo_id():
+    while True:
+        non_existing_id = randint(1000, 100000)
+        if not Todo.objects.filter(pk=non_existing_id).exists():
             return non_existing_id
 
 
