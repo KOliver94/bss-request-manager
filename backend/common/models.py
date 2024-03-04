@@ -99,3 +99,15 @@ class AbstractRating(models.Model):
 
     class Meta:
         abstract = True
+
+
+class AbstractTodo(models.Model):
+    assignees = models.ManyToManyField(User, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    creator = models.ForeignKey(
+        User, on_delete=models.SET(get_sentinel_user), related_name="todo_creator"
+    )
+    description = models.TextField()
+
+    class Meta:
+        abstract = True
