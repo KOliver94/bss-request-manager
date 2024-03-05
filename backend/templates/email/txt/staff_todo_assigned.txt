@@ -1,0 +1,10 @@
+Szia!
+
+Az alábbi feladatot rendelték hozzád a(z) {{ title }} {% if assignment_type == "request" %}felkéréssel{% else %}videóval{% endif %} kapcsolatban:
+
+{{ todo.description }}
+
+A következő oldalon tekintheted meg: {{ todo.request.admin_url }}
+
+Üdv:
+Felkéréskezelő robotka

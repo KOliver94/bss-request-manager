@@ -29,6 +29,13 @@ def get_anonymous_user():
     )[0]
 
 
+def get_system_user():
+    return get_user_model().objects.get_or_create(
+        username="system",
+        defaults={"first_name": "Automatizáció", "last_name": "Rendszer"},
+    )[0]
+
+
 def validate_profile_avatar(value):
     try:
         validate(value, USER_PROFILE_AVATAR_SCHEMA, format_checker=FormatChecker())
