@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
 from django.db.models import Avg
 from django.urls import reverse
 from django.utils.html import format_html
 from simple_history.admin import SimpleHistoryAdmin
 
-from video_requests.models import Comment, CrewMember, Rating, Request, Video
+from video_requests.models import Comment, CrewMember, Rating, Request, Todo, Video
 
 
 @admin.register(Request)
@@ -112,3 +113,38 @@ class RatingHistoryAdmin(SimpleHistoryAdmin):
     def author_link(self, obj):
         url = reverse("admin:auth_user_change", args=(obj.author.id,))
         return format_html(f'<a href="{url}">{obj.author.get_full_name()}</a>')
+
+
+@admin.register(Todo)
+class TodoAdmin(ModelAdmin):
+    list_display = [
+        "id",
+        "created",
+        "request_link",
+        "video_link",
+        "description",
+        "assignee_names",
+    ]
+    search_fields = ["request__title", "video__title"]
+
+    @admin.display(description="Request")
+    def request_link(self, obj):
+        url = reverse("admin:video_requests_request_change", args=(obj.request.id,))
+        return format_html(f'<a href="{url}">{obj.request.title}</a>')
+
+    @admin.display(description="Video")
+    def video_link(self, obj):
+        if obj.video:
+            url = reverse("admin:video_requests_video_change", args=(obj.video.id,))
+            return format_html(f'<a href="{url}">{obj.video.title}</a>')
+        return None
+
+    @admin.display(description="Assignees")
+    def assignee_names(self, obj):
+        names = ""
+        for assignee in obj.assignees.all():
+            url = reverse("admin:auth_user_change", args=(assignee.id,))
+            names += f'<a href="{url}">{assignee.get_full_name_eastern_order()}</a>&comma;&nbsp;'
+        if names:
+            names = names[:-13]
+        return format_html(names)
