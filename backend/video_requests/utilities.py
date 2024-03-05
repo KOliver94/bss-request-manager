@@ -7,8 +7,10 @@ from django.conf import settings
 from django.utils.timezone import localtime
 from requests import RequestException
 
+from common.models import get_system_user
+from common.utilities import get_pr_responsible
 from video_requests.emails import email_user_video_published
-from video_requests.models import Request, Video
+from video_requests.models import Request, Todo, Video
 
 
 def update_request_status(request, called_from_video=False):
@@ -177,6 +179,15 @@ def update_video_status(video, called_from_request=False, request_status=1):
             "publishing", {}
         ).get("website"):
             status = Video.Statuses.PUBLISHED
+            if not Todo.objects.filter(creator=get_system_user(), video=video).exists():
+                todo = Todo.objects.create(
+                    creator=get_system_user(),
+                    description="Megosztás közösségi platformokon",
+                    request=video.request,
+                    video=video,
+                )
+                todo.assignees.set(get_pr_responsible())
+                todo.save()
             # If the current status of the video is before published send an e-mail to the requester
             if video.status < Video.Statuses.PUBLISHED and not video.additional_data[
                 "publishing"

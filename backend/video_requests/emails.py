@@ -1,14 +1,11 @@
 from celery import shared_task
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
-from common.utilities import (
-    get_editor_in_chief,
-    get_pr_responsible,
-    get_production_manager,
-)
-from video_requests.models import Comment, Request, Video
+from common.utilities import get_editor_in_chief, get_production_manager
+from video_requests.models import Comment, Request, Todo, Video
 
 TEXT_HTML = "text/html"
 
@@ -55,13 +52,11 @@ def email_user_video_published(video_id):
     msg_html = render_to_string("email/html/user_video_published.html", context)
 
     subject = f"{video.request.title} | Új videót publikáltunk"
-    pr_responsible_email_address = [user.email for user in get_pr_responsible()]
 
     msg = EmailMultiAlternatives(
         subject=subject,
         body=msg_plain,
         to=[video.request.requester.email],
-        bcc=pr_responsible_email_address,
         reply_to=[settings.DEFAULT_REPLY_EMAIL],
     )
 
@@ -210,6 +205,35 @@ def email_crew_request_modified(
     msg.attach_alternative(msg_html, TEXT_HTML)
     msg.send()
     return f"Request modified notification e-mail was sent to {[crew_members_email_addresses, editor_in_chief_email_address, responsible_email_address]} successfully."
+
+
+@shared_task
+def email_staff_todo_assigned(todo_id, user_ids):
+    todo = Todo.objects.get(pk=todo_id)
+
+    assignment_type = "video" if todo.video else "request"
+    title = todo.video.title if todo.video else todo.request.title
+
+    context = {"assignment_type": assignment_type, "title": title, "todo": todo}
+
+    msg_plain = render_to_string("email/txt/staff_todo_assigned.txt", context)
+    msg_html = render_to_string("email/html/staff_todo_assigned.html", context)
+
+    subject = "Feladatot rendeltek hozzád"
+
+    assignees_email_address = [
+        user.email for user in User.objects.filter(id__in=user_ids, is_staff=True)
+    ]
+
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=msg_plain,
+        to=assignees_email_address,
+    )
+
+    msg.attach_alternative(msg_html, TEXT_HTML)
+    msg.send()
+    return f"Todo assignment notification was sent to {assignees_email_address} successfully."
 
 
 def email_production_manager_unfinished_requests(requests):
