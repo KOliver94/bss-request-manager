@@ -5,14 +5,17 @@ from unittest.mock import patch
 import time_machine
 from decouple import config
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core import mail
 from django.core.management import call_command
 from django.test import override_settings
 from django.utils.timezone import localtime
+from model_bakery import baker
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
+from common.models import get_system_user
 from tests.helpers.test_utils import conditional_override_settings
 from tests.helpers.users_test_utils import create_user, get_default_password
 from tests.helpers.video_requests_test_utils import (
@@ -27,7 +30,7 @@ from video_requests.emails import (
     email_responsible_overdue_request,
     email_staff_weekly_tasks,
 )
-from video_requests.models import Request, Video
+from video_requests.models import Request, Todo, Video
 
 EMAIL_FILE = config("EMAIL_FILE", default=True, cast=bool)
 
@@ -141,9 +144,17 @@ class EmailSendingTestCase(APITestCase):
             mail.outbox[0].subject, f"{data['title']} | Forgatási felkérésedet fogadtuk"
         )
 
-    def test_video_published_email_sent_to_user(self):
+    def test_video_published_email_sent_to_user_and_todo_created(self):
         # Setup data - Create a Request with status 4, and a video
-        request = create_request(100, self.normal_user, Request.Statuses.UPLOADED)
+        request = create_request(
+            100,
+            self.normal_user,
+            Request.Statuses.UPLOADED,
+            "2020-11-16T04:16:13+0100",
+            "2020-11-17T04:16:13+0100",
+        )
+        request.additional_data = {"accepted": True, "recording": {"path": "test/path"}}
+        request.save()
         video = create_video(300, request, Video.Statuses.PENDING)
 
         # Video data to be patched
@@ -164,15 +175,168 @@ class EmailSendingTestCase(APITestCase):
         )
         response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["status"], Video.Statuses.PUBLISHED)
+
+        todos = Todo.objects.filter(video=video)
+        self.assertEqual(len(todos), 1)
+        self.assertTrue(todos[0].assignees.contains(self.pr_responsible))
+        self.assertEqual(todos[0].creator, get_system_user())
+        self.assertEqual(todos[0].description, "Megosztás közösségi platformokon")
 
         # Check if e-mail was sent to the right people
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn(self.normal_user.email, mail.outbox[0].to)
-        self.assertIn(self.pr_responsible.email, mail.outbox[0].bcc)
-        self.assertIn(settings.DEFAULT_REPLY_EMAIL, mail.outbox[0].reply_to)
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertIn(self.pr_responsible.email, mail.outbox[0].to)
+        self.assertEqual(mail.outbox[0].subject, "Feladatot rendeltek hozzád")
+        self.assertIn(self.normal_user.email, mail.outbox[1].to)
+        self.assertIn(settings.DEFAULT_REPLY_EMAIL, mail.outbox[1].reply_to)
         self.assertEqual(
-            mail.outbox[0].subject, f"{video.request.title} | Új videót publikáltunk"
+            mail.outbox[1].subject, f"{video.request.title} | Új videót publikáltunk"
         )
+
+        # Revert the published status
+        data = {
+            "additional_data": {
+                "publishing": {"website": ""},
+            },
+        }
+        url = reverse(
+            "api:v1:admin:requests:request:video-detail",
+            kwargs={"request_pk": request.id, "pk": video.id},
+        )
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["status"], Video.Statuses.CODED)
+
+        # Publish again
+        data = {
+            "additional_data": {
+                "publishing": {"website": "https://example123.com"},
+            },
+        }
+        url = reverse(
+            "api:v1:admin:requests:request:video-detail",
+            kwargs={"request_pk": request.id, "pk": video.id},
+        )
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["status"], Video.Statuses.PUBLISHED)
+
+        # No new to-do was created
+        todos = Todo.objects.filter(video=video)
+        self.assertEqual(len(todos), 1)
+
+        # No new e-mail should be sent
+        self.assertEqual(len(mail.outbox), 2)
+
+    def test_todo_email_sent_new_todo(self):
+        video_request = baker.make("video_requests.Request")
+        video = baker.make("video_requests.Video", request=video_request)
+        users = baker.make(User, is_staff=True, _fill_optional=True, _quantity=5)
+
+        self.authorize_user(self.staff_user)
+
+        urls = [
+            reverse(
+                "api:v1:admin:requests:request:todo-list",
+                kwargs={"request_pk": video_request.id},
+            ),
+            reverse(
+                "api:v1:admin:requests:request:video:todo-list",
+                kwargs={"request_pk": video_request.id, "video_pk": video.id},
+            ),
+        ]
+
+        for url in urls:
+            response = self.client.post(
+                url,
+                {
+                    "assignees": [user.id for user in users],
+                    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                    "status": Todo.Statuses.CLOSED,
+                },
+            )
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertListEqual([user.email for user in users], mail.outbox[0].to)
+        self.assertEqual(mail.outbox[0].subject, "Feladatot rendeltek hozzád")
+        self.assertListEqual([user.email for user in users], mail.outbox[1].to)
+        self.assertEqual(mail.outbox[1].subject, "Feladatot rendeltek hozzád")
+
+    def test_todo_email_sent_new_assignee(self):
+        video_request = baker.make("video_requests.Request")
+        users_existing = baker.make(
+            User, is_staff=True, _fill_optional=True, _quantity=2
+        )
+        users_new = baker.make(User, is_staff=True, _fill_optional=True, _quantity=3)
+        todo = baker.make(
+            "video_requests.Todo", assignees=users_existing, request=video_request
+        )
+
+        self.authorize_user(self.staff_user)
+
+        url = reverse(
+            "api:v1:admin:todos:todo-detail",
+            kwargs={"pk": todo.id},
+        )
+
+        response = self.client.patch(
+            url, {"assignees": [user.id for user in users_new + users_existing]}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Only the new assignees should get an e-mail
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertListEqual([user.email for user in users_new], mail.outbox[1].to)
+        self.assertEqual(mail.outbox[1].subject, "Feladatot rendeltek hozzád")
+
+    def test_todo_email_not_sent_when_removing_assignee(self):
+        video_request = baker.make("video_requests.Request")
+        users_existing = baker.make(
+            User, is_staff=True, _fill_optional=True, _quantity=3
+        )
+        todo = baker.make(
+            "video_requests.Todo", assignees=users_existing, request=video_request
+        )
+
+        self.authorize_user(self.staff_user)
+
+        url = reverse(
+            "api:v1:admin:todos:todo-detail",
+            kwargs={"pk": todo.id},
+        )
+
+        response = self.client.patch(
+            url, {"assignees": [user.id for user in users_existing[0:1]]}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Creating the to-do will send one e-mail automatically
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_todo_email_sent_only_to_staff(self):
+        video_request = baker.make("video_requests.Request")
+        users_existing = baker.make(
+            User, is_staff=False, _fill_optional=True, _quantity=2
+        )
+        users_new = baker.make(User, is_staff=False, _fill_optional=True, _quantity=3)
+        todo = baker.make(
+            "video_requests.Todo", assignees=users_existing, request=video_request
+        )
+
+        self.authorize_user(self.staff_user)
+
+        url = reverse(
+            "api:v1:admin:todos:todo-detail",
+            kwargs={"pk": todo.id},
+        )
+
+        response = self.client.patch(
+            url, {"assignees": [user.id for user in users_new + users_existing]}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_new_comment_email_sent_to_user_and_crew_admin_endpoint_non_internal(self):
         # Setup data - Create a Request, add Crew members and Responsible
