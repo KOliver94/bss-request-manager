@@ -105,6 +105,7 @@ responses = "0.25.0"
 time-machine = "2.14.1"
 
 [tool.pytest.ini_options]
+addopts = "--cov --cov-report html --cov-report term --cov-report xml -n auto"
 DJANGO_SETTINGS_MODULE = "core.settings.test"
 python_files = "tests.py test_*.py *_tests.py"
 python_classes= ""
