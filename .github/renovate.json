@@ -1,7 +1,6 @@
 {
   "baseBranches": ["next"],
   "extends": [
-    ":autodetectPinVersions",
     ":automergeDisabled",
     ":dependencyDashboard",
     ":disableRateLimiting",
@@ -10,10 +9,12 @@
     ":ignoreUnstable",
     ":label(dependencies)",
     ":maintainLockFilesMonthly",
-    ":semanticPrefixFixDepsChoreOthers",
+    ":pinAllExceptPeerDependencies",
     ":separateMajorReleases",
     ":timezone(Europe/Budapest)",
     "group:monorepos",
+    "group:recommended",
+    "replacements:all",
     "schedule:weekends",
     "workarounds:all"
   ],
