@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@sentry/react": "7.109.0",
-    "@tanstack/react-query": "5.28.9",
+    "@tanstack/react-query": "5.29.0",
     "axios": "1.6.8",
     "bootstrap-icons": "1.11.3",
     "jwt-decode": "4.0.0",
@@ -45,13 +45,13 @@
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "2.13.1",
-    "@tanstack/eslint-plugin-query": "5.28.6",
-    "@tanstack/react-query-devtools": "5.28.10",
-    "@types/node": "20.12.2",
-    "@types/react": "18.2.73",
-    "@types/react-dom": "18.2.23",
-    "@typescript-eslint/eslint-plugin": "7.4.0",
-    "@typescript-eslint/parser": "7.4.0",
+    "@tanstack/eslint-plugin-query": "5.28.11",
+    "@tanstack/react-query-devtools": "5.29.0",
+    "@types/node": "20.12.5",
+    "@types/react": "18.2.74",
+    "@types/react-dom": "18.2.24",
+    "@typescript-eslint/eslint-plugin": "7.5.0",
+    "@typescript-eslint/parser": "7.5.0",
     "@vitejs/plugin-react": "4.2.1",
     "autoprefixer": "10.4.19",
     "cssnano": "6.1.2",
@@ -65,8 +65,8 @@
     "postcss": "8.4.38",
     "prettier": "3.2.5",
     "source-map-explorer": "2.5.3",
-    "typescript": "5.4.3",
-    "vite": "5.2.7",
+    "typescript": "5.4.4",
+    "vite": "5.2.8",
     "vite-tsconfig-paths": "4.3.2"
   }
 }
