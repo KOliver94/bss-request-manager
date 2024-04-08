@@ -2,7 +2,7 @@ ci:
   autoupdate_branch: 'next'
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: detect-private-key
         name: 'Detect private keys'
@@ -92,7 +92,7 @@ repos:
         additional_dependencies:
           - prettier@3.1.1
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.0.0-rc.0
+    rev: v9.0.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
