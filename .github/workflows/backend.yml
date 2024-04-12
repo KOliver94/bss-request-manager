@@ -89,7 +89,7 @@ jobs:
         run: poetry run pytest
       - name: Upload coverage to Codecov
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
-        uses: codecov/codecov-action@v4.2.0
+        uses: codecov/codecov-action@v4.3.0
         with:
           directory: backend/
         env:
