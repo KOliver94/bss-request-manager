@@ -92,7 +92,7 @@ psycopg = {extras = ["binary"], version = "3.1.18"}
 optional = true
 
 [tool.poetry.group.prod.dependencies]
-gunicorn = "21.2.0"
+gunicorn = "22.0.0"
 psycopg = {extras = ["c"], version = "3.1.18"}
 
 [tool.poetry.group.test.dependencies]
