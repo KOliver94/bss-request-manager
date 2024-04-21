@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sentry/react": "7.110.1",
+    "@sentry/react": "7.111.0",
     "@tanstack/react-query": "5.29.2",
     "axios": "1.6.8",
     "bootstrap-icons": "1.11.3",
@@ -44,11 +44,11 @@
     ]
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "2.13.1",
+    "@openapitools/openapi-generator-cli": "2.13.3",
     "@tanstack/eslint-plugin-query": "5.28.11",
     "@tanstack/react-query-devtools": "5.29.2",
     "@types/node": "20.12.7",
-    "@types/react": "18.2.78",
+    "@types/react": "18.2.79",
     "@types/react-dom": "18.2.25",
     "@typescript-eslint/eslint-plugin": "7.7.0",
     "@typescript-eslint/parser": "7.7.0",
@@ -66,7 +66,7 @@
     "prettier": "3.2.5",
     "source-map-explorer": "2.5.3",
     "typescript": "5.4.5",
-    "vite": "5.2.8",
+    "vite": "5.2.10",
     "vite-tsconfig-paths": "4.3.2"
   }
 }
