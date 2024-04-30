@@ -60,10 +60,10 @@ django-phonenumber-field = {extras = ["phonenumbers"], version = "7.3.0"}
 django-simple-history = "3.5.0"
 drf-recaptcha = "3.0.0"
 drf-spectacular = "0.27.2"
-google-api-python-client = "2.126.0"
+google-api-python-client = "2.127.0"
 google-auth-httplib2 = "0.2.0"
 google-auth-oauthlib = "1.2.0"
-jsonschema = {extras = ["format"], version = "4.21.1"}
+jsonschema = {extras = ["format"], version = "4.22.0"}
 libgravatar = "1.0.4"
 python-decouple = "3.8"
 python-ldap = [
@@ -97,10 +97,10 @@ psycopg = {extras = ["c"], version = "3.1.18"}
 
 [tool.poetry.group.test.dependencies]
 model_bakery = "1.18.0"
-pytest = "8.1.1"
+pytest = "8.2.0"
 pytest-cov = "5.0.0"
 pytest-django = "4.8.0"
-pytest-xdist = {extras = ["psutil"], version = "3.5.0"}
+pytest-xdist = {extras = ["psutil"], version = "3.6.1"}
 responses = "0.25.0"
 time-machine = "2.14.1"
 
