@@ -13,7 +13,7 @@ repos:
       - id: mixed-line-ending
         name: 'Replace mixed line endings'
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.28.2
+    rev: 0.28.3
     hooks:
       - id: check-github-workflows
       - id: check-renovate
@@ -39,7 +39,7 @@ repos:
         name: 'Upgrade Python syntax to newer versions'
         args: [--py312-plus]
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: 1.16.0
+    rev: 1.17.0
     hooks:
       - id: django-upgrade
         name: 'Upgrade Django syntax to newer versions'
