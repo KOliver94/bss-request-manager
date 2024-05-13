@@ -47,7 +47,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.12"
 celery = {extras = ["redis"], version = "5.4.0"}
-django = "5.0.4"
+django = "5.0.6"
 djangorestframework = "3.15.1"
 djangorestframework_simplejwt = "5.3.1"
 django-auth-ldap = "4.8.0"
@@ -58,9 +58,9 @@ django-filter = "24.2"
 django-health-check = "3.18.2"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "7.3.0"}
 django-simple-history = "3.5.0"
-drf-recaptcha = "3.0.0"
+drf-recaptcha = "3.1.0"
 drf-spectacular = "0.27.2"
-google-api-python-client = "2.127.0"
+google-api-python-client = "2.129.0"
 google-auth-httplib2 = "0.2.0"
 google-auth-oauthlib = "1.2.0"
 jsonschema = {extras = ["format"], version = "4.22.0"}
@@ -71,7 +71,7 @@ python-ldap = [
     { markers = "sys_platform == 'win32'", url = "https://github.com/cgohlke/python-ldap-build/releases/download/v3.4.4/python_ldap-3.4.4-cp312-cp312-win_amd64.whl" },
 ]
 requests = "2.31.0"
-sentry-sdk = "2.0.1"
+sentry-sdk = "2.1.1"
 social-auth-app-django = "5.4.1"
 whitenoise = {extras = ["brotli"], version = "6.6.0"}
 
@@ -85,15 +85,15 @@ pytest-github-actions-annotate-failures = "0.2.0"
 django-debug-toolbar = "4.3.0"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "3.7.0"
-psycopg = {extras = ["binary"], version = "3.1.18"}
+pre-commit = "3.7.1"
+psycopg = {extras = ["binary"], version = "3.1.19"}
 
 [tool.poetry.group.prod]
 optional = true
 
 [tool.poetry.group.prod.dependencies]
 gunicorn = "22.0.0"
-psycopg = {extras = ["c"], version = "3.1.18"}
+psycopg = {extras = ["c"], version = "3.1.19"}
 
 [tool.poetry.group.test.dependencies]
 model_bakery = "1.18.0"
