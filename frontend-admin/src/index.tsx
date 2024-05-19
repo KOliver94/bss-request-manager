@@ -43,14 +43,12 @@ if (import.meta.env.PROD) {
     },
     dsn: import.meta.env.VITE_SENTRY_URL_ADMIN,
     integrations: [
-      new Sentry.BrowserTracing({
-        routingInstrumentation: Sentry.reactRouterV6Instrumentation(
-          useEffect,
-          useLocation,
-          useNavigationType,
-          createRoutesFromChildren,
-          matchRoutes,
-        ),
+      Sentry.reactRouterV6BrowserTracingIntegration({
+        createRoutesFromChildren,
+        matchRoutes,
+        useEffect,
+        useLocation,
+        useNavigationType,
       }),
     ],
   });
