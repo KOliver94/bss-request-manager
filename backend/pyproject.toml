@@ -57,10 +57,10 @@ django-cors-headers = "4.3.1"
 django-filter = "24.2"
 django-health-check = "3.18.2"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "7.3.0"}
-django-simple-history = "3.6.0"
+django-simple-history = "3.7.0"
 drf-recaptcha = "3.1.0"
 drf-spectacular = "0.27.2"
-google-api-python-client = "2.130.0"
+google-api-python-client = "2.131.0"
 google-auth-httplib2 = "0.2.0"
 google-auth-oauthlib = "1.2.0"
 jsonschema = {extras = ["format"], version = "4.22.0"}
