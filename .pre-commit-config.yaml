@@ -119,7 +119,7 @@ repos:
           - eslint-plugin-react-hooks@4.6.2
           - eslint-plugin-react@7.34.2
           - eslint@8.57.0
-          - prettier@3.3.0
+          - prettier@3.3.1
       - id: eslint
         name: 'Lint TypeScript code (Admin dashboard)'
         files: ^frontend-admin/
