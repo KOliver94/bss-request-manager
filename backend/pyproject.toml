@@ -60,7 +60,7 @@ django-phonenumber-field = {extras = ["phonenumbers"], version = "7.3.0"}
 django-simple-history = "3.7.0"
 drf-recaptcha = "3.1.0"
 drf-spectacular = "0.27.2"
-google-api-python-client = "2.131.0"
+google-api-python-client = "2.132.0"
 google-auth-httplib2 = "0.2.0"
 google-auth-oauthlib = "1.2.0"
 jsonschema = {extras = ["format"], version = "4.22.0"}
@@ -71,7 +71,7 @@ python-ldap = [
     { markers = "sys_platform == 'win32'", url = "https://github.com/cgohlke/python-ldap-build/releases/download/v3.4.4/python_ldap-3.4.4-cp312-cp312-win_amd64.whl" },
 ]
 requests = "2.31.0"
-sentry-sdk = "2.3.1"
+sentry-sdk = "2.5.1"
 social-auth-app-django = "5.4.1"
 whitenoise = {extras = ["brotli"], version = "6.6.0"}
 
@@ -96,12 +96,12 @@ gunicorn = "22.0.0"
 psycopg = {extras = ["c"], version = "3.1.19"}
 
 [tool.poetry.group.test.dependencies]
-model_bakery = "1.18.0"
-pytest = "8.2.1"
+model_bakery = "1.18.1"
+pytest = "8.2.2"
 pytest-cov = "5.0.0"
 pytest-django = "4.8.0"
 pytest-xdist = {extras = ["psutil"], version = "3.6.1"}
-responses = "0.25.0"
+responses = "0.25.2"
 time-machine = "2.14.1"
 
 [tool.pytest.ini_options]
