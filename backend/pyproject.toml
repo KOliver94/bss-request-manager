@@ -70,7 +70,7 @@ python-ldap = [
     { markers = "sys_platform != 'win32'", version = "3.4.4" },
     { markers = "sys_platform == 'win32'", url = "https://github.com/cgohlke/python-ldap-build/releases/download/v3.4.4/python_ldap-3.4.4-cp312-cp312-win_amd64.whl" },
 ]
-requests = "2.31.0"
+requests = "2.32.2"
 sentry-sdk = "2.5.1"
 social-auth-app-django = "5.4.1"
 whitenoise = {extras = ["brotli"], version = "6.6.0"}
