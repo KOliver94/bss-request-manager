@@ -197,6 +197,7 @@ class Todo(AbstractTodo):
     class Statuses(models.IntegerChoices):
         OPEN = 1, "Nyitva"
         CLOSED = 2, "Lezárva"
+        DISCARDED = 3, "Elvetve"
 
     request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="todos")
     video = models.ForeignKey(
