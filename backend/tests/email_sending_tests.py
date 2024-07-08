@@ -14,10 +14,11 @@ from model_bakery import baker
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import AccessToken
 
 from common.models import get_system_user
 from tests.helpers.test_utils import conditional_override_settings
-from tests.helpers.users_test_utils import create_user, get_default_password
+from tests.helpers.users_test_utils import create_user
 from tests.helpers.video_requests_test_utils import (
     create_crew,
     create_request,
@@ -45,14 +46,8 @@ class EmailSendingTestCase(APITestCase):
     """
 
     def authorize_user(self, user):
-        url = reverse("api:v1:login:obtain_jwt_pair")
-        resp = self.client.post(
-            url,
-            {"username": user.username, "password": get_default_password()},
-            format="json",
-        )
-        token = resp.data["access"]
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+        token = AccessToken.for_user(user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(token)}")
 
     def setUp(self):
         # Create normal user

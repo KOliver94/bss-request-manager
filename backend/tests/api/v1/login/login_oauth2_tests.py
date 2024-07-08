@@ -116,7 +116,7 @@ class OAuth2Test(BaseBackendTest):
         self.auth_handlers(start_url)
         self.pre_complete_callback()
 
-        url = reverse("api:v1:login:obtain_jwt_pair_social")
+        url = reverse("api:v1:login:social")
         response = self.client.post(
             url,
             {
@@ -136,7 +136,9 @@ class OAuth2Test(BaseBackendTest):
 
         self.assertEqual(access_token["token_type"], "access")
         self.assertEqual(refresh_token["token_type"], "refresh")
-        self.assertIsNone(access_token.verify())
+        self.assertIsNone(
+            access_token.verify()
+        )  # Throws exception when check fails otherwise returns None
 
 
 @override_settings(SOCIAL_AUTH_PROVIDERS=["authsch"])

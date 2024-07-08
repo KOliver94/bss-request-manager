@@ -40,8 +40,6 @@ import {
 // @ts-ignore
 import { TokenObtainPairOAuth2Request } from '../models';
 // @ts-ignore
-import { TokenObtainPairRequest } from '../models';
-// @ts-ignore
 import { TokenObtainResponse } from '../models';
 // @ts-ignore
 import { TokenRefresh } from '../models';
@@ -55,59 +53,6 @@ export const LoginApiAxiosParamCreator = function (
   configuration?: Configuration,
 ) {
   return {
-    /**
-     * Takes a set of user credentials and returns an access and refresh JSON web token pair to prove the authentication of those credentials.
-     * @param {TokenObtainPairRequest} tokenObtainPairRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    loginCreate: async (
-      tokenObtainPairRequest: TokenObtainPairRequest,
-      options: AxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'tokenObtainPairRequest' is not null or undefined
-      assertParamExists(
-        'loginCreate',
-        'tokenObtainPairRequest',
-        tokenObtainPairRequest,
-      );
-      const localVarPath = `/api/v1/login`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: 'POST',
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      localVarHeaderParameter['Content-Type'] = 'application/json';
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        tokenObtainPairRequest,
-        localVarRequestOptions,
-        configuration,
-      );
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
     /**
      * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
      * @param {TokenRefreshRequest} tokenRefreshRequest
@@ -236,32 +181,6 @@ export const LoginApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = LoginApiAxiosParamCreator(configuration);
   return {
     /**
-     * Takes a set of user credentials and returns an access and refresh JSON web token pair to prove the authentication of those credentials.
-     * @param {TokenObtainPairRequest} tokenObtainPairRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async loginCreate(
-      tokenObtainPairRequest: TokenObtainPairRequest,
-      options?: AxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<TokenObtainResponse>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.loginCreate(
-        tokenObtainPairRequest,
-        options,
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration,
-      );
-    },
-    /**
      * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
      * @param {TokenRefreshRequest} tokenRefreshRequest
      * @param {*} [options] Override http request option.
@@ -327,20 +246,6 @@ export const LoginApiFactory = function (
   const localVarFp = LoginApiFp(configuration);
   return {
     /**
-     * Takes a set of user credentials and returns an access and refresh JSON web token pair to prove the authentication of those credentials.
-     * @param {TokenObtainPairRequest} tokenObtainPairRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    loginCreate(
-      tokenObtainPairRequest: TokenObtainPairRequest,
-      options?: any,
-    ): AxiosPromise<TokenObtainResponse> {
-      return localVarFp
-        .loginCreate(tokenObtainPairRequest, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
      * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
      * @param {TokenRefreshRequest} tokenRefreshRequest
      * @param {*} [options] Override http request option.
@@ -378,22 +283,6 @@ export const LoginApiFactory = function (
  * @extends {BaseAPI}
  */
 export class LoginApi extends BaseAPI {
-  /**
-   * Takes a set of user credentials and returns an access and refresh JSON web token pair to prove the authentication of those credentials.
-   * @param {TokenObtainPairRequest} tokenObtainPairRequest
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof LoginApi
-   */
-  public loginCreate(
-    tokenObtainPairRequest: TokenObtainPairRequest,
-    options?: AxiosRequestConfig,
-  ) {
-    return LoginApiFp(this.configuration)
-      .loginCreate(tokenObtainPairRequest, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
   /**
    * Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid.
    * @param {TokenRefreshRequest} tokenRefreshRequest

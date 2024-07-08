@@ -228,7 +228,6 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(hours=6),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
-    "USER_AUTHENTICATION_RULE": "common.rest_framework.authentication.default_user_authentication_rule",
 }
 
 # Internationalization

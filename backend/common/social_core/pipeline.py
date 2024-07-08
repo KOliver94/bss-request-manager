@@ -13,6 +13,11 @@ def check_for_email(details, *args, **kwargs):
         raise ValidationError("Email was not provided by OAuth provider.")
 
 
+def check_if_user_is_banned(backend, user=None, *args, **kwargs):
+    if bool(user and hasattr(user, "ban")):
+        raise AuthenticationFailed(detail="Your account is suspended.")
+
+
 def check_if_only_one_association_from_a_provider(
     backend, new_association=True, user=None, *args, **kwargs
 ):

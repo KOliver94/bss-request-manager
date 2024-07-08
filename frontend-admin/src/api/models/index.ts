@@ -52,7 +52,6 @@ export * from './todo-admin-list-retrieve';
 export * from './todo-nested-request-video';
 export * from './token-blacklist-request';
 export * from './token-obtain-pair-oauth2-request';
-export * from './token-obtain-pair-request';
 export * from './token-obtain-response';
 export * from './token-refresh';
 export * from './token-refresh-request';

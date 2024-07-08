@@ -68,7 +68,6 @@ models/todo-admin-list-retrieve.ts
 models/todo-nested-request-video.ts
 models/token-blacklist-request.ts
 models/token-obtain-pair-oauth2-request.ts
-models/token-obtain-pair-request.ts
 models/token-obtain-response.ts
 models/token-refresh-request.ts
 models/token-refresh.ts
