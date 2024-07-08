@@ -1,6 +1,5 @@
 import json
 from datetime import timedelta
-from unittest.mock import patch
 
 import pytest
 import responses
@@ -8,7 +7,6 @@ from django.contrib.auth.models import User
 from django.utils.timezone import localtime
 from django_celery_results.models import TaskResult
 from model_bakery import baker
-from requests import Response
 from rest_framework.reverse import reverse
 from rest_framework.status import (
     HTTP_200_OK,
@@ -386,6 +384,7 @@ def test_external_callback_on_status_changes(admin_user, api_client, settings):
     assert json.loads(response2.calls[1].request.body) == {"accept": True}
 
 
+@responses.activate
 @pytest.mark.parametrize("accepted", [True, False])
 def test_external_callback_on_status_changes_redirect_and_result(
     accepted, admin_user, api_client, settings
@@ -393,17 +392,16 @@ def test_external_callback_on_status_changes_redirect_and_result(
     settings.CELERY_TASK_ALWAYS_EAGER = True
     settings.CELERY_TASK_STORE_EAGER_RESULT = True
 
-    def mock_head_redirect_response():
-        r = Response()
-        r.status_code = 504
-        r.url = "https://redirected.example.com/api/callback/123"
-        return r
+    callback_url = "https://example.com/api/callback/123"
+    redirected_callback_url = "https://redirected.example.com/api/callback/123"
 
-    def mock_post_response():
-        r = Response()
-        r.status_code = 200
-        r.json = lambda: {"status": "ok"}
-        return r
+    mock_head_redirect = responses.head(
+        callback_url, status=301, headers={"Location": redirected_callback_url}
+    )
+    mock_head = responses.head(redirected_callback_url, status=504)
+    mock_post = responses.post(
+        redirected_callback_url, status=200, json={"status": "ok"}
+    )
 
     video_request = baker.make(
         "video_requests.Request",
@@ -416,72 +414,60 @@ def test_external_callback_on_status_changes_redirect_and_result(
 
     login(api_client, admin_user)
 
-    with patch("video_requests.utilities.requests.post") as mock_requests_post:
-        with patch("video_requests.utilities.requests.head") as mock_requests_head:
-            mock_requests_head.return_value = mock_head_redirect_response()
-            mock_requests_post.return_value = mock_post_response()
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+    )
+    api_client.patch(url, {"additional_data": {"accepted": accepted}})
 
-            url = reverse(
-                "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
-            )
-            api_client.patch(url, {"additional_data": {"accepted": accepted}})
+    assert mock_head_redirect.call_count == 1
+    assert mock_head.call_count == 1
+    assert mock_post.call_count == 1
+    assert json.loads(mock_post.calls[0].request.body) == {"accept": accepted}
+    assert (
+        mock_post.calls[0].request.headers.items()
+        >= {
+            "Accept": "application/json",
+            "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
+            "Content-Type": "application/json",
+        }.items()
+    )
 
-            mock_requests_head.assert_called_once()
-            mock_requests_post.assert_called_once()
-            mock_requests_post.assert_called_with(
-                mock_head_redirect_response().url,
-                data=json.dumps({"accept": accepted}),
-                headers={
-                    "Accept": "application/json",
-                    "Authorization": f"Bearer {settings.SCH_EVENTS_TOKEN}",
-                    "Content-Type": "application/json",
-                },
-                allow_redirects=False,
-                timeout=30,
-            )
-
-            assert json.loads(
-                TaskResult.objects.get(
-                    task_args__exact=f"[{video_request.id}]",
-                    task_name__exact="video_requests.utilities.notify_sch_event_management_system",
-                ).result
-            ) == {"status": "ok"}
+    assert json.loads(
+        TaskResult.objects.get(
+            task_args__exact=f"[{video_request.id}]",
+            task_name__exact="video_requests.utilities.notify_sch_event_management_system",
+        ).result
+    ) == {"status": "ok"}
 
 
+@responses.activate
 def test_external_callback_retry(admin_user, api_client, settings):
     settings.CELERY_TASK_ALWAYS_EAGER = True
     settings.CELERY_TASK_STORE_EAGER_RESULT = True
 
-    def mock_response():
-        r = Response()
-        r.status_code = 500
-        return r
+    callback_url = "https://example.com/api/callback/123"
+
+    responses.head(callback_url)
+    mock_post = responses.post(callback_url, status=500)
 
     video_request = baker.make(
         "video_requests.Request",
-        additional_data={
-            "external": {
-                "sch_events_callback_url": "https://example.com/api/callback/123"
-            }
-        },
+        additional_data={"external": {"sch_events_callback_url": callback_url}},
     )
 
     login(api_client, admin_user)
 
-    with patch("video_requests.utilities.requests.post") as mock_requests_post:
-        mock_requests_post.return_value = mock_response()
+    url = reverse(
+        "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
+    )
+    api_client.patch(url, {"additional_data": {"accepted": True}})
 
-        url = reverse(
-            "api:v1:admin:requests:request-detail", kwargs={"pk": video_request.id}
-        )
-        api_client.patch(url, {"additional_data": {"accepted": True}})
+    assert mock_post.call_count == 11
 
-        assert mock_requests_post.call_count == 11
-
-        assert (
-            TaskResult.objects.get(
-                task_args__exact=f"[{video_request.id}]",
-                task_name__exact="video_requests.utilities.notify_sch_event_management_system",
-            ).status
-            == "FAILURE"
-        )
+    assert (
+        TaskResult.objects.get(
+            task_args__exact=f"[{video_request.id}]",
+            task_name__exact="video_requests.utilities.notify_sch_event_management_system",
+        ).status
+        == "FAILURE"
+    )
