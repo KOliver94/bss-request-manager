@@ -1843,33 +1843,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/CommentCreateUpdate'
           description: ''
-  /api/v1/login:
-    post:
-      operationId: login_create
-      description: |-
-        Takes a set of user credentials and returns an access and refresh JSON web
-        token pair to prove the authentication of those credentials.
-      tags:
-        - login
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TokenObtainPairRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/TokenObtainPairRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/TokenObtainPairRequest'
-        required: true
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenObtainResponse'
-          description: ''
   /api/v1/login/refresh:
     post:
       operationId: login_refresh_create
@@ -3811,20 +3784,6 @@ components:
       required:
         - code
         - provider
-    TokenObtainPairRequest:
-      type: object
-      properties:
-        username:
-          type: string
-          writeOnly: true
-          minLength: 1
-        password:
-          type: string
-          writeOnly: true
-          minLength: 1
-      required:
-        - password
-        - username
     TokenObtainResponse:
       type: object
       properties:

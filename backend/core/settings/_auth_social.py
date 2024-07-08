@@ -48,7 +48,7 @@ SOCIAL_AUTH_PIPELINE = (
     # already part of the auth response from the provider, but sometimes this
     # could hit a provider API.
     "social_core.pipeline.social_auth.social_details",
-    # Get the social uid from whichever service we're authing thru. The uid is
+    # Get the social uid from whichever service we're authing through. The uid is
     # the unique identifier of the given user in the provider.
     "social_core.pipeline.social_auth.social_uid",
     # Verifies that the current auth process is valid within the current
@@ -65,6 +65,8 @@ SOCIAL_AUTH_PIPELINE = (
     # Associates the current social details with another user account with
     # a similar email address. Disabled by default.
     "social_core.pipeline.social_auth.associate_by_email",
+    # Custom action: Check if user has been banned.
+    "common.social_core.pipeline.check_if_user_is_banned",
     # Custom action: Check if there is only one account from a provider is connected to a user.
     "common.social_core.pipeline.check_if_only_one_association_from_a_provider",
     # Custom action: Set user to active when first logs in.
@@ -82,7 +84,7 @@ SOCIAL_AUTH_PIPELINE = (
     # Custom action: Get user's avatar.
     "common.social_core.pipeline.get_avatar",
     # Populate the extra_data field in the social record with the values
-    # specified by settings (and the default ones like access_token, etc).
+    # specified by settings (and the default ones like access_token, etc.).
     "social_core.pipeline.social_auth.load_extra_data",
 )
 

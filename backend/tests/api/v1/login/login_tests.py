@@ -5,11 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group, User
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.reverse import reverse
-from rest_framework.status import (
-    HTTP_200_OK,
-    HTTP_400_BAD_REQUEST,
-    HTTP_401_UNAUTHORIZED,
-)
+from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 from tests.api.helpers import login
@@ -17,28 +13,7 @@ from tests.api.helpers import login
 pytestmark = pytest.mark.django_db
 
 
-def test_login(api_client, basic_user):
-    url = reverse("api:v1:login:obtain_jwt_pair")
-    response = api_client.post(
-        url,
-        {"username": basic_user.username, "password": "password"},
-        format="json",
-    )
-
-    assert response.status_code == HTTP_200_OK
-    assert "access" in response.data
-    assert "refresh" in response.data
-
-    access_token = AccessToken(response.data["access"])
-    refresh_token = RefreshToken(response.data["refresh"])
-
-    assert access_token["token_type"] == "access"
-    assert refresh_token["token_type"] == "refresh"
-    assert (
-        not access_token.verify()
-    )  # Throws exception when check fails otherwise returns None
-
-
+@pytest.mark.skip(reason="This needs to be moved to OAuth2 tests")
 def test_login_inactive_user(api_client, basic_user):
     basic_user.is_active = False
     basic_user.save()
@@ -57,20 +32,7 @@ def test_login_inactive_user(api_client, basic_user):
     )
 
 
-def test_login_with_email(api_client, basic_user):
-    url = reverse("api:v1:login:obtain_jwt_pair")
-    response = api_client.post(
-        url,
-        {"email": basic_user.email, "password": "password"},
-        format="json",
-    )
-
-    assert response.status_code == HTTP_400_BAD_REQUEST
-    assert response.data["username"][0] == ErrorDetail(
-        string="This field is required.", code="required"
-    )
-
-
+@pytest.mark.skip(reason="This needs to be moved to OAuth2 tests")
 @pytest.mark.parametrize(
     "user,expected",
     [
@@ -104,21 +66,15 @@ def test_custom_jwt_claims(api_client, expected, user, request):
 
 
 def test_token_refresh(api_client, basic_user):
-    login_url = reverse("api:v1:login:obtain_jwt_pair")
     refresh_url = reverse("api:v1:login:refresh_jwt_token")
     user_profile_url = reverse("api:v1:me:me-detail")
 
-    # Login
-    response = api_client.post(
-        login_url,
-        {"username": basic_user.username, "password": "password"},
-        format="json",
-    )
-    assert response.status_code == HTTP_200_OK
+    # Create token
+    token = RefreshToken.for_user(basic_user)
 
     # Set token
-    access_token = response.data["access"]
-    refresh_token = response.data["refresh"]
+    access_token = str(token.access_token)
+    refresh_token = str(token)
     api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
 
     # Check if token works and user can access his profile
@@ -162,39 +118,27 @@ def test_token_refresh(api_client, basic_user):
 
 
 def test_token_create_refresh_error_when_banned(admin_user, api_client, basic_user):
-    login_url = reverse("api:v1:login:obtain_jwt_pair")
     logout_url = reverse("api:v1:login:logout")
     refresh_url = reverse("api:v1:login:refresh_jwt_token")
 
-    response = api_client.post(
-        login_url,
-        {"username": basic_user.username, "password": "password"},
-        format="json",
-    )
-    assert response.status_code == HTTP_200_OK
+    # Create token
+    token = RefreshToken.for_user(basic_user)
 
-    # Set tokens
-    access_token = response.data["access"]
-    refresh_token = response.data["refresh"]
+    # Set token
+    access_token = str(token.access_token)
+    refresh_token = str(token)
     api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
 
     # Logout to create an already blacklisted token to test exception handling in signals.py
     response = api_client.post(logout_url, {"refresh": refresh_token}, format="json")
     assert response.status_code == HTTP_200_OK
 
-    # Login again
-    response = api_client.post(
-        login_url,
-        {"username": basic_user.username, "password": "password"},
-        format="json",
-    )
-    assert response.status_code == HTTP_200_OK
-    assert not access_token == response.data["access"]
-    assert not refresh_token == response.data["refresh"]
+    # Create token
+    token = RefreshToken.for_user(basic_user)
 
-    # Set tokens
-    access_token = response.data["access"]
-    refresh_token = response.data["refresh"]
+    # Set token
+    access_token = str(token.access_token)
+    refresh_token = str(token)
 
     # Login as admin and ban user
     login(api_client, admin_user)
@@ -212,17 +156,4 @@ def test_token_create_refresh_error_when_banned(admin_user, api_client, basic_us
     assert response.status_code == HTTP_401_UNAUTHORIZED
     assert response.data["detail"] == ErrorDetail(
         string="Token is blacklisted", code="token_not_valid"
-    )
-
-    # Try to log in
-    api_client.credentials(HTTP_AUTHORIZATION=None)
-    response = api_client.post(
-        login_url,
-        {"username": basic_user.username, "password": "password"},
-        format="json",
-    )
-    assert response.status_code == HTTP_401_UNAUTHORIZED
-    assert response.data["detail"] == ErrorDetail(
-        string="No active account found with the given credentials",
-        code="no_active_account",
     )

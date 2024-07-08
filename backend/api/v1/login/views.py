@@ -6,14 +6,10 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView as SimpleJWTTokenObtainPairView,
-)
 
 from api.v1.login.serializers import (
     TokenBlacklistSerializer,
     TokenObtainPairOAuth2Serializer,
-    TokenObtainPairSerializer,
     TokenObtainResponseSerializer,
 )
 from common.rest_framework.permissions import IsAuthenticated, IsNotAuthenticated
@@ -49,36 +45,6 @@ class TokenBlacklistView(GenericAPIView):
             raise InvalidToken(e.args[0])
 
         return Response(serializer.validated_data, status=HTTP_200_OK)
-
-
-class TokenObtainPairView(SimpleJWTTokenObtainPairView):
-    """
-    Takes a set of user credentials and returns an access and refresh JSON web
-    token pair to prove the authentication of those credentials.
-    """
-
-    permission_classes = [IsNotAuthenticated]
-    serializer_class = TokenObtainPairSerializer
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = "login"
-
-    @extend_schema(
-        request=TokenObtainPairSerializer,
-        responses=TokenObtainResponseSerializer,
-    )
-    @method_decorator(never_cache)
-    def post(self, request, *args, **kwargs):
-        input_serializer = self.get_serializer(data=request.data)
-
-        try:
-            input_serializer.is_valid(raise_exception=True)
-            output_serializer = TokenObtainResponseSerializer(
-                input_serializer.validated_data, context=self.get_serializer_context()
-            )
-        except TokenError as e:
-            raise InvalidToken(e.args[0])
-
-        return Response(output_serializer.data, status=HTTP_200_OK)
 
 
 class TokenObtainPairOAuth2View(GenericAPIView):

@@ -28,7 +28,8 @@ class TokenBlacklistSerializer(SimpleJWTTokenBlacklistSerializer):
         raise NotAuthenticated(detail="Token is invalid or expired")
 
 
-class TokenObtainPairSerializer(SimpleJWTTokenObtainPairSerializer):
+class TokenObtainPairOAuth2Serializer(SimpleJWTTokenObtainPairSerializer):
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
@@ -38,8 +39,6 @@ class TokenObtainPairSerializer(SimpleJWTTokenObtainPairSerializer):
         token["role"] = user.role
         return token
 
-
-class TokenObtainPairOAuth2Serializer(TokenObtainPairSerializer):
     # This part is a heavily modified and stripped down
     # version of https://github.com/st4lk/django-rest-social-auth
 
@@ -63,7 +62,7 @@ class TokenObtainPairOAuth2Serializer(TokenObtainPairSerializer):
         self.context["request"].backend.REDIRECT_STATE = False
         self.context["request"].backend.STATE_PARAMETER = False
 
-        user = self.context["request"].backend.complete()
+        user = self.context["request"].backend.complete(request=self.context["request"])
         return user
 
     def validate(self, attrs):
@@ -75,7 +74,7 @@ class TokenObtainPairOAuth2Serializer(TokenObtainPairSerializer):
 
         if isinstance(user, HttpResponse):
             # error happened and pipeline returned HttpResponse instead of user
-            # the object is still named user but it's an HttpResponse object containing error
+            # the object is still named user, but it's an HttpResponse object containing error
             raise AuthException(attrs["provider"], user)
 
         refresh = self.get_token(user)

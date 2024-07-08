@@ -11,7 +11,7 @@ from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.utils import make_utc
 
-from tests.helpers.users_test_utils import create_user, get_default_password
+from tests.helpers.users_test_utils import create_user
 from tests.helpers.video_requests_test_utils import create_request, create_video
 from video_requests.models import Request, Video
 
@@ -28,13 +28,7 @@ def get_test_data():
 
 class RequestsUtilitiesTestCase(APITestCase):
     def authorize_user(self, user):
-        url = reverse("api:v1:login:obtain_jwt_pair")
-        resp = self.client.post(
-            url,
-            {"username": user.username, "password": get_default_password()},
-            format="json",
-        )
-        token = AccessToken(resp.data["access"])
+        token = AccessToken.for_user(user)
         token.set_iat(at_time=make_utc(datetime(2020, 11, 21, 00, 00)))
         token.set_exp(lifetime=timedelta(hours=5))
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(token)}")

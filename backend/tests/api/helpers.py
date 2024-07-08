@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from model_bakery import baker
 from rest_framework.authtoken.models import Token
-from rest_framework.reverse import reverse
+from rest_framework_simplejwt.tokens import AccessToken
 
 
 def assert_fields_exist(response, expected_fields):
@@ -41,11 +41,5 @@ def get_response(api_client, method, url, data):
 
 
 def login(client, user):
-    url = reverse("api:v1:login:obtain_jwt_pair")
-    response = client.post(
-        url,
-        {"username": user.username, "password": "password"},
-        format="json",
-    )
-    token = response.data["access"]
-    client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+    token = AccessToken.for_user(user)
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(token)}")
