@@ -56,6 +56,8 @@ import { History } from '../models';
 // @ts-ignore
 import { PaginatedRequestAdminListList } from '../models';
 // @ts-ignore
+import { PaginatedTodoAdminListRetrieveList } from '../models';
+// @ts-ignore
 import { PaginatedUserAdminListList } from '../models';
 // @ts-ignore
 import { PaginatedVideoAdminSearchList } from '../models';
@@ -67,6 +69,8 @@ import { PatchedCrewMemberAdminCreateUpdateRequest } from '../models';
 import { PatchedRatingAdminCreateUpdateRequest } from '../models';
 // @ts-ignore
 import { PatchedRequestAdminUpdateRequest } from '../models';
+// @ts-ignore
+import { PatchedTodoAdminCreateUpdateRequest } from '../models';
 // @ts-ignore
 import { PatchedUserAdminRetrieveUpdateRequest } from '../models';
 // @ts-ignore
@@ -83,6 +87,10 @@ import { RequestAdminCreateRequest } from '../models';
 import { RequestAdminRetrieve } from '../models';
 // @ts-ignore
 import { RequestAdminUpdateRequest } from '../models';
+// @ts-ignore
+import { TodoAdminCreateUpdateRequest } from '../models';
+// @ts-ignore
+import { TodoAdminListRetrieve } from '../models';
 // @ts-ignore
 import { UserAdminRetrieveUpdate } from '../models';
 // @ts-ignore
@@ -1387,6 +1395,139 @@ export const AdminApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {number} requestId
+     * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsTodosCreate: async (
+      requestId: number,
+      todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'requestId' is not null or undefined
+      assertParamExists('adminRequestsTodosCreate', 'requestId', requestId);
+      // verify required parameter 'todoAdminCreateUpdateRequest' is not null or undefined
+      assertParamExists(
+        'adminRequestsTodosCreate',
+        'todoAdminCreateUpdateRequest',
+        todoAdminCreateUpdateRequest,
+      );
+      const localVarPath = `/api/v1/admin/requests/{request_id}/todos`.replace(
+        `{${'request_id'}}`,
+        encodeURIComponent(String(requestId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        todoAdminCreateUpdateRequest,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} requestId
+     * @param {string} [ordering] Which field to use when ordering the results.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsTodosList: async (
+      requestId: number,
+      ordering?: string,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'requestId' is not null or undefined
+      assertParamExists('adminRequestsTodosList', 'requestId', requestId);
+      const localVarPath = `/api/v1/admin/requests/{request_id}/todos`.replace(
+        `{${'request_id'}}`,
+        encodeURIComponent(String(requestId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (ordering !== undefined) {
+        localVarQueryParameter['ordering'] = ordering;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {number} id A unique integer value identifying this request.
      * @param {RequestAdminUpdateRequest} requestAdminUpdateRequest
      * @param {*} [options] Override http request option.
@@ -2447,6 +2588,151 @@ export const AdminApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {number} requestId
+     * @param {number} videoId
+     * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsVideosTodosCreate: async (
+      requestId: number,
+      videoId: number,
+      todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'requestId' is not null or undefined
+      assertParamExists(
+        'adminRequestsVideosTodosCreate',
+        'requestId',
+        requestId,
+      );
+      // verify required parameter 'videoId' is not null or undefined
+      assertParamExists('adminRequestsVideosTodosCreate', 'videoId', videoId);
+      // verify required parameter 'todoAdminCreateUpdateRequest' is not null or undefined
+      assertParamExists(
+        'adminRequestsVideosTodosCreate',
+        'todoAdminCreateUpdateRequest',
+        todoAdminCreateUpdateRequest,
+      );
+      const localVarPath =
+        `/api/v1/admin/requests/{request_id}/videos/{video_id}/todos`
+          .replace(`{${'request_id'}}`, encodeURIComponent(String(requestId)))
+          .replace(`{${'video_id'}}`, encodeURIComponent(String(videoId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        todoAdminCreateUpdateRequest,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} requestId
+     * @param {number} videoId
+     * @param {string} [ordering] Which field to use when ordering the results.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsVideosTodosList: async (
+      requestId: number,
+      videoId: number,
+      ordering?: string,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'requestId' is not null or undefined
+      assertParamExists('adminRequestsVideosTodosList', 'requestId', requestId);
+      // verify required parameter 'videoId' is not null or undefined
+      assertParamExists('adminRequestsVideosTodosList', 'videoId', videoId);
+      const localVarPath =
+        `/api/v1/admin/requests/{request_id}/videos/{video_id}/todos`
+          .replace(`{${'request_id'}}`, encodeURIComponent(String(requestId)))
+          .replace(`{${'video_id'}}`, encodeURIComponent(String(videoId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (ordering !== undefined) {
+        localVarQueryParameter['ordering'] = ordering;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {number} id A unique integer value identifying this video.
      * @param {number} requestId
      * @param {VideoAdminCreateUpdateRequest} videoAdminCreateUpdateRequest
@@ -2510,6 +2796,333 @@ export const AdminApiAxiosParamCreator = function (
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
         videoAdminCreateUpdateRequest,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosDestroy: async (
+      id: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists('adminTodosDestroy', 'id', id);
+      const localVarPath = `/api/v1/admin/todos/{id}`.replace(
+        `{${'id'}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} [ordering] Which field to use when ordering the results.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
+     * @param {boolean} [pagination] Return paginated response.
+     * @param {Array<AdminTodosListStatusEnum>} [status] * &#x60;1&#x60; - Nyitva * &#x60;2&#x60; - Lezárva * &#x60;3&#x60; - Elvetve
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosList: async (
+      ordering?: string,
+      page?: number,
+      pageSize?: number,
+      pagination?: boolean,
+      status?: Array<AdminTodosListStatusEnum>,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/v1/admin/todos`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (ordering !== undefined) {
+        localVarQueryParameter['ordering'] = ordering;
+      }
+
+      if (page !== undefined) {
+        localVarQueryParameter['page'] = page;
+      }
+
+      if (pageSize !== undefined) {
+        localVarQueryParameter['page_size'] = pageSize;
+      }
+
+      if (pagination !== undefined) {
+        localVarQueryParameter['pagination'] = pagination;
+      }
+
+      if (status) {
+        localVarQueryParameter['status'] = status;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {PatchedTodoAdminCreateUpdateRequest} [patchedTodoAdminCreateUpdateRequest]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosPartialUpdate: async (
+      id: number,
+      patchedTodoAdminCreateUpdateRequest?: PatchedTodoAdminCreateUpdateRequest,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists('adminTodosPartialUpdate', 'id', id);
+      const localVarPath = `/api/v1/admin/todos/{id}`.replace(
+        `{${'id'}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'PATCH',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        patchedTodoAdminCreateUpdateRequest,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosRetrieve: async (
+      id: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists('adminTodosRetrieve', 'id', id);
+      const localVarPath = `/api/v1/admin/todos/{id}`.replace(
+        `{${'id'}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosUpdate: async (
+      id: number,
+      todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists('adminTodosUpdate', 'id', id);
+      // verify required parameter 'todoAdminCreateUpdateRequest' is not null or undefined
+      assertParamExists(
+        'adminTodosUpdate',
+        'todoAdminCreateUpdateRequest',
+        todoAdminCreateUpdateRequest,
+      );
+      const localVarPath = `/api/v1/admin/todos/{id}`.replace(
+        `{${'id'}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'PUT',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication tokenAuth required
+      await setApiKeyToObject(
+        localVarHeaderParameter,
+        'Authorization',
+        configuration,
+      );
+
+      // authentication jwtAuth required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        todoAdminCreateUpdateRequest,
         localVarRequestOptions,
         configuration,
       );
@@ -3709,6 +4322,66 @@ export const AdminApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {number} requestId
+     * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminRequestsTodosCreate(
+      requestId: number,
+      todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<TodoAdminListRetrieve>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminRequestsTodosCreate(
+          requestId,
+          todoAdminCreateUpdateRequest,
+          options,
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
+     * @param {number} requestId
+     * @param {string} [ordering] Which field to use when ordering the results.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminRequestsTodosList(
+      requestId: number,
+      ordering?: string,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<Array<TodoAdminListRetrieve>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminRequestsTodosList(
+          requestId,
+          ordering,
+          options,
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
      * @param {number} id A unique integer value identifying this request.
      * @param {RequestAdminUpdateRequest} requestAdminUpdateRequest
      * @param {*} [options] Override http request option.
@@ -4177,6 +4850,72 @@ export const AdminApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {number} requestId
+     * @param {number} videoId
+     * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminRequestsVideosTodosCreate(
+      requestId: number,
+      videoId: number,
+      todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<TodoAdminListRetrieve>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminRequestsVideosTodosCreate(
+          requestId,
+          videoId,
+          todoAdminCreateUpdateRequest,
+          options,
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
+     * @param {number} requestId
+     * @param {number} videoId
+     * @param {string} [ordering] Which field to use when ordering the results.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminRequestsVideosTodosList(
+      requestId: number,
+      videoId: number,
+      ordering?: string,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<Array<TodoAdminListRetrieve>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminRequestsVideosTodosList(
+          requestId,
+          videoId,
+          ordering,
+          options,
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
      * @param {number} id A unique integer value identifying this video.
      * @param {number} requestId
      * @param {VideoAdminCreateUpdateRequest} videoAdminCreateUpdateRequest
@@ -4199,6 +4938,149 @@ export const AdminApiFp = function (configuration?: Configuration) {
           id,
           requestId,
           videoAdminCreateUpdateRequest,
+          options,
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminTodosDestroy(
+      id: number,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminTodosDestroy(id, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
+     * @param {string} [ordering] Which field to use when ordering the results.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
+     * @param {boolean} [pagination] Return paginated response.
+     * @param {Array<AdminTodosListStatusEnum>} [status] * &#x60;1&#x60; - Nyitva * &#x60;2&#x60; - Lezárva * &#x60;3&#x60; - Elvetve
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminTodosList(
+      ordering?: string,
+      page?: number,
+      pageSize?: number,
+      pagination?: boolean,
+      status?: Array<AdminTodosListStatusEnum>,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<PaginatedTodoAdminListRetrieveList>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.adminTodosList(
+        ordering,
+        page,
+        pageSize,
+        pagination,
+        status,
+        options,
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {PatchedTodoAdminCreateUpdateRequest} [patchedTodoAdminCreateUpdateRequest]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminTodosPartialUpdate(
+      id: number,
+      patchedTodoAdminCreateUpdateRequest?: PatchedTodoAdminCreateUpdateRequest,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<TodoAdminListRetrieve>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminTodosPartialUpdate(
+          id,
+          patchedTodoAdminCreateUpdateRequest,
+          options,
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminTodosRetrieve(
+      id: number,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<TodoAdminListRetrieve>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminTodosRetrieve(id, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminTodosUpdate(
+      id: number,
+      todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<TodoAdminListRetrieve>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminTodosUpdate(
+          id,
+          todoAdminCreateUpdateRequest,
           options,
         );
       return createRequestFunction(
@@ -4853,6 +5735,42 @@ export const AdminApiFactory = function (
     },
     /**
      *
+     * @param {number} requestId
+     * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsTodosCreate(
+      requestId: number,
+      todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+      options?: any,
+    ): AxiosPromise<TodoAdminListRetrieve> {
+      return localVarFp
+        .adminRequestsTodosCreate(
+          requestId,
+          todoAdminCreateUpdateRequest,
+          options,
+        )
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} requestId
+     * @param {string} [ordering] Which field to use when ordering the results.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsTodosList(
+      requestId: number,
+      ordering?: string,
+      options?: any,
+    ): AxiosPromise<Array<TodoAdminListRetrieve>> {
+      return localVarFp
+        .adminRequestsTodosList(requestId, ordering, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {number} id A unique integer value identifying this request.
      * @param {RequestAdminUpdateRequest} requestAdminUpdateRequest
      * @param {*} [options] Override http request option.
@@ -5139,6 +6057,47 @@ export const AdminApiFactory = function (
     },
     /**
      *
+     * @param {number} requestId
+     * @param {number} videoId
+     * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsVideosTodosCreate(
+      requestId: number,
+      videoId: number,
+      todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+      options?: any,
+    ): AxiosPromise<TodoAdminListRetrieve> {
+      return localVarFp
+        .adminRequestsVideosTodosCreate(
+          requestId,
+          videoId,
+          todoAdminCreateUpdateRequest,
+          options,
+        )
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} requestId
+     * @param {number} videoId
+     * @param {string} [ordering] Which field to use when ordering the results.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminRequestsVideosTodosList(
+      requestId: number,
+      videoId: number,
+      ordering?: string,
+      options?: any,
+    ): AxiosPromise<Array<TodoAdminListRetrieve>> {
+      return localVarFp
+        .adminRequestsVideosTodosList(requestId, videoId, ordering, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {number} id A unique integer value identifying this video.
      * @param {number} requestId
      * @param {VideoAdminCreateUpdateRequest} videoAdminCreateUpdateRequest
@@ -5158,6 +6117,89 @@ export const AdminApiFactory = function (
           videoAdminCreateUpdateRequest,
           options,
         )
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosDestroy(id: number, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .adminTodosDestroy(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} [ordering] Which field to use when ordering the results.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
+     * @param {boolean} [pagination] Return paginated response.
+     * @param {Array<AdminTodosListStatusEnum>} [status] * &#x60;1&#x60; - Nyitva * &#x60;2&#x60; - Lezárva * &#x60;3&#x60; - Elvetve
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosList(
+      ordering?: string,
+      page?: number,
+      pageSize?: number,
+      pagination?: boolean,
+      status?: Array<AdminTodosListStatusEnum>,
+      options?: any,
+    ): AxiosPromise<PaginatedTodoAdminListRetrieveList> {
+      return localVarFp
+        .adminTodosList(ordering, page, pageSize, pagination, status, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {PatchedTodoAdminCreateUpdateRequest} [patchedTodoAdminCreateUpdateRequest]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosPartialUpdate(
+      id: number,
+      patchedTodoAdminCreateUpdateRequest?: PatchedTodoAdminCreateUpdateRequest,
+      options?: any,
+    ): AxiosPromise<TodoAdminListRetrieve> {
+      return localVarFp
+        .adminTodosPartialUpdate(
+          id,
+          patchedTodoAdminCreateUpdateRequest,
+          options,
+        )
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosRetrieve(
+      id: number,
+      options?: any,
+    ): AxiosPromise<TodoAdminListRetrieve> {
+      return localVarFp
+        .adminTodosRetrieve(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {number} id A unique integer value identifying this todo.
+     * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminTodosUpdate(
+      id: number,
+      todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+      options?: any,
+    ): AxiosPromise<TodoAdminListRetrieve> {
+      return localVarFp
+        .adminTodosUpdate(id, todoAdminCreateUpdateRequest, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -5746,6 +6788,46 @@ export class AdminApi extends BaseAPI {
 
   /**
    *
+   * @param {number} requestId
+   * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminRequestsTodosCreate(
+    requestId: number,
+    todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+    options?: AxiosRequestConfig,
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminRequestsTodosCreate(
+        requestId,
+        todoAdminCreateUpdateRequest,
+        options,
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} requestId
+   * @param {string} [ordering] Which field to use when ordering the results.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminRequestsTodosList(
+    requestId: number,
+    ordering?: string,
+    options?: AxiosRequestConfig,
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminRequestsTodosList(requestId, ordering, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {number} id A unique integer value identifying this request.
    * @param {RequestAdminUpdateRequest} requestAdminUpdateRequest
    * @param {*} [options] Override http request option.
@@ -6062,6 +7144,51 @@ export class AdminApi extends BaseAPI {
 
   /**
    *
+   * @param {number} requestId
+   * @param {number} videoId
+   * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminRequestsVideosTodosCreate(
+    requestId: number,
+    videoId: number,
+    todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+    options?: AxiosRequestConfig,
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminRequestsVideosTodosCreate(
+        requestId,
+        videoId,
+        todoAdminCreateUpdateRequest,
+        options,
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} requestId
+   * @param {number} videoId
+   * @param {string} [ordering] Which field to use when ordering the results.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminRequestsVideosTodosList(
+    requestId: number,
+    videoId: number,
+    ordering?: string,
+    options?: AxiosRequestConfig,
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminRequestsVideosTodosList(requestId, videoId, ordering, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {number} id A unique integer value identifying this video.
    * @param {number} requestId
    * @param {VideoAdminCreateUpdateRequest} videoAdminCreateUpdateRequest
@@ -6082,6 +7209,92 @@ export class AdminApi extends BaseAPI {
         videoAdminCreateUpdateRequest,
         options,
       )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} id A unique integer value identifying this todo.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminTodosDestroy(id: number, options?: AxiosRequestConfig) {
+    return AdminApiFp(this.configuration)
+      .adminTodosDestroy(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} [ordering] Which field to use when ordering the results.
+   * @param {number} [page] A page number within the paginated result set.
+   * @param {number} [pageSize] Number of results to return per page.
+   * @param {boolean} [pagination] Return paginated response.
+   * @param {Array<AdminTodosListStatusEnum>} [status] * &#x60;1&#x60; - Nyitva * &#x60;2&#x60; - Lezárva * &#x60;3&#x60; - Elvetve
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminTodosList(
+    ordering?: string,
+    page?: number,
+    pageSize?: number,
+    pagination?: boolean,
+    status?: Array<AdminTodosListStatusEnum>,
+    options?: AxiosRequestConfig,
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminTodosList(ordering, page, pageSize, pagination, status, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} id A unique integer value identifying this todo.
+   * @param {PatchedTodoAdminCreateUpdateRequest} [patchedTodoAdminCreateUpdateRequest]
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminTodosPartialUpdate(
+    id: number,
+    patchedTodoAdminCreateUpdateRequest?: PatchedTodoAdminCreateUpdateRequest,
+    options?: AxiosRequestConfig,
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminTodosPartialUpdate(id, patchedTodoAdminCreateUpdateRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} id A unique integer value identifying this todo.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminTodosRetrieve(id: number, options?: AxiosRequestConfig) {
+    return AdminApiFp(this.configuration)
+      .adminTodosRetrieve(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {number} id A unique integer value identifying this todo.
+   * @param {TodoAdminCreateUpdateRequest} todoAdminCreateUpdateRequest
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminApi
+   */
+  public adminTodosUpdate(
+    id: number,
+    todoAdminCreateUpdateRequest: TodoAdminCreateUpdateRequest,
+    options?: AxiosRequestConfig,
+  ) {
+    return AdminApiFp(this.configuration)
+      .adminTodosUpdate(id, todoAdminCreateUpdateRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -6301,6 +7514,16 @@ export const AdminRequestsListStatusEnum = {
 } as const;
 export type AdminRequestsListStatusEnum =
   (typeof AdminRequestsListStatusEnum)[keyof typeof AdminRequestsListStatusEnum];
+/**
+ * @export
+ */
+export const AdminTodosListStatusEnum = {
+  NUMBER_1: 1,
+  NUMBER_2: 2,
+  NUMBER_3: 3,
+} as const;
+export type AdminTodosListStatusEnum =
+  (typeof AdminTodosListStatusEnum)[keyof typeof AdminTodosListStatusEnum];
 /**
  * @export
  */

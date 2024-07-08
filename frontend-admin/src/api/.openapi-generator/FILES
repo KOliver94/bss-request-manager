@@ -33,6 +33,7 @@ models/oauth2-connect-request.ts
 models/paginated-request-admin-list-list-links.ts
 models/paginated-request-admin-list-list.ts
 models/paginated-request-list-list.ts
+models/paginated-todo-admin-list-retrieve-list.ts
 models/paginated-user-admin-list-list.ts
 models/paginated-video-admin-search-list.ts
 models/patched-comment-admin-create-update-request.ts
@@ -41,6 +42,7 @@ models/patched-crew-member-admin-create-update-request.ts
 models/patched-rating-admin-create-update-request.ts
 models/patched-rating-create-update-request.ts
 models/patched-request-admin-update-request.ts
+models/patched-todo-admin-create-update-request.ts
 models/patched-user-admin-retrieve-update-request.ts
 models/patched-user-request.ts
 models/patched-video-admin-create-update-request.ts
@@ -60,6 +62,10 @@ models/request-create-request.ts
 models/request-external-sch-events-create-request.ts
 models/request-list.ts
 models/request-retrieve.ts
+models/status-enum.ts
+models/todo-admin-create-update-request.ts
+models/todo-admin-list-retrieve.ts
+models/todo-nested-request-video.ts
 models/token-blacklist-request.ts
 models/token-obtain-pair-oauth2-request.ts
 models/token-obtain-pair-request.ts

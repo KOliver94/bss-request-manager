@@ -658,6 +658,67 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/v1/admin/requests/{request_id}/todos:
+    get:
+      operationId: admin_requests_todos_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TodoAdminListRetrieve'
+          description: ''
+    post:
+      operationId: admin_requests_todos_create
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TodoAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TodoAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoAdminListRetrieve'
+          description: ''
   /api/v1/admin/requests/{request_id}/videos:
     get:
       operationId: admin_requests_videos_list
@@ -1147,6 +1208,237 @@ paths:
               schema:
                 $ref: '#/components/schemas/RatingAdminListRetrieve'
           description: ''
+  /api/v1/admin/requests/{request_id}/videos/{video_id}/todos:
+    get:
+      operationId: admin_requests_videos_todos_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TodoAdminListRetrieve'
+          description: ''
+    post:
+      operationId: admin_requests_videos_todos_create
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TodoAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TodoAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoAdminListRetrieve'
+          description: ''
+  /api/v1/admin/todos:
+    get:
+      operationId: admin_todos_list
+      parameters:
+        - name: ordering
+          required: false
+          in: query
+          description: Which field to use when ordering the results.
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+        - name: page_size
+          required: false
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: pagination
+          required: false
+          in: query
+          description: Return paginated response.
+          schema:
+            type: boolean
+        - in: query
+          name: status
+          schema:
+            type: array
+            items:
+              type: integer
+              enum:
+                - 1
+                - 2
+                - 3
+          description: |-
+            * `1` - Nyitva
+            * `2` - Lezárva
+            * `3` - Elvetve
+          explode: true
+          style: form
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTodoAdminListRetrieveList'
+          description: ''
+  /api/v1/admin/todos/{id}:
+    get:
+      operationId: admin_todos_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this todo.
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoAdminListRetrieve'
+          description: ''
+    put:
+      operationId: admin_todos_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this todo.
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TodoAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TodoAdminCreateUpdateRequest'
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoAdminListRetrieve'
+          description: ''
+    patch:
+      operationId: admin_todos_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this todo.
+          required: true
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTodoAdminCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTodoAdminCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTodoAdminCreateUpdateRequest'
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoAdminListRetrieve'
+          description: ''
+    delete:
+      operationId: admin_todos_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this todo.
+          required: true
+      tags:
+        - admin
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/v1/admin/users:
     get:
       operationId: admin_users_list
@@ -2630,6 +2922,32 @@ components:
         total_pages:
           type: integer
           example: 123
+    PaginatedTodoAdminListRetrieveList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        links:
+          type: object
+          properties:
+            next:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=4
+            previous:
+              type: string
+              nullable: true
+              format: uri
+              example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TodoAdminListRetrieve'
+        total_pages:
+          type: integer
+          example: 123
     PaginatedUserAdminListList:
       type: object
       properties:
@@ -2768,6 +3086,21 @@ components:
           type: string
           minLength: 1
           maxLength: 50
+    PatchedTodoAdminCreateUpdateRequest:
+      type: object
+      properties:
+        assignees:
+          type: array
+          items:
+            type: integer
+        description:
+          type: string
+          minLength: 1
+        status:
+          allOf:
+            - $ref: '#/components/schemas/StatusEnum'
+          minimum: 0
+          maximum: 32767
     PatchedUserAdminRetrieveUpdateRequest:
       type: object
       properties:
@@ -3376,6 +3709,87 @@ components:
         - status
         - title
         - type
+    StatusEnum:
+      enum:
+        - 1
+        - 2
+        - 3
+      type: integer
+      description: |-
+        * `1` - Nyitva
+        * `2` - Lezárva
+        * `3` - Elvetve
+    TodoAdminCreateUpdateRequest:
+      type: object
+      properties:
+        assignees:
+          type: array
+          items:
+            type: integer
+        description:
+          type: string
+          minLength: 1
+        status:
+          allOf:
+            - $ref: '#/components/schemas/StatusEnum'
+          minimum: 0
+          maximum: 32767
+      required:
+        - description
+    TodoAdminListRetrieve:
+      type: object
+      properties:
+        assignees:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        creator:
+          allOf:
+            - $ref: '#/components/schemas/UserNestedList'
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+        request:
+          allOf:
+            - $ref: '#/components/schemas/TodoNestedRequestVideo'
+          readOnly: true
+        status:
+          type: integer
+          readOnly: true
+        video:
+          allOf:
+            - $ref: '#/components/schemas/TodoNestedRequestVideo'
+          readOnly: true
+      required:
+        - assignees
+        - created
+        - creator
+        - description
+        - id
+        - request
+        - status
+        - video
+    TodoNestedRequestVideo:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+      required:
+        - id
+        - title
     TokenBlacklistRequest:
       type: object
       properties:
