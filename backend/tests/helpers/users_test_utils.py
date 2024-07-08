@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import Group, User
 from django.utils.timezone import localtime
 
-from common.models import Ban
+from common.models import Ban, get_system_user
 
 PASSWORD = "ae9U$89z#zyA!YoPE$6m"
 
@@ -67,6 +67,6 @@ def create_user(
 
     # Add user ban
     if banned:
-        Ban.objects.create(receiver=user)
+        Ban.objects.create(creator=get_system_user(), receiver=user)
 
     return user
