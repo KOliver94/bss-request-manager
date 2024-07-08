@@ -66,11 +66,7 @@ class Ban(models.Model):
         User, on_delete=models.CASCADE, primary_key=True, unique=True
     )
     creator = models.ForeignKey(
-        User,
-        related_name="ban_creator",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
+        User, related_name="ban_creator", on_delete=models.SET(get_sentinel_user)
     )
     reason = models.CharField(max_length=100, blank=True)
     created = models.DateTimeField(auto_now_add=True)
