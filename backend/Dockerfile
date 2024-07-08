@@ -37,8 +37,7 @@ ENV PATH="$POETRY_HOME/bin:$VIRTUAL_ENV/bin:$PATH"
 FROM python-base as backend-builder
 
 # Install build dependencies
-RUN apk update && apk add curl postgresql-dev \
-    build-base openldap-dev  # required for python-ldap
+RUN apk update && apk add curl postgresql-dev
 
 # Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
 # The --mount will mount the buildx cache directory to where
@@ -66,8 +65,8 @@ FROM python-base as production
 # Copy built runtime dependencies from builder container
 COPY --from=backend-builder $PYSETUP_PATH $PYSETUP_PATH
 
-# Install runtime dependency for psycopg[c] and python-ldap
-RUN apk update && apk add --no-cache libldap libpq
+# Install runtime dependency for psycopg[c]
+RUN apk update && apk add --no-cache libpq
 
 # Copy everything over to Docker environment
 COPY . /app/backend

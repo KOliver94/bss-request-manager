@@ -45,7 +45,7 @@ User.add_to_class("is_service_account", is_service_account)
 
 
 ##############################
-#           LDAP             #
+#       Special Roles        #
 ##############################
 def get_editor_in_chief():
     return User.objects.filter(groups__name="FOSZERKESZTO")

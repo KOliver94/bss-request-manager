@@ -50,7 +50,6 @@ celery = {extras = ["redis"], version = "5.4.0"}
 django = "5.0.6"
 djangorestframework = "3.15.2"
 djangorestframework_simplejwt = "5.3.1"
-django-auth-ldap = "4.8.0"
 django-cacheops = "7.0.2"
 django-celery-results = "2.5.1"
 django-cors-headers = "4.4.0"
@@ -66,10 +65,6 @@ google-auth-oauthlib = "1.2.0"
 jsonschema = {extras = ["format"], version = "4.22.0"}
 libgravatar = "1.0.4"
 python-decouple = "3.8"
-python-ldap = [
-    { markers = "sys_platform != 'win32'", version = "3.4.4" },
-    { markers = "sys_platform == 'win32'", url = "https://github.com/cgohlke/python-ldap-build/releases/download/v3.4.4/python_ldap-3.4.4-cp312-cp312-win_amd64.whl" },
-]
 requests = "2.32.3"
 sentry-sdk = "2.7.1"
 social-auth-app-django = "5.4.1"

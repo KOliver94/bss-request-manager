@@ -5,13 +5,6 @@ from django.core.management import call_command
 
 
 @shared_task
-def scheduled_sync_ldap_users():
-    with StringIO() as out:
-        call_command("sync_ldap", stdout=out)
-        return out.getvalue()
-
-
-@shared_task
 def scheduled_update_request_status():
     with StringIO() as out:
         call_command("update_request_status", stdout=out)

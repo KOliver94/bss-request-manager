@@ -27,10 +27,6 @@ async function handleLogin(response) {
   return response;
 }
 
-export async function loginLdap(loginDetails, config) {
-  await axiosInstance.post('login', loginDetails, config).then(handleLogin);
-}
-
 export async function loginSocial(provider, code, config) {
   await axiosInstance
     .post('login/social', { provider, code }, config)

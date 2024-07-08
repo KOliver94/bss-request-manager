@@ -2,7 +2,6 @@ import logging
 from base64 import b64encode
 
 import requests
-from django_auth_ldap.backend import LDAPBackend
 from libgravatar import Gravatar, sanitize_email
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from social_core.exceptions import NotAllowedToDisconnect
@@ -44,32 +43,12 @@ def set_user_active_when_first_logs_in(backend, user=None, *args, **kwargs):
         )
 
 
-def check_if_admin_or_staff_user_is_still_privileged(
-    strategy, user=None, *args, **kwargs
-):
-    """
-    Check if a staff or admin member is still privileged or got removed from AD.
-    Runs only at login process. (Request sender user is anonymous).
-    """
-    if (
-        user
-        and (user.is_superuser or user.is_staff)
-        and strategy.request.user.is_anonymous
-    ):
-        ldap_user = LDAPBackend().populate_user(user.username)
-        if ldap_user is None:
-            user.is_superuser = False
-            user.is_staff = False
-            user.groups.clear()
-            user.save()
-
-
 def check_if_admin_or_staff_user_already_associated(
     backend, strategy, user=None, is_new=False, new_association=True, *args, **kwargs
 ):
     """
     A staff or admin member must associate his/her social profile first.
-    (S)he has to log in with her/his LDAP account and associate the profile.
+    (S)he has to log in with her/his BSS Login account and associate the profile.
     Runs only at login process. (Request sender user is anonymous).
     """
     if strategy.request.user.is_anonymous:
@@ -78,6 +57,7 @@ def check_if_admin_or_staff_user_already_associated(
             and new_association
             and user
             and (user.is_superuser or user.is_staff)
+            # TODO: BSS Login backend should be enabled
             and not backend.strategy.storage.user.get_social_auth_for_user(
                 user, provider=backend.name
             ).exists()
