@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from core.settings._auth_ldap import *
 from core.settings._auth_social import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
