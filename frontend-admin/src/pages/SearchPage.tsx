@@ -26,7 +26,7 @@ const SearchPage = () => {
         <div>Keresés</div>
         <ToggleButton
           checked={searchVideo}
-          className="ml-2 p-1 text-sm font-medium"
+          pt={{ box: { className: 'ml-2 p-1 text-sm font-medium' } }}
           offIcon="pi pi-video text-sm "
           offLabel="Felkérések"
           onChange={(e) => setSearchVideo(e.value)}
