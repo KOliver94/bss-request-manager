@@ -16,11 +16,19 @@ SOCIAL_AUTH_USER_FIELDS = ["username", "email", "first_name", "last_name"]
 SOCIAL_AUTH_IMMUTABLE_USER_FIELDS = ["first_name", "last_name"]
 
 # Available OAuth2 providers
-SOCIAL_AUTH_PROVIDERS = ["authsch", "google-oauth2", "microsoft-graph"]
+SOCIAL_AUTH_PROVIDERS = ["authsch", "bss-login", "google-oauth2", "microsoft-graph"]
 
 # AuthSCH OAuth2 settings:
 SOCIAL_AUTH_AUTHSCH_KEY = config("AUTH_SCH_CLIENT_ID", default=None)
 SOCIAL_AUTH_AUTHSCH_SECRET = config("AUTH_SCH_CLIENT_SECRET", default=None)
+
+# BSS Login OAuth2 settings:
+SOCIAL_AUTH_BSS_LOGIN_KEY = config("AUTH_BSS_CLIENT_ID", default=None)
+SOCIAL_AUTH_BSS_LOGIN_SECRET = config("AUTH_BSS_CLIENT_SECRET", default=None)
+SOCIAL_AUTH_BSS_LOGIN_SUPERUSER_GROUP = config("AUTH_BSS_SUPERUSER_GROUP")
+SOCIAL_AUTH_BSS_LOGIN_EXCLUDE_GROUPS = config(
+    "AUTH_BSS_EXCLUDE_GROUPS", default=[], cast=Csv()
+)
 
 # Google OAuth2 settings:
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("AUTH_GOOGLE_CLIENT_ID", default=None)
@@ -83,6 +91,8 @@ SOCIAL_AUTH_PIPELINE = (
     "common.social_core.pipeline.add_phone_number_to_profile",
     # Custom action: Get user's avatar.
     "common.social_core.pipeline.get_avatar",
+    # Custom action: Set permissions and groups for staff users.
+    "common.social_core.pipeline.set_groups_and_permissions_for_staff",
     # Populate the extra_data field in the social record with the values
     # specified by settings (and the default ones like access_token, etc.).
     "social_core.pipeline.social_auth.load_extra_data",
@@ -105,6 +115,7 @@ SOCIAL_AUTH_DISCONNECT_PIPELINE = (
 
 AUTHENTICATION_BACKENDS += [
     "common.social_core.backends.AuthSCHOAuth2",
+    "common.social_core.backends.BSSLoginOAuth2",
     "social_core.backends.google.GoogleOAuth2",
     "social_core.backends.microsoft.MicrosoftOAuth2",
 ]

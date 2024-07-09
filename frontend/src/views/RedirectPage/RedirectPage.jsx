@@ -11,7 +11,9 @@ export default function RedirectPage() {
   const isValidOauthRedirect = () =>
     code &&
     state &&
-    ['authsch', 'google-oauth2', 'microsoft-graph'].includes(state.provider) &&
+    ['authsch', 'bss-login', 'google-oauth2', 'microsoft-graph'].includes(
+      state.provider,
+    ) &&
     ['login', 'profile'].includes(state.operation);
 
   useEffect(() => {

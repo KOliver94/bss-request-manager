@@ -21,6 +21,7 @@ import {
 } from 'src/helpers/authenticationHelper';
 import {
   getOauthUrlAuthSch,
+  getOauthUrlBssLogin,
   getOauthUrlGoogle,
   getOauthUrlMicrosoft,
 } from 'src/helpers/oauthConstants';
@@ -223,7 +224,14 @@ function LoginPage() {
                     />
                   </div>
                 ) : (
-                  <Button simple color="primary" size="lg" type="submit">
+                  <Button
+                    simple
+                    color="primary"
+                    size="lg"
+                    href={getOauthUrlBssLogin({ operation: 'login' })}
+                    onClick={handleButtonClick}
+                    target="_self"
+                  >
                     Bejelentkezés
                   </Button>
                 )}

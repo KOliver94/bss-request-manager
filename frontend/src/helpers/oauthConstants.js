@@ -7,6 +7,8 @@ const authSchScopes = [
   'mobile',
 ];
 
+const bssLoginScopes = ['email', 'mobile', 'name', 'openid', 'profile'];
+
 const googleScopes = [
   'https://www.googleapis.com/auth/userinfo.email',
   'https://www.googleapis.com/auth/userinfo.profile',
@@ -40,6 +42,15 @@ export const getOauthUrlAuthSch = (paramState = {}) => {
   return `https://auth.sch.bme.hu/site/login?response_type=code&client_id=${
     import.meta.env.VITE_AUTHSCH_CLIENT_ID
   }&scope=${authSchScopes.join('+')}&state=${createState(state)}`;
+};
+
+export const getOauthUrlBssLogin = (paramState = {}) => {
+  const state = { ...paramState, provider: 'bss-login' };
+  return `https://login.bsstudio.hu/application/o/authorize/?response_type=code&client_id=${
+    import.meta.env.VITE_BSS_CLIENT_ID
+  }&scope=${bssLoginScopes.join(
+    '+',
+  )}&redirect_uri=${redirectUri}&state=${createState(state)}`;
 };
 
 export const getOauthUrlGoogle = (paramState = {}) => {

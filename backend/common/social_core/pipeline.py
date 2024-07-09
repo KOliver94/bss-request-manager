@@ -2,6 +2,8 @@ import logging
 from base64 import b64encode
 
 import requests
+from django.conf import settings
+from django.contrib.auth.models import Group
 from libgravatar import Gravatar, sanitize_email
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from social_core.exceptions import NotAllowedToDisconnect
@@ -62,7 +64,7 @@ def check_if_admin_or_staff_user_already_associated(
             and new_association
             and user
             and (user.is_superuser or user.is_staff)
-            # TODO: BSS Login backend should be enabled
+            and not backend.name == "bss-login"
             and not backend.strategy.storage.user.get_social_auth_for_user(
                 user, provider=backend.name
             ).exists()
@@ -79,6 +81,10 @@ def add_phone_number_to_profile(backend, details, response, user, *args, **kwarg
     phone_number = None
 
     # AuthSCH
+    if details.get("mobile"):
+        phone_number = details.get("mobile")
+
+    # BSS Login
     if details.get("mobile"):
         phone_number = details.get("mobile")
 
@@ -149,6 +155,25 @@ def get_avatar(backend, response, user, *args, **kwargs):
         "microsoft-graph",
     ]:
         user.userprofile.avatar["provider"] = backend.name
+
+    user.save()
+
+
+def set_groups_and_permissions_for_staff(backend, response, user, *args, **kwargs):
+    if not backend.name == "bss-login":
+        return
+
+    user.is_staff = True
+
+    for group_name in response.get("groups", []):
+        if group_name.lower() not in [
+            grp.lower() for grp in settings.SOCIAL_AUTH_BSS_LOGIN_EXCLUDE_GROUPS
+        ]:
+            group = Group.objects.get_or_create(name=group_name)[0]
+            user.groups.add(group)
+
+        if group_name.lower() == settings.SOCIAL_AUTH_BSS_LOGIN_SUPERUSER_GROUP.lower():
+            user.is_superuser = True
 
     user.save()
 
