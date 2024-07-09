@@ -9,6 +9,9 @@ INSTALLED_APPS += ["social_django"]
 # When using PostgreSQL, it’s recommended to use the built-in JSONB field to store the extracted extra_data.
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
+# This redirect path is used only when the template tag login button is used
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/django-admin/"
+
 # Use username, email, first and last name for user creation
 SOCIAL_AUTH_USER_FIELDS = ["username", "email", "first_name", "last_name"]
 
@@ -119,3 +122,9 @@ AUTHENTICATION_BACKENDS += [
     "social_core.backends.google.GoogleOAuth2",
     "social_core.backends.microsoft.MicrosoftOAuth2",
 ]
+
+if DJANGO_ADMIN and "django.contrib.admin" in INSTALLED_APPS:
+    TEMPLATES[0]["OPTIONS"]["context_processors"] += [
+        "social_django.context_processors.backends",
+        "social_django.context_processors.login_redirect",
+    ]

@@ -1,0 +1,12 @@
+{% extends "admin/login.html" %}
+{% load i18n static %}
+
+{% block content %}
+    <div id="content-main">
+        <form action="{% url "social:begin" "bss-login" %}" id="login-form">
+            <div class="submit-row" style="padding: 0">
+                <input type="submit" value="{% translate 'Log in' %}">
+            </div>
+        </form>
+    </div>
+{% endblock %}
