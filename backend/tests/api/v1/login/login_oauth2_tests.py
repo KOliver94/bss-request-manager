@@ -160,6 +160,29 @@ class AuthSCHOAuth2Test(OAuth2Test):
         self.do_rest_login("authsch")
 
 
+@override_settings(SOCIAL_AUTH_PROVIDERS=["bss-login"])
+class BSSLoginOAuth2Test(OAuth2Test):
+    access_token_body = {"access_token": "foobar", "token_type": "bearer"}
+    backend_path = "common.social_core.backends.BSSLoginOAuth2"
+    user_data_body = {
+        "email": "foobar@example.com",
+        "email_verified": True,
+        "mobile": "+36509999999",
+        "first_name": "Foo",
+        "last_name": "Bar",
+        "name": "Foo Bar",
+        "given_name": "Foo Bar",
+        "preferred_username": "foobar",
+        "nickname": "foobar",
+        "groups": ["Group1", "Group2"],
+    }
+    user_data_url = "https://login.bsstudio.hu/application/o/userinfo/"
+
+    @responses.activate
+    def test_login(self):
+        self.do_rest_login("bss-login")
+
+
 @override_settings(SOCIAL_AUTH_PROVIDERS=["google-oauth2"])
 class GoogleOAuth2Test(OAuth2Test):
     access_token_body = {"access_token": "foobar", "token_type": "bearer"}
