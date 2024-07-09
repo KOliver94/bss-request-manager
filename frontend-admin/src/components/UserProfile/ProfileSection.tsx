@@ -31,6 +31,10 @@ const socialAccounts: Record<string, { icon: string; label: string }> = {
     icon: 'pi icon-sch',
     label: 'AuthSCH',
   },
+  'bss-login': {
+    icon: 'pi pi-shield',
+    label: 'BSS Login',
+  },
   'google-oauth2': {
     icon: 'pi pi-google',
     label: 'Google',
