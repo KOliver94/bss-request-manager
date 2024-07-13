@@ -5,7 +5,7 @@ import PersonalDetails from './PersonalDetails';
 export default function PersonalDetailsNormal({
   control,
   errors,
-  disabled,
+  disabled = false,
   isUser,
 }) {
   return (
@@ -30,8 +30,4 @@ PersonalDetailsNormal.propTypes = {
   }).isRequired,
   disabled: PropTypes.bool,
   isUser: PropTypes.bool.isRequired,
-};
-
-PersonalDetailsNormal.defaultProps = {
-  disabled: false,
 };

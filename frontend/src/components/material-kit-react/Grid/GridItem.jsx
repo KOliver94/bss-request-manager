@@ -5,18 +5,13 @@ import Grid from '@mui/material/Grid';
 
 import stylesModule from './GridItem.module.scss';
 
-export default function GridItem(props) {
-  const { children, className, ...rest } = props;
+export default function GridItem({ children, className = '', ...rest }) {
   return (
     <Grid item {...rest} className={stylesModule.grid + ' ' + className}>
       {children}
     </Grid>
   );
 }
-
-GridItem.defaultProps = {
-  className: '',
-};
 
 GridItem.propTypes = {
   children: PropTypes.node,

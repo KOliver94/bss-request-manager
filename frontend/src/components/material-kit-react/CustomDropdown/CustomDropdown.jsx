@@ -20,13 +20,26 @@ import stringToColor from 'src/helpers/stringToColor';
 
 import stylesModule from './CustomDropdown.module.scss';
 
-export default function CustomDropdown(props) {
+export default function CustomDropdown({
+  hoverColor = 'primary',
+  buttonText,
+  buttonIcon,
+  dropdownList,
+  buttonProps,
+  dropup,
+  dropdownHeader,
+  rtlActive,
+  caret = true,
+  left,
+  noLiPadding,
+  onClick,
+}) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const handleClose = (param) => {
     setOpen(false);
-    if (props && props.onClick) {
-      props.onClick(param);
+    if (onClick) {
+      onClick(param);
     }
   };
   const handleCloseAway = (event) => {
@@ -35,19 +48,6 @@ export default function CustomDropdown(props) {
     }
     setOpen(false);
   };
-  const {
-    buttonText,
-    buttonIcon,
-    dropdownList,
-    buttonProps,
-    dropup,
-    dropdownHeader,
-    caret,
-    hoverColor,
-    left,
-    rtlActive,
-    noLiPadding,
-  } = props;
   const caretClasses = classNames({
     [stylesModule.caret]: true,
     [stylesModule.caretActive]: open,
@@ -76,12 +76,11 @@ export default function CustomDropdown(props) {
         );
         break;
       }
-      icon = <props.buttonIcon className={stylesModule.buttonIcon} />;
+      const ButtonIcon = buttonIcon;
+      icon = <ButtonIcon className={stylesModule.buttonIcon} />;
       break;
     case 'string':
-      icon = (
-        <Icon className={stylesModule.buttonIcon}>{props.buttonIcon}</Icon>
-      );
+      icon = <Icon className={stylesModule.buttonIcon}>{buttonIcon}</Icon>;
       break;
     default:
       icon = null;
@@ -177,11 +176,6 @@ export default function CustomDropdown(props) {
     </div>
   );
 }
-
-CustomDropdown.defaultProps = {
-  caret: true,
-  hoverColor: 'primary',
-};
 
 CustomDropdown.propTypes = {
   hoverColor: PropTypes.oneOf([

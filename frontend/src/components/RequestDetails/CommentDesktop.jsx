@@ -28,15 +28,16 @@ import { isSelf } from 'src/helpers/authenticationHelper';
 import stylesModule from './Comment.module.scss';
 
 export default function CommentDesktop({
-  comment,
+  comment: commentProp,
   handleDelete,
   handleSubmit,
-  isEditing,
-  isNew,
+  isEditing = false,
+  isNew = false,
   loading,
-  requesterId,
+  requesterId = 0,
   setEditingCommentId,
 }) {
+  const comment = commentProp || { text: '' };
   const userName = isNew
     ? localStorage.getItem('name')
     : comment.author.full_name;
@@ -65,8 +66,8 @@ export default function CommentDesktop({
   };
 
   useEffect(() => {
-    reset(comment);
-  }, [reset, comment]);
+    reset(commentProp);
+  }, [reset, commentProp]);
 
   return (
     <>
@@ -227,13 +228,4 @@ CommentDesktop.propTypes = {
   loading: PropTypes.bool.isRequired,
   requesterId: PropTypes.number,
   setEditingCommentId: PropTypes.func.isRequired,
-};
-
-CommentDesktop.defaultProps = {
-  comment: {
-    text: '',
-  },
-  isEditing: false,
-  isNew: false,
-  requesterId: 0,
 };

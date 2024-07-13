@@ -3,18 +3,13 @@ import PropTypes from 'prop-types';
 
 import stylesModule from './Badge.module.scss';
 
-export default function Badge(props) {
-  const { color, children } = props;
+export default function Badge({ color = 'gray', children }) {
   return (
     <span className={`${stylesModule.badge} ${stylesModule[color]}`}>
       {children}
     </span>
   );
 }
-
-Badge.defaultProps = {
-  color: 'gray',
-};
 
 Badge.propTypes = {
   color: PropTypes.oneOf([
