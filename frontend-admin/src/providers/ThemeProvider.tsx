@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 
 import { useTheme } from 'hooks/useTheme';
 
@@ -6,7 +6,7 @@ const DarkTheme = lazy(() => import('themes/dark/DarkTheme'));
 const LightTheme = lazy(() => import('themes/light/LightTheme'));
 
 type ThemeProviderProps = {
-  children: JSX.Element;
+  children: React.JSX.Element;
 };
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {

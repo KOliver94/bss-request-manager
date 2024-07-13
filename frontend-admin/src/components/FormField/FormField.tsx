@@ -1,4 +1,4 @@
-import { cloneElement } from 'react';
+import React, { cloneElement } from 'react';
 
 import { classNames, IconType } from 'primereact/utils';
 import { Controller, UseControllerProps } from 'react-hook-form';
@@ -7,7 +7,7 @@ import ConditionalWrapper from 'helpers/ConditionalWrapper';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface FormFieldProps extends UseControllerProps<any> {
-  children: JSX.Element;
+  children: React.JSX.Element;
   className: string;
   icon?: IconType<FormFieldProps>;
   label: string;

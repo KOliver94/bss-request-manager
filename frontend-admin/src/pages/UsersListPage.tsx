@@ -6,9 +6,9 @@ import {
   DataTableFilterMetaData,
   DataTableOperatorFilterMetaData,
 } from 'primereact/datatable';
-import { InputText } from 'primereact/inputtext';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { InputText } from 'primereact/inputtext';
 
 import { usersListQuery } from 'api/queries';
 import UsersDataTable from 'components/UsersDataTable/UsersDataTable';

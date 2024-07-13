@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 
+import { ButtonGroup } from 'primereact/buttongroup';
 import { Chip } from 'primereact/chip';
 import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
@@ -8,7 +9,6 @@ import { UserNestedDetail } from 'api/models';
 import LinkButton from 'components/LinkButton/LinkButton';
 import User from 'components/User/User';
 import { RequestAdditionalDataType } from 'types/additionalDataTypes';
-import { ButtonGroup } from 'primereact/buttongroup';
 
 type RequesterContentProps = {
   additionalData: RequestAdditionalDataType;
