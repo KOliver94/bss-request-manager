@@ -172,11 +172,19 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
                     // Add "xxx" option created dynamically
                     if (option.label) {
                       // eslint-disable-next-line react/jsx-props-no-spreading
-                      return <li {...props}>{option.label}</li>;
+                      return (
+                        <li {...props} key={option.label}>
+                          {option.label}
+                        </li>
+                      );
                     }
                     // Regular option
                     // eslint-disable-next-line react/jsx-props-no-spreading
-                    return <li {...props}>{option.text}</li>;
+                    return (
+                      <li {...props} key={option.text}>
+                        {option.text}
+                      </li>
+                    );
                   }}
                   fullWidth
                   selectOnFocus
