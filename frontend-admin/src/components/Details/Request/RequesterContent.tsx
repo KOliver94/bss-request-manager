@@ -67,36 +67,40 @@ export const RequesterContentButtons = ({
   requester,
 }: RequesterContentButtonsProps) => {
   return (
-    <span className="flex flex-no-wrap justify-content-end sm:flex-wrap">
-      <ButtonGroup>
-        <LinkButton
-          buttonProps={{
-            className: 'p-button-sm p-button-text pl-1 pr-2 py-0',
-            icon: 'pi pi-phone',
-            label: 'Hívás',
-          }}
-          linkProps={{ to: `tel:${requester.phone_number}` }}
-        />
-        <LinkButton
-          buttonProps={{
-            className:
-              'p-button-sm p-button-text pl-2 pr-2 py-0 white-space-nowrap',
-            icon: 'pi pi-envelope',
-            label: 'E-mail',
-          }}
-          linkProps={{
-            to: `mailto:${requester.email}?subject=${requestTitle}`,
-          }}
-        />
-        <LinkButton
-          buttonProps={{
-            className: 'p-button-sm p-button-text pl-2 pr-1 py-0',
-            icon: 'pi pi-user',
-            label: 'Profil',
-          }}
-          linkProps={{ to: `/users/${requester.id}` }}
-        />
-      </ButtonGroup>
-    </span>
+    <ButtonGroup
+      pt={{
+        root: {
+          className: 'flex flex-no-wrap justify-content-end sm:flex-wrap',
+        },
+      }}
+    >
+      <LinkButton
+        buttonProps={{
+          className: 'p-button-sm p-button-text pl-1 pr-2 py-0',
+          icon: 'pi pi-phone',
+          label: 'Hívás',
+        }}
+        linkProps={{ to: `tel:${requester.phone_number}` }}
+      />
+      <LinkButton
+        buttonProps={{
+          className:
+            'p-button-sm p-button-text pl-2 pr-2 py-0 white-space-nowrap',
+          icon: 'pi pi-envelope',
+          label: 'E-mail',
+        }}
+        linkProps={{
+          to: `mailto:${requester.email}?subject=${requestTitle}`,
+        }}
+      />
+      <LinkButton
+        buttonProps={{
+          className: 'p-button-sm p-button-text pl-2 pr-1 py-0',
+          icon: 'pi pi-user',
+          label: 'Profil',
+        }}
+        linkProps={{ to: `/users/${requester.id}` }}
+      />
+    </ButtonGroup>
   );
 };
