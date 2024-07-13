@@ -1,4 +1,5 @@
 import { Button } from 'primereact/button';
+import { ButtonGroup } from 'primereact/buttongroup';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { Control, Controller } from 'react-hook-form';
@@ -165,21 +166,23 @@ const RecordingContentButtonsEditing = ({
   loading,
 }: RecordingContentButtonsEditingProps) => {
   return (
-    <span className="flex flex-no-wrap justify-content-end p-buttonset sm:flex-wrap">
-      <Button
-        className="p-button-sm p-button-text pl-1 pr-2 py-0"
-        disabled={loading}
-        icon="pi pi-check"
-        label="Mentés"
-        onClick={editOnSave}
-      />
-      <Button
-        className="p-button-sm p-button-text pl-2 pr-1 py-0"
-        disabled={loading}
-        icon="pi pi-times"
-        label="Mégsem"
-        onClick={editOnCancel}
-      />
+    <span className="flex flex-no-wrap justify-content-end sm:flex-wrap">
+      <ButtonGroup>
+        <Button
+          className="p-button-sm p-button-text pl-1 pr-2 py-0"
+          disabled={loading}
+          icon="pi pi-check"
+          label="Mentés"
+          onClick={editOnSave}
+        />
+        <Button
+          className="p-button-sm p-button-text pl-2 pr-1 py-0"
+          disabled={loading}
+          icon="pi pi-times"
+          label="Mégsem"
+          onClick={editOnCancel}
+        />
+      </ButtonGroup>
     </span>
   );
 };
@@ -192,28 +195,30 @@ const RecordingContentButtonsNonEditing = ({
   const { showToast } = useToast();
 
   return (
-    <span className="flex flex-no-wrap justify-content-end p-buttonset sm:flex-wrap">
-      <Button
-        className="p-button-sm p-button-text pl-1 pr-2 py-0"
-        icon="pi pi-pencil"
-        label="Szerkesztés"
-        onClick={editOnClick}
-      />
-      <Button
-        className="p-button-sm p-button-text pl-2 pr-1 py-0"
-        disabled={_recordingPath.length == 0}
-        icon="pi pi-folder-open"
-        label="Másolás"
-        onClick={() => {
-          showToast({
-            detail: 'Elérési út a vágólapra másolva',
-            life: 3000,
-            severity: 'info',
-            summary: 'Információ',
-          });
-          void navigator.clipboard.writeText(_recordingPath);
-        }}
-      />
+    <span className="flex flex-no-wrap justify-content-end sm:flex-wrap">
+      <ButtonGroup>
+        <Button
+          className="p-button-sm p-button-text pl-1 pr-2 py-0"
+          icon="pi pi-pencil"
+          label="Szerkesztés"
+          onClick={editOnClick}
+        />
+        <Button
+          className="p-button-sm p-button-text pl-2 pr-1 py-0"
+          disabled={_recordingPath.length == 0}
+          icon="pi pi-folder-open"
+          label="Másolás"
+          onClick={() => {
+            showToast({
+              detail: 'Elérési út a vágólapra másolva',
+              life: 3000,
+              severity: 'info',
+              summary: 'Információ',
+            });
+            void navigator.clipboard.writeText(_recordingPath);
+          }}
+        />
+      </ButtonGroup>
     </span>
   );
 };
