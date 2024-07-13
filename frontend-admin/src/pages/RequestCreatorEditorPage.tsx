@@ -448,7 +448,7 @@ const RequestCreatorEditorPage = () => {
           >
             <Calendar
               dateFormat="yy.mm.dd"
-              mask="9999.99.99."
+              mask="9999.99.99"
               placeholder={
                 requestId ? 'Nincs változás' : 'Az esemény vége után 3 hét'
               }
