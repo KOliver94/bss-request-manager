@@ -14,7 +14,7 @@ import {
 } from './StatusTagTypes';
 
 export const StatusTag = forwardRef<React.Ref<HTMLSpanElement>, StatusTagProps>(
-  ({ modified, status, ...props }, ref) => {
+  ({ modified = false, status, ...props }, ref) => {
     return (
       <Tag
         {...props}
@@ -27,9 +27,6 @@ export const StatusTag = forwardRef<React.Ref<HTMLSpanElement>, StatusTagProps>(
   },
 );
 
-StatusTag.defaultProps = {
-  modified: false,
-};
 StatusTag.displayName = 'StatusTag';
 
 export const RequestStatusTag = forwardRef<

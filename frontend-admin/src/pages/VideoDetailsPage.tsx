@@ -321,7 +321,7 @@ const VideoDetailsPage = () => {
           <div className="flex">
             <StyleClass
               enterActiveClassName="fadeinleft"
-              enterClassName="hidden"
+              enterFromClassName="hidden"
               hideOnOutsideClick
               leaveActiveClassName="fadeoutleft"
               leaveToClassName="hidden"

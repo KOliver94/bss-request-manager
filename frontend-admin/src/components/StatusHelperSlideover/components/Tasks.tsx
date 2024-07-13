@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { classNames, IconType } from 'primereact/utils';
 
 import { StatusStyle } from 'components/StatusTag/StatusTagTypes';
@@ -8,7 +10,7 @@ type ActiveTaskItemProps = {
 };
 
 type ActiveTaskProps = {
-  children: JSX.Element[] | JSX.Element;
+  children: React.JSX.Element[] | React.JSX.Element;
   icon: IconType<StatusStyle>;
   label: string;
 };

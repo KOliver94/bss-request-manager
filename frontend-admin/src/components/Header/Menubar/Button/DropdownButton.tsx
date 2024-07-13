@@ -27,7 +27,7 @@ const DropdownButton = ({
       {/* Button */}
       <StyleClass
         enterActiveClassName="scalein"
-        enterClassName="hidden"
+        enterFromClassName="hidden"
         hideOnOutsideClick
         leaveActiveClassName="fadeout"
         leaveToClassName="hidden"

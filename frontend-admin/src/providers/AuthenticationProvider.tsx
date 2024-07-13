@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   getAccessToken,
   isRefreshTokenExpired,
@@ -5,7 +7,7 @@ import {
 } from 'helpers/LocalStorageHelper';
 
 type AuthenticationProviderProps = {
-  children: JSX.Element;
+  children: React.JSX.Element;
 };
 
 export const AuthenticationProvider = ({

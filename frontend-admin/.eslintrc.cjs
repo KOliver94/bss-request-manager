@@ -7,6 +7,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:@tanstack/eslint-plugin-query/recommended',
     'plugin:@typescript-eslint/strict', // TODO: Use strict-type-checked
+    'plugin:deprecation/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:react/recommended',

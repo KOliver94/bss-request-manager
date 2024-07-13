@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 
 import {
   DefinedUseQueryResult,
@@ -60,7 +60,7 @@ type CommentCardHeaderProps = {
 };
 
 type CommentCardWrapperProps = {
-  children: JSX.Element[] | JSX.Element;
+  children: React.JSX.Element[] | React.JSX.Element;
   isInternal?: boolean;
   isLastItem?: boolean;
 };

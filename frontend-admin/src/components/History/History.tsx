@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Avatar } from 'primereact/avatar';
 import { Divider } from 'primereact/divider';
 import { Tooltip } from 'primereact/tooltip';
@@ -14,7 +16,7 @@ export interface HistoryDates // TODO: Rename?
 
 type HistoryComponentProps = {
   getFieldName: (name: string) => string;
-  getFieldValue: (name: string, value: string) => string | JSX.Element;
+  getFieldValue: (name: string, value: string) => string | React.JSX.Element;
   history: HistoryDates[];
 };
 

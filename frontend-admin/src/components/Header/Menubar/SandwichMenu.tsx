@@ -7,7 +7,7 @@ const SandwichMenu = () => {
 
   return (
     <StyleClass
-      enterClassName="hidden"
+      enterFromClassName="hidden"
       hideOnOutsideClick
       leaveToClassName="hidden"
       nodeRef={btnRef}

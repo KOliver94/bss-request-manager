@@ -1,11 +1,16 @@
-import { useRef, useLayoutEffect, useContext, createContext } from 'react';
+import React, {
+  useRef,
+  useLayoutEffect,
+  useContext,
+  createContext,
+} from 'react';
 
 import { ToastMessage, Toast } from 'primereact/toast';
 
 type MessageType = ToastMessage | ToastMessage[];
 
 type ToastProviderProps = {
-  children: JSX.Element;
+  children: React.JSX.Element;
 };
 
 interface ToastContextValue {

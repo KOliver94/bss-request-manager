@@ -1,8 +1,10 @@
+import React from 'react';
+
 import { classNames } from 'primereact/utils';
 
 interface DetailsRowProps {
-  button?: JSX.Element;
-  content: string | JSX.Element;
+  button?: React.JSX.Element;
+  content: string | React.JSX.Element;
   firstElement?: boolean;
   label: string;
   lastElement?: boolean;

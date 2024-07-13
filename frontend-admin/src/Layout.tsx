@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { ScrollTop } from 'primereact/scrolltop';
 import { Outlet, ScrollRestoration, useNavigation } from 'react-router-dom';
 
@@ -6,7 +8,7 @@ import LoadingPage from 'pages/LoadingPage';
 import { AuthenticationProvider } from 'providers/AuthenticationProvider';
 
 type LayoutProps = {
-  children?: JSX.Element;
+  children?: React.JSX.Element;
 };
 
 const Layout = ({ children }: LayoutProps) => {
