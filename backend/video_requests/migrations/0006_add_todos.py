@@ -32,7 +32,8 @@ class Migration(migrations.Migration):
                 (
                     "status",
                     models.PositiveSmallIntegerField(
-                        choices=[(1, "Nyitva"), (2, "Lezárva")], default=1
+                        choices=[(1, "Nyitva"), (2, "Lezárva"), (3, "Elvetve")],
+                        default=1,
                     ),
                 ),
                 (
