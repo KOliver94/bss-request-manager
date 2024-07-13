@@ -29,7 +29,12 @@ export default function ReviewDialog({
   };
 
   const handleCancel = () => {
-    setReviewDialogData({ ...reviewDialogData, open: false });
+    setReviewDialogData({
+      ...reviewDialogData,
+      videoId: 0,
+      rating: {},
+      open: false,
+    });
   };
 
   const handleSave = async () => {
