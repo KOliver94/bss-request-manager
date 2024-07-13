@@ -5,8 +5,13 @@ import classNames from 'classnames';
 
 import stylesModule from './InfoArea.module.scss';
 
-export default function InfoArea(props) {
-  const { title, description, iconColor, vertical } = props;
+export default function InfoArea({
+  icon: Icon,
+  title,
+  description,
+  iconColor = 'gray',
+  vertical,
+}) {
   const iconWrapper = classNames({
     [stylesModule.iconWrapper]: true,
     [stylesModule[iconColor]]: true,
@@ -19,7 +24,7 @@ export default function InfoArea(props) {
   return (
     <div className={stylesModule.infoArea}>
       <div className={iconWrapper}>
-        <props.icon className={iconClasses} />
+        <Icon className={iconClasses} />
       </div>
       <div className={stylesModule.descriptionWrapper}>
         <h4 className={stylesModule.title}>{title}</h4>
@@ -28,10 +33,6 @@ export default function InfoArea(props) {
     </div>
   );
 }
-
-InfoArea.defaultProps = {
-  iconColor: 'gray',
-};
 
 InfoArea.propTypes = {
   icon: PropTypes.object.isRequired,

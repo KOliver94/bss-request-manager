@@ -16,14 +16,22 @@ import Menu from '@mui/icons-material/Menu';
 
 import stylesModule from './Header.module.scss';
 
-export default function Header(props) {
+export default function Header({
+  color = 'white',
+  rightLinks,
+  leftLinks,
+  brand,
+  fixed,
+  absolute,
+  changeColorOnScroll,
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   useEffect(() => {
-    if (props.changeColorOnScroll) {
+    if (changeColorOnScroll) {
       window.addEventListener('scroll', headerColorChange);
     }
     return function cleanup() {
-      if (props.changeColorOnScroll) {
+      if (changeColorOnScroll) {
         window.removeEventListener('scroll', headerColorChange);
       }
     };
@@ -32,7 +40,6 @@ export default function Header(props) {
     setMobileOpen(!mobileOpen);
   };
   const headerColorChange = () => {
-    const { color, changeColorOnScroll } = props;
     const windowsScrollTop = window.pageYOffset;
     if (windowsScrollTop > changeColorOnScroll.height) {
       document.body
@@ -50,7 +57,6 @@ export default function Header(props) {
         .classList.remove(stylesModule[changeColorOnScroll.color]);
     }
   };
-  const { color, rightLinks, leftLinks, brand, fixed, absolute } = props;
   const appBarClasses = classNames({
     [stylesModule.appBar]: true,
     [stylesModule[color]]: color,
@@ -108,10 +114,6 @@ export default function Header(props) {
     </AppBar>
   );
 }
-
-Header.defaultProp = {
-  color: 'white',
-};
 
 Header.propTypes = {
   color: PropTypes.oneOf([

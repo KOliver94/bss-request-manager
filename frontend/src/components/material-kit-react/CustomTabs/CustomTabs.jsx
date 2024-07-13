@@ -15,8 +15,14 @@ import CardHeader from 'src/components/material-kit-react/Card/CardHeader';
 
 import stylesModule from './CustomTabs.module.scss';
 
-export default function CustomTabs(props) {
-  const { headerColor, plainTabs, tabs, title, rtlActive, activeTab } = props;
+export default function CustomTabs({
+  headerColor,
+  title,
+  tabs,
+  rtlActive,
+  plainTabs,
+  activeTab = 0,
+}) {
   const [value, setValue] = useState(activeTab);
 
   const handleChange = (event, value) => {
@@ -101,8 +107,4 @@ CustomTabs.propTypes = {
   rtlActive: PropTypes.bool,
   plainTabs: PropTypes.bool,
   activeTab: PropTypes.number,
-};
-
-CustomTabs.defaultProps = {
-  activeTab: 0,
 };

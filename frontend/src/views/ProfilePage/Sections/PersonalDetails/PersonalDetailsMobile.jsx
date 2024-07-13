@@ -9,7 +9,7 @@ import PersonalDetails from './PersonalDetails';
 export default function PersonalDetailsMobile({
   control,
   errors,
-  disabled,
+  disabled = false,
   isUser,
 }) {
   return (
@@ -42,8 +42,4 @@ PersonalDetailsMobile.propTypes = {
   }).isRequired,
   disabled: PropTypes.bool,
   isUser: PropTypes.bool.isRequired,
-};
-
-PersonalDetailsMobile.defaultProps = {
-  disabled: false,
 };

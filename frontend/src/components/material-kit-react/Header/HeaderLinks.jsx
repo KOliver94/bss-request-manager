@@ -36,7 +36,10 @@ function AdminButton() {
   return null;
 }
 
-export default function HeaderLinks({ hideNewRequest, hideLogin }) {
+export default function HeaderLinks({
+  hideNewRequest = false,
+  hideLogin = false,
+}) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState(null);
@@ -149,9 +152,4 @@ export default function HeaderLinks({ hideNewRequest, hideLogin }) {
 HeaderLinks.propTypes = {
   hideNewRequest: PropTypes.bool,
   hideLogin: PropTypes.bool,
-};
-
-HeaderLinks.defaultProps = {
-  hideNewRequest: false,
-  hideLogin: false,
 };
