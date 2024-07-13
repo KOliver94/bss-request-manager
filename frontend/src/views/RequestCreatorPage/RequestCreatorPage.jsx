@@ -23,6 +23,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 // Form
 import RequestCreatorForm from 'src/components/RequestCreatorForm/RequestCreatorForm';
 // API calls
+import { isCancel } from 'axios';
 import { getMe } from 'src/api/meApi';
 import { createRequest } from 'src/api/requestApi';
 import { isAuthenticated } from 'src/helpers/authenticationHelper';
@@ -112,43 +113,51 @@ function RequestCreatorPage() {
       try {
         await getMe({
           signal: controller.signal,
-        }).then((result) => {
-          const userData = {
-            requester_first_name: result.data.first_name,
-            requester_last_name: result.data.last_name,
-            requester_email: result.data.email,
-            requester_mobile: result.data.profile.phone_number,
-          };
-          if (
-            !userData.requester_first_name ||
-            !userData.requester_last_name ||
-            !userData.requester_email ||
-            !userData.requester_mobile
-          ) {
-            const missingData = [];
-            if (!userData.requester_last_name) {
-              missingData.push('vezetéknév');
+        })
+          .then((result) => {
+            const userData = {
+              requester_first_name: result.data.first_name,
+              requester_last_name: result.data.last_name,
+              requester_email: result.data.email,
+              requester_mobile: result.data.profile.phone_number,
+            };
+            if (
+              !userData.requester_first_name ||
+              !userData.requester_last_name ||
+              !userData.requester_email ||
+              !userData.requester_mobile
+            ) {
+              const missingData = [];
+              if (!userData.requester_last_name) {
+                missingData.push('vezetéknév');
+              }
+              if (!userData.requester_first_name) {
+                missingData.push('keresztnév');
+              }
+              if (!userData.requester_email) {
+                missingData.push('e-mail cím');
+              }
+              if (!userData.requester_mobile) {
+                missingData.push('telefonszám');
+              }
+              enqueueSnackbar(
+                `Kérlek töltsd ki hiányzó adataidat (${missingData.join(
+                  ', ',
+                )})!`,
+                {
+                  variant: 'warning',
+                },
+              );
+              navigate('/profile');
             }
-            if (!userData.requester_first_name) {
-              missingData.push('keresztnév');
+            setFormData((prevState) => ({ ...prevState, ...userData }));
+            setActiveStep(1);
+          })
+          .catch((e) => {
+            if (isCancel(e)) {
+              return;
             }
-            if (!userData.requester_email) {
-              missingData.push('e-mail cím');
-            }
-            if (!userData.requester_mobile) {
-              missingData.push('telefonszám');
-            }
-            enqueueSnackbar(
-              `Kérlek töltsd ki hiányzó adataidat (${missingData.join(', ')})!`,
-              {
-                variant: 'warning',
-              },
-            );
-            navigate('/profile');
-          }
-          setFormData((prevState) => ({ ...prevState, ...userData }));
-          setActiveStep(1);
-        });
+          });
       } finally {
         setLoading(false);
       }
