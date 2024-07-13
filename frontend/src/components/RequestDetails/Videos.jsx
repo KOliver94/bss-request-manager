@@ -176,7 +176,12 @@ export default function Videos({ requestId, reload }) {
             };
           }),
         ]);
-        setReviewDialogData({ ...reviewDialogData, open: false });
+        setReviewDialogData({
+          ...reviewDialogData,
+          videoId: 0,
+          rating: {},
+          open: false,
+        });
       })
       .catch((e) => showError(e));
   };
