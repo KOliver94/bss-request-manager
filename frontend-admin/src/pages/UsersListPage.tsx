@@ -7,6 +7,8 @@ import {
   DataTableOperatorFilterMetaData,
 } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
+import { IconField } from 'primereact/iconfield';
+import { InputIcon } from 'primereact/inputicon';
 
 import { usersListQuery } from 'api/queries';
 import UsersDataTable from 'components/UsersDataTable/UsersDataTable';
@@ -70,14 +72,14 @@ const UsersListPage = () => {
           className="p-button-outlined"
           onClick={clearFilter}
         />
-        <span className="p-input-icon-left">
-          <i className="pi pi-search" />
+        <IconField iconPosition="left">
+          <InputIcon className="pi pi-search" />
           <InputText
             onChange={onGlobalFilterChange}
             placeholder="Keresés"
             value={globalFilterValue}
           />
-        </span>
+        </IconField>
       </div>
     );
   };
