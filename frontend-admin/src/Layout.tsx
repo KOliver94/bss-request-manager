@@ -19,7 +19,7 @@ const Layout = ({ children }: LayoutProps) => {
         {navigation.state == 'loading' ? (
           <LoadingPage />
         ) : (
-          children ?? <Outlet />
+          (children ?? <Outlet />)
         )}
         <ScrollTop threshold={200} />
         <ScrollRestoration />
