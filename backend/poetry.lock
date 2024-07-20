@@ -1593,20 +1593,20 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pytest"
-version = "8.2.2"
+version = "8.3.1"
 description = "pytest: simple powerful testing with Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pytest-8.2.2-py3-none-any.whl", hash = "sha256:c434598117762e2bd304e526244f67bf66bbd7b5d6cf22138be51ff661980343"},
-    {file = "pytest-8.2.2.tar.gz", hash = "sha256:de4bb8104e201939ccdc688b27a89a7be2079b22e2bd2b07f806b6ba71117977"},
+    {file = "pytest-8.3.1-py3-none-any.whl", hash = "sha256:e9600ccf4f563976e2c99fa02c7624ab938296551f280835ee6516df8bc4ae8c"},
+    {file = "pytest-8.3.1.tar.gz", hash = "sha256:7e8e5c5abd6e93cb1cc151f23e57adc31fcf8cfd2a3ff2da63e23f732de35db6"},
 ]
 
 [package.dependencies]
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
 iniconfig = "*"
 packaging = "*"
-pluggy = ">=1.5,<2.0"
+pluggy = ">=1.5,<2"
 
 [package.extras]
 dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
@@ -2036,13 +2036,13 @@ pyasn1 = ">=0.1.3"
 
 [[package]]
 name = "sentry-sdk"
-version = "2.9.0"
+version = "2.10.0"
 description = "Python client for Sentry (https://sentry.io)"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "sentry_sdk-2.9.0-py2.py3-none-any.whl", hash = "sha256:0bea5fa8b564cc0d09f2e6f55893e8f70286048b0ffb3a341d5b695d1af0e6ee"},
-    {file = "sentry_sdk-2.9.0.tar.gz", hash = "sha256:4c85bad74df9767976afb3eeddc33e0e153300e887d637775a753a35ef99bee6"},
+    {file = "sentry_sdk-2.10.0-py2.py3-none-any.whl", hash = "sha256:87b3d413c87d8e7f816cc9334bff255a83d8b577db2b22042651c30c19c09190"},
+    {file = "sentry_sdk-2.10.0.tar.gz", hash = "sha256:545fcc6e36c335faa6d6cda84669b6e17025f31efbf3b2211ec14efe008b75d1"},
 ]
 
 [package.dependencies]
@@ -2371,4 +2371,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "90125e48a5726a5fa6f1e4a98e7fd185058ca692c0e795a14b9a4c50ec29b121"
+content-hash = "fd0b7b003ed69c020c93fae77645e416b493eb3368199f81d95038c8ddbfe968"
