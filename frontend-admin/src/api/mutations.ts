@@ -8,6 +8,7 @@ import {
   PatchedVideoAdminCreateUpdateRequest,
   RatingAdminCreateUpdateRequest,
   RequestAdminCreateRequest,
+  TodoAdminCreateUpdateRequest,
   UserAdminRetrieveUpdateRequest,
   VideoAdminCreateUpdateRequest,
 } from './models';
@@ -40,6 +41,12 @@ export const requestCreateMutation = () => ({
 export const requestCrewCreateMutation = (requestId: number) => ({
   mutationFn: (newCrewMember: CrewMemberAdminCreateUpdateRequest) => {
     return adminApi.adminRequestsCrewCreate(requestId, newCrewMember);
+  },
+});
+
+export const requestTodoCreateMutation = (requestId: number) => ({
+  mutationFn: (newTodo: TodoAdminCreateUpdateRequest) => {
+    return adminApi.adminRequestsTodosCreate(requestId, newTodo);
   },
 });
 
@@ -83,6 +90,15 @@ export const requestVideoRatingUpdateMutation = (
   },
 });
 
+export const requestVideoTodoCreateMutation = (
+  requestId: number,
+  videoId: number,
+) => ({
+  mutationFn: (newTodo: TodoAdminCreateUpdateRequest) => {
+    return adminApi.adminRequestsVideosTodosCreate(requestId, videoId, newTodo);
+  },
+});
+
 export const requestVideoUpdateMutation = (
   requestId: number,
   videoId: number,
@@ -93,6 +109,12 @@ export const requestVideoUpdateMutation = (
       requestId,
       updateVideo,
     );
+  },
+});
+
+export const todoUpdateMutation = (todoId: number) => ({
+  mutationFn: (updateTodo: TodoAdminCreateUpdateRequest) => {
+    return adminApi.adminTodosPartialUpdate(todoId, updateTodo);
   },
 });
 

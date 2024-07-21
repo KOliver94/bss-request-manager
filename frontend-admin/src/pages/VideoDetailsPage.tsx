@@ -32,6 +32,7 @@ const AiredAddDialog = lazy(
   () => import('components/Details/Video/AiredAddDialog'),
 );
 const Ratings = lazy(() => import('components/Details/Video/Ratings'));
+const Todos = lazy(() => import('components/Todos/Todos'));
 const VideoHistory = lazy(() => import('components/History/VideoHistory'));
 const VideoStatusHelperSlideover = lazy(
   () => import('components/StatusHelperSlideover/VideoStatusHelperSlideover'),
@@ -540,7 +541,7 @@ const VideoDetailsPage = () => {
           </ul>
           <TabView
             className="pt-3"
-            id="ratings-history-tabs"
+            id="ratings-todos-history-tabs"
             panelContainerClassName={classNames(
               'border-bottom-1 surface-border',
               { 'px-0 py-2': isMobile },
@@ -558,6 +559,14 @@ const VideoDetailsPage = () => {
                     videoTitle={queryResult.title}
                   />
                 </div>
+              </Suspense>
+            </TabPanel>
+            <TabPanel header="Feladatok" leftIcon="pi pi-list-check mr-2">
+              <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+                <Todos
+                  requestId={Number(requestId)}
+                  videoId={Number(videoId)}
+                />
               </Suspense>
             </TabPanel>
             <TabPanel header="Előzmények" leftIcon="pi pi-history mr-2">

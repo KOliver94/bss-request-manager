@@ -59,6 +59,7 @@ const RequestHistory = lazy(() => import('components/History/RequestHistory'));
 const RequestStatusHelperSlideover = lazy(
   () => import('components/StatusHelperSlideover/RequestStatusHelperSlideover'),
 );
+const Todos = lazy(() => import('components/Todos/Todos'));
 const VideosDataTable = lazy(
   () => import('components/VideosDataTable/VideosDataTable'),
 );
@@ -281,7 +282,7 @@ const RequestDetailsPage = () => {
   const onJumpToTabView = (tabViewIndex: number) => {
     setTabViewActiveIndex(tabViewIndex);
     const tabViewEl = document.getElementById(
-      'comments-crew-videos-history-tabs',
+      'comments-crew-videos-todos-history-tabs',
     );
     // Workaround for: https://github.com/primefaces/primereact/issues/4034
     setTimeout(() => {
@@ -682,7 +683,7 @@ const RequestDetailsPage = () => {
           <TabView
             activeIndex={tabViewActiveIndex}
             className="pt-3"
-            id="comments-crew-videos-history-tabs"
+            id="comments-crew-videos-todos-history-tabs"
             onTabChange={(e) => {
               setTabViewActiveIndex(e.index);
             }}
@@ -707,6 +708,11 @@ const RequestDetailsPage = () => {
             <TabPanel header="Videók" leftIcon="pi pi-video mr-2">
               <Suspense fallback={<ProgressBar mode="indeterminate" />}>
                 <VideosDataTable header={videoDataHeader} requestId={data.id} />
+              </Suspense>
+            </TabPanel>
+            <TabPanel header="Feladatok" leftIcon="pi pi-list-check mr-2">
+              <Suspense fallback={<ProgressBar mode="indeterminate" />}>
+                <Todos requestId={data.id} />
               </Suspense>
             </TabPanel>
             <TabPanel header="Előzmények" leftIcon="pi pi-history mr-2">

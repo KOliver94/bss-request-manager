@@ -32,6 +32,10 @@ export interface StatusTagProps extends TagProps {
   status: StatusStyle;
 }
 
+export interface TodoStatusTagProps extends TagProps {
+  statusNum: number;
+}
+
 export interface VideoStatusTagProps extends TagProps {
   modified?: boolean;
   statusNum: number;

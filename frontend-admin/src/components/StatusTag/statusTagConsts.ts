@@ -59,6 +59,24 @@ export const REQUEST_STATUSES: Status = {
   },
 };
 
+export const TODO_STATUSES: Status = {
+  1: {
+    color: 'blue',
+    icon: 'bi bi-clipboard2',
+    text: 'Nyitva',
+  },
+  2: {
+    color: 'green',
+    icon: 'bi bi-clipboard2-check',
+    text: 'Lezárva',
+  },
+  3: {
+    color: 'bluegray',
+    icon: 'bi bi-clipboard2-x',
+    text: 'Elvetve',
+  },
+};
+
 export const VIDEO_STATUSES: Status = {
   1: {
     color: 'blue',

@@ -5,11 +5,13 @@ import { Tag } from 'primereact/tag';
 import {
   FALLBACK_STATUS,
   REQUEST_STATUSES,
+  TODO_STATUSES,
   VIDEO_STATUSES,
 } from './statusTagConsts';
 import {
   RequestStatusTagProps,
   StatusTagProps,
+  TodoStatusTagProps,
   VideoStatusTagProps,
 } from './StatusTagTypes';
 
@@ -43,6 +45,22 @@ export const RequestStatusTag = forwardRef<
 });
 
 RequestStatusTag.displayName = 'RequestStatusTag';
+
+export const TodoStatusTag = forwardRef<
+  React.Ref<HTMLSpanElement>,
+  TodoStatusTagProps
+>(({ statusNum, ...props }, ref) => {
+  return (
+    <StatusTag
+      {...props}
+      {...ref}
+      modified={false}
+      status={TODO_STATUSES[statusNum] || FALLBACK_STATUS}
+    />
+  );
+});
+
+TodoStatusTag.displayName = 'TodoStatusTag';
 
 export const VideoStatusTag = forwardRef<
   React.Ref<HTMLSpanElement>,
