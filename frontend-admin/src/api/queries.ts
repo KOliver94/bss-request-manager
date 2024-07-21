@@ -1,7 +1,7 @@
 import { Semester } from 'helpers/SemesterHelper';
 
 import { adminApi } from './http';
-import { dummyRequest, dummyUser, dummyVideo } from './placeholders';
+import { dummyRequest, dummyTodo, dummyUser, dummyVideo } from './placeholders';
 
 export const requestCommentsListQuery = (requestId: number) => ({
   initialData: [],
@@ -43,6 +43,16 @@ export const requestRetrieveQuery = (requestId: number) => ({
   },
   queryKey: ['requests', requestId],
   refetchInterval: 1000 * 60 * 5,
+});
+
+export const requestTodoListQuery = (requestId: number) => ({
+  initialData: [],
+  queryFn: async () => {
+    const todos = await adminApi.adminRequestsTodosList(requestId);
+    return todos.data;
+  },
+  queryKey: ['requests', requestId, 'todos'],
+  refetchInterval: 1000 * 30,
 });
 
 export const requestVideoHistoryListQuery = (
@@ -132,6 +142,22 @@ export const requestVideoRetrieveQuery = (
   refetchInterval: 1000 * 60 * 5,
 });
 
+export const requestVideoTodosListQuery = (
+  requestId: number,
+  videoId: number,
+) => ({
+  initialData: [],
+  queryFn: async () => {
+    const todos = await adminApi.adminRequestsVideosTodosList(
+      requestId,
+      videoId,
+    );
+    return todos.data;
+  },
+  queryKey: ['requests', requestId, 'videos', videoId, 'todos'],
+  refetchInterval: 1000 * 30,
+});
+
 export const requestsListQuery = (semester: Semester | null) => {
   if (semester) {
     return {
@@ -176,6 +202,26 @@ export const requestsListQuery = (semester: Semester | null) => {
     refetchInterval: 1000 * 30,
   };
 };
+
+export const todosListQuery = () => ({
+  initialData: [],
+  queryFn: async () => {
+    const todos = await adminApi.adminTodosList(undefined, undefined, 10000);
+    return todos.data.results;
+  },
+  queryKey: ['todos'],
+  refetchInterval: 1000 * 30,
+});
+
+export const todoRetrieveQuery = (todoId: number) => ({
+  initialData: dummyTodo,
+  queryFn: async () => {
+    const todo = await adminApi.adminTodosRetrieve(todoId);
+    return todo.data;
+  },
+  queryKey: ['todos', todoId],
+  refetchInterval: 1000 * 60 * 5,
+});
 
 export const usersListQuery = () => ({
   initialData: [],

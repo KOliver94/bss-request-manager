@@ -1,4 +1,4 @@
-import { UserAdminRetrieveUpdate } from './models';
+import { TodoAdminListRetrieve, UserAdminRetrieveUpdate } from './models';
 import { RequestAdminRetrieve } from './models/request-admin-retrieve';
 import { VideoAdminRetrieve } from './models/video-admin-retrieve';
 
@@ -42,6 +42,27 @@ export const dummyRequest: RequestAdminRetrieve = {
   type: '',
   video_count: 0,
   videos_edited: false,
+};
+
+export const dummyTodo: TodoAdminListRetrieve = {
+  assignees: [],
+  created: '2023-01-01T00:00:00.000000+02:00',
+  creator: {
+    avatar_url: '',
+    full_name: '',
+    id: 0,
+  },
+  description: '',
+  id: 0,
+  request: {
+    id: 0,
+    title: '',
+  },
+  status: 0,
+  video: {
+    id: 0,
+    title: '',
+  },
 };
 
 export const dummyUser: UserAdminRetrieveUpdate = {
