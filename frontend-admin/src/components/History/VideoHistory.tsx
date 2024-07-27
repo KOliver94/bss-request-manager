@@ -62,13 +62,17 @@ const VideoHistory = ({ requestId, videoId }: VideoHistoryProps) => {
     return value;
   };
 
-  return (
-    <HistoryComponent
-      history={data}
-      getFieldName={getFieldName}
-      getFieldValue={getFieldValue}
-    />
-  );
+  if (data.length) {
+    return (
+      <HistoryComponent
+        history={data}
+        getFieldName={getFieldName}
+        getFieldValue={getFieldValue}
+      />
+    );
+  }
+
+  return <p>Nem történt még módosítás.</p>;
 };
 
 export default VideoHistory;
