@@ -15,15 +15,14 @@ import { Message } from 'primereact/message';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Controller, useForm } from 'react-hook-form';
 
-import { StatusEnum, TodoAdminListRetrieve, UserAdminList } from 'api/models';
+import { StatusEnum, TodoAdminListRetrieve } from 'api/models';
 import {
   requestTodoCreateMutation,
   requestVideoTodoCreateMutation,
   todoUpdateMutation,
 } from 'api/mutations';
 import { todoRetrieveQuery } from 'api/queries';
-import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
-import Avatar from 'components/Avatar/Avatar';
+import AutoCompleteStaffMultiple from 'components/AutoCompleteStaff/AutoCompleteStaffMultiple';
 import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 
@@ -192,15 +191,6 @@ const TodoDialog = forwardRef<
     );
   };
 
-  const assigneeTemplate = (item: UserAdminList) => {
-    return (
-      <div className="align-items-center flex h-1rem">
-        <Avatar className="mr-2 -ml-3" image={item.avatar_url || undefined} />
-        <div>{item.full_name}</div>
-      </div>
-    );
-  };
-
   const statusTemplate = (option: number) => {
     return <TodoStatusTag statusNum={option} />;
   };
@@ -274,14 +264,10 @@ const TodoDialog = forwardRef<
             name="assignees"
             render={({ field, fieldState }) => (
               <>
-                <AutoCompleteStaff
+                <AutoCompleteStaffMultiple
                   {...field}
                   className="w-full"
-                  dropdown={false}
                   id={field.name}
-                  multiple
-                  pt={{ token: { className: 'pr-1' } }}
-                  selectedItemTemplate={assigneeTemplate}
                 />
                 {fieldState.error && (
                   <small className="block p-error" id={field.name + '-help'}>
