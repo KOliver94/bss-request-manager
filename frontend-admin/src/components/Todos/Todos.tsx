@@ -1,4 +1,4 @@
-import { lazy, useState } from 'react';
+import { lazy, MouseEventHandler, useState } from 'react';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -10,6 +10,7 @@ import {
   PanelHeaderTemplateOptions,
 } from 'primereact/panel';
 import { Tooltip } from 'primereact/tooltip';
+import { classNames } from 'primereact/utils';
 import { Link } from 'react-router-dom';
 import TimeAgo from 'timeago-react';
 
@@ -24,12 +25,16 @@ import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
+
+import TodoDialog from './TodoDialog';
 
 const AvatarGroupCrew = lazy(() => import('components/Avatar/AvatarGroupCrew'));
 
 type TodoProps = {
   data: TodoAdminListRetrieve;
+  onEdit: MouseEventHandler<HTMLButtonElement>;
 };
 
 type TodosProps = {
@@ -37,7 +42,7 @@ type TodosProps = {
   videoId?: number;
 };
 
-const Todo = ({ data }: TodoProps) => {
+const Todo = ({ data, onEdit }: TodoProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { showToast } = useToast();
   const queryClient = useQueryClient();
@@ -165,8 +170,10 @@ const Todo = ({ data }: TodoProps) => {
           )}
           <Button
             className="ml-2 p-1"
+            disabled={loading}
             icon="pi pi-pencil"
             label="Szerkesztés"
+            onClick={onEdit}
             size="small"
             text
           />
@@ -187,6 +194,7 @@ const Todo = ({ data }: TodoProps) => {
 };
 
 const Todos = ({ requestId, videoId }: TodosProps) => {
+  const isMobile = useMobile();
   const { data } = useQuery(
     requestId
       ? videoId
@@ -194,18 +202,57 @@ const Todos = ({ requestId, videoId }: TodosProps) => {
         : requestTodoListQuery(requestId)
       : todosListQuery(),
   );
+  const [todoDialogId, setTodoDialogId] = useState<number>(0);
+  const [todoDialogVisible, setTodoDialogVisible] = useState<boolean>(false);
 
-  if (data?.length) {
-    return (
-      <div className="grid">
-        {data.map((todo) => (
-          <Todo data={todo} key={todo.id} />
-        ))}
+  const onTodoDialogHide = () => {
+    setTodoDialogVisible(false);
+    setTodoDialogId(0);
+  };
+
+  const onTodoEdit = (todoId: number) => {
+    setTodoDialogVisible(true);
+    setTodoDialogId(todoId);
+  };
+
+  return (
+    <>
+      <TodoDialog
+        onHide={onTodoDialogHide}
+        todoId={todoDialogId}
+        requestId={requestId || 0}
+        videoId={videoId}
+        visible={todoDialogVisible}
+      />
+      <div
+        className={classNames(
+          'align-items-center border-1 flex flex-wrap mb-3 p-3 surface-border',
+          isMobile ? 'justify-content-start' : ' justify-content-end',
+        )}
+      >
+        <Button
+          className={isMobile ? 'w-full' : ''}
+          icon="pi pi-plus"
+          label="Új feladat"
+          onClick={() => {
+            setTodoDialogVisible(true);
+          }}
+        />
       </div>
-    );
-  }
-
-  return <p>Nincsenek elvégzendő feladatok.</p>;
+      <div className="grid">
+        {(data?.length &&
+          data.map((todo) => (
+            <Todo
+              data={todo}
+              key={todo.id}
+              onEdit={() => {
+                onTodoEdit(todo.id);
+              }}
+            />
+          ))) || <p className="pl-3 pt-2">Nincsenek elvégzendő feladatok.</p>}
+      </div>
+    </>
+  );
 };
 
 export default Todos;
