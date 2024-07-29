@@ -13,7 +13,7 @@ repos:
       - id: mixed-line-ending
         name: 'Replace mixed line endings'
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.29.0
+    rev: 0.29.1
     hooks:
       - id: check-github-workflows
       - id: check-renovate
@@ -33,7 +33,7 @@ repos:
         name: 'Check Poetry config and verify that lockfile is consistent with pyproject.toml'
         args: [-C, ./backend, --lock]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.16.0
+    rev: v3.17.0
     hooks:
       - id: pyupgrade
         name: 'Upgrade Python syntax to newer versions'
@@ -90,7 +90,7 @@ repos:
           - python
         args: [--config, ./frontend/.prettierrc]
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.7.0
+    rev: v9.8.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
