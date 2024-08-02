@@ -318,16 +318,12 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
               )}
             />
           </div>
-          {isDirty && (
+          {isDirty && !!ratingId && (
             <div className="col-12">
               <Message
                 className="justify-content-start"
                 severity="warn"
-                text={
-                  ratingId
-                    ? 'A módosításaid még nincsenek elmentve!'
-                    : 'Az értékelésed még nincs elmentve!'
-                }
+                text="A módosításaid még nincsenek elmentve!"
               />
             </div>
           )}
