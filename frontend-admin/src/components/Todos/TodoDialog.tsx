@@ -132,7 +132,6 @@ const TodoDialog = forwardRef<
     })
       .then(async () => {
         await invalidateQueries();
-        reset({ ...data });
         onHide();
       })
       .catch(async (error) => {
