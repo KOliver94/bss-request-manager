@@ -77,9 +77,8 @@ const TodoDialog = forwardRef<
       };
       reset({ ...defaultValues });
 
-      setLoading(true);
-
       if (todoId) {
+        setLoading(true);
         query = todoRetrieveQuery(todoId);
 
         queryClient
@@ -90,8 +89,6 @@ const TodoDialog = forwardRef<
           })
           .catch(console.error);
       }
-
-      setLoading(false);
 
       return () => {
         if (query) {
@@ -278,7 +275,7 @@ const TodoDialog = forwardRef<
             )}
           />
         </div>
-        {isDirty && !!todoId && (
+        {isDirty && !!todoId && !loading && (
           <div className="col-12">
             <Message
               className="justify-content-start"
