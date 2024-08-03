@@ -69,8 +69,8 @@ export default function ContactSection() {
             Ha olyan kérésed lenne amire nem kaptál itt választ vagy egyéb
             ügyben szeretnél felkeresni minket, alább lehetőséged van üzenetet
             küldeni nekünk vagy írj a{' '}
-            <a href="mailto:bssinfo@sch.bme.hu">bssinfo@sch.bme.hu</a>{' '}
-            e&#8209;mail címre.
+            <a href="mailto:info@bsstudio.hu">info@bsstudio.hu</a> e&#8209;mail
+            címre.
           </h4>
           <form onSubmit={sendMail}>
             <GridContainer>
