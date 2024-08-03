@@ -1,11 +1,11 @@
 /* Copied from: https://github.com/primefaces/primereact/blob/3f42c54c8517c07990db1e5c8d9ec91044805182/public/themes/lara-dark-blue/theme.css */
-/* Copied everything non-color related from: https://github.com/primefaces/primereact/blob/6287b851165049be7dae1b1b8bf0169b79412147/public/themes/lara-dark-blue/theme.css */
+/* Copied everything non-color related from: https://github.com/primefaces/primereact/blob/bc02f94450cf2f70fd23cca8b9a6e9feec3c90f0/public/themes/lara-dark-blue/theme.css */
 
 :root {
-  font-family: 'Inter var', sans-serif;
+  font-family: 'InterVariable', sans-serif;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   font-variation-settings: normal;
-  --font-family: 'Inter var', sans-serif;
+  --font-family: 'InterVariable', sans-serif;
   --font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   --surface-a: #071426;
   --surface-b: #040d19;
@@ -55,21 +55,21 @@
 }
 
 @font-face {
-  font-family: 'Inter var';
+  font-family: 'InterVariable';
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
   font-named-instance: 'Regular';
-  src: url('~primereact/resources/themes/lara-dark-blue/fonts/Inter-roman.var.woff2?v=3.19')
+  src: url('~primereact/resources/themes/lara-dark-blue/fonts/InterVariable.woff2')
     format('woff2');
 }
 @font-face {
-  font-family: 'Inter var';
+  font-family: 'InterVariable';
   font-weight: 100 900;
   font-display: swap;
   font-style: italic;
   font-named-instance: 'Italic';
-  src: url('~primereact/resources/themes/lara-dark-blue/fonts/Inter-italic.var.woff2?v=3.19')
+  src: url('~primereact/resources/themes/lara-dark-blue/fonts/InterVariable-Italic.woff2')
     format('woff2');
 }
 :root {
