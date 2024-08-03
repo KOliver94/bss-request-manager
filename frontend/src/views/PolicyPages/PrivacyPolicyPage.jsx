@@ -140,7 +140,7 @@ function PrivacyPolicyPage() {
               <h2>Data Deletion Policy</h2>
               <p>
                 Information may be deleted from our system upon request to{' '}
-                <a href="mailto:bssinfo@sch.bme.hu">bssinfo@sch.bme.hu</a>. We
+                <a href="mailto:info@bsstudio.hu">info@bsstudio.hu</a>. We
                 undertake to perform the deletion within one month (30 calendar
                 days) and will send you a confirmation once the information has
                 been deleted. Wherever possible, we will aim to complete the
