@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 
 import { Tag } from 'primereact/tag';
+import { classNames } from 'primereact/utils';
 
 import {
   FALLBACK_STATUS,
@@ -16,12 +17,15 @@ import {
 } from './StatusTagTypes';
 
 export const StatusTag = forwardRef<React.Ref<HTMLSpanElement>, StatusTagProps>(
-  ({ modified = false, status, ...props }, ref) => {
+  ({ className, modified = false, status, ...props }, ref) => {
     return (
       <Tag
         {...props}
         {...ref}
-        className={`p-tag-${status.color} white-space-nowrap`}
+        className={classNames(
+          `p-tag-${status.color} white-space-nowrap`,
+          className,
+        )}
         icon={status.icon}
         value={status.text.concat(modified ? '*' : '')}
       />
