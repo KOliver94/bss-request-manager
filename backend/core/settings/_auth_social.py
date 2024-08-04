@@ -51,6 +51,11 @@ SOCIAL_AUTH_MICROSOFT_GRAPH_KEY = config("AUTH_MICROSOFT_CLIENT_ID", default=Non
 SOCIAL_AUTH_MICROSOFT_GRAPH_SECRET = config(
     "AUTH_MICROSOFT_CLIENT_SECRET", default=None
 )
+SOCIAL_AUTH_MICROSOFT_GRAPH_EXTRA_DATA = [
+    ("displayName", "name"),
+    ("mail", "email"),
+    ("mobilePhone", "mobile"),
+]
 
 SOCIAL_AUTH_PIPELINE = (
     # Get the information we can about the user and return it in a simple
