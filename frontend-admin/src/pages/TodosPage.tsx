@@ -34,9 +34,9 @@ const TodosPage = () => {
 
   const { data, dataUpdatedAt, isLoading, refetch } = useQuery(
     todosListQuery(
-      selectedAssignees.map((assignee) => assignee.id),
+      selectedAssignees.map((assignee) => assignee.id).sort(),
       ordering,
-      selectedStatuses,
+      selectedStatuses.sort(),
     ),
   );
 
