@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+from django.contrib.auth.models import User
 from model_bakery import baker
 from rest_framework.reverse import reverse
 from rest_framework.status import is_success
@@ -186,7 +187,7 @@ def test_order_todos_on_video(admin_user, api_client, expected, ordering, time_m
 
 
 @pytest.mark.parametrize("pagination", [True, False])
-def test_filter_todos(admin_user, api_client, pagination):
+def test_filter_todos_by_status(admin_user, api_client, pagination):
     baker.make("video_requests.Todo", status=Todo.Statuses.OPEN, _quantity=3)
     baker.make("video_requests.Todo", status=Todo.Statuses.CLOSED, _quantity=5)
 
@@ -215,6 +216,43 @@ def test_filter_todos(admin_user, api_client, pagination):
     assert len(response_data_1) == 3
     assert len(response_data_2) == 5
     assert len(response_data_3) == 8
+
+
+@pytest.mark.parametrize("pagination", [True, False])
+def test_filter_todos_by_assignees(admin_user, api_client, pagination):
+    users = baker.make(User, _quantity=4)
+    baker.make("video_requests.Todo", assignees=[users[0], users[1]], _quantity=2)
+    baker.make("video_requests.Todo", assignees=[users[2]], _quantity=3)
+    baker.make("video_requests.Todo", assignees=[users[2], users[0]], _quantity=3)
+    baker.make("video_requests.Todo", assignees=[users[3], users[1]], _quantity=1)
+    baker.make("video_requests.Todo", assignees=[users[1]], _quantity=4)
+
+    login(api_client, admin_user)
+
+    url = reverse("api:v1:admin:todos:todo-list")
+    response_1 = api_client.get(
+        url + f"?pagination={pagination}&assignees={users[0].id}"
+    )
+    response_2 = api_client.get(
+        url
+        + f"?pagination={pagination}&assignees={users[2].id}&assignees={users[3].id}"
+    )
+    response_3 = api_client.get(
+        url
+        + f"?pagination={pagination}&assignees={users[0].id}&assignees={users[3].id}&assignees={users[1].id}"
+    )
+
+    assert is_success(response_1.status_code)
+    assert is_success(response_2.status_code)
+    assert is_success(response_3.status_code)
+
+    response_data_1 = response_1.data["results"] if pagination else response_1.data
+    response_data_2 = response_2.data["results"] if pagination else response_2.data
+    response_data_3 = response_3.data["results"] if pagination else response_3.data
+
+    assert len(response_data_1) == 5
+    assert len(response_data_2) == 7
+    assert len(response_data_3) == 10
 
 
 @pytest.mark.parametrize(

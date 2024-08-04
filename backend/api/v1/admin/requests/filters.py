@@ -33,7 +33,7 @@ class RequestFilter(FilterSet):
 class TodoFilter(FilterSet):
     assignees = ModelMultipleChoiceFilter(
         field_name="assignees__id",
-        queryset=User.objects.filter(is_staff=True),
+        queryset=User.objects.all(),
         to_field_name="id",
     )
     status = MultipleChoiceFilter(choices=Todo.Statuses.choices)
