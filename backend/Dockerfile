@@ -9,7 +9,7 @@
 ##################################################
 
 # Stage 1 - Backend base
-FROM python:3.12 as backend-base
+FROM python:3.12 AS backend-base
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -34,7 +34,7 @@ ENV PATH="$POETRY_HOME/bin:$VIRTUAL_ENV/bin:$PATH"
 # Stage 2 - Backend builder
 
 # Use backend-base image as base
-FROM python-base as backend-builder
+FROM python-base AS backend-builder
 
 # Install build dependencies
 RUN apk update && apk add curl postgresql-dev
@@ -60,7 +60,7 @@ RUN --mount=type=cache,target=/root/.cache \
 # Stage 3 - Final image
 
 # Use backend-base image as base
-FROM python-base as production
+FROM python-base AS production
 
 # Copy built runtime dependencies from builder container
 COPY --from=backend-builder $PYSETUP_PATH $PYSETUP_PATH

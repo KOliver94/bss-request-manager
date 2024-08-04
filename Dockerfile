@@ -75,7 +75,7 @@ RUN npm run build
 # Stage 3 - Backend base
 
 # Pull base image
-FROM python:3.12-alpine as backend-base
+FROM python:3.12-alpine AS backend-base
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -100,7 +100,7 @@ ENV PATH="$POETRY_HOME/bin:$VIRTUAL_ENV/bin:$PATH"
 # Stage 4 - Backend builder
 
 # Use backend-base image as base
-FROM backend-base as backend-builder
+FROM backend-base AS backend-builder
 
 # Install build dependencies
 RUN apk update && apk add curl postgresql-dev
@@ -127,7 +127,7 @@ RUN --mount=type=cache,target=/root/.cache \
 # Stage 5 - The Production Environment
 
 # Use backend-base image as base
-FROM backend-base as request-manager-production
+FROM backend-base AS request-manager-production
 
 # Create the app user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
