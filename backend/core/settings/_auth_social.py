@@ -52,6 +52,7 @@ SOCIAL_AUTH_MICROSOFT_GRAPH_SECRET = config(
     "AUTH_MICROSOFT_CLIENT_SECRET", default=None
 )
 SOCIAL_AUTH_MICROSOFT_GRAPH_EXTRA_DATA = [
+    ("expires_in", "expires"),
     ("displayName", "name"),
     ("mail", "email"),
     ("mobilePhone", "mobile"),
