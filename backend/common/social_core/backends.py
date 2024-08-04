@@ -5,41 +5,39 @@ class AuthSCHOAuth2(BaseOAuth2):
     """AuthSCH OAuth2 authentication backend"""
 
     name = "authsch"
-    ID_KEY = "internal_id"
+    ID_KEY = "sub"
     AUTHORIZATION_URL = "https://auth.sch.bme.hu/site/login"
     ACCESS_TOKEN_URL = "https://auth.sch.bme.hu/oauth2/token"  # nosec
     ACCESS_TOKEN_METHOD = "POST"  # nosec
     REFRESH_TOKEN_URL = "https://auth.sch.bme.hu/oauth2/token"  # nosec
     DEFAULT_SCOPE = [
-        "basic",
-        "displayName",
-        "mail",
-        "givenName",
-        "sn",
-        "mobile",
+        "directory.sch.bme.hu:sAMAccountName",
+        "email",
+        "openid",
+        "phone",
+        "profile",
     ]
     EXTRA_DATA = [
-        ("internal_id", "id"),
         ("expires_in", "expires"),
-        ("displayName", "name"),
-        ("mail", "email"),
-        ("mobile", "mobile"),
+        ("name", "name"),
+        ("email", "email"),
+        ("phone_number", "mobile"),
     ]
 
     def get_user_details(self, response):
         """Return user details from AuthSCH account"""
         return {
-            "username": response.get("internal_id"),
-            "email": response.get("mail"),
-            "first_name": response.get("givenName"),
-            "last_name": response.get("sn"),
-            "mobile": response.get("mobile"),
+            "username": f"{response.get("directory.sch.bme.hu:sAMAccountName")}@sch.bme.hu",
+            "email": response.get("email"),
+            "first_name": response.get("given_name"),
+            "last_name": response.get("family_name"),
+            "mobile": response.get("phone_number"),
         }
 
     def user_data(self, access_token, *args, **kwargs):
         """Loads user data from service"""
         return self.get_json(
-            "https://auth.sch.bme.hu/api/profile/",
+            "https://auth.sch.bme.hu/oidc/userinfo",
             params={"access_token": access_token},
         )
 

@@ -1,10 +1,9 @@
 const authSchScopes = [
-  'basic',
-  'mail',
-  'displayName',
-  'givenName',
-  'sn',
-  'mobile',
+  'directory.sch.bme.hu:sAMAccountName',
+  'email',
+  'openid',
+  'phone',
+  'profile',
 ];
 
 const bssLoginScopes = ['email', 'mobile', 'name', 'openid', 'profile'];
