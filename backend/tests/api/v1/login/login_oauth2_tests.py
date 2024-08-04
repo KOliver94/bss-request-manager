@@ -146,14 +146,20 @@ class AuthSCHOAuth2Test(OAuth2Test):
     access_token_body = {"access_token": "foobar", "token_type": "bearer"}
     backend_path = "common.social_core.backends.AuthSCHOAuth2"
     user_data_body = {
-        "basic": "foobar",
-        "displayName": "Foo Bar",
-        "givenName": "Bar",
-        "mail": "foobar@example.com",
-        "mobile": "+36509999999",
-        "sn": "Foo",
+        "name": "Foo Bar",
+        "family_name": "Foo",
+        "given_name": "Bar",
+        "birthdate": "1995-03-17",
+        "updated_at": 1722802228,
+        "email": "foobar@example.com",
+        "email_verified": True,
+        "phone_number": "+36509999999",
+        "phone_number_verified": False,
+        "directory.sch.bme.hu:sAMAccountName": "foobar",
+        "meta.directory.sch.bme.hu:updated_at": 1722802226,
+        "sub": "c97e69cc-2dc2-4f4f-a99e-d7917f9ce335",
     }
-    user_data_url = "https://auth.sch.bme.hu/api/profile/"
+    user_data_url = "https://auth.sch.bme.hu/oidc/userinfo"
 
     @responses.activate
     def test_login(self):
