@@ -124,6 +124,13 @@ const router = sentryCreateBrowserRouter(
         }}
       />
       <Route
+        path="todos"
+        lazy={() => import('pages/TodosPage')}
+        handle={{
+          crumb: () => 'Feladatok',
+        }}
+      />
+      <Route
         path="users"
         handle={{
           crumb: () => 'Felhasználók',

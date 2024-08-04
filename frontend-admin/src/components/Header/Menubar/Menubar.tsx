@@ -37,6 +37,7 @@ const Menubar = () => {
               { icon: 'pi-plus', label: 'Új', path: '/requests/new' },
             ]}
           />
+          <Button icon="pi-list-check" label="Feladatok" path="/todos" />
           <Button icon="pi-users" label="Felhasználók" path="/users" />
           <Button icon="pi-search" label="Keresés" path="/search" />
         </ul>

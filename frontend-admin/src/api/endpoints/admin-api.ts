@@ -2863,6 +2863,7 @@ export const AdminApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {Array<number>} [assignees]
      * @param {string} [ordering] Which field to use when ordering the results.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -2872,6 +2873,7 @@ export const AdminApiAxiosParamCreator = function (
      * @throws {RequiredError}
      */
     adminTodosList: async (
+      assignees?: Array<number>,
       ordering?: string,
       page?: number,
       pageSize?: number,
@@ -2905,6 +2907,10 @@ export const AdminApiAxiosParamCreator = function (
       // authentication jwtAuth required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (assignees) {
+        localVarQueryParameter['assignees'] = assignees;
+      }
 
       if (ordering !== undefined) {
         localVarQueryParameter['ordering'] = ordering;
@@ -4970,6 +4976,7 @@ export const AdminApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {Array<number>} [assignees]
      * @param {string} [ordering] Which field to use when ordering the results.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -4979,6 +4986,7 @@ export const AdminApiFp = function (configuration?: Configuration) {
      * @throws {RequiredError}
      */
     async adminTodosList(
+      assignees?: Array<number>,
       ordering?: string,
       page?: number,
       pageSize?: number,
@@ -4992,6 +5000,7 @@ export const AdminApiFp = function (configuration?: Configuration) {
       ) => AxiosPromise<PaginatedTodoAdminListRetrieveList>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.adminTodosList(
+        assignees,
         ordering,
         page,
         pageSize,
@@ -6132,6 +6141,7 @@ export const AdminApiFactory = function (
     },
     /**
      *
+     * @param {Array<number>} [assignees]
      * @param {string} [ordering] Which field to use when ordering the results.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -6141,6 +6151,7 @@ export const AdminApiFactory = function (
      * @throws {RequiredError}
      */
     adminTodosList(
+      assignees?: Array<number>,
       ordering?: string,
       page?: number,
       pageSize?: number,
@@ -6149,7 +6160,15 @@ export const AdminApiFactory = function (
       options?: any,
     ): AxiosPromise<PaginatedTodoAdminListRetrieveList> {
       return localVarFp
-        .adminTodosList(ordering, page, pageSize, pagination, status, options)
+        .adminTodosList(
+          assignees,
+          ordering,
+          page,
+          pageSize,
+          pagination,
+          status,
+          options,
+        )
         .then((request) => request(axios, basePath));
     },
     /**
@@ -7227,6 +7246,7 @@ export class AdminApi extends BaseAPI {
 
   /**
    *
+   * @param {Array<number>} [assignees]
    * @param {string} [ordering] Which field to use when ordering the results.
    * @param {number} [page] A page number within the paginated result set.
    * @param {number} [pageSize] Number of results to return per page.
@@ -7237,6 +7257,7 @@ export class AdminApi extends BaseAPI {
    * @memberof AdminApi
    */
   public adminTodosList(
+    assignees?: Array<number>,
     ordering?: string,
     page?: number,
     pageSize?: number,
@@ -7245,7 +7266,15 @@ export class AdminApi extends BaseAPI {
     options?: AxiosRequestConfig,
   ) {
     return AdminApiFp(this.configuration)
-      .adminTodosList(ordering, page, pageSize, pagination, status, options)
+      .adminTodosList(
+        assignees,
+        ordering,
+        page,
+        pageSize,
+        pagination,
+        status,
+        options,
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 

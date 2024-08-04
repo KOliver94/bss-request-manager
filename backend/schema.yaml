@@ -1283,6 +1283,14 @@ paths:
     get:
       operationId: admin_todos_list
       parameters:
+        - in: query
+          name: assignees
+          schema:
+            type: array
+            items:
+              type: integer
+          explode: true
+          style: form
         - name: ordering
           required: false
           in: query

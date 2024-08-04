@@ -565,6 +565,7 @@ const VideoDetailsPage = () => {
               <Suspense fallback={<ProgressBar mode="indeterminate" />}>
                 <Todos
                   requestId={Number(requestId)}
+                  showAddButton
                   videoId={Number(videoId)}
                 />
               </Suspense>

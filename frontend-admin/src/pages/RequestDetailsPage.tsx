@@ -712,7 +712,7 @@ const RequestDetailsPage = () => {
             </TabPanel>
             <TabPanel header="Feladatok" leftIcon="pi pi-list-check mr-2">
               <Suspense fallback={<ProgressBar mode="indeterminate" />}>
-                <Todos requestId={data.id} />
+                <Todos requestId={data.id} showAddButton />
               </Suspense>
             </TabPanel>
             <TabPanel header="Előzmények" leftIcon="pi pi-history mr-2">
