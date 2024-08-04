@@ -72,10 +72,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'poetry'
           cache-dependency-path: backend/poetry.lock
-      - name: Install python-ldap build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install libldap2-dev libsasl2-dev -y
       - name: Install dependencies
         run: poetry install --with ci
       - name: Check for model changes without migration
