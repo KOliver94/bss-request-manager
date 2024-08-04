@@ -13,18 +13,18 @@
   display: block;
 }
 .left {
+  padding: 15px 0;
+  display: block;
   @media (min-width: map.get(theme.$themeBreakpoints, 'sm')) {
     float: left !important;
   }
-  padding: 15px 0;
-  display: block;
 }
 .right {
+  padding: 15px 0;
+  margin: 0;
   @media (min-width: map.get(theme.$themeBreakpoints, 'sm')) {
     float: right !important;
   }
-  padding: 15px 0;
-  margin: 0;
 }
 .footer {
   padding: 0.9375rem 0;

@@ -5,10 +5,10 @@
   @include theme.container;
 }
 .section {
-  @include theme.section;
   padding-top: 0 !important;
   padding-left: 15px !important;
   padding-right: 15px !important;
+  @include theme.section;
 }
 .field {
   padding: 0 15px;
