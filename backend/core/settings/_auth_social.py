@@ -44,7 +44,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [
     ("name", "name"),
     ("email", "email"),
-    ("mobile", "mobile"),
 ]
 
 # Microsoft OAuth2 settings:
