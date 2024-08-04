@@ -1,15 +1,14 @@
 @use '/src/assets/scss/theme';
 
 .section {
-  @include theme.section;
   text-align: center;
+  @include theme.section;
 }
 .title {
-  @include theme.title;
-  margin-bottom: 1rem;
-  margin-top: 30px;
+  margin-bottom: 1rem !important;
+  margin-top: 30px !important;
   min-height: 32px;
-  text-decoration: none;
+  @include theme.title;
 }
 .description {
   color: #999;

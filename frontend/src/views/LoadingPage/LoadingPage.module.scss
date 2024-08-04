@@ -7,9 +7,9 @@
   @include theme.container;
 }
 .section {
-  @include theme.section;
   padding-left: 15px !important;
   padding-right: 15px !important;
+  @include theme.section;
 }
 .main {
   background: #ffffff;

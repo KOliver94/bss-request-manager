@@ -29,13 +29,13 @@
   z-index: 1100;
 }
 .container {
-  @include theme.container;
   min-height: 50px;
   flex: 1;
   align-items: center;
   justify-content: space-between;
   display: flex;
   flex-wrap: nowrap;
+  @include theme.container;
 }
 .flex {
   flex: 1;

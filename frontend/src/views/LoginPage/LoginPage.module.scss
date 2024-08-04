@@ -2,12 +2,12 @@
 @use '/src/assets/scss/theme';
 
 .container {
-  @include theme.container;
   z-index: 2;
   position: relative;
   padding-top: 30vh;
   color: #ffffff;
   padding-bottom: 200px;
+  @include theme.container;
 }
 .cardHidden {
   opacity: 0;

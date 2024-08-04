@@ -1,8 +1,8 @@
 @use '/src/assets/scss/theme';
 
 .section {
-  @include theme.section;
   text-align: center;
+  @include theme.section;
 }
 .description {
   color: #999;
