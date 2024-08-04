@@ -48,7 +48,7 @@ class BSSLoginOAuth2(BaseOAuth2):
     """BSS Login OAuth2 authentication backend"""
 
     name = "bss-login"
-    ID_KEY = "preferred_username"
+    ID_KEY = "sub"
     AUTHORIZATION_URL = "https://login.bsstudio.hu/application/o/authorize/"
     ACCESS_TOKEN_URL = "https://login.bsstudio.hu/application/o/token/"  # nosec
     ACCESS_TOKEN_METHOD = "POST"  # nosec
@@ -61,11 +61,11 @@ class BSSLoginOAuth2(BaseOAuth2):
         "profile",
     ]
     EXTRA_DATA = [
-        ("preferred_username", "id"),
-        ("exp", "expires"),
+        ("expires_in", "expires"),
         ("name", "name"),
         ("email", "email"),
         ("mobile", "mobile"),
+        ("preferred_username", "username"),
     ]
 
     def get_user_details(self, response):
