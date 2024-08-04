@@ -9,6 +9,7 @@ import {
   PanelFooterTemplateOptions,
   PanelHeaderTemplateOptions,
 } from 'primereact/panel';
+import { ProgressBar } from 'primereact/progressbar';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 import { Link } from 'react-router-dom';
@@ -16,11 +17,7 @@ import TimeAgo from 'timeago-react';
 
 import { adminApi } from 'api/http';
 import { TodoAdminListRetrieve } from 'api/models/todo-admin-list-retrieve';
-import {
-  requestTodoListQuery,
-  requestVideoTodosListQuery,
-  todosListQuery,
-} from 'api/queries';
+import { requestTodosListQuery, requestVideoTodosListQuery } from 'api/queries';
 import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
@@ -38,7 +35,10 @@ type TodoProps = {
 };
 
 type TodosProps = {
+  data?: TodoAdminListRetrieve[];
+  loading?: boolean;
   requestId?: number;
+  showAddButton?: boolean;
   videoId?: number;
 };
 
@@ -137,7 +137,7 @@ const Todo = ({ data, onEdit }: TodoProps) => {
   };
 
   const footerTemplate = (options: PanelFooterTemplateOptions) => {
-    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`;
+    const className = `${options.className} align-items-center flex flex-wrap gap-3 justify-content-between`;
 
     return (
       <div className={className}>
@@ -193,15 +193,22 @@ const Todo = ({ data, onEdit }: TodoProps) => {
   );
 };
 
-const Todos = ({ requestId, videoId }: TodosProps) => {
+const Todos = ({
+  data: dataProp,
+  loading = false,
+  requestId,
+  showAddButton = false,
+  videoId,
+}: TodosProps) => {
   const isMobile = useMobile();
-  const { data } = useQuery(
-    requestId
-      ? videoId
-        ? requestVideoTodosListQuery(requestId, videoId)
-        : requestTodoListQuery(requestId)
-      : todosListQuery(),
-  );
+  const { data: queryResult } = requestId
+    ? useQuery(
+        videoId
+          ? requestVideoTodosListQuery(requestId, videoId)
+          : requestTodosListQuery(requestId),
+      )
+    : { data: undefined };
+  const data = dataProp || queryResult;
   const [todoDialogId, setTodoDialogId] = useState<number>(0);
   const [todoDialogVisible, setTodoDialogVisible] = useState<boolean>(false);
 
@@ -224,21 +231,24 @@ const Todos = ({ requestId, videoId }: TodosProps) => {
         videoId={videoId}
         visible={todoDialogVisible}
       />
-      <div
-        className={classNames(
-          'align-items-center border-1 flex flex-wrap mb-3 p-3 surface-border',
-          isMobile ? 'justify-content-start' : ' justify-content-end',
-        )}
-      >
-        <Button
-          className={isMobile ? 'w-full' : ''}
-          icon="pi pi-plus"
-          label="Új feladat"
-          onClick={() => {
-            setTodoDialogVisible(true);
-          }}
-        />
-      </div>
+      {showAddButton && (
+        <div
+          className={classNames(
+            'align-items-center border-1 flex flex-wrap mb-3 p-3 surface-border',
+            isMobile ? 'justify-content-start' : ' justify-content-end',
+          )}
+        >
+          <Button
+            className={isMobile ? 'w-full' : ''}
+            icon="pi pi-plus"
+            label="Új feladat"
+            onClick={() => {
+              setTodoDialogVisible(true);
+            }}
+          />
+        </div>
+      )}
+      {loading && <ProgressBar mode="indeterminate" />}
       <div className="grid">
         {(data?.length &&
           data.map((todo) => (
@@ -249,7 +259,10 @@ const Todos = ({ requestId, videoId }: TodosProps) => {
                 onTodoEdit(todo.id);
               }}
             />
-          ))) || <p className="pl-3 pt-2">Nincsenek elvégzendő feladatok.</p>}
+          ))) ||
+          (!loading && (
+            <p className="pl-3 pt-2">Nincsenek elvégzendő feladatok.</p>
+          ))}
       </div>
     </>
   );

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db.models import Q
 from django.forms import IntegerField
 from django_filters.rest_framework import (
@@ -5,6 +6,7 @@ from django_filters.rest_framework import (
     DateFromToRangeFilter,
     Filter,
     FilterSet,
+    ModelMultipleChoiceFilter,
     MultipleChoiceFilter,
 )
 from drf_spectacular.types import OpenApiTypes
@@ -29,6 +31,11 @@ class RequestFilter(FilterSet):
 
 
 class TodoFilter(FilterSet):
+    assignees = ModelMultipleChoiceFilter(
+        field_name="assignees__id",
+        queryset=User.objects.filter(is_staff=True),
+        to_field_name="id",
+    )
     status = MultipleChoiceFilter(choices=Todo.Statuses.choices)
 
 

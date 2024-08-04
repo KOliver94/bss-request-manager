@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
+import { ConfirmDialog } from 'primereact/confirmdialog';
 import { DataTable } from 'primereact/datatable';
 import { Divider } from 'primereact/divider';
 import { Skeleton } from 'primereact/skeleton';
@@ -9,13 +10,16 @@ import { Skeleton } from 'primereact/skeleton';
 import { adminApi } from 'api/http';
 import { RequestAdminList } from 'api/models/request-admin-list';
 import { VideoAdminSearch } from 'api/models/video-admin-search';
+import { todosListQuery } from 'api/queries';
 import LinkButton from 'components/LinkButton/LinkButton';
 import Statistics, {
   StatisticsFieldProps,
 } from 'components/Statistics/Statistics';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
+import Todos from 'components/Todos/Todos';
 import User from 'components/User/User';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
+import { getUserId } from 'helpers/LocalStorageHelper';
 
 const AvatarGroupCrew = lazy(() => import('components/Avatar/AvatarGroupCrew'));
 
@@ -132,6 +136,10 @@ const LandingPage = () => {
       queryKey: ['videos', 'status', '1,2'],
     });
 
+  const { data: todos, isLoading: todosLoading } = useQuery(
+    todosListQuery([getUserId()], 'created', [1]),
+  );
+
   const statistics: StatisticsFieldProps[] = [
     {
       color: 'blue',
@@ -246,6 +254,7 @@ const LandingPage = () => {
 
   return (
     <>
+      <ConfirmDialog />
       <Statistics statistics={statistics} />
       <div className="p-3 sm:p-5 surface-ground">
         <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
@@ -390,6 +399,12 @@ const LandingPage = () => {
                   headerStyle={{ textAlign: 'center', width: '4rem' }}
                 />
               </DataTable>
+            </div>
+            <div className="col-12 mb-4">
+              <div className="align-items-center flex font-medium mb-3 text-900 text-lg">
+                <div>Elvégzendő feladataid</div>
+              </div>
+              <Todos data={todos} loading={todosLoading} />
             </div>
           </div>
         </div>

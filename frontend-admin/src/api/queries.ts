@@ -1,5 +1,6 @@
 import { Semester } from 'helpers/SemesterHelper';
 
+import { AdminTodosListStatusEnum } from './endpoints/admin-api';
 import { adminApi } from './http';
 import { dummyRequest, dummyTodo, dummyUser, dummyVideo } from './placeholders';
 
@@ -45,7 +46,7 @@ export const requestRetrieveQuery = (requestId: number) => ({
   refetchInterval: 1000 * 60 * 5,
 });
 
-export const requestTodoListQuery = (requestId: number) => ({
+export const requestTodosListQuery = (requestId: number) => ({
   initialData: [],
   queryFn: async () => {
     const todos = await adminApi.adminRequestsTodosList(requestId);
@@ -203,13 +204,24 @@ export const requestsListQuery = (semester: Semester | null) => {
   };
 };
 
-export const todosListQuery = () => ({
+export const todosListQuery = (
+  assignees: Array<number>,
+  ordering: string,
+  status: Array<number>,
+) => ({
   initialData: [],
   queryFn: async () => {
-    const todos = await adminApi.adminTodosList(undefined, undefined, 10000);
+    const todos = await adminApi.adminTodosList(
+      assignees,
+      ordering,
+      undefined,
+      10000,
+      undefined,
+      status as AdminTodosListStatusEnum[],
+    );
     return todos.data.results;
   },
-  queryKey: ['todos'],
+  queryKey: ['todos', assignees, ordering, status],
   refetchInterval: 1000 * 30,
 });
 
@@ -219,7 +231,7 @@ export const todoRetrieveQuery = (todoId: number) => ({
     const todo = await adminApi.adminTodosRetrieve(todoId);
     return todo.data;
   },
-  queryKey: ['todos', todoId],
+  queryKey: ['todos', `id:${todoId}`],
   refetchInterval: 1000 * 60 * 5,
 });
 
