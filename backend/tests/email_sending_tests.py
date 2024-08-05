@@ -223,6 +223,85 @@ class EmailSendingTestCase(APITestCase):
         # No new e-mail should be sent
         self.assertEqual(len(mail.outbox), 2)
 
+    def test_video_published_email_not_sent_to_staff_but_todo_created(self):
+        # Setup data - Create a Request with status 4, and a video
+        request = create_request(
+            100,
+            self.staff_user,
+            Request.Statuses.UPLOADED,
+            "2020-11-16T04:16:13+0100",
+            "2020-11-17T04:16:13+0100",
+        )
+        request.additional_data = {"accepted": True, "recording": {"path": "test/path"}}
+        request.save()
+        video = create_video(300, request, Video.Statuses.PENDING)
+
+        # Video data to be patched
+        data = {
+            "editor": self.staff_user.id,
+            "additional_data": {
+                "editing_done": True,
+                "coding": {"website": True},
+                "publishing": {"website": "https://example.com"},
+            },
+        }
+
+        # Authorized staff user and update video data
+        self.authorize_user(self.staff_user)
+        url = reverse(
+            "api:v1:admin:requests:request:video-detail",
+            kwargs={"request_pk": request.id, "pk": video.id},
+        )
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["status"], Video.Statuses.PUBLISHED)
+
+        todos = Todo.objects.filter(video=video)
+        self.assertEqual(len(todos), 1)
+        self.assertTrue(todos[0].assignees.contains(self.pr_responsible))
+        self.assertEqual(todos[0].creator, get_system_user())
+        self.assertEqual(todos[0].description, "Megosztás közösségi platformokon")
+
+        # Check if e-mail was sent to the right people
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(self.pr_responsible.email, mail.outbox[0].to)
+        self.assertEqual(mail.outbox[0].subject, "Feladatot rendeltek hozzád")
+
+        # Revert the published status
+        data = {
+            "additional_data": {
+                "publishing": {"website": ""},
+            },
+        }
+        url = reverse(
+            "api:v1:admin:requests:request:video-detail",
+            kwargs={"request_pk": request.id, "pk": video.id},
+        )
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["status"], Video.Statuses.CODED)
+
+        # Publish again
+        data = {
+            "additional_data": {
+                "publishing": {"website": "https://example123.com"},
+            },
+        }
+        url = reverse(
+            "api:v1:admin:requests:request:video-detail",
+            kwargs={"request_pk": request.id, "pk": video.id},
+        )
+        response = self.client.patch(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["status"], Video.Statuses.PUBLISHED)
+
+        # No new to-do was created
+        todos = Todo.objects.filter(video=video)
+        self.assertEqual(len(todos), 1)
+
+        # No new e-mail should be sent
+        self.assertEqual(len(mail.outbox), 1)
+
     def test_todo_email_sent_new_todo(self):
         video_request = baker.make("video_requests.Request")
         video = baker.make("video_requests.Video", request=video_request)

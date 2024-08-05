@@ -569,7 +569,7 @@ class RequestsUtilitiesTestCase(APITestCase):
     def test_publishing_email_sent_to_user_in_video_additional_data_should_not_be_overwritten(
         self,
     ):
-        request = create_request(100, self.user, Request.Statuses.UPLOADED)
+        request = create_request(100, create_user(), Request.Statuses.UPLOADED)
         staff = create_user(is_staff=True)
 
         # Add a video with some data

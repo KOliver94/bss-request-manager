@@ -60,7 +60,7 @@ def update_request_status(request, called_from_video=False):
                 else status
             )
 
-        # If the request is accepted but we failed to record it set the status
+        # If the request is accepted, but we failed to record it set the status
         if (
             Request.Statuses.ACCEPTED <= status <= Request.Statuses.DONE
             and "failed" in request.additional_data
@@ -179,20 +179,29 @@ def update_video_status(video, called_from_request=False, request_status=1):
             "publishing", {}
         ).get("website"):
             status = Video.Statuses.PUBLISHED
-            if not Todo.objects.filter(creator=get_system_user(), video=video).exists():
-                todo = Todo.objects.create(
-                    creator=get_system_user(),
-                    description="Megosztás közösségi platformokon",
-                    request=video.request,
-                    video=video,
-                )
-                todo.assignees.set(get_pr_responsible())
-                todo.save()
-            # If the current status of the video is before published send an e-mail to the requester
-            if video.status < Video.Statuses.PUBLISHED and not video.additional_data[
-                "publishing"
-            ].get("email_sent_to_user", False):
-                email_user_video_published.delay(video.id)
+
+            # If the current status of the video is before published
+            if video.status < Video.Statuses.PUBLISHED:
+                # Check if there is a task or create one to share on social platforms
+                if not Todo.objects.filter(
+                    creator=get_system_user(), video=video
+                ).exists():
+                    todo = Todo.objects.create(
+                        creator=get_system_user(),
+                        description="Megosztás közösségi platformokon",
+                        request=video.request,
+                        video=video,
+                    )
+                    todo.assignees.set(get_pr_responsible())
+                    todo.save()
+                # Check if requester was already notified or send an e-mail to watch and rate us
+                if (
+                    not video.additional_data["publishing"].get(
+                        "email_sent_to_user", False
+                    )
+                    and not video.request.requester.is_staff
+                ):
+                    email_user_video_published.delay(video.id)
 
         # Check if the HQ export has been moved to its place
         if (
