@@ -311,7 +311,7 @@ const ProfileSection = ({ userData }: ProfileSectionProps) => {
             {userIsStaff && (
               <Message
                 severity="warn"
-                text="Az adatokat az Active Directoryban kell módosítani."
+                text="Az adatokat a BSS címtár szolgáltatásában kell módosítani."
               />
             )}
           </div>

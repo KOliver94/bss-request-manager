@@ -26,7 +26,7 @@ export default function PersonalDetails({ control, errors, disabled, isUser }) {
               isMobileView ? stylesModule.alertAdMobile : stylesModule.alertAd
             }
           >
-            Adataidat az Active Directoryban kell módosítani.
+            Adataidat a BSS címtár szolgáltatásában kell módosítani.
           </Alert>
         )}
       </GridItem>
