@@ -58,20 +58,51 @@ def check_if_admin_or_staff_user_already_associated(
     (S)he has to log in with her/his BSS Login account and associate the profile.
     Runs only at login process. (Request sender user is anonymous).
     """
-    if strategy.request.user.is_anonymous:
-        if (
-            not is_new
-            and new_association
-            and user
-            and (user.is_superuser or user.is_staff)
-            and not backend.name == "bss-login"
-            and not backend.strategy.storage.user.get_social_auth_for_user(
-                user, provider=backend.name
-            ).exists()
-        ):
-            raise AuthenticationFailed(
-                detail="Your social profile is not associated with your account."
-            )
+    if (
+        strategy.request.user.is_anonymous
+        and not is_new
+        and new_association
+        and user
+        and (user.is_superuser or user.is_staff)
+        and not backend.name == "bss-login"
+        and not backend.strategy.storage.user.get_social_auth_for_user(
+            user, provider=backend.name
+        ).exists()
+    ):
+        raise AuthenticationFailed(
+            detail="Your social profile is not associated with your account."
+        )
+
+
+def disconnect_all_other_profiles_and_change_username_on_first_bss_login(
+    backend,
+    strategy,
+    details,
+    user=None,
+    is_new=False,
+    new_association=True,
+    *args,
+    **kwargs,
+):
+    """
+    As non-staff users can change their e-mail addresses, and we match social logins by e-mail address
+    make sure to drop all other connected social profiles when a staff user connect get his privileges the first time.
+    This only happens if an account with the same e-mail already existed for security reasons.
+    We also change the username to match our directory.
+    """
+    if (
+        strategy.request.user.is_anonymous
+        and not is_new
+        and new_association
+        and user
+        and backend.name == "bss-login"
+        and not backend.strategy.storage.user.get_social_auth_for_user(
+            user, provider=backend.name
+        ).exists()
+    ):
+        UserSocialAuth.objects.filter(user=user).delete()
+        user.username = details.get("username")
+        user.save()
 
 
 def add_phone_number_to_profile(backend, details, response, user, *args, **kwargs):

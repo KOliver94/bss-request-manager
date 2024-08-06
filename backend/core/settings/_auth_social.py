@@ -90,6 +90,8 @@ SOCIAL_AUTH_PIPELINE = (
     "common.social_core.pipeline.set_user_active_when_first_logs_in",
     # Custom action: Check if admin/staff user has already associated social profile to his/her account.
     "common.social_core.pipeline.check_if_admin_or_staff_user_already_associated",
+    # Custom action: Disconnect all other profile on first staff logon for already existing user.
+    "common.social_core.pipeline.disconnect_all_other_profiles_and_change_username_on_first_bss_login",
     # Create a user account if we haven't found one yet.
     "social_core.pipeline.user.create_user",
     # Create the record that associates the social account with the user.
