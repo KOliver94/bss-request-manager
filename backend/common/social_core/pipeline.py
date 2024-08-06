@@ -164,6 +164,7 @@ def set_groups_and_permissions_for_staff(backend, response, user, *args, **kwarg
         return
 
     user.is_staff = True
+    user_is_superuser = False
 
     for group_name in response.get("groups", []):
         if group_name.lower() not in [
@@ -173,8 +174,11 @@ def set_groups_and_permissions_for_staff(backend, response, user, *args, **kwarg
             user.groups.add(group)
 
         if group_name.lower() == settings.SOCIAL_AUTH_BSS_LOGIN_SUPERUSER_GROUP.lower():
-            user.is_superuser = True
+            user_is_superuser = True
 
+    user.is_superuser = (
+        user_is_superuser  # This will remove or add superuser status if needed
+    )
     user.save()
 
 
