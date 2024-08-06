@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 
 import pytest
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.utils.timezone import make_aware
 from model_bakery import baker
 from rest_framework.exceptions import ErrorDetail
@@ -173,6 +173,28 @@ def test_update_me_validation(api_client, data, expected, method, request, user,
             assert response.data[data][0] == ErrorDetail(
                 "This field may not be blank.", code="blank"
             )
+
+
+@pytest.mark.parametrize(
+    "user",
+    ["admin_user", "staff_user", "basic_user"],
+)
+@pytest.mark.parametrize("method", ["PATCH", "PUT"])
+def test_update_user_email_validation(api_client, method, request, user, user_data):
+    do_login(api_client, request, user)
+
+    user_2 = baker.make(User, _fill_optional=True)
+
+    url = reverse("api:v1:me:me-detail")
+
+    response = get_response(
+        api_client, method, url, user_data | {"email": user_2.email}
+    )
+
+    assert response.status_code == HTTP_400_BAD_REQUEST
+    assert response.data["email"][0] == ErrorDetail(
+        "E-mail address already in use.", code="invalid"
+    )
 
 
 @pytest.mark.parametrize(

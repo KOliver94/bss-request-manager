@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BSS Request Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-24 21:13+0200\n"
+"POT-Creation-Date: 2024-08-07 01:42+0200\n"
 "PO-Revision-Date: 2023-09-07 03:30+0200\n"
 "Last-Translator: Olivér Kecskeméty <kecskemety.oliver@simonyi.bme.hu>\n"
 "Language: Hungarian\n"
@@ -26,11 +26,11 @@ msgstr "A videó még nincs megvágva."
 msgid "You have already posted a rating."
 msgstr "Már adtál le értékelést."
 
-#: .\api\v1\admin\requests\requests\serializers.py:114
+#: .\api\v1\admin\requests\requests\serializers.py:163
 msgid "Either define the requester by its id or its details but not both."
 msgstr "A felkérőt vagy az id-ja vagy adatai segítségével add meg, de ne egyszerre mindkettővel."
 
-#: .\api\v1\admin\requests\requests\serializers.py:120
+#: .\api\v1\admin\requests\requests\serializers.py:174
 msgid "All requester data fields must be present if one is present."
 msgstr "A felkérő minden adatát szükséges kitölteni ha bármely közülük meg van adva."
 
@@ -51,7 +51,7 @@ msgstr "Felelős"
 msgid "Editor"
 msgstr "Vágó"
 
-#: .\api\v1\login\serializers.py:63 .\api\v1\me\views.py:76
+#: .\api\v1\login\serializers.py:70 .\api\v1\me\views.py:79
 msgid "Invalid provider."
 msgstr "Érvénytelen szogláltató."
 
@@ -59,19 +59,23 @@ msgstr "Érvénytelen szogláltató."
 msgid "Avatar does not exist for this provider."
 msgstr "Nem létezik avatar ehhez a szolgáltatóhoz."
 
+#: .\api\v1\me\serializers.py:88
+msgid "E-mail address already in use."
+msgstr "Az e-mail cím már használatban van."
+
 #: .\api\v1\requests\ratings\views.py:48
 msgid "The video has not been published yet."
 msgstr "A videó még nem került publikálásra."
 
-#: .\api\v1\requests\requests\serializers.py:73
+#: .\api\v1\requests\requests\serializers.py:76
 msgid "Must be later than current time."
 msgstr "Későbbinek kell lennie mint a jelenlegi idő."
 
-#: .\api\v1\requests\requests\serializers.py:80
+#: .\api\v1\requests\requests\serializers.py:86
 msgid "Please fill all data in your profile before sending a request."
 msgstr "Kérlek tölts ki minden adatot a profilodban mielőtt felkérést küldenél be."
 
-#: .\common\models.py:73
+#: .\common\models.py:76
 msgid "Users cannot ban themselves."
 msgstr "A felhasználók nem tilthatják ki saját magukat."
 
@@ -79,18 +83,22 @@ msgstr "A felhasználók nem tilthatják ki saját magukat."
 msgid "Return paginated response."
 msgstr "Lapokra tördelt választ ad vissza."
 
-#: .\core\settings\base.py:233
+#: .\core\settings\base.py:237
 msgid "English"
 msgstr "angol"
 
-#: .\core\settings\base.py:234
+#: .\core\settings\base.py:238
 msgid "Hungarian"
 msgstr "magyar"
 
-#: .\video_requests\models.py:98
+#: .\templates\admin\login.html:8
+msgid "Log in"
+msgstr "Bejelentkezés"
+
+#: .\video_requests\models.py:103
 msgid "Must be later than the start of the event."
 msgstr "Későbbinek kell lennie mint az esemény kezdése."
 
-#: .\video_requests\models.py:102
+#: .\video_requests\models.py:107
 msgid "Must be later than the end of the event."
 msgstr "Későbbinek kell lennie mint az esemény vége."

@@ -83,6 +83,9 @@ class UserSerializer(ModelSerializer):
         read_only_fields = ("groups", "id", "role", "social_accounts", "username")
 
     def update(self, instance, validated_data):
+        email = validated_data.get("email")
+        if email and User.objects.filter(email=email).exclude(pk=instance.pk).exists():
+            raise ValidationError({"email": [_("E-mail address already in use.")]})
         profile_data = validated_data.pop("userprofile")
         UserProfileSerializer.update(
             UserProfileSerializer(), instance.userprofile, profile_data

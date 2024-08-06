@@ -318,6 +318,25 @@ def test_update_user_validation(
 
 
 @pytest.mark.parametrize("method", ["PATCH", "PUT"])
+def test_update_user_email_validation(admin_user, api_client, method, user_data):
+    login(api_client, admin_user)
+
+    user_1 = baker.make(User, _fill_optional=True)
+    user_2 = baker.make(User, _fill_optional=True)
+
+    url = reverse("api:v1:admin:users:user-detail", kwargs={"pk": user_1.id})
+
+    response = get_response(
+        api_client, method, url, user_data | {"email": user_2.email}
+    )
+
+    assert response.status_code == HTTP_400_BAD_REQUEST
+    assert response.data["email"][0] == ErrorDetail(
+        "E-mail address already in use.", code="invalid"
+    )
+
+
+@pytest.mark.parametrize("method", ["PATCH", "PUT"])
 def test_update_user_avatar(admin_user, api_client, method):
     login(api_client, admin_user)
 
