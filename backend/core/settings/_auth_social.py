@@ -32,6 +32,7 @@ SOCIAL_AUTH_BSS_LOGIN_SUPERUSER_GROUP = config("AUTH_BSS_SUPERUSER_GROUP", defau
 SOCIAL_AUTH_BSS_LOGIN_EXCLUDE_GROUPS = config(
     "AUTH_BSS_EXCLUDE_GROUPS", default="", cast=Csv()
 )
+SOCIAL_AUTH_BSS_LOGIN_SYNC_TOKEN = config("AUTH_BSS_SYNC_TOKEN", default=None)
 
 # Google OAuth2 settings:
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("AUTH_GOOGLE_CLIENT_ID", default=None)
@@ -127,6 +128,16 @@ AUTHENTICATION_BACKENDS += [
     "social_core.backends.google.GoogleOAuth2",
     "social_core.backends.microsoft.MicrosoftOAuth2",
 ]
+
+# Add schedules task to sync users
+CELERY_BEAT_SCHEDULE.update(
+    {
+        "sync_bss_users": {
+            "task": "core.tasks.scheduled_sync_bss_users",
+            "schedule": crontab(minute=15, hour=4),
+        }
+    }
+)
 
 if DJANGO_ADMIN and "django.contrib.admin" in INSTALLED_APPS:
     TEMPLATES[0]["OPTIONS"]["context_processors"] += [
