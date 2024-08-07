@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlparse
 
 import requests
 from django.conf import settings
@@ -80,7 +81,8 @@ class Command(BaseCommand):
 
             profile.phone_number = result["attributes"].get("mobile")
 
-            if "gravatar.com" in result.get("avatar", "").lower():
+            avatar_url_hostname = urlparse(result.get("avatar", "")).hostname
+            if avatar_url_hostname and avatar_url_hostname.endswith("gravatar.com"):
                 profile.avatar["gravatar"] = result["avatar"]
 
                 if not profile.avatar.get("provider", None):
