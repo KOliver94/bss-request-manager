@@ -82,7 +82,10 @@ class Command(BaseCommand):
             profile.phone_number = result["attributes"].get("mobile")
 
             avatar_url_hostname = urlparse(result.get("avatar", "")).hostname
-            if avatar_url_hostname and avatar_url_hostname.endswith("gravatar.com"):
+            if avatar_url_hostname and (
+                avatar_url_hostname == "gravatar.com"
+                or avatar_url_hostname.endswith(".gravatar.com")
+            ):
                 profile.avatar["gravatar"] = result["avatar"]
 
                 if not profile.avatar.get("provider", None):
