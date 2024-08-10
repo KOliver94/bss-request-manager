@@ -68,6 +68,6 @@
     "source-map-explorer": "2.5.3",
     "typescript": "5.5.4",
     "vite": "5.3.5",
-    "vite-tsconfig-paths": "4.3.2"
+    "vite-tsconfig-paths": "5.0.1"
   }
 }
