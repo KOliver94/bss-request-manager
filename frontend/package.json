@@ -4,14 +4,14 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@emotion/react": "11.13.0",
+    "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
     "@hookform/resolvers": "3.9.0",
     "@mui/icons-material": "5.16.7",
     "@mui/material": "5.16.7",
-    "@mui/x-date-pickers": "7.13.0",
+    "@mui/x-date-pickers": "7.14.0",
     "@sentry/react": "8.26.0",
-    "axios": "1.7.4",
+    "axios": "1.7.5",
     "classnames": "2.5.1",
     "date-fns": "3.6.0",
     "jwt-decode": "4.0.0",
@@ -21,7 +21,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-google-recaptcha": "3.1.0",
-    "react-hook-form": "7.52.2",
+    "react-hook-form": "7.53.0",
     "react-router-dom": "6.26.1",
     "sass": "1.77.8",
     "yup": "1.4.0"
@@ -64,7 +64,7 @@
     "eslint-plugin-react-hooks": "4.6.2",
     "prettier": "3.3.3",
     "source-map-explorer": "2.5.3",
-    "vite": "5.4.1",
+    "vite": "5.4.2",
     "vite-plugin-pwa": "0.20.1"
   }
 }
