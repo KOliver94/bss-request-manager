@@ -54,7 +54,6 @@ class BSSLoginOAuth2(BaseOAuth2):
     DEFAULT_SCOPE = [
         "email",
         "mobile",
-        "name",
         "openid",
         "profile",
     ]
@@ -71,8 +70,8 @@ class BSSLoginOAuth2(BaseOAuth2):
         return {
             "username": response.get("preferred_username"),
             "email": response.get("email"),
-            "first_name": response.get("first_name"),
-            "last_name": response.get("last_name"),
+            "first_name": response.get("given_name"),
+            "last_name": response.get("family_name"),
             "mobile": response.get("mobile"),
         }
 

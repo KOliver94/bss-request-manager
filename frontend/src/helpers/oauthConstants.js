@@ -6,7 +6,7 @@ const authSchScopes = [
   'profile',
 ];
 
-const bssLoginScopes = ['email', 'mobile', 'name', 'openid', 'profile'];
+const bssLoginScopes = ['email', 'mobile', 'openid', 'profile'];
 
 const googleScopes = [
   'https://www.googleapis.com/auth/userinfo.email',

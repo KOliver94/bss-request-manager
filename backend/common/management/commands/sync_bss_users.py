@@ -63,12 +63,8 @@ class Command(BaseCommand):
                 username=result["username"], defaults={"is_staff": True}
             )
 
-            name = result["name"].split()
-            first_name = " ".join(name[:-1])
-            last_name = name[-1]
-
-            user.first_name = first_name
-            user.last_name = last_name
+            user.first_name = result["attributes"].get("first_name")
+            user.last_name = result["attributes"].get("last_name")
             user.email = result["email"]
             user.save()
 
