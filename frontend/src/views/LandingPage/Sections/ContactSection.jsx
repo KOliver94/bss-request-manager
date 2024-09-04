@@ -68,7 +68,7 @@ export default function ContactSection() {
           <h4 className={stylesModule.description}>
             Ha olyan kérésed lenne amire nem kaptál itt választ vagy egyéb
             ügyben szeretnél felkeresni minket, alább lehetőséged van üzenetet
-            küldeni nekünk vagy írj a{' '}
+            küldeni nekünk vagy írj az{' '}
             <a href="mailto:info@bsstudio.hu">info@bsstudio.hu</a> e&#8209;mail
             címre.
           </h4>
