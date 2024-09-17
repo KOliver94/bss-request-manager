@@ -48,15 +48,15 @@ User.add_to_class("is_service_account", is_service_account)
 #       Special Roles        #
 ##############################
 def get_editor_in_chief():
-    return User.objects.filter(groups__name="FOSZERKESZTO")
+    return User.objects.filter(groups__name="Főszerkesztő")
 
 
 def get_production_manager():
-    return User.objects.filter(groups__name="GYARTASVEZETO")
+    return User.objects.filter(groups__name="Gyártásvezető")
 
 
 def get_pr_responsible():
-    return User.objects.filter(groups__name="PR")
+    return User.objects.filter(groups__name="PR felelős")
 
 
 ##############################

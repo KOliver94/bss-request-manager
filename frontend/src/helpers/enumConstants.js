@@ -64,18 +64,3 @@ export const avatarProviders = (provider) => {
       return 'Gravatar';
   }
 };
-
-export const groups = (group) => {
-  switch (group) {
-    case 'FOSZERKESZTO':
-      return 'Főszerkesztő';
-    case 'GYARTASVEZETO':
-      return 'Gyártásvezető';
-    case 'PR':
-      return 'PR felelős';
-    case 'VEZETOSEG':
-      return 'Vezetőségi tag';
-    default:
-      return group;
-  }
-};

@@ -57,9 +57,9 @@ class EmailSendingTestCase(APITestCase):
         self.staff_user = create_user(is_staff=True)
 
         # Create special users
-        self.editor_in_chief = create_user(is_staff=True, groups=["FOSZERKESZTO"])
-        self.production_manager = create_user(is_staff=True, groups=["GYARTASVEZETO"])
-        self.pr_responsible = create_user(is_staff=True, groups=["PR"])
+        self.editor_in_chief = create_user(is_staff=True, groups=["Főszerkesztő"])
+        self.production_manager = create_user(is_staff=True, groups=["Gyártásvezető"])
+        self.pr_responsible = create_user(is_staff=True, groups=["PR felelős"])
 
     def test_new_request_confirmation_email_sent_to_logged_in_user(self):
         # Create a Request with logged in user

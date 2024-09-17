@@ -50,7 +50,7 @@ import {
 } from 'src/api/meApi';
 import { isPrivileged } from 'src/helpers/authenticationHelper';
 import handleError from 'src/helpers/errorHandler';
-import { userRoles, avatarProviders, groups } from 'src/helpers/enumConstants';
+import { userRoles, avatarProviders } from 'src/helpers/enumConstants';
 import {
   getOauthUrlAuthSch,
   getOauthUrlGoogle,
@@ -289,7 +289,7 @@ export default function ProfilePage() {
                           {userData.groups.map((group) => {
                             return (
                               <Badge color="secondary" key={group}>
-                                {groups(group)}
+                                {group}
                               </Badge>
                             );
                           })}

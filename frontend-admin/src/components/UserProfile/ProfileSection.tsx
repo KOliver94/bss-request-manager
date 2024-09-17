@@ -45,21 +45,6 @@ const socialAccounts: Record<string, { icon: string; label: string }> = {
   },
 };
 
-function getGroup(group: string) {
-  switch (group) {
-    case 'FOSZERKESZTO':
-      return 'Főszerkesztő';
-    case 'GYARTASVEZETO':
-      return 'Gyártásvezető';
-    case 'PR':
-      return 'PR felelős';
-    case 'VEZETOSEG':
-      return 'Vezetőségi tag';
-    default:
-      return group;
-  }
-}
-
 function getUserRole(role: string, banned: boolean) {
   if (banned) return 'Kitiltva';
   switch (role) {
@@ -266,7 +251,7 @@ const ProfileSection = ({ userData }: ProfileSectionProps) => {
                 {userData.groups
                   .sort((a, b) => a.localeCompare(b))
                   .map((group, index) => {
-                    return <Chip key={index} label={getGroup(group)} />;
+                    return <Chip key={index} label={group} />;
                   })}
               </div>
             </div>
