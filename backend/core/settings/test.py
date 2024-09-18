@@ -14,6 +14,9 @@ except AttributeError:
 # Use the default Django authentication backend
 AUTHENTICATION_BACKENDS += ["django.contrib.auth.backends.ModelBackend"]
 
+# Test environment is not HTTPS
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = False
+
 # AuthSCH OAuth2 settings:
 SOCIAL_AUTH_AUTHSCH_KEY = "12345678901234567890"  # nosec
 SOCIAL_AUTH_AUTHSCH_SECRET = "TNcJ3UoBMUqpfYLBqlGlqN0Lsw1LHyIFvEtMTatL65RtTKAc6JnAYyNdDHX2DLFxkWLHpef8Wu8GHIAr"  # nosec

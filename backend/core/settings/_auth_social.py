@@ -12,6 +12,9 @@ SOCIAL_AUTH_JSONFIELD_ENABLED = True
 # This redirect path is used only when the template tag login button is used
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/django-admin/"
 
+# On projects behind a reverse proxy that uses HTTPS, the redirect URIs can have the wrong schema so we can force HTTPS.
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
 # Use username, email, first and last name for user creation
 SOCIAL_AUTH_USER_FIELDS = ["username", "email", "first_name", "last_name"]
 
