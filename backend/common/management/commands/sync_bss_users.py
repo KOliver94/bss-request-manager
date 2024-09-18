@@ -89,8 +89,11 @@ class Command(BaseCommand):
 
             profile.save()
 
-            # Use the social-auth pipeline function to set the groups
-            set_groups_and_permissions_for_staff(BSSLoginOAuth2, result, user)
+            # Use the social-auth pipeline function to set the groups, but we need some transformation
+            groups = [group["name"] for group in result["groups_obj"]]
+            set_groups_and_permissions_for_staff(
+                BSSLoginOAuth2, {"groups": groups}, user
+            )
 
             if created:
                 total_created += 1
