@@ -12,7 +12,7 @@
     "primeflex": "3.3.1",
     "primeicons": "7.0.0",
     "primelocale": "primefaces/primelocale",
-    "primereact": "10.8.2",
+    "primereact": "10.8.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-hook-form": "7.53.0",
@@ -44,18 +44,18 @@
     ]
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "2.13.5",
-    "@tanstack/eslint-plugin-query": "5.56.1",
+    "@openapitools/openapi-generator-cli": "2.13.9",
+    "@tanstack/eslint-plugin-query": "5.57.1",
     "@tanstack/react-query-devtools": "5.56.2",
     "@types/node": "20.16.5",
-    "@types/react": "18.3.5",
+    "@types/react": "18.3.8",
     "@types/react-dom": "18.3.0",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "@vitejs/plugin-react": "4.3.1",
     "autoprefixer": "10.4.20",
     "cssnano": "7.0.6",
-    "eslint": "8.57.0",
+    "eslint": "8.57.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-import-resolver-typescript": "3.6.3",
     "eslint-plugin-deprecation": "3.0.0",
@@ -67,7 +67,7 @@
     "prettier": "3.3.3",
     "source-map-explorer": "2.5.3",
     "typescript": "5.6.2",
-    "vite": "5.4.6",
+    "vite": "5.4.7",
     "vite-tsconfig-paths": "5.0.1"
   }
 }
