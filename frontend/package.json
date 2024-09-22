@@ -7,9 +7,9 @@
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
     "@hookform/resolvers": "3.9.0",
-    "@mui/icons-material": "6.1.0",
-    "@mui/material": "6.1.0",
-    "@mui/x-date-pickers": "7.17.0",
+    "@mui/icons-material": "6.1.1",
+    "@mui/material": "6.1.1",
+    "@mui/x-date-pickers": "7.18.0",
     "@sentry/react": "8.30.0",
     "axios": "1.7.7",
     "classnames": "2.5.1",
@@ -23,7 +23,7 @@
     "react-google-recaptcha": "3.1.0",
     "react-hook-form": "7.53.0",
     "react-router-dom": "6.26.2",
-    "sass": "1.78.0",
+    "sass": "1.79.3",
     "yup": "1.4.0"
   },
   "scripts": {
@@ -54,7 +54,7 @@
     "@vite-pwa/assets-generator": "0.2.6",
     "@vitejs/plugin-basic-ssl": "1.1.0",
     "@vitejs/plugin-react": "4.3.1",
-    "eslint": "8.57.0",
+    "eslint": "8.57.1",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.30.0",
@@ -64,7 +64,7 @@
     "eslint-plugin-react-hooks": "4.6.2",
     "prettier": "3.3.3",
     "source-map-explorer": "2.5.3",
-    "vite": "5.4.6",
+    "vite": "5.4.7",
     "vite-plugin-pwa": "0.20.5"
   }
 }
