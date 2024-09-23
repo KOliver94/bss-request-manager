@@ -101,7 +101,7 @@ a {
   background-color: transparent;
   &:hover,
   &:focus {
-    color: darken($link-color, 5%);
+    color: color.adjust($link-color, $lightness: -5%);
     text-decoration: none;
   }
 }
