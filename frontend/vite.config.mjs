@@ -10,6 +10,13 @@ export default defineConfig(() => {
       outDir: 'build',
       // sourcemap: true, // When you want to use source-map-explorer
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler',
+        },
+      },
+    },
     loader: { '.js': 'jsx' },
     plugins: [
       basicSsl(),

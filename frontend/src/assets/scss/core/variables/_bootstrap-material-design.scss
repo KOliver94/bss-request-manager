@@ -103,9 +103,9 @@ $bmd-switch-handle-checked-bg: $brand-primary !default;
 $bmd-switch-handle-unchecked-bg: #f1f1f1 !default;
 $bmd-switch-handle-disabled-bg: #bdbdbd !default;
 $bmd-switch-unchecked-bg: $gray-lighter !default;
-$bmd-switch-checked-bg: desaturate(
-  lighten($bmd-switch-handle-checked-bg, 28%),
-  32%
+$bmd-switch-checked-bg: color.adjust(
+  color.adjust($bmd-switch-handle-checked-bg, $lightness: 28%),
+  $saturation: -32%
 ); // kind of magic recipe
 $bmd-switch-disabled-bg: $gray-lighter !default;
 
