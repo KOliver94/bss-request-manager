@@ -22,6 +22,12 @@ module.exports = {
   },
   plugins: ['@tanstack/query', '@typescript-eslint', 'prettier', 'react'],
   rules: {
+    '@typescript-eslint/no-empty-object-type': [
+      'error',
+      {
+        allowInterfaces: 'with-single-extends',
+      },
+    ],
     '@typescript-eslint/no-floating-promises': 'error',
     'import/order': [
       'error',

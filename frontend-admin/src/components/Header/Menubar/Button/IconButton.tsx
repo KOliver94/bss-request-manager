@@ -32,8 +32,8 @@ const IconButton = ({
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    path && navigate(path);
-    onClick && onClick(event);
+    if (path) navigate(path);
+    if (onClick) onClick(event);
   };
 
   return (
