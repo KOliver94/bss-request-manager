@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sentry/react": "8.30.0",
+    "@sentry/react": "8.32.0",
     "@tanstack/react-query": "5.56.2",
     "axios": "1.7.7",
     "bootstrap-icons": "1.11.3",
@@ -44,15 +44,15 @@
     ]
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "2.13.9",
-    "@tanstack/eslint-plugin-query": "5.57.1",
-    "@tanstack/react-query-devtools": "5.56.2",
-    "@types/node": "20.16.5",
-    "@types/react": "18.3.8",
+    "@openapitools/openapi-generator-cli": "2.13.12",
+    "@tanstack/eslint-plugin-query": "5.58.1",
+    "@tanstack/react-query-devtools": "5.58.0",
+    "@types/node": "20.16.10",
+    "@types/react": "18.3.10",
     "@types/react-dom": "18.3.0",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
-    "@vitejs/plugin-react": "4.3.1",
+    "@vitejs/plugin-react": "4.3.2",
     "autoprefixer": "10.4.20",
     "cssnano": "7.0.6",
     "eslint": "8.57.1",
@@ -61,13 +61,13 @@
     "eslint-plugin-deprecation": "3.0.0",
     "eslint-plugin-import": "2.30.0",
     "eslint-plugin-prettier": "5.2.1",
-    "eslint-plugin-react": "7.36.1",
+    "eslint-plugin-react": "7.37.0",
     "eslint-plugin-react-hooks": "4.6.2",
     "postcss": "8.4.47",
     "prettier": "3.3.3",
     "source-map-explorer": "2.5.3",
     "typescript": "5.6.2",
-    "vite": "5.4.7",
+    "vite": "5.4.8",
     "vite-tsconfig-paths": "5.0.1"
   }
 }
