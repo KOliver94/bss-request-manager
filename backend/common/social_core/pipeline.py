@@ -194,22 +194,32 @@ def set_groups_and_permissions_for_staff(backend, response, user, *args, **kwarg
     if not backend.name == "bss-login":
         return
 
-    user.is_staff = True
-    user_is_superuser = False
-
-    for group_name in response.get("groups", []):
-        if group_name.lower() not in [
-            grp.lower() for grp in settings.SOCIAL_AUTH_BSS_LOGIN_EXCLUDE_GROUPS
-        ]:
-            group = Group.objects.get_or_create(name=group_name)[0]
-            user.groups.add(group)
-
-        if group_name.lower() == settings.SOCIAL_AUTH_BSS_LOGIN_SUPERUSER_GROUP.lower():
-            user_is_superuser = True
-
-    user.is_superuser = (
-        user_is_superuser  # This will remove or add superuser status if needed
+    mirror_groups_except = frozenset(settings.SOCIAL_AUTH_BSS_LOGIN_EXCLUDE_GROUPS)
+    provided_group_names = frozenset(response.get("groups", []))
+    target_group_names = provided_group_names - mirror_groups_except
+    current_group_names = frozenset(
+        user.groups.values_list("name", flat=True).iterator()
     )
+
+    if target_group_names != current_group_names:
+        existing_groups = list(
+            Group.objects.filter(name__in=target_group_names).iterator()
+        )
+        existing_group_names = frozenset(group.name for group in existing_groups)
+
+        new_groups = [
+            Group.objects.get_or_create(name=name)[0]
+            for name in target_group_names
+            if name not in existing_group_names
+        ]
+
+        user.groups.set(existing_groups + new_groups)
+
+    user.is_staff = True
+    user.is_superuser = (
+        settings.SOCIAL_AUTH_BSS_LOGIN_SUPERUSER_GROUP in provided_group_names
+    )
+
     user.save()
 
 
