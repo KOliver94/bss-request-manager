@@ -1,11 +1,10 @@
 /* Copied from: https://github.com/primefaces/primereact/blob/3f42c54c8517c07990db1e5c8d9ec91044805182/public/themes/lara-dark-blue/theme.css */
-/* Copied everything non-color related from: https://github.com/primefaces/primereact/blob/9d86edb302519702d2e2d3683d69a338ffb887f0/public/themes/lara-dark-blue/theme.css */
+/* Copied everything non-color related from: https://github.com/primefaces/primereact/blob/38bf03b399e714bbfc64579ef2e571ee87b61866/public/themes/lara-dark-blue/theme.css */
 
 :root {
-  font-family: 'Inter var', sans-serif;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   font-variation-settings: normal;
-  --font-family: 'Inter var', sans-serif;
+  --font-family: Inter var, sans-serif;
   --font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   --surface-a: #071426;
   --surface-b: #040d19;
@@ -3699,7 +3698,6 @@
       background-color 0.2s,
       color 0.2s,
       box-shadow 0.2s;
-    margin: 0.5rem;
   }
   .p-carousel .p-carousel-content .p-carousel-prev:enabled:hover,
   .p-carousel .p-carousel-content .p-carousel-next:enabled:hover {
@@ -3712,6 +3710,10 @@
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem rgba(147, 197, 253, 0.5);
+  }
+  .p-carousel .p-carousel-content .p-carousel-prev,
+  .p-carousel .p-carousel-content .p-carousel-next {
+    margin: 0.5rem;
   }
   .p-carousel .p-carousel-indicators {
     padding: 1rem;
@@ -5007,7 +5009,6 @@
       background-color 0.2s,
       color 0.2s,
       box-shadow 0.2s;
-    margin-right: 0.5rem;
   }
   .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler:enabled:hover {
     color: rgba(255, 255, 255, 0.87);
@@ -5018,6 +5019,9 @@
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem rgba(147, 197, 253, 0.5);
+  }
+  .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler {
+    margin-right: 0.5rem;
   }
   .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler + .p-checkbox {
     margin-right: 0.5rem;
@@ -5369,6 +5373,10 @@
   }
   .p-panel.p-panel-toggleable .p-panel-header {
     padding: 0.75rem 1.25rem;
+  }
+  .p-panel:has(> .p-panel-footer) .p-panel-content {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
   .p-panel .p-panel-content {
     padding: 1.25rem;
@@ -5755,7 +5763,6 @@
       background-color 0.2s,
       color 0.2s,
       box-shadow 0.2s;
-    margin-right: 0.5rem;
   }
   .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
     color: rgba(255, 255, 255, 0.87);
@@ -5766,6 +5773,9 @@
     outline: 0 none;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2rem rgba(147, 197, 253, 0.5);
+  }
+  .p-dialog .p-dialog-header .p-dialog-header-icon {
+    margin-right: 0.5rem;
   }
   .p-dialog .p-dialog-header .p-dialog-header-icon:last-child {
     margin-right: 0;
@@ -8163,7 +8173,6 @@
   }
   .p-toast .p-toast-message .p-toast-message-content {
     padding: 1rem;
-    border-width: 0 0 0 6px;
   }
   .p-toast .p-toast-message .p-toast-message-content .p-toast-message-text {
     margin: 0 0 0 1rem;
