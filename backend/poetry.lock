@@ -2411,5 +2411,5 @@ brotli = ["brotli"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = "3.13.0"
-content-hash = "1ddabcde36746c91f6839ff0037ba224e5726c18580b31f6486c1973d6bc47bc"
+python-versions = "^3.13"
+content-hash = "0e2ccf811cabb3375c71962bba81a609b5811fd129f5b5f645870ebed0404cf1"
