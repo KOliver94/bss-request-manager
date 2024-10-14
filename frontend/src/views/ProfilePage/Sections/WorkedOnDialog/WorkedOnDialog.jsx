@@ -168,7 +168,10 @@ export default function WorkedOnDialog({
                     .map((request) => (
                       <TableRow key={`${request.id}-${request.position}`} hover>
                         <TableCell align="center">
-                          <Link to={`/admin/requests/${request.id}`}>
+                          <Link
+                            to={`/admin/requests/${request.id}`}
+                            reloadDocument
+                          >
                             {request.title}
                           </Link>
                         </TableCell>
