@@ -62,7 +62,6 @@ class BSSLoginOAuth2(BaseOAuth2):
         ("name", "name"),
         ("email", "email"),
         ("mobile", "mobile"),
-        ("preferred_username", "username"),
     ]
 
     def get_user_details(self, response):
