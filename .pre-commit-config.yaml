@@ -37,13 +37,13 @@ repos:
     hooks:
       - id: pyupgrade
         name: 'Upgrade Python syntax to newer versions'
-        args: [--py312-plus]
+        args: [--py313-plus]
   - repo: https://github.com/adamchainz/django-upgrade
     rev: 1.22.1
     hooks:
       - id: django-upgrade
         name: 'Upgrade Django syntax to newer versions'
-        args: [--target-version, '5.0']
+        args: [--target-version, '5.1']
   - repo: https://github.com/hadialqattan/pycln
     rev: v2.4.0
     hooks:
