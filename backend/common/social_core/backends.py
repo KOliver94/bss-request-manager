@@ -27,7 +27,7 @@ class AuthSCHOAuth2(BaseOAuth2):
     def get_user_details(self, response):
         """Return user details from AuthSCH account"""
         return {
-            "username": f"{response.get("directory.sch.bme.hu:sAMAccountName")}@sch.bme.hu",
+            "username": f"{response.get('directory.sch.bme.hu:sAMAccountName')}@sch.bme.hu",
             "email": response.get("email"),
             "first_name": response.get("given_name"),
             "last_name": response.get("family_name"),
