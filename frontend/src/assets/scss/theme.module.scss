@@ -1,10 +1,11 @@
-@import 'theme';
+@use 'sass:string';
+@use 'theme';
 
 :export {
-  @each $key, $value in $themeBreakpoints {
-    #{unquote($key)}: $value;
+  @each $key, $value in theme.$themeBreakpoints {
+    #{string.unquote($key)}: $value;
   }
-  @each $key, $value in $themeColors {
-    #{unquote($key)}: $value;
+  @each $key, $value in theme.$themeColors {
+    #{string.unquote($key)}: $value;
   }
 }
