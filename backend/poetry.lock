@@ -735,17 +735,18 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-cacheops"
-version = "7.0.2"
+version = "7.1"
 description = "A slick ORM cache with automatic granular event-driven invalidation for Django."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "django-cacheops-7.0.2.tar.gz", hash = "sha256:77a37c73d7facfc7299365ed66a12be7a487dd745dd86c1d33ca2ebfd3b32878"},
+    {file = "django_cacheops-7.1-py2.py3-none-any.whl", hash = "sha256:7d5e0f42e41ab4a8052130d33d9f3b26c47bef944ef2df0a64db92d70e51d87e"},
+    {file = "django_cacheops-7.1.tar.gz", hash = "sha256:ec079abb968557321ee208c6274820231820f98ca6377dda971f04981bc2ab52"},
 ]
 
 [package.dependencies]
 django = ">=3.2"
-funcy = ">=1.8,<3.0"
+funcy = ">=1.8"
 redis = ">=3.0.0"
 
 [[package]]
@@ -765,18 +766,18 @@ Django = ">=3.2.18"
 
 [[package]]
 name = "django-cors-headers"
-version = "4.5.0"
+version = "4.6.0"
 description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "django_cors_headers-4.5.0-py3-none-any.whl", hash = "sha256:28c1ded847aa70208798de3e42422a782f427b8b720e8d7319d34b654b5978e6"},
-    {file = "django_cors_headers-4.5.0.tar.gz", hash = "sha256:6c01a85cf1ec779a7bde621db853aa3ce5c065a5ba8e27df7a9f9e8dac310f4f"},
+    {file = "django_cors_headers-4.6.0-py3-none-any.whl", hash = "sha256:8edbc0497e611c24d5150e0055d3b178c6534b8ed826fb6f53b21c63f5d48ba3"},
+    {file = "django_cors_headers-4.6.0.tar.gz", hash = "sha256:14d76b4b4c8d39375baeddd89e4f08899051eeaf177cb02a29bd6eae8cf63aa8"},
 ]
 
 [package.dependencies]
 asgiref = ">=3.6"
-django = ">=3.2"
+django = ">=4.2"
 
 [[package]]
 name = "django-debug-toolbar"
@@ -1027,13 +1028,13 @@ grpcio-gcp = ["grpcio-gcp (>=0.2.2,<1.0.dev0)"]
 
 [[package]]
 name = "google-api-python-client"
-version = "2.149.0"
+version = "2.151.0"
 description = "Google API Client Library for Python"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "google_api_python_client-2.149.0-py2.py3-none-any.whl", hash = "sha256:1a5232e9cfed8c201799d9327e4d44dc7ea7daa3c6e1627fca41aa201539c0da"},
-    {file = "google_api_python_client-2.149.0.tar.gz", hash = "sha256:b9d68c6b14ec72580d66001bd33c5816b78e2134b93ccc5cf8f624516b561750"},
+    {file = "google_api_python_client-2.151.0-py2.py3-none-any.whl", hash = "sha256:4427b2f47cd88b0355d540c2c52215f68c337f3bc9d6aae1ceeae4525977504c"},
+    {file = "google_api_python_client-2.151.0.tar.gz", hash = "sha256:a9d26d630810ed4631aea21d1de3e42072f98240aaf184a8a1a874a371115034"},
 ]
 
 [package.dependencies]
@@ -2443,13 +2444,13 @@ tests = ["coverage[toml]"]
 
 [[package]]
 name = "whitenoise"
-version = "6.7.0"
+version = "6.8.2"
 description = "Radically simplified static file serving for WSGI applications"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 files = [
-    {file = "whitenoise-6.7.0-py3-none-any.whl", hash = "sha256:a1ae85e01fdc9815d12fa33f17765bc132ed2c54fa76daf9e39e879dd93566f6"},
-    {file = "whitenoise-6.7.0.tar.gz", hash = "sha256:58c7a6cd811e275a6c91af22e96e87da0b1109e9a53bb7464116ef4c963bf636"},
+    {file = "whitenoise-6.8.2-py3-none-any.whl", hash = "sha256:df12dce147a043d1956d81d288c6f0044147c6d2ab9726e5772ac50fb45d2280"},
+    {file = "whitenoise-6.8.2.tar.gz", hash = "sha256:486bd7267a375fa9650b136daaec156ac572971acc8bf99add90817a530dd1d4"},
 ]
 
 [package.dependencies]
@@ -2461,4 +2462,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-content-hash = "ef4e7ddf8ba82d364043bf86f310d010e4504e049cd68a2a18b3bc59a634d5c9"
+content-hash = "f2832b0e4287ec02dd0df13993c18d454a59fb8ed0787e81891224d8bd822b56"
