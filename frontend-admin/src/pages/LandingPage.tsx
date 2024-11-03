@@ -64,6 +64,7 @@ const LandingPage = () => {
           undefined,
           currentDate,
           twoWeeksLaterDate,
+          [1, 2],
         );
         return requests.data.results || [];
       },
