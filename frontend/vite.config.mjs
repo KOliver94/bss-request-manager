@@ -63,7 +63,7 @@ export default defineConfig(() => {
           start_url: '/',
           theme_color: '#3c4858',
         },
-        registerType: 'autoUpdate',
+        registerType: 'prompt',
         workbox: {
           globPatterns: ['**/*.{css,eot,html,ico,jpg,js,png,svg,ttf,woof}'],
           navigateFallbackDenylist: [/^\/admin/, /^\/api/, /^\/django-admin/],
