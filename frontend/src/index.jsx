@@ -11,6 +11,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 import * as Sentry from '@sentry/react';
 import router from './router';
+import ServiceWorkerUpdate from './components/ServiceWorkerUpdate';
 import theme from './assets/jss/theme';
 
 import 'src/assets/scss/custom-icon-font.scss';
@@ -54,6 +55,7 @@ root.render(
             horizontal: 'right',
           }}
         >
+          <ServiceWorkerUpdate />
           <RouterProvider router={router} />
         </SnackbarProvider>
       </ThemeProvider>
