@@ -7,11 +7,11 @@
     "@emotion/react": "11.13.5",
     "@emotion/styled": "11.13.5",
     "@hookform/resolvers": "3.9.1",
-    "@mui/icons-material": "6.1.8",
-    "@mui/material": "6.1.8",
-    "@mui/x-date-pickers": "7.22.3",
-    "@sentry/react": "8.40.0",
-    "axios": "1.7.7",
+    "@mui/icons-material": "6.1.9",
+    "@mui/material": "6.1.9",
+    "@mui/x-date-pickers": "7.23.0",
+    "@sentry/react": "8.41.0",
+    "axios": "1.7.8",
     "classnames": "2.5.1",
     "date-fns": "4.1.0",
     "jwt-decode": "4.0.0",
@@ -52,8 +52,8 @@
   },
   "devDependencies": {
     "@vite-pwa/assets-generator": "0.2.6",
-    "@vitejs/plugin-basic-ssl": "1.1.0",
-    "@vitejs/plugin-react": "4.3.3",
+    "@vitejs/plugin-basic-ssl": "1.2.0",
+    "@vitejs/plugin-react": "4.3.4",
     "eslint": "8.57.1",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-prettier": "9.1.0",
@@ -62,9 +62,9 @@
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-react": "7.37.2",
     "eslint-plugin-react-hooks": "4.6.2",
-    "prettier": "3.3.3",
+    "prettier": "3.4.1",
     "source-map-explorer": "2.5.3",
     "vite": "5.4.11",
-    "vite-plugin-pwa": "0.21.0"
+    "vite-plugin-pwa": "0.21.1"
   }
 }
