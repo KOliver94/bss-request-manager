@@ -13,7 +13,7 @@ repos:
       - id: mixed-line-ending
         name: 'Replace mixed line endings'
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.29.4
+    rev: 0.30.0
     hooks:
       - id: check-github-workflows
       - id: check-renovate
@@ -39,7 +39,7 @@ repos:
         name: 'Upgrade Python syntax to newer versions'
         args: [--py313-plus]
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: 1.22.1
+    rev: 1.22.2
     hooks:
       - id: django-upgrade
         name: 'Upgrade Django syntax to newer versions'
@@ -75,13 +75,13 @@ repos:
         additional_dependencies:
           - Flake8-pyproject
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.10
+    rev: 1.8.0
     hooks:
       - id: bandit
         name: 'Check Python security issues'
         exclude: ^backend/tests/
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: v3.3.3
+    rev: v3.4.1
     hooks:
       - id: prettier
         name: 'Format JavaScript and TypeScript code'
@@ -90,7 +90,7 @@ repos:
           - python
         args: [--config, ./frontend/.prettierrc]
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.15.0
+    rev: v9.16.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
