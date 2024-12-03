@@ -14,7 +14,7 @@ import {
   useNavigate,
   useParams,
   useRevalidator,
-} from 'react-router-dom';
+} from 'react-router';
 
 import { UserNestedList, VideoAdminRetrieve } from 'api/models';
 import {
@@ -145,7 +145,7 @@ const VideoCreatorEditorPage = () => {
   }, [queryData]);
 
   const onReload = () => {
-    revalidator.revalidate();
+    void revalidator.revalidate();
   };
 
   const onSubmit: SubmitHandler<IVideoCreator> = async (data) => {
@@ -189,7 +189,7 @@ const VideoCreatorEditorPage = () => {
           });
         }
 
-        navigate(`/requests/${requestId}/videos/${response.data.id}`);
+        void navigate(`/requests/${requestId}/videos/${response.data.id}`);
       })
       .catch(async (error) => {
         if (isAxiosError(error)) {
@@ -216,7 +216,7 @@ const VideoCreatorEditorPage = () => {
 
   if (error) {
     if (isAxiosError(error)) {
-      navigate('/error', {
+      void navigate('/error', {
         state: {
           statusCode: error.response?.status,
           statusText: error.response?.statusText,

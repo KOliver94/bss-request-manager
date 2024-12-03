@@ -1,7 +1,7 @@
 import { Badge, BadgeProps } from 'primereact/badge';
 import { Ripple } from 'primereact/ripple';
 import { IconType } from 'primereact/utils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 interface IconButtonWithClickHandler {
   badgeSeverity?: BadgeProps['severity'];
@@ -32,7 +32,7 @@ const IconButton = ({
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    if (path) navigate(path);
+    if (path) void navigate(path);
     if (onClick) onClick(event);
   };
 

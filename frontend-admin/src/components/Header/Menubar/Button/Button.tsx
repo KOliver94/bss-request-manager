@@ -1,7 +1,7 @@
 import { Badge } from 'primereact/badge';
 import { Ripple } from 'primereact/ripple';
 import { IconType } from 'primereact/utils';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 type ButtonProps = {
   badgeValue?: string;

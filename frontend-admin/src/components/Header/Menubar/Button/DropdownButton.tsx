@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { Ripple } from 'primereact/ripple';
 import { StyleClass } from 'primereact/styleclass';
 import { IconType } from 'primereact/utils';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 type ButtonDropdownProps = {
   dropdownItems: {

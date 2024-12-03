@@ -4,7 +4,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-} from 'react-router-dom';
+} from 'react-router';
 import AuthenticatedRoute from 'src/components/AuthenticatedRoute';
 import ErrorPage from 'src/views/ErrorPage/ErrorPage';
 import LoadingPage from 'src/views/LoadingPage/LoadingPage';

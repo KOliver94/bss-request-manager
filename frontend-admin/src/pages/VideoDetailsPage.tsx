@@ -10,7 +10,7 @@ import { StyleClass } from 'primereact/styleclass';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { adminApi } from 'api/http';
 import { requestVideoUpdateMutation } from 'api/mutations';
@@ -80,14 +80,14 @@ const VideoDetailsPage = () => {
     await adminApi
       .adminRequestsVideosDestroy(Number(videoId), Number(requestId))
       .then(() => {
-        navigate(`/requests/${requestId}/videos`, { replace: true });
+        void navigate(`/requests/${requestId}/videos`, { replace: true });
         void queryClient.invalidateQueries({
           queryKey: ['requests', Number(requestId), 'videos'],
         });
       })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          navigate(`/requests/${requestId}/videos`, { replace: true });
+          void navigate(`/requests/${requestId}/videos`, { replace: true });
           void queryClient.invalidateQueries({
             queryKey: ['requests', Number(requestId), 'videos'],
           });
@@ -255,7 +255,7 @@ const VideoDetailsPage = () => {
 
   if (error) {
     if (isAxiosError(error)) {
-      navigate('/error', {
+      void navigate('/error', {
         state: {
           statusCode: error.response?.status,
           statusText: error.response?.statusText,

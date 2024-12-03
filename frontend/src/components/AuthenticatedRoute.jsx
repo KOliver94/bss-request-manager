@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router';
 import PropTypes from 'prop-types';
 import { isAuthenticated } from 'src/helpers/authenticationHelper';
 

@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 
 import { useIsFetching } from '@tanstack/react-query';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Link, useMatches, useRouteError } from 'react-router-dom';
+import { Link, useMatches, useRouteError } from 'react-router';
 
 type BreadcrumbsType = {
   name: string;

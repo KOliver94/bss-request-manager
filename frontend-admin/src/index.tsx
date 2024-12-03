@@ -7,12 +7,12 @@ import * as locales from 'primelocale/hu.json';
 import { PrimeReactProvider, addLocale } from 'primereact/api';
 import { createRoot } from 'react-dom/client';
 import {
-  RouterProvider,
   createRoutesFromChildren,
   matchRoutes,
   useLocation,
   useNavigationType,
-} from 'react-router-dom';
+} from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 import { register } from 'timeago.js';
 import huLocal from 'timeago.js/lib/lang/hu';
 
