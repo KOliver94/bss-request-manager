@@ -12,7 +12,7 @@ import {
 import { ProgressBar } from 'primereact/progressbar';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import TimeAgo from 'timeago-react';
 
 import { adminApi } from 'api/http';

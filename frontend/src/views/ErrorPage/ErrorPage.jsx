@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useRouteError, isRouteErrorResponse } from 'react-router-dom';
+import { Link, useRouteError, isRouteErrorResponse } from 'react-router';
 import Paper from '@mui/material/Paper';
 import changePageTitle from 'src/helpers/pageTitleHelper';
 import getErrorDetails from 'src/helpers/errorPageConstants';

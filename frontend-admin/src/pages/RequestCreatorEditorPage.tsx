@@ -19,7 +19,7 @@ import {
   useNavigate,
   useParams,
   useRevalidator,
-} from 'react-router-dom';
+} from 'react-router';
 
 import { RequestAdminRetrieve, UserNestedDetail } from 'api/models';
 import { requestCreateMutation, requestUpdateMutation } from 'api/mutations';
@@ -192,7 +192,7 @@ const RequestCreatorEditorPage = () => {
   };
 
   const onReload = () => {
-    revalidator.revalidate();
+    void revalidator.revalidate();
   };
 
   const onSubmit: SubmitHandler<IRequestCreator> = async (data) => {
@@ -259,7 +259,7 @@ const RequestCreatorEditorPage = () => {
         if (watchCreateMore) {
           reset();
         } else {
-          navigate('/requests/' + response.data.id);
+          void navigate('/requests/' + response.data.id);
         }
       })
       .catch(async (error) => {
@@ -290,7 +290,7 @@ const RequestCreatorEditorPage = () => {
 
   if (error) {
     if (isAxiosError(error)) {
-      navigate('/error', {
+      void navigate('/error', {
         state: {
           statusCode: error.response?.status,
           statusText: error.response?.statusText,

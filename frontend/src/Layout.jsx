@@ -1,4 +1,4 @@
-import { Outlet, useLocation, ScrollRestoration } from 'react-router-dom';
+import { Outlet, useLocation, ScrollRestoration } from 'react-router';
 import Header from 'src/components/material-kit-react/Header/Header';
 import Footer from 'src/components/material-kit-react/Footer/Footer';
 import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';

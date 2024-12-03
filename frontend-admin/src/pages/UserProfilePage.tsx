@@ -3,7 +3,7 @@ import { Suspense, lazy, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { ProgressBar } from 'primereact/progressbar';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { usersRetrieveQuery } from 'api/queries';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
@@ -41,7 +41,7 @@ const UserProfilePage = () => {
 
   if (error) {
     if (isAxiosError(error)) {
-      navigate('/error', {
+      void navigate('/error', {
         state: {
           statusCode: error.response?.status,
           statusText: error.response?.statusText,

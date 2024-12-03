@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // nodejs library to set properties for components

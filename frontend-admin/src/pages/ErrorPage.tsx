@@ -5,7 +5,7 @@ import {
   useLocation,
   useNavigate,
   useRouteError,
-} from 'react-router-dom';
+} from 'react-router';
 
 const errorTranslation = {
   401: {
@@ -77,14 +77,14 @@ const ErrorPage = () => {
             icon="pi pi-arrow-left"
             label="Vissza"
             onClick={() => {
-              navigate(-1);
+              void navigate(-1);
             }}
           />
           <Button
             icon="pi pi-home"
             label="Ugrás a Kezdőoldalra"
             onClick={() => {
-              navigate('/', { replace: true });
+              void navigate('/', { replace: true });
             }}
           />
         </div>

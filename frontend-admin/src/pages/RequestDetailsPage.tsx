@@ -11,7 +11,7 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
@@ -150,12 +150,12 @@ const RequestDetailsPage = () => {
     await adminApi
       .adminRequestsDestroy(Number(requestId))
       .then(() => {
-        navigate('/requests', { replace: true });
+        void navigate('/requests', { replace: true });
         void queryClient.invalidateQueries({ queryKey: ['requests'] });
       })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
-          navigate('/requests', { replace: true });
+          void navigate('/requests', { replace: true });
           void queryClient.invalidateQueries({
             queryKey: ['requests', Number(requestId)],
           });
@@ -370,7 +370,7 @@ const RequestDetailsPage = () => {
 
   if (error) {
     if (isAxiosError(error)) {
-      navigate('/error', {
+      void navigate('/error', {
         state: {
           statusCode: error.response?.status,
           statusText: error.response?.statusText,

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { classNames } from 'primereact/utils';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { requestRetrieveQuery, requestVideosListQuery } from 'api/queries';
 import LinkButton from 'components/LinkButton/LinkButton';

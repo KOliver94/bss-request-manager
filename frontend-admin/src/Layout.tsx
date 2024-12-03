@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ScrollTop } from 'primereact/scrolltop';
-import { Outlet, ScrollRestoration, useNavigation } from 'react-router-dom';
+import { Outlet, ScrollRestoration, useNavigation } from 'react-router';
 
 import Header from 'components/Header/Header';
 import LoadingPage from 'pages/LoadingPage';

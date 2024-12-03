@@ -5,7 +5,7 @@ import {
   createRoutesFromElements,
   Outlet,
   Route,
-} from 'react-router-dom';
+} from 'react-router';
 
 import {
   RequestAdminRetrieve,

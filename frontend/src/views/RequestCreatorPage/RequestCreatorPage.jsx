@@ -1,5 +1,5 @@
 import { useState, useEffect, createRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @mui components
@@ -155,7 +155,6 @@ function RequestCreatorPage() {
           })
           .catch((e) => {
             if (isCancel(e)) {
-              return;
             }
           });
       } finally {

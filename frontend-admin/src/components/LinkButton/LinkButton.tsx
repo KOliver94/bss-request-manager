@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 
 import { Button, ButtonProps } from 'primereact/button';
 import { classNames } from 'primereact/utils';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link, LinkProps } from 'react-router';
 
 interface LinkButtonProps {
   buttonProps: ButtonProps;
