@@ -7,11 +7,11 @@
     "@emotion/react": "11.13.5",
     "@emotion/styled": "11.13.5",
     "@hookform/resolvers": "3.9.1",
-    "@mui/icons-material": "6.1.9",
-    "@mui/material": "6.1.9",
-    "@mui/x-date-pickers": "7.23.0",
-    "@sentry/react": "8.41.0",
-    "axios": "1.7.8",
+    "@mui/icons-material": "6.1.10",
+    "@mui/material": "6.1.10",
+    "@mui/x-date-pickers": "7.23.1",
+    "@sentry/react": "8.42.0",
+    "axios": "1.7.9",
     "classnames": "2.5.1",
     "date-fns": "4.1.0",
     "jwt-decode": "4.0.0",
@@ -21,10 +21,10 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-google-recaptcha": "3.1.0",
-    "react-hook-form": "7.53.2",
+    "react-hook-form": "7.54.0",
     "react-router": "7.0.2",
-    "sass": "1.81.0",
-    "yup": "1.4.0"
+    "sass": "1.82.0",
+    "yup": "1.5.0"
   },
   "scripts": {
     "start": "vite dev",
@@ -62,9 +62,9 @@
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-react": "7.37.2",
     "eslint-plugin-react-hooks": "4.6.2",
-    "prettier": "3.4.1",
+    "prettier": "3.4.2",
     "source-map-explorer": "2.5.3",
-    "vite": "6.0.1",
+    "vite": "6.0.3",
     "vite-plugin-pwa": "0.21.1"
   }
 }
