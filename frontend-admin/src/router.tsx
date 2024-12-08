@@ -1,4 +1,4 @@
-import { wrapCreateBrowserRouter } from '@sentry/react';
+import { wrapCreateBrowserRouterV7 } from '@sentry/react';
 import { QueryClient } from '@tanstack/react-query';
 import {
   createBrowserRouter,
@@ -39,7 +39,8 @@ async function requestVideoLoader({ params }: any) {
   );
 }
 
-const sentryCreateBrowserRouter = wrapCreateBrowserRouter(createBrowserRouter);
+const sentryCreateBrowserRouter =
+  wrapCreateBrowserRouterV7(createBrowserRouter);
 
 const router = sentryCreateBrowserRouter(
   createRoutesFromElements(
