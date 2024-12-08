@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { wrapCreateBrowserRouter } from '@sentry/react';
+import { wrapCreateBrowserRouterV7 } from '@sentry/react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -19,7 +19,8 @@ const RequestDetailPage = lazy(
   () => import('src/views/RequestDetailPage/RequestDetailPage'),
 );
 
-const sentryCreateBrowserRouter = wrapCreateBrowserRouter(createBrowserRouter);
+const sentryCreateBrowserRouter =
+  wrapCreateBrowserRouterV7(createBrowserRouter);
 
 const router = sentryCreateBrowserRouter(
   createRoutesFromElements(
