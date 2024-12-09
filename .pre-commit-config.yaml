@@ -81,7 +81,7 @@ repos:
         name: 'Check Python security issues'
         exclude: ^backend/tests/
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: v3.4.1
+    rev: v3.4.2
     hooks:
       - id: prettier
         name: 'Format JavaScript and TypeScript code'
