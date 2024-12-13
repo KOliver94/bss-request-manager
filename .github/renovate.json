@@ -1,7 +1,5 @@
 {
-  "baseBranches": [
-    "main"
-  ],
+  "baseBranches": ["main"],
   "extends": [
     ":automergeDisabled",
     ":dependencyDashboard",
@@ -20,88 +18,46 @@
     "schedule:weekends",
     "workarounds:all"
   ],
-  "gitIgnoredAuthors": [
-    "66853113+pre-commit-ci[bot]@users.noreply.github.com"
-  ],
+  "gitIgnoredAuthors": ["66853113+pre-commit-ci[bot]@users.noreply.github.com"],
   "packageRules": [
     {
       "description": "Add `docker` label for Dockerfile or docker-compose related updates.",
-      "matchManagers": [
-        "docker-compose",
-        "dockerfile"
-      ],
-      "addLabels": [
-        "docker"
-      ]
+      "matchManagers": ["docker-compose", "dockerfile"],
+      "addLabels": ["docker"]
     },
     {
       "description": "Add `github_actions` label for GitHub Actions related updates.",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "addLabels": [
-        "github_actions"
-      ]
+      "matchManagers": ["github-actions"],
+      "addLabels": ["github_actions"]
     },
     {
       "description": "Group all minor and patch updates together for Poetry in /backend.",
-      "addLabels": [
-        "python"
-      ],
+      "addLabels": ["python"],
       "groupName": "all non-major backend dependencies",
       "groupSlug": "all-minor-patch-backend",
-      "matchManagers": [
-        "poetry"
-      ],
-      "matchFileNames": [
-        "backend/**"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ]
+      "matchManagers": ["poetry"],
+      "matchFileNames": ["backend/**"],
+      "matchUpdateTypes": ["minor", "patch"]
     },
     {
       "description": "Group all minor and patch updates together for npm in /frontend.",
-      "addLabels": [
-        "javascript"
-      ],
+      "addLabels": ["javascript"],
       "groupName": "all non-major frontend dependencies",
       "groupSlug": "all-minor-patch-frontend",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchFileNames": [
-        "frontend/**"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "postUpdateOptions": [
-        "npmDedupe"
-      ]
+      "matchManagers": ["npm"],
+      "matchFileNames": ["frontend/**"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "postUpdateOptions": ["npmDedupe"]
     },
     {
       "description": "Group all minor and patch updates together for npm in /frontend-admin.",
-      "addLabels": [
-        "javascript"
-      ],
+      "addLabels": ["javascript"],
       "groupName": "all non-major frontend-admin dependencies",
       "groupSlug": "all-minor-patch-frontend-admin",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchFileNames": [
-        "frontend-admin/**"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "postUpdateOptions": [
-        "npmDedupe"
-      ]
+      "matchManagers": ["npm"],
+      "matchFileNames": ["frontend-admin/**"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "postUpdateOptions": ["npmDedupe"]
     }
   ],
   "rebaseWhen": "conflicted"
