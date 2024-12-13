@@ -36,7 +36,7 @@
       "groupName": "all non-major backend dependencies",
       "groupSlug": "all-minor-patch-backend",
       "matchManagers": ["poetry"],
-      "matchPaths": ["backend/**"],
+      "matchFileNames": ["backend/**"],
       "matchUpdateTypes": ["minor", "patch"]
     },
     {
@@ -45,7 +45,7 @@
       "groupName": "all non-major frontend dependencies",
       "groupSlug": "all-minor-patch-frontend",
       "matchManagers": ["npm"],
-      "matchPaths": ["frontend/**"],
+      "matchFileNames": ["frontend/**"],
       "matchUpdateTypes": ["minor", "patch"],
       "postUpdateOptions": ["npmDedupe"]
     },
@@ -55,7 +55,7 @@
       "groupName": "all non-major frontend-admin dependencies",
       "groupSlug": "all-minor-patch-frontend-admin",
       "matchManagers": ["npm"],
-      "matchPaths": ["frontend-admin/**"],
+      "matchFileNames": ["frontend-admin/**"],
       "matchUpdateTypes": ["minor", "patch"],
       "postUpdateOptions": ["npmDedupe"]
     }
