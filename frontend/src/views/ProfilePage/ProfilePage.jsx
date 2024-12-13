@@ -405,10 +405,9 @@ export default function ProfilePage() {
                           >
                             <AlertTitle>Nincs elérhető kép</AlertTitle>
                             Tölts fel egy képet{' '}
-                            <a href="https://gravatar.com">
-                              Gravatar
-                            </a>-ra vagy kapcsold össze profilod Google vagy
-                            Microsoft fiókoddal a lenti menüpont segítségével.
+                            <a href="https://gravatar.com">Gravatar</a>-ra vagy
+                            kapcsold össze profilod Google vagy Microsoft
+                            fiókoddal a lenti menüpont segítségével.
                             <br />
                             <em>
                               <small className={stylesModule.smallAvatar}>
