@@ -33,7 +33,7 @@ repos:
         name: 'Check Poetry config and verify that lockfile is consistent with pyproject.toml'
         args: [-C, ./backend, --lock]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.0
+    rev: v3.19.1
     hooks:
       - id: pyupgrade
         name: 'Upgrade Python syntax to newer versions'
