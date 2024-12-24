@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -73,24 +73,26 @@ export async function loader({ params }: any) {
 }
 
 const RequestCreatorEditorPage = () => {
-  const defaultValues = {
-    comment: '',
-    createMore: false,
-    deadline: null,
-    end_datetime: null,
-    place: '',
-    requester: null,
-    requester_email: '',
-    requester_first_name: '',
-    requester_last_name: '',
-    requester_mobile: '',
-    requesterType: 'self',
-    responsible: null,
-    send_notification: false,
-    start_datetime: null,
-    title: '',
-    type: '',
-  };
+  const defaultValues = useMemo(() => {
+    return {
+      comment: '',
+      createMore: false,
+      deadline: null,
+      end_datetime: null,
+      place: '',
+      requester: null,
+      requester_email: '',
+      requester_first_name: '',
+      requester_last_name: '',
+      requester_mobile: '',
+      requesterType: 'self',
+      responsible: null,
+      send_notification: false,
+      start_datetime: null,
+      title: '',
+      type: '',
+    };
+  }, []);
 
   const { control, handleSubmit, reset, setError, setValue, watch } =
     useForm<IRequestCreator>({
@@ -138,13 +140,13 @@ const RequestCreatorEditorPage = () => {
         start_datetime: new Date(loaderData.start_datetime),
       });
     }
-  }, [loaderData]);
+  }, [defaultValues, loaderData, reset]);
 
   useEffect(() => {
     if (requestId && loaderData !== queryData) {
       setIsDataChanged(true);
     }
-  }, [queryData]);
+  }, [loaderData, queryData, requestId]);
 
   const buttonOptions = [
     {

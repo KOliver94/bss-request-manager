@@ -34,11 +34,11 @@ const AdditionalDataDialog = forwardRef<
       additional_data: JSON.stringify(data, null, 2),
     };
     reset({ ...defaultValues });
-  }, [visible]);
+  }, [data, reset, visible]);
 
   useEffect(() => {
     setError('additional_data', { message: error, type: 'backend' });
-  }, [error]);
+  }, [error, setError]);
 
   const renderFooter = () => {
     return (

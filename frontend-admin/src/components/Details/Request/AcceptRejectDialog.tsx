@@ -56,7 +56,7 @@ const AcceptRejectDialog = forwardRef<
         failed: failed || null,
       };
       reset({ ...defaultValues });
-    }, [visible]);
+    }, [accepted, canceled, failed, reset, visible]);
 
     const acceptOptions: AcceptOption[] = [
       {

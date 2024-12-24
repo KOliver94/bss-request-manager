@@ -21,7 +21,7 @@ const AiredAddDialog = forwardRef<
 
   useEffect(() => {
     reset();
-  }, [visible]);
+  }, [reset, visible]);
 
   const renderFooter = () => {
     return (
