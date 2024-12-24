@@ -129,7 +129,15 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
           }, 500);
         };
       }
-    }, [ratingIdParam, videoId, visible]);
+    }, [
+      isRated,
+      queryClient,
+      ratingIdParam,
+      requestId,
+      reset,
+      videoId,
+      visible,
+    ]);
 
     const onSubmit = async (data: IRating) => {
       setLoading(true);

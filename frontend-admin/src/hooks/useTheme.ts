@@ -17,23 +17,24 @@ export const useTheme = () => {
     return getLocalStorageDarkMode() === 'true';
   }
 
-  // Save preferences on change if:
-  // 1. User did not save previous preference and changes to
-  //  something else than browser's preference.
-  // 2. User has a saved preference but changes to other theme.
-  function savePreference() {
-    const darkModeSavedPref = getLocalStorageDarkMode();
-    const darkModeSavedPrefBool = darkModeSavedPref === 'true';
-
-    if (darkModeSavedPref === null) {
-      if (prefersDarkMode.matches !== darkMode)
-        setLocalStorageDarkMode(darkMode);
-    } else {
-      if (darkModeSavedPrefBool !== darkMode) setLocalStorageDarkMode(darkMode);
-    }
-  }
-
   useEffect(() => {
+    // Save preferences on change if:
+    // 1. User did not save previous preference and changes to
+    //  something else than browser's preference.
+    // 2. User has a saved preference but changes to other theme.
+    function savePreference() {
+      const darkModeSavedPref = getLocalStorageDarkMode();
+      const darkModeSavedPrefBool = darkModeSavedPref === 'true';
+
+      if (darkModeSavedPref === null) {
+        if (prefersDarkMode.matches !== darkMode)
+          setLocalStorageDarkMode(darkMode);
+      } else {
+        if (darkModeSavedPrefBool !== darkMode)
+          setLocalStorageDarkMode(darkMode);
+      }
+    }
+
     const previousValue = getDarkMode();
     if (previousValue !== darkMode) {
       savePreference();
@@ -59,7 +60,7 @@ export const useTheme = () => {
     return () => {
       prefersDarkMode.removeEventListener('change', handlePreferredThemeChange);
     };
-  }, []);
+  }, [darkMode]);
 
   return [darkMode, setDarkMode] as const;
 };

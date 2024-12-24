@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -64,24 +64,26 @@ export async function loader({ params }: any) {
 }
 
 const VideoCreatorEditorPage = () => {
-  const defaultValues = {
-    additional_data: {
-      archiving: {
-        hq_archive: false,
+  const defaultValues = useMemo(() => {
+    return {
+      additional_data: {
+        archiving: {
+          hq_archive: false,
+        },
+        coding: {
+          website: false,
+        },
+        editing_done: false,
+        length: undefined,
+        publishing: {
+          website: '',
+        },
       },
-      coding: {
-        website: false,
-      },
-      editing_done: false,
-      length: undefined,
-      publishing: {
-        website: '',
-      },
-    },
-    editor: null,
-    id: 0,
-    title: '',
-  };
+      editor: null,
+      id: 0,
+      title: '',
+    };
+  }, []);
 
   const { control, handleSubmit, reset, setError } = useForm<IVideoCreator>({
     defaultValues,
@@ -139,13 +141,13 @@ const VideoCreatorEditorPage = () => {
         },
       });
     }
-  }, [loaderData]);
+  }, [defaultValues, loaderData, reset]);
 
   useEffect(() => {
     if (requestId && videoId && loaderData !== queryData) {
       setIsDataChanged(true);
     }
-  }, [queryData]);
+  }, [loaderData, queryData, requestId, videoId]);
 
   const onReload = () => {
     void revalidator.revalidate();

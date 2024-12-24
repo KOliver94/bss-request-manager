@@ -99,7 +99,7 @@ const TodoDialog = forwardRef<
         }
       };
     }
-  }, [todoId, visible]);
+  }, [queryClient, reset, todoId, visible]);
 
   const onSubmit = async (data: ITodo) => {
     const invalidateQueries = async () => {

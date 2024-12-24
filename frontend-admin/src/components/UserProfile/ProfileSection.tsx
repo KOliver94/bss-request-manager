@@ -85,7 +85,7 @@ const ProfileSection = ({ userData }: ProfileSectionProps) => {
 
   useEffect(() => {
     reset({ ...userData });
-  }, [userData]);
+  }, [reset, userData]);
 
   const onAvatarSave = async (provider: string) => {
     await mutateAsync({
