@@ -18,7 +18,6 @@ import { classNames } from 'primereact/utils';
 import type { IconType } from 'primereact/utils';
 import { Controller, useForm } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
-import TimeAgo from 'timeago-react';
 
 import { adminApi } from 'api/http';
 import { CommentAdminListRetrieve } from 'api/models';
@@ -35,6 +34,7 @@ import {
   getUserId,
   isAdmin,
 } from 'helpers/LocalStorageHelper';
+import TimeAgo from 'helpers/TimeAgo';
 import { useTheme } from 'hooks/useTheme';
 import { UI_AVATAR_URL } from 'localConstants';
 import { useToast } from 'providers/ToastProvider';

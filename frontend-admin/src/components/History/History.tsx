@@ -3,10 +3,10 @@ import React from 'react';
 import { Avatar } from 'primereact/avatar';
 import { Divider } from 'primereact/divider';
 import { Tooltip } from 'primereact/tooltip';
-import TimeAgo from 'timeago-react';
 
 import { History } from 'api/models/history';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
+import TimeAgo from 'helpers/TimeAgo';
 import { UI_AVATAR_URL } from 'localConstants';
 
 export interface HistoryDates // TODO: Rename?

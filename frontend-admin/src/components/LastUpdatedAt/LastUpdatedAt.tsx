@@ -1,5 +1,6 @@
 import { QueryObserverResult } from '@tanstack/react-query';
-import TimeAgo from 'timeago-react';
+
+import TimeAgo from 'helpers/TimeAgo';
 
 type LastUpdatedAtProps = {
   lastUpdatedAt: Date;

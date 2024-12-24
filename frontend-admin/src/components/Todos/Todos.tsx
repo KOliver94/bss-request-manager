@@ -13,7 +13,6 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 import { Link } from 'react-router';
-import TimeAgo from 'timeago-react';
 
 import { adminApi } from 'api/http';
 import { TodoAdminListRetrieve } from 'api/models/todo-admin-list-retrieve';
@@ -22,6 +21,7 @@ import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import TimeAgo from 'helpers/TimeAgo';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 
