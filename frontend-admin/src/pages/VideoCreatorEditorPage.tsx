@@ -94,15 +94,17 @@ const VideoCreatorEditorPage = () => {
       ? requestVideoUpdateMutation(Number(requestId), Number(videoId))
       : requestVideoCreateMutation(Number(requestId)),
   );
+  const query = useQuery({
+    ...requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
+    enabled: !!requestId && !!videoId,
+    refetchInterval: 1000 * 30,
+  });
   const {
     data: queryData,
     dataUpdatedAt,
     error,
   } = requestId && videoId
-    ? useQuery({
-        ...requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
-        refetchInterval: 1000 * 30,
-      })
+    ? query
     : { data: undefined, dataUpdatedAt: new Date(), error: null };
 
   const [isDataChanged, setIsDataChanged] = useState<boolean>(false);
