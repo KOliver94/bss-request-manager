@@ -5,7 +5,8 @@ import React, {
   createContext,
 } from 'react';
 
-import { ToastMessage, Toast } from 'primereact/toast';
+import { Toast } from 'primereact/toast';
+import type { ToastMessage } from 'primereact/toast';
 
 type MessageType = ToastMessage | ToastMessage[];
 

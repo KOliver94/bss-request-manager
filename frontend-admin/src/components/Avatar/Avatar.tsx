@@ -1,9 +1,7 @@
 import { forwardRef } from 'react';
 
-import {
-  Avatar as PrimeAvatar,
-  AvatarProps as PrimeAvatarProps,
-} from 'primereact/avatar';
+import { Avatar as PrimeAvatar } from 'primereact/avatar';
+import type { AvatarProps as PrimeAvatarProps } from 'primereact/avatar';
 import { classNames } from 'primereact/utils';
 
 import stylesModule from './Avatar.module.css';

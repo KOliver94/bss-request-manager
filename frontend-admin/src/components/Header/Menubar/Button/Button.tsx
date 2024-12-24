@@ -1,6 +1,6 @@
 import { Badge } from 'primereact/badge';
 import { Ripple } from 'primereact/ripple';
-import { IconType } from 'primereact/utils';
+import type { IconType } from 'primereact/utils';
 import { Link } from 'react-router';
 
 type ButtonProps = {

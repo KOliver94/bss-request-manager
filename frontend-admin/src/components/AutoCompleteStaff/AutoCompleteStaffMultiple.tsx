@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { AutoCompleteProps } from 'primereact/autocomplete';
+import type { AutoCompleteProps } from 'primereact/autocomplete';
 
 import { UserAdminList } from 'api/models';
 import Avatar from 'components/Avatar/Avatar';

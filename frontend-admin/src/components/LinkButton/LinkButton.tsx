@@ -1,8 +1,10 @@
 import { forwardRef } from 'react';
 
-import { Button, ButtonProps } from 'primereact/button';
+import { Button } from 'primereact/button';
+import type { ButtonProps } from 'primereact/button';
 import { classNames } from 'primereact/utils';
-import { Link, LinkProps } from 'react-router';
+import { Link } from 'react-router';
+import type { LinkProps } from 'react-router';
 
 interface LinkButtonProps {
   buttonProps: ButtonProps;

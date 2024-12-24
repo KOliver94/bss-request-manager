@@ -2,8 +2,8 @@ import { forwardRef, lazy, Suspense, useState } from 'react';
 
 import { Badge } from 'primereact/badge';
 import { Column } from 'primereact/column';
-import {
-  DataTable,
+import { DataTable } from 'primereact/datatable';
+import type {
   DataTableExpandedRows,
   DataTableProps,
   DataTableValueArray,

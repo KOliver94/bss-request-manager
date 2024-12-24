@@ -8,7 +8,8 @@ import { InputText } from 'primereact/inputtext';
 import { Message } from 'primereact/message';
 import { SplitButton } from 'primereact/splitbutton';
 import { ToggleButton } from 'primereact/togglebutton';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import {
   useLoaderData,
   useNavigate,

@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { classNames, IconType } from 'primereact/utils';
+import { classNames } from 'primereact/utils';
+import type { IconType } from 'primereact/utils';
 
 import { StatusStyle } from 'components/StatusTag/StatusTagTypes';
 import { useTheme } from 'hooks/useTheme';

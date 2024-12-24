@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { AutoCompleteChangeEvent } from 'primereact/autocomplete';
+import type { AutoCompleteChangeEvent } from 'primereact/autocomplete';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { Dropdown } from 'primereact/dropdown';
-import { MultiSelect, MultiSelectChangeEvent } from 'primereact/multiselect';
+import { MultiSelect } from 'primereact/multiselect';
+import type { MultiSelectChangeEvent } from 'primereact/multiselect';
 
 import { StatusEnum } from 'api/models/status-enum';
 import { UserAdminList } from 'api/models/user-admin-list';

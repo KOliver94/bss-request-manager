@@ -11,7 +11,8 @@ import { Message } from 'primereact/message';
 import { SplitButton } from 'primereact/splitbutton';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 
 import { AvatarProviderEnum, UserAdminRetrieveUpdate } from 'api';
 import { userUpdateMutation } from 'api/mutations';

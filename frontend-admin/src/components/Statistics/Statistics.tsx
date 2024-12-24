@@ -1,5 +1,5 @@
 import { Skeleton } from 'primereact/skeleton';
-import { IconType } from 'primereact/utils';
+import type { IconType } from 'primereact/utils';
 
 export type StatisticsFieldProps = {
   color: 'blue' | 'cyan' | 'orange' | 'purple';

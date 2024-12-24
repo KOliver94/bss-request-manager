@@ -1,11 +1,8 @@
 import { forwardRef } from 'react';
 
 import { Column } from 'primereact/column';
-import {
-  DataTable,
-  DataTableProps,
-  DataTableValueArray,
-} from 'primereact/datatable';
+import { DataTable } from 'primereact/datatable';
+import type { DataTableProps, DataTableValueArray } from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
 
 import { VideoAdminSearch } from 'api/models';

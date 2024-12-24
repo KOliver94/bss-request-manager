@@ -1,6 +1,7 @@
-import { Badge, BadgeProps } from 'primereact/badge';
+import { Badge } from 'primereact/badge';
+import type { BadgeProps } from 'primereact/badge';
 import { Ripple } from 'primereact/ripple';
-import { IconType } from 'primereact/utils';
+import type { IconType } from 'primereact/utils';
 import { useNavigate } from 'react-router';
 
 interface IconButtonWithClickHandler {

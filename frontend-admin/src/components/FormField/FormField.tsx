@@ -1,7 +1,9 @@
 import React, { cloneElement } from 'react';
 
-import { classNames, IconType } from 'primereact/utils';
-import { Controller, UseControllerProps } from 'react-hook-form';
+import { classNames } from 'primereact/utils';
+import type { IconType } from 'primereact/utils';
+import { Controller } from 'react-hook-form';
+import type { UseControllerProps } from 'react-hook-form';
 
 import ConditionalWrapper from 'helpers/ConditionalWrapper';
 

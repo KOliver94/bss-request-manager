@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useState } from 'react';
 
 import { Button } from 'primereact/button';
-import { Dialog, DialogProps } from 'primereact/dialog';
+import { Dialog } from 'primereact/dialog';
+import type { DialogProps } from 'primereact/dialog';
 import { RadioButton } from 'primereact/radiobutton';
 import { classNames } from 'primereact/utils';
 
