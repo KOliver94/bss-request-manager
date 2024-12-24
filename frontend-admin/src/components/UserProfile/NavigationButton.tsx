@@ -1,5 +1,5 @@
 import { Ripple } from 'primereact/ripple';
-import { IconType } from 'primereact/utils';
+import type { IconType } from 'primereact/utils';
 
 interface NavigationButtonProps {
   icon: IconType<NavigationButtonProps>;

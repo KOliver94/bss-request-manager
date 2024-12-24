@@ -1,4 +1,5 @@
-import axios, { AxiosResponse, isAxiosError } from 'axios';
+import axios, { isAxiosError } from 'axios';
+import type { AxiosResponse } from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
 import {

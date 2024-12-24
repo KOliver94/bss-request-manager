@@ -1,5 +1,5 @@
 import { InputText } from 'primereact/inputtext';
-import { Control } from 'react-hook-form';
+import type { Control } from 'react-hook-form';
 
 import FormField from 'components/FormField/FormField';
 import { IRequestCreator } from 'pages/RequestCreatorEditorPage';

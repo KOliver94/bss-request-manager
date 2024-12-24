@@ -1,7 +1,8 @@
 import { forwardRef, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { AutoComplete, AutoCompleteProps } from 'primereact/autocomplete';
+import { AutoComplete } from 'primereact/autocomplete';
+import type { AutoCompleteProps } from 'primereact/autocomplete';
 
 import { UserAdminList } from 'api/models';
 import { usersStaffListQuery } from 'api/queries';

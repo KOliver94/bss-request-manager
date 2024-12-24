@@ -2,15 +2,13 @@ import { useState } from 'react';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { AutoCompleteChangeEvent } from 'primereact/autocomplete';
+import type { AutoCompleteChangeEvent } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
-import {
-  Column,
-  ColumnEditorOptions,
-  ColumnSortEvent,
-} from 'primereact/column';
+import { Column } from 'primereact/column';
+import type { ColumnEditorOptions, ColumnSortEvent } from 'primereact/column';
 import { confirmDialog } from 'primereact/confirmdialog';
-import { DataTable, DataTableRowEditCompleteEvent } from 'primereact/datatable';
+import { DataTable } from 'primereact/datatable';
+import type { DataTableRowEditCompleteEvent } from 'primereact/datatable';
 import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
 

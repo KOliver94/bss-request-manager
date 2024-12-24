@@ -12,8 +12,9 @@ import { Message } from 'primereact/message';
 import { ProgressBar } from 'primereact/progressbar';
 import { SelectButton } from 'primereact/selectbutton';
 import { SplitButton } from 'primereact/splitbutton';
-import { IconType } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import type { IconType } from 'primereact/utils';
+import { Controller, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import {
   useLoaderData,
   useNavigate,

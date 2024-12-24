@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import { Dropdown } from 'primereact/dropdown';
+import type { DropdownChangeEvent } from 'primereact/dropdown';
 
 import { requestsListQuery } from 'api/queries';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';

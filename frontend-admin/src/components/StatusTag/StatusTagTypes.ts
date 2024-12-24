@@ -1,5 +1,5 @@
-import { TagProps } from 'primereact/tag';
-import { IconType } from 'primereact/utils';
+import type { TagProps } from 'primereact/tag';
+import type { IconType } from 'primereact/utils';
 
 export type Status = {
   [key: number]: StatusStyle;

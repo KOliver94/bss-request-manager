@@ -1,7 +1,8 @@
 import { forwardRef, Fragment } from 'react';
 
 import { Avatar } from 'primereact/avatar';
-import { AvatarGroup, AvatarGroupProps } from 'primereact/avatargroup';
+import { AvatarGroup } from 'primereact/avatargroup';
+import type { AvatarGroupProps } from 'primereact/avatargroup';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 

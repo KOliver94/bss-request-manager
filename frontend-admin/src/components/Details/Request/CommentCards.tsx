@@ -14,8 +14,10 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { SelectButton } from 'primereact/selectbutton';
 import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
-import { IconType, classNames } from 'primereact/utils';
-import { Control, Controller, useForm } from 'react-hook-form';
+import { classNames } from 'primereact/utils';
+import type { IconType } from 'primereact/utils';
+import { Controller, useForm } from 'react-hook-form';
+import type { Control } from 'react-hook-form';
 import TimeAgo from 'timeago-react';
 
 import { adminApi } from 'api/http';
