@@ -201,13 +201,13 @@ const Todos = ({
   videoId,
 }: TodosProps) => {
   const isMobile = useMobile();
-  const { data: queryResult } = requestId
-    ? useQuery(
-        videoId
-          ? requestVideoTodosListQuery(requestId, videoId)
-          : requestTodosListQuery(requestId),
-      )
-    : { data: undefined };
+  const query = useQuery({
+    ...(videoId
+      ? requestVideoTodosListQuery(Number(requestId), videoId)
+      : requestTodosListQuery(Number(requestId))),
+    enabled: !!requestId,
+  });
+  const { data: queryResult } = requestId ? query : { data: undefined };
   const data = dataProp || queryResult;
   const [todoDialogId, setTodoDialogId] = useState<number>(0);
   const [todoDialogVisible, setTodoDialogVisible] = useState<boolean>(false);

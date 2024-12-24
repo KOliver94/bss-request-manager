@@ -20,7 +20,8 @@ type ReactRouterUseMatchesType = {
 const Breadcrumbs = () => {
   const error = useRouteError();
   const isFetching = useIsFetching();
-  const matches = error ? [] : (useMatches() as ReactRouterUseMatchesType);
+  const matchesHook = useMatches() as ReactRouterUseMatchesType;
+  const matches = error ? [] : matchesHook;
 
   const breadcrumbs: BreadcrumbsType = matches
     // first get rid of any matches that don't have handle and crumb

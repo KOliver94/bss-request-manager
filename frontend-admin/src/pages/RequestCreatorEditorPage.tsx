@@ -104,15 +104,17 @@ const RequestCreatorEditorPage = () => {
       ? requestUpdateMutation(Number(requestId))
       : requestCreateMutation(),
   );
+  const query = useQuery({
+    ...requestRetrieveQuery(Number(requestId)),
+    enabled: !!requestId,
+    refetchInterval: 1000 * 30,
+  });
   const {
     data: queryData,
     dataUpdatedAt,
     error,
   } = requestId
-    ? useQuery({
-        ...requestRetrieveQuery(Number(requestId)),
-        refetchInterval: 1000 * 30,
-      })
+    ? query
     : { data: undefined, dataUpdatedAt: new Date(), error: null };
 
   const [isDataChanged, setIsDataChanged] = useState<boolean>(false);
