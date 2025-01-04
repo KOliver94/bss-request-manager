@@ -59,7 +59,7 @@ django-phonenumber-field = {extras = ["phonenumbers"], version = "8.0.0"}
 django-simple-history = "3.7.0"
 drf-recaptcha = "4.0.2"
 drf-spectacular = "0.28.0"
-google-api-python-client = "2.156.0"
+google-api-python-client = "2.157.0"
 google-auth-httplib2 = "0.2.0"
 google-auth-oauthlib = "1.2.1"
 jsonschema = {extras = ["format"], version = "4.23.0"}
