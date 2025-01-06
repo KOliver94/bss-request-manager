@@ -2,6 +2,39 @@
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[project]
+name = "bss-request-manager-backend"
+authors = [
+    {name = "Olivér Kecskeméty", email = "kecskemety.oliver@simonyi.bme.hu"}
+]
+description = "Workflow Support System for managing video shooting, filming and live streaming requests of Budavári Schönherz Stúdió."
+requires-python = ">=3.13"
+dependencies = [
+    "celery[redis]==5.4.0",
+    "django==5.1.4",
+    "djangorestframework==3.15.2",
+    "djangorestframework_simplejwt==5.3.1",
+    "django-cacheops==7.1",
+    "django-celery-results==2.5.1",
+    "django-cors-headers==4.6.0",
+    "django-filter==24.3",
+    "django-health-check==3.18.3",
+    "django-phonenumber-field[phonenumbers]==8.0.0",
+    "django-simple-history==3.7.0",
+    "drf-recaptcha==4.0.2",
+    "drf-spectacular==0.28.0",
+    "google-api-python-client==2.157.0",
+    "google-auth-httplib2==0.2.0",
+    "google-auth-oauthlib==1.2.1",
+    "jsonschema[format]==4.23.0",
+    "libgravatar==1.0.4",
+    "python-decouple==3.8",
+    "requests==2.32.3",
+    "sentry-sdk==2.19.2",
+    "social-auth-app-django==5.4.2",
+    "whitenoise[brotli]==6.8.2"
+]
+
 [tool.coverage.report]
 fail_under = 90
 ignore_errors = true
@@ -40,35 +73,7 @@ per-file-ignores = [
 profile = "black"
 
 [tool.poetry]
-authors = ["Olivér Kecskeméty <kecskemety.oliver@simonyi.bme.hu>"]
-description = "Workflow Support System for managing video shooting, filming and live streaming requests of Budavári Schönherz Stúdió."
 package-mode = false
-
-[tool.poetry.dependencies]
-python = "^3.13"
-celery = {extras = ["redis"], version = "5.4.0"}
-django = "5.1.4"
-djangorestframework = "3.15.2"
-djangorestframework_simplejwt = "5.3.1"
-django-cacheops = "7.1"
-django-celery-results = "2.5.1"
-django-cors-headers = "4.6.0"
-django-filter = "24.3"
-django-health-check = "3.18.3"
-django-phonenumber-field = {extras = ["phonenumbers"], version = "8.0.0"}
-django-simple-history = "3.7.0"
-drf-recaptcha = "4.0.2"
-drf-spectacular = "0.28.0"
-google-api-python-client = "2.157.0"
-google-auth-httplib2 = "0.2.0"
-google-auth-oauthlib = "1.2.1"
-jsonschema = {extras = ["format"], version = "4.23.0"}
-libgravatar = "1.0.4"
-python-decouple = "3.8"
-requests = "2.32.3"
-sentry-sdk = "2.19.2"
-social-auth-app-django = "5.4.2"
-whitenoise = {extras = ["brotli"], version = "6.8.2"}
 
 [tool.poetry.group.ci]
 optional = true
