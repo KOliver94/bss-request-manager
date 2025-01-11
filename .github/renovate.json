@@ -35,7 +35,7 @@
       "addLabels": ["python"],
       "groupName": "all non-major backend dependencies",
       "groupSlug": "all-minor-patch-backend",
-      "matchManagers": ["poetry"],
+      "matchManagers": ["pep621", "poetry"],
       "matchFileNames": ["backend/**"],
       "matchUpdateTypes": ["minor", "patch"]
     },
