@@ -9,8 +9,8 @@ on:
       - 'frontend-admin/**'
       - '.github/workflows/frontend-admin.yml'
 jobs:
-  admin-dashboard-test:
-    name: Admin dashboard tests
+  run-tests:
+    name: Run tests
     strategy:
       fail-fast: false
       matrix:

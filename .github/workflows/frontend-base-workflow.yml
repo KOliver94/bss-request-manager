@@ -23,7 +23,8 @@ on:
         type: boolean
 
 jobs:
-  frontend-test:
+  run-tests:
+    name: Run tests
     runs-on: ubuntu-latest
     continue-on-error: ${{ inputs.experimental }}
     defaults:
