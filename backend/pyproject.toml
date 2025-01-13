@@ -13,7 +13,7 @@ dependencies = [
     "celery[redis]==5.4.0",
     "django==5.1.4",
     "djangorestframework==3.15.2",
-    "djangorestframework_simplejwt==5.3.1",
+    "djangorestframework_simplejwt==5.4.0",
     "django-cacheops==7.1",
     "django-celery-results==2.5.1",
     "django-cors-headers==4.6.0",
@@ -23,7 +23,7 @@ dependencies = [
     "django-simple-history==3.7.0",
     "drf-recaptcha==4.0.2",
     "drf-spectacular==0.28.0",
-    "google-api-python-client==2.157.0",
+    "google-api-python-client==2.158.0",
     "google-auth-httplib2==0.2.0",
     "google-auth-oauthlib==1.2.1",
     "jsonschema[format]==4.23.0",
@@ -96,12 +96,12 @@ gunicorn = "23.0.0"
 psycopg = {extras = ["c"], version = "3.2.3"}
 
 [tool.poetry.group.test.dependencies]
-model_bakery = "1.20.0"
+model_bakery = "1.20.1"
 pytest = "8.3.4"
 pytest-cov = "6.0.0"
 pytest-django = "4.9.0"
 pytest-xdist = {extras = ["psutil"], version = "3.6.1"}
-responses = "0.25.3"
+responses = "0.25.5"
 time-machine = "2.16.0"
 
 [tool.pytest.ini_options]
