@@ -7,10 +7,10 @@
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",
     "@hookform/resolvers": "3.10.0",
-    "@mui/icons-material": "6.4.0",
-    "@mui/material": "6.4.0",
-    "@mui/x-date-pickers": "7.24.0",
-    "@sentry/react": "8.50.0",
+    "@mui/icons-material": "6.4.1",
+    "@mui/material": "6.4.1",
+    "@mui/x-date-pickers": "7.24.1",
+    "@sentry/react": "8.51.0",
     "axios": "1.7.9",
     "classnames": "2.5.1",
     "date-fns": "4.1.0",
@@ -64,7 +64,7 @@
     "eslint-plugin-react-hooks": "4.6.2",
     "prettier": "3.4.2",
     "source-map-explorer": "2.5.3",
-    "vite": "6.0.9",
+    "vite": "6.0.11",
     "vite-plugin-pwa": "0.21.1"
   }
 }
