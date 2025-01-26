@@ -44,7 +44,7 @@
     ]
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "2.16.2",
+    "@openapitools/openapi-generator-cli": "2.16.3",
     "@tanstack/eslint-plugin-query": "5.64.2",
     "@tanstack/react-query-devtools": "5.64.2",
     "@types/node": "22.10.10",
