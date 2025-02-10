@@ -11,12 +11,12 @@ description = "Workflow Support System for managing video shooting, filming and 
 requires-python = ">=3.13"
 dependencies = [
     "celery[redis]==5.4.0",
-    "django==5.1.5",
+    "django==5.1.6",
     "djangorestframework==3.15.2",
     "djangorestframework_simplejwt==5.4.0",
     "django-cacheops==7.1",
     "django-celery-results==2.5.1",
-    "django-cors-headers==4.6.0",
+    "django-cors-headers==4.7.0",
     "django-filter==24.3",
     "django-health-check==3.18.3",
     "django-phonenumber-field[phonenumbers]==8.0.0",
@@ -32,7 +32,7 @@ dependencies = [
     "requests==2.32.3",
     "sentry-sdk==2.20.0",
     "social-auth-app-django==5.4.2",
-    "whitenoise[brotli]==6.8.2"
+    "whitenoise[brotli]==6.9.0"
 ]
 
 [tool.coverage.report]
@@ -99,7 +99,7 @@ psycopg = {extras = ["c"], version = "3.2.4"}
 model_bakery = "1.20.1"
 pytest = "8.3.4"
 pytest-cov = "6.0.0"
-pytest-django = "4.9.0"
+pytest-django = "4.10.0"
 pytest-xdist = {extras = ["psutil"], version = "3.6.1"}
 responses = "0.25.6"
 time-machine = "2.16.0"
