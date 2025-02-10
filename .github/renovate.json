@@ -18,7 +18,10 @@
     "schedule:weekends",
     "workarounds:all"
   ],
-  "gitIgnoredAuthors": ["66853113+pre-commit-ci[bot]@users.noreply.github.com"],
+  "gitIgnoredAuthors": [
+    "41898282+github-actions[bot]@users.noreply.github.com",
+    "66853113+pre-commit-ci[bot]@users.noreply.github.com"
+  ],
   "packageRules": [
     {
       "description": "Add `docker` label for Dockerfile or docker-compose related updates.",
