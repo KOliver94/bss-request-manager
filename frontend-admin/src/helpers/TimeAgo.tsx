@@ -17,7 +17,7 @@ interface TimeAgoProps extends ComponentProps<'time'> {
   locale?: string;
 }
 
-export function TimeAgo({
+function TimeAgo({
   datetime,
   live = true,
   locale,
@@ -46,3 +46,5 @@ export function TimeAgo({
     </time>
   );
 }
+
+export default TimeAgo;
