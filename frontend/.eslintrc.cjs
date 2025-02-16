@@ -18,12 +18,19 @@ module.exports = {
   plugins: ['jsx-a11y', 'prettier', 'react', 'react-hooks'],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/no-unresolved': [
+      'error',
+      {
+        ignore: ['router/dom'],
+      },
+    ],
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'react/forbid-prop-types': 'off',
     'react/jsx-no-useless-fragment': ['error', { allowExpressions: true }],
-    'react/jsx-props-no-spreading': ['error', { custom: 'ignore' }],
+    'react/jsx-props-no-spreading': 'off',
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
     'react/react-in-jsx-scope': 'off',
+    'react/require-default-props': 'off',
   },
   settings: {
     'import/resolver': {
@@ -32,7 +39,7 @@ module.exports = {
       },
     },
     react: {
-      version: '17.0.2',
+      version: '18.3.1',
     },
   },
 };

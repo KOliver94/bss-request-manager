@@ -26,16 +26,6 @@ export default function Header({
   changeColorOnScroll,
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  useEffect(() => {
-    if (changeColorOnScroll) {
-      window.addEventListener('scroll', headerColorChange);
-    }
-    return function cleanup() {
-      if (changeColorOnScroll) {
-        window.removeEventListener('scroll', headerColorChange);
-      }
-    };
-  });
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -68,6 +58,18 @@ export default function Header({
       <Button className={stylesModule.title}>{brand}</Button>
     </Link>
   );
+
+  useEffect(() => {
+    if (changeColorOnScroll) {
+      window.addEventListener('scroll', headerColorChange);
+    }
+    return function cleanup() {
+      if (changeColorOnScroll) {
+        window.removeEventListener('scroll', headerColorChange);
+      }
+    };
+  });
+
   return (
     <AppBar className={appBarClasses}>
       <Toolbar className={stylesModule.container}>

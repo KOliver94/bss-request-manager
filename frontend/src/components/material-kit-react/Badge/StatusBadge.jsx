@@ -13,6 +13,7 @@ export default function StatusBadge(props) {
 }
 
 StatusBadge.propTypes = {
+  // eslint-disable-next-line consistent-return
   color(props, propName, componentName) {
     if (!/^#[0-9a-fA-F]{6}$/.test(props[propName])) {
       return new Error(
