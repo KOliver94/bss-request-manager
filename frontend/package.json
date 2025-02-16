@@ -7,8 +7,8 @@
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",
     "@hookform/resolvers": "4.1.0",
-    "@mui/icons-material": "6.4.3",
-    "@mui/material": "6.4.3",
+    "@mui/icons-material": "6.4.4",
+    "@mui/material": "6.4.4",
     "@mui/x-date-pickers": "7.26.0",
     "@sentry/react": "9.1.0",
     "axios": "1.7.9",
@@ -23,7 +23,7 @@
     "react-google-recaptcha": "3.1.0",
     "react-hook-form": "7.54.2",
     "react-router": "7.1.5",
-    "sass": "1.84.0",
+    "sass": "1.85.0",
     "yup": "1.6.1"
   },
   "scripts": {
@@ -62,7 +62,7 @@
     "eslint-plugin-prettier": "5.2.3",
     "eslint-plugin-react": "7.37.4",
     "eslint-plugin-react-hooks": "4.6.2",
-    "prettier": "3.5.0",
+    "prettier": "3.5.1",
     "source-map-explorer": "2.5.3",
     "vite": "6.1.0",
     "vite-plugin-pwa": "0.21.1"

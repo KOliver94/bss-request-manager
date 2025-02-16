@@ -95,7 +95,8 @@ repos:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
         files: ^frontend/
-        types: [text]
+        types:
+          - text
         types_or:
           - javascript
           - jsx
@@ -118,22 +119,23 @@ repos:
           - eslint-plugin-react-hooks@4.6.2
           - eslint-plugin-react@7.37.4
           - eslint@8.57.1
-          - prettier@3.5.0
+          - prettier@3.5.1
       - id: eslint
         name: 'Lint TypeScript code (Admin dashboard)'
         files: ^frontend-admin/
-        types: [text]
+        types:
+          - text
         types_or:
           - javascript
           - jsx
           - ts
           - tsx
-        args:
-          [
+        args: [
             --config,
             ./frontend-admin/eslint.config.cjs,
             --rule,
-            'import/no-unresolved: off',
+            'import/no-unresolved:
+            off',
             --fix,
           ]
         additional_dependencies:
