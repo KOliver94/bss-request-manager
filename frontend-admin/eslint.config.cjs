@@ -1,16 +1,18 @@
-import { fixupPluginRules } from '@eslint/compat';
-import eslint from '@eslint/js';
-import pluginQuery from '@tanstack/eslint-plugin-query';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
-import pluginImport from 'eslint-plugin-import';
-import pluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import pluginReact from 'eslint-plugin-react';
-import pluginReactHooks from 'eslint-plugin-react-hooks';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+const { fixupPluginRules } = require('@eslint/compat');
+const eslint = require('@eslint/js');
+const pluginQuery = require('@tanstack/eslint-plugin-query');
+const eslintConfigPrettier = require('eslint-config-prettier');
+const pluginImport = require('eslint-plugin-import');
+const pluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
+const pluginReact = require('eslint-plugin-react');
+const pluginReactHooks = require('eslint-plugin-react-hooks');
+const globals = require('globals');
+const tseslint = require('typescript-eslint');
+const path = require('path');
 
-export default tseslint.config(
+const currentDir = path.resolve(__dirname);
+
+module.exports = tseslint.config(
   eslint.configs.recommended,
   eslintConfigPrettier,
   pluginImport.flatConfigs.recommended,
@@ -19,7 +21,7 @@ export default tseslint.config(
   pluginReact.configs.flat.recommended,
   pluginReact.configs.flat['jsx-runtime'],
   tseslint.configs.strict, // TODO: Use strict-type-checked
-  { ignores: ['**/eslint.config.mjs', '**/postcss.config.cjs'] },
+  { ignores: ['**/eslint.config.cjs', '**/postcss.config.cjs'] },
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     languageOptions: {
@@ -29,7 +31,7 @@ export default tseslint.config(
         ecmaVersion: 'latest',
         projectService: true,
         sourceType: 'module',
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: currentDir,
       },
     },
     linterOptions: {
@@ -70,21 +72,23 @@ export default tseslint.config(
     },
     settings: {
       'import/resolver': {
-        node: { paths: ['src'] },
-        typescript: true,
-      },
-      'import/resolver-next': [
-        createTypeScriptImportResolver({
+        node: {
+          paths: [path.resolve(currentDir, 'src')],
+        },
+        typescript: {
           alwaysTryTypes: true,
-          project: ['tsconfig.json', 'tsconfig.node.json'],
-        }),
-      ],
+          project: [
+            path.resolve(currentDir, 'tsconfig.json'),
+            path.resolve(currentDir, 'tsconfig.node.json'),
+          ],
+        },
+      },
     },
   },
   {
     settings: {
       react: {
-        version: '18.3.1',
+        version: '19.0.0',
       },
     },
   },

@@ -95,6 +95,7 @@ repos:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
         files: ^frontend/
+        types: [text]
         types_or:
           - javascript
           - jsx
@@ -121,12 +122,13 @@ repos:
       - id: eslint
         name: 'Lint TypeScript code (Admin dashboard)'
         files: ^frontend-admin/
+        types: [text]
         types_or:
           - javascript
           - jsx
           - ts
           - tsx
-        args: [--config, ./frontend-admin/eslint.config.mjs, --fix]
+        args: [--config, ./frontend-admin/eslint.config.cjs, --fix]
         additional_dependencies:
           - '@eslint/compat@1.2.6'
           - '@eslint/js@9.20.0'
