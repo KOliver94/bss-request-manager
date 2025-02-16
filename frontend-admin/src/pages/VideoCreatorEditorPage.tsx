@@ -324,13 +324,17 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   {...field}
                   checked={field.value || false}
-                  className="w-full"
                   id={field.name}
                   offIcon="bi bi-scissors"
                   offLabel="Vágandó"
                   onChange={field.onChange}
                   onIcon="bi bi-scissors"
                   onLabel="Megvágva"
+                  pt={{
+                    root: {
+                      className: 'w-full',
+                    },
+                  }}
                   value={undefined}
                 />
               </div>
@@ -345,13 +349,17 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   {...field}
                   checked={field.value || false}
-                  className="w-full"
                   id={field.name}
                   offIcon="bi bi-file-earmark-play"
                   offLabel="Kódolásra vár"
                   onChange={field.onChange}
                   onIcon="bi bi-file-earmark-play"
                   onLabel="Kikódolva"
+                  pt={{
+                    root: {
+                      className: 'w-full',
+                    },
+                  }}
                   value={undefined}
                 />
               </div>
@@ -366,13 +374,17 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   {...field}
                   checked={field.value || false}
-                  className="w-full"
                   id={field.name}
                   offIcon="bi bi-archive"
                   offLabel="Archiválandó"
                   onChange={field.onChange}
                   onIcon="bi bi-archive"
                   onLabel="Archiválva"
+                  pt={{
+                    root: {
+                      className: 'w-full',
+                    },
+                  }}
                   value={undefined}
                 />
               </div>
