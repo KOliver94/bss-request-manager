@@ -8,7 +8,8 @@ import {
 import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
-import { Dialog, DialogProps } from 'primereact/dialog';
+import { Dialog } from 'primereact/dialog';
+import type { DialogProps } from 'primereact/dialog';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Message } from 'primereact/message';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -128,7 +129,15 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
           }, 500);
         };
       }
-    }, [ratingIdParam, videoId, visible]);
+    }, [
+      isRated,
+      queryClient,
+      ratingIdParam,
+      requestId,
+      reset,
+      videoId,
+      visible,
+    ]);
 
     const onSubmit = async (data: IRating) => {
       setLoading(true);

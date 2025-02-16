@@ -2,7 +2,8 @@ import { Button } from 'primereact/button';
 import { ButtonGroup } from 'primereact/buttongroup';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
-import { Control, Controller } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
+import type { Control } from 'react-hook-form';
 
 import { useToast } from 'providers/ToastProvider';
 import { RequestAdditionalDataRecordingType } from 'types/additionalDataTypes';

@@ -2,7 +2,8 @@ import { forwardRef, useEffect } from 'react';
 
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
-import { Dialog, DialogProps } from 'primereact/dialog';
+import { Dialog } from 'primereact/dialog';
+import type { DialogProps } from 'primereact/dialog';
 import { Controller, useForm } from 'react-hook-form';
 
 interface AcceptRejectDialogProps extends DialogProps {
@@ -20,7 +21,7 @@ const AiredAddDialog = forwardRef<
 
   useEffect(() => {
     reset();
-  }, [visible]);
+  }, [reset, visible]);
 
   const renderFooter = () => {
     return (

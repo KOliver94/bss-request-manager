@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { Button } from 'primereact/button';
-import {
+import type {
   DataTableFilterMetaData,
   DataTableOperatorFilterMetaData,
 } from 'primereact/datatable';

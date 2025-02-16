@@ -1,10 +1,12 @@
 import { forwardRef, useEffect } from 'react';
 
 import { Button } from 'primereact/button';
-import { Dialog, DialogProps } from 'primereact/dialog';
+import { Dialog } from 'primereact/dialog';
+import type { DialogProps } from 'primereact/dialog';
 import { SelectButton } from 'primereact/selectbutton';
 import { ToggleButton } from 'primereact/togglebutton';
-import { IconType, classNames } from 'primereact/utils';
+import { classNames } from 'primereact/utils';
+import type { IconType } from 'primereact/utils';
 import { Controller, useForm } from 'react-hook-form';
 
 import { isAdmin } from 'helpers/LocalStorageHelper';
@@ -54,7 +56,7 @@ const AcceptRejectDialog = forwardRef<
         failed: failed || null,
       };
       reset({ ...defaultValues });
-    }, [visible]);
+    }, [accepted, canceled, failed, reset, visible]);
 
     const acceptOptions: AcceptOption[] = [
       {

@@ -1,7 +1,7 @@
 import { forwardRef, useState } from 'react';
 
-import {
-  AutoComplete,
+import { AutoComplete } from 'primereact/autocomplete';
+import type {
   AutoCompleteCompleteEvent,
   AutoCompleteProps,
 } from 'primereact/autocomplete';

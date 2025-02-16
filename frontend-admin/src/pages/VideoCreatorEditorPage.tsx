@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -8,7 +8,8 @@ import { InputText } from 'primereact/inputtext';
 import { Message } from 'primereact/message';
 import { SplitButton } from 'primereact/splitbutton';
 import { ToggleButton } from 'primereact/togglebutton';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import {
   useLoaderData,
   useNavigate,
@@ -63,24 +64,26 @@ export async function loader({ params }: any) {
 }
 
 const VideoCreatorEditorPage = () => {
-  const defaultValues = {
-    additional_data: {
-      archiving: {
-        hq_archive: false,
+  const defaultValues = useMemo(() => {
+    return {
+      additional_data: {
+        archiving: {
+          hq_archive: false,
+        },
+        coding: {
+          website: false,
+        },
+        editing_done: false,
+        length: undefined,
+        publishing: {
+          website: '',
+        },
       },
-      coding: {
-        website: false,
-      },
-      editing_done: false,
-      length: undefined,
-      publishing: {
-        website: '',
-      },
-    },
-    editor: null,
-    id: 0,
-    title: '',
-  };
+      editor: null,
+      id: 0,
+      title: '',
+    };
+  }, []);
 
   const { control, handleSubmit, reset, setError } = useForm<IVideoCreator>({
     defaultValues,
@@ -93,15 +96,17 @@ const VideoCreatorEditorPage = () => {
       ? requestVideoUpdateMutation(Number(requestId), Number(videoId))
       : requestVideoCreateMutation(Number(requestId)),
   );
+  const query = useQuery({
+    ...requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
+    enabled: !!requestId && !!videoId,
+    refetchInterval: 1000 * 30,
+  });
   const {
     data: queryData,
     dataUpdatedAt,
     error,
   } = requestId && videoId
-    ? useQuery({
-        ...requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
-        refetchInterval: 1000 * 30,
-      })
+    ? query
     : { data: undefined, dataUpdatedAt: new Date(), error: null };
 
   const [isDataChanged, setIsDataChanged] = useState<boolean>(false);
@@ -136,13 +141,13 @@ const VideoCreatorEditorPage = () => {
         },
       });
     }
-  }, [loaderData]);
+  }, [defaultValues, loaderData, reset]);
 
   useEffect(() => {
     if (requestId && videoId && loaderData !== queryData) {
       setIsDataChanged(true);
     }
-  }, [queryData]);
+  }, [loaderData, queryData, requestId, videoId]);
 
   const onReload = () => {
     void revalidator.revalidate();
@@ -319,13 +324,17 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   {...field}
                   checked={field.value || false}
-                  className="w-full"
                   id={field.name}
                   offIcon="bi bi-scissors"
                   offLabel="Vágandó"
                   onChange={field.onChange}
                   onIcon="bi bi-scissors"
                   onLabel="Megvágva"
+                  pt={{
+                    root: {
+                      className: 'w-full',
+                    },
+                  }}
                   value={undefined}
                 />
               </div>
@@ -340,13 +349,17 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   {...field}
                   checked={field.value || false}
-                  className="w-full"
                   id={field.name}
                   offIcon="bi bi-file-earmark-play"
                   offLabel="Kódolásra vár"
                   onChange={field.onChange}
                   onIcon="bi bi-file-earmark-play"
                   onLabel="Kikódolva"
+                  pt={{
+                    root: {
+                      className: 'w-full',
+                    },
+                  }}
                   value={undefined}
                 />
               </div>
@@ -361,13 +374,17 @@ const VideoCreatorEditorPage = () => {
                 <ToggleButton
                   {...field}
                   checked={field.value || false}
-                  className="w-full"
                   id={field.name}
                   offIcon="bi bi-archive"
                   offLabel="Archiválandó"
                   onChange={field.onChange}
                   onIcon="bi bi-archive"
                   onLabel="Archiválva"
+                  pt={{
+                    root: {
+                      className: 'w-full',
+                    },
+                  }}
                   value={undefined}
                 />
               </div>

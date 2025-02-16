@@ -155,6 +155,7 @@ function RequestCreatorPage() {
           })
           .catch((e) => {
             if (isCancel(e)) {
+              // Request was cancelled, continue
             }
           });
       } finally {

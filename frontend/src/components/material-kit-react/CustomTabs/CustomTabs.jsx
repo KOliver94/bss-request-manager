@@ -25,8 +25,8 @@ export default function CustomTabs({
 }) {
   const [value, setValue] = useState(activeTab);
 
-  const handleChange = (event, value) => {
-    setValue(value);
+  const handleChange = (event, val) => {
+    setValue(val);
   };
   const cardTitle = classNames({
     [stylesModule.cardTitle]: true,
@@ -66,6 +66,7 @@ export default function CustomTabs({
                   iconWrapper: stylesModule.tabIconWrapper,
                   textColorInherit: stylesModule.tabTextColorInherit,
                 }}
+                // eslint-disable-next-line react/no-array-index-key
                 key={key}
                 label={prop.tabName}
                 iconPosition="start"
@@ -78,6 +79,7 @@ export default function CustomTabs({
       <CardBody>
         {tabs.map((prop, key) => {
           if (key === value) {
+            // eslint-disable-next-line react/no-array-index-key
             return <div key={key}>{prop.tabContent}</div>;
           }
           return null;

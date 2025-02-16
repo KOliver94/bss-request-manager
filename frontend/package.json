@@ -33,7 +33,7 @@
     "preview": "vite preview",
     "analyze": "source-map-explorer 'build/static/frontend/*.js' --no-border-checks",
     "format": "prettier --write src/**/*.{js,jsx,json,css,scss}",
-    "lint": "eslint src/",
+    "lint": "eslint --ext .js,.jsx src/",
     "lint:fix": "eslint --fix --ext .js,.jsx src/",
     "check-eslint-config": "eslint-config-prettier src/index.js",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 public/logo.svg"

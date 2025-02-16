@@ -3,11 +3,8 @@ import { forwardRef, lazy, Suspense, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
-import {
-  DataTable,
-  DataTableProps,
-  DataTableValueArray,
-} from 'primereact/datatable';
+import { DataTable } from 'primereact/datatable';
+import type { DataTableProps, DataTableValueArray } from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
 
 import { VideoAdminRetrieve } from 'api/models';

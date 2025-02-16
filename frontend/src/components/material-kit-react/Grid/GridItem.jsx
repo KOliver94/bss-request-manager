@@ -7,7 +7,7 @@ import stylesModule from './GridItem.module.scss';
 
 export default function GridItem({ children, className = '', ...rest }) {
   return (
-    <Grid item {...rest} className={stylesModule.grid + ' ' + className}>
+    <Grid item {...rest} className={`${stylesModule.grid} ${className}`}>
       {children}
     </Grid>
   );

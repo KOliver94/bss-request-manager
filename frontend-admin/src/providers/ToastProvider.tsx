@@ -5,7 +5,8 @@ import React, {
   createContext,
 } from 'react';
 
-import { ToastMessage, Toast } from 'primereact/toast';
+import { Toast } from 'primereact/toast';
+import type { ToastMessage } from 'primereact/toast';
 
 type MessageType = ToastMessage | ToastMessage[];
 
@@ -41,10 +42,10 @@ export const toast = new (class Toaster {
 const ToastContext = createContext<ToastContextValue>(initialValue);
 
 export const ToastProvider = (props: ToastProviderProps) => {
-  const toast = useRef<Toast>(null);
+  const toastRef = useRef<Toast>(null);
 
   const showToast = (message: MessageType) => {
-    toast.current?.show(message);
+    toastRef.current?.show(message);
   };
 
   useLayoutEffect(() => {
@@ -58,15 +59,15 @@ export const ToastProvider = (props: ToastProviderProps) => {
     };
   }, []);
 
-  const clearToasts = () => toast.current?.clear();
+  const clearToasts = () => toastRef.current?.clear();
+
+  const contextValue = React.useMemo(() => ({ clearToasts, showToast }), []);
 
   return (
-    <>
-      <Toast ref={toast} position="bottom-left" />
-      <ToastContext.Provider value={{ clearToasts, showToast }}>
-        {props.children}
-      </ToastContext.Provider>
-    </>
+    <ToastContext.Provider value={contextValue}>
+      <Toast ref={toastRef} position="bottom-left" />
+      {props.children}
+    </ToastContext.Provider>
   );
 };
 

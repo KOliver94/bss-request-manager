@@ -1,5 +1,7 @@
 import { wrapCreateBrowserRouterV7 } from '@sentry/react';
 import { QueryClient } from '@tanstack/react-query';
+import { BlockUI } from 'primereact/blockui';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -47,6 +49,9 @@ const router = sentryCreateBrowserRouter(
     <Route
       path="/"
       element={<Layout />}
+      hydrateFallbackElement={
+        <BlockUI blocked={true} fullScreen template={<ProgressSpinner />} />
+      }
       errorElement={
         <Layout>
           <ErrorPage />

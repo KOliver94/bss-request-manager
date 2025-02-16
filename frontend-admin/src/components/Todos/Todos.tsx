@@ -4,8 +4,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
-import {
-  Panel,
+import { Panel } from 'primereact/panel';
+import type {
   PanelFooterTemplateOptions,
   PanelHeaderTemplateOptions,
 } from 'primereact/panel';
@@ -13,7 +13,6 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 import { Link } from 'react-router';
-import TimeAgo from 'timeago-react';
 
 import { adminApi } from 'api/http';
 import { TodoAdminListRetrieve } from 'api/models/todo-admin-list-retrieve';
@@ -22,6 +21,7 @@ import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import TimeAgo from 'helpers/TimeAgo';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 
@@ -201,13 +201,13 @@ const Todos = ({
   videoId,
 }: TodosProps) => {
   const isMobile = useMobile();
-  const { data: queryResult } = requestId
-    ? useQuery(
-        videoId
-          ? requestVideoTodosListQuery(requestId, videoId)
-          : requestTodosListQuery(requestId),
-      )
-    : { data: undefined };
+  const query = useQuery({
+    ...(videoId
+      ? requestVideoTodosListQuery(Number(requestId), videoId)
+      : requestTodosListQuery(Number(requestId))),
+    enabled: !!requestId,
+  });
+  const { data: queryResult } = requestId ? query : { data: undefined };
   const data = dataProp || queryResult;
   const [todoDialogId, setTodoDialogId] = useState<number>(0);
   const [todoDialogVisible, setTodoDialogVisible] = useState<boolean>(false);

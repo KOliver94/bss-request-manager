@@ -3,7 +3,8 @@ import { forwardRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
-import { Dialog, DialogProps } from 'primereact/dialog';
+import { Dialog } from 'primereact/dialog';
+import type { DialogProps } from 'primereact/dialog';
 import { Controller, useForm } from 'react-hook-form';
 
 import { UserNestedDetail } from 'api/models/user-nested-detail';

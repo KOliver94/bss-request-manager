@@ -8,7 +8,8 @@ import {
 import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { ConfirmPopup } from 'primereact/confirmpopup';
-import { Dialog, DialogProps } from 'primereact/dialog';
+import { Dialog } from 'primereact/dialog';
+import type { DialogProps } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Message } from 'primereact/message';
@@ -98,7 +99,7 @@ const TodoDialog = forwardRef<
         }
       };
     }
-  }, [todoId, visible]);
+  }, [queryClient, reset, todoId, visible]);
 
   const onSubmit = async (data: ITodo) => {
     const invalidateQueries = async () => {

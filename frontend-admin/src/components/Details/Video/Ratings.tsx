@@ -6,13 +6,13 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
-import TimeAgo from 'timeago-react';
 
 import { RatingAdminListRetrieve } from 'api/models';
 import { requestVideoRatingsListQuery } from 'api/queries';
 import RatingDialog from 'components/RatingDialog/RatingDialog';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import TimeAgo from 'helpers/TimeAgo';
 import { UI_AVATAR_URL } from 'localConstants';
 
 interface RatingAdminListDates // TODO: Rename?

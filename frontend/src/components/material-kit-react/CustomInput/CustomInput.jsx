@@ -23,8 +23,8 @@ export default function CustomInput(props) {
   } = props;
 
   const labelClasses = classNames({
-    [' ' + stylesModule.labelRootError]: error,
-    [' ' + stylesModule.labelRootSuccess]: success && !error,
+    [` ${stylesModule.labelRootError}`]: error,
+    [` ${stylesModule.labelRootSuccess}`]: success && !error,
   });
   const underlineClasses = classNames({
     [stylesModule.underlineError]: error,
@@ -52,7 +52,7 @@ export default function CustomInput(props) {
     <FormControl {...formControlProps} className={formControlClasses}>
       {labelText !== undefined ? (
         <InputLabel
-          className={stylesModule.labelRoot + ' ' + labelClasses}
+          className={`${stylesModule.labelRoot} ${labelClasses}`}
           htmlFor={id}
           {...labelProps}
         >

@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -12,8 +12,9 @@ import { Message } from 'primereact/message';
 import { ProgressBar } from 'primereact/progressbar';
 import { SelectButton } from 'primereact/selectbutton';
 import { SplitButton } from 'primereact/splitbutton';
-import { IconType } from 'primereact/utils';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import type { IconType } from 'primereact/utils';
+import { Controller, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import {
   useLoaderData,
   useNavigate,
@@ -72,24 +73,26 @@ export async function loader({ params }: any) {
 }
 
 const RequestCreatorEditorPage = () => {
-  const defaultValues = {
-    comment: '',
-    createMore: false,
-    deadline: null,
-    end_datetime: null,
-    place: '',
-    requester: null,
-    requester_email: '',
-    requester_first_name: '',
-    requester_last_name: '',
-    requester_mobile: '',
-    requesterType: 'self',
-    responsible: null,
-    send_notification: false,
-    start_datetime: null,
-    title: '',
-    type: '',
-  };
+  const defaultValues = useMemo(() => {
+    return {
+      comment: '',
+      createMore: false,
+      deadline: null,
+      end_datetime: null,
+      place: '',
+      requester: null,
+      requester_email: '',
+      requester_first_name: '',
+      requester_last_name: '',
+      requester_mobile: '',
+      requesterType: 'self',
+      responsible: null,
+      send_notification: false,
+      start_datetime: null,
+      title: '',
+      type: '',
+    };
+  }, []);
 
   const { control, handleSubmit, reset, setError, setValue, watch } =
     useForm<IRequestCreator>({
@@ -103,15 +106,17 @@ const RequestCreatorEditorPage = () => {
       ? requestUpdateMutation(Number(requestId))
       : requestCreateMutation(),
   );
+  const query = useQuery({
+    ...requestRetrieveQuery(Number(requestId)),
+    enabled: !!requestId,
+    refetchInterval: 1000 * 30,
+  });
   const {
     data: queryData,
     dataUpdatedAt,
     error,
   } = requestId
-    ? useQuery({
-        ...requestRetrieveQuery(Number(requestId)),
-        refetchInterval: 1000 * 30,
-      })
+    ? query
     : { data: undefined, dataUpdatedAt: new Date(), error: null };
 
   const [isDataChanged, setIsDataChanged] = useState<boolean>(false);
@@ -135,13 +140,13 @@ const RequestCreatorEditorPage = () => {
         start_datetime: new Date(loaderData.start_datetime),
       });
     }
-  }, [loaderData]);
+  }, [defaultValues, loaderData, reset]);
 
   useEffect(() => {
     if (requestId && loaderData !== queryData) {
       setIsDataChanged(true);
     }
-  }, [queryData]);
+  }, [loaderData, queryData, requestId]);
 
   const buttonOptions = [
     {

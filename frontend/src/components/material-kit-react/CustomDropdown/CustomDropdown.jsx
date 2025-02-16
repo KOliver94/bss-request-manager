@@ -76,6 +76,7 @@ export default function CustomDropdown({
         );
         break;
       }
+      // eslint-disable-next-line no-case-declarations
       const ButtonIcon = buttonIcon;
       icon = <ButtonIcon className={stylesModule.buttonIcon} />;
       break;
@@ -110,6 +111,7 @@ export default function CustomDropdown({
         transition
         disablePortal
         placement={
+          // eslint-disable-next-line no-nested-ternary
           dropup
             ? left
               ? 'top-start'
@@ -150,6 +152,7 @@ export default function CustomDropdown({
                       if (prop.divider) {
                         return (
                           <Divider
+                            // eslint-disable-next-line react/no-array-index-key
                             key={key}
                             className={stylesModule.dropdownDividerItem}
                           />
@@ -159,6 +162,7 @@ export default function CustomDropdown({
                     }
                     return (
                       <MenuItem
+                        // eslint-disable-next-line react/no-array-index-key
                         key={key}
                         onClick={() => handleClose(prop)}
                         className={dropdownItem}
