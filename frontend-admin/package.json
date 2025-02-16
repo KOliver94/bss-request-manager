@@ -27,7 +27,7 @@
     "analyze": "source-map-explorer 'build/static/frontend-admin/*.js' --no-border-checks",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css}",
     "lint": "eslint src/",
-    "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx src/",
+    "lint:fix": "eslint --fix src/",
     "check-eslint-config": "eslint-config-prettier src/index.tsx",
     "generate-client": "openapi-generator-cli generate && prettier --write src/api/**/*.ts"
   },
