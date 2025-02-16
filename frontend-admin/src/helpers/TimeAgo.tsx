@@ -1,4 +1,5 @@
 import { ComponentProps, useEffect, useRef } from 'react';
+
 import { format, cancel, render } from 'timeago.js';
 import type { Opts, TDate } from 'timeago.js/lib/interface';
 

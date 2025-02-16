@@ -1,5 +1,7 @@
 import { wrapCreateBrowserRouterV7 } from '@sentry/react';
 import { QueryClient } from '@tanstack/react-query';
+import { BlockUI } from 'primereact/blockui';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -15,8 +17,6 @@ import {
 import { requestRetrieveQuery, requestVideoRetrieveQuery } from 'api/queries';
 import Layout from 'Layout';
 import ErrorPage from 'pages/ErrorPage';
-import { BlockUI } from 'primereact/blockui';
-import { ProgressSpinner } from 'primereact/progressspinner';
 
 export const queryClient = new QueryClient();
 
