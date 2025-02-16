@@ -15,6 +15,8 @@ import {
 import { requestRetrieveQuery, requestVideoRetrieveQuery } from 'api/queries';
 import Layout from 'Layout';
 import ErrorPage from 'pages/ErrorPage';
+import { BlockUI } from 'primereact/blockui';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 export const queryClient = new QueryClient();
 
@@ -47,6 +49,9 @@ const router = sentryCreateBrowserRouter(
     <Route
       path="/"
       element={<Layout />}
+      hydrateFallbackElement={
+        <BlockUI blocked={true} fullScreen template={<ProgressSpinner />} />
+      }
       errorElement={
         <Layout>
           <ErrorPage />
