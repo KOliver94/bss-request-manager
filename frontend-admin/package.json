@@ -9,7 +9,7 @@
     "axios": "1.7.9",
     "bootstrap-icons": "1.11.3",
     "jwt-decode": "4.0.0",
-    "primeflex": "3.3.1",
+    "primeflex": "4.0.0",
     "primeicons": "7.0.0",
     "primelocale": "primefaces/primelocale",
     "primereact": "10.9.2",
