@@ -12,7 +12,7 @@ import type {
 import { ProgressBar } from 'primereact/progressbar';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
-import { Link } from 'react-router';
+import { href, Link } from 'react-router';
 
 import { adminApi } from 'api/http';
 import { TodoAdminListRetrieve } from 'api/models/todo-admin-list-retrieve';
@@ -115,14 +115,19 @@ const Todo = ({ data, onEdit }: TodoProps) => {
         <div className="flex flex-column gap-1">
           <Link
             className="cursor-pointer no-underline text-color"
-            to={`/requests/${data.request.id}`}
+            to={href('/requests/:requestId', {
+              requestId: data.request.id.toString(),
+            })}
           >
             <span className="font-bold">{data.request.title}</span>
           </Link>
           {data.video && (
             <Link
               className="cursor-pointer no-underline text-color"
-              to={`/requests/${data.request.id}/videos/${data.video.id}`}
+              to={href('/requests/:requestId/videos/:videoId', {
+                requestId: data.request.id.toString(),
+                videoId: data.video.id.toString(),
+              })}
             >
               <span className="font-bold text-xs">{data.video.title}</span>
             </Link>

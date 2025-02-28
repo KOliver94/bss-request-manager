@@ -10,7 +10,7 @@ import { StyleClass } from 'primereact/styleclass';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
-import { useNavigate, useParams } from 'react-router';
+import { href, useNavigate, useParams } from 'react-router';
 
 import { adminApi } from 'api/http';
 import { requestVideoUpdateMutation } from 'api/mutations';
@@ -348,7 +348,10 @@ const VideoDetailsPage = () => {
                 icon: 'pi pi-pencil',
               }}
               linkProps={{
-                to: `/requests/${requestId}/videos/${videoId}/edit`,
+                to: href('/requests/:requestId/videos/:videoId/edit', {
+                  requestId: requestId?.toString(),
+                  videoId: videoId?.toString(),
+                }),
               }}
             />
             <Button
@@ -385,7 +388,11 @@ const VideoDetailsPage = () => {
                       icon: 'pi pi-user',
                       label: 'Profil',
                     }}
-                    linkProps={{ to: `/users/${queryResult.editor.id}` }}
+                    linkProps={{
+                      to: href('/users/:userId', {
+                        userId: queryResult.editor.id.toString(),
+                      }),
+                    }}
                   />
                 )
               }

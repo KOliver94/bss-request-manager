@@ -6,6 +6,7 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import type { DataTableProps, DataTableValueArray } from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
+import { href } from 'react-router';
 
 import { VideoAdminRetrieve } from 'api/models';
 import { requestVideosListQuery } from 'api/queries';
@@ -90,7 +91,12 @@ const VideosDataTable = forwardRef<
             className: 'p-button-outlined',
             icon: 'pi pi-sign-in',
           }}
-          linkProps={{ to: `/requests/${requestId}/videos/${id}` }}
+          linkProps={{
+            to: href('/requests/:requestId/videos/:videoId', {
+              requestId: requestId.toString(),
+              videoId: id.toString(),
+            }),
+          }}
         />
       </div>
     );
