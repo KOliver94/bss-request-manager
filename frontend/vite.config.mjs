@@ -2,6 +2,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig(() => {
   return {
@@ -21,6 +22,7 @@ export default defineConfig(() => {
     plugins: [
       basicSsl(),
       react(),
+      tsconfigPaths(),
       VitePWA({
         includeAssests: [
           'apple-touch-icon.png',
@@ -70,10 +72,5 @@ export default defineConfig(() => {
         },
       }),
     ],
-    resolve: {
-      alias: {
-        src: '/src',
-      },
-    },
   };
 });

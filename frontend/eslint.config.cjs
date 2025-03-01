@@ -74,16 +74,20 @@ module.exports = [
     settings: {
       'import/resolver': {
         node: {
-          extensions: ['.js', '.jsx'],
+          extensions: ['.js', '.jsx', '.mjs'],
           paths: [path.resolve(currentDir, 'src')],
           moduleDirectory: ['node_modules', 'src'],
         },
         typescript: {
           alwaysTryTypes: true,
+          project: [
+            path.resolve(currentDir, 'tsconfig.json'),
+            path.resolve(currentDir, 'tsconfig.node.json'),
+          ],
         },
       },
       'import/parsers': {
-        '@typescript-eslint/parser': ['.js', '.jsx'],
+        '@typescript-eslint/parser': ['.js', '.jsx', '.mjs'],
       },
     },
   },

@@ -68,6 +68,7 @@
     "prettier": "3.5.2",
     "source-map-explorer": "2.5.3",
     "vite": "6.2.0",
-    "vite-plugin-pwa": "0.21.1"
+    "vite-plugin-pwa": "0.21.1",
+    "vite-tsconfig-paths": "5.1.4"
   }
 }
