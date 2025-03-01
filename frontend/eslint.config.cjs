@@ -7,7 +7,6 @@ const importPlugin = require('eslint-plugin-import');
 const prettierPluginRecommended = require('eslint-plugin-prettier/recommended');
 const prettierConfig = require('eslint-config-prettier');
 const path = require('path');
-const { off } = require('process');
 
 const currentDir = path.resolve(__dirname);
 
