@@ -6,6 +6,7 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import { DataTable } from 'primereact/datatable';
 import { Divider } from 'primereact/divider';
 import { Skeleton } from 'primereact/skeleton';
+import { href } from 'react-router';
 
 import { adminApi } from 'api/http';
 import { RequestAdminList } from 'api/models/request-admin-list';
@@ -228,7 +229,9 @@ const LandingPage = () => {
           className: 'p-button-outlined',
           icon: 'pi pi-sign-in',
         }}
-        linkProps={{ to: `/requests/${id}` }}
+        linkProps={{
+          to: href('/requests/:requestId', { requestId: id.toString() }),
+        }}
       />
     );
   };
@@ -241,7 +244,12 @@ const LandingPage = () => {
           className: 'p-button-outlined',
           icon: 'pi pi-sign-in',
         }}
-        linkProps={{ to: `/requests/${request_id}/videos/${id}` }}
+        linkProps={{
+          to: href('/requests/:requestId/videos/:videoId', {
+            requestId: request_id.toString(),
+            videoId: id.toString(),
+          }),
+        }}
       />
     );
   };

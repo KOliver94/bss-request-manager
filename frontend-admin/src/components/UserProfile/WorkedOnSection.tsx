@@ -9,6 +9,7 @@ import { Divider } from 'primereact/divider';
 import { InputSwitch } from 'primereact/inputswitch';
 import { SplitButton } from 'primereact/splitbutton';
 import { Controller, useForm } from 'react-hook-form';
+import { href } from 'react-router';
 
 import { adminApi } from 'api/http';
 import { UserAdminWorkedOn } from 'api/models/user-admin-worked-on';
@@ -66,7 +67,9 @@ const WorkedOnSection = ({ userId }: WorkedOnSectionProps) => {
           className: 'p-button-outlined',
           icon: 'pi pi-sign-in',
         }}
-        linkProps={{ to: `/requests/${id}` }}
+        linkProps={{
+          to: href('/requests/:requestId', { requestId: id.toString() }),
+        }}
       />
     );
   };

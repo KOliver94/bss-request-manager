@@ -7,6 +7,7 @@ import type { ColumnFilterElementTemplateOptions } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import type { DataTableProps, DataTableValueArray } from 'primereact/datatable';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
+import { href } from 'react-router';
 
 import { UserAdminList } from 'api/models';
 import { usersListQuery } from 'api/queries';
@@ -45,7 +46,7 @@ const UsersDataTable = forwardRef<
           className: 'p-button-outlined',
           icon: 'pi pi-id-card',
         }}
-        linkProps={{ to: `/users/${id}` }}
+        linkProps={{ to: href('/users/:userId', { userId: id.toString() }) }}
       />
     );
   };

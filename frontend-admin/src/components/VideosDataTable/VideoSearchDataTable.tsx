@@ -4,6 +4,7 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import type { DataTableProps, DataTableValueArray } from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
+import { href } from 'react-router';
 
 import { VideoAdminSearch } from 'api/models';
 import LinkButton from 'components/LinkButton/LinkButton';
@@ -93,7 +94,12 @@ const VideoSearchDataTable = forwardRef<
           className: 'p-button-outlined',
           icon: 'pi pi-sign-in',
         }}
-        linkProps={{ to: `/requests/${request_id}/videos/${id}` }}
+        linkProps={{
+          to: href('/requests/:requestId/videos/:videoId', {
+            requestId: request_id.toString(),
+            videoId: id.toString(),
+          }),
+        }}
       />
     );
   };

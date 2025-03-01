@@ -12,7 +12,7 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router';
+import { href, useNavigate, useParams } from 'react-router';
 
 import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
@@ -306,7 +306,9 @@ const RequestDetailsPage = () => {
         }}
         linkProps={{
           className: isMobile ? 'w-full' : '',
-          to: `/requests/${data.id}/videos/new`,
+          to: href('/requests/:requestId/videos/new', {
+            requestId: data.id.toString(),
+          }),
         }}
       />
     </div>
@@ -472,7 +474,11 @@ const RequestDetailsPage = () => {
                 className: 'mr-2 p-button p-button-rounded',
                 icon: 'pi pi-pencil',
               }}
-              linkProps={{ to: `/requests/${requestId}/edit` }}
+              linkProps={{
+                to: href('/requests/:requestId/edit', {
+                  requestId: requestId,
+                }),
+              }}
             />
             <Button
               className="p-button-danger p-button-rounded"
@@ -550,7 +556,11 @@ const RequestDetailsPage = () => {
                       icon: 'pi pi-user',
                       label: 'Profil',
                     }}
-                    linkProps={{ to: `/users/${data.responsible.id}` }}
+                    linkProps={{
+                      to: href('/users/:userId', {
+                        userId: data.responsible.id.toString(),
+                      }),
+                    }}
                   />
                 )
               }
@@ -665,7 +675,11 @@ const RequestDetailsPage = () => {
                     icon: 'pi pi-user',
                     label: 'Profil',
                   }}
-                  linkProps={{ to: `/users/${data.requested_by.id}` }}
+                  linkProps={{
+                    to: href('/users/:userId', {
+                      userId: data.requested_by.id.toString(),
+                    }),
+                  }}
                 />
               }
               content={

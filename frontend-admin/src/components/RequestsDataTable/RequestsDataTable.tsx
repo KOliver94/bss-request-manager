@@ -10,6 +10,7 @@ import type {
 } from 'primereact/datatable';
 import { ProgressBar } from 'primereact/progressbar';
 import { Skeleton } from 'primereact/skeleton';
+import { href } from 'react-router';
 
 import { RequestAdminList } from 'api/models';
 import LinkButton from 'components/LinkButton/LinkButton';
@@ -108,7 +109,9 @@ const RequestsDataTable = forwardRef<
           className: 'p-button-outlined',
           icon: 'pi pi-sign-in',
         }}
-        linkProps={{ to: `/requests/${id}` }}
+        linkProps={{
+          to: href('/requests/:requestId', { requestId: id.toString() }),
+        }}
       />
     );
   };

@@ -1,4 +1,3 @@
-const { fixupPluginRules } = require('@eslint/compat');
 const eslint = require('@eslint/js');
 const pluginQuery = require('@tanstack/eslint-plugin-query');
 const eslintConfigPrettier = require('eslint-config-prettier');
@@ -20,6 +19,7 @@ module.exports = tseslint.config(
   pluginQuery.configs['flat/recommended'],
   pluginReact.configs.flat.recommended,
   pluginReact.configs.flat['jsx-runtime'],
+  pluginReactHooks.configs['recommended-latest'], // TODO: Change this to recommended with version 6.0
   tseslint.configs.strict, // TODO: Use strict-type-checked
   { ignores: ['**/eslint.config.cjs', '**/postcss.config.cjs'] },
   {
@@ -37,11 +37,7 @@ module.exports = tseslint.config(
     linterOptions: {
       reportUnusedDisableDirectives: 'off',
     },
-    plugins: {
-      'react-hooks': fixupPluginRules(pluginReactHooks), // TODO: Change when flat config is added. Remove @eslint/compat after.
-    },
     rules: {
-      ...pluginReactHooks.configs.recommended.rules, // TODO: Change when flat config is added. Remove @eslint/compat after.
       '@typescript-eslint/no-deprecated': 'error',
       '@typescript-eslint/no-empty-object-type': [
         'error',

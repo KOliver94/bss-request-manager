@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { Ripple } from 'primereact/ripple';
 import { StyleClass } from 'primereact/styleclass';
 import type { IconType } from 'primereact/utils';
-import { Link } from 'react-router';
+import { href, Link } from 'react-router';
 
 type ButtonDropdownProps = {
   dropdownItems: {
@@ -51,7 +51,7 @@ const DropdownButton = ({
           <li key={`dropdown-${item.label}-${index}`}>
             <Link
               className="align-items-center border-left-2 border-transparent flex hover:border-primary hover:text-900 no-underline p-3 p-ripple text-600 transition-colors transition-duration-150"
-              to={item.path}
+              to={href(item.path)}
             >
               <i className={`mr-2 pi ${item.icon}`}></i>
               <span className="font-medium">{item.label}</span>

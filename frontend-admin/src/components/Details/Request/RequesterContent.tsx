@@ -4,6 +4,7 @@ import { ButtonGroup } from 'primereact/buttongroup';
 import { Chip } from 'primereact/chip';
 import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
+import { href } from 'react-router';
 
 import { UserNestedDetail } from 'api/models';
 import LinkButton from 'components/LinkButton/LinkButton';
@@ -99,7 +100,9 @@ export const RequesterContentButtons = ({
           icon: 'pi pi-user',
           label: 'Profil',
         }}
-        linkProps={{ to: `/users/${requester.id}` }}
+        linkProps={{
+          to: href('/users/:userId', { userId: requester.id.toString() }),
+        }}
       />
     </ButtonGroup>
   );
