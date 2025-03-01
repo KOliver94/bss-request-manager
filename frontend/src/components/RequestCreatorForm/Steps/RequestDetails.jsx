@@ -4,12 +4,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { hu } from 'date-fns/locale';
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Button from 'components/material-kit-react/CustomButtons/Button';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import * as Yup from 'yup';
-import { requestTypes } from 'src/helpers/enumConstants';
+import { requestTypes } from 'helpers/enumConstants';
 
 import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers';

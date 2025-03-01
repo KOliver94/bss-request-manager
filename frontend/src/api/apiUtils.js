@@ -1,6 +1,6 @@
 import axios, { isAxiosError } from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { isRefreshTokenExpired } from 'src/helpers/authenticationHelper';
+import { isRefreshTokenExpired } from 'helpers/authenticationHelper';
 
 const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1/`,

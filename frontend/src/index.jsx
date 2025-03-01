@@ -10,12 +10,12 @@ import { RouterProvider } from 'react-router/dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 import * as Sentry from '@sentry/react';
-import router from './router';
-import ServiceWorkerUpdate from './components/ServiceWorkerUpdate';
-import theme from './assets/jss/theme';
+import router from 'router';
+import ServiceWorkerUpdate from 'components/ServiceWorkerUpdate';
+import theme from 'assets/jss/theme';
 
-import 'src/assets/scss/custom-icon-font.scss';
-import 'src/assets/scss/material-kit-react.scss';
+import 'assets/scss/custom-icon-font.scss';
+import 'assets/scss/material-kit-react.scss';
 
 if (import.meta.env.PROD) {
   Sentry.init({

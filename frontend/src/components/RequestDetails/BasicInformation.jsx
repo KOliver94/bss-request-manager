@@ -18,8 +18,8 @@ import { hu } from 'date-fns/locale';
 import { useSnackbar } from 'notistack';
 // Helpers
 // API calls
-import { getRequest } from 'src/api/requestApi';
-import handleError from 'src/helpers/errorHandler';
+import { getRequest } from 'api/requestApi';
+import handleError from 'helpers/errorHandler';
 
 import stylesModule from './BasicInformation.module.scss';
 

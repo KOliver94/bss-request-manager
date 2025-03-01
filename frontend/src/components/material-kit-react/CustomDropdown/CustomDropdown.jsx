@@ -14,9 +14,9 @@ import Icon from '@mui/material/Icon';
 import Popper from '@mui/material/Popper';
 import Avatar from '@mui/material/Avatar';
 // core components
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
+import Button from 'components/material-kit-react/CustomButtons/Button';
 // Helpers
-import stringToColor from 'src/helpers/stringToColor';
+import stringToColor from 'helpers/stringToColor';
 
 import stylesModule from './CustomDropdown.module.scss';
 

@@ -1,5 +1,5 @@
 import { jwtDecode } from 'jwt-decode';
-import axiosInstance from './apiUtils';
+import axiosInstance from 'api/apiUtils';
 
 async function handleLogin(response) {
   const accessToken = response.data.access;

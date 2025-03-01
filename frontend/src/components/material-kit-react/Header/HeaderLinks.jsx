@@ -13,15 +13,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 
 // core components
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import CustomDropdown from 'src/components/material-kit-react/CustomDropdown/CustomDropdown';
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import CustomDropdown from 'components/material-kit-react/CustomDropdown/CustomDropdown';
 
 import { useSnackbar } from 'notistack';
-import { logoutUser } from 'src/api/loginApi';
-import {
-  isAuthenticated,
-  isPrivileged,
-} from 'src/helpers/authenticationHelper';
+import { logoutUser } from 'api/loginApi';
+import { isAuthenticated, isPrivileged } from 'helpers/authenticationHelper';
 
 import stylesModule from './HeaderLinks.module.scss';
 
@@ -92,12 +89,20 @@ export default function HeaderLinks({
               imgSrc: avatar,
             }}
             dropdownList={[
-              <AdminButton />,
+              <AdminButton key="admin" />,
               { divider: isPrivileged() },
-              <Link to="/profile" className={stylesModule.dropdownLink}>
+              <Link
+                to="/profile"
+                className={stylesModule.dropdownLink}
+                key="my-profile"
+              >
                 <i className="fa-solid fa-circle-user" /> Profilom
               </Link>,
-              <Link to="/my-requests" className={stylesModule.dropdownLink}>
+              <Link
+                to="/my-requests"
+                className={stylesModule.dropdownLink}
+                key="my-requests"
+              >
                 <i className="fa-solid fa-list-check" /> Felkéréseim
               </Link>,
               { divider: true },
@@ -105,6 +110,7 @@ export default function HeaderLinks({
                 type="button"
                 onClick={handleLogout}
                 className={stylesModule.dropdownLink}
+                key="logout"
               >
                 {loading ? (
                   <CircularProgress size={10} />

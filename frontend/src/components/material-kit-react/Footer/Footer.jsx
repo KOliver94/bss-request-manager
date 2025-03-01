@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { List, ListItem } from '@mui/material';
 
 // core components
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
+import Button from 'components/material-kit-react/CustomButtons/Button';
 
 import stylesModule from './Footer.module.scss';
 

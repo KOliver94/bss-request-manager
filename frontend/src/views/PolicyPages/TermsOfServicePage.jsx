@@ -3,11 +3,11 @@ import { Link } from 'react-router';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // core components
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Parallax from 'components/material-kit-react/Parallax/Parallax';
 // helpers
-import changePageTitle from 'src/helpers/pageTitleHelper';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import stylesModule from './PolicyPages.module.scss';
 

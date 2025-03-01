@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 // material-kit-react
-import Badge from 'src/components/material-kit-react/Badge/Badge';
+import Badge from 'components/material-kit-react/Badge/Badge';
 // MUI components
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
@@ -22,8 +22,8 @@ import * as Yup from 'yup';
 import { format, formatDistanceToNow } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // Helpers
-import stringToColor from 'src/helpers/stringToColor';
-import { isSelf } from 'src/helpers/authenticationHelper';
+import stringToColor from 'helpers/stringToColor';
+import { isSelf } from 'helpers/authenticationHelper';
 
 import stylesModule from './Comment.module.scss';
 

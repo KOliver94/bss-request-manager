@@ -8,8 +8,8 @@ import Divider from '@mui/material/Divider';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 // Components
-import CommentDesktop from 'src/components/RequestDetails/CommentDesktop';
-import CommentMobile from 'src/components/RequestDetails/CommentMobile';
+import CommentDesktop from 'components/RequestDetails/CommentDesktop';
+import CommentMobile from 'components/RequestDetails/CommentMobile';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
@@ -18,9 +18,9 @@ import {
   updateComment,
   deleteComment,
   listComments,
-} from 'src/api/requestApi';
-import compareValues from 'src/helpers/objectComperator';
-import handleError from 'src/helpers/errorHandler';
+} from 'api/requestApi';
+import compareValues from 'helpers/objectComperator';
+import handleError from 'helpers/errorHandler';
 
 import stylesModule from './Comments.module.scss';
 

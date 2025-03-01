@@ -15,21 +15,21 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 // core components
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
-import Badge from 'src/components/material-kit-react/Badge/Badge';
-import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import Badge from 'components/material-kit-react/Badge/Badge';
+import StatusBadge from 'components/material-kit-react/Badge/StatusBadge';
 // Notistack
 import { useSnackbar } from 'notistack';
 // Date format
 import { format, isAfter, sub } from 'date-fns';
 import { hu } from 'date-fns/locale';
 // API calls
-import { listRequests } from 'src/api/requestApi';
-import { requestStatuses } from 'src/helpers/enumConstants';
-import handleError from 'src/helpers/errorHandler';
-import changePageTitle from 'src/helpers/pageTitleHelper';
+import { listRequests } from 'api/requestApi';
+import { requestStatuses } from 'helpers/enumConstants';
+import handleError from 'helpers/errorHandler';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import stylesModule from './MyRequestsPage.module.scss';
 

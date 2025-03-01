@@ -22,11 +22,11 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 // core components
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
-import Badge from 'src/components/material-kit-react/Badge/Badge';
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import Badge from 'components/material-kit-react/Badge/Badge';
 // React Hook Form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -34,33 +34,28 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
-import sub from 'date-fns/sub';
+import { sub } from 'date-fns/sub';
 import { hu } from 'date-fns/locale';
 // Yup validations
 import * as Yup from 'yup';
-import isValidPhone from 'src/helpers/yupPhoneNumberValidator';
+import isValidPhone from 'helpers/yupPhoneNumberValidator';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
-import {
-  connectSocial,
-  disconnectSocial,
-  getMe,
-  updateMe,
-} from 'src/api/meApi';
-import { isPrivileged } from 'src/helpers/authenticationHelper';
-import handleError from 'src/helpers/errorHandler';
-import { userRoles, avatarProviders } from 'src/helpers/enumConstants';
+import { connectSocial, disconnectSocial, getMe, updateMe } from 'api/meApi';
+import { isPrivileged } from 'helpers/authenticationHelper';
+import handleError from 'helpers/errorHandler';
+import { userRoles, avatarProviders } from 'helpers/enumConstants';
 import {
   getOauthUrlAuthSch,
   getOauthUrlGoogle,
   getOauthUrlMicrosoft,
-} from 'src/helpers/oauthConstants';
-import changePageTitle from 'src/helpers/pageTitleHelper';
+} from 'helpers/oauthConstants';
+import changePageTitle from 'helpers/pageTitleHelper';
 // Sections
-import PersonalDetailsNormal from './Sections/PersonalDetails/PersonalDetailsNormal';
-import PersonalDetailsMobile from './Sections/PersonalDetails/PersonalDetailsMobile';
-import WorkedOnDialog from './Sections/WorkedOnDialog/WorkedOnDialog';
+import PersonalDetailsNormal from 'views/ProfilePage/Sections/PersonalDetails/PersonalDetailsNormal';
+import PersonalDetailsMobile from 'views/ProfilePage/Sections/PersonalDetails/PersonalDetailsMobile';
+import WorkedOnDialog from 'views/ProfilePage/Sections/WorkedOnDialog/WorkedOnDialog';
 
 import stylesModule from './ProfilePage.module.scss';
 

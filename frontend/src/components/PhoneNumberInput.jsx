@@ -21,5 +21,6 @@ const PhoneNumberInput = forwardRef((props, ref) => {
     />
   );
 });
+PhoneNumberInput.displayName = 'PhoneNumberInput';
 
 export default PhoneNumberInput;

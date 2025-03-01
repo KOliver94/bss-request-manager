@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router';
-import { getOauthCode, getOauthState } from 'src/helpers/oauthConstants';
-import changePageTitle from 'src/helpers/pageTitleHelper';
+import { getOauthCode, getOauthState } from 'helpers/oauthConstants';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 export default function RedirectPage() {
   const location = useLocation();

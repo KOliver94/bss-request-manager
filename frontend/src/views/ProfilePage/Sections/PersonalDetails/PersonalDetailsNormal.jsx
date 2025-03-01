@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import PersonalDetails from './PersonalDetails';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import PersonalDetails from 'views/ProfilePage/Sections/PersonalDetails/PersonalDetails';
 
 export default function PersonalDetailsNormal({
   control,

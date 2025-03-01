@@ -1,9 +1,9 @@
 import { Link } from 'react-router';
 // core components
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
 // logo
-import logo from 'src/assets/img/bss_logo.webp';
+import logo from 'assets/img/bss_logo.webp';
 
 import stylesModule from './PostscriptSection.module.scss';
 

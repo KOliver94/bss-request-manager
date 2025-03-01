@@ -1,7 +1,7 @@
 import { Outlet, useLocation, ScrollRestoration } from 'react-router';
-import Header from 'src/components/material-kit-react/Header/Header';
-import Footer from 'src/components/material-kit-react/Footer/Footer';
-import HeaderLinks from 'src/components/material-kit-react/Header/HeaderLinks';
+import Header from 'components/material-kit-react/Header/Header';
+import Footer from 'components/material-kit-react/Footer/Footer';
+import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
 
 function Layout() {
   const location = useLocation();

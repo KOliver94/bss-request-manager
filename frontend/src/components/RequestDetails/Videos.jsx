@@ -19,7 +19,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Rating from '@mui/material/Rating';
 import Tooltip from '@mui/material/Tooltip';
 // Material React Kit components
-import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
+import StatusBadge from 'components/material-kit-react/Badge/StatusBadge';
 // Notistack
 import { useSnackbar } from 'notistack';
 // API calls
@@ -28,12 +28,12 @@ import {
   updateRating,
   deleteRating,
   listVideos,
-} from 'src/api/requestApi';
-import { videoStatuses } from 'src/helpers/enumConstants';
-import compareValues from 'src/helpers/objectComperator';
-import handleError from 'src/helpers/errorHandler';
+} from 'api/requestApi';
+import { videoStatuses } from 'helpers/enumConstants';
+import compareValues from 'helpers/objectComperator';
+import handleError from 'helpers/errorHandler';
 // Review component
-import ReviewDialog from './ReviewDialog';
+import ReviewDialog from 'components/RequestDetails/ReviewDialog';
 
 import stylesModule from './Videos.module.scss';
 

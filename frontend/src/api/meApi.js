@@ -1,4 +1,4 @@
-import axiosInstance from './apiUtils';
+import axiosInstance from 'api/apiUtils';
 
 export async function getMe(config) {
   return axiosInstance.get('me', config);

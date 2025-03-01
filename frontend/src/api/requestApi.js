@@ -1,4 +1,4 @@
-import axiosInstance from './apiUtils';
+import axiosInstance from 'api/apiUtils';
 
 /*
  * Requests API calls

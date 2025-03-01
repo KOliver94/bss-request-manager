@@ -4,7 +4,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
-import PersonalDetails from './PersonalDetails';
+import PersonalDetails from 'views/ProfilePage/Sections/PersonalDetails/PersonalDetails';
 
 export default function PersonalDetailsMobile({
   control,
