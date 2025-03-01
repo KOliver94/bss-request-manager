@@ -1,4 +1,8 @@
 import { StrictMode, useEffect } from 'react';
+
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import * as Sentry from '@sentry/react';
+import { SnackbarProvider } from 'notistack';
 import { createRoot } from 'react-dom/client';
 import {
   createRoutesFromChildren,
@@ -7,12 +11,10 @@ import {
   useNavigationType,
 } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
-import { SnackbarProvider } from 'notistack';
-import * as Sentry from '@sentry/react';
-import router from 'router';
-import ServiceWorkerUpdate from 'components/ServiceWorkerUpdate';
+
 import theme from 'assets/jss/theme';
+import ServiceWorkerUpdate from 'components/ServiceWorkerUpdate';
+import router from 'router';
 
 import 'assets/scss/custom-icon-font.scss';
 import 'assets/scss/material-kit-react.scss';

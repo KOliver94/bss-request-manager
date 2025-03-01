@@ -1,5 +1,6 @@
 import axios, { isAxiosError } from 'axios';
 import { jwtDecode } from 'jwt-decode';
+
 import { isRefreshTokenExpired } from 'helpers/authenticationHelper';
 
 const axiosInstance = axios.create({

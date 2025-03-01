@@ -1,8 +1,7 @@
-// @mui/icons-material
+import CancelIcon from '@mui/icons-material/Cancel';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import VerifiedUser from '@mui/icons-material/VerifiedUser';
-import CancelIcon from '@mui/icons-material/Cancel';
-// core components
+
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import InfoArea from 'components/material-kit-react/InfoArea/InfoArea';

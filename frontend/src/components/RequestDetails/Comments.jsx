@@ -1,26 +1,24 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-// MUI components
-import Typography from '@mui/material/Typography';
+
+import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Divider from '@mui/material/Divider';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-// Components
-import CommentDesktop from 'components/RequestDetails/CommentDesktop';
-import CommentMobile from 'components/RequestDetails/CommentMobile';
-// Notistack
+import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
-// API calls
+import PropTypes from 'prop-types';
+
 import {
   createComment,
   updateComment,
   deleteComment,
   listComments,
 } from 'api/requestApi';
-import compareValues from 'helpers/objectComperator';
+import CommentDesktop from 'components/RequestDetails/CommentDesktop';
+import CommentMobile from 'components/RequestDetails/CommentMobile';
 import handleError from 'helpers/errorHandler';
+import compareValues from 'helpers/objectComperator';
 
 import stylesModule from './Comments.module.scss';
 

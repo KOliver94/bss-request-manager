@@ -1,13 +1,13 @@
 import { useState, createRef } from 'react';
-import { useSnackbar } from 'notistack';
 
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
-import CustomInput from 'components/material-kit-react/CustomInput/CustomInput';
-import Button from 'components/material-kit-react/CustomButtons/Button';
+import { useSnackbar } from 'notistack';
 import { ReCAPTCHA } from 'react-google-recaptcha';
 
 import sendContactMessage from 'api/miscApi';
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import CustomInput from 'components/material-kit-react/CustomInput/CustomInput';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
 import handleError from 'helpers/errorHandler';
 
 import stylesModule from './ContactSection.module.scss';

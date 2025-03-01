@@ -44,6 +44,25 @@ module.exports = [
           ignore: ['router/dom'],
         },
       ],
+      'import/order': [
+        'error',
+        {
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
+          groups: ['builtin', 'external', 'internal', ['parent', 'sibling']],
+          'newlines-between': 'always',
+          pathGroups: [
+            {
+              pattern: 'react',
+              group: 'external',
+              position: 'before',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['react'],
+        },
+      ],
       'jsx-a11y/no-autofocus': 'off',
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
       'react/forbid-prop-types': 'off',

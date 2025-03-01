@@ -1,23 +1,19 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import PropTypes from 'prop-types';
-// MUI components
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
-// Form components
-// Date format
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
-// Notistack
 import { useSnackbar } from 'notistack';
-// Helpers
-// API calls
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router';
+
 import { getRequest } from 'api/requestApi';
 import handleError from 'helpers/errorHandler';
 

@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
-import { Link, useRouteError, isRouteErrorResponse } from 'react-router';
+
 import Paper from '@mui/material/Paper';
-import changePageTitle from 'helpers/pageTitleHelper';
+import { Link, useRouteError, isRouteErrorResponse } from 'react-router';
+
 import getErrorDetails from 'helpers/errorPageConstants';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import stylesModule from './ErrorPage.module.scss';
 

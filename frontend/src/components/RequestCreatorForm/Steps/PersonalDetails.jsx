@@ -1,17 +1,18 @@
-import { useNavigate } from 'react-router';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { TextField } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import MUIButton from '@mui/material/Button';
 import PropTypes from 'prop-types';
 import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import PhoneNumberInput from 'components/PhoneNumberInput';
+import { useNavigate } from 'react-router';
+import * as Yup from 'yup';
+
+import Button from 'components/material-kit-react/CustomButtons/Button';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
-import Button from 'components/material-kit-react/CustomButtons/Button';
-import MUIButton from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import * as Yup from 'yup';
+import PhoneNumberInput from 'components/PhoneNumberInput';
 import isValidPhone from 'helpers/yupPhoneNumberValidator';
 
-import { TextField } from '@mui/material';
 import stylesModule from './PersonalDetails.module.scss';
 
 Yup.addMethod(Yup.string, 'phone', isValidPhone);

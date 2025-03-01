@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
-// nodejs library that concatenates classes
-import classNames from 'classnames';
-// nodejs library to set properties for components
-import PropTypes from 'prop-types';
-// @mui components
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import Hidden from '@mui/material/Hidden';
-import Drawer from '@mui/material/Drawer';
-// @mui/icons-material
+
 import Menu from '@mui/icons-material/Menu';
+import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
+import Drawer from '@mui/material/Drawer';
+import Hidden from '@mui/material/Hidden';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
 import stylesModule from './Header.module.scss';
 

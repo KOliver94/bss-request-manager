@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-// nodejs library that concatenates classes
+
 import classNames from 'classnames';
-// nodejs library to set properties for components
 import PropTypes from 'prop-types';
+
 import background from 'assets/img/header.webp';
 
 import stylesModule from './Parallax.module.scss';

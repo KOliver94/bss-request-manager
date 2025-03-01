@@ -1,29 +1,25 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
-// nodejs library that concatenates classes
-import classNames from 'classnames';
-// @mui components
-import CircularProgress from '@mui/material/CircularProgress';
+
 import TheatersIcon from '@mui/icons-material/Theaters';
-// core components
+import CircularProgress from '@mui/material/CircularProgress';
+import classNames from 'classnames';
+import { useSnackbar } from 'notistack';
+import { useParams, useNavigate } from 'react-router';
+
+import { getRequest } from 'api/requestApi';
 import StatusBadge from 'components/material-kit-react/Badge/StatusBadge';
 import CustomTabs from 'components/material-kit-react/CustomTabs/CustomTabs';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import Parallax from 'components/material-kit-react/Parallax/Parallax';
-// Notistack
-import { useSnackbar } from 'notistack';
-// Page components
 import BasicInformation from 'components/RequestDetails/BasicInformation';
 import Comments from 'components/RequestDetails/Comments';
 import Videos from 'components/RequestDetails/Videos';
-// API calls
-import { getRequest } from 'api/requestApi';
+import { isPrivileged } from 'helpers/authenticationHelper';
 import { requestStatuses } from 'helpers/enumConstants';
 import handleError from 'helpers/errorHandler';
 import changePageTitle from 'helpers/pageTitleHelper';
 
-import { isPrivileged } from 'helpers/authenticationHelper';
 import stylesModule from './RequestDetailPage.module.scss';
 
 export default function RequestDetailPage() {

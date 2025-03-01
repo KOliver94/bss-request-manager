@@ -1,15 +1,17 @@
 import { lazy, Suspense } from 'react';
+
 import { wrapCreateBrowserRouterV7 } from '@sentry/react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
 } from 'react-router';
+
 import AuthenticatedRoute from 'components/AuthenticatedRoute';
+import Layout from 'Layout';
 import ErrorPage from 'views/ErrorPage/ErrorPage';
 import LoadingPage from 'views/LoadingPage/LoadingPage';
 import RedirectPage from 'views/RedirectPage/RedirectPage';
-import Layout from 'Layout';
 
 const MyRequestsPage = lazy(
   () => import('views/MyRequestsPage/MyRequestsPage'),

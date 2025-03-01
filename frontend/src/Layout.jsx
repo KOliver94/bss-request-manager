@@ -1,6 +1,7 @@
 import { Outlet, useLocation, ScrollRestoration } from 'react-router';
-import Header from 'components/material-kit-react/Header/Header';
+
 import Footer from 'components/material-kit-react/Footer/Footer';
+import Header from 'components/material-kit-react/Header/Header';
 import HeaderLinks from 'components/material-kit-react/Header/HeaderLinks';
 
 function Layout() {

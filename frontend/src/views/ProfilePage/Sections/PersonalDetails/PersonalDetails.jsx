@@ -1,14 +1,13 @@
-import PropTypes from 'prop-types';
-// @mui components
+import { TextField } from '@mui/material';
 import Alert from '@mui/material/Alert';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-// core components
+import useMediaQuery from '@mui/material/useMediaQuery';
+import PropTypes from 'prop-types';
+import { Controller } from 'react-hook-form';
+
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
-import { Controller } from 'react-hook-form';
 import PhoneNumberInput from 'components/PhoneNumberInput';
-import { TextField } from '@mui/material';
 
 import stylesModule from '../../ProfilePage.module.scss';
 

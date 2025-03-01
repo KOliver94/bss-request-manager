@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-// eslint-disable-next-line import/no-unresolved
-import { useRegisterSW } from 'virtual:pwa-register/react';
-import { useSnackbar } from 'notistack';
+
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useSnackbar } from 'notistack';
+// eslint-disable-next-line import/no-unresolved
+import { useRegisterSW } from 'virtual:pwa-register/react';
 
 export default function ServiceWorkerUpdate() {
   const { enqueueSnackbar } = useSnackbar();

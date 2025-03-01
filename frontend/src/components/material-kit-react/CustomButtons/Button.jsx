@@ -1,11 +1,8 @@
 import { forwardRef } from 'react';
-// nodejs library to set properties for components
-import PropTypes from 'prop-types';
-// nodejs library that concatenates classes
-import classNames from 'classnames';
 
-// @mui components
 import Button from '@mui/material/Button';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
 import stylesModule from './Button.module.scss';
 

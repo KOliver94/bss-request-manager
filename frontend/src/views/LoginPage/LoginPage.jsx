@@ -1,20 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router';
-// @mui components
+
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
-// notistack (MUI Snackbars)
+import { isCancel } from 'axios';
 import { useSnackbar } from 'notistack';
-// core components
+import { useNavigate, useLocation } from 'react-router';
+
+import { loginSocial } from 'api/loginApi';
+import background from 'assets/img/login.webp';
+import Card from 'components/material-kit-react/Card/Card';
+import CardFooter from 'components/material-kit-react/Card/CardFooter';
+import CardHeader from 'components/material-kit-react/Card/CardHeader';
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import Footer from 'components/material-kit-react/Footer/Footer';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
-import Button from 'components/material-kit-react/CustomButtons/Button';
-import Card from 'components/material-kit-react/Card/Card';
-import CardHeader from 'components/material-kit-react/Card/CardHeader';
-import CardFooter from 'components/material-kit-react/Card/CardFooter';
-import Footer from 'components/material-kit-react/Footer/Footer';
-// API calls and helpers
-import { loginSocial } from 'api/loginApi';
 import { isAuthenticated, isPrivileged } from 'helpers/authenticationHelper';
 import {
   getOauthUrlAuthSch,
@@ -24,8 +24,6 @@ import {
 } from 'helpers/oauthConstants';
 import changePageTitle from 'helpers/pageTitleHelper';
 
-import background from 'assets/img/login.webp';
-import { isCancel } from 'axios';
 import stylesModule from './LoginPage.module.scss';
 
 function LoginPage() {

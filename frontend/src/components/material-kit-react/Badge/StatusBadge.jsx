@@ -1,4 +1,3 @@
-// nodejs library to set properties for components
 import PropTypes from 'prop-types';
 
 import stylesModule from './Badge.module.scss';

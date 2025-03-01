@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+
 import GridItem from 'components/material-kit-react/Grid/GridItem';
 import PersonalDetails from 'views/ProfilePage/Sections/PersonalDetails/PersonalDetails';
 

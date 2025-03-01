@@ -1,23 +1,17 @@
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-// react components for routing our app without refresh
-import { Link, useLocation, useNavigate } from 'react-router';
 
-// @mui components
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import CircularProgress from '@mui/material/CircularProgress';
-
-// @mui/icons-material
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import CircularProgress from '@mui/material/CircularProgress';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import { useSnackbar } from 'notistack';
+import PropTypes from 'prop-types';
+import { Link, useLocation, useNavigate } from 'react-router';
 
-// core components
+import { logoutUser } from 'api/loginApi';
 import Button from 'components/material-kit-react/CustomButtons/Button';
 import CustomDropdown from 'components/material-kit-react/CustomDropdown/CustomDropdown';
-
-import { useSnackbar } from 'notistack';
-import { logoutUser } from 'api/loginApi';
 import { isAuthenticated, isPrivileged } from 'helpers/authenticationHelper';
 
 import stylesModule from './HeaderLinks.module.scss';

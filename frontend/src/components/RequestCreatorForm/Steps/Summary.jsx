@@ -1,13 +1,14 @@
-import PropTypes from 'prop-types';
-import GridContainer from 'components/material-kit-react/Grid/GridContainer';
-import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { format } from 'date-fns';
 import { hu } from 'date-fns/locale';
+import PropTypes from 'prop-types';
+
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
 
 import stylesModule from './Summary.module.scss';
 

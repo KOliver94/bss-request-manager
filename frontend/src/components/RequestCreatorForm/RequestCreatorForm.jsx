@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 
+import OtherInformation from 'components/RequestCreatorForm/Steps/OtherInformation';
 import PersonalDetails from 'components/RequestCreatorForm/Steps/PersonalDetails';
 import RequestDetails from 'components/RequestCreatorForm/Steps/RequestDetails';
-import OtherInformation from 'components/RequestCreatorForm/Steps/OtherInformation';
-import Summary from 'components/RequestCreatorForm/Steps/Summary';
 import Success from 'components/RequestCreatorForm/Steps/Success';
+import Summary from 'components/RequestCreatorForm/Steps/Summary';
 
 function RequestCreatorForm({
   step,

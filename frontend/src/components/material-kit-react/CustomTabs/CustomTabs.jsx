@@ -1,14 +1,11 @@
 import { useState } from 'react';
-// nodejs library that concatenates classes
+
+import Icon from '@mui/material/Icon';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import classNames from 'classnames';
-// nodejs library to set properties for components
 import PropTypes from 'prop-types';
 
-// @mui components
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Icon from '@mui/material/Icon';
-// core components
 import Card from 'components/material-kit-react/Card/Card';
 import CardBody from 'components/material-kit-react/Card/CardBody';
 import CardHeader from 'components/material-kit-react/Card/CardHeader';

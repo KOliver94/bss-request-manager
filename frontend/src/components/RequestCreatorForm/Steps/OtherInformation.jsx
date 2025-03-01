@@ -1,10 +1,11 @@
+import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useForm, Controller } from 'react-hook-form';
+
+import Button from 'components/material-kit-react/CustomButtons/Button';
 import GridContainer from 'components/material-kit-react/Grid/GridContainer';
 import GridItem from 'components/material-kit-react/Grid/GridItem';
-import Button from 'components/material-kit-react/CustomButtons/Button';
 
-import { TextField } from '@mui/material';
 import stylesModule from './OtherInformation.module.scss';
 
 function OtherInformation({ formData, setFormData, handleNext, handleBack }) {
