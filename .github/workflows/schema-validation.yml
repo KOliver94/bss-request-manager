@@ -1,0 +1,38 @@
+name: OpenAPI schema validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/schema-validation.yml'
+
+jobs:
+  validate-schema:
+    name: OpenAPI schema validation
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DJANGO_SETTINGS_MODULE: core.settings.ci
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dyff
+        run: curl --silent --location https://git.io/JYfAY | sudo bash
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+          cache: 'poetry'
+          cache-dependency-path: backend/poetry.lock
+      - name: Install dependencies
+        run: poetry install --without=debug,test
+      - name: Generate schema from code
+        run: poetry run python manage.py spectacular --file schema.new.yaml --validate --fail-on-warn
+      - name: Compare version controlled schema file with newly generated one
+        run: dyff between schema.yaml schema.new.yaml --set-exit-code
