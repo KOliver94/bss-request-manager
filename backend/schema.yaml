@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: BSS Request Manager API
-  version: 0.1.0
+  version: 1.0.0
   description:
     REST API for Workflow Support System for managing video shooting, filming
     and live streaming requests of Budavári Schönherz Stúdió.
