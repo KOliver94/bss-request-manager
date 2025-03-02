@@ -373,7 +373,7 @@ SPECTACULAR_SETTINGS = {
         },
     ],
     "TITLE": "BSS Request Manager API",
-    "VERSION": "0.1.0",
+    "VERSION": "1.0.0",
 }
 
 SPECTACULAR_SERVE_SCHEMA = config("SPECTACULAR_SERVE_SCHEMA", default=False, cast=bool)
