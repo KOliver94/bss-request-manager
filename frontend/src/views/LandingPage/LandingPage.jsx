@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router';
-// nodejs library that concatenates classes
+
 import classNames from 'classnames';
-// core components
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
-// helpers
-import changePageTitle from 'src/helpers/pageTitleHelper';
-// Sections for this page
-import RulesPoliciesSection from './Sections/RulesPoliciesSection';
-import ContactSection from './Sections/ContactSection';
-import PostscriptSection from './Sections/PostscriptSection';
+import { Link } from 'react-router';
+
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import changePageTitle from 'helpers/pageTitleHelper';
+import ContactSection from 'views/LandingPage/Sections/ContactSection';
+import PostscriptSection from 'views/LandingPage/Sections/PostscriptSection';
+import RulesPoliciesSection from 'views/LandingPage/Sections/RulesPoliciesSection';
 
 import stylesModule from './LandingPage.module.scss';
 

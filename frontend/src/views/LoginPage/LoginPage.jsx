@@ -1,34 +1,29 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router';
-// @mui components
+
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
-// notistack (MUI Snackbars)
+import { isCancel } from 'axios';
 import { useSnackbar } from 'notistack';
-// core components
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import Card from 'src/components/material-kit-react/Card/Card';
-import CardHeader from 'src/components/material-kit-react/Card/CardHeader';
-import CardFooter from 'src/components/material-kit-react/Card/CardFooter';
-import Footer from 'src/components/material-kit-react/Footer/Footer';
-// API calls and helpers
-import { loginSocial } from 'src/api/loginApi';
-import {
-  isAuthenticated,
-  isPrivileged,
-} from 'src/helpers/authenticationHelper';
+import { useNavigate, useLocation } from 'react-router';
+
+import { loginSocial } from 'api/loginApi';
+import background from 'assets/img/login.webp';
+import Card from 'components/material-kit-react/Card/Card';
+import CardFooter from 'components/material-kit-react/Card/CardFooter';
+import CardHeader from 'components/material-kit-react/Card/CardHeader';
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import Footer from 'components/material-kit-react/Footer/Footer';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import { isAuthenticated, isPrivileged } from 'helpers/authenticationHelper';
 import {
   getOauthUrlAuthSch,
   getOauthUrlBssLogin,
   getOauthUrlGoogle,
   getOauthUrlMicrosoft,
-} from 'src/helpers/oauthConstants';
-import changePageTitle from 'src/helpers/pageTitleHelper';
+} from 'helpers/oauthConstants';
+import changePageTitle from 'helpers/pageTitleHelper';
 
-import background from 'src/assets/img/login.webp';
-import { isCancel } from 'axios';
 import stylesModule from './LoginPage.module.scss';
 
 function LoginPage() {

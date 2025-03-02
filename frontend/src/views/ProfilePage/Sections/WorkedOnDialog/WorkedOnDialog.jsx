@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
-import PropTypes from 'prop-types';
-// MUI components
-import Box from '@mui/material/Box';
+
 import CloseIcon from '@mui/icons-material/Close';
+import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Skeleton from '@mui/material/Skeleton';
+import { useTheme } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -18,15 +17,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-// Notistack
-import { useSnackbar } from 'notistack';
-// Date format
 import { format } from 'date-fns';
-// API calls
-import compareValues from 'src/helpers/objectComperator';
-import handleError from 'src/helpers/errorHandler';
-import { getMeWorkedOn } from 'src/api/meApi';
+import { useSnackbar } from 'notistack';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router';
+
+import { getMeWorkedOn } from 'api/meApi';
+import handleError from 'helpers/errorHandler';
+import compareValues from 'helpers/objectComperator';
 
 export default function WorkedOnDialog({
   workedOnDialogOpen,

@@ -1,29 +1,26 @@
 import { useEffect } from 'react';
-import PropTypes from 'prop-types';
-// material-kit-react
-import Badge from 'src/components/material-kit-react/Badge/Badge';
-// MUI components
-import IconButton from '@mui/material/IconButton';
-import SendIcon from '@mui/icons-material/Send';
-import EditIcon from '@mui/icons-material/Edit';
+
+import { yupResolver } from '@hookform/resolvers/yup';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Grid from '@mui/material/Grid';
+import EditIcon from '@mui/icons-material/Edit';
+import SendIcon from '@mui/icons-material/Send';
+import { TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import Divider from '@mui/material/Divider';
-import { TextField } from '@mui/material';
-// New comment
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
-// Date format
 import { format, formatDistanceToNow } from 'date-fns';
 import { hu } from 'date-fns/locale';
-// Helpers
-import stringToColor from 'src/helpers/stringToColor';
-import { isSelf } from 'src/helpers/authenticationHelper';
+import PropTypes from 'prop-types';
+import { useForm, Controller } from 'react-hook-form';
+import * as Yup from 'yup';
+
+import Badge from 'components/material-kit-react/Badge/Badge';
+import { isSelf } from 'helpers/authenticationHelper';
+import stringToColor from 'helpers/stringToColor';
 
 import stylesModule from './Comment.module.scss';
 

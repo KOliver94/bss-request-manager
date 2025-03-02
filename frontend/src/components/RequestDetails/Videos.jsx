@@ -1,39 +1,36 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-// MUI components
-import IconButton from '@mui/material/IconButton';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import Accordion from '@mui/material/Accordion';
+import AccordionActions from '@mui/material/AccordionActions';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionActions from '@mui/material/AccordionActions';
 import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import IconButton from '@mui/material/IconButton';
 import Rating from '@mui/material/Rating';
 import Tooltip from '@mui/material/Tooltip';
-// Material React Kit components
-import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
-// Notistack
+import Typography from '@mui/material/Typography';
 import { useSnackbar } from 'notistack';
-// API calls
+import PropTypes from 'prop-types';
+
 import {
   createRating,
   updateRating,
   deleteRating,
   listVideos,
-} from 'src/api/requestApi';
-import { videoStatuses } from 'src/helpers/enumConstants';
-import compareValues from 'src/helpers/objectComperator';
-import handleError from 'src/helpers/errorHandler';
-// Review component
-import ReviewDialog from './ReviewDialog';
+} from 'api/requestApi';
+import StatusBadge from 'components/material-kit-react/Badge/StatusBadge';
+import ReviewDialog from 'components/RequestDetails/ReviewDialog';
+import { videoStatuses } from 'helpers/enumConstants';
+import handleError from 'helpers/errorHandler';
+import compareValues from 'helpers/objectComperator';
 
 import stylesModule from './Videos.module.scss';
 

@@ -1,29 +1,25 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
-// nodejs library that concatenates classes
-import classNames from 'classnames';
-// @mui components
-import CircularProgress from '@mui/material/CircularProgress';
-import TheatersIcon from '@mui/icons-material/Theaters';
-// core components
-import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
-import CustomTabs from 'src/components/material-kit-react/CustomTabs/CustomTabs';
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
-// Notistack
-import { useSnackbar } from 'notistack';
-// Page components
-import BasicInformation from 'src/components/RequestDetails/BasicInformation';
-import Comments from 'src/components/RequestDetails/Comments';
-import Videos from 'src/components/RequestDetails/Videos';
-// API calls
-import { getRequest } from 'src/api/requestApi';
-import { requestStatuses } from 'src/helpers/enumConstants';
-import handleError from 'src/helpers/errorHandler';
-import changePageTitle from 'src/helpers/pageTitleHelper';
 
-import { isPrivileged } from 'src/helpers/authenticationHelper';
+import TheatersIcon from '@mui/icons-material/Theaters';
+import CircularProgress from '@mui/material/CircularProgress';
+import classNames from 'classnames';
+import { useSnackbar } from 'notistack';
+import { useParams, useNavigate } from 'react-router';
+
+import { getRequest } from 'api/requestApi';
+import StatusBadge from 'components/material-kit-react/Badge/StatusBadge';
+import CustomTabs from 'components/material-kit-react/CustomTabs/CustomTabs';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import BasicInformation from 'components/RequestDetails/BasicInformation';
+import Comments from 'components/RequestDetails/Comments';
+import Videos from 'components/RequestDetails/Videos';
+import { isPrivileged } from 'helpers/authenticationHelper';
+import { requestStatuses } from 'helpers/enumConstants';
+import handleError from 'helpers/errorHandler';
+import changePageTitle from 'helpers/pageTitleHelper';
+
 import stylesModule from './RequestDetailPage.module.scss';
 
 export default function RequestDetailPage() {

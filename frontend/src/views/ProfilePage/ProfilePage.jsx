@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-// nodejs library that concatenates classes
-import classNames from 'classnames';
-// @mui components
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -15,52 +14,41 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useTheme } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-// core components
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
-import Badge from 'src/components/material-kit-react/Badge/Badge';
-// React Hook Form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-// Date fields
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
-import sub from 'date-fns/sub';
+import classNames from 'classnames';
 import { hu } from 'date-fns/locale';
-// Yup validations
-import * as Yup from 'yup';
-import isValidPhone from 'src/helpers/yupPhoneNumberValidator';
-// Notistack
+import { sub } from 'date-fns/sub';
 import { useSnackbar } from 'notistack';
-// API calls
-import {
-  connectSocial,
-  disconnectSocial,
-  getMe,
-  updateMe,
-} from 'src/api/meApi';
-import { isPrivileged } from 'src/helpers/authenticationHelper';
-import handleError from 'src/helpers/errorHandler';
-import { userRoles, avatarProviders } from 'src/helpers/enumConstants';
+import { useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router';
+import * as Yup from 'yup';
+
+import { connectSocial, disconnectSocial, getMe, updateMe } from 'api/meApi';
+import Badge from 'components/material-kit-react/Badge/Badge';
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import { isPrivileged } from 'helpers/authenticationHelper';
+import { userRoles, avatarProviders } from 'helpers/enumConstants';
+import handleError from 'helpers/errorHandler';
 import {
   getOauthUrlAuthSch,
   getOauthUrlGoogle,
   getOauthUrlMicrosoft,
-} from 'src/helpers/oauthConstants';
-import changePageTitle from 'src/helpers/pageTitleHelper';
-// Sections
-import PersonalDetailsNormal from './Sections/PersonalDetails/PersonalDetailsNormal';
-import PersonalDetailsMobile from './Sections/PersonalDetails/PersonalDetailsMobile';
-import WorkedOnDialog from './Sections/WorkedOnDialog/WorkedOnDialog';
+} from 'helpers/oauthConstants';
+import changePageTitle from 'helpers/pageTitleHelper';
+import isValidPhone from 'helpers/yupPhoneNumberValidator';
+import PersonalDetailsMobile from 'views/ProfilePage/Sections/PersonalDetails/PersonalDetailsMobile';
+import PersonalDetailsNormal from 'views/ProfilePage/Sections/PersonalDetails/PersonalDetailsNormal';
+import WorkedOnDialog from 'views/ProfilePage/Sections/WorkedOnDialog/WorkedOnDialog';
 
 import stylesModule from './ProfilePage.module.scss';
 

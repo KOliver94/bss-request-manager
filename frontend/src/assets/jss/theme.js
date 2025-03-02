@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { huHU } from '@mui/x-date-pickers/locales';
+
 import variables from '../scss/theme.module.scss';
 
 const {

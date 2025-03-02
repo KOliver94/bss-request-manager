@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router';
-// nodejs library that concatenates classes
-import classNames from 'classnames';
-// @mui components
+
 import CircularProgress from '@mui/material/CircularProgress';
+import Pagination from '@mui/material/Pagination';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,25 +10,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Pagination from '@mui/material/Pagination';
-// core components
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
-import Badge from 'src/components/material-kit-react/Badge/Badge';
-import StatusBadge from 'src/components/material-kit-react/Badge/StatusBadge';
-// Notistack
-import { useSnackbar } from 'notistack';
-// Date format
+import classNames from 'classnames';
 import { format, isAfter, sub } from 'date-fns';
 import { hu } from 'date-fns/locale';
-// API calls
-import { listRequests } from 'src/api/requestApi';
-import { requestStatuses } from 'src/helpers/enumConstants';
-import handleError from 'src/helpers/errorHandler';
-import changePageTitle from 'src/helpers/pageTitleHelper';
+import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router';
+
+import { listRequests } from 'api/requestApi';
+import Badge from 'components/material-kit-react/Badge/Badge';
+import StatusBadge from 'components/material-kit-react/Badge/StatusBadge';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import { requestStatuses } from 'helpers/enumConstants';
+import handleError from 'helpers/errorHandler';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import stylesModule from './MyRequestsPage.module.scss';
 

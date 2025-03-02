@@ -1,6 +1,7 @@
-import { MuiTelInput } from 'mui-tel-input';
 import { forwardRef } from 'react';
+
 import { styled } from '@mui/material/styles';
+import { MuiTelInput } from 'mui-tel-input';
 
 const CustomizedMuiPhoneNumber = styled(MuiTelInput)`
   & .MuiIconButton-root {
@@ -21,5 +22,6 @@ const PhoneNumberInput = forwardRef((props, ref) => {
     />
   );
 });
+PhoneNumberInput.displayName = 'PhoneNumberInput';
 
 export default PhoneNumberInput;

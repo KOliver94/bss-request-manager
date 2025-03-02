@@ -1,14 +1,14 @@
 import { useState, createRef } from 'react';
+
 import { useSnackbar } from 'notistack';
+import { ReCAPTCHA } from 'react-google-recaptcha';
 
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import CustomInput from 'src/components/material-kit-react/CustomInput/CustomInput';
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import ReCAPTCHA from 'react-google-recaptcha';
-
-import sendContactMessage from 'src/api/miscApi';
-import handleError from 'src/helpers/errorHandler';
+import sendContactMessage from 'api/miscApi';
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import CustomInput from 'components/material-kit-react/CustomInput/CustomInput';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import handleError from 'helpers/errorHandler';
 
 import stylesModule from './ContactSection.module.scss';
 

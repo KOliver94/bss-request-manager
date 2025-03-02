@@ -1,22 +1,24 @@
 import { lazy, Suspense } from 'react';
+
 import { wrapCreateBrowserRouterV7 } from '@sentry/react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
 } from 'react-router';
-import AuthenticatedRoute from 'src/components/AuthenticatedRoute';
-import ErrorPage from 'src/views/ErrorPage/ErrorPage';
-import LoadingPage from 'src/views/LoadingPage/LoadingPage';
-import RedirectPage from 'src/views/RedirectPage/RedirectPage';
-import Layout from './Layout';
+
+import AuthenticatedRoute from 'components/AuthenticatedRoute';
+import Layout from 'Layout';
+import ErrorPage from 'views/ErrorPage/ErrorPage';
+import LoadingPage from 'views/LoadingPage/LoadingPage';
+import RedirectPage from 'views/RedirectPage/RedirectPage';
 
 const MyRequestsPage = lazy(
-  () => import('src/views/MyRequestsPage/MyRequestsPage'),
+  () => import('views/MyRequestsPage/MyRequestsPage'),
 );
-const ProfilePage = lazy(() => import('src/views/ProfilePage/ProfilePage'));
+const ProfilePage = lazy(() => import('views/ProfilePage/ProfilePage'));
 const RequestDetailPage = lazy(
-  () => import('src/views/RequestDetailPage/RequestDetailPage'),
+  () => import('views/RequestDetailPage/RequestDetailPage'),
 );
 
 const sentryCreateBrowserRouter =
@@ -25,11 +27,8 @@ const sentryCreateBrowserRouter =
 const router = sentryCreateBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<ErrorPage />}>
-      <Route index lazy={() => import('src/views/LandingPage/LandingPage')} />
-      <Route
-        path="login"
-        lazy={() => import('src/views/LoginPage/LoginPage')}
-      />
+      <Route index lazy={() => import('views/LandingPage/LandingPage')} />
+      <Route path="login" lazy={() => import('views/LoginPage/LoginPage')} />
       <Route path="load" element={<LoadingPage />} />
       <Route path="my-requests">
         <Route
@@ -55,11 +54,11 @@ const router = sentryCreateBrowserRouter(
       </Route>
       <Route
         path="new-request"
-        lazy={() => import('src/views/RequestCreatorPage/RequestCreatorPage')}
+        lazy={() => import('views/RequestCreatorPage/RequestCreatorPage')}
       />
       <Route
         path="privacy"
-        lazy={() => import('src/views/PolicyPages/PrivacyPolicyPage')}
+        lazy={() => import('views/PolicyPages/PrivacyPolicyPage')}
       />
       <Route
         path="profile"
@@ -74,7 +73,7 @@ const router = sentryCreateBrowserRouter(
       <Route path="/redirect" element={<RedirectPage />} />
       <Route
         path="terms"
-        lazy={() => import('src/views/PolicyPages/TermsOfServicePage')}
+        lazy={() => import('views/PolicyPages/TermsOfServicePage')}
       />
     </Route>,
   ),

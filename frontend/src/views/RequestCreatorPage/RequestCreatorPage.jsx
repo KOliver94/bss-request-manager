@@ -1,34 +1,29 @@
 import { useState, useEffect, createRef } from 'react';
-import { useNavigate } from 'react-router';
-// nodejs library that concatenates classes
-import classNames from 'classnames';
-// @mui components
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+
 import CircularProgress from '@mui/material/CircularProgress';
 import MobileStepper from '@mui/material/MobileStepper';
-import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-// core components
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import GridItem from 'src/components/material-kit-react/Grid/GridItem';
-import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
-// Notistack
-import { useSnackbar } from 'notistack';
-// ReCAPTCHA
-import ReCAPTCHA from 'react-google-recaptcha';
-// Form
-import RequestCreatorForm from 'src/components/RequestCreatorForm/RequestCreatorForm';
-// API calls
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { isCancel } from 'axios';
-import { getMe } from 'src/api/meApi';
-import { createRequest } from 'src/api/requestApi';
-import { isAuthenticated } from 'src/helpers/authenticationHelper';
-import handleError from 'src/helpers/errorHandler';
-import changePageTitle from 'src/helpers/pageTitleHelper';
+import classNames from 'classnames';
+import { useSnackbar } from 'notistack';
+import { ReCAPTCHA } from 'react-google-recaptcha';
+import { useNavigate } from 'react-router';
+
+import { getMe } from 'api/meApi';
+import { createRequest } from 'api/requestApi';
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import GridItem from 'components/material-kit-react/Grid/GridItem';
+import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import RequestCreatorForm from 'components/RequestCreatorForm/RequestCreatorForm';
+import { isAuthenticated } from 'helpers/authenticationHelper';
+import handleError from 'helpers/errorHandler';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import stylesModule from './RequestCreatorPage.module.scss';
 

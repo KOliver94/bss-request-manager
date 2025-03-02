@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-// nodejs library that concatenates classes
-import classNames from 'classnames';
-// core components
+
 import CircularProgress from '@mui/material/CircularProgress';
-import GridContainer from 'src/components/material-kit-react/Grid/GridContainer';
-import Parallax from 'src/components/material-kit-react/Parallax/Parallax';
-// helpers
-import changePageTitle from 'src/helpers/pageTitleHelper';
+import classNames from 'classnames';
+
+import GridContainer from 'components/material-kit-react/Grid/GridContainer';
+import Parallax from 'components/material-kit-react/Parallax/Parallax';
+import changePageTitle from 'helpers/pageTitleHelper';
 
 import stylesModule from './LoadingPage.module.scss';
 

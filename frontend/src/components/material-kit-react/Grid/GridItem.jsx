@@ -1,7 +1,5 @@
-// nodejs library to set properties for components
-import PropTypes from 'prop-types';
-// @mui components
 import Grid from '@mui/material/Grid';
+import PropTypes from 'prop-types';
 
 import stylesModule from './GridItem.module.scss';
 

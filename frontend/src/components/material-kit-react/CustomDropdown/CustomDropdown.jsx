@@ -1,22 +1,19 @@
 import { useState, useRef } from 'react';
-// nodejs library that concatenates classes
-import classNames from 'classnames';
-// nodejs library to set properties for components
-import PropTypes from 'prop-types';
-// @mui components
+
+import Avatar from '@mui/material/Avatar';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Divider from '@mui/material/Divider';
+import Grow from '@mui/material/Grow';
+import Icon from '@mui/material/Icon';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
-import Grow from '@mui/material/Grow';
-import Divider from '@mui/material/Divider';
-import Icon from '@mui/material/Icon';
 import Popper from '@mui/material/Popper';
-import Avatar from '@mui/material/Avatar';
-// core components
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
-// Helpers
-import stringToColor from 'src/helpers/stringToColor';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import stringToColor from 'helpers/stringToColor';
 
 import stylesModule from './CustomDropdown.module.scss';
 

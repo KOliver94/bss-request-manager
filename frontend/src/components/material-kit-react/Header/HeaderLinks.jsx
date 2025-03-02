@@ -1,27 +1,18 @@
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-// react components for routing our app without refresh
-import { Link, useLocation, useNavigate } from 'react-router';
 
-// @mui components
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import CircularProgress from '@mui/material/CircularProgress';
-
-// @mui/icons-material
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-
-// core components
-import Button from 'src/components/material-kit-react/CustomButtons/Button';
-import CustomDropdown from 'src/components/material-kit-react/CustomDropdown/CustomDropdown';
-
+import CircularProgress from '@mui/material/CircularProgress';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import { useSnackbar } from 'notistack';
-import { logoutUser } from 'src/api/loginApi';
-import {
-  isAuthenticated,
-  isPrivileged,
-} from 'src/helpers/authenticationHelper';
+import PropTypes from 'prop-types';
+import { Link, useLocation, useNavigate } from 'react-router';
+
+import { logoutUser } from 'api/loginApi';
+import Button from 'components/material-kit-react/CustomButtons/Button';
+import CustomDropdown from 'components/material-kit-react/CustomDropdown/CustomDropdown';
+import { isAuthenticated, isPrivileged } from 'helpers/authenticationHelper';
 
 import stylesModule from './HeaderLinks.module.scss';
 
@@ -92,12 +83,20 @@ export default function HeaderLinks({
               imgSrc: avatar,
             }}
             dropdownList={[
-              <AdminButton />,
+              <AdminButton key="admin" />,
               { divider: isPrivileged() },
-              <Link to="/profile" className={stylesModule.dropdownLink}>
+              <Link
+                to="/profile"
+                className={stylesModule.dropdownLink}
+                key="my-profile"
+              >
                 <i className="fa-solid fa-circle-user" /> Profilom
               </Link>,
-              <Link to="/my-requests" className={stylesModule.dropdownLink}>
+              <Link
+                to="/my-requests"
+                className={stylesModule.dropdownLink}
+                key="my-requests"
+              >
                 <i className="fa-solid fa-list-check" /> Felkéréseim
               </Link>,
               { divider: true },
@@ -105,6 +104,7 @@ export default function HeaderLinks({
                 type="button"
                 onClick={handleLogout}
                 className={stylesModule.dropdownLink}
+                key="logout"
               >
                 {loading ? (
                   <CircularProgress size={10} />
