@@ -6,6 +6,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -14,6 +15,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import LinearProgress from '@mui/material/LinearProgress';
 import Rating from '@mui/material/Rating';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -37,6 +39,7 @@ import stylesModule from './Videos.module.scss';
 export default function Videos({ requestId, reload }) {
   const { enqueueSnackbar } = useSnackbar();
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [ratingLoading, setRatingLoading] = useState(false);
   const [videoAccordionOpen, setVideoAccordionOpen] = useState(null);
   const [ratingRemoveDialog, setRatingRemoveDialog] = useState({
@@ -199,6 +202,7 @@ export default function Videos({ requestId, reload }) {
           signal: controller.signal,
         });
         setData(result.data);
+        setLoading(false);
         setVideoAccordionOpen(
           result.data.length === 1 && `${result.data[0].id}-panel`,
         );
@@ -213,6 +217,7 @@ export default function Videos({ requestId, reload }) {
       return [];
     }
 
+    setLoading(true);
     loadData(requestId);
 
     return () => {
@@ -300,6 +305,10 @@ export default function Videos({ requestId, reload }) {
             );
           })}
         </>
+      ) : loading ? (
+        <Box sx={{ paddingY: '20px' }}>
+          <LinearProgress />
+        </Box>
       ) : (
         <p className={stylesModule.noVideosYet}>
           Még nincsenek videók. <i className="fa-regular fa-circle-pause" />

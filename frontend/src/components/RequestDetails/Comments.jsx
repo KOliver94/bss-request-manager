@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
+import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import LinearProgress from '@mui/material/LinearProgress';
 import Paper from '@mui/material/Paper';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -150,6 +152,14 @@ export default function Comments({ requestId, requesterId, reload }) {
               )}
           </>
         )}
+        {
+          <>
+            <LinearProgress />
+            <Box sx={{ marginY: isMobileView ? '15px' : '30px' }}>
+              <Divider variant="fullWidth" />
+            </Box>
+          </>
+        }
         {isMobileView ? (
           <CommentMobile
             handleDelete={handleDelete}
