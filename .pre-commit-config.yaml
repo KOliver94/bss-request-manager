@@ -50,7 +50,7 @@ repos:
       - id: pycln
         name: 'Remove unused Python imports'
   - repo: https://github.com/PyCQA/isort
-    rev: 6.0.0
+    rev: 6.0.1
     hooks:
       - id: isort
         name: 'Sort Python imports'
@@ -81,7 +81,7 @@ repos:
         name: 'Check Python security issues'
         exclude: ^backend/tests/
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: v3.5.2
+    rev: v3.5.3
     hooks:
       - id: prettier
         name: 'Format JavaScript and TypeScript code'
