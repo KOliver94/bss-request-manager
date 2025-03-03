@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react';
 
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import { wrapCreateBrowserRouterV7 } from '@sentry/react';
 import {
   createBrowserRouter,
@@ -26,7 +28,19 @@ const sentryCreateBrowserRouter =
 
 const router = sentryCreateBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />} errorElement={<ErrorPage />}>
+    <Route
+      path="/"
+      element={<Layout />}
+      errorElement={<ErrorPage />}
+      hydrateFallbackElement={
+        <Backdrop
+          sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+          open={true}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      }
+    >
       <Route index lazy={() => import('views/LandingPage/LandingPage')} />
       <Route path="login" lazy={() => import('views/LoginPage/LoginPage')} />
       <Route path="load" element={<LoadingPage />} />
