@@ -11,7 +11,7 @@
     "@mui/material": "6.4.6",
     "@mui/x-date-pickers": "7.27.1",
     "@sentry/react": "9.3.0",
-    "axios": "1.8.1",
+    "axios": "1.8.2",
     "classnames": "2.5.1",
     "date-fns": "4.1.0",
     "jwt-decode": "4.0.0",
