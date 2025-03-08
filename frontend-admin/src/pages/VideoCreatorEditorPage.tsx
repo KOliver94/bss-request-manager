@@ -28,7 +28,7 @@ import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { useToast } from 'providers/ToastProvider';
-import { queryClient } from 'router';
+import { queryClient, videoLoaderData } from 'router';
 
 export interface IVideoCreator {
   additional_data: {
@@ -46,21 +46,6 @@ export interface IVideoCreator {
   };
   editor: UserNestedList | null;
   title: string;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  if (params.requestId && params.videoId) {
-    const query = requestVideoRetrieveQuery(
-      Number(params.requestId),
-      Number(params.videoId),
-    );
-    return (
-      queryClient.getQueryData(query.queryKey) ??
-      (await queryClient.fetchQuery(query))
-    );
-  }
-  return null;
 }
 
 const VideoCreatorEditorPage = () => {
@@ -89,7 +74,7 @@ const VideoCreatorEditorPage = () => {
     defaultValues,
     mode: 'onChange',
   });
-  const { requestId, videoId } = useParams();
+  const { requestId, videoId } = useLoaderData() as videoLoaderData;
   const { showToast } = useToast();
   const { isPending, mutateAsync } = useMutation(
     requestId && videoId

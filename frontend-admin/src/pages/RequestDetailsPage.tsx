@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
@@ -12,7 +12,7 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
-import { href, useNavigate, useParams } from 'react-router';
+import { href, useLoaderData, useNavigate } from 'react-router';
 
 import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
@@ -41,7 +41,7 @@ import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
-import { queryClient } from 'router';
+import { queryClient, requestLoaderData } from 'router';
 import { RequestAdditionalDataRecordingType } from 'types/additionalDataTypes';
 
 const AcceptRejectDialog = lazy(
@@ -65,15 +65,6 @@ const VideosDataTable = lazy(
   () => import('components/VideosDataTable/VideosDataTable'),
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = requestRetrieveQuery(Number(params.requestId));
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
-}
-
 interface RequestAdminRetrieveDates // TODO: Rename?
   extends Omit<
     RequestAdminRetrieve,
@@ -86,7 +77,7 @@ interface RequestAdminRetrieveDates // TODO: Rename?
 }
 
 const RequestDetailsPage = () => {
-  const { requestId } = useParams();
+  const { requestId } = useLoaderData() as requestLoaderData;
   const { showToast } = useToast();
   const { mutateAsync } = useMutation(requestUpdateMutation(Number(requestId)));
   const isMobile = useMobile();
@@ -109,7 +100,7 @@ const RequestDetailsPage = () => {
     dataUpdatedAt,
     error,
     refetch,
-  } = useQuery(requestRetrieveQuery(Number(requestId)));
+  } = useSuspenseQuery(requestRetrieveQuery(requestId));
   const data = getRequest(queryResult);
 
   const [acceptRejectDialogOpen, setAcceptRejectDialogOpen] = useState(false);

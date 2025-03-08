@@ -1,6 +1,6 @@
 import { Suspense, lazy, useRef, useState } from 'react';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
@@ -10,7 +10,7 @@ import { StyleClass } from 'primereact/styleclass';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
-import { href, useNavigate, useParams } from 'react-router';
+import { href, useLoaderData, useNavigate, useParams } from 'react-router';
 
 import { adminApi } from 'api/http';
 import { requestVideoUpdateMutation } from 'api/mutations';
@@ -23,7 +23,7 @@ import User from 'components/User/User';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
-import { queryClient } from 'router';
+import { queryClient, videoLoaderData } from 'router';
 
 const AdditionalDataDialog = lazy(
   () => import('components/AdditionalDataDialog/AdditionalDataDialog'),
@@ -38,20 +38,8 @@ const VideoStatusHelperSlideover = lazy(
   () => import('components/StatusHelperSlideover/VideoStatusHelperSlideover'),
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = requestVideoRetrieveQuery(
-    Number(params.requestId),
-    Number(params.videoId),
-  );
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
-}
-
 const VideoDetailsPage = () => {
-  const { requestId, videoId } = useParams();
+  const { requestId, videoId } = useLoaderData() as videoLoaderData;
   const { showToast } = useToast();
   const { mutateAsync } = useMutation(
     requestVideoUpdateMutation(Number(requestId), Number(videoId)),
@@ -64,7 +52,7 @@ const VideoDetailsPage = () => {
     dataUpdatedAt,
     error,
     refetch,
-  } = useQuery(requestVideoRetrieveQuery(Number(requestId), Number(videoId)));
+  } = useSuspenseQuery(requestVideoRetrieveQuery(requestId, videoId));
 
   const [additionalDataDialogError, setAdditionalDataDialogError] =
     useState('');

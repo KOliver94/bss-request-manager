@@ -1,9 +1,9 @@
 import { Suspense, lazy, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { ProgressBar } from 'primereact/progressbar';
-import { useNavigate, useParams } from 'react-router';
+import { LoaderFunctionArgs, useLoaderData, useNavigate } from 'react-router';
 
 import { usersRetrieveQuery } from 'api/queries';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
@@ -20,23 +20,29 @@ const WorkedOnSection = lazy(
   () => import('components/UserProfile/WorkedOnSection'),
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = usersRetrieveQuery(Number(params.userId));
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
+export type loaderData = Awaited<ReturnType<typeof loader>>;
+
+export async function loader({ params }: LoaderFunctionArgs) {
+  if (!params.userId) {
+    throw new Error('No user ID provided');
+  }
+  const userData = await queryClient.ensureQueryData(
+    usersRetrieveQuery(params.userId),
   );
+  return {
+    userId: params.userId,
+    userFullName: `${userData.last_name} ${userData.first_name}`,
+  };
 }
 
 const UserProfilePage = () => {
   const [section, setSection] = useState<string>('profile');
-  const { userId } = useParams();
+  const { userId } = useLoaderData() as loaderData;
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const { data, dataUpdatedAt, error, refetch } = useQuery(
-    usersRetrieveQuery(Number(userId)),
+  const { data, dataUpdatedAt, error, refetch } = useSuspenseQuery(
+    usersRetrieveQuery(userId),
   );
 
   if (error) {
