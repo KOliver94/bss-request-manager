@@ -153,14 +153,14 @@ const VideoDetailsPage = () => {
       });
   };
 
-  const onAiredDateRemove = async (airedDate: string) => {
+  const onAiredDateRemove = (airedDate: string) => {
     setLoading(true);
 
     const aired = (queryResult.additional_data.aired || []).filter(
       (element: string) => element !== airedDate,
     );
 
-    await mutateAsync({
+    mutateAsync({
       additional_data: {
         ...queryResult.additional_data,
         aired: aired,
@@ -192,6 +192,8 @@ const VideoDetailsPage = () => {
       .finally(() => {
         setLoading(false);
       });
+
+    return true;
   };
 
   const onAiredDateSave = async (data: { airedDate: Date }) => {
