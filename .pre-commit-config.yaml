@@ -141,9 +141,9 @@ repos:
           ]
         additional_dependencies:
           - '@eslint/js@9.22.0'
-          - '@tanstack/eslint-plugin-query@5.67.2'
+          - '@tanstack/eslint-plugin-query@5.68.0'
           - eslint-config-prettier@10.1.1
-          - eslint-import-resolver-typescript@3.8.4
+          - eslint-import-resolver-typescript@3.9.0
           - eslint-plugin-import@2.31.0
           - eslint-plugin-prettier@5.2.3
           - eslint-plugin-react-hooks@5.2.0
