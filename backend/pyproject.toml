@@ -23,14 +23,14 @@ dependencies = [
     "django-simple-history==3.8.0",
     "drf-recaptcha==4.0.2",
     "drf-spectacular==0.28.0",
-    "google-api-python-client==2.163.0",
+    "google-api-python-client==2.165.0",
     "google-auth-httplib2==0.2.0",
     "google-auth-oauthlib==1.2.1",
     "jsonschema[format]==4.23.0",
     "libgravatar==1.0.4",
     "python-decouple==3.8",
     "requests==2.32.3",
-    "sentry-sdk==2.22.0",
+    "sentry-sdk==2.24.1",
     "social-auth-app-django==5.4.3",
     "whitenoise[brotli]==6.9.0"
 ]
@@ -82,18 +82,18 @@ optional = true
 pytest-github-actions-annotate-failures = "0.3.0"
 
 [tool.poetry.group.debug.dependencies]
-django-debug-toolbar = "5.0.1"
+django-debug-toolbar = "5.1.0"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "4.1.0"
-psycopg = {extras = ["binary"], version = "3.2.5"}
+pre-commit = "4.2.0"
+psycopg = {extras = ["binary"], version = "3.2.6"}
 
 [tool.poetry.group.prod]
 optional = true
 
 [tool.poetry.group.prod.dependencies]
 gunicorn = "23.0.0"
-psycopg = {extras = ["c"], version = "3.2.5"}
+psycopg = {extras = ["c"], version = "3.2.6"}
 
 [tool.poetry.group.test.dependencies]
 model_bakery = "1.20.4"
@@ -101,7 +101,7 @@ pytest = "8.3.5"
 pytest-cov = "6.0.0"
 pytest-django = "4.10.0"
 pytest-xdist = {extras = ["psutil"], version = "3.6.1"}
-responses = "0.25.6"
+responses = "0.25.7"
 time-machine = "2.16.0"
 
 [tool.pytest.ini_options]
