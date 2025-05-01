@@ -219,7 +219,7 @@ export const todosListQuery = (
       undefined,
       status as AdminTodosListStatusEnum[],
     );
-    return todos.data.results;
+    return todos.data.results || [];
   },
   queryKey: ['todos', assignees, ordering, status],
   refetchInterval: 1000 * 30,
@@ -245,7 +245,7 @@ export const usersListQuery = () => ({
       undefined,
       10000,
     );
-    return users.data.results;
+    return users.data.results || [];
   },
   queryKey: ['users'],
   refetchInterval: 1000 * 30,
