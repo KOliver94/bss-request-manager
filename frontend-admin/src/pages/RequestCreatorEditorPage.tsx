@@ -21,6 +21,7 @@ import {
   useParams,
   useRevalidator,
 } from 'react-router';
+import { queryClient } from 'router';
 
 import { RequestAdminRetrieve, UserNestedDetail } from 'api/models';
 import { requestCreateMutation, requestUpdateMutation } from 'api/mutations';
@@ -32,7 +33,6 @@ import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getName } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
-import { queryClient } from 'router';
 
 const NewRequesterForm = lazy(
   () => import('components/RequestCreator/NewRequesterForm'),

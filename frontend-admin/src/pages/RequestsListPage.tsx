@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Dropdown } from 'primereact/dropdown';
 import type { DropdownChangeEvent } from 'primereact/dropdown';
+import { queryClient } from 'router';
 
 import { requestsListQuery } from 'api/queries';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
@@ -12,7 +13,6 @@ import {
   getLatestSemester,
   getSemesters,
 } from 'helpers/SemesterHelper';
-import { queryClient } from 'router';
 
 export async function loader() {
   const query = requestsListQuery(getLatestSemester());

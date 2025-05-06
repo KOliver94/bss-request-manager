@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { classNames } from 'primereact/utils';
 import { href, useParams } from 'react-router';
+import { queryClient } from 'router';
 
 import { requestRetrieveQuery, requestVideosListQuery } from 'api/queries';
 import LinkButton from 'components/LinkButton/LinkButton';
 import VideosDataTable from 'components/VideosDataTable/VideosDataTable';
 import useMobile from 'hooks/useMobile';
-import { queryClient } from 'router';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function loader({ params }: any) {

@@ -4,13 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { ProgressBar } from 'primereact/progressbar';
 import { useNavigate, useParams } from 'react-router';
+import { queryClient } from 'router';
 
 import { usersRetrieveQuery } from 'api/queries';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import NavigationButton from 'components/UserProfile/NavigationButton';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { useToast } from 'providers/ToastProvider';
-import { queryClient } from 'router';
 
 const BanSection = lazy(() => import('components/UserProfile/BanSection'));
 const ProfileSection = lazy(
