@@ -13,7 +13,6 @@ import { classNames } from 'primereact/utils';
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { href, useNavigate, useParams } from 'react-router';
-import { queryClient } from 'router';
 
 import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
@@ -42,6 +41,7 @@ import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
+import { queryClient } from 'router';
 import { RequestAdditionalDataRecordingType } from 'types/additionalDataTypes';
 
 const AcceptRejectDialog = lazy(

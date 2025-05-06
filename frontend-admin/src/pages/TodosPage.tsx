@@ -6,7 +6,6 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
 import type { MultiSelectChangeEvent } from 'primereact/multiselect';
-import { queryClient } from 'router';
 
 import { StatusEnum } from 'api/models/status-enum';
 import { UserAdminList } from 'api/models/user-admin-list';
@@ -17,6 +16,7 @@ import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { TODO_STATUSES } from 'components/StatusTag/statusTagConsts';
 import { StatusStyle } from 'components/StatusTag/StatusTagTypes';
 import Todos from 'components/Todos/Todos';
+import { queryClient } from 'router';
 
 export async function loader() {
   const query = todosListQuery([], '-created', [1]);

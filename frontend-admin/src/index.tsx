@@ -13,13 +13,13 @@ import {
   useNavigationType,
 } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
-import router, { queryClient } from 'router';
 import { register } from 'timeago.js';
 import huLocal from 'timeago.js/lib/lang/hu';
 
 import { getName } from 'helpers/LocalStorageHelper';
 import { ThemeProvider } from 'providers/ThemeProvider';
 import { ToastProvider } from 'providers/ToastProvider';
+import router, { queryClient } from 'router';
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'primeicons/primeicons.css';

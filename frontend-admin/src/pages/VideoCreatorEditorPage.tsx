@@ -16,7 +16,6 @@ import {
   useParams,
   useRevalidator,
 } from 'react-router';
-import { queryClient } from 'router';
 
 import { UserNestedList, VideoAdminRetrieve } from 'api/models';
 import {
@@ -29,6 +28,7 @@ import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { useToast } from 'providers/ToastProvider';
+import { queryClient } from 'router';
 
 export interface IVideoCreator {
   additional_data: {

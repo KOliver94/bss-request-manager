@@ -9,10 +9,10 @@ import type {
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
-import { queryClient } from 'router';
 
 import { usersListQuery } from 'api/queries';
 import UsersDataTable from 'components/UsersDataTable/UsersDataTable';
+import { queryClient } from 'router';
 
 export async function loader() {
   const query = usersListQuery();

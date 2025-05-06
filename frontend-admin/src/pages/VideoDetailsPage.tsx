@@ -11,7 +11,6 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { href, useNavigate, useParams } from 'react-router';
-import { queryClient } from 'router';
 
 import { adminApi } from 'api/http';
 import { requestVideoUpdateMutation } from 'api/mutations';
@@ -24,6 +23,7 @@ import User from 'components/User/User';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
+import { queryClient } from 'router';
 
 const AdditionalDataDialog = lazy(
   () => import('components/AdditionalDataDialog/AdditionalDataDialog'),
