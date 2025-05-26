@@ -33,7 +33,7 @@ repos:
         name: 'Check Poetry config and verify that lockfile is consistent with pyproject.toml'
         args: [-C, ./backend, --lock]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
+    rev: v3.20.0
     hooks:
       - id: pyupgrade
         name: 'Upgrade Python syntax to newer versions'
@@ -61,7 +61,7 @@ repos:
       - id: black
         name: 'Format Python code'
   - repo: https://github.com/rtts/djhtml
-    rev: 3.0.7
+    rev: 3.0.8
     hooks:
       - id: djhtml
         name: 'Format Django templates'
