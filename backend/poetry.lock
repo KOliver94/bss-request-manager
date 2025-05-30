@@ -1281,14 +1281,14 @@ files = [
 
 [[package]]
 name = "jsonschema"
-version = "4.23.0"
+version = "4.24.0"
 description = "An implementation of JSON Schema validation for Python"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "jsonschema-4.23.0-py3-none-any.whl", hash = "sha256:fbadb6f8b144a8f8cf9f0b89ba94501d143e50411a1278633f56a7acf7fd5566"},
-    {file = "jsonschema-4.23.0.tar.gz", hash = "sha256:d71497fef26351a33265337fa77ffeb82423f3ea21283cd9467bb03999266bc4"},
+    {file = "jsonschema-4.24.0-py3-none-any.whl", hash = "sha256:a462455f19f5faf404a7902952b6f0e3ce868f3ee09a359b05eca6673bd8412d"},
+    {file = "jsonschema-4.24.0.tar.gz", hash = "sha256:0b4e8069eb12aedfa881333004bccaec24ecef5a8a6a4b6df142b2cc9599d196"},
 ]
 
 [package.dependencies]
@@ -1833,14 +1833,14 @@ pytest = ">=6.0.0"
 
 [[package]]
 name = "pytest-xdist"
-version = "3.6.1"
+version = "3.7.0"
 description = "pytest xdist plugin for distributed testing, most importantly across multiple CPUs"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["test"]
 files = [
-    {file = "pytest_xdist-3.6.1-py3-none-any.whl", hash = "sha256:9ed4adfb68a016610848639bb7e02c9352d5d9f03d04809919e2dafc3be4cca7"},
-    {file = "pytest_xdist-3.6.1.tar.gz", hash = "sha256:ead156a4db231eec769737f57668ef58a2084a34b2e55c4a8fa20d861107300d"},
+    {file = "pytest_xdist-3.7.0-py3-none-any.whl", hash = "sha256:7d3fbd255998265052435eb9daa4e99b62e6fb9cfb6efd1f858d4d8c0c7f0ca0"},
+    {file = "pytest_xdist-3.7.0.tar.gz", hash = "sha256:f9248c99a7c15b7d2f90715df93610353a485827bc06eefb6566d23f6400f126"},
 ]
 
 [package.dependencies]
@@ -2586,4 +2586,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "4ff26409428bf982ffc63fcc8655455352d4cce8963888fc9c6b97f1782e584e"
+content-hash = "73fdad80f50f7756ee35b21499e1fca9437d6b7d2889bafa548b9cc1765cd035"
