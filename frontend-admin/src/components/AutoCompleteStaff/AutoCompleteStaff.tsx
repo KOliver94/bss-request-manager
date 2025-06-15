@@ -11,7 +11,8 @@ import { getUserId } from 'helpers/LocalStorageHelper';
 
 const AutoCompleteStaff = forwardRef<
   React.Ref<HTMLInputElement>,
-  AutoCompleteProps
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  AutoCompleteProps<any, boolean>
 >((props, ref) => {
   const { data } = useQuery(usersStaffListQuery());
   const [filteredStaff, setFilteredStaff] = useState<UserAdminList[]>([]);
