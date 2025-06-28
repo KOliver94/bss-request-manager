@@ -178,7 +178,7 @@ function RequestCreatorPage() {
     <>
       <Parallax small filter>
         <div className={stylesModule.container}>
-          <GridContainer justifyContent="center">
+          <GridContainer sx={{ justifyContent: 'center' }}>
             <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
               <h1 className={stylesModule.title}>Új felkérés beküldése</h1>
             </GridItem>
@@ -189,7 +189,7 @@ function RequestCreatorPage() {
         <div
           className={classNames(stylesModule.container, stylesModule.section)}
         >
-          <GridContainer justifyContent="center">
+          <GridContainer sx={{ justifyContent: 'center' }}>
             <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
               {isMobileView ? (
                 <>
@@ -235,7 +235,7 @@ function RequestCreatorPage() {
             </GridItem>
           </GridContainer>
           {loading && activeStep === 0 ? (
-            <GridContainer justifyContent="center">
+            <GridContainer sx={{ justifyContent: 'center' }}>
               <CircularProgress
                 className={stylesModule.circularProgress}
                 size={60}
@@ -243,7 +243,7 @@ function RequestCreatorPage() {
             </GridContainer>
           ) : (
             <>
-              <GridContainer justifyContent="center">
+              <GridContainer sx={{ justifyContent: 'center' }}>
                 <GridItem
                   size={{ xs: 12, sm: 12, md: 6 }}
                   className={stylesModule.contentBox}
@@ -259,7 +259,7 @@ function RequestCreatorPage() {
                   />
                 </GridItem>
               </GridContainer>
-              <GridContainer justifyContent="center">
+              <GridContainer sx={{ justifyContent: 'center' }}>
                 <GridItem
                   size={{ xs: 12, sm: 12 }}
                   className={stylesModule.textCenter}

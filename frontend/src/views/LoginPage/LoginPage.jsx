@@ -144,7 +144,7 @@ function LoginPage() {
       }}
     >
       <div className={stylesModule.container}>
-        <GridContainer justifyContent="center">
+        <GridContainer sx={{ justifyContent: 'center' }}>
           <GridItem size={{ xs: 12, sm: 12, md: 4 }}>
             <Card className={stylesModule[cardAnimation]}>
               <CardHeader color="primary" className={stylesModule.cardHeader}>

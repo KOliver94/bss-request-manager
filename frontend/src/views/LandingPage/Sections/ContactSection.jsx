@@ -62,7 +62,7 @@ export default function ContactSection() {
 
   return (
     <div className={stylesModule.section}>
-      <GridContainer justifyContent="center">
+      <GridContainer sx={{ justifyContent: 'center' }}>
         <GridItem size={{ xs: 12, sm: 12, md: 8 }}>
           <h2 className={stylesModule.title}>Egyéb kérdések esetén</h2>
           <h4 className={stylesModule.description}>

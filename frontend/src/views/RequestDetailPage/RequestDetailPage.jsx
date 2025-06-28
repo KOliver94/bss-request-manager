@@ -97,7 +97,7 @@ export default function RequestDetailPage() {
     <>
       <Parallax small filter>
         <div className={stylesModule.container}>
-          <GridContainer justifyContent="center">
+          <GridContainer sx={{ justifyContent: 'center' }}>
             <GridItem className={stylesModule.textCenter}>
               <h1 className={stylesModule.title}>
                 {loading ? 'Betöltés...' : data.title}
@@ -121,7 +121,7 @@ export default function RequestDetailPage() {
           className={classNames(stylesModule.container, stylesModule.section)}
         >
           {loading ? (
-            <GridContainer justifyContent="center">
+            <GridContainer sx={{ justifyContent: 'center' }}>
               <CircularProgress
                 className={stylesModule.circularProgress}
                 size={60}
@@ -129,7 +129,7 @@ export default function RequestDetailPage() {
             </GridContainer>
           ) : (
             <GridContainer
-              justifyContent="center"
+              sx={{ justifyContent: 'center' }}
               className={stylesModule.content}
             >
               <GridItem size={{ xs: 12, sm: 12, md: 6 }}>

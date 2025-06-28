@@ -11,7 +11,7 @@ import stylesModule from './RulesPoliciesSection.module.scss';
 export default function RulesPoliciesSection() {
   return (
     <div className={stylesModule.section}>
-      <GridContainer justifyContent="center">
+      <GridContainer sx={{ justifyContent: 'center' }}>
         <GridItem size={{ xs: 12, sm: 12, md: 8 }}>
           <h2 className={stylesModule.title}>Irányelvek és szabályzat</h2>
           <h5 className={stylesModule.description}>

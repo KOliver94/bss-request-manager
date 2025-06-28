@@ -68,7 +68,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={hu}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <GridContainer justifyContent="center">
+        <GridContainer sx={{ justifyContent: 'center' }}>
           <GridItem>
             <Controller
               name="title"
@@ -210,7 +210,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
             />
           </GridItem>
         </GridContainer>
-        <GridContainer justifyContent="center">
+        <GridContainer sx={{ justifyContent: 'center' }}>
           <GridItem>
             <Button onClick={handleBack} className={stylesModule.button}>
               Vissza

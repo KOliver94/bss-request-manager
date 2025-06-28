@@ -20,9 +20,6 @@ const {
 const theme = createTheme(
   {
     components: {
-      MuiGrid: {
-        disableEqualOverflow: true,
-      },
       MuiRating: {
         styleOverrides: {
           label: {

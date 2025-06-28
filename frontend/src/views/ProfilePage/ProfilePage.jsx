@@ -243,7 +243,7 @@ export default function ProfilePage() {
         <div
           className={classNames(stylesModule.container, stylesModule.section)}
         >
-          <GridContainer justifyContent="center">
+          <GridContainer sx={{ justifyContent: 'center' }}>
             <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
               <div className={stylesModule.profile}>
                 <div>
@@ -338,7 +338,7 @@ export default function ProfilePage() {
               </div>
             </GridItem>
           </GridContainer>
-          <GridContainer justifyContent="center">
+          <GridContainer sx={{ justifyContent: 'center' }}>
             {loading ? (
               <CircularProgress
                 className={stylesModule.circularProgress}
@@ -347,7 +347,7 @@ export default function ProfilePage() {
             ) : (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <GridContainer
-                  justifyContent="center"
+                  sx={{ justifyContent: 'center' }}
                   className={stylesModule.field}
                 >
                   {!isMobileView && (
@@ -406,8 +406,10 @@ export default function ProfilePage() {
                           </Alert>
                         ) : (
                           <GridContainer
-                            justifyContent="center"
-                            alignItems="center"
+                            sx={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}
                           >
                             {Object.entries(userData.profile.avatar)
                               .filter(
@@ -596,8 +598,10 @@ export default function ProfilePage() {
                           </AccordionSummary>
                           <AccordionDetails>
                             <GridContainer
-                              justifyContent="center"
-                              alignItems="center"
+                              sx={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
                             >
                               <LocalizationProvider
                                 dateAdapter={AdapterDateFns}
@@ -654,8 +658,10 @@ export default function ProfilePage() {
                                 }
                               >
                                 <GridContainer
-                                  justifyContent="space-between"
-                                  alignItems="center"
+                                  sx={{
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                  }}
                                 >
                                   <GridItem size={{ xs: 6 }}>
                                     <Typography variant="body2">
@@ -705,7 +711,7 @@ export default function ProfilePage() {
                   </GridItem>
                 </GridContainer>
                 {userData.role === 'user' && (
-                  <GridContainer justifyContent="center">
+                  <GridContainer sx={{ justifyContent: 'center' }}>
                     <GridItem className={stylesModule.textCenter}>
                       <Button
                         color="error"

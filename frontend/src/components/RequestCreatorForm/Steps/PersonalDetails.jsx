@@ -59,7 +59,7 @@ function PersonalDetails({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <GridContainer justifyContent="center">
+      <GridContainer sx={{ justifyContent: 'center' }}>
         <GridItem>
           {isAuthenticated ? (
             <Alert
@@ -173,7 +173,7 @@ function PersonalDetails({
           />
         </GridItem>
       </GridContainer>
-      <GridContainer justifyContent="center">
+      <GridContainer sx={{ justifyContent: 'center' }}>
         <GridItem size={{ xs: 12, sm: 12, md: 4 }}>
           <Button type="submit" color="primary" className={stylesModule.button}>
             Következő
