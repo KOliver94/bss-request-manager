@@ -29,7 +29,7 @@ export default function PersonalDetails({ control, errors, disabled, isUser }) {
           </Alert>
         )}
       </GridItem>
-      <GridItem xs={12} sm={6}>
+      <GridItem size={{ xs: 12, sm: 6 }}>
         <Controller
           name="last_name"
           control={control}
@@ -46,7 +46,7 @@ export default function PersonalDetails({ control, errors, disabled, isUser }) {
           )}
         />
       </GridItem>
-      <GridItem xs={12} sm={6}>
+      <GridItem size={{ xs: 12, sm: 6 }}>
         <Controller
           name="first_name"
           control={control}

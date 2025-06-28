@@ -244,7 +244,7 @@ export default function ProfilePage() {
           className={classNames(stylesModule.container, stylesModule.section)}
         >
           <GridContainer justifyContent="center">
-            <GridItem xs={12} sm={12} md={6}>
+            <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
               <div className={stylesModule.profile}>
                 <div>
                   <Avatar
@@ -358,7 +358,7 @@ export default function ProfilePage() {
                       isUser={userData.role === 'user'}
                     />
                   )}
-                  <GridItem xs={12} sm={12} md={6}>
+                  <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
                     {isMobileView && (
                       <PersonalDetailsMobile
                         control={control}
@@ -418,9 +418,7 @@ export default function ProfilePage() {
                                 return (
                                   <GridItem
                                     key={avatar[0]}
-                                    xs={12}
-                                    sm={4}
-                                    md={4}
+                                    size={{ xs: 12, sm: 4, md: 4 }}
                                     className={
                                       isXsView
                                         ? stylesModule.gridItemMobile
@@ -607,8 +605,7 @@ export default function ProfilePage() {
                               >
                                 <>
                                   <GridItem
-                                    xs={12}
-                                    sm={6}
+                                    size={{ xs: 12, sm: 6 }}
                                     className={
                                       isXsView
                                         ? stylesModule.gridItemMobile
@@ -628,8 +625,7 @@ export default function ProfilePage() {
                                     />
                                   </GridItem>
                                   <GridItem
-                                    xs={12}
-                                    sm={6}
+                                    size={{ xs: 12, sm: 6 }}
                                     className={
                                       isXsView
                                         ? stylesModule.gridItemMobile
@@ -661,13 +657,13 @@ export default function ProfilePage() {
                                   justifyContent="space-between"
                                   alignItems="center"
                                 >
-                                  <GridItem xs={6}>
+                                  <GridItem size={{ xs: 6 }}>
                                     <Typography variant="body2">
                                       Felelős pozíciók
                                     </Typography>
                                   </GridItem>
                                   <GridItem
-                                    xs={6}
+                                    size={{ xs: 6 }}
                                     className={stylesModule.gridEnd}
                                   >
                                     <Switch

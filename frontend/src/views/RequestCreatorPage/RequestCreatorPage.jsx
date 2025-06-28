@@ -179,7 +179,7 @@ function RequestCreatorPage() {
       <Parallax small filter>
         <div className={stylesModule.container}>
           <GridContainer justifyContent="center">
-            <GridItem xs={12} sm={12} md={6}>
+            <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
               <h1 className={stylesModule.title}>Új felkérés beküldése</h1>
             </GridItem>
           </GridContainer>
@@ -190,7 +190,7 @@ function RequestCreatorPage() {
           className={classNames(stylesModule.container, stylesModule.section)}
         >
           <GridContainer justifyContent="center">
-            <GridItem xs={12} sm={12} md={6}>
+            <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
               {isMobileView ? (
                 <>
                   <Typography
@@ -245,9 +245,7 @@ function RequestCreatorPage() {
             <>
               <GridContainer justifyContent="center">
                 <GridItem
-                  xs={12}
-                  sm={12}
-                  md={6}
+                  size={{ xs: 12, sm: 12, md: 6 }}
                   className={stylesModule.contentBox}
                 >
                   <RequestCreatorForm
@@ -262,7 +260,10 @@ function RequestCreatorPage() {
                 </GridItem>
               </GridContainer>
               <GridContainer justifyContent="center">
-                <GridItem xs={12} sm={12} className={stylesModule.textCenter}>
+                <GridItem
+                  size={{ xs: 12, sm: 12 }}
+                  className={stylesModule.textCenter}
+                >
                   {activeStep < steps.length ? (
                     <>
                       {activeStep === steps.length - 1 && (

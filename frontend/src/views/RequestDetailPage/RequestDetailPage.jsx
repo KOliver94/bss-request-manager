@@ -104,9 +104,7 @@ export default function RequestDetailPage() {
               </h1>
             </GridItem>
             <GridItem
-              xs={12}
-              sm={12}
-              md={6}
+              size={{ xs: 12, sm: 12, md: 6 }}
               className={stylesModule.textCenter}
             >
               {!loading && (
@@ -134,7 +132,7 @@ export default function RequestDetailPage() {
               justifyContent="center"
               className={stylesModule.content}
             >
-              <GridItem xs={12} sm={12} md={6}>
+              <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
                 <BasicInformation
                   requestId={id}
                   requestData={data}
@@ -143,7 +141,7 @@ export default function RequestDetailPage() {
                   setReload={setReload}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
+              <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
                 <CustomTabs
                   headerColor="primary"
                   tabs={tabsContent()}

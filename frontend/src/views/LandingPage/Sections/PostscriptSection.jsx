@@ -10,7 +10,7 @@ export default function Postscript() {
   return (
     <div className={stylesModule.section}>
       <GridContainer justifyContent="center">
-        <GridItem xs={12} sm={12} md={8}>
+        <GridItem size={{ xs: 12, sm: 12, md: 8 }}>
           <h5 className={stylesModule.description}>
             Az oldal használatával elfogadod a{' '}
             <Link to="/terms">Szolgáltatási Feltételeket</Link> valamint az{' '}

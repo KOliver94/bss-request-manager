@@ -23,7 +23,10 @@ function PrivacyPolicyPage() {
           className={classNames(stylesModule.container, stylesModule.section)}
         >
           <GridContainer justifyContent="center">
-            <GridItem xs={12} sm={12} md={6} className={stylesModule.text}>
+            <GridItem
+              size={{ xs: 12, sm: 12, md: 6 }}
+              className={stylesModule.text}
+            >
               <h2 className={stylesModule.title}>Privacy Policy</h2>
               <p>
                 Your privacy is important to us. It is Budavári Schönherz

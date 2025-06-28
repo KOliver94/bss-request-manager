@@ -5,7 +5,14 @@ import stylesModule from './GridContainer.module.scss';
 
 export default function GridContainer({ children, className = '', ...rest }) {
   return (
-    <Grid container {...rest} className={`${stylesModule.grid} ${className}`}>
+    <Grid
+      container
+      {...rest}
+      className={`${stylesModule.grid} ${className}`}
+      sx={{
+        width: '100%',
+      }}
+    >
       {children}
     </Grid>
   );

@@ -10,7 +10,7 @@ export default function PersonalDetailsNormal({
   isUser,
 }) {
   return (
-    <GridItem xs={12} sm={12} md={6}>
+    <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
       <PersonalDetails
         control={control}
         errors={errors}

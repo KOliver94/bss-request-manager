@@ -23,7 +23,10 @@ function TermsOfServicePage() {
           className={classNames(stylesModule.container, stylesModule.section)}
         >
           <GridContainer justifyContent="center">
-            <GridItem xs={12} sm={12} md={6} className={stylesModule.text}>
+            <GridItem
+              size={{ xs: 12, sm: 12, md: 6 }}
+              className={stylesModule.text}
+            >
               <h2 className={stylesModule.title}>Terms of Service</h2>
               <h3>1. Terms</h3>
               <p>

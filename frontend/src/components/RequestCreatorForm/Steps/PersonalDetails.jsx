@@ -102,7 +102,7 @@ function PersonalDetails({
             </Alert>
           )}
         </GridItem>
-        <GridItem xs={12} sm={6}>
+        <GridItem size={{ xs: 12, sm: 6 }}>
           <Controller
             name="requester_last_name"
             control={control}
@@ -119,7 +119,7 @@ function PersonalDetails({
             )}
           />
         </GridItem>
-        <GridItem xs={12} sm={6}>
+        <GridItem size={{ xs: 12, sm: 6 }}>
           <Controller
             name="requester_first_name"
             control={control}
@@ -174,7 +174,7 @@ function PersonalDetails({
         </GridItem>
       </GridContainer>
       <GridContainer justifyContent="center">
-        <GridItem xs={12} sm={12} md={4}>
+        <GridItem size={{ xs: 12, sm: 12, md: 4 }}>
           <Button type="submit" color="primary" className={stylesModule.button}>
             Következő
           </Button>

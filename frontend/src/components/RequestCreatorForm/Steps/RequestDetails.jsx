@@ -85,7 +85,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
               )}
             />
           </GridItem>
-          <GridItem xs={12} sm={6}>
+          <GridItem size={{ xs: 12, sm: 6 }}>
             <Controller
               name="start_datetime"
               control={control}
@@ -106,7 +106,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
               )}
             />
           </GridItem>
-          <GridItem xs={12} sm={6}>
+          <GridItem size={{ xs: 12, sm: 6 }}>
             <Controller
               name="end_datetime"
               control={control}
@@ -127,7 +127,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
               )}
             />
           </GridItem>
-          <GridItem xs={12} sm={6}>
+          <GridItem size={{ xs: 12, sm: 6 }}>
             <Controller
               name="place"
               control={control}
@@ -143,7 +143,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
               )}
             />
           </GridItem>
-          <GridItem xs={12} sm={6}>
+          <GridItem size={{ xs: 12, sm: 6 }}>
             <Controller
               name="type_obj"
               control={control}
