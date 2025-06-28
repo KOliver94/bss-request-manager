@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 
 import Menu from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
-import Hidden from '@mui/material/Hidden';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import classNames from 'classnames';
@@ -73,17 +73,13 @@ export default function Header({
         {leftLinks !== undefined ? brandComponent : null}
         <div className={stylesModule.flex}>
           {leftLinks !== undefined ? (
-            <Hidden mdDown implementation="css">
-              {leftLinks}
-            </Hidden>
+            <Box sx={{ display: { xs: 'none', md: 'block' } }}>{leftLinks}</Box>
           ) : (
             brandComponent
           )}
         </div>
-        <Hidden mdDown implementation="css">
-          {rightLinks}
-        </Hidden>
-        <Hidden mdUp>
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>{rightLinks}</Box>
+        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -92,9 +88,9 @@ export default function Header({
           >
             <Menu />
           </IconButton>
-        </Hidden>
+        </Box>
       </Toolbar>
-      <Hidden mdUp implementation="js">
+      <Box sx={{ display: { xs: 'block', md: 'none' } }}>
         <Drawer
           variant="temporary"
           anchor="right"
@@ -109,7 +105,7 @@ export default function Header({
             {rightLinks}
           </div>
         </Drawer>
-      </Hidden>
+      </Box>
     </AppBar>
   );
 }
