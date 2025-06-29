@@ -306,9 +306,7 @@ export default function ProfilePage() {
                             key={`${account.provider}-clickListener`}
                           >
                             <Tooltip
-                              PopperProps={{
-                                disablePortal: true,
-                              }}
+                              slotProps={{ popper: { disablePortal: true } }}
                               onClose={() =>
                                 handleCloseTooltip(account.provider)
                               }

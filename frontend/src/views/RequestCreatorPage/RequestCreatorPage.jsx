@@ -205,7 +205,7 @@ function RequestCreatorPage() {
                     activeStep={activeStep}
                     steps={5}
                     position="static"
-                    LinearProgressProps={{ sx: { width: 1 } }}
+                    slotProps={{ progress: { sx: { width: 1 } } }}
                     className={stylesModule.stepper}
                   />
                 </>
@@ -218,11 +218,13 @@ function RequestCreatorPage() {
                   {steps.map((label) => (
                     <Step key={label}>
                       <StepLabel
-                        StepIconProps={{
-                          classes: {
-                            root: stylesModule.stepIcon,
-                            active: stylesModule.activeIcon,
-                            completed: stylesModule.completedIcon,
+                        slotProps={{
+                          stepIcon: {
+                            classes: {
+                              root: stylesModule.stepIcon,
+                              active: stylesModule.activeIcon,
+                              completed: stylesModule.completedIcon,
+                            },
                           },
                         }}
                       >

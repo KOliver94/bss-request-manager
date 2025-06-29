@@ -6,11 +6,12 @@ const jsxA11yPlugin = require('eslint-plugin-jsx-a11y');
 const importPlugin = require('eslint-plugin-import');
 const prettierPluginRecommended = require('eslint-plugin-prettier/recommended');
 const prettierConfig = require('eslint-config-prettier');
+const tseslint = require('typescript-eslint');
 const path = require('path');
 
 const currentDir = path.resolve(__dirname);
 
-module.exports = [
+module.exports = tseslint.config(
   eslintPlugin.configs.recommended,
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat['jsx-runtime'],
@@ -19,23 +20,28 @@ module.exports = [
   importPlugin.flatConfigs.recommended,
   prettierPluginRecommended,
   prettierConfig,
+  tseslint.configs.recommended,
   { ignores: ['**/eslint.config.cjs'] },
   {
     files: ['**/*.{js,mjs,cjs,jsx}'],
     languageOptions: {
       globals: globals.browser,
+      parser: tseslint.parser,
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
         ecmaVersion: 'latest',
+        projectService: true,
         sourceType: 'module',
+        tsconfigRootDir: currentDir,
       },
     },
     linterOptions: {
       reportUnusedDisableDirectives: 'off',
     },
     rules: {
+      '@typescript-eslint/no-deprecated': 'error',
       'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
       'import/no-unresolved': [
         'error',
@@ -98,4 +104,4 @@ module.exports = [
       },
     },
   },
-];
+);

@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import PropTypes from 'prop-types';
 
 const SocialAccount = PropTypes.shape({
