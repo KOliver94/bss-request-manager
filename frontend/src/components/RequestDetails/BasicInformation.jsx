@@ -53,16 +53,18 @@ export default function BasicInformation({
           container
           spacing={1}
           direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          className={stylesModule.titleGrid}
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0 15px',
+          }}
         >
-          <Grid item>
+          <Grid>
             <Typography variant="h6" className={stylesModule.title}>
               Alapinformációk
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Tooltip
               title="Vissza a felkérések listájához"
               placement="top"

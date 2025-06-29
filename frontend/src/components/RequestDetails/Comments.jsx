@@ -109,10 +109,12 @@ export default function Comments({ requestId, requesterId, reload }) {
           container
           spacing={1}
           direction="row"
-          justifyContent="space-between"
-          alignItems="center"
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
         >
-          <Grid item>
+          <Grid>
             <Typography variant="h6" className={stylesModule.title}>
               Hozzászólások
             </Typography>
