@@ -203,7 +203,7 @@ function RequestCreatorPage() {
                   <MobileStepper
                     variant="progress"
                     activeStep={activeStep}
-                    steps={4}
+                    steps={5}
                     position="static"
                     LinearProgressProps={{ sx: { width: 1 } }}
                     className={stylesModule.stepper}
