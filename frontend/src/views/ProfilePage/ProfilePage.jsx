@@ -283,53 +283,58 @@ export default function ProfilePage() {
                           })}
                         </h6>
                       )}
-                      {userData.social_accounts.map((account) => {
-                        let icon;
-                        switch (account.provider) {
-                          case 'authsch':
-                            icon = 'fa-brands icon-sch';
-                            break;
-                          case 'google-oauth2':
-                            icon = 'fa-brands fa-google';
-                            break;
-                          case 'microsoft-graph':
-                            icon = 'fa-brands fa-microsoft';
-                            break;
-                          default:
-                            break;
-                        }
-                        return (
-                          <ClickAwayListener
-                            onClickAway={() =>
-                              handleCloseTooltip(account.provider)
-                            }
-                            key={`${account.provider}-clickListener`}
-                          >
-                            <Tooltip
-                              slotProps={{ popper: { disablePortal: true } }}
-                              onClose={() =>
+                      {userData.social_accounts
+                        .filter((account) => account.provider !== 'bss-login')
+                        .map((account) => {
+                          let icon;
+                          switch (account.provider) {
+                            case 'authsch':
+                              icon = 'fa-brands icon-sch';
+                              break;
+                            case 'google-oauth2':
+                              icon = 'fa-brands fa-google';
+                              break;
+                            case 'microsoft-graph':
+                              icon = 'fa-brands fa-microsoft';
+                              break;
+                            default:
+                              icon = 'fa-solid fa-user-shield';
+                              break;
+                          }
+                          return (
+                            <ClickAwayListener
+                              onClickAway={() =>
                                 handleCloseTooltip(account.provider)
                               }
-                              open={account.provider === tooltipOpen}
-                              disableFocusListener
-                              disableHoverListener
-                              disableTouchListener
-                              title={account.uid}
-                              key={`${account.provider}-tooltip`}
-                              arrow
+                              key={`${account.provider}-clickListener`}
                             >
-                              <Button
-                                justIcon
-                                link
-                                key={`${account.provider}-button`}
-                                onClick={() => setTooltipOpen(account.provider)}
+                              <Tooltip
+                                slotProps={{ popper: { disablePortal: true } }}
+                                onClose={() =>
+                                  handleCloseTooltip(account.provider)
+                                }
+                                open={account.provider === tooltipOpen}
+                                disableFocusListener
+                                disableHoverListener
+                                disableTouchListener
+                                title={account.uid}
+                                key={`${account.provider}-tooltip`}
+                                arrow
                               >
-                                <i className={icon} />
-                              </Button>
-                            </Tooltip>
-                          </ClickAwayListener>
-                        );
-                      })}
+                                <Button
+                                  justIcon
+                                  link
+                                  key={`${account.provider}-button`}
+                                  onClick={() =>
+                                    setTooltipOpen(account.provider)
+                                  }
+                                >
+                                  <i className={icon} />
+                                </Button>
+                              </Tooltip>
+                            </ClickAwayListener>
+                          );
+                        })}
                     </>
                   )}
                 </div>
