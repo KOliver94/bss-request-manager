@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { cloneElement, useState, useEffect } from 'react';
 
 import Menu from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
@@ -26,6 +26,11 @@ export default function Header({
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const closeDrawer = () => {
+    setMobileOpen(false);
+  };
+
   const headerColorChange = () => {
     const windowsScrollTop = window.pageYOffset;
     if (windowsScrollTop > changeColorOnScroll.height) {
@@ -67,6 +72,10 @@ export default function Header({
     };
   });
 
+  const mobileLeftLinks = leftLinks && cloneElement(leftLinks, { closeDrawer });
+  const mobileRightLinks =
+    rightLinks && cloneElement(rightLinks, { closeDrawer });
+
   return (
     <AppBar className={appBarClasses}>
       <Toolbar className={stylesModule.container}>
@@ -101,8 +110,8 @@ export default function Header({
           onClose={handleDrawerToggle}
         >
           <div className={stylesModule.appResponsive}>
-            {leftLinks}
-            {rightLinks}
+            {mobileLeftLinks}
+            {mobileRightLinks}
           </div>
         </Drawer>
       </Box>

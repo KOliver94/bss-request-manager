@@ -30,6 +30,7 @@ function AdminButton() {
 export default function HeaderLinks({
   hideNewRequest = false,
   hideLogin = false,
+  closeDrawer,
 }) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
@@ -52,6 +53,9 @@ export default function HeaderLinks({
       });
       navigate('/', { replace: true });
       setLoading(false);
+      if (closeDrawer) {
+        closeDrawer();
+      }
     });
   }
 
@@ -65,6 +69,12 @@ export default function HeaderLinks({
     setAvatar(localStorage.getItem('avatar') || null);
     window.addEventListener('storage', storageEventHandler, false);
   }, []);
+
+  const handleLinkClick = () => {
+    if (closeDrawer) {
+      closeDrawer();
+    }
+  };
 
   return (
     <List className={stylesModule.list}>
@@ -89,6 +99,7 @@ export default function HeaderLinks({
                 to="/profile"
                 className={stylesModule.dropdownLink}
                 key="my-profile"
+                onClick={handleLinkClick}
               >
                 <i className="fa-solid fa-circle-user" /> Profilom
               </Link>,
@@ -96,6 +107,7 @@ export default function HeaderLinks({
                 to="/my-requests"
                 className={stylesModule.dropdownLink}
                 key="my-requests"
+                onClick={handleLinkClick}
               >
                 <i className="fa-solid fa-list-check" /> Felkéréseim
               </Link>,
@@ -124,6 +136,7 @@ export default function HeaderLinks({
                 to="/login"
                 state={{ from: location }}
                 className={stylesModule.navReactRouterLink}
+                onClick={handleLinkClick}
               >
                 <Button color="transparent" className={stylesModule.navLink}>
                   <LockOutlinedIcon className={stylesModule.icons} />{' '}
@@ -137,7 +150,11 @@ export default function HeaderLinks({
 
       {!hideNewRequest && (
         <ListItem className={stylesModule.listItem}>
-          <Link to="/new-request" className={stylesModule.navReactRouterLink}>
+          <Link
+            to="/new-request"
+            className={stylesModule.navReactRouterLink}
+            onClick={handleLinkClick}
+          >
             <Button color="primary" className={stylesModule.navLinkMain}>
               <SendRoundedIcon className={stylesModule.icons} />
               Felkérés beküldése
@@ -152,4 +169,5 @@ export default function HeaderLinks({
 HeaderLinks.propTypes = {
   hideNewRequest: PropTypes.bool,
   hideLogin: PropTypes.bool,
+  closeDrawer: PropTypes.func,
 };
