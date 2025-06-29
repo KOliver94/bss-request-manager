@@ -98,14 +98,14 @@ export default function RequestDetailPage() {
       <Parallax small filter>
         <div className={stylesModule.container}>
           <GridContainer sx={{ justifyContent: 'center' }}>
-            <GridItem className={stylesModule.textCenter}>
+            <GridItem sx={{ textAlign: 'center' }}>
               <h1 className={stylesModule.title}>
                 {loading ? 'Betöltés...' : data.title}
               </h1>
             </GridItem>
             <GridItem
               size={{ xs: 12, sm: 12, md: 6 }}
-              className={stylesModule.textCenter}
+              sx={{ textAlign: 'center' }}
             >
               {!loading && (
                 <StatusBadge color={requestStatus.color}>
@@ -128,10 +128,7 @@ export default function RequestDetailPage() {
               />
             </GridContainer>
           ) : (
-            <GridContainer
-              sx={{ justifyContent: 'center' }}
-              className={stylesModule.content}
-            >
+            <GridContainer sx={{ color: 'black', justifyContent: 'center' }}>
               <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
                 <BasicInformation
                   requestId={id}

@@ -350,8 +350,7 @@ export default function ProfilePage() {
             ) : (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <GridContainer
-                  sx={{ justifyContent: 'center' }}
-                  className={stylesModule.field}
+                  sx={{ justifyContent: 'center', padding: '0 15px' }}
                 >
                   {!isMobileView && (
                     <PersonalDetailsNormal
@@ -424,11 +423,12 @@ export default function ProfilePage() {
                                   <GridItem
                                     key={avatar[0]}
                                     size={{ xs: 12, sm: 4, md: 4 }}
-                                    className={
-                                      isXsView
-                                        ? stylesModule.gridItemMobile
-                                        : ''
-                                    }
+                                    sx={{
+                                      paddingTop: isXsView ? '15px' : undefined,
+                                      paddingBottom: isXsView
+                                        ? '15px'
+                                        : undefined,
+                                    }}
                                   >
                                     <Card>
                                       <CardActionArea
@@ -613,11 +613,12 @@ export default function ProfilePage() {
                                 <>
                                   <GridItem
                                     size={{ xs: 12, sm: 6 }}
-                                    className={
-                                      isXsView
-                                        ? stylesModule.gridItemMobile
-                                        : ''
-                                    }
+                                    sx={{
+                                      paddingTop: isXsView ? '15px' : undefined,
+                                      paddingBottom: isXsView
+                                        ? '15px'
+                                        : undefined,
+                                    }}
                                   >
                                     <DatePicker
                                       label="Kezdő dátum"
@@ -633,11 +634,12 @@ export default function ProfilePage() {
                                   </GridItem>
                                   <GridItem
                                     size={{ xs: 12, sm: 6 }}
-                                    className={
-                                      isXsView
-                                        ? stylesModule.gridItemMobile
-                                        : ''
-                                    }
+                                    sx={{
+                                      paddingTop: isXsView ? '15px' : undefined,
+                                      paddingBottom: isXsView
+                                        ? '15px'
+                                        : undefined,
+                                    }}
                                   >
                                     <DatePicker
                                       label="Vége dátum"
@@ -654,11 +656,10 @@ export default function ProfilePage() {
                                 </>
                               </LocalizationProvider>
                               <GridItem
-                                className={
-                                  isXsView
-                                    ? stylesModule.gridItemMobileNoTopPadding
-                                    : stylesModule.gridItemMobile
-                                }
+                                sx={{
+                                  paddingBottom: '15px',
+                                  paddingTop: !isXsView ? '15px' : undefined,
+                                }}
                               >
                                 <GridContainer
                                   sx={{
@@ -666,14 +667,14 @@ export default function ProfilePage() {
                                     alignItems: 'center',
                                   }}
                                 >
-                                  <GridItem size={{ xs: 6 }}>
+                                  <GridItem size={6} sx={{ width: 'inherit' }}>
                                     <Typography variant="body2">
                                       Felelős pozíciók
                                     </Typography>
                                   </GridItem>
                                   <GridItem
-                                    size={{ xs: 6 }}
-                                    className={stylesModule.gridEnd}
+                                    size={6}
+                                    sx={{ textAlign: 'end', width: 'inherit' }}
                                   >
                                     <Switch
                                       checked={includeResponsible}
@@ -715,7 +716,7 @@ export default function ProfilePage() {
                 </GridContainer>
                 {userData.role === 'user' && (
                   <GridContainer sx={{ justifyContent: 'center' }}>
-                    <GridItem className={stylesModule.textCenter}>
+                    <GridItem sx={{ textAlign: 'center' }}>
                       <Button
                         color="error"
                         className={stylesModule.button}

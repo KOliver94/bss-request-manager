@@ -25,7 +25,7 @@ function PrivacyPolicyPage() {
           <GridContainer sx={{ justifyContent: 'center' }}>
             <GridItem
               size={{ xs: 12, sm: 12, md: 6 }}
-              className={stylesModule.text}
+              sx={{ color: 'black', textAlign: 'justify', fontSize: '14px' }}
             >
               <h2 className={stylesModule.title}>Privacy Policy</h2>
               <p>

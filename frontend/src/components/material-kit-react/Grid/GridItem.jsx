@@ -1,16 +1,10 @@
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 
-export default function GridItem({
-  children,
-  className = '',
-  sx = {},
-  ...rest
-}) {
+export default function GridItem({ children, sx = {}, ...rest }) {
   return (
     <Grid
       {...rest}
-      className={className}
       sx={{
         position: 'relative',
         width: '100%',
@@ -28,6 +22,5 @@ export default function GridItem({
 
 GridItem.propTypes = {
   children: PropTypes.node,
-  className: PropTypes.string,
   sx: PropTypes.object,
 };

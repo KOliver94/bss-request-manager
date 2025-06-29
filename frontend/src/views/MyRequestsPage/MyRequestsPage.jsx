@@ -93,7 +93,7 @@ export default function MyRequestsPage() {
           <GridContainer sx={{ justifyContent: 'center' }}>
             <GridItem
               size={{ xs: 12, sm: 12, md: 6 }}
-              className={stylesModule.textCenter}
+              sx={{ textAlign: 'center' }}
             >
               <h1 className={stylesModule.title}>Felkéréseim</h1>
             </GridItem>

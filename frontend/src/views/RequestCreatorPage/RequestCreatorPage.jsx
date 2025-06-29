@@ -248,7 +248,7 @@ function RequestCreatorPage() {
               <GridContainer sx={{ justifyContent: 'center' }}>
                 <GridItem
                   size={{ xs: 12, sm: 12, md: 6 }}
-                  className={stylesModule.contentBox}
+                  sx={{ textAlign: 'center' }}
                 >
                   <RequestCreatorForm
                     step={activeStep}
@@ -264,7 +264,7 @@ function RequestCreatorPage() {
               <GridContainer sx={{ justifyContent: 'center' }}>
                 <GridItem
                   size={{ xs: 12, sm: 12 }}
-                  className={stylesModule.textCenter}
+                  sx={{ textAlign: 'center' }}
                 >
                   {activeStep < steps.length ? (
                     <>
