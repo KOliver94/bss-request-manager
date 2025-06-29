@@ -154,14 +154,14 @@ export default function Comments({ requestId, requesterId, reload }) {
               )}
           </>
         )}
-        {
+        {loading && (
           <>
             <LinearProgress />
             <Box sx={{ marginY: isMobileView ? '15px' : '30px' }}>
               <Divider variant="fullWidth" />
             </Box>
           </>
-        }
+        )}
         {isMobileView ? (
           <CommentMobile
             handleDelete={handleDelete}
