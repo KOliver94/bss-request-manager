@@ -123,44 +123,45 @@ export default function Comments({ requestId, requesterId, reload }) {
       </div>
       <Divider variant="middle" />
       <Paper className={stylesModule.paper} elevation={2}>
-        {data.length > 0 && (
-          <>
-            {data
-              .sort(compareValues('id'))
-              .map((comment) =>
-                isMobileView ? (
-                  <CommentMobile
-                    key={`${comment.id}-comment-base`}
-                    comment={comment}
-                    handleDelete={handleDelete}
-                    handleSubmit={handleSubmit}
-                    isEditing={editingCommentId === comment.id}
-                    loading={loading}
-                    requesterId={requesterId}
-                    setEditingCommentId={setEditingCommentId}
-                  />
-                ) : (
-                  <CommentDesktop
-                    key={`${comment.id}-comment-base`}
-                    comment={comment}
-                    handleDelete={handleDelete}
-                    handleSubmit={handleSubmit}
-                    isEditing={editingCommentId === comment.id}
-                    loading={loading}
-                    requesterId={requesterId}
-                    setEditingCommentId={setEditingCommentId}
-                  />
-                ),
-              )}
-          </>
-        )}
-        {loading && (
+        {loading ? (
           <>
             <LinearProgress />
             <Box sx={{ marginY: isMobileView ? '15px' : '30px' }}>
               <Divider variant="fullWidth" />
             </Box>
           </>
+        ) : (
+          data.length > 0 && (
+            <>
+              {data
+                .sort(compareValues('id'))
+                .map((comment) =>
+                  isMobileView ? (
+                    <CommentMobile
+                      key={`${comment.id}-comment-base`}
+                      comment={comment}
+                      handleDelete={handleDelete}
+                      handleSubmit={handleSubmit}
+                      isEditing={editingCommentId === comment.id}
+                      loading={loading}
+                      requesterId={requesterId}
+                      setEditingCommentId={setEditingCommentId}
+                    />
+                  ) : (
+                    <CommentDesktop
+                      key={`${comment.id}-comment-base`}
+                      comment={comment}
+                      handleDelete={handleDelete}
+                      handleSubmit={handleSubmit}
+                      isEditing={editingCommentId === comment.id}
+                      loading={loading}
+                      requesterId={requesterId}
+                      setEditingCommentId={setEditingCommentId}
+                    />
+                  ),
+                )}
+            </>
+          )
         )}
         {isMobileView ? (
           <CommentMobile

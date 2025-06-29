@@ -227,7 +227,11 @@ export default function Videos({ requestId, reload }) {
 
   return (
     <div>
-      {data.length > 0 ? (
+      {loading ? (
+        <Box sx={{ paddingY: '20px' }}>
+          <LinearProgress />
+        </Box>
+      ) : data.length > 0 ? (
         <>
           {data.sort(compareValues('id')).map((video) => {
             const videoStatus = videoStatuses.find(
@@ -305,10 +309,6 @@ export default function Videos({ requestId, reload }) {
             );
           })}
         </>
-      ) : loading ? (
-        <Box sx={{ paddingY: '20px' }}>
-          <LinearProgress />
-        </Box>
       ) : (
         <p className={stylesModule.noVideosYet}>
           Még nincsenek videók. <i className="fa-regular fa-circle-pause" />
