@@ -74,7 +74,7 @@ export default function CommentDesktop({
           className={isNew ? stylesModule.newComment : ''}
         >
           <Grid container spacing={2}>
-            <Grid item>
+            <Grid>
               <Avatar
                 src={avatarUrl}
                 sx={{
@@ -84,7 +84,7 @@ export default function CommentDesktop({
                 {nameFirstLetter}
               </Avatar>
             </Grid>
-            <Grid item xs>
+            <Grid size="grow">
               <h4 className={stylesModule.commentAuthor}>{userName}</h4>
               <Controller
                 name="text"
@@ -103,9 +103,9 @@ export default function CommentDesktop({
                 )}
               />
             </Grid>
-            <Grid item className={stylesModule.commentButtons}>
+            <Grid sx={{ alignSelf: 'flex-end' }}>
               {!isNew && (
-                <Grid item>
+                <Grid>
                   <Tooltip title="Elvetés" placement="left" arrow>
                     <span>
                       <IconButton
@@ -118,7 +118,7 @@ export default function CommentDesktop({
                   </Tooltip>
                 </Grid>
               )}
-              <Grid item>
+              <Grid>
                 <Tooltip
                   title={isNew ? 'Küldés' : 'Mentés'}
                   placement="left"
@@ -136,7 +136,7 @@ export default function CommentDesktop({
         </form>
       ) : (
         <Grid container spacing={2}>
-          <Grid item>
+          <Grid>
             <Avatar
               src={avatarUrl}
               sx={{
@@ -146,7 +146,7 @@ export default function CommentDesktop({
               {nameFirstLetter}
             </Avatar>
           </Grid>
-          <Grid item xs>
+          <Grid size="grow">
             <Stack direction="row" alignItems="center" spacing={1}>
               <h4 className={stylesModule.commentAuthor}>{userName}</h4>
               {comment.author.id === requesterId && (
@@ -175,8 +175,8 @@ export default function CommentDesktop({
           </Grid>
 
           {isSelf(comment.author.id) && (
-            <Grid item className={stylesModule.commentButtons}>
-              <Grid item>
+            <Grid sx={{ alignSelf: 'flex-end' }}>
+              <Grid>
                 <Tooltip title="Törlés" placement="left" arrow>
                   <span>
                     <IconButton
@@ -188,7 +188,7 @@ export default function CommentDesktop({
                   </span>
                 </Tooltip>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Tooltip title="Szerkesztés" placement="left" arrow>
                   <span>
                     <IconButton

@@ -19,7 +19,7 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import classNames from 'classnames';
@@ -243,8 +243,8 @@ export default function ProfilePage() {
         <div
           className={classNames(stylesModule.container, stylesModule.section)}
         >
-          <GridContainer justifyContent="center">
-            <GridItem xs={12} sm={12} md={6}>
+          <GridContainer sx={{ justifyContent: 'center' }}>
+            <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
               <div className={stylesModule.profile}>
                 <div>
                   <Avatar
@@ -283,62 +283,65 @@ export default function ProfilePage() {
                           })}
                         </h6>
                       )}
-                      {userData.social_accounts.map((account) => {
-                        let icon;
-                        switch (account.provider) {
-                          case 'authsch':
-                            icon = 'fa-brands icon-sch';
-                            break;
-                          case 'google-oauth2':
-                            icon = 'fa-brands fa-google';
-                            break;
-                          case 'microsoft-graph':
-                            icon = 'fa-brands fa-microsoft';
-                            break;
-                          default:
-                            break;
-                        }
-                        return (
-                          <ClickAwayListener
-                            onClickAway={() =>
-                              handleCloseTooltip(account.provider)
-                            }
-                            key={`${account.provider}-clickListener`}
-                          >
-                            <Tooltip
-                              PopperProps={{
-                                disablePortal: true,
-                              }}
-                              onClose={() =>
+                      {userData.social_accounts
+                        .filter((account) => account.provider !== 'bss-login')
+                        .map((account) => {
+                          let icon;
+                          switch (account.provider) {
+                            case 'authsch':
+                              icon = 'fa-brands icon-sch';
+                              break;
+                            case 'google-oauth2':
+                              icon = 'fa-brands fa-google';
+                              break;
+                            case 'microsoft-graph':
+                              icon = 'fa-brands fa-microsoft';
+                              break;
+                            default:
+                              icon = 'fa-solid fa-user-shield';
+                              break;
+                          }
+                          return (
+                            <ClickAwayListener
+                              onClickAway={() =>
                                 handleCloseTooltip(account.provider)
                               }
-                              open={account.provider === tooltipOpen}
-                              disableFocusListener
-                              disableHoverListener
-                              disableTouchListener
-                              title={account.uid}
-                              key={`${account.provider}-tooltip`}
-                              arrow
+                              key={`${account.provider}-clickListener`}
                             >
-                              <Button
-                                justIcon
-                                link
-                                key={`${account.provider}-button`}
-                                onClick={() => setTooltipOpen(account.provider)}
+                              <Tooltip
+                                slotProps={{ popper: { disablePortal: true } }}
+                                onClose={() =>
+                                  handleCloseTooltip(account.provider)
+                                }
+                                open={account.provider === tooltipOpen}
+                                disableFocusListener
+                                disableHoverListener
+                                disableTouchListener
+                                title={account.uid}
+                                key={`${account.provider}-tooltip`}
+                                arrow
                               >
-                                <i className={icon} />
-                              </Button>
-                            </Tooltip>
-                          </ClickAwayListener>
-                        );
-                      })}
+                                <Button
+                                  justIcon
+                                  link
+                                  key={`${account.provider}-button`}
+                                  onClick={() =>
+                                    setTooltipOpen(account.provider)
+                                  }
+                                >
+                                  <i className={icon} />
+                                </Button>
+                              </Tooltip>
+                            </ClickAwayListener>
+                          );
+                        })}
                     </>
                   )}
                 </div>
               </div>
             </GridItem>
           </GridContainer>
-          <GridContainer justifyContent="center">
+          <GridContainer sx={{ justifyContent: 'center' }}>
             {loading ? (
               <CircularProgress
                 className={stylesModule.circularProgress}
@@ -347,8 +350,7 @@ export default function ProfilePage() {
             ) : (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <GridContainer
-                  justifyContent="center"
-                  className={stylesModule.field}
+                  sx={{ justifyContent: 'center', padding: '0 15px' }}
                 >
                   {!isMobileView && (
                     <PersonalDetailsNormal
@@ -358,7 +360,7 @@ export default function ProfilePage() {
                       isUser={userData.role === 'user'}
                     />
                   )}
-                  <GridItem xs={12} sm={12} md={6}>
+                  <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
                     {isMobileView && (
                       <PersonalDetailsMobile
                         control={control}
@@ -406,8 +408,10 @@ export default function ProfilePage() {
                           </Alert>
                         ) : (
                           <GridContainer
-                            justifyContent="center"
-                            alignItems="center"
+                            sx={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}
                           >
                             {Object.entries(userData.profile.avatar)
                               .filter(
@@ -418,14 +422,13 @@ export default function ProfilePage() {
                                 return (
                                   <GridItem
                                     key={avatar[0]}
-                                    xs={12}
-                                    sm={4}
-                                    md={4}
-                                    className={
-                                      isXsView
-                                        ? stylesModule.gridItemMobile
-                                        : ''
-                                    }
+                                    size={{ xs: 12, sm: 4, md: 4 }}
+                                    sx={{
+                                      paddingTop: isXsView ? '15px' : undefined,
+                                      paddingBottom: isXsView
+                                        ? '15px'
+                                        : undefined,
+                                    }}
                                   >
                                     <Card>
                                       <CardActionArea
@@ -598,8 +601,10 @@ export default function ProfilePage() {
                           </AccordionSummary>
                           <AccordionDetails>
                             <GridContainer
-                              justifyContent="center"
-                              alignItems="center"
+                              sx={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
                             >
                               <LocalizationProvider
                                 dateAdapter={AdapterDateFns}
@@ -607,13 +612,13 @@ export default function ProfilePage() {
                               >
                                 <>
                                   <GridItem
-                                    xs={12}
-                                    sm={6}
-                                    className={
-                                      isXsView
-                                        ? stylesModule.gridItemMobile
-                                        : ''
-                                    }
+                                    size={{ xs: 12, sm: 6 }}
+                                    sx={{
+                                      paddingTop: isXsView ? '15px' : undefined,
+                                      paddingBottom: isXsView
+                                        ? '15px'
+                                        : undefined,
+                                    }}
                                   >
                                     <DatePicker
                                       label="Kezdő dátum"
@@ -628,13 +633,13 @@ export default function ProfilePage() {
                                     />
                                   </GridItem>
                                   <GridItem
-                                    xs={12}
-                                    sm={6}
-                                    className={
-                                      isXsView
-                                        ? stylesModule.gridItemMobile
-                                        : ''
-                                    }
+                                    size={{ xs: 12, sm: 6 }}
+                                    sx={{
+                                      paddingTop: isXsView ? '15px' : undefined,
+                                      paddingBottom: isXsView
+                                        ? '15px'
+                                        : undefined,
+                                    }}
                                   >
                                     <DatePicker
                                       label="Vége dátum"
@@ -651,24 +656,25 @@ export default function ProfilePage() {
                                 </>
                               </LocalizationProvider>
                               <GridItem
-                                className={
-                                  isXsView
-                                    ? stylesModule.gridItemMobileNoTopPadding
-                                    : stylesModule.gridItemMobile
-                                }
+                                sx={{
+                                  paddingBottom: '15px',
+                                  paddingTop: !isXsView ? '15px' : undefined,
+                                }}
                               >
                                 <GridContainer
-                                  justifyContent="space-between"
-                                  alignItems="center"
+                                  sx={{
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                  }}
                                 >
-                                  <GridItem xs={6}>
+                                  <GridItem size={6} sx={{ width: 'inherit' }}>
                                     <Typography variant="body2">
                                       Felelős pozíciók
                                     </Typography>
                                   </GridItem>
                                   <GridItem
-                                    xs={6}
-                                    className={stylesModule.gridEnd}
+                                    size={6}
+                                    sx={{ textAlign: 'end', width: 'inherit' }}
                                   >
                                     <Switch
                                       checked={includeResponsible}
@@ -709,8 +715,8 @@ export default function ProfilePage() {
                   </GridItem>
                 </GridContainer>
                 {userData.role === 'user' && (
-                  <GridContainer justifyContent="center">
-                    <GridItem className={stylesModule.textCenter}>
+                  <GridContainer sx={{ justifyContent: 'center' }}>
+                    <GridItem sx={{ textAlign: 'center' }}>
                       <Button
                         color="error"
                         className={stylesModule.button}

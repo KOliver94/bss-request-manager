@@ -20,7 +20,7 @@ function OtherInformation({ formData, setFormData, handleNext, handleBack }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <GridContainer justifyContent="center">
+      <GridContainer sx={{ justifyContent: 'center' }}>
         <GridItem>
           <Controller
             name="comment"
@@ -39,7 +39,7 @@ function OtherInformation({ formData, setFormData, handleNext, handleBack }) {
           />
         </GridItem>
       </GridContainer>
-      <GridContainer justifyContent="center">
+      <GridContainer sx={{ justifyContent: 'center' }}>
         <GridItem>
           <Button onClick={handleBack} className={stylesModule.button}>
             Vissza

@@ -53,16 +53,18 @@ export default function BasicInformation({
           container
           spacing={1}
           direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          className={stylesModule.titleGrid}
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0 15px',
+          }}
         >
-          <Grid item>
+          <Grid>
             <Typography variant="h6" className={stylesModule.title}>
               Alapinformációk
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Tooltip
               title="Vissza a felkérések listájához"
               placement="top"
@@ -90,10 +92,10 @@ export default function BasicInformation({
       </div>
       <Divider variant="middle" />
       <Paper className={stylesModule.paper} elevation={2}>
-        <p>
+        <Typography variant="body2" component="p" sx={{ marginBottom: '10px' }}>
           Esemény neve: <strong>{requestData.title}</strong>
-        </p>
-        <p>
+        </Typography>
+        <Typography variant="body2" component="p" sx={{ marginBottom: '10px' }}>
           Kezdés időpontja:{' '}
           <strong>
             {format(
@@ -102,8 +104,8 @@ export default function BasicInformation({
               { locale: hu },
             )}
           </strong>
-        </p>
-        <p>
+        </Typography>
+        <Typography variant="body2" component="p" sx={{ marginBottom: '10px' }}>
           Várható befejezés:{' '}
           <strong>
             {format(
@@ -112,14 +114,14 @@ export default function BasicInformation({
               { locale: hu },
             )}
           </strong>
-        </p>
-        <p>
+        </Typography>
+        <Typography variant="body2" component="p" sx={{ marginBottom: '10px' }}>
           Helyszín: <strong>{requestData.place}</strong>
-        </p>
-        <p>
+        </Typography>
+        <Typography variant="body2" component="p" sx={{ marginBottom: '10px' }}>
           Videó típusa: <strong>{requestData.type}</strong>
-        </p>
-        <p>
+        </Typography>
+        <Typography variant="body2" component="p" sx={{ marginBottom: '10px' }}>
           Felkérő: <strong>{requestData.requester.full_name}</strong>
           <br />
           <strong>
@@ -137,15 +139,19 @@ export default function BasicInformation({
             )}
             )
           </strong>
-        </p>
+        </Typography>
         {requestData.requested_by &&
           requestData.requested_by.id !== requestData.requester.id && (
-            <p>
+            <Typography
+              variant="body2"
+              component="p"
+              sx={{ marginBottom: '10px' }}
+            >
               Beküldő: <strong>{requestData.requested_by.full_name}</strong>
-            </p>
+            </Typography>
           )}
         <Divider />
-        <p className={stylesModule.afterDivider}>
+        <Typography variant="body2" component="p" sx={{ marginTop: '10px' }}>
           Beküldve:{' '}
           <strong>
             {format(
@@ -156,9 +162,13 @@ export default function BasicInformation({
               },
             )}
           </strong>
-        </p>
+        </Typography>
         {requestData.responsible && (
-          <p>
+          <Typography
+            variant="body2"
+            component="p"
+            sx={{ marginBottom: '10px' }}
+          >
             Felelős: <strong>{requestData.responsible.full_name}</strong>
             <br />
             <strong>
@@ -176,7 +186,7 @@ export default function BasicInformation({
               )}
               )
             </strong>
-          </p>
+          </Typography>
         )}
       </Paper>
     </div>

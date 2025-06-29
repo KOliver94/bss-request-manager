@@ -109,10 +109,12 @@ export default function Comments({ requestId, requesterId, reload }) {
           container
           spacing={1}
           direction="row"
-          justifyContent="space-between"
-          alignItems="center"
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
         >
-          <Grid item>
+          <Grid>
             <Typography variant="h6" className={stylesModule.title}>
               Hozzászólások
             </Typography>
@@ -121,45 +123,46 @@ export default function Comments({ requestId, requesterId, reload }) {
       </div>
       <Divider variant="middle" />
       <Paper className={stylesModule.paper} elevation={2}>
-        {data.length > 0 && (
-          <>
-            {data
-              .sort(compareValues('id'))
-              .map((comment) =>
-                isMobileView ? (
-                  <CommentMobile
-                    key={`${comment.id}-comment-base`}
-                    comment={comment}
-                    handleDelete={handleDelete}
-                    handleSubmit={handleSubmit}
-                    isEditing={editingCommentId === comment.id}
-                    loading={loading}
-                    requesterId={requesterId}
-                    setEditingCommentId={setEditingCommentId}
-                  />
-                ) : (
-                  <CommentDesktop
-                    key={`${comment.id}-comment-base`}
-                    comment={comment}
-                    handleDelete={handleDelete}
-                    handleSubmit={handleSubmit}
-                    isEditing={editingCommentId === comment.id}
-                    loading={loading}
-                    requesterId={requesterId}
-                    setEditingCommentId={setEditingCommentId}
-                  />
-                ),
-              )}
-          </>
-        )}
-        {
+        {loading ? (
           <>
             <LinearProgress />
             <Box sx={{ marginY: isMobileView ? '15px' : '30px' }}>
               <Divider variant="fullWidth" />
             </Box>
           </>
-        }
+        ) : (
+          data.length > 0 && (
+            <>
+              {data
+                .sort(compareValues('id'))
+                .map((comment) =>
+                  isMobileView ? (
+                    <CommentMobile
+                      key={`${comment.id}-comment-base`}
+                      comment={comment}
+                      handleDelete={handleDelete}
+                      handleSubmit={handleSubmit}
+                      isEditing={editingCommentId === comment.id}
+                      loading={loading}
+                      requesterId={requesterId}
+                      setEditingCommentId={setEditingCommentId}
+                    />
+                  ) : (
+                    <CommentDesktop
+                      key={`${comment.id}-comment-base`}
+                      comment={comment}
+                      handleDelete={handleDelete}
+                      handleSubmit={handleSubmit}
+                      isEditing={editingCommentId === comment.id}
+                      loading={loading}
+                      requesterId={requesterId}
+                      setEditingCommentId={setEditingCommentId}
+                    />
+                  ),
+                )}
+            </>
+          )
+        )}
         {isMobileView ? (
           <CommentMobile
             handleDelete={handleDelete}

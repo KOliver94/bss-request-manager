@@ -24,7 +24,7 @@ function LandingPage() {
       <Parallax filter>
         <div className={stylesModule.container}>
           <GridContainer>
-            <GridItem xs={12} sm={12} md={6}>
+            <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
               <h1 className={stylesModule.title}>
                 Szeretnéd, hogy megörökítsük az eseményed?
               </h1>

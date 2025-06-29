@@ -62,8 +62,8 @@ export default function ContactSection() {
 
   return (
     <div className={stylesModule.section}>
-      <GridContainer justifyContent="center">
-        <GridItem cs={12} sm={12} md={8}>
+      <GridContainer sx={{ justifyContent: 'center' }}>
+        <GridItem size={{ xs: 12, sm: 12, md: 8 }}>
           <h2 className={stylesModule.title}>Egyéb kérdések esetén</h2>
           <h4 className={stylesModule.description}>
             Ha olyan kérésed lenne amire nem kaptál itt választ vagy egyéb
@@ -74,7 +74,7 @@ export default function ContactSection() {
           </h4>
           <form onSubmit={sendMail}>
             <GridContainer>
-              <GridItem xs={12} sm={12} md={6}>
+              <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
                 <CustomInput
                   labelText="Teljes neved"
                   id="name"
@@ -92,7 +92,7 @@ export default function ContactSection() {
                   }}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
+              <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
                 <CustomInput
                   labelText="E-mail címed"
                   id="email"
@@ -137,7 +137,7 @@ export default function ContactSection() {
                   onChange={handleCaptcha}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={4}>
+              <GridItem size={{ xs: 12, sm: 12, md: 4 }}>
                 <Button
                   color="primary"
                   type="submit"

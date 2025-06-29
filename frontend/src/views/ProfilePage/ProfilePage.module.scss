@@ -10,9 +10,6 @@
   padding-right: 15px !important;
   @include theme.section;
 }
-.field {
-  padding: 0 15px;
-}
 .profile {
   text-align: center;
 }
@@ -104,21 +101,8 @@
   margin: 50px 30px;
   color: map.get(theme.$themeColors, 'primary');
 }
-.textCenter {
-  text-align: center;
-}
 .button {
   margin-top: 15px;
-}
-.gridItemMobile {
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-.gridItemMobileNoTopPadding {
-  padding-bottom: 15px;
-}
-.gridEnd {
-  text-align: end;
 }
 .alertAd {
   margin-top: 18;

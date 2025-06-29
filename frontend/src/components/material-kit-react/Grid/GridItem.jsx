@@ -1,11 +1,20 @@
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 
-import stylesModule from './GridItem.module.scss';
-
-export default function GridItem({ children, className = '', ...rest }) {
+export default function GridItem({ children, sx = {}, ...rest }) {
   return (
-    <Grid item {...rest} className={`${stylesModule.grid} ${className}`}>
+    <Grid
+      {...rest}
+      sx={{
+        position: 'relative',
+        width: '100%',
+        minHeight: '1px',
+        paddingRight: '15px',
+        paddingLeft: '15px',
+        flexBasis: 'auto',
+        ...sx,
+      }}
+    >
       {children}
     </Grid>
   );
@@ -13,5 +22,5 @@ export default function GridItem({ children, className = '', ...rest }) {
 
 GridItem.propTypes = {
   children: PropTypes.node,
-  className: PropTypes.string,
+  sx: PropTypes.object,
 };

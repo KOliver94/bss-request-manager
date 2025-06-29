@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { hu } from 'date-fns/locale';
 import PropTypes from 'prop-types';
@@ -68,7 +68,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={hu}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <GridContainer justifyContent="center">
+        <GridContainer sx={{ justifyContent: 'center' }}>
           <GridItem>
             <Controller
               name="title"
@@ -85,7 +85,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
               )}
             />
           </GridItem>
-          <GridItem xs={12} sm={6}>
+          <GridItem size={{ xs: 12, sm: 6 }}>
             <Controller
               name="start_datetime"
               control={control}
@@ -106,7 +106,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
               )}
             />
           </GridItem>
-          <GridItem xs={12} sm={6}>
+          <GridItem size={{ xs: 12, sm: 6 }}>
             <Controller
               name="end_datetime"
               control={control}
@@ -127,7 +127,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
               )}
             />
           </GridItem>
-          <GridItem xs={12} sm={6}>
+          <GridItem size={{ xs: 12, sm: 6 }}>
             <Controller
               name="place"
               control={control}
@@ -143,7 +143,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
               )}
             />
           </GridItem>
-          <GridItem xs={12} sm={6}>
+          <GridItem size={{ xs: 12, sm: 6 }}>
             <Controller
               name="type_obj"
               control={control}
@@ -210,7 +210,7 @@ function RequestDetails({ formData, setFormData, handleNext, handleBack }) {
             />
           </GridItem>
         </GridContainer>
-        <GridContainer justifyContent="center">
+        <GridContainer sx={{ justifyContent: 'center' }}>
           <GridItem>
             <Button onClick={handleBack} className={stylesModule.button}>
               Vissza

@@ -14,7 +14,7 @@ import stylesModule from './Summary.module.scss';
 
 function Summary({ formData, setActiveStep, isAuthenticated }) {
   return (
-    <GridContainer justifyContent="center">
+    <GridContainer sx={{ justifyContent: 'center' }}>
       <GridItem>
         <Card className={stylesModule.first} variant="outlined">
           <CardContent className={stylesModule.content}>

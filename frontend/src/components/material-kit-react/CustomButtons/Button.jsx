@@ -43,6 +43,7 @@ const RegularButton = forwardRef((props, ref) => {
 });
 RegularButton.displayName = 'RegularButton';
 
+/* eslint-disable-next-line @typescript-eslint/no-deprecated */
 RegularButton.propTypes = {
   color: PropTypes.oneOf([
     'primary',

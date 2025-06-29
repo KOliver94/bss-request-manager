@@ -90,12 +90,10 @@ export default function MyRequestsPage() {
     <>
       <Parallax small filter>
         <div className={stylesModule.container}>
-          <GridContainer justifyContent="center">
+          <GridContainer sx={{ justifyContent: 'center' }}>
             <GridItem
-              xs={12}
-              sm={12}
-              md={6}
-              className={stylesModule.textCenter}
+              size={{ xs: 12, sm: 12, md: 6 }}
+              sx={{ textAlign: 'center' }}
             >
               <h1 className={stylesModule.title}>Felkéréseim</h1>
             </GridItem>
@@ -107,7 +105,7 @@ export default function MyRequestsPage() {
           className={classNames(stylesModule.container, stylesModule.section)}
         >
           {loading ? (
-            <GridContainer justifyContent="center">
+            <GridContainer sx={{ justifyContent: 'center' }}>
               <CircularProgress
                 className={stylesModule.circularProgress}
                 size={60}
@@ -117,7 +115,7 @@ export default function MyRequestsPage() {
             <>
               {data.results.length > 0 ? (
                 <>
-                  <GridContainer justifyContent="center">
+                  <GridContainer sx={{ justifyContent: 'center' }}>
                     <TableContainer
                       component={Paper}
                       className={stylesModule.table}
@@ -196,7 +194,7 @@ export default function MyRequestsPage() {
                       </Table>
                     </TableContainer>
                   </GridContainer>
-                  <GridContainer justifyContent="center">
+                  <GridContainer sx={{ justifyContent: 'center' }}>
                     <Pagination
                       count={data.total_pages}
                       onChange={handlePageChange}
@@ -205,7 +203,7 @@ export default function MyRequestsPage() {
                   </GridContainer>
                 </>
               ) : (
-                <GridContainer justifyContent="center">
+                <GridContainer sx={{ justifyContent: 'center' }}>
                   <Typography
                     variant="h5"
                     className={stylesModule.notFound}

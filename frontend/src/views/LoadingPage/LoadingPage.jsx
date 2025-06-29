@@ -21,7 +21,7 @@ export default function LoadingPage() {
         <div
           className={classNames(stylesModule.container, stylesModule.section)}
         >
-          <GridContainer justifyContent="center">
+          <GridContainer sx={{ justifyContent: 'center' }}>
             <CircularProgress
               className={stylesModule.circularProgress}
               size={60}

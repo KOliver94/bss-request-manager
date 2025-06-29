@@ -97,17 +97,15 @@ export default function RequestDetailPage() {
     <>
       <Parallax small filter>
         <div className={stylesModule.container}>
-          <GridContainer justifyContent="center">
-            <GridItem className={stylesModule.textCenter}>
+          <GridContainer sx={{ justifyContent: 'center' }}>
+            <GridItem sx={{ textAlign: 'center' }}>
               <h1 className={stylesModule.title}>
                 {loading ? 'Betöltés...' : data.title}
               </h1>
             </GridItem>
             <GridItem
-              xs={12}
-              sm={12}
-              md={6}
-              className={stylesModule.textCenter}
+              size={{ xs: 12, sm: 12, md: 6 }}
+              sx={{ textAlign: 'center' }}
             >
               {!loading && (
                 <StatusBadge color={requestStatus.color}>
@@ -123,18 +121,15 @@ export default function RequestDetailPage() {
           className={classNames(stylesModule.container, stylesModule.section)}
         >
           {loading ? (
-            <GridContainer justifyContent="center">
+            <GridContainer sx={{ justifyContent: 'center' }}>
               <CircularProgress
                 className={stylesModule.circularProgress}
                 size={60}
               />
             </GridContainer>
           ) : (
-            <GridContainer
-              justifyContent="center"
-              className={stylesModule.content}
-            >
-              <GridItem xs={12} sm={12} md={6}>
+            <GridContainer sx={{ color: 'black', justifyContent: 'center' }}>
+              <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
                 <BasicInformation
                   requestId={id}
                   requestData={data}
@@ -143,7 +138,7 @@ export default function RequestDetailPage() {
                   setReload={setReload}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
+              <GridItem size={{ xs: 12, sm: 12, md: 6 }}>
                 <CustomTabs
                   headerColor="primary"
                   tabs={tabsContent()}
