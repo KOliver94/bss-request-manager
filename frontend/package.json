@@ -9,8 +9,8 @@
     "@hookform/resolvers": "5.1.1",
     "@mui/icons-material": "7.2.0",
     "@mui/material": "7.2.0",
-    "@mui/x-date-pickers": "8.7.0",
-    "@sentry/react": "9.35.0",
+    "@mui/x-date-pickers": "8.8.0",
+    "@sentry/react": "9.38.0",
     "axios": "1.10.0",
     "classnames": "2.5.1",
     "date-fns": "4.1.0",
@@ -51,12 +51,12 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "9.30.1",
+    "@eslint/js": "9.31.0",
     "@typescript-eslint/parser": "8.36.0",
     "@vite-pwa/assets-generator": "1.0.0",
     "@vitejs/plugin-basic-ssl": "2.1.0",
     "@vitejs/plugin-react": "4.6.0",
-    "eslint": "9.30.1",
+    "eslint": "9.31.0",
     "eslint-config-prettier": "10.1.5",
     "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-import": "2.32.0",
@@ -68,7 +68,7 @@
     "prettier": "3.6.2",
     "source-map-explorer": "2.5.3",
     "typescript-eslint": "8.36.0",
-    "vite": "7.0.2",
+    "vite": "7.0.4",
     "vite-plugin-pwa": "1.0.1",
     "vite-tsconfig-paths": "5.1.4"
   }
