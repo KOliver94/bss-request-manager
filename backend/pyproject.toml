@@ -26,11 +26,11 @@ dependencies = [
     "google-api-python-client==2.176.0",
     "google-auth-httplib2==0.2.0",
     "google-auth-oauthlib==1.2.2",
-    "jsonschema[format]==4.24.0",
+    "jsonschema[format]==4.25.0",
     "libgravatar==1.0.4",
     "python-decouple==3.8",
     "requests==2.32.4",
-    "sentry-sdk==2.32.0",
+    "sentry-sdk==2.33.0",
     "social-auth-app-django==5.5.1",
     "whitenoise[brotli]==6.9.0"
 ]
