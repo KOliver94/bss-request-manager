@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sentry/react": "9.40.0",
+    "@sentry/react": "10.0.0",
     "@tanstack/react-query": "5.83.0",
     "axios": "1.11.0",
     "bootstrap-icons": "1.13.1",
