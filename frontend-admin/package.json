@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sentry/react": "10.0.0",
-    "@tanstack/react-query": "5.83.0",
+    "@sentry/react": "10.1.0",
+    "@tanstack/react-query": "5.84.1",
     "axios": "1.11.0",
     "bootstrap-icons": "1.13.1",
     "jwt-decode": "4.0.0",
@@ -13,10 +13,10 @@
     "primeicons": "7.0.0",
     "primelocale": "primefaces/primelocale",
     "primereact": "10.9.6",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-hook-form": "7.60.0",
-    "react-router": "7.7.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "react-hook-form": "7.62.0",
+    "react-router": "7.7.1",
     "timeago.js": "4.0.2"
   },
   "scripts": {
@@ -44,17 +44,17 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "9.31.0",
-    "@openapitools/openapi-generator-cli": "2.21.3",
-    "@tanstack/eslint-plugin-query": "5.81.2",
-    "@tanstack/react-query-devtools": "5.83.0",
-    "@types/node": "22.16.5",
-    "@types/react": "19.1.8",
-    "@types/react-dom": "19.1.6",
+    "@eslint/js": "9.32.0",
+    "@openapitools/openapi-generator-cli": "2.21.4",
+    "@tanstack/eslint-plugin-query": "5.83.1",
+    "@tanstack/react-query-devtools": "5.84.1",
+    "@types/node": "22.17.0",
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.7",
     "@vitejs/plugin-react": "4.7.0",
     "autoprefixer": "10.4.21",
     "cssnano": "7.1.0",
-    "eslint": "9.31.0",
+    "eslint": "9.32.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-import": "2.32.0",
@@ -65,14 +65,14 @@
     "postcss": "8.5.6",
     "prettier": "3.6.2",
     "source-map-explorer": "2.5.3",
-    "typescript": "5.8.3",
-    "typescript-eslint": "8.37.0",
-    "vite": "7.0.5",
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.39.0",
+    "vite": "7.0.6",
     "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.45.1",
-    "@rollup/rollup-linux-x64-musl": "4.45.1",
-    "@rollup/rollup-win32-x64-msvc": "4.45.1"
+    "@rollup/rollup-linux-x64-gnu": "4.46.2",
+    "@rollup/rollup-linux-x64-musl": "4.46.2",
+    "@rollup/rollup-win32-x64-msvc": "4.46.2"
   }
 }
