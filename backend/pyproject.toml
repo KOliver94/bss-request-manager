@@ -8,7 +8,7 @@ authors = [
     {name = "Olivér Kecskeméty", email = "kecskemety.oliver@simonyi.bme.hu"}
 ]
 description = "Workflow Support System for managing video shooting, filming and live streaming requests of Budavári Schönherz Stúdió."
-requires-python = ">=3.13"
+requires-python = "==3.13.6"
 dependencies = [
     "celery[redis]==5.5.3",
     "django==5.2.4",
