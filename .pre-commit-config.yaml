@@ -13,7 +13,7 @@ repos:
       - id: mixed-line-ending
         name: 'Replace mixed line endings'
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.33.2
+    rev: 0.33.3
     hooks:
       - id: check-github-workflows
       - id: check-renovate
@@ -61,7 +61,7 @@ repos:
       - id: black
         name: 'Format Python code'
   - repo: https://github.com/rtts/djhtml
-    rev: 3.0.8
+    rev: 3.0.9
     hooks:
       - id: djhtml
         name: 'Format Django templates'
