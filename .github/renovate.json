@@ -1,5 +1,5 @@
 {
-  "baseBranches": ["main"],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     ":automergeDisabled",
     ":dependencyDashboard",
