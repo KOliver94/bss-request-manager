@@ -24,7 +24,7 @@ from common.social_core.helpers import decorate_request
 class TokenBlacklistSerializer(SimpleJWTTokenBlacklistSerializer):
     def validate(self, attrs):
         refresh = self.token_class(attrs["refresh"])
-        if refresh.payload["user_id"] == self.context["request"].user.id:
+        if refresh.payload["user_id"] == str(self.context["request"].user.id):
             refresh.blacklist()
             return {}
         raise NotAuthenticated(detail="Token is invalid or expired")
