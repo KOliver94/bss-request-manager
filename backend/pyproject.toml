@@ -16,7 +16,7 @@ dependencies = [
     "djangorestframework_simplejwt==5.5.1",
     "django-cacheops==7.2",
     "django-celery-results==2.6.0",
-    "django-cors-headers==4.7.0",
+    "django-cors-headers==4.8.0",
     "django-filter==25.1",
     "django-health-check==3.20.0",
     "django-phonenumber-field[phonenumbers]==8.1.0",
@@ -30,9 +30,9 @@ dependencies = [
     "libgravatar==1.0.4",
     "python-decouple==3.8",
     "requests==2.32.5",
-    "sentry-sdk==2.37.0",
+    "sentry-sdk==2.37.1",
     "social-auth-app-django==5.5.1",
-    "whitenoise[brotli]==6.9.0"
+    "whitenoise[brotli]==6.10.0"
 ]
 
 [tool.coverage.report]
@@ -86,14 +86,14 @@ django-debug-toolbar = "6.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "4.3.0"
-psycopg = {extras = ["binary"], version = "3.2.9"}
+psycopg = {extras = ["binary"], version = "3.2.10"}
 
 [tool.poetry.group.prod]
 optional = true
 
 [tool.poetry.group.prod.dependencies]
 gunicorn = "23.0.0"
-psycopg = {extras = ["c"], version = "3.2.9"}
+psycopg = {extras = ["c"], version = "3.2.10"}
 
 [tool.poetry.group.test.dependencies]
 model_bakery = "1.20.5"
