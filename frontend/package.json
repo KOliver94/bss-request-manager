@@ -9,8 +9,8 @@
     "@hookform/resolvers": "5.2.2",
     "@mui/icons-material": "7.3.2",
     "@mui/material": "7.3.2",
-    "@mui/x-date-pickers": "8.11.2",
-    "@sentry/react": "10.11.0",
+    "@mui/x-date-pickers": "8.11.3",
+    "@sentry/react": "10.12.0",
     "axios": "1.12.2",
     "classnames": "2.5.1",
     "date-fns": "4.1.0",
@@ -21,10 +21,10 @@
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-google-recaptcha": "3.1.0",
-    "react-hook-form": "7.62.0",
+    "react-hook-form": "7.63.0",
     "react-router": "7.9.1",
-    "sass": "1.92.1",
-    "yup": "1.7.0"
+    "sass": "1.93.0",
+    "yup": "1.7.1"
   },
   "scripts": {
     "start": "vite dev",
@@ -51,12 +51,12 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "9.35.0",
-    "@typescript-eslint/parser": "8.43.0",
+    "@eslint/js": "9.36.0",
+    "@typescript-eslint/parser": "8.44.0",
     "@vite-pwa/assets-generator": "1.0.1",
     "@vitejs/plugin-basic-ssl": "2.1.0",
-    "@vitejs/plugin-react": "5.0.2",
-    "eslint": "9.35.0",
+    "@vitejs/plugin-react": "5.0.3",
+    "eslint": "9.36.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-import": "2.32.0",
@@ -67,8 +67,8 @@
     "globals": "16.4.0",
     "prettier": "3.6.2",
     "source-map-explorer": "2.5.3",
-    "typescript-eslint": "8.43.0",
-    "vite": "7.1.5",
+    "typescript-eslint": "8.44.0",
+    "vite": "7.1.6",
     "vite-plugin-pwa": "1.0.3",
     "vite-tsconfig-paths": "5.1.4"
   }
