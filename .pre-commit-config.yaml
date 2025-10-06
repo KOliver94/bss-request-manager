@@ -39,7 +39,7 @@ repos:
         name: 'Upgrade Python syntax to newer versions'
         args: [--py313-plus]
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: 1.28.0
+    rev: 1.29.0
     hooks:
       - id: django-upgrade
         name: 'Upgrade Django syntax to newer versions'
@@ -50,7 +50,7 @@ repos:
       - id: pycln
         name: 'Remove unused Python imports'
   - repo: https://github.com/PyCQA/isort
-    rev: 6.0.1
+    rev: 6.1.0
     hooks:
       - id: isort
         name: 'Sort Python imports'
@@ -90,7 +90,7 @@ repos:
           - python
         args: [--config, ./frontend/.prettierrc]
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.36.0
+    rev: v9.37.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
