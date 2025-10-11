@@ -19,7 +19,7 @@ dependencies = [
     "django-cors-headers==4.9.0",
     "django-filter==25.2",
     "django-health-check==3.20.0",
-    "django-phonenumber-field[phonenumbers]==8.2.0",
+    "django-phonenumber-field[phonenumbers]==8.3.0",
     "django-simple-history==3.10.1",
     "drf-recaptcha==4.0.3",
     "drf-spectacular==0.28.0",
@@ -30,7 +30,7 @@ dependencies = [
     "libgravatar==1.0.4",
     "python-decouple==3.8",
     "requests==2.32.5",
-    "sentry-sdk==2.39.0",
+    "sentry-sdk==2.41.0",
     "social-auth-app-django==5.5.1",
     "whitenoise[brotli]==6.11.0"
 ]
