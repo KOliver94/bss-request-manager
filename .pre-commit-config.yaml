@@ -37,7 +37,7 @@ repos:
     hooks:
       - id: pyupgrade
         name: 'Upgrade Python syntax to newer versions'
-        args: [--py313-plus]
+        args: [--py314-plus]
   - repo: https://github.com/adamchainz/django-upgrade
     rev: 1.29.0
     hooks:
