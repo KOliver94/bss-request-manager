@@ -9,7 +9,7 @@
 ##################################################
 
 # Stage 1 - Backend base
-FROM python:3.13 AS backend-base
+FROM python:3.14 AS backend-base
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
