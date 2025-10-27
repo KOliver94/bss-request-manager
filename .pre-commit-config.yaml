@@ -39,13 +39,13 @@ repos:
         name: 'Upgrade Python syntax to newer versions'
         args: [--py314-plus]
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: 1.29.0
+    rev: 1.29.1
     hooks:
       - id: django-upgrade
         name: 'Upgrade Django syntax to newer versions'
         args: [--target-version, '6.0']
   - repo: https://github.com/hadialqattan/pycln
-    rev: v2.5.0
+    rev: v2.6.0
     hooks:
       - id: pycln
         name: 'Remove unused Python imports'
