@@ -7,7 +7,7 @@
 # Stage 1 - Build Frontend
 
 # Pull base image
-FROM node:22-alpine AS frontend-build
+FROM node:24-alpine AS frontend-build
 
 # Build args
 ARG API_URL
@@ -47,7 +47,7 @@ RUN npm run build
 # Stage 2 - Build Admin dashboard
 
 # Pull base image
-FROM node:22-alpine AS frontend-admin-build
+FROM node:24-alpine AS frontend-admin-build
 
 # Build args
 ARG API_URL
