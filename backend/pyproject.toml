@@ -22,8 +22,8 @@ dependencies = [
     "django-phonenumber-field[phonenumbers]==8.3.0",
     "django-simple-history==3.10.1",
     "drf-recaptcha==4.0.3",
-    "drf-spectacular==0.28.0",
-    "google-api-python-client==2.186.0",
+    "drf-spectacular==0.29.0",
+    "google-api-python-client==2.187.0",
     "google-auth-httplib2==0.2.1",
     "google-auth-oauthlib==1.2.3",
     "jsonschema[format]==4.25.1",
@@ -85,7 +85,7 @@ pytest-github-actions-annotate-failures = "0.3.0"
 django-debug-toolbar = "6.1.0"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "4.3.0"
+pre-commit = "4.4.0"
 psycopg = {extras = ["binary"], version = "3.2.12"}
 
 [tool.poetry.group.prod]
