@@ -104,6 +104,7 @@ export default function CustomDropdown({
       </div>
       <Popper
         open={open}
+        // eslint-disable-next-line react-hooks/refs
         anchorEl={anchorRef.current}
         transition
         disablePortal

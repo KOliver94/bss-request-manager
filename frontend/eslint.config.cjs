@@ -15,7 +15,7 @@ module.exports = tseslint.config(
   eslintPlugin.configs.recommended,
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat['jsx-runtime'],
-  reactHooksPlugin.configs['recommended-latest'],
+  reactHooksPlugin.configs.flat.recommended,
   jsxA11yPlugin.flatConfigs.recommended,
   importPlugin.flatConfigs.recommended,
   prettierPluginRecommended,
@@ -76,6 +76,7 @@ module.exports = tseslint.config(
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
       'react/react-in-jsx-scope': 'off',
       'react/require-default-props': 'off',
+      'react-hooks/set-state-in-effect': 'off', // TODO: Check later
     },
     settings: {
       'import/resolver': {

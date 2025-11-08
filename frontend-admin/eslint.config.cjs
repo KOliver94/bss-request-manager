@@ -19,7 +19,7 @@ module.exports = tseslint.config(
   pluginQuery.configs['flat/recommended'],
   pluginReact.configs.flat.recommended,
   pluginReact.configs.flat['jsx-runtime'],
-  pluginReactHooks.configs['recommended-latest'], // TODO: Change this to recommended with version 6.0
+  pluginReactHooks.configs.flat.recommended,
   tseslint.configs.strict, // TODO: Use strict-type-checked
   { ignores: ['**/eslint.config.cjs', '**/postcss.config.cjs'] },
   {
@@ -64,6 +64,7 @@ module.exports = tseslint.config(
         },
       ],
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
+      'react-hooks/set-state-in-effect': 'off', // TODO: Check later
       'sort-keys': ['error', 'asc', { caseSensitive: true, natural: true }],
     },
     settings: {

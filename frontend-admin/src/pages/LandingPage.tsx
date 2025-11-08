@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
@@ -25,13 +25,16 @@ import { getUserId } from 'helpers/LocalStorageHelper';
 const AvatarGroupCrew = lazy(() => import('components/Avatar/AvatarGroupCrew'));
 
 const LandingPage = () => {
-  const currentDate = new Date().toISOString().split('T')[0];
-  const oneWeekLaterDate = new Date(Date.now() + 6048e5)
-    .toISOString()
-    .split('T')[0];
-  const twoWeeksLaterDate = new Date(Date.now() + 12096e5)
-    .toISOString()
-    .split('T')[0];
+  const [dates] = useState(() => {
+    const now = Date.now();
+    return {
+      currentDate: new Date(now).toISOString().split('T')[0],
+      oneWeekLaterDate: new Date(now + 6048e5).toISOString().split('T')[0],
+      twoWeeksLaterDate: new Date(now + 12096e5).toISOString().split('T')[0],
+    };
+  });
+
+  const { currentDate, oneWeekLaterDate, twoWeeksLaterDate } = dates;
 
   const { data: notAnsweredData, isLoading: notAnsweredLoading } = useQuery({
     queryFn: async () => {

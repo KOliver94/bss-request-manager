@@ -40,6 +40,7 @@ const ErrorPage = () => {
   } else if (isAxiosError(error) && error.response) {
     statusCode = error.response.status.toString();
     if (error.response.status == 401) {
+      // eslint-disable-next-line react-hooks/immutability
       window.location.href = '/';
     } else if (error.response.status == 404) {
       ({ message, statusText } = errorTranslation[error.response.status]);
