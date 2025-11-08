@@ -31,10 +31,12 @@ class RequestFilter(FilterSet):
 
 
 class TodoFilter(FilterSet):
-    assignees = ModelMultipleChoiceFilter(
-        field_name="assignees__id",
-        queryset=User.objects.all(),
-        to_field_name="id",
+    assignees = extend_schema_field(OpenApiTypes.INT)(
+        ModelMultipleChoiceFilter(
+            field_name="assignees__id",
+            queryset=User.objects.all(),
+            to_field_name="id",
+        )
     )
     status = MultipleChoiceFilter(choices=Todo.Statuses.choices)
 
