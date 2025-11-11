@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sentry/react": "10.23.0",
+    "@sentry/react": "10.25.0",
     "@tanstack/react-query": "5.90.7",
     "axios": "1.13.2",
     "bootstrap-icons": "1.13.1",
@@ -49,10 +49,10 @@
     "@tanstack/eslint-plugin-query": "5.91.2",
     "@tanstack/react-query-devtools": "5.90.2",
     "@types/node": "24.10.0",
-    "@types/react": "19.2.2",
+    "@types/react": "19.2.3",
     "@types/react-dom": "19.2.2",
     "@vitejs/plugin-react": "5.1.0",
-    "autoprefixer": "10.4.21",
+    "autoprefixer": "10.4.22",
     "cssnano": "7.1.2",
     "eslint": "9.39.1",
     "eslint-config-prettier": "10.1.8",
@@ -66,13 +66,13 @@
     "prettier": "3.6.2",
     "source-map-explorer": "2.5.3",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.46.3",
-    "vite": "7.2.0",
+    "typescript-eslint": "8.46.4",
+    "vite": "7.2.2",
     "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.52.5",
-    "@rollup/rollup-linux-x64-musl": "4.52.5",
-    "@rollup/rollup-win32-x64-msvc": "4.52.5"
+    "@rollup/rollup-linux-x64-gnu": "4.53.2",
+    "@rollup/rollup-linux-x64-musl": "4.53.2",
+    "@rollup/rollup-win32-x64-msvc": "4.53.2"
   }
 }
