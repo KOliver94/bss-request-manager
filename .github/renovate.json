@@ -61,6 +61,18 @@
       "matchFileNames": ["frontend-admin/**"],
       "matchUpdateTypes": ["minor", "patch"],
       "postUpdateOptions": ["npmDedupe"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["actions/python-versions"],
+      "matchUpdateTypes": ["patch", "pin"],
+      "enabled": false
+    },
+    {
+      "matchCategories": ["docker"],
+      "matchPackageNames": ["node"],
+      "matchUpdateTypes": ["patch", "pin"],
+      "enabled": false
     }
   ],
   "rebaseWhen": "conflicted"
