@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@sentry/react": "10.25.0",
-    "@tanstack/react-query": "5.90.7",
+    "@tanstack/react-query": "5.90.10",
     "axios": "1.13.2",
     "bootstrap-icons": "1.13.1",
     "jwt-decode": "4.0.0",
@@ -16,7 +16,7 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-hook-form": "7.66.0",
-    "react-router": "7.9.5",
+    "react-router": "7.9.6",
     "timeago.js": "4.0.2"
   },
   "scripts": {
@@ -48,10 +48,10 @@
     "@openapitools/openapi-generator-cli": "2.25.0",
     "@tanstack/eslint-plugin-query": "5.91.2",
     "@tanstack/react-query-devtools": "5.90.2",
-    "@types/node": "24.10.0",
-    "@types/react": "19.2.3",
-    "@types/react-dom": "19.2.2",
-    "@vitejs/plugin-react": "5.1.0",
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.5",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.1.1",
     "autoprefixer": "10.4.22",
     "cssnano": "7.1.2",
     "eslint": "9.39.1",
