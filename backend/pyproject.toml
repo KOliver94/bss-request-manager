@@ -30,7 +30,7 @@ dependencies = [
     "libgravatar==1.0.4",
     "python-decouple==3.8",
     "requests==2.32.5",
-    "sentry-sdk==2.44.0",
+    "sentry-sdk==2.45.0",
     "social-auth-app-django==5.6.0",
     "whitenoise[brotli]==6.11.0"
 ]
@@ -85,15 +85,15 @@ pytest-github-actions-annotate-failures = "0.3.0"
 django-debug-toolbar = "6.1.0"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "4.4.0"
-psycopg = {extras = ["binary"], version = "3.2.12"}
+pre-commit = "4.5.0"
+psycopg = {extras = ["binary"], version = "3.2.13"}
 
 [tool.poetry.group.prod]
 optional = true
 
 [tool.poetry.group.prod.dependencies]
 gunicorn = "23.0.0"
-psycopg = {extras = ["c"], version = "3.2.12"}
+psycopg = {extras = ["c"], version = "3.2.13"}
 
 [tool.poetry.group.test.dependencies]
 model_bakery = "1.20.5"
