@@ -540,7 +540,7 @@ const RequestCreatorEditorPage = () => {
                 render={({ field }) => (
                   <Checkbox
                     {...field}
-                    checked={field.value}
+                    checked={!!field.value}
                     inputId={field.name}
                     onChange={(e) => {
                       field.onChange(e.checked);

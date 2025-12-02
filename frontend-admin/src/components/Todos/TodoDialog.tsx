@@ -36,11 +36,10 @@ interface TodoDialogUpdateProps extends DialogProps {
   videoId?: number;
 }
 
-interface ITodo
-  extends Omit<
-    TodoAdminListRetrieve,
-    'created' | 'creator' | 'id' | 'request' | 'video'
-  > {}
+interface ITodo extends Omit<
+  TodoAdminListRetrieve,
+  'created' | 'creator' | 'id' | 'request' | 'video'
+> {}
 
 const TodoDialog = forwardRef<
   React.Ref<HTMLDivElement>,
