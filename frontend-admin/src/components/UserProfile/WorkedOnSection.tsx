@@ -181,7 +181,7 @@ const WorkedOnSection = ({ userId }: WorkedOnSectionProps) => {
                 </label>
                 <InputSwitch
                   {...field}
-                  checked={field.value}
+                  checked={!!field.value}
                   inputId={field.name}
                   inputRef={field.ref}
                   onChange={(e) => field.onChange(e.value)}
