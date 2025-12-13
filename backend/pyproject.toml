@@ -20,7 +20,7 @@ dependencies = [
     "django-filter==25.2",
     "django-health-check==3.20.0",
     "django-phonenumber-field[phonenumbers]==8.4.0",
-    "django-simple-history==3.10.1",
+    "django-simple-history==3.11.0",
     "drf-recaptcha==4.0.3",
     "drf-spectacular==0.29.0",
     "google-api-python-client==2.187.0",
