@@ -135,7 +135,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Archive code coverage results
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: code-coverage-report
           path: backend/htmlcov/
@@ -147,7 +147,7 @@ jobs:
         run: poetry run python manage.py test tests.email_sending_tests
       - name: Archive sent e-mails
         if: ${{ github.event.inputs.generate-emails == 'true' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: emails
           path: backend/logs/emails/
