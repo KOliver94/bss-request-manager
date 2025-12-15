@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sentry/react": "10.29.0",
+    "@sentry/react": "10.30.0",
     "@tanstack/react-query": "5.90.12",
     "axios": "1.13.2",
     "bootstrap-icons": "1.13.1",
@@ -13,8 +13,8 @@
     "primeicons": "7.0.0",
     "primelocale": "primefaces/primelocale",
     "primereact": "10.9.7",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-hook-form": "7.68.0",
     "react-router": "7.10.1",
     "timeago.js": "4.0.2"
@@ -44,17 +44,17 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "9.39.1",
+    "@eslint/js": "9.39.2",
     "@openapitools/openapi-generator-cli": "2.25.2",
     "@tanstack/eslint-plugin-query": "5.91.2",
     "@tanstack/react-query-devtools": "5.91.1",
-    "@types/node": "24.10.1",
+    "@types/node": "24.10.4",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "5.1.1",
-    "autoprefixer": "10.4.22",
+    "@vitejs/plugin-react": "5.1.2",
+    "autoprefixer": "10.4.23",
     "cssnano": "7.1.2",
-    "eslint": "9.39.1",
+    "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-import": "2.32.0",
@@ -66,13 +66,13 @@
     "prettier": "3.7.4",
     "source-map-explorer": "2.5.3",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.48.1",
-    "vite": "7.2.6",
+    "typescript-eslint": "8.50.0",
+    "vite": "7.3.0",
     "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.53.3",
-    "@rollup/rollup-linux-x64-musl": "4.53.3",
-    "@rollup/rollup-win32-x64-msvc": "4.53.3"
+    "@rollup/rollup-linux-x64-gnu": "4.53.4",
+    "@rollup/rollup-linux-x64-musl": "4.53.4",
+    "@rollup/rollup-win32-x64-msvc": "4.53.4"
   }
 }
