@@ -18,20 +18,20 @@ dependencies = [
     "django-celery-results==2.6.0",
     "django-cors-headers==4.9.0",
     "django-filter==25.2",
-    "django-health-check==3.20.0",
+    "django-health-check==3.20.7",
     "django-phonenumber-field[phonenumbers]==8.4.0",
     "django-simple-history==3.11.0",
     "drf-recaptcha==4.0.3",
     "drf-spectacular==0.29.0",
     "google-api-python-client==2.187.0",
-    "google-auth-httplib2==0.2.1",
+    "google-auth-httplib2==0.3.0",
     "google-auth-oauthlib==1.2.3",
     "jsonschema[format]==4.25.1",
     "libgravatar==1.0.4",
     "python-decouple==3.8",
     "requests==2.32.5",
-    "sentry-sdk==2.47.0",
-    "social-auth-app-django==5.6.0",
+    "sentry-sdk==2.48.0",
+    "social-auth-app-django==5.7.0",
     "whitenoise[brotli]==6.11.0"
 ]
 
@@ -85,7 +85,7 @@ pytest-github-actions-annotate-failures = "0.3.0"
 django-debug-toolbar = "6.1.0"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "4.5.0"
+pre-commit = "4.5.1"
 psycopg = {extras = ["binary"], version = "3.3.2"}
 
 [tool.poetry.group.prod]
@@ -102,7 +102,7 @@ pytest-cov = "7.0.0"
 pytest-django = "4.11.1"
 pytest-xdist = {extras = ["psutil"], version = "3.8.0"}
 responses = "0.25.8"
-time-machine = "3.1.0"
+time-machine = "3.2.0"
 typing_extensions = "4.15.0" # TODO: Remove when social-core no longer supports Python 3.9
 
 [tool.pytest]
