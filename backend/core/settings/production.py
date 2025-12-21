@@ -42,7 +42,7 @@ sentry_sdk.init(
     dsn=config("SENTRY_URL"),
     integrations=[
         CeleryIntegration(monitor_beat_tasks=True),
-        DjangoIntegration(),
+        DjangoIntegration(middleware_spans=True),
         RedisIntegration(),
     ],
     # Set traces_sample_rate to 1.0 to capture 100%

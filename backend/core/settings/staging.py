@@ -31,7 +31,7 @@ sentry_sdk.init(
     dsn=config("SENTRY_URL"),
     integrations=[
         CeleryIntegration(monitor_beat_tasks=True),
-        DjangoIntegration(),
+        DjangoIntegration(middleware_spans=True),
         RedisIntegration(),
     ],
     # If you wish to associate users to errors (assuming you are using
