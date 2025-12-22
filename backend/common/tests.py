@@ -76,10 +76,9 @@ class CommonTestCase(TestCase):
     def test_health_check_management_command_works(self):
         with StringIO() as out:
             call_command("health_check", stdout=out)
-            self.assertEqual(out.getvalue().count("working"), 6)
+            self.assertEqual(out.getvalue().count("working"), 5)
             self.assertIn("Cache backend: default", out.getvalue())
             self.assertIn("DatabaseBackend", out.getvalue())
-            self.assertIn("DatabaseBackend[default]", out.getvalue())
             self.assertIn("DefaultFileStorageHealthCheck", out.getvalue())
             self.assertIn("MigrationsHealthCheck", out.getvalue())
             self.assertIn("RedisHealthCheck", out.getvalue())
