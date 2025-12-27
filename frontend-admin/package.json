@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.2",
-    "@openapitools/openapi-generator-cli": "2.25.2",
+    "@openapitools/openapi-generator-cli": "2.26.0",
     "@tanstack/eslint-plugin-query": "5.91.2",
     "@tanstack/react-query-devtools": "5.91.1",
     "@types/node": "24.10.4",
@@ -66,7 +66,7 @@
     "prettier": "3.7.4",
     "source-map-explorer": "2.5.3",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.50.0",
+    "typescript-eslint": "8.50.1",
     "vite": "7.3.0",
     "vite-tsconfig-paths": "6.0.3"
   },
