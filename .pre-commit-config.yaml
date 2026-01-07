@@ -152,5 +152,5 @@ repos:
           - eslint@9.39.2
           - globals@16.5.0
           - prettier@3.7.4
-          - typescript-eslint@8.51.0
+          - typescript-eslint@8.52.0
           - typescript@5.9.3
