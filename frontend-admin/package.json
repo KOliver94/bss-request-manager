@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@sentry/react": "10.32.1",
-    "@tanstack/react-query": "5.90.15",
+    "@tanstack/react-query": "5.90.16",
     "axios": "1.13.2",
     "bootstrap-icons": "1.13.1",
     "jwt-decode": "4.0.0",
@@ -15,8 +15,8 @@
     "primereact": "10.9.7",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-hook-form": "7.69.0",
-    "react-router": "7.11.0",
+    "react-hook-form": "7.70.0",
+    "react-router": "7.12.0",
     "timeago.js": "4.0.2"
   },
   "scripts": {
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.2",
-    "@openapitools/openapi-generator-cli": "2.26.0",
+    "@openapitools/openapi-generator-cli": "2.27.0",
     "@tanstack/eslint-plugin-query": "5.91.2",
     "@tanstack/react-query-devtools": "5.91.2",
     "@types/node": "24.10.4",
@@ -66,13 +66,13 @@
     "prettier": "3.7.4",
     "source-map-explorer": "2.5.3",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.51.0",
-    "vite": "7.3.0",
+    "typescript-eslint": "8.52.0",
+    "vite": "7.3.1",
     "vite-tsconfig-paths": "6.0.3"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.54.0",
-    "@rollup/rollup-linux-x64-musl": "4.54.0",
-    "@rollup/rollup-win32-x64-msvc": "4.54.0"
+    "@rollup/rollup-linux-x64-gnu": "4.55.1",
+    "@rollup/rollup-linux-x64-musl": "4.55.1",
+    "@rollup/rollup-win32-x64-msvc": "4.55.1"
   }
 }
