@@ -790,14 +790,14 @@ files = [
 
 [[package]]
 name = "django"
-version = "6.0"
+version = "6.0.1"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
 python-versions = ">=3.12"
 groups = ["main", "debug", "test"]
 files = [
-    {file = "django-6.0-py3-none-any.whl", hash = "sha256:1cc2c7344303bbfb7ba5070487c17f7fc0b7174bbb0a38cebf03c675f5f19b6d"},
-    {file = "django-6.0.tar.gz", hash = "sha256:7b0c1f50c0759bbe6331c6a39c89ae022a84672674aeda908784617ef47d8e26"},
+    {file = "django-6.0.1-py3-none-any.whl", hash = "sha256:a92a4ff14f664a896f9849009cb8afaca7abe0d6fc53325f3d1895a15253433d"},
+    {file = "django-6.0.1.tar.gz", hash = "sha256:ed76a7af4da21551573b3d9dfc1f53e20dd2e6c7d70a3adc93eedb6338130a5f"},
 ]
 
 [package.dependencies]
@@ -860,14 +860,14 @@ django = ">=4.2"
 
 [[package]]
 name = "django-debug-toolbar"
-version = "6.1.0"
+version = "6.2.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["debug"]
 files = [
-    {file = "django_debug_toolbar-6.1.0-py3-none-any.whl", hash = "sha256:e214dea4494087e7cebdcea84223819c5eb97f9de3110a3665ad673f0ba98413"},
-    {file = "django_debug_toolbar-6.1.0.tar.gz", hash = "sha256:e962ec350c9be8bdba918138e975a9cdb193f60ec396af2bb71b769e8e165519"},
+    {file = "django_debug_toolbar-6.2.0-py3-none-any.whl", hash = "sha256:1575461954e6befa720e999dec13fe4f1cc8baf40b6c3ac2aec5f340c0f9c85f"},
+    {file = "django_debug_toolbar-6.2.0.tar.gz", hash = "sha256:dc1c174d8fb0ea01435e02d9ceef735cf62daf37c1a6a5692d33b4127327679b"},
 ]
 
 [package.dependencies]
@@ -1116,14 +1116,14 @@ grpcio-gcp = ["grpcio-gcp (>=0.2.2,<1.0.0)"]
 
 [[package]]
 name = "google-api-python-client"
-version = "2.187.0"
+version = "2.188.0"
 description = "Google API Client Library for Python"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "google_api_python_client-2.187.0-py3-none-any.whl", hash = "sha256:d8d0f6d85d7d1d10bdab32e642312ed572bdc98919f72f831b44b9a9cebba32f"},
-    {file = "google_api_python_client-2.187.0.tar.gz", hash = "sha256:e98e8e8f49e1b5048c2f8276473d6485febc76c9c47892a8b4d1afa2c9ec8278"},
+    {file = "google_api_python_client-2.188.0-py3-none-any.whl", hash = "sha256:3cad1b68f9d48b82b93d77927e8370a6f43f33d97848242601f14a93a1c70ef5"},
+    {file = "google_api_python_client-2.188.0.tar.gz", hash = "sha256:5c469db6614f071009e3e5bb8b6aeeccae3beb3647fa9c6cd97f0d551edde0b6"},
 ]
 
 [package.dependencies]
@@ -1178,18 +1178,18 @@ httplib2 = ">=0.19.0,<1.0.0"
 
 [[package]]
 name = "google-auth-oauthlib"
-version = "1.2.3"
+version = "1.2.4"
 description = "Google Authentication Library"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "google_auth_oauthlib-1.2.3-py3-none-any.whl", hash = "sha256:7c0940e037677f25e71999607493640d071212e7f3c15aa0febea4c47a5a0680"},
-    {file = "google_auth_oauthlib-1.2.3.tar.gz", hash = "sha256:eb09e450d3cc789ecbc2b3529cb94a713673fd5f7a22c718ad91cf75aedc2ea4"},
+    {file = "google_auth_oauthlib-1.2.4-py3-none-any.whl", hash = "sha256:0e922eea5f2baacaf8867febb782e46e7b153236c21592ed76ab3ddb77ffd772"},
+    {file = "google_auth_oauthlib-1.2.4.tar.gz", hash = "sha256:3ca93859c6cc9003c8e12b2a0868915209d7953f05a70f4880ab57d57e56ee3e"},
 ]
 
 [package.dependencies]
-google-auth = ">=2.15.0,<2.42.0"
+google-auth = ">=2.15.0,<2.43.0 || >2.43.0,<2.44.0 || >2.44.0,<2.45.0 || >2.45.0,<3.0.0"
 requests-oauthlib = ">=0.7.0"
 
 [package.extras]
@@ -1333,14 +1333,14 @@ files = [
 
 [[package]]
 name = "jsonschema"
-version = "4.25.1"
+version = "4.26.0"
 description = "An implementation of JSON Schema validation for Python"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "jsonschema-4.25.1-py3-none-any.whl", hash = "sha256:3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63"},
-    {file = "jsonschema-4.25.1.tar.gz", hash = "sha256:e4a9655ce0da0c0b67a085847e00a3a51449e1157f4f75e9fb5aa545e122eb85"},
+    {file = "jsonschema-4.26.0-py3-none-any.whl", hash = "sha256:d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce"},
+    {file = "jsonschema-4.26.0.tar.gz", hash = "sha256:0c26707e2efad8aa1bfc5b7ce170f3fccc2e4918ff85989ba9ffa9facb2be326"},
 ]
 
 [package.dependencies]
@@ -1353,7 +1353,7 @@ jsonschema-specifications = ">=2023.03.6"
 referencing = ">=0.28.4"
 rfc3339-validator = {version = "*", optional = true, markers = "extra == \"format\""}
 rfc3987 = {version = "*", optional = true, markers = "extra == \"format\""}
-rpds-py = ">=0.7.1"
+rpds-py = ">=0.25.0"
 uri-template = {version = "*", optional = true, markers = "extra == \"format\""}
 webcolors = {version = ">=1.11", optional = true, markers = "extra == \"format\""}
 
@@ -1427,14 +1427,14 @@ files = [
 
 [[package]]
 name = "model-bakery"
-version = "1.21.0"
+version = "1.23.2"
 description = "Smart object creation facility for Django."
 optional = false
 python-versions = ">=3.10"
 groups = ["test"]
 files = [
-    {file = "model_bakery-1.21.0-py3-none-any.whl", hash = "sha256:46df25eb2a0583d595ed5503caf434b4ce91c729456c5abfcb130594c1803c6f"},
-    {file = "model_bakery-1.21.0.tar.gz", hash = "sha256:ea5f579782e6ac521e49acb02f7454b91d24a1f7e602505006fbd4374be1aa94"},
+    {file = "model_bakery-1.23.2-py3-none-any.whl", hash = "sha256:31f1067df0879ea5f0f158aaa7a8b26fd9a6c62cc1f1f08ea288a35023b9f9b1"},
+    {file = "model_bakery-1.23.2.tar.gz", hash = "sha256:42d249903bcdb96875d289b4733c22c8e7b46c3e59604e0538aabe8a3a743fad"},
 ]
 
 [package.dependencies]
@@ -1442,7 +1442,6 @@ django = ">=4.2"
 
 [package.extras]
 docs = ["myst-parser", "sphinx", "sphinx-rtd-theme"]
-test = ["black", "coverage", "mypy", "pillow", "pytest", "pytest-django", "ruff"]
 
 [[package]]
 name = "nodeenv"
@@ -2333,14 +2332,14 @@ pyasn1 = ">=0.1.3"
 
 [[package]]
 name = "sentry-sdk"
-version = "2.48.0"
+version = "2.50.0"
 description = "Python client for Sentry (https://sentry.io)"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
 files = [
-    {file = "sentry_sdk-2.48.0-py2.py3-none-any.whl", hash = "sha256:6b12ac256769d41825d9b7518444e57fa35b5642df4c7c5e322af4d2c8721172"},
-    {file = "sentry_sdk-2.48.0.tar.gz", hash = "sha256:5213190977ff7fdff8a58b722fb807f8d5524a80488626ebeda1b5676c0c1473"},
+    {file = "sentry_sdk-2.50.0-py2.py3-none-any.whl", hash = "sha256:0ef0ed7168657ceb5a0be081f4102d92042a125462d1d1a29277992e344e749e"},
+    {file = "sentry_sdk-2.50.0.tar.gz", hash = "sha256:873437a989ee1b8b25579847bae8384515bf18cfed231b06c591b735c1781fe3"},
 ]
 
 [package.dependencies]
@@ -2728,4 +2727,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14"
-content-hash = "994f971413a7ed8a11d522de2b0c17c3b3566b76822d587c4b23598e2f8a8cc1"
+content-hash = "bd40047624cec4b77e549a6f65d09037e2957a98c8e470268e629d4e526bf2d6"
