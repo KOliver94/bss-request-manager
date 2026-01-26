@@ -59,6 +59,9 @@ exclude_lines = [
 branch = true
 source = ["."]
 
+[tool.bandit]
+exclude_dirs = ["tests", "core/settings/ci.py"]
+
 [tool.flake8]
 max-line-length = 88
 max-complexity = 15
