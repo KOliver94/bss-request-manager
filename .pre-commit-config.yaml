@@ -79,7 +79,7 @@ repos:
     hooks:
       - id: bandit
         name: 'Check Python security issues'
-        exclude: ^backend/tests/
+        args: [-c, ./backend/pyproject.toml]
   - repo: https://github.com/rbubley/mirrors-prettier
     rev: v3.8.1
     hooks:
