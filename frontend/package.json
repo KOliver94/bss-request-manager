@@ -7,8 +7,8 @@
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
     "@hookform/resolvers": "5.2.2",
-    "@mui/icons-material": "7.3.7",
-    "@mui/material": "7.3.7",
+    "@mui/icons-material": "7.3.8",
+    "@mui/material": "7.3.8",
     "@mui/x-date-pickers": "8.27.0",
     "@sentry/react": "10.38.0",
     "axios": "1.13.5",
@@ -70,6 +70,6 @@
     "typescript-eslint": "8.55.0",
     "vite": "7.3.1",
     "vite-plugin-pwa": "1.2.0",
-    "vite-tsconfig-paths": "6.1.0"
+    "vite-tsconfig-paths": "6.1.1"
   }
 }
