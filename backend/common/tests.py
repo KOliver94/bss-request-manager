@@ -84,8 +84,9 @@ class CommonTestCase(TestCase):
 
     def test_health_check_management_command_works(self):
         with StringIO() as out:
-            with self.assertRaises(SystemExit):
+            with self.assertRaises(SystemExit) as cm:
                 call_command("health_check", "health_check", "--no-http", stdout=out)
+            self.assertEqual(cm.exception.code, 0)
             self.assertIn("Cache(alias='default')", out.getvalue())
             self.assertIn("Database(alias='default')", out.getvalue())
             self.assertIn(
