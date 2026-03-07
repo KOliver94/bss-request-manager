@@ -14,17 +14,6 @@ urlpatterns = [
     path("misc/", include(("api.v1.misc.urls", "misc"), namespace="misc")),
 ]
 
-if settings.HEALTH_CHECK_API_ENABLED:
-    token = (
-        f"/{settings.HEALTH_CHECK_URL_TOKEN}"
-        if hasattr(settings, "HEALTH_CHECK_URL_TOKEN")
-        and settings.HEALTH_CHECK_URL_TOKEN is not None
-        else ""
-    )
-    urlpatterns += [
-        path(f"health{token}", include("health_check.urls")),
-    ]
-
 if settings.SPECTACULAR_SERVE_SCHEMA:
     from drf_spectacular.views import (
         SpectacularAPIView,

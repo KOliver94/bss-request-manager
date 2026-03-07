@@ -82,10 +82,9 @@ GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH = None
 # Random external token
 SCH_EVENTS_TOKEN = "123456789abcdef"  # nosec
 
-# Enable health check endpoint and remove celery from checks
-HEALTH_CHECK_API_ENABLED = True
+# Remove celery from health checks
 try:
-    INSTALLED_APPS.remove("health_check.contrib.celery_ping")
+    HEALTH_CHECK_ENABLED_CHECKS.remove("health_check.contrib.celery.Ping")
 except ValueError:
     pass
 

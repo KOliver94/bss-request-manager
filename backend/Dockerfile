@@ -80,7 +80,7 @@ EXPOSE 8000
 
 # Set health check
 HEALTHCHECK --start-period=30s --interval=5m \
-    CMD python manage.py health_check
+    CMD python manage.py health_check health_check --no-http
 
 # Do the migrations and start the server
 CMD ["sh", "-c", "python manage.py migrate; gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 core.wsgi"]
