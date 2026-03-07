@@ -1,4 +1,5 @@
 import json
+import re
 from io import StringIO
 
 from django.conf import settings
@@ -74,7 +75,12 @@ class CommonTestCase(TestCase):
             response.data,
         )
         self.assertIn("Storage(alias='default')", response.data)
-        self.assertIn("Redis(host='localhost', port=6379)", response.data)
+        self.assertTrue(
+            any(
+                re.search(r"Redis\(host='[^']+', port=6379\)", key)
+                for key in response.data
+            )
+        )
 
     def test_health_check_management_command_works(self):
         with StringIO() as out:
@@ -87,7 +93,7 @@ class CommonTestCase(TestCase):
                 out.getvalue(),
             )
             self.assertIn("Storage(alias='default')", out.getvalue())
-            self.assertIn("Redis(host='localhost', port=6379)", out.getvalue())
+            self.assertRegex(out.getvalue(), r"Redis\(host='[^']+', port=6379\)")
 
     def test_user_profile_avatar_json_validation(self):
         self.user.refresh_from_db()
