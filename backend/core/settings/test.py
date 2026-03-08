@@ -6,10 +6,6 @@ from core.settings._auth_social import *
 DATABASES["default"].update({"HOST": config("DATABASE_HOST", default="localhost")})
 CACHEOPS_REDIS = config("CACHE_REDIS", default="redis://localhost:6379/0")
 CELERY_BROKER_URL = config("CELERY_BROKER", default="redis://localhost:6379/1")
-try:
-    REDIS_URL = match("^redis://[a-zA-Z0-9]+:[0-9]+", CACHEOPS_REDIS).group(0)
-except AttributeError:
-    raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
 
 # Use the default Django authentication backend
 AUTHENTICATION_BACKENDS += ["django.contrib.auth.backends.ModelBackend"]
@@ -82,11 +78,23 @@ GOOGLE_SERVICE_ACCOUNT_KEY_FILE_PATH = None
 # Random external token
 SCH_EVENTS_TOKEN = "123456789abcdef"  # nosec
 
-# Remove celery from health checks
+# Remove celery and update Redis health check to use the local REDIS_URL
 try:
-    HEALTH_CHECK_ENABLED_CHECKS.remove("health_check.contrib.celery.Ping")
-except ValueError:
-    pass
+    REDIS_URL = match("^redis://[a-zA-Z0-9]+:[0-9]+", CACHEOPS_REDIS).group(0)
+except AttributeError:
+    raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
+
+HEALTH_CHECK_ENABLED_CHECKS = [
+    check
+    for check in HEALTH_CHECK_ENABLED_CHECKS
+    if check != "health_check.contrib.celery.Ping"
+    and not (isinstance(check, tuple) and "Redis" in check[0])
+] + [
+    (
+        "health_check.contrib.redis.Redis",
+        {"client_factory": lambda: RedisClient.from_url(REDIS_URL)},
+    ),
+]
 
 # Set DRF reCAPTCHA to test mode
 DRF_RECAPTCHA_TESTING = True
