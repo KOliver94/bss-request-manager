@@ -26,7 +26,7 @@ export default function RulesPoliciesSection() {
           <GridItem size={{ xs: 12, sm: 12, md: 4 }}>
             <InfoArea
               title="Legyél időben"
-              description="Késedelmes, vagy hiányos felkéréseket nem biztos, hogy el tudunk vállalni. Gyűléseink hétfőn este vannak, ekkor tudunk dönteni a felkérések sorsáról, ezért felkérési igényedet a rendezvényt megelőző hétfőig feltétlenül jelezd."
+              description="Késedelmes, vagy hiányos felkéréseket nem biztos, hogy el tudunk vállalni. Gyűléseink hétfőn este vannak, ekkor tudunk dönteni a felkérések sorsáról. Kérjük, felkérési igényedet legalább 8 nappal a rendezvény előtt, hétfőig jelezd."
               icon={ScheduleIcon}
               iconColor="info"
               vertical
