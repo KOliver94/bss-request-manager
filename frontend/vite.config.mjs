@@ -68,7 +68,12 @@ export default defineConfig(() => {
         registerType: 'prompt',
         workbox: {
           globPatterns: ['**/*.{css,eot,html,ico,jpg,js,png,svg,ttf,woof}'],
-          navigateFallbackDenylist: [/^\/admin/, /^\/api/, /^\/django-admin/],
+          navigateFallbackDenylist: [
+            /^\/admin/,
+            /^\/api/,
+            /^\/django-admin/,
+            /^\/health/,
+          ],
         },
       }),
     ],

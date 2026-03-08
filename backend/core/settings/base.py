@@ -19,6 +19,7 @@ from decouple import Csv, config
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.utils import get_random_secret_key
 from django.utils.translation import gettext_lazy as _
+from redis.asyncio import Redis as RedisClient
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BACKEND_DIR = os.path.dirname(
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     "drf_recaptcha",
     "drf_spectacular",
     "corsheaders",
+    "health_check",
     "rest_framework_simplejwt.token_blacklist",
     "phonenumber_field",
     "simple_history",
@@ -322,22 +324,23 @@ if DJANGO_ADMIN:
 
 # Health check
 # https://django-health-check.readthedocs.io/en/stable/
-
-HEALTH_CHECK_API_ENABLED = config("HEALTH_CHECK_API", default=False, cast=bool)
-HEALTH_CHECK_URL_TOKEN = config("HEALTH_CHECK_URL_TOKEN", default=None)
-INSTALLED_APPS += [
-    "health_check",
-    "health_check.db",
-    "health_check.cache",
-    "health_check.storage",
-    "health_check.contrib.migrations",
-    "health_check.contrib.celery_ping",
-    "health_check.contrib.redis",
-]
 try:
     REDIS_URL = match("^redis://[a-zA-Z0-9]+:[0-9]+", CACHEOPS_REDIS).group(0)
 except AttributeError:
     raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
+
+HEALTH_CHECK_URL_TOKEN = config("HEALTH_CHECK_URL_TOKEN", default=None)
+HEALTH_CHECK_ENABLED_CHECKS = [
+    "health_check.Cache",
+    "health_check.Database",
+    "health_check.Mail",
+    "health_check.Storage",
+    "health_check.contrib.celery.Ping",
+    (
+        "health_check.contrib.redis.Redis",
+        {"client_factory": lambda: RedisClient.from_url(REDIS_URL)},
+    ),
+]
 
 # Django REST reCAPTCHA
 # https://github.com/llybin/drf-recaptcha

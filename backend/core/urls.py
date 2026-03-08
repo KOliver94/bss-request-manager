@@ -18,6 +18,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import TemplateView
+from health_check.views import HealthCheckView
 
 urlpatterns = [
     path("api/", include(("api.urls", "api"), namespace="api")),
@@ -26,6 +27,23 @@ urlpatterns = [
     ),  # React frontend
     re_path(r"", TemplateView.as_view(template_name="index.html")),  # React frontend
 ]
+
+# Django HealthCheck endpoints
+token = (
+    f"/{settings.HEALTH_CHECK_URL_TOKEN}"
+    if hasattr(settings, "HEALTH_CHECK_URL_TOKEN")
+    and settings.HEALTH_CHECK_URL_TOKEN is not None
+    else ""
+)
+
+urlpatterns.insert(
+    0,
+    path(
+        f"health{token}",
+        HealthCheckView.as_view(checks=settings.HEALTH_CHECK_ENABLED_CHECKS),
+        name="health_check",
+    ),
+)
 
 # Enable Django Admin when requested
 if settings.DJANGO_ADMIN and "django.contrib.admin" in settings.INSTALLED_APPS:

@@ -1,4 +1,5 @@
 import json
+import re
 from io import StringIO
 
 from django.conf import settings
@@ -64,24 +65,36 @@ class CommonTestCase(TestCase):
             and settings.HEALTH_CHECK_URL_TOKEN is not None
             else ""
         )
-        response = self.client.get(f"/api/v1/health{token}?format=json")
+        response = self.client.get(f"/health{token}?format=json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response.data = json.loads(response.content)
-        self.assertIn("Cache backend: default", response.data)
-        self.assertIn("DatabaseBackend", response.data)
-        self.assertIn("DefaultFileStorageHealthCheck", response.data)
-        self.assertIn("MigrationsHealthCheck", response.data)
-        self.assertIn("RedisHealthCheck", response.data)
+        self.assertIn("Cache(alias='default')", response.data)
+        self.assertIn("Database(alias='default')", response.data)
+        self.assertIn(
+            "Mail(backend='django.core.mail.backends.dummy.EmailBackend')",
+            response.data,
+        )
+        self.assertIn("Storage(alias='default')", response.data)
+        self.assertTrue(
+            any(
+                re.search(r"Redis\(host='[^']+', port=6379\)", key)
+                for key in response.data
+            )
+        )
 
     def test_health_check_management_command_works(self):
         with StringIO() as out:
-            call_command("health_check", stdout=out)
-            self.assertEqual(out.getvalue().count("working"), 5)
-            self.assertIn("Cache backend: default", out.getvalue())
-            self.assertIn("DatabaseBackend", out.getvalue())
-            self.assertIn("DefaultFileStorageHealthCheck", out.getvalue())
-            self.assertIn("MigrationsHealthCheck", out.getvalue())
-            self.assertIn("RedisHealthCheck", out.getvalue())
+            with self.assertRaises(SystemExit) as cm:
+                call_command("health_check", "health_check", "--no-http", stdout=out)
+            self.assertEqual(cm.exception.code, 0)
+            self.assertIn("Cache(alias='default')", out.getvalue())
+            self.assertIn("Database(alias='default')", out.getvalue())
+            self.assertIn(
+                "Mail(backend='django.core.mail.backends.dummy.EmailBackend')",
+                out.getvalue(),
+            )
+            self.assertIn("Storage(alias='default')", out.getvalue())
+            self.assertRegex(out.getvalue(), r"Redis\(host='[^']+', port=6379\)")
 
     def test_user_profile_avatar_json_validation(self):
         self.user.refresh_from_db()
