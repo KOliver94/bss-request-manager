@@ -1,8 +1,13 @@
+import logging
+
 import requests
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
+from requests import RequestException
 from rest_framework.fields import CharField
+
+logger = logging.getLogger(__name__)
 
 
 class TurnstileField(CharField):
@@ -28,14 +33,19 @@ class TurnstileField(CharField):
                 "TURNSTILE_SECRET_KEY must be set in Django settings."
             )
 
-        response = requests.post(
-            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-            data={"secret": secret_key, "response": data},
-            timeout=10,
-        )
-        result = response.json()
+        try:
+            response = requests.post(
+                "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+                data={"secret": secret_key, "response": data},
+                timeout=10,
+            )
+            response.raise_for_status()
+            result = response.json()
 
-        if not result.get("success"):
+            if not result.get("success"):
+                self.fail("captcha_invalid")
+        except RequestException:
+            logger.exception("Failed to verify Turnstile captcha")
             self.fail("captcha_invalid")
 
         return data
