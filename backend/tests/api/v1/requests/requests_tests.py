@@ -185,7 +185,7 @@ def test_create_request_service_account(
 def test_create_request_anonymous(
     api_client, new_user, recaptcha_pass, request_create_data, requester_data, settings
 ):
-    settings.DRF_RECAPTCHA_TESTING_PASS = recaptcha_pass
+    settings.TURNSTILE_TESTING_PASS = recaptcha_pass
     user = baker.make(User, _fill_optional=["email"])
 
     if not new_user:
@@ -238,7 +238,7 @@ def test_create_request_anonymous(
 def test_create_request_with_comment(
     api_client, request, request_create_data, requester_data, settings, user
 ):
-    settings.DRF_RECAPTCHA_TESTING_PASS = True
+    settings.TURNSTILE_TESTING_PASS = True
     if user is None:
         data = (
             request_create_data
@@ -270,7 +270,7 @@ def test_create_request_with_comment(
 def test_create_request_date_validation(
     api_client, request, request_create_data, requester_data, settings, user
 ):
-    settings.DRF_RECAPTCHA_TESTING_PASS = True
+    settings.TURNSTILE_TESTING_PASS = True
     if user is None:
         data = (
             request_create_data

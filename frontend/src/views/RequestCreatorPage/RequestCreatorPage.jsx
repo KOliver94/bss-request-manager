@@ -1,5 +1,6 @@
-import { useState, useEffect, createRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
+import { Turnstile } from '@marsidev/react-turnstile';
 import CircularProgress from '@mui/material/CircularProgress';
 import MobileStepper from '@mui/material/MobileStepper';
 import Step from '@mui/material/Step';
@@ -11,7 +12,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { isCancel } from 'axios';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
-import { ReCAPTCHA } from 'react-google-recaptcha';
 import { useNavigate } from 'react-router';
 
 import { getMe } from 'api/meApi';
@@ -54,7 +54,7 @@ const formInitialState = {
 function RequestCreatorPage() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const recaptchaRef = createRef();
+  const [turnstileToken, setTurnstileToken] = useState(null);
   const theme = useTheme();
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -68,6 +68,7 @@ function RequestCreatorPage() {
   };
 
   const handleBack = () => {
+    setTurnstileToken(null);
     setActiveStep(activeStep - 1);
   };
 
@@ -81,12 +82,20 @@ function RequestCreatorPage() {
     }
   };
 
+  const handleTurnstileVerify = useCallback((token) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+
   const handleSubmit = async () => {
     setLoading(true);
     try {
       formData.type = formData.type_obj.text;
       if (!isAuthenticated()) {
-        formData.recaptcha = await recaptchaRef.current.executeAsync();
+        formData.recaptcha = turnstileToken;
       }
       await createRequest(formData).then((response) => {
         handleNext();
@@ -269,29 +278,45 @@ function RequestCreatorPage() {
                   {activeStep < steps.length ? (
                     <>
                       {activeStep === steps.length - 1 && (
-                        <div className={stylesModule.wrapper}>
-                          <Button
-                            onClick={handleBack}
-                            disabled={loading}
-                            className={stylesModule.button}
-                          >
-                            Vissza
-                          </Button>
-                          <Button
-                            onClick={handleSubmit}
-                            color="success"
-                            disabled={loading}
-                            className={stylesModule.button}
-                          >
-                            Küldés
-                          </Button>
-                          {loading && (
-                            <CircularProgress
-                              size={24}
-                              className={stylesModule.buttonProgress}
+                        <>
+                          {!isAuthenticated() && (
+                            <Turnstile
+                              siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                              onSuccess={handleTurnstileVerify}
+                              onError={handleTurnstileError}
+                              onExpire={handleTurnstileError}
+                              options={{
+                                theme: 'light',
+                              }}
                             />
                           )}
-                        </div>
+                          <div className={stylesModule.wrapper}>
+                            <Button
+                              onClick={handleBack}
+                              disabled={loading}
+                              className={stylesModule.button}
+                            >
+                              Vissza
+                            </Button>
+                            <Button
+                              onClick={handleSubmit}
+                              color="success"
+                              disabled={
+                                loading ||
+                                (!isAuthenticated() && !turnstileToken)
+                              }
+                              className={stylesModule.button}
+                            >
+                              Küldés
+                            </Button>
+                            {loading && (
+                              <CircularProgress
+                                size={24}
+                                className={stylesModule.buttonProgress}
+                              />
+                            )}
+                          </div>
+                        </>
                       )}
                     </>
                   ) : (
@@ -309,13 +334,6 @@ function RequestCreatorPage() {
                 </GridItem>
               </GridContainer>
             </>
-          )}
-          {!isAuthenticated() && (
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              size="invisible"
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-            />
           )}
         </div>
       </div>

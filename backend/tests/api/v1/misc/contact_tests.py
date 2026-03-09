@@ -34,7 +34,7 @@ def contact_data():
 def test_contact(
     api_client, contact_data, mailoutbox, recaptcha_pass, request, settings, user
 ):
-    settings.DRF_RECAPTCHA_TESTING_PASS = recaptcha_pass
+    settings.TURNSTILE_TESTING_PASS = recaptcha_pass
 
     do_login(api_client, request, user)
 
