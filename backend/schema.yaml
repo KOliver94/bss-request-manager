@@ -2769,15 +2769,15 @@ components:
           type: string
           minLength: 1
           maxLength: 150
-        recaptcha:
+        captcha:
           type: string
           writeOnly: true
           minLength: 1
       required:
+        - captcha
         - email
         - message
         - name
-        - recaptcha
     CrewMemberAdminCreateUpdateRequest:
       type: object
       properties:
@@ -3489,7 +3489,7 @@ components:
           type: string
           minLength: 1
           maxLength: 150
-        recaptcha:
+        captcha:
           type: string
           writeOnly: true
           minLength: 1
@@ -3518,9 +3518,9 @@ components:
           minLength: 1
           maxLength: 50
       required:
+        - captcha
         - end_datetime
         - place
-        - recaptcha
         - requester_email
         - requester_first_name
         - requester_last_name

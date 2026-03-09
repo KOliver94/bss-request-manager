@@ -41,7 +41,7 @@ export interface RequestAnonymousCreateRequest {
    * @type {string}
    * @memberof RequestAnonymousCreateRequest
    */
-  recaptcha: string;
+  captcha: string;
   /**
    *
    * @type {string}

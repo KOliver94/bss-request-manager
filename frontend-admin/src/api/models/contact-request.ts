@@ -41,5 +41,5 @@ export interface ContactRequest {
    * @type {string}
    * @memberof ContactRequest
    */
-  recaptcha: string;
+  captcha: string;
 }
