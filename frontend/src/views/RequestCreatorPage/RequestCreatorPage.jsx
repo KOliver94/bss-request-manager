@@ -95,7 +95,7 @@ function RequestCreatorPage() {
     try {
       formData.type = formData.type_obj.text;
       if (!isAuthenticated()) {
-        formData.recaptcha = turnstileToken;
+        formData.captcha = turnstileToken;
       }
       await createRequest(formData).then((response) => {
         handleNext();

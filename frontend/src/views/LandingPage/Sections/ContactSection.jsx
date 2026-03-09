@@ -16,7 +16,7 @@ const emptyMessageData = {
   name: '',
   email: '',
   message: '',
-  recaptcha: '',
+  captcha: '',
 };
 
 export default function ContactSection() {
@@ -36,7 +36,7 @@ export default function ContactSection() {
   const handleCaptcha = (token) => {
     setMessageData((prevMailData) => ({
       ...prevMailData,
-      recaptcha: token,
+      captcha: token,
     }));
   };
 
@@ -144,7 +144,7 @@ export default function ContactSection() {
                 <Button
                   color="primary"
                   type="submit"
-                  disabled={!messageData.recaptcha || loading}
+                  disabled={!messageData.captcha || loading}
                 >
                   Küldés
                 </Button>

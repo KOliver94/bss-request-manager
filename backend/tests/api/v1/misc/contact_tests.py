@@ -19,7 +19,7 @@ def contact_data():
         "email": "joe@example.com",
         "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere tempus nibh et lobortis.",
         "name": "Joe Bloggs",
-        "recaptcha": "randomReCaptchaResponseToken",
+        "captcha": "randomCaptchaResponseToken",
     }
 
 
@@ -28,20 +28,20 @@ def contact_data():
     ["admin_user", "staff_user", "basic_user", "service_account", None],
 )
 @pytest.mark.parametrize(
-    "recaptcha_pass",
+    "captcha_pass",
     [True, False],
 )
 def test_contact(
-    api_client, contact_data, mailoutbox, recaptcha_pass, request, settings, user
+    api_client, contact_data, mailoutbox, captcha_pass, request, settings, user
 ):
-    settings.TURNSTILE_TESTING_PASS = recaptcha_pass
+    settings.TURNSTILE_TESTING_PASS = captcha_pass
 
     do_login(api_client, request, user)
 
     url = reverse("api:v1:misc:contact")
     response = api_client.post(url, contact_data)
 
-    if recaptcha_pass:
+    if captcha_pass:
         assert response.status_code == HTTP_201_CREATED
 
         assert len(mailoutbox) == 1
@@ -53,7 +53,7 @@ def test_contact(
     else:
         assert response.status_code == HTTP_400_BAD_REQUEST
 
-        assert response.data["recaptcha"][0] == ErrorDetail(
-            string="Error verifying reCAPTCHA, please try again.",
+        assert response.data["captcha"][0] == ErrorDetail(
+            string="Error verifying captcha, please try again.",
             code="captcha_invalid",
         )

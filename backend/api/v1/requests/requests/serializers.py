@@ -92,7 +92,7 @@ class RequestCreateSerializer(ModelSerializer):
 
 
 class RequestAnonymousCreateSerializer(RequestCreateSerializer):
-    recaptcha = TurnstileField()
+    captcha = TurnstileField()
     requester_email = EmailField()
     requester_first_name = CharField()
     requester_last_name = CharField()
@@ -104,7 +104,7 @@ class RequestAnonymousCreateSerializer(RequestCreateSerializer):
             "comment",
             "end_datetime",
             "place",
-            "recaptcha",
+            "captcha",
             "requester_first_name",
             "requester_email",
             "requester_last_name",
@@ -124,5 +124,5 @@ class RequestAnonymousCreateSerializer(RequestCreateSerializer):
         return request
 
     def validate(self, attrs):
-        attrs.pop("recaptcha", None)
+        attrs.pop("captcha", None)
         return super().validate(attrs)

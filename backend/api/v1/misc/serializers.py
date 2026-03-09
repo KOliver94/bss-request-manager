@@ -8,4 +8,4 @@ class ContactSerializer(Serializer):
     email = EmailField()
     message = CharField()
     name = CharField(max_length=150)
-    recaptcha = TurnstileField()
+    captcha = TurnstileField()

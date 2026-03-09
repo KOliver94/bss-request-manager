@@ -124,7 +124,7 @@ class EmailSendingTestCase(APITestCase):
             "requester_email": "test.user@example.com",
             "requester_mobile": "+36509999999",
             "comment": "Additional information",
-            "recaptcha": "randomReCaptchaResponseToken",
+            "captcha": "randomCaptchaResponseToken",
         }
         url = reverse("api:v1:requests:request-list")
         response = self.client.post(url, data)
@@ -1052,7 +1052,7 @@ class EmailSendingTestCase(APITestCase):
             "name": "Joe Bloggs",
             "email": "joe@example.com",
             "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere tempus nibh et lobortis.",
-            "recaptcha": "randomReCaptchaResponseToken",
+            "captcha": "randomCaptchaResponseToken",
         }
         url = reverse("api:v1:misc:contact")
         response = self.client.post(url, data)

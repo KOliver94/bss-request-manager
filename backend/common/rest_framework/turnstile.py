@@ -7,7 +7,7 @@ from rest_framework.fields import CharField
 
 class TurnstileField(CharField):
     default_error_messages = {
-        "captcha_invalid": _("Error verifying reCAPTCHA, please try again."),
+        "captcha_invalid": _("Error verifying captcha, please try again."),
     }
 
     def __init__(self, **kwargs):
