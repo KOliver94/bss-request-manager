@@ -1,5 +1,6 @@
 import requests
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import gettext_lazy as _
 from rest_framework.fields import CharField
 
@@ -23,7 +24,9 @@ class TurnstileField(CharField):
 
         secret_key = getattr(settings, "TURNSTILE_SECRET_KEY", None)
         if not secret_key:
-            self.fail("captcha_invalid")
+            raise ImproperlyConfigured(
+                "TURNSTILE_SECRET_KEY must be set in Django settings."
+            )
 
         response = requests.post(
             "https://challenges.cloudflare.com/turnstile/v0/siteverify",
