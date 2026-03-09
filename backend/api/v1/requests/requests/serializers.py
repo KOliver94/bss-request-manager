@@ -101,10 +101,10 @@ class RequestAnonymousCreateSerializer(RequestCreateSerializer):
     class Meta:
         model = Request
         fields = (
+            "captcha",
             "comment",
             "end_datetime",
             "place",
-            "captcha",
             "requester_first_name",
             "requester_email",
             "requester_last_name",

@@ -23,6 +23,12 @@ export interface RequestAnonymousCreateRequest {
    * @type {string}
    * @memberof RequestAnonymousCreateRequest
    */
+  captcha: string;
+  /**
+   *
+   * @type {string}
+   * @memberof RequestAnonymousCreateRequest
+   */
   comment?: string;
   /**
    *
@@ -36,12 +42,6 @@ export interface RequestAnonymousCreateRequest {
    * @memberof RequestAnonymousCreateRequest
    */
   place: string;
-  /**
-   *
-   * @type {string}
-   * @memberof RequestAnonymousCreateRequest
-   */
-  captcha: string;
   /**
    *
    * @type {string}

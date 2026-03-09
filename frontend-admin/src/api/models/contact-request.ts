@@ -23,6 +23,12 @@ export interface ContactRequest {
    * @type {string}
    * @memberof ContactRequest
    */
+  captcha: string;
+  /**
+   *
+   * @type {string}
+   * @memberof ContactRequest
+   */
   email: string;
   /**
    *
@@ -36,10 +42,4 @@ export interface ContactRequest {
    * @memberof ContactRequest
    */
   name: string;
-  /**
-   *
-   * @type {string}
-   * @memberof ContactRequest
-   */
-  captcha: string;
 }

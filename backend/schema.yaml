@@ -2758,6 +2758,10 @@ components:
     ContactRequest:
       type: object
       properties:
+        captcha:
+          type: string
+          writeOnly: true
+          minLength: 1
         email:
           type: string
           format: email
@@ -2769,10 +2773,6 @@ components:
           type: string
           minLength: 1
           maxLength: 150
-        captcha:
-          type: string
-          writeOnly: true
-          minLength: 1
       required:
         - captcha
         - email
@@ -3480,6 +3480,10 @@ components:
     RequestAnonymousCreateRequest:
       type: object
       properties:
+        captcha:
+          type: string
+          writeOnly: true
+          minLength: 1
         comment:
           type: string
         end_datetime:
@@ -3489,10 +3493,6 @@ components:
           type: string
           minLength: 1
           maxLength: 150
-        captcha:
-          type: string
-          writeOnly: true
-          minLength: 1
         requester_first_name:
           type: string
           minLength: 1

@@ -16,10 +16,10 @@ def celery_tasks_eager(settings):
 @pytest.fixture
 def contact_data():
     return {
+        "captcha": "randomCaptchaResponseToken",
         "email": "joe@example.com",
         "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere tempus nibh et lobortis.",
         "name": "Joe Bloggs",
-        "captcha": "randomCaptchaResponseToken",
     }
 
 
@@ -32,7 +32,7 @@ def contact_data():
     [True, False],
 )
 def test_contact(
-    api_client, contact_data, mailoutbox, captcha_pass, request, settings, user
+    api_client, captcha_pass, contact_data, mailoutbox, request, settings, user
 ):
     settings.TURNSTILE_TESTING_PASS = captcha_pass
 

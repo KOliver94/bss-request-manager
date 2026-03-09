@@ -183,7 +183,7 @@ def test_create_request_service_account(
     [True, False],
 )
 def test_create_request_anonymous(
-    api_client, new_user, captcha_pass, request_create_data, requester_data, settings
+    api_client, captcha_pass, new_user, request_create_data, requester_data, settings
 ):
     settings.TURNSTILE_TESTING_PASS = captcha_pass
     user = baker.make(User, _fill_optional=["email"])
