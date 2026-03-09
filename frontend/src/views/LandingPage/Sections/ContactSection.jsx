@@ -43,10 +43,10 @@ export default function ContactSection() {
   const sendMail = async (event) => {
     event.preventDefault();
     setLoading(true);
-    turnstileRef.current?.reset();
     try {
       await sendContactMessage(messageData).then(() => {
         setMessageData(emptyMessageData);
+        turnstileRef.current?.reset();
         enqueueSnackbar('Üzenetedet elküldtük!', {
           variant: 'success',
         });
