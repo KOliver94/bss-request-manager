@@ -68,7 +68,6 @@ function RequestCreatorPage() {
   };
 
   const handleBack = () => {
-    setTurnstileToken(null);
     setActiveStep(activeStep - 1);
   };
 
@@ -178,6 +177,12 @@ function RequestCreatorPage() {
       controller.abort();
     };
   }, [enqueueSnackbar, navigate]);
+
+  useEffect(() => {
+    if (activeStep !== steps.length - 1) {
+      setTurnstileToken(null);
+    }
+  }, [activeStep]);
 
   useEffect(() => {
     changePageTitle('Felkérés beküldése');
