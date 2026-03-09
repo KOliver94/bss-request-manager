@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import Tooltip from '@mui/material/Tooltip';
-import { isCancel } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useNavigate, useLocation } from 'react-router';
 
@@ -67,7 +66,7 @@ function LoginPage() {
   }, [navigate, getRedirectedFrom]);
 
   const handleLogin = useCallback(
-    async (type, data, signal) => {
+    async (type, data) => {
       setLoading(true);
 
       const handleSuccess = () => {
@@ -79,14 +78,10 @@ function LoginPage() {
       };
 
       try {
-        await loginSocial(type, data, { signal }).then(() => {
+        await loginSocial(type, data).then(() => {
           handleSuccess();
         });
       } catch (e) {
-        if (isCancel(e)) {
-          return;
-        }
-
         let message = 'Sikertelen bejelentkezés.';
         if (e.response && e.response.status === 401) {
           message = 'Hibás felhasználónév vagy jelszó!';
@@ -121,17 +116,14 @@ function LoginPage() {
     };
   }, [redirect]);
 
+  const loginAttemptedRef = useRef(false);
+
   useEffect(() => {
-    const controller = new AbortController();
-
-    if (code && provider) {
+    if (code && provider && !loginAttemptedRef.current) {
+      loginAttemptedRef.current = true;
       setLoading(true);
-      handleLogin(provider, code, controller.signal);
+      handleLogin(provider, code);
     }
-
-    return () => {
-      controller.abort();
-    };
   }, [code, provider, handleLogin]);
 
   return (

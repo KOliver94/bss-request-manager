@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { Turnstile } from '@marsidev/react-turnstile';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -9,7 +9,6 @@ import Stepper from '@mui/material/Stepper';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { isCancel } from 'axios';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router';
@@ -109,73 +108,59 @@ function RequestCreatorPage() {
     }
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const userDataLoadedRef = useRef(false);
 
+  useEffect(() => {
     async function loadUserData() {
       try {
-        await getMe({
-          signal: controller.signal,
-        })
-          .then((result) => {
-            const userData = {
-              requester_first_name: result.data.first_name,
-              requester_last_name: result.data.last_name,
-              requester_email: result.data.email,
-              requester_mobile: result.data.profile.phone_number,
-            };
-            if (
-              !userData.requester_first_name ||
-              !userData.requester_last_name ||
-              !userData.requester_email ||
-              !userData.requester_mobile
-            ) {
-              const missingData = [];
-              if (!userData.requester_last_name) {
-                missingData.push('vezetéknév');
-              }
-              if (!userData.requester_first_name) {
-                missingData.push('keresztnév');
-              }
-              if (!userData.requester_email) {
-                missingData.push('e-mail cím');
-              }
-              if (!userData.requester_mobile) {
-                missingData.push('telefonszám');
-              }
-              enqueueSnackbar(
-                `Kérlek töltsd ki hiányzó adataidat (${missingData.join(
-                  ', ',
-                )})!`,
-                {
-                  variant: 'warning',
-                },
-              );
-              navigate('/profile');
-            }
-            setFormData((prevState) => ({ ...prevState, ...userData }));
-            setActiveStep(1);
-          })
-          .catch((e) => {
-            if (isCancel(e)) {
-              // Request was cancelled, continue
-            }
-          });
+        const result = await getMe();
+        const userData = {
+          requester_first_name: result.data.first_name,
+          requester_last_name: result.data.last_name,
+          requester_email: result.data.email,
+          requester_mobile: result.data.profile.phone_number,
+        };
+        if (
+          !userData.requester_first_name ||
+          !userData.requester_last_name ||
+          !userData.requester_email ||
+          !userData.requester_mobile
+        ) {
+          const missingData = [];
+          if (!userData.requester_last_name) {
+            missingData.push('vezetéknév');
+          }
+          if (!userData.requester_first_name) {
+            missingData.push('keresztnév');
+          }
+          if (!userData.requester_email) {
+            missingData.push('e-mail cím');
+          }
+          if (!userData.requester_mobile) {
+            missingData.push('telefonszám');
+          }
+          enqueueSnackbar(
+            `Kérlek töltsd ki hiányzó adataidat (${missingData.join(', ')})!`,
+            {
+              variant: 'warning',
+            },
+          );
+          navigate('/profile');
+        }
+        setFormData((prevState) => ({ ...prevState, ...userData }));
+        setActiveStep(1);
       } finally {
         setLoading(false);
       }
     }
 
-    if (isAuthenticated()) {
+    if (isAuthenticated() && !userDataLoadedRef.current) {
+      userDataLoadedRef.current = true;
       setLoading(true);
       loadUserData();
     } else {
       setLoading(false);
     }
-
-    return () => {
-      controller.abort();
-    };
   }, [enqueueSnackbar, navigate]);
 
   useEffect(() => {
