@@ -26,9 +26,9 @@ async function handleLogin(response) {
   return response;
 }
 
-export async function loginSocial(provider, code, config) {
+export async function loginSocial(provider, code) {
   await axiosInstance
-    .post('login/social', { provider, code }, config)
+    .post('login/social', { provider, code })
     .then(handleLogin);
 }
 

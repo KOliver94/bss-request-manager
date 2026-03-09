@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -139,14 +139,12 @@ export default function ProfilePage() {
     }
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const profileLoadedRef = useRef(false);
 
+  useEffect(() => {
     async function loadData() {
       try {
-        const result = await getMe({
-          signal: controller.signal,
-        });
+        const result = await getMe();
         setUserData(result.data);
         setLoading(false);
         reset({
@@ -161,21 +159,21 @@ export default function ProfilePage() {
         }
       }
     }
-    setLoading(true);
-    loadData();
 
-    return () => {
-      controller.abort();
-    };
+    if (!profileLoadedRef.current) {
+      profileLoadedRef.current = true;
+      setLoading(true);
+      loadData();
+    }
   }, [reset, enqueueSnackbar]);
 
   useEffect(() => {
     changePageTitle(!loading && `${userData.last_name} ${userData.first_name}`);
   }, [loading, userData]);
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const connectAttemptedRef = useRef(false);
 
+  useEffect(() => {
     async function connectSocialProfile() {
       function handleSocialError(e) {
         const errorMessage = handleError(e);
@@ -187,13 +185,9 @@ export default function ProfilePage() {
         }
       }
 
-      connectSocial(provider, code, {
-        signal: controller.signal,
-      })
+      connectSocial(provider, code)
         .then(() => {
-          getMe({
-            signal: controller.signal,
-          })
+          getMe()
             .then((result) => {
               setUserData(result.data);
               setProfileConnecting(false);
@@ -204,14 +198,11 @@ export default function ProfilePage() {
         .catch((e) => handleSocialError(e));
     }
 
-    if (code && provider) {
+    if (code && provider && !connectAttemptedRef.current) {
+      connectAttemptedRef.current = true;
       setProfileConnecting(true);
       connectSocialProfile();
     }
-
-    return () => {
-      controller.abort();
-    };
   }, [code, provider, navigate, enqueueSnackbar]);
 
   const onSubmit = async (data) => {
