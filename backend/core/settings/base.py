@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
-    "drf_recaptcha",
     "drf_spectacular",
     "corsheaders",
     "health_check",
@@ -342,10 +341,10 @@ HEALTH_CHECK_ENABLED_CHECKS = [
     ),
 ]
 
-# Django REST reCAPTCHA
-# https://github.com/llybin/drf-recaptcha
+# Cloudflare Turnstile
+# https://developers.cloudflare.com/turnstile/
 
-DRF_RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default=None)
+TURNSTILE_SECRET_KEY = config("TURNSTILE_SECRET_KEY", default=None)
 
 # drf-spectacular
 # https://drf-spectacular.readthedocs.io/en/latest/

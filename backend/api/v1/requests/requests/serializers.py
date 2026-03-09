@@ -1,6 +1,5 @@
 from django.utils.timezone import localtime
 from django.utils.translation import gettext_lazy as _
-from drf_recaptcha.fields import ReCaptchaV2Field
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, DateTimeField, EmailField, IntegerField
@@ -12,6 +11,7 @@ from api.v1.admin.users.serializers import (
 )
 from api.v1.requests.utilities import create_user
 from common.models import get_anonymous_user
+from common.rest_framework.turnstile import TurnstileField
 from common.utilities import create_calendar_event
 from video_requests.emails import email_user_new_request_confirmation
 from video_requests.models import Comment, Request
@@ -92,7 +92,7 @@ class RequestCreateSerializer(ModelSerializer):
 
 
 class RequestAnonymousCreateSerializer(RequestCreateSerializer):
-    recaptcha = ReCaptchaV2Field()
+    captcha = TurnstileField()
     requester_email = EmailField()
     requester_first_name = CharField()
     requester_last_name = CharField()
@@ -101,10 +101,10 @@ class RequestAnonymousCreateSerializer(RequestCreateSerializer):
     class Meta:
         model = Request
         fields = (
+            "captcha",
             "comment",
             "end_datetime",
             "place",
-            "recaptcha",
             "requester_first_name",
             "requester_email",
             "requester_last_name",
@@ -124,5 +124,5 @@ class RequestAnonymousCreateSerializer(RequestCreateSerializer):
         return request
 
     def validate(self, attrs):
-        attrs.pop("recaptcha", None)
+        attrs.pop("captcha", None)
         return super().validate(attrs)

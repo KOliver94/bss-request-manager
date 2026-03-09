@@ -96,8 +96,8 @@ HEALTH_CHECK_ENABLED_CHECKS = [
     ),
 ]
 
-# Set DRF reCAPTCHA to test mode
-DRF_RECAPTCHA_TESTING = True
+# Set Cloudflare Turnstile to test mode
+TURNSTILE_TESTING = True
 
 # Disable file logging
 LOGGING = {

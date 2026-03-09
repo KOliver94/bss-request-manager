@@ -110,7 +110,7 @@ class EmailSendingTestCase(APITestCase):
             mail.outbox[0].subject, f"{data['title']} | Forgatási felkérésedet fogadtuk"
         )
 
-    @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
+    @override_settings(TURNSTILE_TESTING_PASS=True)
     def test_new_request_confirmation_email_sent_to_anonymous(self):
         # Create a Request without login
         data = {
@@ -124,7 +124,7 @@ class EmailSendingTestCase(APITestCase):
             "requester_email": "test.user@example.com",
             "requester_mobile": "+36509999999",
             "comment": "Additional information",
-            "recaptcha": "randomReCaptchaResponseToken",
+            "captcha": "randomCaptchaResponseToken",
         }
         url = reverse("api:v1:requests:request-list")
         response = self.client.post(url, data)
@@ -1046,13 +1046,13 @@ class EmailSendingTestCase(APITestCase):
         # Check if function was called with correct parameters
         mock_email_responsible_overdue_request.assert_not_called()
 
-    @override_settings(DRF_RECAPTCHA_TESTING_PASS=True)
+    @override_settings(TURNSTILE_TESTING_PASS=True)
     def test_contact_message_email_sent(self):
         data = {
             "name": "Joe Bloggs",
             "email": "joe@example.com",
             "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere tempus nibh et lobortis.",
-            "recaptcha": "randomReCaptchaResponseToken",
+            "captcha": "randomCaptchaResponseToken",
         }
         url = reverse("api:v1:misc:contact")
         response = self.client.post(url, data)

@@ -179,13 +179,13 @@ def test_create_request_service_account(
     [True, False],
 )
 @pytest.mark.parametrize(
-    "recaptcha_pass",
+    "captcha_pass",
     [True, False],
 )
 def test_create_request_anonymous(
-    api_client, new_user, recaptcha_pass, request_create_data, requester_data, settings
+    api_client, captcha_pass, new_user, request_create_data, requester_data, settings
 ):
-    settings.DRF_RECAPTCHA_TESTING_PASS = recaptcha_pass
+    settings.TURNSTILE_TESTING_PASS = captcha_pass
     user = baker.make(User, _fill_optional=["email"])
 
     if not new_user:
@@ -198,10 +198,10 @@ def test_create_request_anonymous(
         url,
         request_create_data
         | requester_data
-        | {"recaptcha": "randomReCaptchaResponseToken"},
+        | {"captcha": "randomCaptchaResponseToken"},
     )
 
-    if recaptcha_pass:
+    if captcha_pass:
         assert response.status_code == HTTP_201_CREATED
         assert_retrieve_response_keys(response.data)
         requester = User.objects.filter(email=requester_data["requester_email"]).first()
@@ -226,8 +226,8 @@ def test_create_request_anonymous(
 
     else:
         assert response.status_code == HTTP_400_BAD_REQUEST
-        assert response.data["recaptcha"][0] == ErrorDetail(
-            string="Error verifying reCAPTCHA, please try again.",
+        assert response.data["captcha"][0] == ErrorDetail(
+            string="Error verifying captcha, please try again.",
             code="captcha_invalid",
         )
 
@@ -238,12 +238,12 @@ def test_create_request_anonymous(
 def test_create_request_with_comment(
     api_client, request, request_create_data, requester_data, settings, user
 ):
-    settings.DRF_RECAPTCHA_TESTING_PASS = True
+    settings.TURNSTILE_TESTING_PASS = True
     if user is None:
         data = (
             request_create_data
             | requester_data
-            | {"recaptcha": "randomReCaptchaResponseToken"}
+            | {"captcha": "randomCaptchaResponseToken"}
         )
     else:
         data = request_create_data
@@ -270,12 +270,12 @@ def test_create_request_with_comment(
 def test_create_request_date_validation(
     api_client, request, request_create_data, requester_data, settings, user
 ):
-    settings.DRF_RECAPTCHA_TESTING_PASS = True
+    settings.TURNSTILE_TESTING_PASS = True
     if user is None:
         data = (
             request_create_data
             | requester_data
-            | {"recaptcha": "randomReCaptchaResponseToken"}
+            | {"captcha": "randomCaptchaResponseToken"}
         )
     else:
         data = request_create_data

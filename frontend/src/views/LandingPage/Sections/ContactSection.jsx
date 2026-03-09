@@ -1,7 +1,7 @@
-import { useState, createRef } from 'react';
+import { useState, useRef } from 'react';
 
+import { Turnstile } from '@marsidev/react-turnstile';
 import { useSnackbar } from 'notistack';
-import { ReCAPTCHA } from 'react-google-recaptcha';
 
 import sendContactMessage from 'api/miscApi';
 import Button from 'components/material-kit-react/CustomButtons/Button';
@@ -16,12 +16,12 @@ const emptyMessageData = {
   name: '',
   email: '',
   message: '',
-  recaptcha: '',
+  captcha: '',
 };
 
 export default function ContactSection() {
   const { enqueueSnackbar } = useSnackbar();
-  const recaptchaRef = createRef();
+  const turnstileRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [messageData, setMessageData] = useState(emptyMessageData);
 
@@ -36,17 +36,17 @@ export default function ContactSection() {
   const handleCaptcha = (token) => {
     setMessageData((prevMailData) => ({
       ...prevMailData,
-      recaptcha: token,
+      captcha: token,
     }));
   };
 
   const sendMail = async (event) => {
     event.preventDefault();
     setLoading(true);
-    recaptchaRef.current.reset();
     try {
       await sendContactMessage(messageData).then(() => {
         setMessageData(emptyMessageData);
+        turnstileRef.current?.reset();
         enqueueSnackbar('Üzenetedet elküldtük!', {
           variant: 'success',
         });
@@ -131,17 +131,20 @@ export default function ContactSection() {
                 }}
               />
               <GridItem>
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                  onChange={handleCaptcha}
+                <Turnstile
+                  ref={turnstileRef}
+                  siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                  onSuccess={handleCaptcha}
+                  options={{
+                    theme: 'light',
+                  }}
                 />
               </GridItem>
               <GridItem size={{ xs: 12, sm: 12, md: 4 }}>
                 <Button
                   color="primary"
                   type="submit"
-                  disabled={!messageData.recaptcha || loading}
+                  disabled={!messageData.captcha || loading}
                 >
                   Küldés
                 </Button>
