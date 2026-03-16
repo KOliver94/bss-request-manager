@@ -10,7 +10,7 @@
     "@mui/icons-material": "7.3.9",
     "@mui/material": "7.3.9",
     "@mui/x-date-pickers": "8.27.2",
-    "@sentry/react": "10.42.0",
+    "@sentry/react": "10.43.0",
     "@marsidev/react-turnstile": "1.4.2",
     "axios": "1.13.6",
     "classnames": "2.5.1",
@@ -23,7 +23,7 @@
     "react-dom": "19.2.4",
     "react-hook-form": "7.71.2",
     "react-router": "7.13.1",
-    "sass": "1.97.3",
+    "sass": "1.98.0",
     "yup": "1.7.1"
   },
   "scripts": {
@@ -52,10 +52,10 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.4",
-    "@typescript-eslint/parser": "8.56.1",
+    "@typescript-eslint/parser": "8.57.0",
     "@vite-pwa/assets-generator": "1.0.2",
-    "@vitejs/plugin-basic-ssl": "2.1.4",
-    "@vitejs/plugin-react": "5.1.4",
+    "@vitejs/plugin-basic-ssl": "2.2.0",
+    "@vitejs/plugin-react": "5.2.0",
     "eslint": "9.39.4",
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-typescript": "4.4.4",
@@ -67,7 +67,7 @@
     "globals": "17.4.0",
     "prettier": "3.8.1",
     "source-map-explorer": "2.5.3",
-    "typescript-eslint": "8.56.1",
+    "typescript-eslint": "8.57.0",
     "vite": "7.3.1",
     "vite-plugin-pwa": "1.2.0",
     "vite-tsconfig-paths": "6.1.1"
