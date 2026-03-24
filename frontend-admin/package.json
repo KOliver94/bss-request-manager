@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sentry/react": "10.43.0",
-    "@tanstack/react-query": "5.90.21",
+    "@sentry/react": "10.45.0",
+    "@tanstack/react-query": "5.95.2",
     "axios": "1.13.6",
     "bootstrap-icons": "1.13.1",
     "jwt-decode": "4.0.0",
@@ -15,8 +15,8 @@
     "primereact": "10.9.7",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-hook-form": "7.71.2",
-    "react-router": "7.13.1",
+    "react-hook-form": "7.72.0",
+    "react-router": "7.13.2",
     "timeago.js": "4.0.2"
   },
   "scripts": {
@@ -45,9 +45,9 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.4",
-    "@openapitools/openapi-generator-cli": "2.30.2",
-    "@tanstack/eslint-plugin-query": "5.91.4",
-    "@tanstack/react-query-devtools": "5.91.3",
+    "@openapitools/openapi-generator-cli": "2.31.0",
+    "@tanstack/eslint-plugin-query": "5.95.2",
+    "@tanstack/react-query-devtools": "5.95.2",
     "@types/node": "24.12.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -66,13 +66,13 @@
     "prettier": "3.8.1",
     "source-map-explorer": "2.5.3",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.57.0",
+    "typescript-eslint": "8.57.2",
     "vite": "7.3.1",
     "vite-tsconfig-paths": "6.1.1"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.59.0",
-    "@rollup/rollup-linux-x64-musl": "4.59.0",
-    "@rollup/rollup-win32-x64-msvc": "4.59.0"
+    "@rollup/rollup-linux-x64-gnu": "4.60.0",
+    "@rollup/rollup-linux-x64-musl": "4.60.0",
+    "@rollup/rollup-win32-x64-msvc": "4.60.0"
   }
 }
