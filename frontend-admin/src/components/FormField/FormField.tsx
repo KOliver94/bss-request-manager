@@ -3,15 +3,21 @@ import React, { cloneElement } from 'react';
 import { classNames } from 'primereact/utils';
 import type { IconType } from 'primereact/utils';
 import { Controller } from 'react-hook-form';
-import type { UseControllerProps } from 'react-hook-form';
+import type {
+  FieldPath,
+  FieldValues,
+  UseControllerProps,
+} from 'react-hook-form';
 
 import ConditionalWrapper from 'helpers/ConditionalWrapper';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface FormFieldProps extends UseControllerProps<any> {
+interface FormFieldProps<
+  T extends FieldValues = FieldValues,
+  TName extends FieldPath<T> = FieldPath<T>,
+> extends UseControllerProps<T, TName> {
   children: React.JSX.Element;
   className: string;
-  icon?: IconType<FormFieldProps>;
+  icon?: IconType<FormFieldProps<T, TName>>;
   label: string;
 }
 
@@ -21,13 +27,16 @@ const errorMessages: Record<string, string> = {
   validate: 'A mező kitöltése kötelező',
 };
 
-const FormField = ({
+const FormField = <
+  T extends FieldValues = FieldValues,
+  TName extends FieldPath<T> = FieldPath<T>,
+>({
   className,
   children,
   icon,
   label,
   ...controllerProps
-}: FormFieldProps) => {
+}: FormFieldProps<T, TName>) => {
   return (
     <Controller
       {...controllerProps}
