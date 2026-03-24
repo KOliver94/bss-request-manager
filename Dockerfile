@@ -33,8 +33,8 @@ WORKDIR /app/frontend
 # Copy package.json and package-lock.json to Docker environment
 COPY ./frontend/package*.json /app/frontend/
 
-# Update npm and install all required node packages
-RUN npm install -g npm@latest && npm install --silent
+# Install all required node packages
+RUN npm install --silent
 
 # Copy everything over to Docker environment
 COPY ./frontend /app/frontend
@@ -63,8 +63,8 @@ WORKDIR /app/frontend-admin
 # Copy package.json and package-lock.json to Docker environment
 COPY ./frontend-admin/package*.json /app/frontend-admin/
 
-# Update npm and install all required node packages
-RUN npm install -g npm@latest && npm install --silent
+# Install all required node packages
+RUN npm install --silent
 
 # Copy everything over to Docker environment
 COPY ./frontend-admin /app/frontend-admin
