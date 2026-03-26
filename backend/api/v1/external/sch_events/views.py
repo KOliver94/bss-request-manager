@@ -20,8 +20,14 @@ logger = logging.getLogger("external.sch-events.views")
 
 
 def external_api_exception_handler(exc, context):
-    if isinstance(exc, ValidationError) or isinstance(exc, ParseError):
-        logger.exception("SCH Events (bejelentes.sch) bad request received.")
+    if isinstance(exc, (ValidationError, ParseError)):
+        request = context.get("request")
+        logger.exception(
+            "SCH Events (bejelentes.sch) bad request: %s %s body=%s",
+            request.method if request else "?",
+            request.get_full_path() if request else "?",
+            getattr(request, "data", None),
+        )
     return exception_handler(exc, context)
 
 
