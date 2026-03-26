@@ -45,16 +45,16 @@ class AnnotatedManager(models.Manager):
 
 class Request(models.Model):
     class Statuses(models.IntegerChoices):
-        DENIED = 0, "Elutasítva"
-        REQUESTED = 1, "Felkérés"
-        ACCEPTED = 2, "Elvállalva"
-        RECORDED = 3, "Leforgatva"
-        UPLOADED = 4, "Beírva"
-        EDITED = 5, "Megvágva"
-        ARCHIVED = 6, "Archiválva"
-        DONE = 7, "Lezárva"
-        CANCELED = 9, "Szervezők által lemondva"
-        FAILED = 10, "Meghiúsult"
+        DENIED = 0, _("Elutasítva")
+        REQUESTED = 1, _("Felkérés")
+        ACCEPTED = 2, _("Elvállalva")
+        RECORDED = 3, _("Leforgatva")
+        UPLOADED = 4, _("Beírva")
+        EDITED = 5, _("Megvágva")
+        ARCHIVED = 6, _("Archiválva")
+        DONE = 7, _("Lezárva")
+        CANCELED = 9, _("Szervezők által lemondva")
+        FAILED = 10, _("Meghiúsult")
 
     title = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
@@ -128,12 +128,12 @@ class CrewMember(models.Model):
 
 class Video(models.Model):
     class Statuses(models.IntegerChoices):
-        PENDING = 1, "Vágásra vár"
-        IN_PROGRESS = 2, "Vágás alatt"
-        EDITED = 3, "Megvágva"
-        CODED = 4, "Kikódolva"
-        PUBLISHED = 5, "Közzétéve"
-        DONE = 6, "Lezárva"
+        PENDING = 1, _("Vágásra vár")
+        IN_PROGRESS = 2, _("Vágás alatt")
+        EDITED = 3, _("Megvágva")
+        CODED = 4, _("Kikódolva")
+        PUBLISHED = 5, _("Közzétéve")
+        DONE = 6, _("Lezárva")
 
     title = models.CharField(max_length=200)
     request = models.ForeignKey(
@@ -195,9 +195,9 @@ class Rating(AbstractRating):
 
 class Todo(AbstractTodo):
     class Statuses(models.IntegerChoices):
-        OPEN = 1, "Nyitva"
-        CLOSED = 2, "Lezárva"
-        DISCARDED = 3, "Elvetve"
+        OPEN = 1, _("Nyitva")
+        CLOSED = 2, _("Lezárva")
+        DISCARDED = 3, _("Elvetve")
 
     request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="todos")
     video = models.ForeignKey(
