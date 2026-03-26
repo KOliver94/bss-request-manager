@@ -28,7 +28,7 @@ dependencies = [
     "jsonschema[format]==4.26.0",
     "libgravatar==1.0.4",
     "python-decouple==3.8",
-    "requests==2.32.5",
+    "requests==2.33.0",
     "sentry-sdk==2.55.0",
     "social-auth-app-django==5.7.0",
     "whitenoise[brotli]==6.12.0"
