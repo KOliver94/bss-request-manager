@@ -43,7 +43,8 @@ class Command(BaseCommand):
                 username=result["username"], is_staff=False
             ).exists():
                 logging.exception(
-                    f"User with username {result['username']} already exists."
+                    "User with username %s already exists as non-staff.",
+                    result["username"],
                 )
                 continue
 
@@ -55,7 +56,9 @@ class Command(BaseCommand):
                 .exists()
             ):
                 logging.exception(
-                    f"E-mail address {result['email']} is already assigned to a different user."
+                    "E-mail address %s is already assigned to a different user (sync user: %s).",
+                    result["email"],
+                    result["username"],
                 )
                 continue
 
@@ -109,7 +112,9 @@ class Command(BaseCommand):
             user.groups.clear()
             user.save()  # Save modifications
             total_demoted += 1
-            logging.info(f"{user.get_full_name()} ({user.username}) has been demoted.")
+            logging.info(
+                "%s (%s) has been demoted.", user.get_full_name(), user.username
+            )
 
         self.stdout.write(
             self.style.SUCCESS(

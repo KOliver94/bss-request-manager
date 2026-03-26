@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.contrib.auth import get_user_model
@@ -7,6 +9,8 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from common.models import Ban, UserProfile
+
+logger = logging.getLogger(__name__)
 
 USER_MODEL = get_user_model()
 
@@ -41,6 +45,7 @@ class ExtendedUserAdmin(UserAdmin):
             try:
                 Ban.objects.create(receiver=user, creator=request.user)
             except IntegrityError:
+                logger.warning("User %s is already banned, skipping.", user.username)
                 continue
         self.message_user(request, "Successfully banned selected users.")
 

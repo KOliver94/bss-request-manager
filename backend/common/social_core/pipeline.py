@@ -9,6 +9,8 @@ from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from social_core.exceptions import NotAllowedToDisconnect
 from social_django.models import UserSocialAuth
 
+logger = logging.getLogger(__name__)
+
 
 def check_for_email(details, *args, **kwargs):
     if not details.get("email"):
@@ -45,8 +47,10 @@ def set_user_active_when_first_logs_in(backend, user=None, *args, **kwargs):
     if user and not backend.strategy.storage.user.get_social_auth_for_user(user):
         user.is_active = True
         user.save()
-        logging.info(
-            f"User account has been activated for {user.get_full_name()} ({user.username})"
+        logger.info(
+            "User account has been activated for %s (%s)",
+            user.get_full_name(),
+            user.username,
         )
 
 
@@ -179,7 +183,7 @@ def get_avatar(backend, response, user, *args, **kwargs):
         if not user.userprofile.avatar.get("provider", None):
             user.userprofile.avatar["provider"] = "gravatar"
     except requests.exceptions.HTTPError:
-        pass
+        logger.debug("Gravatar not found for %s", user.email)
 
     if not user.userprofile.avatar.get("provider", None) and backend.name in [
         "google-oauth2",
