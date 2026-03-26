@@ -31,7 +31,9 @@ def handle_exception(e):
             elif isinstance(message, list) and len(message):
                 message = message[0]
         except (KeyError, TypeError):
-            pass
+            logger.debug(
+                "Could not parse error message from response: %s", e.response.text[:200]
+            )
     # As a fallback, if no valid message was captured, covert the exception to string
     # because most of the social-core exceptions implement a valid conversion.
     if isinstance(e, SocialAuthBaseException) and not message:

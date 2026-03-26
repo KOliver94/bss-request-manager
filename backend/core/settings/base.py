@@ -73,6 +73,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "common.middleware.RequestLoggingMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
@@ -301,7 +302,19 @@ LOGGING = {
             "formatter": "error",
         },
     },
-    "loggers": {"": {"handlers": ["console", "info", "error"], "level": "INFO"}},
+    "loggers": {
+        "": {"handlers": ["console", "info", "error"], "level": "INFO"},
+        "django.request": {
+            "handlers": ["error"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "api.access": {
+            "handlers": ["console", "info"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
 }
 
 # E-mail settings
