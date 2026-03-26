@@ -14,4 +14,17 @@ def exception_handler(exception, context):
         exception = DRFValidationError(detail=get_error_detail(exception))
 
     # Call REST Framework's default exception handler with the transformed exception.
-    return drf_exception_handler(exception, context)
+    response = drf_exception_handler(exception, context)
+
+    if response is not None and response.status_code == 403:
+        request = context.get("request")
+        LOG.warning(
+            "Permission denied: %s %s user=%s status=%s detail=%s",
+            request.method if request else "?",
+            request.get_full_path() if request else "?",
+            getattr(request.user, "id", None) if request else None,
+            response.status_code,
+            response.data,
+        )
+
+    return response
