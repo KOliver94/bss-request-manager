@@ -45,16 +45,16 @@ class AnnotatedManager(models.Manager):
 
 class Request(models.Model):
     class Statuses(models.IntegerChoices):
-        DENIED = 0, "Elutasítva"
-        REQUESTED = 1, "Felkérés"
-        ACCEPTED = 2, "Elvállalva"
-        RECORDED = 3, "Leforgatva"
-        UPLOADED = 4, "Beírva"
-        EDITED = 5, "Megvágva"
-        ARCHIVED = 6, "Archiválva"
-        DONE = 7, "Lezárva"
-        CANCELED = 9, "Szervezők által lemondva"
-        FAILED = 10, "Meghiúsult"
+        DENIED = 0, _("Elutasítva")
+        REQUESTED = 1, _("Felkérés")
+        ACCEPTED = 2, _("Elvállalva")
+        RECORDED = 3, _("Leforgatva")
+        UPLOADED = 4, _("Beírva")
+        EDITED = 5, _("Megvágva")
+        ARCHIVED = 6, _("Archiválva")
+        DONE = 7, _("Lezárva")
+        CANCELED = 9, _("Szervezők által lemondva")
+        FAILED = 10, _("Meghiúsult")
 
     title = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
@@ -64,21 +64,21 @@ class Request(models.Model):
     type = models.CharField(max_length=50)
     place = models.CharField(max_length=150)
     status = models.PositiveSmallIntegerField(
-        choices=Statuses, default=Statuses.REQUESTED
+        choices=Statuses, default=Statuses.REQUESTED, db_index=True
     )
     responsible = models.ForeignKey(
         User,
-        related_name="responsible_user",
+        related_name="responsible_requests",
         on_delete=models.SET(get_sentinel_user),
         blank=True,
         null=True,
     )
     requester = models.ForeignKey(
-        User, related_name="requester_user", on_delete=models.SET(get_sentinel_user)
+        User, related_name="requested_requests", on_delete=models.SET(get_sentinel_user)
     )
     requested_by = models.ForeignKey(
         User,
-        related_name="requested_by_user",
+        related_name="submitted_requests",
         on_delete=models.SET(get_sentinel_user),
     )
     additional_data = JSONField(
@@ -98,11 +98,11 @@ class Request(models.Model):
         return f"{settings.BASE_URL}/admin/requests/{self.id}"
 
     def clean(self):
-        if not (self.start_datetime <= self.end_datetime):
+        if self.start_datetime > self.end_datetime:
             raise ValidationError(
                 {"end_datetime": [_("Must be later than the start of the event.")]}
             )
-        if self.deadline and not (self.end_datetime.date() < self.deadline):
+        if self.deadline and self.end_datetime.date() >= self.deadline:
             raise ValidationError(
                 {"deadline": [_("Must be later than the end of the event.")]}
             )
@@ -128,12 +128,12 @@ class CrewMember(models.Model):
 
 class Video(models.Model):
     class Statuses(models.IntegerChoices):
-        PENDING = 1, "Vágásra vár"
-        IN_PROGRESS = 2, "Vágás alatt"
-        EDITED = 3, "Megvágva"
-        CODED = 4, "Kikódolva"
-        PUBLISHED = 5, "Közzétéve"
-        DONE = 6, "Lezárva"
+        PENDING = 1, _("Vágásra vár")
+        IN_PROGRESS = 2, _("Vágás alatt")
+        EDITED = 3, _("Megvágva")
+        CODED = 4, _("Kikódolva")
+        PUBLISHED = 5, _("Közzétéve")
+        DONE = 6, _("Lezárva")
 
     title = models.CharField(max_length=200)
     request = models.ForeignKey(
@@ -143,7 +143,7 @@ class Video(models.Model):
         User, on_delete=models.SET(get_sentinel_user), blank=True, null=True
     )
     status = models.PositiveSmallIntegerField(
-        choices=Statuses, default=Statuses.PENDING
+        choices=Statuses, default=Statuses.PENDING, db_index=True
     )
     additional_data = JSONField(
         encoder=DjangoJSONEncoder,
@@ -195,9 +195,9 @@ class Rating(AbstractRating):
 
 class Todo(AbstractTodo):
     class Statuses(models.IntegerChoices):
-        OPEN = 1, "Nyitva"
-        CLOSED = 2, "Lezárva"
-        DISCARDED = 3, "Elvetve"
+        OPEN = 1, _("Nyitva")
+        CLOSED = 2, _("Lezárva")
+        DISCARDED = 3, _("Elvetve")
 
     request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name="todos")
     video = models.ForeignKey(

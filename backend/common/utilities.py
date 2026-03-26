@@ -67,11 +67,14 @@ def get_pr_responsible():
 # https://github.com/googleapis/google-api-python-client/issues/325#issuecomment-274349841
 class MemoryCache(Cache):
     _CACHE = {}
+    _MAX_SIZE = 128
 
     def get(self, url):
         return MemoryCache._CACHE.get(url)
 
     def set(self, url, content):
+        if len(MemoryCache._CACHE) >= MemoryCache._MAX_SIZE:
+            MemoryCache._CACHE.pop(next(iter(MemoryCache._CACHE)))
         MemoryCache._CACHE[url] = content
 
 
@@ -143,4 +146,4 @@ def remove_calendar_event(request_id):
             calendarId=settings.GOOGLE_CALENDAR_ID,
             eventId=request.additional_data["calendar_id"],
         ).execute()
-        return "Calendar event for {request.title} was deleted successfully."
+        return f"Calendar event for {request.title} was deleted successfully."

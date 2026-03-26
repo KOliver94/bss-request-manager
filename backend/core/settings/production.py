@@ -7,7 +7,7 @@ from sentry_sdk.integrations.redis import RedisIntegration
 from core.settings._auth_social import *
 
 # E-mail settings
-# https://docs.djangoproject.com/en/3.0/topics/email/
+# https://docs.djangoproject.com/en/6.0/topics/email/
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST")

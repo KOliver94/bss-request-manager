@@ -62,9 +62,7 @@ class UserProfile(models.Model):
 
 
 class Ban(models.Model):
-    receiver = models.OneToOneField(
-        User, on_delete=models.CASCADE, primary_key=True, unique=True
-    )
+    receiver = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     creator = models.ForeignKey(
         User, related_name="ban_creator", on_delete=models.SET(get_sentinel_user)
     )

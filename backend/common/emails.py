@@ -4,7 +4,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
 # EmailMultiAlternatives object attributes detailed description
-# https://docs.djangoproject.com/en/3.0/topics/email/#emailmessage-objects
+# https://docs.djangoproject.com/en/6.0/topics/email/#emailmessage-objects
 
 
 @shared_task
