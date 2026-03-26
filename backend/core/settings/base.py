@@ -8,8 +8,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-import os
 from datetime import timedelta
+from pathlib import Path
 from re import match
 
 from celery.schedules import crontab
@@ -19,12 +19,10 @@ from django.core.management.utils import get_random_secret_key
 from django.utils.translation import gettext_lazy as _
 from redis.asyncio import Redis as RedisClient
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BACKEND_DIR = os.path.dirname(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-)
-FRONTEND_DIR = os.path.abspath(os.path.join(BACKEND_DIR, "..", "frontend"))
-FRONTEND_ADMIN_DIR = os.path.abspath(os.path.join(BACKEND_DIR, "..", "frontend-admin"))
+# Build paths inside the project like this: BACKEND_DIR / "subdir"
+BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+FRONTEND_DIR = (BACKEND_DIR / ".." / "frontend").resolve()
+FRONTEND_ADMIN_DIR = (BACKEND_DIR / ".." / "frontend-admin").resolve()
 
 # URL of the site such as: https://website.example.com
 BASE_URL_DOMAIN = config("BASE_URL_DOMAIN", default="localhost:8000")
@@ -86,9 +84,9 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            os.path.join(FRONTEND_DIR, "build"),
-            os.path.join(FRONTEND_ADMIN_DIR, "build"),
-            os.path.join(BACKEND_DIR, "templates"),
+            FRONTEND_DIR / "build",
+            FRONTEND_ADMIN_DIR / "build",
+            BACKEND_DIR / "templates",
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -237,7 +235,7 @@ LANGUAGES = [
     ("hu", _("Hungarian")),
 ]
 LANGUAGE_CODE = config("LANGUAGE_CODE", default="en-us")
-LOCALE_PATHS = [os.path.join(BACKEND_DIR, "locale")]
+LOCALE_PATHS = [BACKEND_DIR / "locale"]
 TIME_ZONE = config("TIME_ZONE", default="Europe/Budapest")
 USE_I18N = True
 USE_TZ = True
@@ -246,11 +244,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATICFILES_DIRS = [
-    os.path.join(FRONTEND_DIR, "build", "static"),
-    os.path.join(FRONTEND_ADMIN_DIR, "build", "static"),
-    os.path.join(BACKEND_DIR, "templates", "static"),
+    FRONTEND_DIR / "build" / "static",
+    FRONTEND_ADMIN_DIR / "build" / "static",
+    BACKEND_DIR / "templates" / "static",
 ]
-STATIC_ROOT = os.path.join(BACKEND_DIR, "staticfiles")
+STATIC_ROOT = BACKEND_DIR / "staticfiles"
 STATIC_URL = "/static/"
 STORAGES = {
     "default": {
@@ -264,7 +262,7 @@ STORAGES = {
 # Whitenoise
 # http://whitenoise.evans.io/en/stable/django.html
 
-WHITENOISE_ROOT = os.path.join(FRONTEND_DIR, "build", "root")
+WHITENOISE_ROOT = FRONTEND_DIR / "build" / "root"
 
 # Logging
 # https://docs.djangoproject.com/en/6.0/topics/logging/
@@ -288,7 +286,7 @@ LOGGING = {
         },
         "info": {
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(BACKEND_DIR, "logs", "info.log"),
+            "filename": BACKEND_DIR / "logs" / "info.log",
             "maxBytes": 1024 * 1024 * 25,
             "backupCount": 3,
             "level": "INFO",
@@ -296,7 +294,7 @@ LOGGING = {
         },
         "error": {
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(BACKEND_DIR, "logs", "error.log"),
+            "filename": BACKEND_DIR / "logs" / "error.log",
             "maxBytes": 1024 * 1024 * 50,
             "backupCount": 5,
             "level": "ERROR",

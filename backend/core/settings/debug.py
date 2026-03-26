@@ -49,7 +49,7 @@ LOGGING["handlers"].update(
     {
         "debug": {
             "class": "logging.FileHandler",
-            "filename": os.path.join(BACKEND_DIR, "logs", "debug.log"),
+            "filename": BACKEND_DIR / "logs" / "debug.log",
             "level": "DEBUG",
             "formatter": "default",
         }

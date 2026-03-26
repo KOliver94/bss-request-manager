@@ -1,4 +1,3 @@
-import os
 import random
 import re
 from base64 import b64encode
@@ -292,13 +291,11 @@ class MicrosoftOAuth2Test(OAuth2Test):
 
     def setUp(self):
         with open(
-            os.path.join(
-                settings.BACKEND_DIR,
-                "templates",
-                "static",
-                "images",
-                "default_avatar.png",
-            ),
+            settings.BACKEND_DIR
+            / "templates"
+            / "static"
+            / "images"
+            / "default_avatar.png",
             "rb",
         ) as image_file:
             responses.get(self.avatar_image_url, body=b64encode(image_file.read()))
