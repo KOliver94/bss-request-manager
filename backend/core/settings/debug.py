@@ -55,13 +55,7 @@ LOGGING["handlers"].update(
         }
     }
 )
-LOGGING.update(
-    {
-        "loggers": {
-            "": {
-                "handlers": ["console", "info", "error", "debug"],
-                "level": "DEBUG",
-            }
-        },
-    }
-)
+LOGGING["loggers"][""] = {
+    "handlers": ["console", "info", "error", "debug"],
+    "level": "DEBUG",
+}
