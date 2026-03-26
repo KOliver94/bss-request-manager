@@ -68,17 +68,17 @@ class Request(models.Model):
     )
     responsible = models.ForeignKey(
         User,
-        related_name="responsible_user",
+        related_name="responsible_requests",
         on_delete=models.SET(get_sentinel_user),
         blank=True,
         null=True,
     )
     requester = models.ForeignKey(
-        User, related_name="requester_user", on_delete=models.SET(get_sentinel_user)
+        User, related_name="requested_requests", on_delete=models.SET(get_sentinel_user)
     )
     requested_by = models.ForeignKey(
         User,
-        related_name="requested_by_user",
+        related_name="submitted_requests",
         on_delete=models.SET(get_sentinel_user),
     )
     additional_data = JSONField(
