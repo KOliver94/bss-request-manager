@@ -11,6 +11,8 @@ from common.models import UserProfile
 from common.social_core.backends import BSSLoginOAuth2
 from common.social_core.pipeline import set_groups_and_permissions_for_staff
 
+logger = logging.getLogger(__name__)
+
 
 class Command(BaseCommand):
     help = "Synchronizes BSS users with Django"
@@ -42,7 +44,7 @@ class Command(BaseCommand):
             if User.objects.filter(
                 username=result["username"], is_staff=False
             ).exists():
-                logging.exception(
+                logger.exception(
                     "User with username %s already exists as non-staff.",
                     result["username"],
                 )
@@ -55,7 +57,7 @@ class Command(BaseCommand):
                 .exclude(username=result["username"])
                 .exists()
             ):
-                logging.exception(
+                logger.exception(
                     "E-mail address %s is already assigned to a different user (sync user: %s).",
                     result["email"],
                     result["username"],
@@ -112,7 +114,7 @@ class Command(BaseCommand):
             user.groups.clear()
             user.save()  # Save modifications
             total_demoted += 1
-            logging.info(
+            logger.info(
                 "%s (%s) has been demoted.", user.get_full_name(), user.username
             )
 

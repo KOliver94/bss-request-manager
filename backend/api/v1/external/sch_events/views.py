@@ -16,7 +16,7 @@ from common.rest_framework.exception import exception_handler
 from common.rest_framework.permissions import IsServiceAccount
 from video_requests.models import Request
 
-logger = logging.getLogger("external.sch-events.views")
+logger = logging.getLogger(__name__)
 
 
 def external_api_exception_handler(exc, context):
