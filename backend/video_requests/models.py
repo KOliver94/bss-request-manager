@@ -98,11 +98,11 @@ class Request(models.Model):
         return f"{settings.BASE_URL}/admin/requests/{self.id}"
 
     def clean(self):
-        if not (self.start_datetime <= self.end_datetime):
+        if self.start_datetime > self.end_datetime:
             raise ValidationError(
                 {"end_datetime": [_("Must be later than the start of the event.")]}
             )
-        if self.deadline and not (self.end_datetime.date() < self.deadline):
+        if self.deadline and self.end_datetime.date() >= self.deadline:
             raise ValidationError(
                 {"deadline": [_("Must be later than the end of the event.")]}
             )
