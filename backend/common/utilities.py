@@ -143,4 +143,4 @@ def remove_calendar_event(request_id):
             calendarId=settings.GOOGLE_CALENDAR_ID,
             eventId=request.additional_data["calendar_id"],
         ).execute()
-        return "Calendar event for {request.title} was deleted successfully."
+        return f"Calendar event for {request.title} was deleted successfully."
