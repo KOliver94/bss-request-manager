@@ -304,6 +304,11 @@ LOGGING = {
     },
     "loggers": {
         "": {"handlers": ["console", "info", "error"], "level": "INFO"},
+        "django.request": {
+            "handlers": ["error"],
+            "level": "ERROR",
+            "propagate": False,
+        },
         "api.access": {
             "handlers": ["console", "info"],
             "level": "WARNING",
