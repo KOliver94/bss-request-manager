@@ -15,10 +15,8 @@ class VideoListRetrieveSerializer(Serializer):
 
     @extend_schema_field(RatingRetrieveSerializer)
     def get_rating(self, obj):
-        serializer = RatingRetrieveSerializer(
-            obj.ratings.filter(author=self.context["request"].user).first()
-        )
-        return serializer.data
+        rating = obj.user_ratings[0] if obj.user_ratings else None
+        return RatingRetrieveSerializer(rating).data
 
     @staticmethod
     def get_video_url(obj) -> str | None:
