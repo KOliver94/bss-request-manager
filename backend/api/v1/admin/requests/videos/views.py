@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from django.db.models.fields.json import KeyTransform
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
@@ -19,7 +20,7 @@ from api.v1.admin.requests.videos.serializers import (
 from api.v1.admin.serializers import HistorySerializer
 from common.rest_framework.pagination import ExtendedPagination
 from common.rest_framework.permissions import IsStaffUser
-from video_requests.models import Request, Video
+from video_requests.models import Rating, Request, Video
 
 
 class VideoAdminViewSet(ModelViewSet):
@@ -55,7 +56,13 @@ class VideoAdminViewSet(ModelViewSet):
             return Video.objects.none()
         return (
             Video.objects.select_related("editor__userprofile")
-            .prefetch_related("ratings")
+            .prefetch_related(
+                Prefetch(
+                    "ratings",
+                    queryset=Rating.objects.filter(author=self.request.user),
+                    to_attr="user_ratings",
+                )
+            )
             .filter(request=get_object_or_404(Request, pk=self.kwargs["request_pk"]))
         )
 

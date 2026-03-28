@@ -24,8 +24,9 @@ class VideoAdminListSerializer(Serializer):
     status_by_admin = SerializerMethodField(read_only=True)
     title = CharField(read_only=True)
 
-    def get_rated(self, obj) -> bool:
-        return obj.ratings.filter(author=self.context["request"].user).exists()
+    @staticmethod
+    def get_rated(obj) -> bool:
+        return len(getattr(obj, "user_ratings", [])) > 0
 
     @staticmethod
     def get_status_by_admin(obj) -> bool:

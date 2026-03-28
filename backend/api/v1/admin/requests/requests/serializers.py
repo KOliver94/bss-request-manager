@@ -72,8 +72,9 @@ class RequestAdminRetrieveSerializer(RequestAdminListSerializer):
 
     @staticmethod
     def get_videos_edited(obj) -> bool:
-        return obj.videos.exists() and all(
-            video.status >= Video.Statuses.EDITED for video in obj.videos.all()
+        videos = obj.videos.all()
+        return len(videos) > 0 and all(
+            video.status >= Video.Statuses.EDITED for video in videos
         )
 
 

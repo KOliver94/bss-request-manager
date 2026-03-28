@@ -165,33 +165,47 @@ class UserAdminViewSet(
                 }
             )
 
+        date_range = [start_datetime_after, start_datetime_before]
+
         if is_responsible:
-            for request in Request.objects.filter(
+            for req in Request.objects.filter(
                 responsible=user,
-                start_datetime__date__range=[
-                    start_datetime_after,
-                    start_datetime_before,
-                ],
+                start_datetime__date__range=date_range,
             ):
-                worked_on.append(request.__dict__ | {"position": _("Responsible")})
+                worked_on.append(
+                    {
+                        "id": req.id,
+                        "title": req.title,
+                        "start_datetime": req.start_datetime,
+                        "position": _("Responsible"),
+                    }
+                )
 
-        for crew in CrewMember.objects.filter(
+        for crew in CrewMember.objects.select_related("request").filter(
             member=user,
-            request__start_datetime__date__range=[
-                start_datetime_after,
-                start_datetime_before,
-            ],
+            request__start_datetime__date__range=date_range,
         ):
-            worked_on.append(crew.request.__dict__ | {"position": crew.position})
+            worked_on.append(
+                {
+                    "id": crew.request.id,
+                    "title": crew.request.title,
+                    "start_datetime": crew.request.start_datetime,
+                    "position": crew.position,
+                }
+            )
 
-        for video in Video.objects.filter(
+        for video in Video.objects.select_related("request").filter(
             editor=user,
-            request__start_datetime__date__range=[
-                start_datetime_after,
-                start_datetime_before,
-            ],
+            request__start_datetime__date__range=date_range,
         ):
-            worked_on.append(video.request.__dict__ | {"position": _("Editor")})
+            worked_on.append(
+                {
+                    "id": video.request.id,
+                    "title": video.request.title,
+                    "start_datetime": video.request.start_datetime,
+                    "position": _("Editor"),
+                }
+            )
 
         serializer = UserAdminWorkedOnSerializer(worked_on, many=True)
         return Response(serializer.data)
