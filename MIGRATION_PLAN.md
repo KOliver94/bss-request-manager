@@ -292,9 +292,11 @@ wasteful — use 96x96 as a reasonable middle ground.
 **File:** `requirements.txt` / `pyproject.toml`
 
 Remove:
+
 - `djangorestframework-simplejwt`
 
 Keep:
+
 - `social-auth-app-django` (still needed for OAuth2)
 
 ### 1.9 Database migration
@@ -309,12 +311,12 @@ Then remove `rest_framework_simplejwt.token_blacklist` from `INSTALLED_APPS`.
 
 ### 1.10 Files to delete or gut
 
-| File | Action |
-|------|--------|
-| `api/v1/login/serializers.py` | Rewrite (remove all JWT serializer classes) |
-| `api/v1/login/views.py` | Rewrite (remove TokenBlacklistView) |
-| `api/v1/login/urls.py` | Remove refresh endpoint |
-| `common/social_core/helpers.py` | Remove `InvalidToken`/`TokenError` imports |
+| File                            | Action                                      |
+| ------------------------------- | ------------------------------------------- |
+| `api/v1/login/serializers.py`   | Rewrite (remove all JWT serializer classes) |
+| `api/v1/login/views.py`         | Rewrite (remove TokenBlacklistView)         |
+| `api/v1/login/urls.py`          | Remove refresh endpoint                     |
+| `common/social_core/helpers.py` | Remove `InvalidToken`/`TokenError` imports  |
 
 ---
 
@@ -353,7 +355,7 @@ api.interceptors.response.use(
       window.location.href = '/login';
     }
     return Promise.reject(error);
-  }
+  },
 );
 ```
 
@@ -389,17 +391,18 @@ If using the CSRF-exempt session auth from 1.2, skip the `X-CSRFToken` header.
 
 Same changes as above, applied to the TypeScript equivalents:
 
-| Frontend file | Frontend-Admin equivalent |
-|---------------|---------------------------|
-| `src/api/apiUtils.js` | `src/api/http.ts` |
-| `src/helpers/authenticationHelper.js` | `src/helpers/LocalStorageHelper.ts` |
-| `src/api/loginApi.js` | Equivalent login API module |
-| `LoginPage.jsx` | Login page component |
-| `AuthenticatedRoute` | `src/providers/AuthenticationProvider.tsx` |
+| Frontend file                         | Frontend-Admin equivalent                  |
+| ------------------------------------- | ------------------------------------------ |
+| `src/api/apiUtils.js`                 | `src/api/http.ts`                          |
+| `src/helpers/authenticationHelper.js` | `src/helpers/LocalStorageHelper.ts`        |
+| `src/api/loginApi.js`                 | Equivalent login API module                |
+| `LoginPage.jsx`                       | Login page component                       |
+| `AuthenticatedRoute`                  | `src/providers/AuthenticationProvider.tsx` |
 
 ### 2.3 Remove frontend dependencies
 
 Both frontends can remove:
+
 - `jwt-decode` — no longer decoding JWTs
 
 ---
@@ -459,6 +462,7 @@ def create_comment(*, request_obj, author, text, internal=False):
 ### 3.3 Consolidate duplicated `create_comment()`
 
 Currently duplicated in three serializers:
+
 - `api/v1/requests/requests/serializers.py` — `RequestCreateSerializer.create()`
 - `api/v1/admin/requests/requests/serializers.py` — `RequestAdminCreateSerializer.create()`
 - `api/v1/external/sch_events/serializers.py` — `RequestExternalSchEventsCreateSerializer.create()`
@@ -1037,6 +1041,7 @@ class CommentAdminListRetrieveSerializer(BaseCommentSerializer):
 ```
 
 Apply the same pattern to:
+
 - `RatingRetrieveSerializer` / `RatingAdminListRetrieveSerializer`
 - `VideoListRetrieveSerializer` / `VideoAdminListSerializer`
 
@@ -1127,49 +1132,63 @@ auth migration also touches user-related code.
 ## Migration Checklist
 
 ### Phase 5: Small fixes
-- [ ] Fix f-string bug in `common/utilities.py`
-- [ ] Wrap status labels in `_()`
-- [ ] Add `db_index=True` to status fields + migration
-- [ ] Fix `related_name` values + update any queryset references
-- [ ] Remove redundant `unique=True` on `Ban.receiver`
-- [ ] Modernize `os.path` to `pathlib.Path`
-- [ ] Update stale Django 2.2/3.0 doc comments in settings
-- [ ] Fix fragile `save_user_profile` signal (merge with create signal)
-- [ ] Fix `full_clean(exclude=["additional_data"])` — remove the exclude
-- [ ] Cap `MemoryCache` growth in `common/utilities.py`
-- [ ] Rename `Request.type` → `Request.request_type` (with `db_column="type"`)
+
+- [x] Fix f-string bug in `common/utilities.py`
+- [x] Wrap status labels in `_()`
+- [x] Add `db_index=True` to status fields + migration
+- [x] Fix `related_name` values + update any queryset references
+- [x] Remove redundant `unique=True` on `Ban.receiver`
+- [x] Modernize `os.path` to `pathlib.Path`
+- [x] Update stale Django 2.2/3.0 doc comments in settings
+- [x] Fix fragile `save_user_profile` signal (merge with create signal)
+- [x] Simplify `Request.clean()` conditionals (kept `exclude=["additional_data"]`)
+- [x] Cap `MemoryCache` growth in `common/utilities.py`
+- [ ] Rename `Request.type` → `Request.request_type` (with `db_column="type"`) — deferred to separate PR
 
 ### Phase 4: Logging
-- [ ] Add `RequestLoggingMiddleware`
-- [ ] Log permission denials in exception handler
-- [ ] Improve external API logging
-- [ ] Add API access logger config
+
+- [x] Add `RequestLoggingMiddleware` (`common/middleware.py`)
+- [x] Log 403 permission denials in exception handler (`common/rest_framework/exception.py`)
+- [x] Improve SCH Events external API error logging with request context
+- [x] Add `api.access` logger config, silence `django.request` default WARNING logs
+- [x] Fix `debug.py` overwriting all logger configs (used `LOGGING["loggers"][""]` instead of `LOGGING.update`)
+- [x] Standardize logger naming: `logger = logging.getLogger(__name__)` everywhere
+- [x] Replace root `logging.*()` calls with module loggers (`sync_bss_users.py`, `pipeline.py`)
+- [x] Add logging to silent exception handlers (`helpers.py`, `pipeline.py`, `admin.py`)
+- [x] Switch from f-strings to lazy `%s` formatting in log calls
+- [ ] Add `environment` and `release` to Sentry config in `production.py` and `staging.py`
+- [ ] Add `traces_sample_rate` to `staging.py` (missing, production has 0.15)
 
 ### Phase 6: N+1 queries
-- [ ] Fix `VideoListRetrieveSerializer.get_rating()` — use `Prefetch`
-- [ ] Fix `VideoAdminListSerializer.get_rated()` — use `Prefetch`
-- [ ] Fix `RequestAdminRetrieveSerializer.get_videos_edited()` — use annotation
-- [ ] Rewrite `UserAdminViewSet.worked_on()` — single annotated queryset
-- [ ] Add `select_related` / `prefetch_related` to all viewset querysets
+
+- [x] Fix `VideoListRetrieveSerializer.get_rating()` — `Prefetch` with `to_attr="user_ratings"`
+- [x] Fix `VideoAdminListSerializer.get_rated()` — `Prefetch` with `to_attr="user_ratings"`
+- [x] Fix `RequestAdminRetrieveSerializer.get_videos_edited()` — use `len()` on prefetched cache instead of `.exists()`
+- [x] Fix `UserAdminViewSet.worked_on()` — add `select_related("request")`, replace `__dict__` with explicit dicts
+- [x] Reviewed all other viewsets — existing prefetching is adequate
 
 ### Phase 8: Serializer deduplication
+
 - [ ] Create base Comment serializer, inherit in user + admin versions
 - [ ] Create base Rating serializer, inherit in user + admin versions
 - [ ] Create base Video serializer, inherit in user + admin versions
 
 ### Phase 9: Permission refactor
+
 - [ ] Add `get_owner()` method to Request, Video, Comment, Rating, Todo models
 - [ ] Replace `IsSelf` isinstance chain with `IsOwner` permission
 - [ ] Update all views referencing `IsSelf`
 
 ### Phase 3: Validation / services
+
 - [ ] Create `video_requests/services.py`
 - [ ] Extract `create_request()` service
 - [ ] Extract `create_comment()` service
 - [ ] Slim down API serializer `.create()` methods
-- [ ] Simplify `Request.clean()` conditionals
+- [x] Simplify `Request.clean()` conditionals (done in Phase 5)
 
 ### Phase 7: Custom user model
+
 - [ ] Create `common.User` extending `AbstractUser` (with `db_table = "auth_user"`)
 - [ ] Set `AUTH_USER_MODEL = "common.User"` in settings
 - [ ] Create `SeparateDatabaseAndState` migration
@@ -1178,6 +1197,7 @@ auth migration also touches user-related code.
 - [ ] Remove monkey-patching from `common/utilities.py`
 
 ### Phase 1: Backend auth (JWT → sessions)
+
 - [ ] Add session/cache settings
 - [ ] Update `DEFAULT_AUTHENTICATION_CLASSES`
 - [ ] Create new login/logout views
@@ -1191,6 +1211,7 @@ auth migration also touches user-related code.
 - [ ] Remove `djangorestframework-simplejwt` dependency
 
 ### Phase 2: Frontend auth
+
 - [ ] Update axios — `withCredentials: true`, remove `Authorization` header
 - [ ] Add CSRF token handling (or use exempt auth class)
 - [ ] Remove token refresh interceptor logic
@@ -1203,5 +1224,6 @@ auth migration also touches user-related code.
 - [ ] Apply same changes to `frontend-admin`
 
 ### Final
+
 - [ ] Tests: Update all auth-related tests
 - [ ] Deploy Phase 1 + Phase 2 atomically
