@@ -107,6 +107,9 @@ class Request(models.Model):
                 {"deadline": [_("Must be later than the end of the event.")]}
             )
 
+    def get_owner(self):
+        return self.requester
+
     def save(self, *args, **kwargs):
         if not self.deadline:
             self.deadline = (self.end_datetime + timedelta(weeks=3)).date()
@@ -155,6 +158,9 @@ class Video(models.Model):
     objects = AnnotatedManager()
 
     __original_aired = None
+
+    def get_owner(self):
+        return self.request.requester
 
     @property
     def published_url(self) -> str:
