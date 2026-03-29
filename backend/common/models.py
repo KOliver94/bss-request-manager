@@ -54,6 +54,8 @@ class UserProfile(models.Model):
     phone_number = PhoneNumberField(blank=True)
 
     def clean(self):
+        if not isinstance(self.avatar, dict):
+            raise ValidationError({"avatar": [_("Avatar must be an object.")]})
         provider = self.avatar.get("provider")
         if provider and not self.avatar.get(provider):
             raise ValidationError(

@@ -1,7 +1,7 @@
-from video_requests.models import Comment
+from django.contrib.auth.models import User
+
+from video_requests.models import Comment, Request
 
 
-def create_comment(*, author, text, request):
-    comment = Comment(author=author, text=text, request=request)
-    comment.save()
-    return comment
+def create_comment(*, author: User, text: str, request: Request) -> Comment:
+    return Comment.objects.create(author=author, text=text, request=request)
