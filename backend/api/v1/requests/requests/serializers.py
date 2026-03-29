@@ -14,7 +14,8 @@ from common.models import get_anonymous_user
 from common.rest_framework.turnstile import TurnstileField
 from common.utilities import create_calendar_event
 from video_requests.emails import email_user_new_request_confirmation
-from video_requests.models import Comment, Request
+from video_requests.models import Request
+from video_requests.services import create_comment
 
 
 class RequestListSerializer(Serializer):
@@ -48,15 +49,6 @@ class RequestCreateSerializer(ModelSerializer):
             "type",
         )
 
-    @staticmethod
-    def create_comment(comment_text, request):
-        comment = Comment()
-        comment.author = request.requester
-        comment.text = comment_text
-        comment.request = request
-        comment.save()
-        return comment
-
     def create(self, validated_data):
         user = self.context["request"].user
         if not user.is_anonymous:
@@ -65,7 +57,7 @@ class RequestCreateSerializer(ModelSerializer):
         comment_text = validated_data.pop("comment", None)
         request = super().create(validated_data)
         if comment_text:
-            request.comments.add(self.create_comment(comment_text, request))
+            create_comment(author=request.requester, text=comment_text, request=request)
         create_calendar_event.delay(request.id)
         email_user_new_request_confirmation.delay(request.id)
         return request
