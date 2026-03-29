@@ -13,7 +13,7 @@ from video_requests.emails import email_user_video_published
 from video_requests.models import Request, Todo, Video
 
 
-def update_request_status(request, called_from_video=False):
+def update_request_status(request: Request, called_from_video: bool = False) -> None:
     # Check if the status is set by admin (overwrites everything)
     if (
         "status_by_admin" in request.additional_data
@@ -130,7 +130,9 @@ def update_request_status(request, called_from_video=False):
             update_video_status(video, True)
 
 
-def update_video_status(video, called_from_request=False, request_status=1):
+def update_video_status(
+    video: Video, called_from_request: bool = False, request_status: int = 1
+) -> None:
     # Check if the status is set by admin (overwrites everything)
     if (
         "status_by_admin" in video.additional_data
@@ -225,7 +227,7 @@ def update_video_status(video, called_from_request=False, request_status=1):
         update_request_status(video.request, True)
 
 
-def recalculate_deadline(instance, data):
+def recalculate_deadline(instance: Request, data: dict) -> dict:
     """
     If we change the end_datetime of an existing video request but
     - we did not include a deadline in the request body
@@ -234,7 +236,7 @@ def recalculate_deadline(instance, data):
     we recalculate the deadline and add 3 weeks to the new end_datetime
     """
     end_datetime = data.get("end_datetime")
-    if instance and end_datetime and end_datetime != instance.end_datetime:
+    if end_datetime and end_datetime != instance.end_datetime:
         deadline = data.get("deadline")
         if (not deadline or deadline == instance.deadline) and (
             instance.end_datetime + timedelta(weeks=3)
