@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 
 
-def create_user(validated_data):
+def create_user(validated_data: dict) -> tuple[User, dict | None]:
     user = User()
     user.first_name = validated_data.pop("requester_first_name")
     user.last_name = validated_data.pop("requester_last_name")

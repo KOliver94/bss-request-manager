@@ -1,9 +1,14 @@
 from collections.abc import Mapping
 
+from django.contrib.auth.models import User
+
 from api.v1.requests.utilities import create_user
+from video_requests.models import Request, Video
 
 
-def check_and_remove_unauthorized_additional_data(additional_data, user, original_data):
+def check_and_remove_unauthorized_additional_data(
+    additional_data: dict, user: User, original_data: Request | Video | None
+) -> dict:
     """Remove keys and values which are used by other functions and should be changed only by authorized users"""
     additional_data.pop("requester", None)
     if "publishing" in additional_data:
@@ -41,7 +46,9 @@ def check_and_remove_unauthorized_additional_data(additional_data, user, origina
     return additional_data
 
 
-def get_or_create_requester_from_data(validated_data, instance=None):
+def get_or_create_requester_from_data(
+    validated_data: dict, instance: Request | None = None
+) -> None:
     validated_data["requester"], additional_data = create_user(validated_data)
     if additional_data:
         # handle_additional_data() is always called before this function,
@@ -59,7 +66,9 @@ def get_or_create_requester_from_data(validated_data, instance=None):
             validated_data["additional_data"] = additional_data
 
 
-def handle_additional_data(validated_data, user, original_data=None):
+def handle_additional_data(
+    validated_data: dict, user: User, original_data: Request | Video | None = None
+) -> dict:
     if "additional_data" in validated_data:
         validated_data["additional_data"] = (
             check_and_remove_unauthorized_additional_data(
@@ -73,14 +82,14 @@ def handle_additional_data(validated_data, user, original_data=None):
     return validated_data
 
 
-def is_status_by_admin(obj):
+def is_status_by_admin(obj: Request | Video) -> bool:
     try:
         return isinstance(obj.additional_data.get("status_by_admin").get("status"), int)
     except AttributeError:
         return False
 
 
-def update_additional_data(orig_dict, new_dict):
+def update_additional_data(orig_dict: dict, new_dict: dict) -> dict:
     """
     Update existing additional data.
     Replaces/extends changed keys and removes them if None is provided.

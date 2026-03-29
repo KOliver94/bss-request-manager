@@ -1,6 +1,7 @@
 from celery import shared_task
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.db import models
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.discovery_cache.base import Cache
@@ -12,7 +13,7 @@ from video_requests.models import Request
 #          Common            #
 ##############################
 @property
-def role(self):
+def role(self) -> str:
     if self.is_admin:
         return "admin"
     elif self.is_staff:
@@ -21,20 +22,20 @@ def role(self):
         return "user"
 
 
-def get_full_name_eastern_order(self):
+def get_full_name_eastern_order(self) -> str:
     full_name = f"{self.last_name} {self.first_name}"
     return full_name.strip()
 
 
 @property
-def is_admin(self):
+def is_admin(self) -> bool:
     return self.is_staff and (
         self.groups.filter(name=settings.ADMIN_GROUP).exists() or self.is_superuser
     )
 
 
 @property
-def is_service_account(self):
+def is_service_account(self) -> bool:
     return self.groups.filter(name=settings.SERVICE_ACCOUNTS_GROUP).exists()
 
 
@@ -47,15 +48,15 @@ User.add_to_class("is_service_account", is_service_account)
 ##############################
 #       Special Roles        #
 ##############################
-def get_editor_in_chief():
+def get_editor_in_chief() -> models.QuerySet[User]:
     return User.objects.filter(groups__name="Főszerkesztő")
 
 
-def get_production_manager():
+def get_production_manager() -> models.QuerySet[User]:
     return User.objects.filter(groups__name="Gyártásvezető")
 
 
-def get_pr_responsible():
+def get_pr_responsible() -> models.QuerySet[User]:
     return User.objects.filter(groups__name="PR felelős")
 
 
@@ -86,7 +87,7 @@ def get_google_calendar_service():
     return build("calendar", "v3", credentials=credentials, cache=MemoryCache())
 
 
-def get_calendar_event_body(request):
+def get_calendar_event_body(request: Request) -> dict:
     return {
         "summary": request.title,
         "location": request.place,
