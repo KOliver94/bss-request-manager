@@ -1169,22 +1169,20 @@ auth migration also touches user-related code.
 
 ### Phase 8: Serializer deduplication
 
-- [ ] Create base Comment serializer, inherit in user + admin versions
-- [ ] Create base Rating serializer, inherit in user + admin versions
-- [ ] Create base Video serializer, inherit in user + admin versions
+- [x] Reviewed all serializer pairs — duplication is minimal (a few field declarations) and the explicit, self-contained style is more readable than inheritance. Skipped.
 
 ### Phase 9: Permission refactor
 
-- [ ] Add `get_owner()` method to Request, Video, Comment, Rating, Todo models
-- [ ] Replace `IsSelf` isinstance chain with `IsOwner` permission
-- [ ] Update all views referencing `IsSelf`
+- [x] Add `get_owner()` method to Request, Video, Comment, Rating, Todo models
+- [x] Replace `IsSelf` isinstance chain with `get_owner()` lookup
+- [x] Views unchanged — `IsSelf` name kept, just simplified internally
 
 ### Phase 3: Validation / services
 
-- [ ] Create `video_requests/services.py`
-- [ ] Extract `create_request()` service
-- [ ] Extract `create_comment()` service
-- [ ] Slim down API serializer `.create()` methods
+- [x] Create `video_requests/services.py`
+- [x] Extract `create_comment()` service (replaced 3 duplicate static methods)
+- [x] Move avatar provider validation from serializer to `UserProfile.clean()`
+- [ ] Move email uniqueness validation to model (blocked by Phase 7 — custom user model)
 - [x] Simplify `Request.clean()` conditionals (done in Phase 5)
 
 ### Phase 7: Custom user model
