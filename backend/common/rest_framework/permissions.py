@@ -91,22 +91,6 @@ class IsSelf(IsAuthenticated):
         return False
 
 
-class IsSelfOrStaff(IsSelf):
-    """
-    Allows access only to admin members and if the authenticated user is
-    - Requester of the request OR
-    - Requester of the request which contains the video OR
-    - Author of the comment OR
-    - Author of the rating
-    - the requested user itself
-    """
-
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_staff:
-            return True
-        return super().has_object_permission(request, view, obj)
-
-
 class IsSelfOrAdmin(IsSelf):
     """
     Allows access only to admin members and if the authenticated user is
