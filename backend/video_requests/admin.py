@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from django.urls import reverse
 from django.utils.html import format_html
 from simple_history.admin import SimpleHistoryAdmin
@@ -23,9 +23,12 @@ class RequestHistoryAdmin(SimpleHistoryAdmin):
     readonly_fields = ["requested_by"]
     search_fields = ["title"]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(num_of_videos=Count("videos"))
+
     @admin.display(description="Number of Videos")
     def num_of_videos(self, obj):
-        return Video.objects.filter(request=obj).count()
+        return obj.num_of_videos
 
     @admin.display(description="Requester")
     def requester_link(self, obj):
@@ -59,6 +62,9 @@ class VideoHistoryAdmin(SimpleHistoryAdmin):
     list_display = ["id", "title", "status", "request_link", "avg_rating"]
     search_fields = ["title"]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(avg_rating=Avg("ratings__rating"))
+
     @admin.display(description="Request")
     def request_link(self, obj):
         url = reverse("admin:video_requests_request_change", args=(obj.request.id,))
@@ -66,7 +72,7 @@ class VideoHistoryAdmin(SimpleHistoryAdmin):
 
     @admin.display(description="Average Rating")
     def avg_rating(self, obj):
-        return Rating.objects.filter(video=obj).aggregate(Avg("rating"))["rating__avg"]
+        return obj.avg_rating
 
 
 @admin.register(Comment)
