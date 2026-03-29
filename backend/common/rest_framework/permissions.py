@@ -93,12 +93,7 @@ class IsSelf(IsAuthenticated):
 
 class IsSelfOrAdmin(IsSelf):
     """
-    Allows access only to admin members and if the authenticated user is
-    - Requester of the request OR
-    - Requester of the request which contains the video OR
-    - Author of the comment OR
-    - Author of the rating
-    - the requested user itself
+    Allows access if the user is an admin or the owner of the object.
     """
 
     def has_object_permission(self, request, view, obj):
@@ -109,15 +104,8 @@ class IsSelfOrAdmin(IsSelf):
 
 class IsStaffSelfOrAdmin(IsStaffUser, IsSelfOrAdmin):
     """
-    Allows access only to admin members and if the authenticated user is staff member and
-    - Requester of the request OR
-    - Request is requested by them OR
-    - Requester of the request which contains the video OR
-    - Author of the comment OR
-    - Author of the rating
-    - the requested user itself
-
-    This class is based on multiple inheritance. The sequence of the classes is important!
+    Allows access to staff members who are either an admin, the owner of the object,
+    or (for Requests) the user who submitted the request on behalf of someone else.
     """
 
     def has_object_permission(self, request, view, obj):
