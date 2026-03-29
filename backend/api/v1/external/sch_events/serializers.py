@@ -5,7 +5,8 @@ from rest_framework.serializers import ModelSerializer
 from api.v1.requests.utilities import create_user
 from common.utilities import create_calendar_event
 from video_requests.emails import email_user_new_request_confirmation
-from video_requests.models import Comment, Request
+from video_requests.models import Request
+from video_requests.services import create_comment
 
 
 class RequestExternalSchEventsCreateSerializer(ModelSerializer):
@@ -36,15 +37,6 @@ class RequestExternalSchEventsCreateSerializer(ModelSerializer):
             "type",
         )
 
-    @staticmethod
-    def create_comment(comment_text, request):
-        comment = Comment()
-        comment.author = request.requester
-        comment.text = comment_text
-        comment.request = request
-        comment.save()
-        return comment
-
     def create(self, validated_data):
         comment_text = validated_data.pop(
             "comment", validated_data.pop("comment_text", None)
@@ -56,7 +48,7 @@ class RequestExternalSchEventsCreateSerializer(ModelSerializer):
         if additional_data:
             request.additional_data = additional_data
         if comment_text:
-            request.comments.add(self.create_comment(comment_text, request))
+            create_comment(author=request.requester, text=comment_text, request=request)
         request.additional_data["external"] = {}
         request.additional_data["external"]["sch_events_callback_url"] = callback_url
         request.save()

@@ -41,10 +41,6 @@ class UserProfileSerializer(ModelSerializer):
 
     def update(self, instance, validated_data):
         if "avatar_provider" in validated_data:
-            if not instance.avatar.get(validated_data["avatar_provider"]):
-                raise ValidationError(
-                    {"avatar_provider": _("Avatar does not exist for this provider.")}
-                )
             instance.avatar["provider"] = validated_data.pop("avatar_provider")
         return super().update(instance, validated_data)
 

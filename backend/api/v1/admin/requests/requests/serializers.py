@@ -31,7 +31,8 @@ from video_requests.emails import (
     email_crew_request_modified,
     email_user_new_request_confirmation,
 )
-from video_requests.models import Comment, Request, Video
+from video_requests.models import Request, Video
+from video_requests.services import create_comment
 from video_requests.utilities import recalculate_deadline, update_request_status
 
 
@@ -204,14 +205,6 @@ class RequestAdminCreateSerializer(RequestAdminUpdateSerializer):
             "type",
         )
 
-    def create_comment(self, comment_text, request):
-        comment = Comment()
-        comment.author = self.context["request"].user
-        comment.text = comment_text
-        comment.request = request
-        comment.save()
-        return comment
-
     def create(self, validated_data):
         comment_text = validated_data.pop("comment", None)
         send_notification = validated_data.pop("send_notification", None)
@@ -223,7 +216,9 @@ class RequestAdminCreateSerializer(RequestAdminUpdateSerializer):
             validated_data["requester"] = self.context["request"].user
         request = super().create(validated_data)
         if comment_text:
-            request.comments.add(self.create_comment(comment_text, request))
+            create_comment(
+                author=self.context["request"].user, text=comment_text, request=request
+            )
         if send_notification:
             email_user_new_request_confirmation.delay(request.id)
         update_request_status(request)
