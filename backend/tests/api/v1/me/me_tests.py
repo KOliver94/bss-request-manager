@@ -240,7 +240,7 @@ def test_update_me_avatar(api_client, method, user, request):
     )
 
     assert response.status_code == HTTP_400_BAD_REQUEST
-    assert response.data["avatar_provider"] == ErrorDetail(
+    assert response.data["avatar"][0] == ErrorDetail(
         "Avatar does not exist for this provider.", code="invalid"
     )
 

@@ -53,6 +53,17 @@ class UserProfile(models.Model):
     )
     phone_number = PhoneNumberField(blank=True)
 
+    def clean(self):
+        provider = self.avatar.get("provider")
+        if provider and not self.avatar.get(provider):
+            raise ValidationError(
+                {"avatar": [_("Avatar does not exist for this provider.")]}
+            )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.user.get_full_name()}'s ({self.user.username}) profile"
 
