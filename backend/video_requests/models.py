@@ -209,7 +209,9 @@ class Todo(AbstractTodo):
     video = models.ForeignKey(
         Video, on_delete=models.CASCADE, related_name="todos", blank=True, null=True
     )
-    status = models.PositiveSmallIntegerField(choices=Statuses, default=Statuses.OPEN)
+    status = models.PositiveSmallIntegerField(
+        choices=Statuses, default=Statuses.OPEN, db_index=True
+    )
 
     def __str__(self):
         return f"Todo || {self.request.title} - {self.description[0:25]}[...]"
