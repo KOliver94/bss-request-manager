@@ -88,6 +88,9 @@ class AbstractComment(models.Model):
     class Meta:
         abstract = True
 
+    def get_owner(self):
+        return self.author
+
 
 class AbstractRating(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
@@ -101,6 +104,9 @@ class AbstractRating(models.Model):
     class Meta:
         abstract = True
 
+    def get_owner(self):
+        return self.author
+
 
 class AbstractTodo(models.Model):
     assignees = models.ManyToManyField(User, blank=True)
@@ -112,3 +118,6 @@ class AbstractTodo(models.Model):
 
     class Meta:
         abstract = True
+
+    def get_owner(self):
+        return self.creator

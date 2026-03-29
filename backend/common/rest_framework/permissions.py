@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework.permissions import BasePermission
 
-from video_requests.models import Comment, Rating, Request, Todo, Video
+from video_requests.models import Request
 
 
 def is_admin(user):
@@ -79,27 +79,16 @@ class IsServiceAccount(BasePermission):
 
 class IsSelf(IsAuthenticated):
     """
-    Allows access only if the user is authenticated and
-    - Requester of the request OR
-    - Requester of the request which contains the video OR
-    - Author of the comment OR
-    - Author of the rating
-    - the requested user itself
+    Allows access only if the user is authenticated and the owner of the object.
+    Models must implement get_owner(). User objects are compared directly.
     """
 
     def has_object_permission(self, request, view, obj):
-        if isinstance(obj, Request):
-            return bool(obj.requester == request.user)
-        elif isinstance(obj, Video):
-            return bool(obj.request.requester == request.user)
-        elif isinstance(obj, Comment) or isinstance(obj, Rating):
-            return bool(obj.author == request.user)
-        elif isinstance(obj, Todo):
-            return bool(obj.creator == request.user)
-        elif isinstance(obj, User):
+        if isinstance(obj, User):
             return bool(obj == request.user)
-        else:
-            return False
+        if hasattr(obj, "get_owner"):
+            return bool(obj.get_owner() == request.user)
+        return False
 
 
 class IsSelfOrStaff(IsSelf):
