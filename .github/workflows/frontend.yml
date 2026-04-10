@@ -8,6 +8,10 @@ on:
     paths:
       - 'frontend/**'
       - '.github/workflows/frontend.yml'
+
+permissions:
+  contents: read
+
 jobs:
   run-tests:
     name: Run tests

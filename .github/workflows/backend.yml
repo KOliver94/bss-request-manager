@@ -20,6 +20,9 @@ on:
       - 'backend/**'
       - '.github/workflows/backend.yml'
 
+permissions:
+  contents: read
+
 jobs:
   generate-lockfile:
     name: Generate lockfile
