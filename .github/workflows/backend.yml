@@ -20,11 +20,16 @@ on:
       - 'backend/**'
       - '.github/workflows/backend.yml'
 
+permissions:
+  contents: read
+
 jobs:
   generate-lockfile:
     name: Generate lockfile
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request'}}
+    permissions:
+      contents: write
 
     outputs:
       files_changed: ${{ steps.verify-changed-files.outputs.files_changed }}

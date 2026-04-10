@@ -7,6 +7,9 @@ on:
       - 'backend/**'
       - '.github/workflows/schema-validation.yml'
 
+permissions:
+  contents: read
+
 jobs:
   validate-schema:
     name: OpenAPI schema validation
