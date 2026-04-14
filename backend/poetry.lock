@@ -907,14 +907,14 @@ drf = ["djangorestframework"]
 
 [[package]]
 name = "django-health-check"
-version = "4.2.1"
+version = "4.2.2"
 description = "Monitor the health of your Django app and its connected services."
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django_health_check-4.2.1-py3-none-any.whl", hash = "sha256:7216ba208f82f7587dc0ac0fe4c8f8a1c4d0cebbbae46cff6bd89779b378daf3"},
-    {file = "django_health_check-4.2.1.tar.gz", hash = "sha256:aa05f57d6b01fe502842273aaa944e988b85d1f58e3ea67b6f98c5f9808a530a"},
+    {file = "django_health_check-4.2.2-py3-none-any.whl", hash = "sha256:86689c6d5f1cdfe7d9ca6830df17b26fdd920fb1b1d221314cb1e6d60eaeecd8"},
+    {file = "django_health_check-4.2.2.tar.gz", hash = "sha256:66f9861be1c53607fd26037eb8c9dae58db8c23e34af0792bc6f9d78f28fa64c"},
 ]
 
 [package.dependencies]
@@ -1128,14 +1128,14 @@ grpc = ["grpcio (>=1.33.2,<2.0.0)", "grpcio (>=1.49.1,<2.0.0) ; python_version >
 
 [[package]]
 name = "google-api-python-client"
-version = "2.193.0"
+version = "2.194.0"
 description = "Google API Client Library for Python"
 optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
-    {file = "google_api_python_client-2.193.0-py3-none-any.whl", hash = "sha256:c42aa324b822109901cfecab5dc4fc3915d35a7b376835233c916c70610322db"},
-    {file = "google_api_python_client-2.193.0.tar.gz", hash = "sha256:8f88d16e89d11341e0a8b199cafde0fb7e6b44260dffb88d451577cbd1bb5d33"},
+    {file = "google_api_python_client-2.194.0-py3-none-any.whl", hash = "sha256:61eaaac3b8fc8fdf11c08af87abc3d1342d1b37319cc1b57405f86ef7697e717"},
+    {file = "google_api_python_client-2.194.0.tar.gz", hash = "sha256:db92647bd1a90f40b79c9618461553c2b20b6a43ce7395fa6de07132dc14f023"},
 ]
 
 [package.dependencies]
@@ -2331,14 +2331,14 @@ files = [
 
 [[package]]
 name = "sentry-sdk"
-version = "2.57.0"
+version = "2.58.0"
 description = "Python client for Sentry (https://sentry.io)"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
 files = [
-    {file = "sentry_sdk-2.57.0-py2.py3-none-any.whl", hash = "sha256:812c8bf5ff3d2f0e89c82f5ce80ab3a6423e102729c4706af7413fd1eb480585"},
-    {file = "sentry_sdk-2.57.0.tar.gz", hash = "sha256:4be8d1e71c32fb27f79c577a337ac8912137bba4bcbc64a4ec1da4d6d8dc5199"},
+    {file = "sentry_sdk-2.58.0-py2.py3-none-any.whl", hash = "sha256:688d1c704ddecf382ea3326f21a67453d4caa95592d722b7c780a36a9d23109e"},
+    {file = "sentry_sdk-2.58.0.tar.gz", hash = "sha256:c1144d947352d54e5b7daa63596d9f848adf684989c06c4f5a659f0c85a18f6f"},
 ]
 
 [package.dependencies]
@@ -2724,4 +2724,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14"
-content-hash = "a3eedf6c41cead3c477c3605799e3790dd1848d0b10542090f837f811a9b3027"
+content-hash = "76dc453547043a3ee57e6a2fecc7858adff52de3802b17d98f4320262e7dcf78"
