@@ -34,14 +34,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       - name: Install Poetry
         run: pipx install poetry
       - name: Set up Python 3.14
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: 3.14
           cache: 'poetry'
@@ -50,7 +50,7 @@ jobs:
         working-directory: backend
         run: poetry lock
       - name: Verify lockfile has changed
-        uses: tj-actions/verify-changed-files@v20
+        uses: tj-actions/verify-changed-files@v20.0.4
         id: verify-changed-files
         with:
           files: |
@@ -109,11 +109,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
       - name: Install Poetry
         run: pipx install poetry
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'poetry'
@@ -131,14 +131,14 @@ jobs:
         run: poetry run pytest
       - name: Upload coverage to Codecov
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v6.0.0
         with:
           directory: backend/
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Archive code coverage results
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run-tests == 'true' }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: code-coverage-report
           path: backend/htmlcov/
@@ -150,7 +150,7 @@ jobs:
         run: poetry run python manage.py test tests.email_sending_tests
       - name: Archive sent e-mails
         if: ${{ github.event.inputs.generate-emails == 'true' }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: emails
           path: backend/logs/emails/
