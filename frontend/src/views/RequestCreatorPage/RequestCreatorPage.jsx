@@ -91,11 +91,12 @@ function RequestCreatorPage() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      formData.type = formData.type_obj.text;
-      if (!isAuthenticated()) {
-        formData.captcha = turnstileToken;
-      }
-      await createRequest(formData).then((response) => {
+      const submitData = {
+        ...formData,
+        type: formData.type_obj.text,
+        ...(!isAuthenticated() && { captcha: turnstileToken }),
+      };
+      await createRequest(submitData).then((response) => {
         handleNext();
         setLoading(false);
         setRequestId(response.data.id);
