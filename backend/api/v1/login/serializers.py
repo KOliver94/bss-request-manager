@@ -13,9 +13,7 @@ from rest_framework_simplejwt.serializers import (
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer as SimpleJWTTokenObtainPairSerializer,
 )
-from rest_framework_simplejwt.serializers import (
-    TokenObtainSerializer,
-)
+from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from social_core.exceptions import AuthException
 
 from common.social_core.helpers import decorate_request
