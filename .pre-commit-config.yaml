@@ -50,7 +50,7 @@ repos:
       - id: pycln
         name: 'Remove unused Python imports'
   - repo: https://github.com/PyCQA/isort
-    rev: 8.0.1
+    rev: 9.0.0a3
     hooks:
       - id: isort
         name: 'Sort Python imports'
