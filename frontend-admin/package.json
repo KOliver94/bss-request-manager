@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@sentry/react": "10.51.0",
+    "@sentry/react": "10.52.0",
     "@tanstack/react-query": "5.100.9",
     "axios": "1.16.0",
     "bootstrap-icons": "1.13.1",
@@ -13,10 +13,10 @@
     "primeicons": "7.0.0",
     "primelocale": "primefaces/primelocale",
     "primereact": "10.9.7",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
     "react-hook-form": "7.75.0",
-    "react-router": "7.14.2",
+    "react-router": "7.15.0",
     "timeago.js": "4.0.2"
   },
   "scripts": {
@@ -48,12 +48,12 @@
     "@openapitools/openapi-generator-cli": "2.32.0",
     "@tanstack/eslint-plugin-query": "5.100.9",
     "@tanstack/react-query-devtools": "5.100.9",
-    "@types/node": "24.12.2",
+    "@types/node": "24.12.3",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.2.0",
     "autoprefixer": "10.5.0",
-    "cssnano": "7.1.8",
+    "cssnano": "7.1.9",
     "eslint": "9.39.4",
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-typescript": "4.4.4",
@@ -62,12 +62,12 @@
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.6.0",
-    "postcss": "8.5.13",
+    "postcss": "8.5.14",
     "prettier": "3.8.3",
     "source-map-explorer": "2.5.3",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.59.1",
-    "vite": "7.3.2",
+    "typescript-eslint": "8.59.2",
+    "vite": "7.3.3",
     "vite-tsconfig-paths": "6.1.1"
   }
 }
