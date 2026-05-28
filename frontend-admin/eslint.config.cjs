@@ -68,6 +68,8 @@ module.exports = tseslint.config(
       'sort-keys': ['error', 'asc', { caseSensitive: true, natural: true }],
     },
     settings: {
+      'import/internal-regex':
+        '^(api|assets|components|helpers|hooks|pages|providers|themes|types|router|localConstants|Layout)(/|$)',
       'import/resolver': {
         node: {
           paths: [path.resolve(currentDir, 'src')],
