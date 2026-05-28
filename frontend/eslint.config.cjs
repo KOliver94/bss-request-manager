@@ -79,6 +79,8 @@ module.exports = tseslint.config(
       'react-hooks/set-state-in-effect': 'off', // TODO: Check later
     },
     settings: {
+      'import/internal-regex':
+        '^(api|assets|components|helpers|views|router|Layout)(/|$)',
       'import/resolver': {
         node: {
           extensions: ['.js', '.jsx', '.mjs'],
