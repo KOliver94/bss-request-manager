@@ -198,3 +198,10 @@ class ClientIPResolutionTestCase(TestCase):
             self._resolve("172.21.0.3", forwarded="not-an-ip, 203.0.113.7"),
             "203.0.113.7",
         )
+
+    def test_all_entries_unparseable_falls_back_to_remote_addr(self):
+        # Even REMOTE_ADDR fails to parse; the loop exhausts and returns it.
+        self.assertEqual(
+            self._resolve("garbage", forwarded="also-bad"),
+            "garbage",
+        )
