@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from libgravatar import Gravatar, sanitize_email
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
-from social_core.exceptions import NotAllowedToDisconnect
+from social_core.exceptions import AuthException, NotAllowedToDisconnect
 from social_django.models import UserSocialAuth
 
 logger = logging.getLogger(__name__)
@@ -15,6 +15,29 @@ logger = logging.getLogger(__name__)
 def check_for_email(details, *args, **kwargs):
     if not details.get("email"):
         raise ValidationError("Email was not provided by OAuth provider.")
+
+
+def associate_by_email(backend, details, user=None, *args, **kwargs):
+    """
+    Drop-in replacement for social_core.pipeline.social_auth.associate_by_email
+    that also matches inactive accounts created by the anonymous request flow.
+    """
+    if user:
+        return None
+
+    email = details.get("email")
+    if not email:
+        return None
+
+    user_model = backend.strategy.storage.user.user_model()
+    users = list(user_model.objects.filter(email__iexact=email))
+    if len(users) == 0:
+        return None
+    if len(users) > 1:
+        raise AuthException(
+            backend, "The given email address is associated with another account"
+        )
+    return {"user": users[0], "is_new": False}
 
 
 def check_if_user_is_banned(backend, user=None, *args, **kwargs):

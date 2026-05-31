@@ -23,7 +23,7 @@ class UserProfileAdmin(ModelAdmin):
     @admin.display(description="Link to User")
     def user_link(self, obj):
         url = reverse("admin:auth_user_change", args=(obj.user.id,))
-        return format_html(f'<a href="{url}">{obj.user.get_full_name()}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.user.get_full_name())
 
 
 class ExtendedUserAdmin(UserAdmin):

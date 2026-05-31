@@ -82,9 +82,10 @@ SOCIAL_AUTH_PIPELINE = (
     # Make up a username for this person, appends a random string at the end if
     # there's any collision.
     "social_core.pipeline.user.get_username",
-    # Associates the current social details with another user account with
-    # a similar email address. Disabled by default.
-    "social_core.pipeline.social_auth.associate_by_email",
+    # Custom action: Associates the current social details with another user
+    # account with the same email address, including inactive placeholder
+    # accounts created by the anonymous request flow.
+    "common.social_core.pipeline.associate_by_email",
     # Custom action: Check if user has been banned.
     "common.social_core.pipeline.check_if_user_is_banned",
     # Custom action: Check if there is only one account from a provider is connected to a user.

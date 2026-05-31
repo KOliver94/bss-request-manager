@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.db.models import Avg, Count
 from django.urls import reverse
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
+from django.utils.safestring import mark_safe
 from simple_history.admin import SimpleHistoryAdmin
 
 from video_requests.models import Comment, CrewMember, Rating, Request, Todo, Video
@@ -33,7 +34,7 @@ class RequestHistoryAdmin(SimpleHistoryAdmin):
     @admin.display(description="Requester")
     def requester_link(self, obj):
         url = reverse("admin:auth_user_change", args=(obj.requester.id,))
-        return format_html(f'<a href="{url}">{obj.requester.get_full_name()}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.requester.get_full_name())
 
     def save_model(self, request, obj, form, change):
         if not change:
@@ -49,12 +50,12 @@ class CrewMemberHistoryAdmin(SimpleHistoryAdmin):
     @admin.display(description="Request")
     def request_link(self, obj):
         url = reverse("admin:video_requests_request_change", args=(obj.request.id,))
-        return format_html(f'<a href="{url}">{obj.request.title}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.request.title)
 
     @admin.display(description="Crew Member")
     def member_link(self, obj):
         url = reverse("admin:auth_user_change", args=(obj.member.id,))
-        return format_html(f'<a href="{url}">{obj.member.get_full_name()}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.member.get_full_name())
 
 
 @admin.register(Video)
@@ -68,7 +69,7 @@ class VideoHistoryAdmin(SimpleHistoryAdmin):
     @admin.display(description="Request")
     def request_link(self, obj):
         url = reverse("admin:video_requests_request_change", args=(obj.request.id,))
-        return format_html(f'<a href="{url}">{obj.request.title}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.request.title)
 
     @admin.display(description="Average Rating")
     def avg_rating(self, obj):
@@ -87,12 +88,12 @@ class CommentHistoryAdmin(SimpleHistoryAdmin):
     @admin.display(description="Request")
     def request_link(self, obj):
         url = reverse("admin:video_requests_request_change", args=(obj.request.id,))
-        return format_html(f'<a href="{url}">{obj.request.title}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.request.title)
 
     @admin.display(description="Author")
     def author_link(self, obj):
         url = reverse("admin:auth_user_change", args=(obj.author.id,))
-        return format_html(f'<a href="{url}">{obj.author.get_full_name()}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.author.get_full_name())
 
 
 @admin.register(Rating)
@@ -113,12 +114,12 @@ class RatingHistoryAdmin(SimpleHistoryAdmin):
     @admin.display(description="Video")
     def video_link(self, obj):
         url = reverse("admin:video_requests_video_change", args=(obj.video.id,))
-        return format_html(f'<a href="{url}">{obj.video.title}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.video.title)
 
     @admin.display(description="Author")
     def author_link(self, obj):
         url = reverse("admin:auth_user_change", args=(obj.author.id,))
-        return format_html(f'<a href="{url}">{obj.author.get_full_name()}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.author.get_full_name())
 
 
 @admin.register(Todo)
@@ -136,21 +137,25 @@ class TodoAdmin(ModelAdmin):
     @admin.display(description="Request")
     def request_link(self, obj):
         url = reverse("admin:video_requests_request_change", args=(obj.request.id,))
-        return format_html(f'<a href="{url}">{obj.request.title}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.request.title)
 
     @admin.display(description="Video")
     def video_link(self, obj):
         if obj.video:
             url = reverse("admin:video_requests_video_change", args=(obj.video.id,))
-            return format_html(f'<a href="{url}">{obj.video.title}</a>')
+            return format_html('<a href="{}">{}</a>', url, obj.video.title)
         return None
 
     @admin.display(description="Assignees")
     def assignee_names(self, obj):
-        names = ""
-        for assignee in obj.assignees.all():
-            url = reverse("admin:auth_user_change", args=(assignee.id,))
-            names += f'<a href="{url}">{assignee.get_full_name_eastern_order()}</a>&comma;&nbsp;'
-        if names:
-            names = names[:-13]
-        return format_html(names)
+        return format_html_join(
+            mark_safe("&comma;&nbsp;"),  # nosec B308
+            '<a href="{}">{}</a>',
+            (
+                (
+                    reverse("admin:auth_user_change", args=(assignee.id,)),
+                    assignee.get_full_name_eastern_order(),
+                )
+                for assignee in obj.assignees.all()
+            ),
+        )
