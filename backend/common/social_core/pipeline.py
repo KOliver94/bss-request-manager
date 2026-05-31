@@ -208,10 +208,11 @@ def get_avatar(backend, response, user, *args, **kwargs):
     except requests.exceptions.HTTPError:
         logger.debug("Gravatar not found for %s", user.email)
 
-    if not user.userprofile.avatar.get("provider", None) and backend.name in [
-        "google-oauth2",
-        "microsoft-graph",
-    ]:
+    if (
+        not user.userprofile.avatar.get("provider", None)
+        and backend.name in ["google-oauth2", "microsoft-graph"]
+        and user.userprofile.avatar.get(backend.name)
+    ):
         user.userprofile.avatar["provider"] = backend.name
 
     user.save()
