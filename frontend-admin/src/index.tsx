@@ -14,7 +14,7 @@ import {
 } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { register } from 'timeago.js';
-import huLocal from 'timeago.js/lib/lang/hu';
+import huLocal from 'timeago.js/esm/lang/hu';
 
 import { getName } from 'helpers/LocalStorageHelper';
 import { ThemeProvider } from 'providers/ThemeProvider';
