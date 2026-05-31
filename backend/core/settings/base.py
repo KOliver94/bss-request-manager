@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from datetime import timedelta
+from ipaddress import ip_network
 from pathlib import Path
 from re import match
 
@@ -38,6 +39,16 @@ SECRET_KEY = config("APP_SECRET_KEY", default=get_random_secret_key())
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
+
+# Trusted reverse-proxy networks for resolving the client IP from X-Forwarded-For.
+TRUSTED_PROXY_CIDRS = [
+    ip_network(cidr, strict=False)
+    for cidr in config(
+        "TRUSTED_PROXY_CIDRS",
+        default="127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16",
+        cast=Csv(),
+    )
+]
 
 # Application definition
 

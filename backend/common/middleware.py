@@ -1,5 +1,8 @@
 import logging
 import time
+from ipaddress import ip_address
+
+from django.conf import settings
 
 logger = logging.getLogger("api.access")
 
@@ -7,6 +10,30 @@ logger = logging.getLogger("api.access")
 class RequestLoggingMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
+
+    @staticmethod
+    def _client_ip(request):
+        remote_addr = request.META.get("REMOTE_ADDR")
+        forwarded = request.headers.get("x-forwarded-for")
+        if not forwarded:
+            return remote_addr
+
+        # Walk hops from the right (unspoofable REMOTE_ADDR outward) and skip
+        # trusted proxies: the first untrusted address is the real client.
+        # Client-forged entries sit on the left, so they can never pass as a proxy.
+        chain = [part.strip() for part in forwarded.split(",") if part.strip()]
+        chain.append(remote_addr)
+
+        for candidate in reversed(chain):
+            try:
+                addr = ip_address(candidate)
+            except ValueError:
+                continue
+            if any(addr in network for network in settings.TRUSTED_PROXY_CIDRS):
+                continue
+            return candidate
+
+        return remote_addr
 
     def __call__(self, request):
         start = time.monotonic()
@@ -21,7 +48,7 @@ class RequestLoggingMiddleware:
                 response.status_code,
                 duration_ms,
                 getattr(request.user, "id", None),
-                request.META.get("REMOTE_ADDR"),
+                self._client_ip(request),
             )
 
         return response
