@@ -5,9 +5,10 @@ from io import StringIO
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from rest_framework import status
 
+from common.middleware import RequestLoggingMiddleware
 from common.models import Ban, get_sentinel_user
 from common.templatetags.extra_tags import settings_value
 from tests.helpers.users_test_utils import create_user
@@ -147,4 +148,60 @@ class CommonTestCase(TestCase):
         self.assertIn(
             "Users cannot ban themselves.",
             context.exception.messages[0],
+        )
+
+
+class ClientIPResolutionTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def _resolve(self, remote_addr, forwarded=None):
+        request = self.factory.get("/")
+        request.META["REMOTE_ADDR"] = remote_addr
+        if forwarded is None:
+            request.META.pop("HTTP_X_FORWARDED_FOR", None)
+        else:
+            request.META["HTTP_X_FORWARDED_FOR"] = forwarded
+        return RequestLoggingMiddleware._client_ip(request)
+
+    def test_no_forwarded_header_returns_remote_addr(self):
+        self.assertEqual(self._resolve("172.21.0.3"), "172.21.0.3")
+
+    def test_single_trusted_proxy_returns_real_client(self):
+        # peer is the trusted proxy; client sits left of it.
+        self.assertEqual(
+            self._resolve("172.21.0.3", forwarded="203.0.113.7"), "203.0.113.7"
+        )
+
+    def test_multiple_trusted_proxies_are_skipped(self):
+        self.assertEqual(
+            self._resolve("172.21.0.3", forwarded="203.0.113.7, 10.0.0.5, 192.168.1.2"),
+            "203.0.113.7",
+        )
+
+    def test_client_spoofed_entry_is_ignored(self):
+        # Client prepends a fake internal IP; it stays left of the real hop and
+        # must not be mistaken for the client.
+        self.assertEqual(
+            self._resolve("172.21.0.3", forwarded="10.9.9.9, 203.0.113.7"),
+            "203.0.113.7",
+        )
+
+    def test_all_hops_trusted_falls_back_to_remote_addr(self):
+        self.assertEqual(
+            self._resolve("172.21.0.3", forwarded="10.0.0.1, 192.168.0.1"),
+            "172.21.0.3",
+        )
+
+    def test_malformed_entries_are_skipped(self):
+        self.assertEqual(
+            self._resolve("172.21.0.3", forwarded="not-an-ip, 203.0.113.7"),
+            "203.0.113.7",
+        )
+
+    def test_all_entries_unparseable_falls_back_to_remote_addr(self):
+        # Even REMOTE_ADDR fails to parse; the loop exhausts and returns it.
+        self.assertEqual(
+            self._resolve("garbage", forwarded="also-bad"),
+            "garbage",
         )
