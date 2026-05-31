@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 
 import responses
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.test import override_settings
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -305,3 +306,28 @@ class MicrosoftOAuth2Test(OAuth2Test):
     @responses.activate
     def test_login(self):
         self.do_rest_login("microsoft-graph")
+
+    @responses.activate
+    def test_login_matches_inactive_placeholder_account(self):
+        # Anonymous request flow creates inactive placeholder accounts with the
+        # requester's email. The first social login must match such an account
+        # instead of creating a duplicate user.
+        UserModel = get_user_model()
+        placeholder = UserModel.objects.create_user(
+            username="foobar@foobar.com",
+            email="foobar@foobar.com",
+            is_active=False,
+        )
+        placeholder.set_unusable_password()
+        placeholder.save()
+
+        self.do_rest_login("microsoft-graph")
+
+        placeholder.refresh_from_db()
+        self.assertTrue(placeholder.is_active)
+        self.assertEqual(
+            UserModel.objects.filter(email__iexact="foobar@foobar.com").count(), 1
+        )
+        self.assertTrue(
+            placeholder.social_auth.filter(provider="microsoft-graph").exists()
+        )
