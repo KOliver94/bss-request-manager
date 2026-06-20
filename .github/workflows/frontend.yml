@@ -15,16 +15,6 @@ permissions:
 jobs:
   run-tests:
     name: Run tests
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - node-version: '24'
-            experimental: false
-            node-options: ''
     uses: ./.github/workflows/frontend-base-workflow.yml
     with:
       working-directory: 'frontend'
-      node-version: ${{ matrix.node-version }}
-      node-options: ${{ matrix.node-options }}
-      experimental: ${{ matrix.experimental }}

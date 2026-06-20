@@ -22,6 +22,36 @@
     "41898282+github-actions[bot]@users.noreply.github.com",
     "66853113+pre-commit-ci[bot]@users.noreply.github.com"
   ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update Python version pinned in .python-version.",
+      "managerFilePatterns": ["/^backend/\\.python-version$/"],
+      "matchStrings": ["(?<currentValue>\\d+\\.\\d+(\\.\\d+)?)"],
+      "depNameTemplate": "python",
+      "datasourceTemplate": "python-version"
+    },
+    {
+      "customType": "regex",
+      "description": "Update the Node.js feature version in the dev container.",
+      "managerFilePatterns": ["/^\\.devcontainer/devcontainer\\.json$/"],
+      "matchStrings": [
+        "node:\\d+\":\\s*\\{\\s*\"version\":\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node-version"
+    },
+    {
+      "customType": "regex",
+      "description": "Update the Python feature version in the dev container.",
+      "managerFilePatterns": ["/^\\.devcontainer/devcontainer\\.json$/"],
+      "matchStrings": [
+        "python:\\d+\":\\s*\\{\\s*\"version\":\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "python",
+      "datasourceTemplate": "python-version"
+    }
+  ],
   "packageRules": [
     {
       "description": "Add `docker` label for Dockerfile or docker-compose related updates.",
@@ -81,6 +111,18 @@
       "matchPackageNames": ["node"],
       "matchUpdateTypes": ["patch", "pin"],
       "enabled": false
+    },
+    {
+      "description": "Group every Python runtime version bump (.python-version, dev container, Dockerfiles) into one PR.",
+      "groupName": "Python runtime version",
+      "matchDepNames": ["python"],
+      "matchManagers": ["custom.regex", "dockerfile"]
+    },
+    {
+      "description": "Group every Node.js runtime version bump (.nvmrc, dev container, Dockerfiles) into one PR.",
+      "groupName": "Node.js runtime version",
+      "matchDepNames": ["node"],
+      "matchManagers": ["custom.regex", "dockerfile", "nvm"]
     }
   ],
   "rebaseWhen": "conflicted"
