@@ -43,7 +43,7 @@ if (import.meta.env.PROD) {
     },
     dsn: import.meta.env.VITE_SENTRY_URL_ADMIN,
     integrations: [
-      Sentry.reactRouterV7BrowserTracingIntegration({
+      Sentry.reactRouterBrowserTracingIntegration({
         createRoutesFromChildren,
         matchRoutes,
         useEffect,

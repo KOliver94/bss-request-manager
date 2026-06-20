@@ -1,4 +1,4 @@
-import { wrapCreateBrowserRouterV7 } from '@sentry/react';
+import { wrapCreateBrowserRouter } from '@sentry/react';
 import { QueryClient } from '@tanstack/react-query';
 import { BlockUI } from 'primereact/blockui';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -41,8 +41,7 @@ async function requestVideoLoader({ params }: any) {
   );
 }
 
-const sentryCreateBrowserRouter =
-  wrapCreateBrowserRouterV7(createBrowserRouter);
+const sentryCreateBrowserRouter = wrapCreateBrowserRouter(createBrowserRouter);
 
 const router = sentryCreateBrowserRouter(
   createRoutesFromElements(

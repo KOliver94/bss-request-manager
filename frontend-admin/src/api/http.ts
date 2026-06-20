@@ -1,4 +1,4 @@
-import axios, { isAxiosError } from 'axios';
+import { isAxiosError, create } from 'axios';
 import type { AxiosResponse } from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
@@ -22,7 +22,7 @@ import { TokenRefresh } from './models';
 
 // TODO: Create some validation view to check if all local storage elements exists otherwise redirect to login
 
-const axiosInstance = axios.create({
+const axiosInstance = create({
   headers: {
     'Accept-Language': 'hu',
     Authorization: `Bearer ${getAccessToken()}`,
