@@ -12,6 +12,7 @@ repos:
         name: 'Trim trailing whitespaces'
       - id: mixed-line-ending
         name: 'Replace mixed line endings'
+        args: [--fix=lf]
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.37.3
     hooks:
