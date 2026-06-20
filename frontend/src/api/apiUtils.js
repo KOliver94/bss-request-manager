@@ -1,9 +1,9 @@
-import axios, { isAxiosError } from 'axios';
+import { isAxiosError, create } from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
 import { isRefreshTokenExpired } from 'helpers/authenticationHelper';
 
-const axiosInstance = axios.create({
+const axiosInstance = create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1/`,
   headers: {
     'Content-Type': 'application/json',
