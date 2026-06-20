@@ -1,0 +1,38 @@
+{
+  "name": "bss-request-manager",
+  // Reuse the existing dev stack (postgres + redis) and add an `app` workspace
+  // container on the same compose network so `postgres` / `redis` hostnames resolve.
+  "dockerComposeFile": ["../docker-compose.dev.yaml", "docker-compose.yml"],
+  "service": "app",
+  "workspaceFolder": "/workspaces/bss-request-manager",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.14" },
+    "ghcr.io/devcontainers/features/node:1": { "version": "24" },
+    "ghcr.io/devcontainers-extra/features/poetry:2": {}
+  },
+  "forwardPorts": [8000, 5173, 5174],
+  "portsAttributes": {
+    "8000": { "label": "backend (Django)" },
+    "5173": { "label": "frontend (Vite)" },
+    "5174": { "label": "frontend-admin (Vite)" }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.flake8",
+        "batisteo.vscode-django",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "editorconfig.editorconfig"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/bss-request-manager/backend/.venv/bin/python"
+      }
+    }
+  },
+  "remoteUser": "vscode"
+}
