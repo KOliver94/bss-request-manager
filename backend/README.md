@@ -73,6 +73,20 @@ Formatting and linting are enforced by pre-commit (Black, isort, flake8,
 bandit, pyupgrade, django-upgrade). Install the hooks once from the repository
 root with `pre-commit install`.
 
+## Upgrading runtime versions
+
+Renovate keeps most versions current automatically. A few values encode the
+**minimum** supported version and are intentionally left for you to bump by hand
+when you raise it — Renovate does not touch these floors:
+
+| When you upgrade… | Also bump…                                                                                                                                    |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Python            | `requires-python` in `pyproject.toml`, and the pyupgrade `--py<version>-plus` arg in [`.pre-commit-config.yaml`](../.pre-commit-config.yaml). |
+| Django            | the django-upgrade `--target-version` arg in [`.pre-commit-config.yaml`](../.pre-commit-config.yaml).                                         |
+
+The runtime versions themselves live in [`.python-version`](.python-version)
+(Python) and the `.nvmrc` files (Node) and are bumped by Renovate.
+
 ## OpenAPI schema
 
 The REST API is documented with an OpenAPI schema (`backend/schema.yaml`), which
@@ -89,8 +103,8 @@ CI fails if the committed schema differs from the generated one.
 
 ## Management commands
 
-In addition to Django's built-ins (`poetry run python manage.py help` lists
-them all), the project ships these commands:
+Run `poetry run python manage.py help` to list every available command. In
+addition to Django's built-ins, the project ships these commands:
 
 | Command                     | App              | Purpose                                                  |
 | --------------------------- | ---------------- | -------------------------------------------------------- |

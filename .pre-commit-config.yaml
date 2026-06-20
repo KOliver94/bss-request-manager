@@ -38,12 +38,14 @@ repos:
     hooks:
       - id: pyupgrade
         name: 'Upgrade Python syntax to newer versions'
+        # Bump --pyXXX-plus when the minimum Python version rises
         args: [--py314-plus]
   - repo: https://github.com/adamchainz/django-upgrade
     rev: 1.30.0
     hooks:
       - id: django-upgrade
         name: 'Upgrade Django syntax to newer versions'
+        # Bump --target-version when the minimum Django version rises
         args: [--target-version, '6.0']
   - repo: https://github.com/hadialqattan/pycln
     rev: v2.6.0
