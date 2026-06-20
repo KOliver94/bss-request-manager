@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { wrapCreateBrowserRouterV7 } from '@sentry/react';
+import { wrapCreateBrowserRouter } from '@sentry/react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -23,8 +23,7 @@ const RequestDetailPage = lazy(
   () => import('views/RequestDetailPage/RequestDetailPage'),
 );
 
-const sentryCreateBrowserRouter =
-  wrapCreateBrowserRouterV7(createBrowserRouter);
+const sentryCreateBrowserRouter = wrapCreateBrowserRouter(createBrowserRouter);
 
 const router = sentryCreateBrowserRouter(
   createRoutesFromElements(
