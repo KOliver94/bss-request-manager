@@ -34,6 +34,14 @@
       "addLabels": ["github_actions"]
     },
     {
+      "description": "Group all minor and patch updates together for GitHub Actions.",
+      "addLabels": ["github_actions"],
+      "groupName": "all non-major GitHub Actions dependencies",
+      "groupSlug": "all-minor-patch-github-actions",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
       "description": "Group all minor and patch updates together for Poetry in /backend.",
       "addLabels": ["python"],
       "groupName": "all non-major backend dependencies",
