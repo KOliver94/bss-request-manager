@@ -13,7 +13,7 @@ repos:
       - id: mixed-line-ending
         name: 'Replace mixed line endings'
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.37.2
+    rev: 0.37.3
     hooks:
       - id: check-github-workflows
       - id: check-renovate
@@ -81,7 +81,7 @@ repos:
         name: 'Check Python security issues'
         args: [-c, ./backend/pyproject.toml]
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: v3.8.3
+    rev: v3.8.4
     hooks:
       - id: prettier
         name: 'Format JavaScript and TypeScript code'
@@ -90,7 +90,7 @@ repos:
           - python
         args: [--config, ./frontend/.prettierrc]
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v10.4.1
+    rev: v10.5.0
     hooks:
       - id: eslint
         name: 'Lint JavaScript code (Frontend)'
