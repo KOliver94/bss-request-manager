@@ -105,7 +105,7 @@ ENV PATH="$POETRY_HOME/bin:$VIRTUAL_ENV/bin:$PATH"
 FROM backend-base AS backend-builder
 
 # Install build dependencies
-RUN apk update && apk add curl postgresql-dev
+RUN apk update && apk add curl postgresql-dev gcc musl-dev python3-dev
 
 # Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
 # The --mount will mount the buildx cache directory to where
