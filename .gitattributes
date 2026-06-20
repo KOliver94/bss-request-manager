@@ -1,0 +1,19 @@
+# Normalize all text files to LF in the repository.
+# Overrides per-machine core.autocrlf so line endings stop churning.
+* text=auto eol=lf
+
+# Scripts must stay LF (they run in Linux containers / CI).
+*.sh   text eol=lf
+
+# Binary files: never touch line endings or diff as text.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
+*.pdf  binary
