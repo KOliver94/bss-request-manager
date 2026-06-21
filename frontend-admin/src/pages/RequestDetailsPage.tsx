@@ -14,9 +14,8 @@ import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { href, useNavigate, useParams } from 'react-router';
 
-import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
-import { requestUpdateMutation } from 'api/mutations';
+import { requestDeleteMutation, requestUpdateMutation } from 'api/mutations';
 import { requestRetrieveQuery } from 'api/queries';
 import { queryKeys } from 'api/queryKeys';
 import AvatarGroupCrew from 'components/Avatar/AvatarGroupCrew';
@@ -81,6 +80,9 @@ const RequestDetailsPage = () => {
   const { requestId } = useParams();
   const { showToast } = useToast();
   const { mutateAsync } = useMutation(requestUpdateMutation(Number(requestId)));
+  const { mutateAsync: deleteRequest } = useMutation(
+    requestDeleteMutation(Number(requestId)),
+  );
   const isMobile = useMobile();
   const navigate = useNavigate();
 
@@ -139,8 +141,7 @@ const RequestDetailsPage = () => {
 
   const handleDelete = async () => {
     setLoading(true);
-    await adminApi
-      .adminRequestsDestroy(Number(requestId))
+    await deleteRequest()
       .then(() => {
         void navigate('/requests', { replace: true });
         void queryClient.invalidateQueries({ queryKey: queryKeys.requests() });

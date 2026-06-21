@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import type { AutoCompleteChangeEvent } from 'primereact/autocomplete';
 import { Button } from 'primereact/button';
@@ -12,8 +12,11 @@ import type { DataTableRowEditCompleteEvent } from 'primereact/datatable';
 import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
 
-import { adminApi } from 'api/http';
 import { CrewMemberAdminListRetrieve } from 'api/models';
+import {
+  requestCrewDeleteMutation,
+  requestCrewUpdateMutation,
+} from 'api/mutations';
 import { requestCrewListQuery } from 'api/queries';
 import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
@@ -35,10 +38,16 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
 
   const { data, isLoading } = useQuery(requestCrewListQuery(requestId));
   const { showToast } = useToast();
+  const { mutateAsync: deleteCrew, isPending: isDeleting } = useMutation(
+    requestCrewDeleteMutation(requestId),
+  );
+  const { mutateAsync: updateCrew, isPending: isUpdating } = useMutation(
+    requestCrewUpdateMutation(requestId),
+  );
+  const isMutating = isDeleting || isUpdating;
 
   const [addCrewDialogVisible, setAddCrewDialogVisible] =
     useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const deleteActionBodyTemplate = ({
     member,
@@ -48,7 +57,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     return (
       <button
         className="p-link p-row-editor-init"
-        disabled={loading}
+        disabled={isMutating}
         onClick={() => {
           onRowDelete(id, member, position);
         }}
@@ -62,9 +71,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
   };
 
   const handleDelete = async (id: number) => {
-    setLoading(true);
-    await adminApi
-      .adminRequestsCrewDestroy(id, requestId)
+    await deleteCrew(id)
       .then(async () => {
         await queryClient.invalidateQueries({
           queryKey: queryKeys.requestCrew(requestId),
@@ -82,9 +89,6 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
           severity: 'error',
           summary: 'Hiba',
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 
@@ -114,7 +118,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     return (
       <AutoCompleteStaff
         className="w-full"
-        disabled={loading}
+        disabled={isMutating}
         onChange={(e: AutoCompleteChangeEvent) =>
           options.editorCallback?.(e.value)
         }
@@ -161,12 +165,10 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
 
     const { id, ...data } = newData as CrewMemberAdminListRetrieve;
 
-    setLoading(true);
-    await adminApi
-      .adminRequestsCrewPartialUpdate(id, requestId, {
-        ...data,
-        member: data.member.id,
-      })
+    await updateCrew({
+      crewId: id,
+      crewMember: { ...data, member: data.member.id },
+    })
       .then(async () => {
         await queryClient.invalidateQueries({
           queryKey: queryKeys.requestCrew(requestId),
@@ -184,9 +186,6 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
           severity: 'error',
           summary: 'Hiba',
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 
@@ -194,7 +193,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
     return (
       <AutoCompleteCrewPosition
         className="w-full"
-        disabled={loading}
+        disabled={isMutating}
         onChange={(e: AutoCompleteChangeEvent) =>
           options.editorCallback?.(e.value)
         }

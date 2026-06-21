@@ -1,6 +1,6 @@
 import { lazy, MouseEventHandler, useState } from 'react';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
@@ -14,8 +14,8 @@ import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 import { href, Link } from 'react-router';
 
-import { adminApi } from 'api/http';
 import { TodoAdminListRetrieve } from 'api/models/todo-admin-list-retrieve';
+import { todoDeleteMutation } from 'api/mutations';
 import { requestTodosListQuery, requestVideoTodosListQuery } from 'api/queries';
 import { queryKeys } from 'api/queryKeys';
 import { TodoStatusTag } from 'components/StatusTag/StatusTag';
@@ -44,13 +44,13 @@ type TodosProps = {
 };
 
 const Todo = ({ data, onEdit }: TodoProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
   const { showToast } = useToast();
   const queryClient = useQueryClient();
+  const { mutateAsync: deleteTodo, isPending } = useMutation(
+    todoDeleteMutation(data.id),
+  );
 
-  const handleDelete = async (todoId: number) => {
-    setLoading(true);
-
+  const handleDelete = async () => {
     const invalidateQueries = async () => {
       await queryClient.invalidateQueries({
         queryKey: queryKeys.todos(),
@@ -66,8 +66,7 @@ const Todo = ({ data, onEdit }: TodoProps) => {
       }
     };
 
-    await adminApi
-      .adminTodosDestroy(todoId)
+    await deleteTodo()
       .then(async () => {
         await invalidateQueries();
       })
@@ -81,15 +80,12 @@ const Todo = ({ data, onEdit }: TodoProps) => {
           severity: 'error',
           summary: 'Hiba',
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 
   const onTodoDelete = () => {
     confirmDialog({
-      accept: () => handleDelete(data.id),
+      accept: () => handleDelete(),
       acceptClassName: 'p-button-danger',
       breakpoints: { '768px': '95vw' },
       defaultFocus: 'reject',
@@ -159,7 +155,7 @@ const Todo = ({ data, onEdit }: TodoProps) => {
               className="p-1"
               icon="pi pi-trash"
               label="Törlés"
-              loading={loading}
+              loading={isPending}
               onClick={() => {
                 onTodoDelete();
               }}
@@ -170,7 +166,7 @@ const Todo = ({ data, onEdit }: TodoProps) => {
           )}
           <Button
             className="ml-2 p-1"
-            disabled={loading}
+            disabled={isPending}
             icon="pi pi-pencil"
             label="Szerkesztés"
             onClick={onEdit}

@@ -12,8 +12,10 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { href, useNavigate, useParams } from 'react-router';
 
-import { adminApi } from 'api/http';
-import { requestVideoUpdateMutation } from 'api/mutations';
+import {
+  requestVideoDeleteMutation,
+  requestVideoUpdateMutation,
+} from 'api/mutations';
 import { requestVideoRetrieveQuery } from 'api/queries';
 import { queryKeys } from 'api/queryKeys';
 import DetailsRow from 'components/Details/DetailsRow';
@@ -45,6 +47,9 @@ const VideoDetailsPage = () => {
   const { mutateAsync } = useMutation(
     requestVideoUpdateMutation(Number(requestId), Number(videoId)),
   );
+  const { mutateAsync: deleteVideo } = useMutation(
+    requestVideoDeleteMutation(Number(requestId), Number(videoId)),
+  );
   const isMobile = useMobile();
   const navigate = useNavigate();
 
@@ -67,8 +72,7 @@ const VideoDetailsPage = () => {
   const handleDelete = async () => {
     setLoading(true);
 
-    await adminApi
-      .adminRequestsVideosDestroy(Number(videoId), Number(requestId))
+    await deleteVideo()
       .then(() => {
         void navigate(`/requests/${requestId}/videos`, { replace: true });
         void queryClient.invalidateQueries({

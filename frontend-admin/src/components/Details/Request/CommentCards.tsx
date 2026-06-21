@@ -15,9 +15,9 @@ import type { IconType } from 'primereact/utils';
 import { Controller, useForm } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
 
-import { adminApi } from 'api/http';
 import {
   requestCommentCreateMutation,
+  requestCommentDeleteMutation,
   requestCommentUpdateMutation,
 } from 'api/mutations';
 import { requestCommentsListQuery } from 'api/queries';
@@ -192,15 +192,14 @@ const CommentCard = ({
   showButtons,
   text,
 }: CommentCardProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
   const { showToast } = useToast();
   const queryClient = useQueryClient();
+  const { mutateAsync: deleteComment, isPending } = useMutation(
+    requestCommentDeleteMutation(requestId, commentId),
+  );
 
-  const handleDelete = async (commentId: number) => {
-    setLoading(true);
-
-    await adminApi
-      .adminRequestsCommentsDestroy(commentId, requestId)
+  const handleDelete = async () => {
+    await deleteComment()
       .then(async () => {
         await queryClient.invalidateQueries({
           queryKey: queryKeys.requestComments(requestId),
@@ -218,15 +217,12 @@ const CommentCard = ({
           severity: 'error',
           summary: 'Hiba',
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 
   const onCommentDelete = () => {
     confirmDialog({
-      accept: () => handleDelete(commentId),
+      accept: () => handleDelete(),
       acceptClassName: 'p-button-danger',
       breakpoints: { '768px': '95vw' },
       defaultFocus: 'reject',
@@ -254,7 +250,7 @@ const CommentCard = ({
             className="p-1"
             icon="pi pi-trash"
             label="Törlés"
-            loading={loading}
+            loading={isPending}
             onClick={() => {
               onCommentDelete();
             }}
@@ -264,7 +260,7 @@ const CommentCard = ({
           />
           <Button
             className="ml-2 p-1"
-            disabled={loading}
+            disabled={isPending}
             icon="pi pi-pencil"
             label="Szerkesztés"
             onClick={() => {

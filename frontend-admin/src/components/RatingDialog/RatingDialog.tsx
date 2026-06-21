@@ -17,10 +17,10 @@ import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
 import { Controller, useForm } from 'react-hook-form';
 
-import { adminApi } from 'api/http';
 import { RatingAdminListRetrieve } from 'api/models';
 import {
   requestVideoRatingCreateMutation,
+  requestVideoRatingDeleteMutation,
   requestVideoRatingUpdateMutation,
 } from 'api/mutations';
 import {
@@ -77,6 +77,9 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
       ratingId
         ? requestVideoRatingUpdateMutation(requestId, videoId, ratingId)
         : requestVideoRatingCreateMutation(requestId, videoId),
+    );
+    const { mutateAsync: deleteRating } = useMutation(
+      requestVideoRatingDeleteMutation(requestId, videoId, ratingId),
     );
 
     useEffect(() => {
@@ -173,8 +176,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
     const handleDelete = async () => {
       setLoading(true);
 
-      await adminApi
-        .adminRequestsVideosRatingsDestroy(ratingId, requestId, videoId)
+      await deleteRating()
         .then(async () => {
           await queryClient.invalidateQueries({
             queryKey: queryKeys.video(requestId, videoId),
