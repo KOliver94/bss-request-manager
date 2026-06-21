@@ -1,0 +1,15 @@
+# Devcontainer overlay. Adds the `app` workspace container to the dev stack
+# defined in ../docker-compose.dev.yaml (postgres + redis).
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/base:bookworm
+    # Source is resolved relative to the FIRST compose file's directory
+    # (../docker-compose.dev.yaml at the repo root), so `.` is the repo root.
+    volumes:
+      - .:/workspaces/bss-request-manager:cached
+    command: sleep infinity
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    depends_on:
+      - postgres
+      - redis
