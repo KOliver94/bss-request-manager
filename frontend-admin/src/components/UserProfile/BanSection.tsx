@@ -10,8 +10,8 @@ import { userBanCreateMutation, userBanDeleteMutation } from 'api/mutations';
 import { queryKeys } from 'api/queryKeys';
 import User from 'components/User/User';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import { useToast } from 'providers/ToastProvider';
 
 type BanSectionProps = {
@@ -46,12 +46,7 @@ const BanSection = ({ banData, userId }: BanSectionProps) => {
         });
       })
       .catch((error) => {
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 
@@ -70,12 +65,7 @@ const BanSection = ({ banData, userId }: BanSectionProps) => {
         });
       })
       .catch((error) => {
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 

@@ -37,8 +37,8 @@ import {
   dateTimeToLocaleString,
   dateToLocaleString,
 } from 'helpers/DateToLocaleStringCoverters';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
@@ -153,12 +153,7 @@ const RequestDetailsPage = () => {
             queryKey: queryKeys.request(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -201,12 +196,7 @@ const RequestDetailsPage = () => {
             queryKey: queryKeys.request(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -246,12 +236,7 @@ const RequestDetailsPage = () => {
             return;
           }
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -341,12 +326,7 @@ const RequestDetailsPage = () => {
             queryKey: queryKeys.request(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);

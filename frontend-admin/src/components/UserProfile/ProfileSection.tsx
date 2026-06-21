@@ -18,8 +18,8 @@ import { AvatarProviderEnum, UserAdminRetrieveUpdate } from 'api';
 import { userUpdateMutation } from 'api/mutations';
 import { queryKeys } from 'api/queryKeys';
 import FormField from 'components/FormField/FormField';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import { useToast } from 'providers/ToastProvider';
 
 const AvatarDialog = lazy(() => import('components/UserProfile/AvatarDialog'));
@@ -109,12 +109,7 @@ const ProfileSection = ({ userData }: ProfileSectionProps) => {
         setAvatarDialogVisible(false);
       })
       .catch(async (error) => {
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 
@@ -162,12 +157,7 @@ const ProfileSection = ({ userData }: ProfileSectionProps) => {
             return;
           }
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 

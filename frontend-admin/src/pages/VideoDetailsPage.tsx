@@ -23,9 +23,8 @@ import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import LinkButton from 'components/LinkButton/LinkButton';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
+import { showErrorToast } from 'helpers/showErrorToast';
 import useMobile from 'hooks/useMobile';
-import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
 const AdditionalDataDialog = lazy(
@@ -43,7 +42,6 @@ const VideoStatusHelperSlideover = lazy(
 
 const VideoDetailsPage = () => {
   const { requestId, videoId } = useParams();
-  const { showToast } = useToast();
   const { mutateAsync } = useMutation(
     requestVideoUpdateMutation(Number(requestId), Number(videoId)),
   );
@@ -86,12 +84,7 @@ const VideoDetailsPage = () => {
             queryKey: queryKeys.requestVideos(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -130,12 +123,7 @@ const VideoDetailsPage = () => {
             return;
           }
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -166,12 +154,7 @@ const VideoDetailsPage = () => {
             queryKey: queryKeys.video(requestId, videoId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -208,12 +191,7 @@ const VideoDetailsPage = () => {
             queryKey: queryKeys.video(requestId, videoId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);

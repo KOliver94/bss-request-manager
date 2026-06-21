@@ -28,7 +28,7 @@ import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
+import { showErrorToast } from 'helpers/showErrorToast';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
@@ -201,12 +201,7 @@ const VideoCreatorEditorPage = () => {
             return;
           }
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 
@@ -219,12 +214,7 @@ const VideoCreatorEditorPage = () => {
         },
       });
     } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
+      showErrorToast(error);
     }
   }
 

@@ -21,9 +21,8 @@ import { requestCrewListQuery } from 'api/queries';
 import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import User from 'components/User/User';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
+import { showErrorToast } from 'helpers/showErrorToast';
 import useMobile from 'hooks/useMobile';
-import { useToast } from 'providers/ToastProvider';
 
 import AddCrewDialog from './AddCrewDialog';
 import AutoCompleteCrewPosition from './AutoCompleteCrewPosition';
@@ -37,7 +36,6 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery(requestCrewListQuery(requestId));
-  const { showToast } = useToast();
   const { mutateAsync: deleteCrew, isPending: isDeleting } = useMutation(
     requestCrewDeleteMutation(requestId),
   );
@@ -83,12 +81,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
             queryKey: queryKeys.requestCrew(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 
@@ -180,12 +173,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
             queryKey: queryKeys.requestCrew(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 

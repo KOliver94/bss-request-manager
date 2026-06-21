@@ -30,8 +30,8 @@ import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getName } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
@@ -280,12 +280,7 @@ const RequestCreatorEditorPage = () => {
             return;
           }
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setValue('send_notification', false);
@@ -301,12 +296,7 @@ const RequestCreatorEditorPage = () => {
         },
       });
     } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
+      showErrorToast(error);
     }
   }
 

@@ -20,11 +20,10 @@ import { requestTodosListQuery, requestVideoTodosListQuery } from 'api/queries';
 import { queryKeys } from 'api/queryKeys';
 import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import TimeAgo from 'helpers/TimeAgo';
 import useMobile from 'hooks/useMobile';
-import { useToast } from 'providers/ToastProvider';
 
 import TodoDialog from './TodoDialog';
 
@@ -44,7 +43,6 @@ type TodosProps = {
 };
 
 const Todo = ({ data, onEdit }: TodoProps) => {
-  const { showToast } = useToast();
   const queryClient = useQueryClient();
   const { mutateAsync: deleteTodo, isPending } = useMutation(
     todoDeleteMutation(data.id),
@@ -74,12 +72,7 @@ const Todo = ({ data, onEdit }: TodoProps) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await invalidateQueries();
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 

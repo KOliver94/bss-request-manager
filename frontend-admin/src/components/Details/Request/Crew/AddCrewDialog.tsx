@@ -11,8 +11,7 @@ import { UserNestedDetail } from 'api/models/user-nested-detail';
 import { requestCrewCreateMutation } from 'api/mutations';
 import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
-import { useToast } from 'providers/ToastProvider';
+import { showErrorToast } from 'helpers/showErrorToast';
 
 import AutoCompleteCrewPosition from './AutoCompleteCrewPosition';
 
@@ -41,7 +40,6 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
       shouldFocusError: false,
     });
     const { mutateAsync } = useMutation(requestCrewCreateMutation(requestId));
-    const { showToast } = useToast();
 
     const onSubmit = async (data: ICrewCreate) => {
       if (!data.member) return;
@@ -71,12 +69,7 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
               return;
             }
           }
-          showToast({
-            detail: getErrorMessage(error),
-            life: 3000,
-            severity: 'error',
-            summary: 'Hiba',
-          });
+          showErrorToast(error);
         })
         .finally(() => {
           setLoading(false);

@@ -30,10 +30,10 @@ import {
   getUserId,
   isAdmin,
 } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import TimeAgo from 'helpers/TimeAgo';
 import { useTheme } from 'hooks/useTheme';
 import { UI_AVATAR_URL } from 'localConstants';
-import { useToast } from 'providers/ToastProvider';
 
 // TODO: Review props
 type CommentCardProps = CommentCardCreateProps & {
@@ -192,7 +192,6 @@ const CommentCard = ({
   showButtons,
   text,
 }: CommentCardProps) => {
-  const { showToast } = useToast();
   const queryClient = useQueryClient();
   const { mutateAsync: deleteComment, isPending } = useMutation(
     requestCommentDeleteMutation(requestId, commentId),
@@ -211,12 +210,7 @@ const CommentCard = ({
             queryKey: queryKeys.requestComments(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 
