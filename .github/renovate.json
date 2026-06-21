@@ -42,8 +42,7 @@
         "node:\\d+\":\\s*\\{\\s*\"version\":\\s*\"(?<currentValue>[^\"]+)\""
       ],
       "depNameTemplate": "node",
-      "datasourceTemplate": "node-version",
-      "extractVersion": "^(?<version>\\d+)"
+      "datasourceTemplate": "node-version"
     },
     {
       "customType": "regex",
