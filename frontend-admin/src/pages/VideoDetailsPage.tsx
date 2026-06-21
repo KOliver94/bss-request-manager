@@ -1,6 +1,6 @@
 import { Suspense, lazy, useRef, useState } from 'react';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
@@ -62,9 +62,10 @@ const VideoDetailsPage = () => {
   const {
     data: queryResult,
     dataUpdatedAt,
-    error,
     refetch,
-  } = useQuery(requestVideoRetrieveQuery(Number(requestId), Number(videoId)));
+  } = useSuspenseQuery(
+    requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
+  );
 
   const [additionalDataDialogError, setAdditionalDataDialogError] =
     useState('');
@@ -254,24 +255,6 @@ const VideoDetailsPage = () => {
       style: { width: '50vw' },
     });
   };
-
-  if (error) {
-    if (isAxiosError(error)) {
-      void navigate('/error', {
-        state: {
-          statusCode: error.response?.status,
-          statusText: error.response?.statusText,
-        },
-      });
-    } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
-    }
-  }
 
   return (
     <>

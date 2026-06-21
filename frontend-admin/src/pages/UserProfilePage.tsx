@@ -1,15 +1,12 @@
 import { Suspense, lazy, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { ProgressBar } from 'primereact/progressbar';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 
 import { usersRetrieveQuery } from 'api/queries';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import NavigationButton from 'components/UserProfile/NavigationButton';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
-import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
 const BanSection = lazy(() => import('components/UserProfile/BanSection'));
@@ -32,30 +29,10 @@ export async function loader({ params }: any) {
 const UserProfilePage = () => {
   const [section, setSection] = useState<string>('profile');
   const { userId } = useParams();
-  const { showToast } = useToast();
-  const navigate = useNavigate();
 
-  const { data, dataUpdatedAt, error, refetch } = useQuery(
+  const { data, dataUpdatedAt, refetch } = useSuspenseQuery(
     usersRetrieveQuery(Number(userId)),
   );
-
-  if (error) {
-    if (isAxiosError(error)) {
-      void navigate('/error', {
-        state: {
-          statusCode: error.response?.status,
-          statusText: error.response?.statusText,
-        },
-      });
-    } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
-    }
-  }
 
   return (
     <div className="lg:px-8 md:px-6 px-4 py-5 surface-ground">

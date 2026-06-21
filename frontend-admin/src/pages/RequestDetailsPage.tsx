@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
@@ -107,9 +107,8 @@ const RequestDetailsPage = () => {
   const {
     data: queryResult,
     dataUpdatedAt,
-    error,
     refetch,
-  } = useQuery(requestRetrieveQuery(Number(requestId)));
+  } = useSuspenseQuery(requestRetrieveQuery(Number(requestId)));
   const data = getRequest(queryResult);
 
   const [acceptRejectDialogOpen, setAcceptRejectDialogOpen] = useState(false);
@@ -370,24 +369,6 @@ const RequestDetailsPage = () => {
     // Workaround for: https://github.com/primefaces/primereact/issues/4034
     window.scrollTo(0, 0);
   }, []);
-
-  if (error) {
-    if (isAxiosError(error)) {
-      void navigate('/error', {
-        state: {
-          statusCode: error.response?.status,
-          statusText: error.response?.statusText,
-        },
-      });
-    } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
-    }
-  }
 
   return (
     <>

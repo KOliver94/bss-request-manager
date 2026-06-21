@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { classNames } from 'primereact/utils';
 import { href, useParams } from 'react-router';
 
@@ -19,7 +19,7 @@ export async function loader({ params }: any) {
 
 const VideosListPage = () => {
   const { requestId } = useParams();
-  const { data } = useQuery(requestRetrieveQuery(Number(requestId)));
+  const { data } = useSuspenseQuery(requestRetrieveQuery(Number(requestId)));
   const isMobile = useMobile();
 
   const videoDataHeader = (

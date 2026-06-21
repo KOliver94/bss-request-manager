@@ -2,7 +2,6 @@ import { Semester } from 'helpers/SemesterHelper';
 
 import { AdminTodosListStatusEnum } from './endpoints/admin-api';
 import { adminApi } from './http';
-import { dummyRequest, dummyTodo, dummyUser, dummyVideo } from './placeholders';
 
 export const requestCommentsListQuery = (requestId: number) => ({
   queryFn: async () => {
@@ -34,7 +33,6 @@ export const requestHistoryListQuery = (requestId: number) => ({
 });
 
 export const requestRetrieveQuery = (requestId: number) => ({
-  initialData: dummyRequest,
   queryFn: async () => {
     const request = await adminApi.adminRequestsRetrieve(requestId);
     return request.data;
@@ -124,7 +122,6 @@ export const requestVideoRetrieveQuery = (
   requestId: number,
   videoId: number,
 ) => ({
-  initialData: dummyVideo,
   queryFn: async () => {
     const video = await adminApi.adminRequestsVideosRetrieve(
       videoId,
@@ -215,7 +212,6 @@ export const todosListQuery = (
 });
 
 export const todoRetrieveQuery = (todoId: number) => ({
-  initialData: dummyTodo,
   queryFn: async () => {
     const todo = await adminApi.adminTodosRetrieve(todoId);
     return todo.data;
@@ -240,7 +236,6 @@ export const usersListQuery = () => ({
 });
 
 export const usersRetrieveQuery = (userId: number) => ({
-  initialData: dummyUser,
   queryFn: async () => {
     const user = await adminApi.adminUsersRetrieve(userId);
     return user.data;
