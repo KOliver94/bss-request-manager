@@ -1,6 +1,6 @@
 import { MouseEventHandler, useState } from 'react';
 
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
@@ -131,19 +131,15 @@ const Ratings = ({
   videoStatus,
   videoTitle,
 }: RatingsProps) => {
-  const getRatings = ({
-    data: ratings,
-  }: UseQueryResult<RatingAdminListRetrieve[]>): RatingAdminListDates[] => {
-    return [...(ratings || [])].map((rating) => {
-      return {
-        ...rating,
-        created: new Date(rating.created),
-      };
-    });
-  };
-  const data = getRatings(
-    useQuery(requestVideoRatingsListQuery(requestId, videoId)),
-  );
+  const data =
+    useQuery({
+      ...requestVideoRatingsListQuery(requestId, videoId),
+      select: (ratings): RatingAdminListDates[] =>
+        ratings.map((rating) => ({
+          ...rating,
+          created: new Date(rating.created),
+        })),
+    }).data ?? [];
 
   const [ordering, setOrdering] = useState<
     'highest' | 'lowest' | 'oldest' | 'newest'

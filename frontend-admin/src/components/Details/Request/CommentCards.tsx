@@ -15,7 +15,6 @@ import { Controller, useForm } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
 
 import { adminApi } from 'api/http';
-import { CommentAdminListRetrieve } from 'api/models';
 import {
   requestCommentCreateMutation,
   requestCommentUpdateMutation,
@@ -519,10 +518,12 @@ const CommentCardNew = ({
 };
 
 const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
-  const getComments = (comments: CommentAdminListRetrieve[] = []) => {
-    return comments.map((el) => ({ ...el, created: new Date(el.created) }));
-  };
-  const data = getComments(useQuery(requestCommentsListQuery(requestId)).data);
+  const data =
+    useQuery({
+      ...requestCommentsListQuery(requestId),
+      select: (comments) =>
+        comments.map((el) => ({ ...el, created: new Date(el.created) })),
+    }).data ?? [];
   const [editingId, setEditingId] = useState<number>(0);
 
   return (

@@ -31,9 +31,11 @@ const RequestFieldNames: Record<string, string> = {
 };
 
 const RequestHistory = ({ requestId }: RequestHistoryProps) => {
-  const { data: queryResult } = useQuery(requestHistoryListQuery(requestId));
+  const { data = [] } = useQuery({
+    ...requestHistoryListQuery(requestId),
+    select: getHistory,
+  });
   const { data: users } = useQuery(usersListQuery());
-  const data = getHistory(queryResult ?? []);
 
   const getFieldName = (name: string) => {
     return RequestFieldNames[name];

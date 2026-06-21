@@ -20,11 +20,11 @@ const VideoFieldNames: Record<string, string> = {
 };
 
 const VideoHistory = ({ requestId, videoId }: VideoHistoryProps) => {
-  const { data: queryResult } = useQuery(
-    requestVideoHistoryListQuery(requestId, videoId),
-  );
+  const { data = [] } = useQuery({
+    ...requestVideoHistoryListQuery(requestId, videoId),
+    select: getHistory,
+  });
   const { data: users } = useQuery(usersListQuery());
-  const data = getHistory(queryResult ?? []);
 
   const getFieldName = (name: string) => {
     return VideoFieldNames[name];

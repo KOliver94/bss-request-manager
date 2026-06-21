@@ -175,31 +175,8 @@ export const requestVideoTodosListQuery = (
 });
 
 export const requestsListQuery = (semester: Semester | null) => {
-  if (semester) {
-    return {
-      queryFn: async () => {
-        const requests = await adminApi.adminRequestsList(
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          200,
-          undefined,
-          undefined,
-          semester.afterDate.toISOString().split('T')[0],
-          semester.beforeDate.toISOString().split('T')[0],
-        );
-        return requests.data.results || [];
-      },
-      queryKey: [
-        'requests',
-        `${semester.afterDate.toISOString().split('T')[0]}/${
-          semester.beforeDate.toISOString().split('T')[0]
-        }`,
-      ],
-      refetchInterval: 1000 * 30,
-    };
-  }
+  const afterDate = semester?.afterDate.toISOString().split('T')[0];
+  const beforeDate = semester?.beforeDate.toISOString().split('T')[0];
 
   return {
     queryFn: async () => {
@@ -208,11 +185,17 @@ export const requestsListQuery = (semester: Semester | null) => {
         undefined,
         undefined,
         undefined,
-        10000,
+        semester ? 200 : 10000,
+        undefined,
+        undefined,
+        afterDate,
+        beforeDate,
       );
       return requests.data.results || [];
     },
-    queryKey: ['requests'],
+    queryKey: semester
+      ? ['requests', `${afterDate}/${beforeDate}`]
+      : ['requests'],
     refetchInterval: 1000 * 30,
   };
 };
