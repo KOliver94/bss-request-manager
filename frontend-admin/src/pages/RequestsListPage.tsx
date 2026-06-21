@@ -22,7 +22,7 @@ const RequestsListPage = () => {
   const [selectedSemester, setSelectedSemester] = useState<Semester | null>(
     getLatestSemester(),
   );
-  const { data, dataUpdatedAt, refetch } = useQuery(
+  const { data, dataUpdatedAt, isLoading, refetch } = useQuery(
     requestsListQuery(selectedSemester),
   );
 
@@ -42,7 +42,7 @@ const RequestsListPage = () => {
         />
       </div>
       <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
-        <RequestsDataTable requests={data ?? []} />
+        <RequestsDataTable loading={isLoading} requests={data ?? []} />
       </div>
       <LastUpdatedAt
         lastUpdatedAt={new Date(dataUpdatedAt)}

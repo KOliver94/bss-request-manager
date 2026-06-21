@@ -214,6 +214,7 @@ const Todos = ({
   });
   const { data: queryResult } = requestId ? query : { data: undefined };
   const data = dataProp || queryResult;
+  const showLoading = loading || (!dataProp && query.isLoading);
   const [todoDialogId, setTodoDialogId] = useState<number>(0);
   const [todoDialogVisible, setTodoDialogVisible] = useState<boolean>(false);
 
@@ -253,7 +254,7 @@ const Todos = ({
           />
         </div>
       )}
-      {loading && <ProgressBar mode="indeterminate" />}
+      {showLoading && <ProgressBar mode="indeterminate" />}
       <div className="grid">
         {(data?.length &&
           data.map((todo) => (
@@ -265,7 +266,7 @@ const Todos = ({
               }}
             />
           ))) ||
-          (!loading && (
+          (!showLoading && (
             <p className="pl-3 pt-2">Nincsenek elvégzendő feladatok.</p>
           ))}
       </div>

@@ -32,7 +32,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
   const isMobile = useMobile();
   const queryClient = useQueryClient();
 
-  const { data } = useQuery(requestCrewListQuery(requestId));
+  const { data, isLoading } = useQuery(requestCrewListQuery(requestId));
   const { showToast } = useToast();
 
   const [addCrewDialogVisible, setAddCrewDialogVisible] =
@@ -210,6 +210,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
         dataKey="id"
         editMode="row"
         header={header}
+        loading={isLoading}
         onRowEditComplete={onRowEditComplete}
         showGridlines
         sortField="member"
