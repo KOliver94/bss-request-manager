@@ -20,7 +20,7 @@ const UsersDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
   DataTableProps<DataTableValueArray>
 >((props, ref) => {
-  const { data } = useQuery(usersListQuery());
+  const { data, isLoading } = useQuery(usersListQuery());
 
   const isStaffBodyTemplate = ({ is_staff }: UserAdminList) => {
     return (
@@ -79,6 +79,7 @@ const UsersDataTable = forwardRef<
     <DataTable
       dataKey="id"
       emptyMessage="Nem található felhasználó."
+      loading={isLoading}
       paginator
       rows={25}
       rowsPerPageOptions={[10, 25, 50, 100]}

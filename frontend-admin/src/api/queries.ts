@@ -2,204 +2,175 @@ import { Semester } from 'helpers/SemesterHelper';
 
 import { AdminTodosListStatusEnum } from './endpoints/admin-api';
 import { adminApi } from './http';
-import { dummyRequest, dummyTodo, dummyUser, dummyVideo } from './placeholders';
+import { queryKeys } from './queryKeys';
 
-export const requestCommentsListQuery = (requestId: number) => ({
-  initialData: [],
+export const requestCommentsListQuery = (requestId: string | number) => ({
   queryFn: async () => {
     const comments = await adminApi.adminRequestsCommentsList(
-      requestId,
+      Number(requestId),
       'created',
     );
     return comments.data;
   },
-  queryKey: ['requests', requestId, 'comments'],
+  queryKey: queryKeys.requestComments(requestId),
   refetchInterval: 1000 * 30,
 });
 
-export const requestCrewListQuery = (requestId: number) => ({
-  initialData: [],
+export const requestCrewListQuery = (requestId: string | number) => ({
   queryFn: async () => {
-    const crew = await adminApi.adminRequestsCrewList(requestId);
-    return crew.data;
+    const crew = await adminApi.adminRequestsCrewList(Number(requestId));
+    return crew.data.sort((a, b) => a.id - b.id);
   },
-  queryKey: ['requests', requestId, 'crew'],
+  queryKey: queryKeys.requestCrew(requestId),
   refetchInterval: 1000 * 30,
 });
 
-export const requestHistoryListQuery = (requestId: number) => ({
-  initialData: [],
+export const requestHistoryListQuery = (requestId: string | number) => ({
   queryFn: async () => {
-    const history = await adminApi.adminRequestsHistoryList(requestId);
+    const history = await adminApi.adminRequestsHistoryList(Number(requestId));
     return history.data;
   },
-  queryKey: ['requests', requestId, 'history'],
+  queryKey: queryKeys.requestHistory(requestId),
 });
 
-export const requestRetrieveQuery = (requestId: number) => ({
-  initialData: dummyRequest,
+export const requestRetrieveQuery = (requestId: string | number) => ({
   queryFn: async () => {
-    const request = await adminApi.adminRequestsRetrieve(requestId);
+    const request = await adminApi.adminRequestsRetrieve(Number(requestId));
     return request.data;
   },
-  queryKey: ['requests', requestId],
+  queryKey: queryKeys.request(requestId),
   refetchInterval: 1000 * 60 * 5,
 });
 
-export const requestTodosListQuery = (requestId: number) => ({
-  initialData: [],
+export const requestTodosListQuery = (requestId: string | number) => ({
   queryFn: async () => {
-    const todos = await adminApi.adminRequestsTodosList(requestId);
+    const todos = await adminApi.adminRequestsTodosList(Number(requestId));
     return todos.data;
   },
-  queryKey: ['requests', requestId, 'todos'],
+  queryKey: queryKeys.requestTodos(requestId),
   refetchInterval: 1000 * 30,
 });
 
 export const requestVideoHistoryListQuery = (
-  requestId: number,
-  videoId: number,
+  requestId: string | number,
+  videoId: string | number,
 ) => ({
-  initialData: [],
   queryFn: async () => {
     const history = await adminApi.adminRequestsVideosHistoryList(
-      videoId,
-      requestId,
+      Number(videoId),
+      Number(requestId),
     );
     return history.data;
   },
-  queryKey: ['requests', requestId, 'videos', videoId, 'history'],
+  queryKey: queryKeys.videoHistory(requestId, videoId),
 });
 
-export const requestVideosListQuery = (requestId: number) => ({
-  initialData: [],
+export const requestVideosListQuery = (requestId: string | number) => ({
   queryFn: async () => {
-    const videos = await adminApi.adminRequestsVideosList(requestId);
+    const videos = await adminApi.adminRequestsVideosList(Number(requestId));
     return videos.data;
   },
-  queryKey: ['requests', requestId, 'videos'],
+  queryKey: queryKeys.requestVideos(requestId),
   refetchInterval: 1000 * 30,
 });
 
 export const requestVideoRatingRetrieveOwnQuery = (
-  requestId: number,
-  videoId: number,
+  requestId: string | number,
+  videoId: string | number,
 ) => ({
   queryFn: async () => {
     const rating = await adminApi.adminRequestsVideosRatingsOwnRetrieve(
-      requestId,
-      videoId,
+      Number(requestId),
+      Number(videoId),
     );
     return rating.data;
   },
-  queryKey: ['requests', requestId, 'videos', videoId, 'ratings', 'own'],
+  queryKey: queryKeys.videoRatingOwn(requestId, videoId),
 });
 
 export const requestVideoRatingRetrieveQuery = (
-  requestId: number,
-  videoId: number,
-  ratingId: number,
+  requestId: string | number,
+  videoId: string | number,
+  ratingId: string | number,
 ) => ({
   queryFn: async () => {
     const rating = await adminApi.adminRequestsVideosRatingsRetrieve(
-      ratingId,
-      requestId,
-      videoId,
+      Number(ratingId),
+      Number(requestId),
+      Number(videoId),
     );
     return rating.data;
   },
-  queryKey: ['requests', requestId, 'videos', videoId, 'ratings', ratingId],
+  queryKey: queryKeys.videoRating(requestId, videoId, ratingId),
 });
 
 export const requestVideoRatingsListQuery = (
-  requestId: number,
-  videoId: number,
+  requestId: string | number,
+  videoId: string | number,
 ) => ({
-  initialData: [],
   queryFn: async () => {
     const ratings = await adminApi.adminRequestsVideosRatingsList(
-      requestId,
-      videoId,
+      Number(requestId),
+      Number(videoId),
     );
     return ratings.data;
   },
-  queryKey: ['requests', requestId, 'videos', videoId, 'ratings'],
+  queryKey: queryKeys.videoRatings(requestId, videoId),
   refetchInterval: 1000 * 30,
 });
 
 export const requestVideoRetrieveQuery = (
-  requestId: number,
-  videoId: number,
+  requestId: string | number,
+  videoId: string | number,
 ) => ({
-  initialData: dummyVideo,
   queryFn: async () => {
     const video = await adminApi.adminRequestsVideosRetrieve(
-      videoId,
-      requestId,
+      Number(videoId),
+      Number(requestId),
     );
     return video.data;
   },
-  queryKey: ['requests', requestId, 'videos', videoId],
+  queryKey: queryKeys.video(requestId, videoId),
   refetchInterval: 1000 * 60 * 5,
 });
 
 export const requestVideoTodosListQuery = (
-  requestId: number,
-  videoId: number,
+  requestId: string | number,
+  videoId: string | number,
 ) => ({
-  initialData: [],
   queryFn: async () => {
     const todos = await adminApi.adminRequestsVideosTodosList(
-      requestId,
-      videoId,
+      Number(requestId),
+      Number(videoId),
     );
     return todos.data;
   },
-  queryKey: ['requests', requestId, 'videos', videoId, 'todos'],
+  queryKey: queryKeys.videoTodos(requestId, videoId),
   refetchInterval: 1000 * 30,
 });
 
 export const requestsListQuery = (semester: Semester | null) => {
-  if (semester) {
-    return {
-      initialData: [],
-      queryFn: async () => {
-        const requests = await adminApi.adminRequestsList(
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          200,
-          undefined,
-          undefined,
-          semester.afterDate.toISOString().split('T')[0],
-          semester.beforeDate.toISOString().split('T')[0],
-        );
-        return requests.data.results || [];
-      },
-      queryKey: [
-        'requests',
-        `${semester.afterDate.toISOString().split('T')[0]}/${
-          semester.beforeDate.toISOString().split('T')[0]
-        }`,
-      ],
-      refetchInterval: 1000 * 30,
-    };
-  }
+  const afterDate = semester?.afterDate.toISOString().split('T')[0];
+  const beforeDate = semester?.beforeDate.toISOString().split('T')[0];
 
   return {
-    initialData: [],
     queryFn: async () => {
       const requests = await adminApi.adminRequestsList(
         undefined,
         undefined,
         undefined,
         undefined,
-        10000,
+        semester ? 200 : 10000,
+        undefined,
+        undefined,
+        afterDate,
+        beforeDate,
       );
       return requests.data.results || [];
     },
-    queryKey: ['requests'],
+    queryKey: semester
+      ? queryKeys.requestsBySemester(afterDate, beforeDate)
+      : queryKeys.requests(),
     refetchInterval: 1000 * 30,
   };
 };
@@ -209,7 +180,6 @@ export const todosListQuery = (
   ordering: string,
   status: Array<number>,
 ) => ({
-  initialData: [],
   queryFn: async () => {
     const todos = await adminApi.adminTodosList(
       assignees,
@@ -225,18 +195,16 @@ export const todosListQuery = (
   refetchInterval: 1000 * 30,
 });
 
-export const todoRetrieveQuery = (todoId: number) => ({
-  initialData: dummyTodo,
+export const todoRetrieveQuery = (todoId: string | number) => ({
   queryFn: async () => {
-    const todo = await adminApi.adminTodosRetrieve(todoId);
+    const todo = await adminApi.adminTodosRetrieve(Number(todoId));
     return todo.data;
   },
-  queryKey: ['todos', `id:${todoId}`],
+  queryKey: queryKeys.todo(todoId),
   refetchInterval: 1000 * 60 * 5,
 });
 
 export const usersListQuery = () => ({
-  initialData: [],
   queryFn: async () => {
     const users = await adminApi.adminUsersList(
       undefined,
@@ -247,23 +215,21 @@ export const usersListQuery = () => ({
     );
     return users.data.results || [];
   },
-  queryKey: ['users'],
+  queryKey: queryKeys.users(),
   refetchInterval: 1000 * 30,
 });
 
-export const usersRetrieveQuery = (userId: number) => ({
-  initialData: dummyUser,
+export const usersRetrieveQuery = (userId: string | number) => ({
   queryFn: async () => {
-    const user = await adminApi.adminUsersRetrieve(userId);
+    const user = await adminApi.adminUsersRetrieve(Number(userId));
     return user.data;
   },
-  queryKey: ['users', userId],
+  queryKey: queryKeys.user(userId),
   refetchInterval: 1000 * 60 * 5,
 });
 
 export const usersStaffListQuery = () => ({
-  cacheTime: 1000 * 60 * 60,
-  initialData: [],
+  gcTime: 1000 * 60 * 60,
   queryFn: async () => {
     const usersStaff = await adminApi.adminUsersList(
       undefined,
@@ -274,5 +240,5 @@ export const usersStaffListQuery = () => ({
     );
     return usersStaff.data.results || [];
   },
-  queryKey: ['users', 'staff'],
+  queryKey: queryKeys.usersStaff(),
 });

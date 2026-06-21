@@ -9,9 +9,9 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { UserNestedDetail } from 'api/models/user-nested-detail';
 import { requestCrewCreateMutation } from 'api/mutations';
+import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
-import { useToast } from 'providers/ToastProvider';
+import { showErrorToast } from 'helpers/showErrorToast';
 
 import AutoCompleteCrewPosition from './AutoCompleteCrewPosition';
 
@@ -40,7 +40,6 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
       shouldFocusError: false,
     });
     const { mutateAsync } = useMutation(requestCrewCreateMutation(requestId));
-    const { showToast } = useToast();
 
     const onSubmit = async (data: ICrewCreate) => {
       if (!data.member) return;
@@ -50,7 +49,7 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
       await mutateAsync({ ...data, member: data.member.id })
         .then(async () => {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'crew'],
+            queryKey: queryKeys.requestCrew(requestId),
           });
           onHide();
           reset();
@@ -59,7 +58,7 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
           if (isAxiosError(error)) {
             if (error.response?.status === 404) {
               await queryClient.invalidateQueries({
-                queryKey: ['requests', requestId],
+                queryKey: queryKeys.request(requestId),
               });
               onHide();
             } else if (error.response?.status === 400) {
@@ -70,12 +69,7 @@ const AddCrewDialog = forwardRef<React.Ref<HTMLDivElement>, AddCrewDialogProps>(
               return;
             }
           }
-          showToast({
-            detail: getErrorMessage(error),
-            life: 3000,
-            severity: 'error',
-            summary: 'Hiba',
-          });
+          showErrorToast(error);
         })
         .finally(() => {
           setLoading(false);

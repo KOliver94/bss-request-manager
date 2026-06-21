@@ -16,6 +16,7 @@ import type { IconType } from 'primereact/utils';
 import { Controller, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import {
+  type LoaderFunctionArgs,
   useLoaderData,
   useNavigate,
   useParams,
@@ -25,11 +26,12 @@ import {
 import { RequestAdminRetrieve, UserNestedDetail } from 'api/models';
 import { requestCreateMutation, requestUpdateMutation } from 'api/mutations';
 import { requestRetrieveQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getName } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
@@ -60,14 +62,9 @@ export interface IRequestCreator {
   type: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
+export async function loader({ params }: LoaderFunctionArgs) {
   if (params.requestId) {
-    const query = requestRetrieveQuery(Number(params.requestId));
-    return (
-      queryClient.getQueryData(query.queryKey) ??
-      (await queryClient.fetchQuery(query))
-    );
+    return queryClient.ensureQueryData(requestRetrieveQuery(params.requestId));
   }
   return null;
 }
@@ -255,10 +252,12 @@ const RequestCreatorEditorPage = () => {
 
         if (requestId) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId)],
+            queryKey: queryKeys.request(requestId),
           });
         } else {
-          await queryClient.invalidateQueries({ queryKey: ['requests'] });
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.requests(),
+          });
         }
 
         if (watchCreateMore) {
@@ -271,7 +270,7 @@ const RequestCreatorEditorPage = () => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', Number(requestId)],
+              queryKey: queryKeys.request(requestId),
             });
           } else if (error.response?.status === 400) {
             for (const [key, value] of Object.entries(error.response.data)) {
@@ -281,19 +280,15 @@ const RequestCreatorEditorPage = () => {
             return;
           }
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setValue('send_notification', false);
       });
   };
 
-  if (error) {
+  useEffect(() => {
+    if (!error) return;
     if (isAxiosError(error)) {
       void navigate('/error', {
         state: {
@@ -302,14 +297,9 @@ const RequestCreatorEditorPage = () => {
         },
       });
     } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
+      showErrorToast(error);
     }
-  }
+  }, [error, navigate]);
 
   return (
     <div className="p-3 sm:p-5 surface-ground">

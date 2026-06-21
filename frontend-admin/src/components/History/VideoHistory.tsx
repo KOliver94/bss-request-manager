@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { ProgressBar } from 'primereact/progressbar';
 import { Skeleton } from 'primereact/skeleton';
 
 import { requestVideoHistoryListQuery, usersListQuery } from 'api/queries';
@@ -20,11 +21,11 @@ const VideoFieldNames: Record<string, string> = {
 };
 
 const VideoHistory = ({ requestId, videoId }: VideoHistoryProps) => {
-  const { data: queryResult } = useQuery(
-    requestVideoHistoryListQuery(requestId, videoId),
-  );
+  const { data = [], isLoading } = useQuery({
+    ...requestVideoHistoryListQuery(requestId, videoId),
+    select: getHistory,
+  });
   const { data: users } = useQuery(usersListQuery());
-  const data = getHistory(queryResult);
 
   const getFieldName = (name: string) => {
     return VideoFieldNames[name];
@@ -61,6 +62,10 @@ const VideoHistory = ({ requestId, videoId }: VideoHistoryProps) => {
     }
     return value;
   };
+
+  if (isLoading) {
+    return <ProgressBar mode="indeterminate" />;
+  }
 
   if (data.length) {
     return (

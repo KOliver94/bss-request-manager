@@ -23,6 +23,7 @@ import {
   todoUpdateMutation,
 } from 'api/mutations';
 import { todoRetrieveQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaffMultiple from 'components/AutoCompleteStaff/AutoCompleteStaffMultiple';
 import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
@@ -103,18 +104,18 @@ const TodoDialog = forwardRef<
   const onSubmit = async (data: ITodo) => {
     const invalidateQueries = async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['todos'],
+        queryKey: queryKeys.todos(),
       });
 
       if (requestId) {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'todos'],
+          queryKey: queryKeys.requestTodos(requestId),
         });
       }
 
       if (videoId) {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'videos', videoId, 'todos'],
+          queryKey: queryKeys.videoTodos(requestId, videoId),
         });
       }
     };

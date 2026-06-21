@@ -1,16 +1,12 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
-import {
-  DefinedUseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { ProgressBar } from 'primereact/progressbar';
 import { SelectButton } from 'primereact/selectbutton';
 import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
@@ -19,13 +15,13 @@ import type { IconType } from 'primereact/utils';
 import { Controller, useForm } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
 
-import { adminApi } from 'api/http';
-import { CommentAdminListRetrieve } from 'api/models';
 import {
   requestCommentCreateMutation,
+  requestCommentDeleteMutation,
   requestCommentUpdateMutation,
 } from 'api/mutations';
 import { requestCommentsListQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import {
@@ -34,10 +30,10 @@ import {
   getUserId,
   isAdmin,
 } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import TimeAgo from 'helpers/TimeAgo';
 import { useTheme } from 'hooks/useTheme';
 import { UI_AVATAR_URL } from 'localConstants';
-import { useToast } from 'providers/ToastProvider';
 
 // TODO: Review props
 type CommentCardProps = CommentCardCreateProps & {
@@ -196,41 +192,31 @@ const CommentCard = ({
   showButtons,
   text,
 }: CommentCardProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { showToast } = useToast();
   const queryClient = useQueryClient();
+  const { mutateAsync: deleteComment, isPending } = useMutation(
+    requestCommentDeleteMutation(requestId, commentId),
+  );
 
-  const handleDelete = async (commentId: number) => {
-    setLoading(true);
-
-    await adminApi
-      .adminRequestsCommentsDestroy(commentId, requestId)
+  const handleDelete = async () => {
+    await deleteComment()
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'comments'],
+          queryKey: queryKeys.requestComments(requestId),
         });
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'comments'],
+            queryKey: queryKeys.requestComments(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
-      })
-      .finally(() => {
-        setLoading(false);
+        showErrorToast(error);
       });
   };
 
   const onCommentDelete = () => {
     confirmDialog({
-      accept: () => handleDelete(commentId),
+      accept: () => handleDelete(),
       acceptClassName: 'p-button-danger',
       breakpoints: { '768px': '95vw' },
       defaultFocus: 'reject',
@@ -258,7 +244,7 @@ const CommentCard = ({
             className="p-1"
             icon="pi pi-trash"
             label="Törlés"
-            loading={loading}
+            loading={isPending}
             onClick={() => {
               onCommentDelete();
             }}
@@ -268,7 +254,7 @@ const CommentCard = ({
           />
           <Button
             className="ml-2 p-1"
-            disabled={loading}
+            disabled={isPending}
             icon="pi pi-pencil"
             label="Szerkesztés"
             onClick={() => {
@@ -312,14 +298,14 @@ const CommentCardEdit = ({
     await mutateAsync({ ...data })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'comments'],
+          queryKey: queryKeys.requestComments(requestId),
         });
         setEditing(0);
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'comments'],
+            queryKey: queryKeys.requestComments(requestId),
           });
           setEditing(0);
         } else {
@@ -425,7 +411,7 @@ const CommentCardNew = ({
     await mutateAsync({ ...data })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'comments'],
+          queryKey: queryKeys.requestComments(requestId),
         });
         reset();
       })
@@ -433,7 +419,7 @@ const CommentCardNew = ({
         // This should mean that the request no longer exists
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId],
+            queryKey: queryKeys.request(requestId),
           });
         }
         setError('text', {
@@ -524,16 +510,16 @@ const CommentCardNew = ({
 };
 
 const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
-  const getComments = ({
-    data,
-  }: DefinedUseQueryResult<CommentAdminListRetrieve[]>) => {
-    return data.map((el) => ({ ...el, created: new Date(el.created) }));
-  };
-  const data = getComments(useQuery(requestCommentsListQuery(requestId)));
+  const { data = [], isLoading } = useQuery({
+    ...requestCommentsListQuery(requestId),
+    select: (comments) =>
+      comments.map((el) => ({ ...el, created: new Date(el.created) })),
+  });
   const [editingId, setEditingId] = useState<number>(0);
 
   return (
     <>
+      {isLoading && <ProgressBar className="mb-3" mode="indeterminate" />}
       {data.map((comment) =>
         editingId === comment.id ? (
           <CommentCardEdit

@@ -1,16 +1,17 @@
 import { useState } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { InputTextarea } from 'primereact/inputtextarea';
 
-import { adminApi } from 'api/http';
 import { BanUser } from 'api/models/ban-user';
+import { userBanCreateMutation, userBanDeleteMutation } from 'api/mutations';
+import { queryKeys } from 'api/queryKeys';
 import User from 'components/User/User';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import { useToast } from 'providers/ToastProvider';
 
 type BanSectionProps = {
@@ -19,17 +20,19 @@ type BanSectionProps = {
 };
 
 const BanSection = ({ banData, userId }: BanSectionProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [reason, setReason] = useState<string>(banData?.reason || '');
 
   const { showToast } = useToast();
   const queryClient = useQueryClient();
+  const { mutateAsync: createBan, isPending: isCreating } = useMutation(
+    userBanCreateMutation(userId),
+  );
+  const { mutateAsync: deleteBan, isPending: isDeleting } = useMutation(
+    userBanDeleteMutation(userId),
+  );
 
   const onCreate = async () => {
-    setIsLoading(true);
-
-    await adminApi
-      .adminUsersBanCreate(userId, { reason })
+    await createBan({ reason })
       .then(async () => {
         showToast({
           detail: 'Felhasználó kitiltva',
@@ -39,27 +42,16 @@ const BanSection = ({ banData, userId }: BanSectionProps) => {
         });
 
         await queryClient.invalidateQueries({
-          queryKey: ['users', userId],
+          queryKey: queryKeys.user(userId),
         });
       })
       .catch((error) => {
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
+        showErrorToast(error);
       });
   };
 
   const onDelete = async () => {
-    setIsLoading(true);
-
-    await adminApi
-      .adminUsersBanDestroy(userId)
+    await deleteBan()
       .then(async () => {
         showToast({
           detail: 'Felhasználó kitiltása feloldva',
@@ -69,19 +61,11 @@ const BanSection = ({ banData, userId }: BanSectionProps) => {
         });
 
         await queryClient.invalidateQueries({
-          queryKey: ['users', userId],
+          queryKey: queryKeys.user(userId),
         });
       })
       .catch((error) => {
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
+        showErrorToast(error);
       });
   };
 
@@ -126,7 +110,7 @@ const BanSection = ({ banData, userId }: BanSectionProps) => {
         icon={banData ? 'pi pi-check' : 'pi pi-ban'}
         label={banData ? 'Kitiltás törlése' : 'Kitiltás'}
         severity={banData ? 'success' : 'danger'}
-        loading={isLoading}
+        loading={banData ? isDeleting : isCreating}
         onClick={banData ? () => onDelete() : () => onCreate()}
       />
     </>

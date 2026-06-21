@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
@@ -14,10 +14,10 @@ import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { href, useNavigate, useParams } from 'react-router';
 
-import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
-import { requestUpdateMutation } from 'api/mutations';
+import { requestDeleteMutation, requestUpdateMutation } from 'api/mutations';
 import { requestRetrieveQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import AvatarGroupCrew from 'components/Avatar/AvatarGroupCrew';
 import DetailsRow from 'components/Details/DetailsRow';
 import JumpButton from 'components/Details/Request/JumpButton';
@@ -37,8 +37,8 @@ import {
   dateTimeToLocaleString,
   dateToLocaleString,
 } from 'helpers/DateToLocaleStringCoverters';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import useMobile from 'hooks/useMobile';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
@@ -65,15 +65,6 @@ const VideosDataTable = lazy(
   () => import('components/VideosDataTable/VideosDataTable'),
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = requestRetrieveQuery(Number(params.requestId));
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
-}
-
 interface RequestAdminRetrieveDates // TODO: Rename?
   extends Omit<
     RequestAdminRetrieve,
@@ -89,6 +80,9 @@ const RequestDetailsPage = () => {
   const { requestId } = useParams();
   const { showToast } = useToast();
   const { mutateAsync } = useMutation(requestUpdateMutation(Number(requestId)));
+  const { mutateAsync: deleteRequest } = useMutation(
+    requestDeleteMutation(Number(requestId)),
+  );
   const isMobile = useMobile();
   const navigate = useNavigate();
 
@@ -107,9 +101,8 @@ const RequestDetailsPage = () => {
   const {
     data: queryResult,
     dataUpdatedAt,
-    error,
     refetch,
-  } = useQuery(requestRetrieveQuery(Number(requestId)));
+  } = useSuspenseQuery(requestRetrieveQuery(Number(requestId)));
   const data = getRequest(queryResult);
 
   const [acceptRejectDialogOpen, setAcceptRejectDialogOpen] = useState(false);
@@ -148,25 +141,25 @@ const RequestDetailsPage = () => {
 
   const handleDelete = async () => {
     setLoading(true);
-    await adminApi
-      .adminRequestsDestroy(Number(requestId))
+    await deleteRequest()
       .then(() => {
         void navigate('/requests', { replace: true });
-        void queryClient.invalidateQueries({ queryKey: ['requests'] });
+        void queryClient.invalidateQueries({ queryKey: queryKeys.requests() });
+        void queryClient.invalidateQueries({
+          queryKey: queryKeys.request(requestId),
+        });
       })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           void navigate('/requests', { replace: true });
           void queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId)],
+            queryKey: queryKeys.requests(),
+          });
+          void queryClient.invalidateQueries({
+            queryKey: queryKeys.request(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -192,7 +185,7 @@ const RequestDetailsPage = () => {
     })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId)],
+          queryKey: queryKeys.request(requestId),
         });
         setAcceptRejectDialogOpen(false);
         showToast({
@@ -206,15 +199,10 @@ const RequestDetailsPage = () => {
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId)],
+            queryKey: queryKeys.request(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -239,7 +227,7 @@ const RequestDetailsPage = () => {
     await mutateAsync({ additional_data: additional_data })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId)],
+          queryKey: queryKeys.request(requestId),
         });
         setAdditionalDataDialogOpen(false);
       })
@@ -247,19 +235,14 @@ const RequestDetailsPage = () => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', Number(requestId)],
+              queryKey: queryKeys.request(requestId),
             });
           } else if (error.response?.status === 400) {
             setAdditionalDataDialogError(error.response.data?.additional_data);
             return;
           }
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -339,22 +322,17 @@ const RequestDetailsPage = () => {
     })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId)],
+          queryKey: queryKeys.request(requestId),
         });
         setRecordingIsEditing(false);
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId)],
+            queryKey: queryKeys.request(requestId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -370,24 +348,6 @@ const RequestDetailsPage = () => {
     // Workaround for: https://github.com/primefaces/primereact/issues/4034
     window.scrollTo(0, 0);
   }, []);
-
-  if (error) {
-    if (isAxiosError(error)) {
-      void navigate('/error', {
-        state: {
-          statusCode: error.response?.status,
-          statusText: error.response?.statusText,
-        },
-      });
-    } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
-    }
-  }
 
   return (
     <>

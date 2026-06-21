@@ -1,6 +1,6 @@
 import { Suspense, lazy, useRef, useState } from 'react';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
@@ -12,17 +12,19 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { href, useNavigate, useParams } from 'react-router';
 
-import { adminApi } from 'api/http';
-import { requestVideoUpdateMutation } from 'api/mutations';
+import {
+  requestVideoDeleteMutation,
+  requestVideoUpdateMutation,
+} from 'api/mutations';
 import { requestVideoRetrieveQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import DetailsRow from 'components/Details/DetailsRow';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import LinkButton from 'components/LinkButton/LinkButton';
 import { VideoStatusTag } from 'components/StatusTag/StatusTag';
 import User from 'components/User/User';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
+import { showErrorToast } from 'helpers/showErrorToast';
 import useMobile from 'hooks/useMobile';
-import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
 const AdditionalDataDialog = lazy(
@@ -38,23 +40,13 @@ const VideoStatusHelperSlideover = lazy(
   () => import('components/StatusHelperSlideover/VideoStatusHelperSlideover'),
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = requestVideoRetrieveQuery(
-    Number(params.requestId),
-    Number(params.videoId),
-  );
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
-}
-
 const VideoDetailsPage = () => {
   const { requestId, videoId } = useParams();
-  const { showToast } = useToast();
   const { mutateAsync } = useMutation(
     requestVideoUpdateMutation(Number(requestId), Number(videoId)),
+  );
+  const { mutateAsync: deleteVideo } = useMutation(
+    requestVideoDeleteMutation(Number(requestId), Number(videoId)),
   );
   const isMobile = useMobile();
   const navigate = useNavigate();
@@ -62,9 +54,10 @@ const VideoDetailsPage = () => {
   const {
     data: queryResult,
     dataUpdatedAt,
-    error,
     refetch,
-  } = useQuery(requestVideoRetrieveQuery(Number(requestId), Number(videoId)));
+  } = useSuspenseQuery(
+    requestVideoRetrieveQuery(Number(requestId), Number(videoId)),
+  );
 
   const [additionalDataDialogError, setAdditionalDataDialogError] =
     useState('');
@@ -77,27 +70,27 @@ const VideoDetailsPage = () => {
   const handleDelete = async () => {
     setLoading(true);
 
-    await adminApi
-      .adminRequestsVideosDestroy(Number(videoId), Number(requestId))
+    await deleteVideo()
       .then(() => {
         void navigate(`/requests/${requestId}/videos`, { replace: true });
         void queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId), 'videos'],
+          queryKey: queryKeys.requestVideos(requestId),
+        });
+        void queryClient.invalidateQueries({
+          queryKey: queryKeys.video(requestId, videoId),
         });
       })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           void navigate(`/requests/${requestId}/videos`, { replace: true });
           void queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId), 'videos'],
+            queryKey: queryKeys.requestVideos(requestId),
+          });
+          void queryClient.invalidateQueries({
+            queryKey: queryKeys.video(requestId, videoId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -121,7 +114,7 @@ const VideoDetailsPage = () => {
     await mutateAsync({ additional_data: additional_data })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
+          queryKey: queryKeys.video(requestId, videoId),
         });
         setAdditionalDataDialogOpen(false);
       })
@@ -129,24 +122,14 @@ const VideoDetailsPage = () => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: [
-                'requests',
-                Number(requestId),
-                'videos',
-                Number(videoId),
-              ],
+              queryKey: queryKeys.video(requestId, videoId),
             });
           } else if (error.response?.status === 400) {
             setAdditionalDataDialogError(error.response.data?.additional_data);
             return;
           }
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -168,26 +151,16 @@ const VideoDetailsPage = () => {
     })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
+          queryKey: queryKeys.video(requestId, videoId),
         });
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: [
-              'requests',
-              Number(requestId),
-              'videos',
-              Number(videoId),
-            ],
+            queryKey: queryKeys.video(requestId, videoId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -214,27 +187,17 @@ const VideoDetailsPage = () => {
     })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
+          queryKey: queryKeys.video(requestId, videoId),
         });
         setAiredAddDialogOpen(false);
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: [
-              'requests',
-              Number(requestId),
-              'videos',
-              Number(videoId),
-            ],
+            queryKey: queryKeys.video(requestId, videoId),
           });
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       })
       .finally(() => {
         setLoading(false);
@@ -254,24 +217,6 @@ const VideoDetailsPage = () => {
       style: { width: '50vw' },
     });
   };
-
-  if (error) {
-    if (isAxiosError(error)) {
-      void navigate('/error', {
-        state: {
-          statusCode: error.response?.status,
-          statusText: error.response?.statusText,
-        },
-      });
-    } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
-    }
-  }
 
   return (
     <>

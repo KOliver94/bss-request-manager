@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { classNames } from 'primereact/utils';
-import { href, useParams } from 'react-router';
+import { href, type LoaderFunctionArgs, useParams } from 'react-router';
 
 import { requestRetrieveQuery, requestVideosListQuery } from 'api/queries';
 import LinkButton from 'components/LinkButton/LinkButton';
@@ -8,18 +8,16 @@ import VideosDataTable from 'components/VideosDataTable/VideosDataTable';
 import useMobile from 'hooks/useMobile';
 import { queryClient } from 'router';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = requestVideosListQuery(Number(params.requestId));
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
+export async function loader({ params }: LoaderFunctionArgs) {
+  if (!params.requestId) {
+    throw new Error('No request ID provided');
+  }
+  return queryClient.ensureQueryData(requestVideosListQuery(params.requestId));
 }
 
 const VideosListPage = () => {
   const { requestId } = useParams();
-  const { data } = useQuery(requestRetrieveQuery(Number(requestId)));
+  const { data } = useSuspenseQuery(requestRetrieveQuery(Number(requestId)));
   const isMobile = useMobile();
 
   const videoDataHeader = (

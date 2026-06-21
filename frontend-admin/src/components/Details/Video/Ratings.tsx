@@ -1,9 +1,10 @@
 import { MouseEventHandler, useState } from 'react';
 
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
+import { ProgressBar } from 'primereact/progressbar';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 
@@ -131,19 +132,14 @@ const Ratings = ({
   videoStatus,
   videoTitle,
 }: RatingsProps) => {
-  const getRatings = ({
-    data: ratings,
-  }: UseQueryResult<RatingAdminListRetrieve[]>): RatingAdminListDates[] => {
-    return [...(ratings || [])].map((rating) => {
-      return {
+  const { data = [], isLoading } = useQuery({
+    ...requestVideoRatingsListQuery(requestId, videoId),
+    select: (ratings): RatingAdminListDates[] =>
+      ratings.map((rating) => ({
         ...rating,
         created: new Date(rating.created),
-      };
-    });
-  };
-  const data = getRatings(
-    useQuery(requestVideoRatingsListQuery(requestId, videoId)),
-  );
+      })),
+  });
 
   const [ordering, setOrdering] = useState<
     'highest' | 'lowest' | 'oldest' | 'newest'
@@ -264,20 +260,26 @@ const Ratings = ({
           />
         </div>
         <div className="grid -ml-3 -mr-3 -mt-3">
-          {data.sort(compare).map((rating) => (
-            <Rating
-              authorName={rating.author.full_name}
-              avatarUrl={rating.author.avatar_url}
-              creationDate={rating.created}
-              key={rating.id}
-              onEdit={() => {
-                onRatingEdit(rating.author.full_name, rating.id);
-              }}
-              rating={rating.rating}
-              review={rating.review}
-              showEdit={rating.author.id === getUserId() || isAdmin()}
-            />
-          ))}
+          {isLoading ? (
+            <div className="p-3 w-full">
+              <ProgressBar mode="indeterminate" />
+            </div>
+          ) : (
+            [...data].sort(compare).map((rating) => (
+              <Rating
+                authorName={rating.author.full_name}
+                avatarUrl={rating.author.avatar_url}
+                creationDate={rating.created}
+                key={rating.id}
+                onEdit={() => {
+                  onRatingEdit(rating.author.full_name, rating.id);
+                }}
+                rating={rating.rating}
+                review={rating.review}
+                showEdit={rating.author.id === getUserId() || isAdmin()}
+              />
+            ))
+          )}
         </div>
       </div>
     </>

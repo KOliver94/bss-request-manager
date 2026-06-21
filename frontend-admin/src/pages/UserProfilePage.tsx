@@ -1,15 +1,12 @@
 import { Suspense, lazy, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { ProgressBar } from 'primereact/progressbar';
-import { useNavigate, useParams } from 'react-router';
+import { type LoaderFunctionArgs, useLoaderData } from 'react-router';
 
 import { usersRetrieveQuery } from 'api/queries';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import NavigationButton from 'components/UserProfile/NavigationButton';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
-import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
 const BanSection = lazy(() => import('components/UserProfile/BanSection'));
@@ -20,42 +17,28 @@ const WorkedOnSection = lazy(
   () => import('components/UserProfile/WorkedOnSection'),
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = usersRetrieveQuery(Number(params.userId));
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
+export type loaderData = Awaited<ReturnType<typeof loader>>;
+
+export async function loader({ params }: LoaderFunctionArgs) {
+  if (!params.userId) {
+    throw new Error('No user ID provided');
+  }
+  const user = await queryClient.ensureQueryData(
+    usersRetrieveQuery(params.userId),
   );
+  return {
+    userFullName: `${user.last_name} ${user.first_name}`,
+    userId: params.userId,
+  };
 }
 
 const UserProfilePage = () => {
   const [section, setSection] = useState<string>('profile');
-  const { userId } = useParams();
-  const { showToast } = useToast();
-  const navigate = useNavigate();
+  const { userId } = useLoaderData() as loaderData;
 
-  const { data, dataUpdatedAt, error, refetch } = useQuery(
-    usersRetrieveQuery(Number(userId)),
+  const { data, dataUpdatedAt, refetch } = useSuspenseQuery(
+    usersRetrieveQuery(userId),
   );
-
-  if (error) {
-    if (isAxiosError(error)) {
-      void navigate('/error', {
-        state: {
-          statusCode: error.response?.status,
-          statusText: error.response?.statusText,
-        },
-      });
-    } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
-    }
-  }
 
   return (
     <div className="lg:px-8 md:px-6 px-4 py-5 surface-ground">

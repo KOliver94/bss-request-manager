@@ -11,6 +11,7 @@ import { ToggleButton } from 'primereact/togglebutton';
 import { Controller, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import {
+  type LoaderFunctionArgs,
   useLoaderData,
   useNavigate,
   useParams,
@@ -23,10 +24,11 @@ import {
   requestVideoCreateMutation,
 } from 'api/mutations';
 import { requestVideoRetrieveQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
+import { showErrorToast } from 'helpers/showErrorToast';
 import { useToast } from 'providers/ToastProvider';
 import { queryClient } from 'router';
 
@@ -48,16 +50,10 @@ export interface IVideoCreator {
   title: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
+export async function loader({ params }: LoaderFunctionArgs) {
   if (params.requestId && params.videoId) {
-    const query = requestVideoRetrieveQuery(
-      Number(params.requestId),
-      Number(params.videoId),
-    );
-    return (
-      queryClient.getQueryData(query.queryKey) ??
-      (await queryClient.fetchQuery(query))
+    return queryClient.ensureQueryData(
+      requestVideoRetrieveQuery(params.requestId, params.videoId),
     );
   }
   return null;
@@ -181,16 +177,11 @@ const VideoCreatorEditorPage = () => {
 
         if (videoId) {
           await queryClient.invalidateQueries({
-            queryKey: [
-              'requests',
-              Number(requestId),
-              'videos',
-              Number(videoId),
-            ],
+            queryKey: queryKeys.video(requestId, videoId),
           });
         } else {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId), 'videos'],
+            queryKey: queryKeys.requestVideos(requestId),
           });
         }
 
@@ -200,7 +191,7 @@ const VideoCreatorEditorPage = () => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', Number(requestId), 'videos'],
+              queryKey: queryKeys.requestVideos(requestId),
             });
           } else if (error.response?.status === 400) {
             for (const [key, value] of Object.entries(error.response.data)) {
@@ -210,16 +201,12 @@ const VideoCreatorEditorPage = () => {
             return;
           }
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
+        showErrorToast(error);
       });
   };
 
-  if (error) {
+  useEffect(() => {
+    if (!error) return;
     if (isAxiosError(error)) {
       void navigate('/error', {
         state: {
@@ -228,14 +215,9 @@ const VideoCreatorEditorPage = () => {
         },
       });
     } else {
-      showToast({
-        detail: getErrorMessage(error),
-        life: 3000,
-        severity: 'error',
-        summary: 'Hiba',
-      });
+      showErrorToast(error);
     }
-  }
+  }, [error, navigate]);
 
   return (
     <div className="p-3 sm:p-5 surface-ground">

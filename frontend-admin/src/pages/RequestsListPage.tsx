@@ -15,18 +15,14 @@ import {
 import { queryClient } from 'router';
 
 export async function loader() {
-  const query = requestsListQuery(getLatestSemester());
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
+  return queryClient.ensureQueryData(requestsListQuery(getLatestSemester()));
 }
 
 const RequestsListPage = () => {
   const [selectedSemester, setSelectedSemester] = useState<Semester | null>(
     getLatestSemester(),
   );
-  const { data, dataUpdatedAt, refetch } = useQuery(
+  const { data, dataUpdatedAt, isLoading, refetch } = useQuery(
     requestsListQuery(selectedSemester),
   );
 
@@ -46,7 +42,7 @@ const RequestsListPage = () => {
         />
       </div>
       <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
-        <RequestsDataTable requests={data} />
+        <RequestsDataTable loading={isLoading} requests={data ?? []} />
       </div>
       <LastUpdatedAt
         lastUpdatedAt={new Date(dataUpdatedAt)}

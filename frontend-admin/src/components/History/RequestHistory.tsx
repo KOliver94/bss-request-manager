@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { ProgressBar } from 'primereact/progressbar';
 import { Skeleton } from 'primereact/skeleton';
 
 import { requestHistoryListQuery, usersListQuery } from 'api/queries';
@@ -31,9 +32,11 @@ const RequestFieldNames: Record<string, string> = {
 };
 
 const RequestHistory = ({ requestId }: RequestHistoryProps) => {
-  const { data: queryResult } = useQuery(requestHistoryListQuery(requestId));
+  const { data = [], isLoading } = useQuery({
+    ...requestHistoryListQuery(requestId),
+    select: getHistory,
+  });
   const { data: users } = useQuery(usersListQuery());
-  const data = getHistory(queryResult);
 
   const getFieldName = (name: string) => {
     return RequestFieldNames[name];
@@ -76,6 +79,10 @@ const RequestHistory = ({ requestId }: RequestHistoryProps) => {
     }
     return value;
   };
+
+  if (isLoading) {
+    return <ProgressBar mode="indeterminate" />;
+  }
 
   if (data.length) {
     return (

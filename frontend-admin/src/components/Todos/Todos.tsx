@@ -1,6 +1,6 @@
 import { lazy, MouseEventHandler, useState } from 'react';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
@@ -14,16 +14,16 @@ import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 import { href, Link } from 'react-router';
 
-import { adminApi } from 'api/http';
 import { TodoAdminListRetrieve } from 'api/models/todo-admin-list-retrieve';
+import { todoDeleteMutation } from 'api/mutations';
 import { requestTodosListQuery, requestVideoTodosListQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
-import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
+import { showErrorToast } from 'helpers/showErrorToast';
 import TimeAgo from 'helpers/TimeAgo';
 import useMobile from 'hooks/useMobile';
-import { useToast } from 'providers/ToastProvider';
 
 import TodoDialog from './TodoDialog';
 
@@ -43,36 +43,28 @@ type TodosProps = {
 };
 
 const Todo = ({ data, onEdit }: TodoProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { showToast } = useToast();
   const queryClient = useQueryClient();
+  const { mutateAsync: deleteTodo, isPending } = useMutation(
+    todoDeleteMutation(data.id),
+  );
 
-  const handleDelete = async (todoId: number) => {
-    setLoading(true);
-
+  const handleDelete = async () => {
     const invalidateQueries = async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['todos'],
+        queryKey: queryKeys.todos(),
       });
       await queryClient.invalidateQueries({
-        queryKey: ['requests', data.request.id, 'todos'],
+        queryKey: queryKeys.requestTodos(data.request.id),
       });
 
       if (data.video) {
         await queryClient.invalidateQueries({
-          queryKey: [
-            'requests',
-            data.request.id,
-            'videos',
-            data.video.id,
-            'todos',
-          ],
+          queryKey: queryKeys.videoTodos(data.request.id, data.video.id),
         });
       }
     };
 
-    await adminApi
-      .adminTodosDestroy(todoId)
+    await deleteTodo()
       .then(async () => {
         await invalidateQueries();
       })
@@ -80,21 +72,13 @@ const Todo = ({ data, onEdit }: TodoProps) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await invalidateQueries();
         }
-        showToast({
-          detail: getErrorMessage(error),
-          life: 3000,
-          severity: 'error',
-          summary: 'Hiba',
-        });
-      })
-      .finally(() => {
-        setLoading(false);
+        showErrorToast(error);
       });
   };
 
   const onTodoDelete = () => {
     confirmDialog({
-      accept: () => handleDelete(data.id),
+      accept: () => handleDelete(),
       acceptClassName: 'p-button-danger',
       breakpoints: { '768px': '95vw' },
       defaultFocus: 'reject',
@@ -164,7 +148,7 @@ const Todo = ({ data, onEdit }: TodoProps) => {
               className="p-1"
               icon="pi pi-trash"
               label="Törlés"
-              loading={loading}
+              loading={isPending}
               onClick={() => {
                 onTodoDelete();
               }}
@@ -175,7 +159,7 @@ const Todo = ({ data, onEdit }: TodoProps) => {
           )}
           <Button
             className="ml-2 p-1"
-            disabled={loading}
+            disabled={isPending}
             icon="pi pi-pencil"
             label="Szerkesztés"
             onClick={onEdit}
@@ -214,6 +198,7 @@ const Todos = ({
   });
   const { data: queryResult } = requestId ? query : { data: undefined };
   const data = dataProp || queryResult;
+  const showLoading = loading || (!dataProp && query.isLoading);
   const [todoDialogId, setTodoDialogId] = useState<number>(0);
   const [todoDialogVisible, setTodoDialogVisible] = useState<boolean>(false);
 
@@ -253,7 +238,7 @@ const Todos = ({
           />
         </div>
       )}
-      {loading && <ProgressBar mode="indeterminate" />}
+      {showLoading && <ProgressBar mode="indeterminate" />}
       <div className="grid">
         {(data?.length &&
           data.map((todo) => (
@@ -265,7 +250,7 @@ const Todos = ({
               }}
             />
           ))) ||
-          (!loading && (
+          (!showLoading && (
             <p className="pl-3 pt-2">Nincsenek elvégzendő feladatok.</p>
           ))}
       </div>

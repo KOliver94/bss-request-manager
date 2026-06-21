@@ -24,7 +24,7 @@ const VideosDataTable = forwardRef<
   React.Ref<HTMLTableElement>,
   VideosDataTableProps
 >(({ requestId, ...props }, ref) => {
-  const { data } = useQuery(requestVideosListQuery(requestId));
+  const { data, isLoading } = useQuery(requestVideosListQuery(requestId));
 
   const [ratingDialogIsRated, setRatingDialogIsRated] =
     useState<boolean>(false);
@@ -107,6 +107,7 @@ const VideosDataTable = forwardRef<
       <DataTable
         dataKey="id"
         emptyMessage="Nem található videó."
+        loading={isLoading}
         showGridlines
         sortField="title"
         sortOrder={1}

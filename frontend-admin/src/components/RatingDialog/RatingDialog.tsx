@@ -17,16 +17,17 @@ import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
 import { Controller, useForm } from 'react-hook-form';
 
-import { adminApi } from 'api/http';
 import { RatingAdminListRetrieve } from 'api/models';
 import {
   requestVideoRatingCreateMutation,
+  requestVideoRatingDeleteMutation,
   requestVideoRatingUpdateMutation,
 } from 'api/mutations';
 import {
   requestVideoRatingRetrieveOwnQuery,
   requestVideoRatingRetrieveQuery,
 } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 
 interface RatingDialogProps extends DialogProps {
@@ -76,6 +77,9 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
       ratingId
         ? requestVideoRatingUpdateMutation(requestId, videoId, ratingId)
         : requestVideoRatingCreateMutation(requestId, videoId),
+    );
+    const { mutateAsync: deleteRating } = useMutation(
+      requestVideoRatingDeleteMutation(requestId, videoId, ratingId),
     );
 
     useEffect(() => {
@@ -145,7 +149,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
       await mutateAsync({ ...data })
         .then(async (response) => {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'videos', videoId],
+            queryKey: queryKeys.video(requestId, videoId),
           });
           if (!ratingId) {
             setRatingId(response.data.id);
@@ -156,7 +160,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
           // This should mean that the video no longer exists
           if (isAxiosError(error) && error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', requestId, 'videos', videoId],
+              queryKey: queryKeys.video(requestId, videoId),
             });
           }
           setError('review', {
@@ -172,18 +176,17 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
     const handleDelete = async () => {
       setLoading(true);
 
-      await adminApi
-        .adminRequestsVideosRatingsDestroy(ratingId, requestId, videoId)
+      await deleteRating()
         .then(async () => {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'videos', videoId],
+            queryKey: queryKeys.video(requestId, videoId),
           });
           onHide();
         })
         .catch(async (error) => {
           if (isAxiosError(error) && error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', requestId, 'videos', videoId],
+              queryKey: queryKeys.video(requestId, videoId),
             });
           }
           setError('review', {
