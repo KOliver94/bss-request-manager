@@ -40,7 +40,8 @@
         "node:\\d+\":\\s*\\{\\s*\"version\":\\s*\"(?<currentValue>[^\"]+)\""
       ],
       "depNameTemplate": "node",
-      "datasourceTemplate": "node-version"
+      "datasourceTemplate": "node-version",
+      "extractVersion": "^(?<version>\\d+)"
     },
     {
       "customType": "regex",
@@ -108,9 +109,9 @@
       "enabled": false
     },
     {
-      "matchCategories": ["docker"],
-      "matchPackageNames": ["node"],
-      "matchUpdateTypes": ["patch", "pin"],
+      "description": "Keep Node.js at major version only across .nvmrc, the dev container, and Docker images.",
+      "matchDepNames": ["node"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "pinDigest"],
       "enabled": false
     },
     {
