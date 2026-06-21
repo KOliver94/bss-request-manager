@@ -18,7 +18,15 @@ import { requestRetrieveQuery, requestVideoRetrieveQuery } from 'api/queries';
 import Layout from 'Layout';
 import ErrorPage from 'pages/ErrorPage';
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 5,
+      retry: 1,
+      staleTime: 1000 * 30,
+    },
+  },
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function requestLoader({ params }: any) {

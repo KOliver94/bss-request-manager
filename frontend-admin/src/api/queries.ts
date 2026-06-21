@@ -262,7 +262,7 @@ export const usersRetrieveQuery = (userId: number) => ({
 });
 
 export const usersStaffListQuery = () => ({
-  cacheTime: 1000 * 60 * 60,
+  gcTime: 1000 * 60 * 60,
   initialData: [],
   queryFn: async () => {
     const usersStaff = await adminApi.adminUsersList(
