@@ -18,7 +18,7 @@ export const requestCommentsListQuery = (requestId: string | number) => ({
 export const requestCrewListQuery = (requestId: string | number) => ({
   queryFn: async () => {
     const crew = await adminApi.adminRequestsCrewList(Number(requestId));
-    return crew.data;
+    return crew.data.sort((a, b) => a.id - b.id);
   },
   queryKey: ['requests', Number(requestId), 'crew'],
   refetchInterval: 1000 * 30,

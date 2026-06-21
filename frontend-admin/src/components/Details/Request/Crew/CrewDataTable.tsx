@@ -127,7 +127,7 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
       return data;
     }
 
-    data.sort(
+    return [...data].sort(
       (a: CrewMemberAdminListRetrieve, b: CrewMemberAdminListRetrieve) => {
         const _a = a.member.full_name;
         const _b = b.member.full_name;
@@ -136,8 +136,6 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
           : _a.localeCompare(_b, 'hu');
       },
     );
-
-    return data;
   };
 
   const onRowDelete = (
