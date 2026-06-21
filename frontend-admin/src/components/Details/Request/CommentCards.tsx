@@ -1,11 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
-import {
-  DefinedUseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
@@ -524,12 +519,10 @@ const CommentCardNew = ({
 };
 
 const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
-  const getComments = ({
-    data,
-  }: DefinedUseQueryResult<CommentAdminListRetrieve[]>) => {
-    return data.map((el) => ({ ...el, created: new Date(el.created) }));
+  const getComments = (comments: CommentAdminListRetrieve[] = []) => {
+    return comments.map((el) => ({ ...el, created: new Date(el.created) }));
   };
-  const data = getComments(useQuery(requestCommentsListQuery(requestId)));
+  const data = getComments(useQuery(requestCommentsListQuery(requestId)).data);
   const [editingId, setEditingId] = useState<number>(0);
 
   return (

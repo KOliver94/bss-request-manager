@@ -5,7 +5,6 @@ import { adminApi } from './http';
 import { dummyRequest, dummyTodo, dummyUser, dummyVideo } from './placeholders';
 
 export const requestCommentsListQuery = (requestId: number) => ({
-  initialData: [],
   queryFn: async () => {
     const comments = await adminApi.adminRequestsCommentsList(
       requestId,
@@ -18,7 +17,6 @@ export const requestCommentsListQuery = (requestId: number) => ({
 });
 
 export const requestCrewListQuery = (requestId: number) => ({
-  initialData: [],
   queryFn: async () => {
     const crew = await adminApi.adminRequestsCrewList(requestId);
     return crew.data;
@@ -28,7 +26,6 @@ export const requestCrewListQuery = (requestId: number) => ({
 });
 
 export const requestHistoryListQuery = (requestId: number) => ({
-  initialData: [],
   queryFn: async () => {
     const history = await adminApi.adminRequestsHistoryList(requestId);
     return history.data;
@@ -47,7 +44,6 @@ export const requestRetrieveQuery = (requestId: number) => ({
 });
 
 export const requestTodosListQuery = (requestId: number) => ({
-  initialData: [],
   queryFn: async () => {
     const todos = await adminApi.adminRequestsTodosList(requestId);
     return todos.data;
@@ -60,7 +56,6 @@ export const requestVideoHistoryListQuery = (
   requestId: number,
   videoId: number,
 ) => ({
-  initialData: [],
   queryFn: async () => {
     const history = await adminApi.adminRequestsVideosHistoryList(
       videoId,
@@ -72,7 +67,6 @@ export const requestVideoHistoryListQuery = (
 });
 
 export const requestVideosListQuery = (requestId: number) => ({
-  initialData: [],
   queryFn: async () => {
     const videos = await adminApi.adminRequestsVideosList(requestId);
     return videos.data;
@@ -115,7 +109,6 @@ export const requestVideoRatingsListQuery = (
   requestId: number,
   videoId: number,
 ) => ({
-  initialData: [],
   queryFn: async () => {
     const ratings = await adminApi.adminRequestsVideosRatingsList(
       requestId,
@@ -147,7 +140,6 @@ export const requestVideoTodosListQuery = (
   requestId: number,
   videoId: number,
 ) => ({
-  initialData: [],
   queryFn: async () => {
     const todos = await adminApi.adminRequestsVideosTodosList(
       requestId,
@@ -162,7 +154,6 @@ export const requestVideoTodosListQuery = (
 export const requestsListQuery = (semester: Semester | null) => {
   if (semester) {
     return {
-      initialData: [],
       queryFn: async () => {
         const requests = await adminApi.adminRequestsList(
           undefined,
@@ -188,7 +179,6 @@ export const requestsListQuery = (semester: Semester | null) => {
   }
 
   return {
-    initialData: [],
     queryFn: async () => {
       const requests = await adminApi.adminRequestsList(
         undefined,
@@ -209,7 +199,6 @@ export const todosListQuery = (
   ordering: string,
   status: Array<number>,
 ) => ({
-  initialData: [],
   queryFn: async () => {
     const todos = await adminApi.adminTodosList(
       assignees,
@@ -236,7 +225,6 @@ export const todoRetrieveQuery = (todoId: number) => ({
 });
 
 export const usersListQuery = () => ({
-  initialData: [],
   queryFn: async () => {
     const users = await adminApi.adminUsersList(
       undefined,
@@ -263,7 +251,6 @@ export const usersRetrieveQuery = (userId: number) => ({
 
 export const usersStaffListQuery = () => ({
   gcTime: 1000 * 60 * 60,
-  initialData: [],
   queryFn: async () => {
     const usersStaff = await adminApi.adminUsersList(
       undefined,

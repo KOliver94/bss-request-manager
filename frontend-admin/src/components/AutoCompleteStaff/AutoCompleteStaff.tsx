@@ -14,7 +14,7 @@ const AutoCompleteStaff = forwardRef<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   AutoCompleteProps<any, boolean>
 >((props, ref) => {
-  const { data } = useQuery(usersStaffListQuery());
+  const { data = [] } = useQuery(usersStaffListQuery());
   const [filteredStaff, setFilteredStaff] = useState<UserAdminList[]>([]);
 
   const itemTemplate = (item: UserAdminList) => {

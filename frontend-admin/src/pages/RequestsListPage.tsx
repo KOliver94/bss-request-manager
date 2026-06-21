@@ -46,7 +46,7 @@ const RequestsListPage = () => {
         />
       </div>
       <div className="border-round p-3 shadow-2 sm:p-4 surface-card">
-        <RequestsDataTable requests={data} />
+        <RequestsDataTable requests={data ?? []} />
       </div>
       <LastUpdatedAt
         lastUpdatedAt={new Date(dataUpdatedAt)}

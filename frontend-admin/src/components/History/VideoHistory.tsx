@@ -24,7 +24,7 @@ const VideoHistory = ({ requestId, videoId }: VideoHistoryProps) => {
     requestVideoHistoryListQuery(requestId, videoId),
   );
   const { data: users } = useQuery(usersListQuery());
-  const data = getHistory(queryResult);
+  const data = getHistory(queryResult ?? []);
 
   const getFieldName = (name: string) => {
     return VideoFieldNames[name];
