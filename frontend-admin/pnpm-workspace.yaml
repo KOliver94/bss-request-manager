@@ -1,0 +1,4 @@
+allowBuilds:
+  '@openapitools/openapi-generator-cli': true
+  primelocale: false
+  unrs-resolver: true
