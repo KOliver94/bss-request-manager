@@ -169,8 +169,8 @@ export const requestsListQuery = (semester: Semester | null) => {
       return requests.data.results || [];
     },
     queryKey: semester
-      ? ['requests', `${afterDate}/${beforeDate}`]
-      : ['requests'],
+      ? queryKeys.requestsBySemester(afterDate, beforeDate)
+      : queryKeys.requests(),
     refetchInterval: 1000 * 30,
   };
 };
