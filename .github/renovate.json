@@ -18,6 +18,7 @@
     "schedule:weekends",
     "workarounds:all"
   ],
+  "minimumReleaseAge": "3 days",
   "gitIgnoredAuthors": [
     "41898282+github-actions[bot]@users.noreply.github.com",
     "66853113+pre-commit-ci[bot]@users.noreply.github.com"
