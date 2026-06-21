@@ -18,7 +18,9 @@
     "schedule:weekends",
     "workarounds:all"
   ],
+  "configMigration": true,
   "minimumReleaseAge": "3 days",
+  "osvVulnerabilityAlerts": true,
   "gitIgnoredAuthors": [
     "41898282+github-actions[bot]@users.noreply.github.com",
     "66853113+pre-commit-ci[bot]@users.noreply.github.com"
@@ -90,7 +92,7 @@
       "matchManagers": ["npm"],
       "matchFileNames": ["frontend/**"],
       "matchUpdateTypes": ["minor", "patch"],
-      "postUpdateOptions": ["npmDedupe"]
+      "postUpdateOptions": ["pnpmDedupe"]
     },
     {
       "description": "Group all minor and patch updates together for npm in /frontend-admin.",
@@ -100,9 +102,10 @@
       "matchManagers": ["npm"],
       "matchFileNames": ["frontend-admin/**"],
       "matchUpdateTypes": ["minor", "patch"],
-      "postUpdateOptions": ["npmDedupe"]
+      "postUpdateOptions": ["pnpmDedupe"]
     },
     {
+      "description": "Disable patch and pin updates for actions/python-versions; only meaningful minor/major bumps are wanted.",
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["actions/python-versions"],
       "matchUpdateTypes": ["patch", "pin"],
@@ -127,5 +130,9 @@
       "matchManagers": ["custom.regex", "dockerfile", "nvm"]
     }
   ],
-  "rebaseWhen": "conflicted"
+  "rebaseWhen": "conflicted",
+  "vulnerabilityAlerts": {
+    "schedule": ["at any time"],
+    "minimumReleaseAge": null
+  }
 }
