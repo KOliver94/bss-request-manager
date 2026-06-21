@@ -2,7 +2,7 @@ import { Suspense, lazy, useState } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { ProgressBar } from 'primereact/progressbar';
-import { useParams } from 'react-router';
+import { type LoaderFunctionArgs, useLoaderData } from 'react-router';
 
 import { usersRetrieveQuery } from 'api/queries';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
@@ -17,21 +17,27 @@ const WorkedOnSection = lazy(
   () => import('components/UserProfile/WorkedOnSection'),
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = usersRetrieveQuery(Number(params.userId));
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
+export type loaderData = Awaited<ReturnType<typeof loader>>;
+
+export async function loader({ params }: LoaderFunctionArgs) {
+  if (!params.userId) {
+    throw new Error('No user ID provided');
+  }
+  const user = await queryClient.ensureQueryData(
+    usersRetrieveQuery(params.userId),
   );
+  return {
+    userFullName: `${user.last_name} ${user.first_name}`,
+    userId: params.userId,
+  };
 }
 
 const UserProfilePage = () => {
   const [section, setSection] = useState<string>('profile');
-  const { userId } = useParams();
+  const { userId } = useLoaderData() as loaderData;
 
   const { data, dataUpdatedAt, refetch } = useSuspenseQuery(
-    usersRetrieveQuery(Number(userId)),
+    usersRetrieveQuery(userId),
   );
 
   return (

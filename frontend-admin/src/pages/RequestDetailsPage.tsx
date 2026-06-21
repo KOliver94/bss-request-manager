@@ -65,15 +65,6 @@ const VideosDataTable = lazy(
   () => import('components/VideosDataTable/VideosDataTable'),
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = requestRetrieveQuery(Number(params.requestId));
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
-}
-
 interface RequestAdminRetrieveDates // TODO: Rename?
   extends Omit<
     RequestAdminRetrieve,

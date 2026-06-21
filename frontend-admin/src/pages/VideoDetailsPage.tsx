@@ -38,18 +38,6 @@ const VideoStatusHelperSlideover = lazy(
   () => import('components/StatusHelperSlideover/VideoStatusHelperSlideover'),
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
-  const query = requestVideoRetrieveQuery(
-    Number(params.requestId),
-    Number(params.videoId),
-  );
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
-}
-
 const VideoDetailsPage = () => {
   const { requestId, videoId } = useParams();
   const { showToast } = useToast();

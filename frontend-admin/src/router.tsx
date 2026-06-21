@@ -5,18 +5,15 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  type LoaderFunctionArgs,
   Outlet,
   Route,
 } from 'react-router';
 
-import {
-  RequestAdminRetrieve,
-  UserAdminRetrieveUpdate,
-  VideoAdminRetrieve,
-} from 'api/models';
 import { requestRetrieveQuery, requestVideoRetrieveQuery } from 'api/queries';
 import Layout from 'Layout';
 import ErrorPage from 'pages/ErrorPage';
+import type { loaderData as userProfileLoaderData } from 'pages/UserProfilePage';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,26 +25,35 @@ export const queryClient = new QueryClient({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function requestLoader({ params }: any) {
-  const query = requestRetrieveQuery(Number(params.requestId));
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
+export async function requestLoader({ params }: LoaderFunctionArgs) {
+  if (!params.requestId) {
+    throw new Error('No request ID provided');
+  }
+  const request = await queryClient.ensureQueryData(
+    requestRetrieveQuery(params.requestId),
   );
+  return { requestId: params.requestId, requestTitle: request.title };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function requestVideoLoader({ params }: any) {
-  const query = requestVideoRetrieveQuery(
-    Number(params.requestId),
-    Number(params.videoId),
+export async function videoLoader({ params }: LoaderFunctionArgs) {
+  if (!params.requestId) {
+    throw new Error('No request ID provided');
+  }
+  if (!params.videoId) {
+    throw new Error('No video ID provided');
+  }
+  const video = await queryClient.ensureQueryData(
+    requestVideoRetrieveQuery(params.requestId, params.videoId),
   );
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
+  return {
+    requestId: params.requestId,
+    videoId: params.videoId,
+    videoTitle: video.title,
+  };
 }
+
+export type requestLoaderData = Awaited<ReturnType<typeof requestLoader>>;
+export type videoLoaderData = Awaited<ReturnType<typeof videoLoader>>;
 
 const sentryCreateBrowserRouter = wrapCreateBrowserRouter(createBrowserRouter);
 
@@ -85,7 +91,7 @@ const router = sentryCreateBrowserRouter(
           path=":requestId"
           loader={requestLoader}
           handle={{
-            crumb: (data: RequestAdminRetrieve) => data.title,
+            crumb: ({ requestTitle }: requestLoaderData) => requestTitle,
           }}
         >
           <Route index lazy={() => import('pages/RequestDetailsPage')} />
@@ -112,9 +118,9 @@ const router = sentryCreateBrowserRouter(
             />
             <Route
               path=":videoId"
-              loader={requestVideoLoader}
+              loader={videoLoader}
               handle={{
-                crumb: (data: VideoAdminRetrieve) => data.title,
+                crumb: ({ videoTitle }: videoLoaderData) => videoTitle,
               }}
             >
               <Route index lazy={() => import('pages/VideoDetailsPage')} />
@@ -154,8 +160,7 @@ const router = sentryCreateBrowserRouter(
           path=":userId"
           lazy={() => import('pages/UserProfilePage')}
           handle={{
-            crumb: (data: UserAdminRetrieveUpdate) =>
-              `${data.last_name} ${data.first_name}`,
+            crumb: ({ userFullName }: userProfileLoaderData) => userFullName,
           }}
         />
       </Route>

@@ -16,6 +16,7 @@ import type { IconType } from 'primereact/utils';
 import { Controller, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import {
+  type LoaderFunctionArgs,
   useLoaderData,
   useNavigate,
   useParams,
@@ -60,14 +61,9 @@ export interface IRequestCreator {
   type: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
+export async function loader({ params }: LoaderFunctionArgs) {
   if (params.requestId) {
-    const query = requestRetrieveQuery(Number(params.requestId));
-    return (
-      queryClient.getQueryData(query.queryKey) ??
-      (await queryClient.fetchQuery(query))
-    );
+    return queryClient.ensureQueryData(requestRetrieveQuery(params.requestId));
   }
   return null;
 }

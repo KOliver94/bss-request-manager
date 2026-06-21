@@ -19,11 +19,7 @@ import Todos from 'components/Todos/Todos';
 import { queryClient } from 'router';
 
 export async function loader() {
-  const query = todosListQuery([], '-created', [1]);
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
+  return queryClient.ensureQueryData(todosListQuery([], '-created', [1]));
 }
 
 const TodosPage = () => {

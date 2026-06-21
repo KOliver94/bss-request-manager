@@ -15,11 +15,7 @@ import {
 import { queryClient } from 'router';
 
 export async function loader() {
-  const query = requestsListQuery(getLatestSemester());
-  return (
-    queryClient.getQueryData(query.queryKey) ??
-    (await queryClient.fetchQuery(query))
-  );
+  return queryClient.ensureQueryData(requestsListQuery(getLatestSemester()));
 }
 
 const RequestsListPage = () => {

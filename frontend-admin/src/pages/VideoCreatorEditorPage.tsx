@@ -11,6 +11,7 @@ import { ToggleButton } from 'primereact/togglebutton';
 import { Controller, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import {
+  type LoaderFunctionArgs,
   useLoaderData,
   useNavigate,
   useParams,
@@ -48,16 +49,10 @@ export interface IVideoCreator {
   title: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function loader({ params }: any) {
+export async function loader({ params }: LoaderFunctionArgs) {
   if (params.requestId && params.videoId) {
-    const query = requestVideoRetrieveQuery(
-      Number(params.requestId),
-      Number(params.videoId),
-    );
-    return (
-      queryClient.getQueryData(query.queryKey) ??
-      (await queryClient.fetchQuery(query))
+    return queryClient.ensureQueryData(
+      requestVideoRetrieveQuery(params.requestId, params.videoId),
     );
   }
   return null;
