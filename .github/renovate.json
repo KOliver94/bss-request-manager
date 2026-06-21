@@ -42,8 +42,7 @@
         "node:\\d+\":\\s*\\{\\s*\"version\":\\s*\"(?<currentValue>[^\"]+)\""
       ],
       "depNameTemplate": "node",
-      "datasourceTemplate": "node-version",
-      "extractVersion": "^(?<version>\\d+)"
+      "datasourceTemplate": "node-version"
     },
     {
       "customType": "regex",
@@ -85,7 +84,7 @@
       "matchUpdateTypes": ["minor", "patch"]
     },
     {
-      "description": "Group all minor and patch updates together for npm in /frontend.",
+      "description": "Group all minor and patch updates together for pnpm in /frontend.",
       "addLabels": ["javascript"],
       "groupName": "all non-major frontend dependencies",
       "groupSlug": "all-minor-patch-frontend",
@@ -95,7 +94,7 @@
       "postUpdateOptions": ["pnpmDedupe"]
     },
     {
-      "description": "Group all minor and patch updates together for npm in /frontend-admin.",
+      "description": "Group all minor and patch updates together for pnpm in /frontend-admin.",
       "addLabels": ["javascript"],
       "groupName": "all non-major frontend-admin dependencies",
       "groupSlug": "all-minor-patch-frontend-admin",
