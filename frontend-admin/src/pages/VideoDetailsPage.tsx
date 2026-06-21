@@ -76,12 +76,18 @@ const VideoDetailsPage = () => {
         void queryClient.invalidateQueries({
           queryKey: queryKeys.requestVideos(requestId),
         });
+        void queryClient.invalidateQueries({
+          queryKey: queryKeys.video(requestId, videoId),
+        });
       })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           void navigate(`/requests/${requestId}/videos`, { replace: true });
           void queryClient.invalidateQueries({
             queryKey: queryKeys.requestVideos(requestId),
+          });
+          void queryClient.invalidateQueries({
+            queryKey: queryKeys.video(requestId, videoId),
           });
         }
         showErrorToast(error);

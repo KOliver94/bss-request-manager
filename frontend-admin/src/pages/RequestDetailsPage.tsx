@@ -145,10 +145,16 @@ const RequestDetailsPage = () => {
       .then(() => {
         void navigate('/requests', { replace: true });
         void queryClient.invalidateQueries({ queryKey: queryKeys.requests() });
+        void queryClient.invalidateQueries({
+          queryKey: queryKeys.request(requestId),
+        });
       })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           void navigate('/requests', { replace: true });
+          void queryClient.invalidateQueries({
+            queryKey: queryKeys.requests(),
+          });
           void queryClient.invalidateQueries({
             queryKey: queryKeys.request(requestId),
           });

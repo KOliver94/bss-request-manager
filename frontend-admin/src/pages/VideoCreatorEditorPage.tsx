@@ -205,7 +205,8 @@ const VideoCreatorEditorPage = () => {
       });
   };
 
-  if (error) {
+  useEffect(() => {
+    if (!error) return;
     if (isAxiosError(error)) {
       void navigate('/error', {
         state: {
@@ -216,7 +217,7 @@ const VideoCreatorEditorPage = () => {
     } else {
       showErrorToast(error);
     }
-  }
+  }, [error, navigate]);
 
   return (
     <div className="p-3 sm:p-5 surface-ground">

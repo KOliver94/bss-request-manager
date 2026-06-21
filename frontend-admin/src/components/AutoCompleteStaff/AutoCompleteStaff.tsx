@@ -44,7 +44,7 @@ const AutoCompleteStaff = forwardRef<
     }
 
     let _filteredStaff;
-    const _staff = moveOwnUserToTop(data);
+    const _staff = moveOwnUserToTop([...data]);
     if (!event.query.trim().length) {
       _filteredStaff = [..._staff];
     } else {
