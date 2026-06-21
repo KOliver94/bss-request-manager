@@ -16,6 +16,7 @@ import type { SubmitHandler } from 'react-hook-form';
 
 import { AvatarProviderEnum, UserAdminRetrieveUpdate } from 'api';
 import { userUpdateMutation } from 'api/mutations';
+import { queryKeys } from 'api/queryKeys';
 import FormField from 'components/FormField/FormField';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import { getUserId, isAdmin } from 'helpers/LocalStorageHelper';
@@ -102,7 +103,7 @@ const ProfileSection = ({ userData }: ProfileSectionProps) => {
         });
 
         await queryClient.invalidateQueries({
-          queryKey: ['users', response.data.id],
+          queryKey: queryKeys.user(response.data.id),
         });
 
         setAvatarDialogVisible(false);
@@ -130,14 +131,14 @@ const ProfileSection = ({ userData }: ProfileSectionProps) => {
         });
 
         await queryClient.invalidateQueries({
-          queryKey: ['users', response.data.id],
+          queryKey: queryKeys.user(response.data.id),
         });
       })
       .catch(async (error) => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['users', userData.id],
+              queryKey: queryKeys.user(userData.id),
             });
           } else if (error.response?.status === 400) {
             for (const [key, value] of Object.entries(error.response.data)) {

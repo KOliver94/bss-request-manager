@@ -15,6 +15,7 @@ import { href, useNavigate, useParams } from 'react-router';
 import { adminApi } from 'api/http';
 import { requestVideoUpdateMutation } from 'api/mutations';
 import { requestVideoRetrieveQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import DetailsRow from 'components/Details/DetailsRow';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
 import LinkButton from 'components/LinkButton/LinkButton';
@@ -71,14 +72,14 @@ const VideoDetailsPage = () => {
       .then(() => {
         void navigate(`/requests/${requestId}/videos`, { replace: true });
         void queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId), 'videos'],
+          queryKey: queryKeys.requestVideos(requestId),
         });
       })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           void navigate(`/requests/${requestId}/videos`, { replace: true });
           void queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId), 'videos'],
+            queryKey: queryKeys.requestVideos(requestId),
           });
         }
         showToast({
@@ -110,7 +111,7 @@ const VideoDetailsPage = () => {
     await mutateAsync({ additional_data: additional_data })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
+          queryKey: queryKeys.video(requestId, videoId),
         });
         setAdditionalDataDialogOpen(false);
       })
@@ -118,12 +119,7 @@ const VideoDetailsPage = () => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: [
-                'requests',
-                Number(requestId),
-                'videos',
-                Number(videoId),
-              ],
+              queryKey: queryKeys.video(requestId, videoId),
             });
           } else if (error.response?.status === 400) {
             setAdditionalDataDialogError(error.response.data?.additional_data);
@@ -157,18 +153,13 @@ const VideoDetailsPage = () => {
     })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
+          queryKey: queryKeys.video(requestId, videoId),
         });
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: [
-              'requests',
-              Number(requestId),
-              'videos',
-              Number(videoId),
-            ],
+            queryKey: queryKeys.video(requestId, videoId),
           });
         }
         showToast({
@@ -203,19 +194,14 @@ const VideoDetailsPage = () => {
     })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId), 'videos', Number(videoId)],
+          queryKey: queryKeys.video(requestId, videoId),
         });
         setAiredAddDialogOpen(false);
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: [
-              'requests',
-              Number(requestId),
-              'videos',
-              Number(videoId),
-            ],
+            queryKey: queryKeys.video(requestId, videoId),
           });
         }
         showToast({

@@ -26,6 +26,7 @@ import {
 import { RequestAdminRetrieve, UserNestedDetail } from 'api/models';
 import { requestCreateMutation, requestUpdateMutation } from 'api/mutations';
 import { requestRetrieveQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
@@ -251,10 +252,12 @@ const RequestCreatorEditorPage = () => {
 
         if (requestId) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId)],
+            queryKey: queryKeys.request(requestId),
           });
         } else {
-          await queryClient.invalidateQueries({ queryKey: ['requests'] });
+          await queryClient.invalidateQueries({
+            queryKey: queryKeys.requests(),
+          });
         }
 
         if (watchCreateMore) {
@@ -267,7 +270,7 @@ const RequestCreatorEditorPage = () => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', Number(requestId)],
+              queryKey: queryKeys.request(requestId),
             });
           } else if (error.response?.status === 400) {
             for (const [key, value] of Object.entries(error.response.data)) {

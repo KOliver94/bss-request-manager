@@ -21,6 +21,7 @@ import {
   requestCommentUpdateMutation,
 } from 'api/mutations';
 import { requestCommentsListQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 import {
@@ -202,13 +203,13 @@ const CommentCard = ({
       .adminRequestsCommentsDestroy(commentId, requestId)
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'comments'],
+          queryKey: queryKeys.requestComments(requestId),
         });
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'comments'],
+            queryKey: queryKeys.requestComments(requestId),
           });
         }
         showToast({
@@ -307,14 +308,14 @@ const CommentCardEdit = ({
     await mutateAsync({ ...data })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'comments'],
+          queryKey: queryKeys.requestComments(requestId),
         });
         setEditing(0);
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'comments'],
+            queryKey: queryKeys.requestComments(requestId),
           });
           setEditing(0);
         } else {
@@ -420,7 +421,7 @@ const CommentCardNew = ({
     await mutateAsync({ ...data })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'comments'],
+          queryKey: queryKeys.requestComments(requestId),
         });
         reset();
       })
@@ -428,7 +429,7 @@ const CommentCardNew = ({
         // This should mean that the request no longer exists
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId],
+            queryKey: queryKeys.request(requestId),
           });
         }
         setError('text', {

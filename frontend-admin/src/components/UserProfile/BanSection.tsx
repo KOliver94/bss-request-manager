@@ -7,6 +7,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 
 import { adminApi } from 'api/http';
 import { BanUser } from 'api/models/ban-user';
+import { queryKeys } from 'api/queryKeys';
 import User from 'components/User/User';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
@@ -39,7 +40,7 @@ const BanSection = ({ banData, userId }: BanSectionProps) => {
         });
 
         await queryClient.invalidateQueries({
-          queryKey: ['users', userId],
+          queryKey: queryKeys.user(userId),
         });
       })
       .catch((error) => {
@@ -69,7 +70,7 @@ const BanSection = ({ banData, userId }: BanSectionProps) => {
         });
 
         await queryClient.invalidateQueries({
-          queryKey: ['users', userId],
+          queryKey: queryKeys.user(userId),
         });
       })
       .catch((error) => {

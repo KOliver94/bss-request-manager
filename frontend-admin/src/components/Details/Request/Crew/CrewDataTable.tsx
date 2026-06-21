@@ -15,6 +15,7 @@ import { classNames } from 'primereact/utils';
 import { adminApi } from 'api/http';
 import { CrewMemberAdminListRetrieve } from 'api/models';
 import { requestCrewListQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import User from 'components/User/User';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
@@ -66,13 +67,13 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
       .adminRequestsCrewDestroy(id, requestId)
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'crew'],
+          queryKey: queryKeys.requestCrew(requestId),
         });
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'crew'],
+            queryKey: queryKeys.requestCrew(requestId),
           });
         }
         showToast({
@@ -168,13 +169,13 @@ const CrewDataTable = ({ requestId }: CrewDataTableProps) => {
       })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', requestId, 'crew'],
+          queryKey: queryKeys.requestCrew(requestId),
         });
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'crew'],
+            queryKey: queryKeys.requestCrew(requestId),
           });
         }
         showToast({

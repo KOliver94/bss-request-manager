@@ -17,6 +17,7 @@ import { href, Link } from 'react-router';
 import { adminApi } from 'api/http';
 import { TodoAdminListRetrieve } from 'api/models/todo-admin-list-retrieve';
 import { requestTodosListQuery, requestVideoTodosListQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import { TodoStatusTag } from 'components/StatusTag/StatusTag';
 import { dateTimeToLocaleString } from 'helpers/DateToLocaleStringCoverters';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
@@ -52,21 +53,15 @@ const Todo = ({ data, onEdit }: TodoProps) => {
 
     const invalidateQueries = async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['todos'],
+        queryKey: queryKeys.todos(),
       });
       await queryClient.invalidateQueries({
-        queryKey: ['requests', data.request.id, 'todos'],
+        queryKey: queryKeys.requestTodos(data.request.id),
       });
 
       if (data.video) {
         await queryClient.invalidateQueries({
-          queryKey: [
-            'requests',
-            data.request.id,
-            'videos',
-            data.video.id,
-            'todos',
-          ],
+          queryKey: queryKeys.videoTodos(data.request.id, data.video.id),
         });
       }
     };

@@ -18,6 +18,7 @@ import { adminApi } from 'api/http';
 import { RequestAdminRetrieve } from 'api/models';
 import { requestUpdateMutation } from 'api/mutations';
 import { requestRetrieveQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import AvatarGroupCrew from 'components/Avatar/AvatarGroupCrew';
 import DetailsRow from 'components/Details/DetailsRow';
 import JumpButton from 'components/Details/Request/JumpButton';
@@ -142,13 +143,13 @@ const RequestDetailsPage = () => {
       .adminRequestsDestroy(Number(requestId))
       .then(() => {
         void navigate('/requests', { replace: true });
-        void queryClient.invalidateQueries({ queryKey: ['requests'] });
+        void queryClient.invalidateQueries({ queryKey: queryKeys.requests() });
       })
       .catch((error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           void navigate('/requests', { replace: true });
           void queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId)],
+            queryKey: queryKeys.request(requestId),
           });
         }
         showToast({
@@ -182,7 +183,7 @@ const RequestDetailsPage = () => {
     })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId)],
+          queryKey: queryKeys.request(requestId),
         });
         setAcceptRejectDialogOpen(false);
         showToast({
@@ -196,7 +197,7 @@ const RequestDetailsPage = () => {
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId)],
+            queryKey: queryKeys.request(requestId),
           });
         }
         showToast({
@@ -229,7 +230,7 @@ const RequestDetailsPage = () => {
     await mutateAsync({ additional_data: additional_data })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId)],
+          queryKey: queryKeys.request(requestId),
         });
         setAdditionalDataDialogOpen(false);
       })
@@ -237,7 +238,7 @@ const RequestDetailsPage = () => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', Number(requestId)],
+              queryKey: queryKeys.request(requestId),
             });
           } else if (error.response?.status === 400) {
             setAdditionalDataDialogError(error.response.data?.additional_data);
@@ -329,14 +330,14 @@ const RequestDetailsPage = () => {
     })
       .then(async () => {
         await queryClient.invalidateQueries({
-          queryKey: ['requests', Number(requestId)],
+          queryKey: queryKeys.request(requestId),
         });
         setRecordingIsEditing(false);
       })
       .catch(async (error) => {
         if (isAxiosError(error) && error.response?.status === 404) {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId)],
+            queryKey: queryKeys.request(requestId),
           });
         }
         showToast({

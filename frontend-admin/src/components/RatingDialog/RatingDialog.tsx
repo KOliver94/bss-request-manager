@@ -27,6 +27,7 @@ import {
   requestVideoRatingRetrieveOwnQuery,
   requestVideoRatingRetrieveQuery,
 } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import { getErrorMessage } from 'helpers/ErrorMessageProvider';
 
 interface RatingDialogProps extends DialogProps {
@@ -145,7 +146,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
       await mutateAsync({ ...data })
         .then(async (response) => {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'videos', videoId],
+            queryKey: queryKeys.video(requestId, videoId),
           });
           if (!ratingId) {
             setRatingId(response.data.id);
@@ -156,7 +157,7 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
           // This should mean that the video no longer exists
           if (isAxiosError(error) && error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', requestId, 'videos', videoId],
+              queryKey: queryKeys.video(requestId, videoId),
             });
           }
           setError('review', {
@@ -176,14 +177,14 @@ const RatingDialog = forwardRef<React.Ref<HTMLDivElement>, RatingDialogProps>(
         .adminRequestsVideosRatingsDestroy(ratingId, requestId, videoId)
         .then(async () => {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', requestId, 'videos', videoId],
+            queryKey: queryKeys.video(requestId, videoId),
           });
           onHide();
         })
         .catch(async (error) => {
           if (isAxiosError(error) && error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', requestId, 'videos', videoId],
+              queryKey: queryKeys.video(requestId, videoId),
             });
           }
           setError('review', {

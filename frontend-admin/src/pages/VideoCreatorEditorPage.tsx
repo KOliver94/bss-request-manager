@@ -24,6 +24,7 @@ import {
   requestVideoCreateMutation,
 } from 'api/mutations';
 import { requestVideoRetrieveQuery } from 'api/queries';
+import { queryKeys } from 'api/queryKeys';
 import AutoCompleteStaff from 'components/AutoCompleteStaff/AutoCompleteStaff';
 import FormField from 'components/FormField/FormField';
 import LastUpdatedAt from 'components/LastUpdatedAt/LastUpdatedAt';
@@ -176,16 +177,11 @@ const VideoCreatorEditorPage = () => {
 
         if (videoId) {
           await queryClient.invalidateQueries({
-            queryKey: [
-              'requests',
-              Number(requestId),
-              'videos',
-              Number(videoId),
-            ],
+            queryKey: queryKeys.video(requestId, videoId),
           });
         } else {
           await queryClient.invalidateQueries({
-            queryKey: ['requests', Number(requestId), 'videos'],
+            queryKey: queryKeys.requestVideos(requestId),
           });
         }
 
@@ -195,7 +191,7 @@ const VideoCreatorEditorPage = () => {
         if (isAxiosError(error)) {
           if (error.response?.status === 404) {
             await queryClient.invalidateQueries({
-              queryKey: ['requests', Number(requestId), 'videos'],
+              queryKey: queryKeys.requestVideos(requestId),
             });
           } else if (error.response?.status === 400) {
             for (const [key, value] of Object.entries(error.response.data)) {
