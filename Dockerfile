@@ -9,6 +9,10 @@
 # Pull base image
 FROM node:24-alpine AS frontend-build
 
+# pnpm store location (shared with the BuildKit cache mount below)
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 # Build args
 ARG API_URL
 ARG AUTHSCH_CLIENT_ID
@@ -35,7 +39,7 @@ COPY ./frontend/package.json ./frontend/pnpm-lock.yaml ./frontend/pnpm-workspace
 
 # Enable pnpm via Corepack and install all required node packages
 RUN corepack enable
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Copy everything over to Docker environment
 COPY ./frontend /app/frontend
@@ -49,6 +53,10 @@ RUN pnpm run build
 
 # Pull base image
 FROM node:24-alpine AS frontend-admin-build
+
+# pnpm store location (shared with the BuildKit cache mount below)
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
 # Build args
 ARG API_URL
@@ -66,7 +74,7 @@ COPY ./frontend-admin/package.json ./frontend-admin/pnpm-lock.yaml ./frontend-ad
 
 # Enable pnpm via Corepack and install all required node packages
 RUN corepack enable
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Copy everything over to Docker environment
 COPY ./frontend-admin /app/frontend-admin
