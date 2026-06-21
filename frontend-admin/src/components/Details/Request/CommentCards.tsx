@@ -6,6 +6,7 @@ import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { ProgressBar } from 'primereact/progressbar';
 import { SelectButton } from 'primereact/selectbutton';
 import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
@@ -518,16 +519,16 @@ const CommentCardNew = ({
 };
 
 const CommentCards = ({ requestId, requesterId }: CommentCardsProps) => {
-  const data =
-    useQuery({
-      ...requestCommentsListQuery(requestId),
-      select: (comments) =>
-        comments.map((el) => ({ ...el, created: new Date(el.created) })),
-    }).data ?? [];
+  const { data = [], isLoading } = useQuery({
+    ...requestCommentsListQuery(requestId),
+    select: (comments) =>
+      comments.map((el) => ({ ...el, created: new Date(el.created) })),
+  });
   const [editingId, setEditingId] = useState<number>(0);
 
   return (
     <>
+      {isLoading && <ProgressBar className="mb-3" mode="indeterminate" />}
       {data.map((comment) =>
         editingId === comment.id ? (
           <CommentCardEdit
