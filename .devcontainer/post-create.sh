@@ -8,11 +8,11 @@ poetry config virtualenvs.in-project true
 poetry install --with=dev,test,debug
 cd ..
 
-echo "==> Frontend (npm)"
-cd frontend && npm ci && cd ..
+echo "==> Frontend (pnpm)"
+cd frontend && pnpm install --frozen-lockfile && cd ..
 
-echo "==> Admin dashboard (npm)"
-cd frontend-admin && npm ci && cd ..
+echo "==> Admin dashboard (pnpm)"
+cd frontend-admin && pnpm install --frozen-lockfile && cd ..
 
 echo "==> pre-commit"
 pipx install pre-commit >/dev/null 2>&1 || pip install --user pre-commit

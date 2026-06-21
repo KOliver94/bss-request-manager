@@ -30,17 +30,18 @@ ENV VITE_TURNSTILE_SITE_KEY=$TURNSTILE_SITE_KEY
 # Set work directory
 WORKDIR /app/frontend
 
-# Copy package.json and package-lock.json to Docker environment
-COPY ./frontend/package*.json /app/frontend/
+# Copy manifest, pnpm lockfile and workspace config to Docker environment
+COPY ./frontend/package.json ./frontend/pnpm-lock.yaml ./frontend/pnpm-workspace.yaml /app/frontend/
 
-# Install all required node packages
-RUN npm install --silent
+# Enable pnpm via Corepack and install all required node packages
+RUN corepack enable
+RUN pnpm install --frozen-lockfile
 
 # Copy everything over to Docker environment
 COPY ./frontend /app/frontend
 
 # Build the frontend
-RUN npm run build
+RUN pnpm run build
 
 ##################################################
 
@@ -60,17 +61,18 @@ ENV VITE_SENTRY_URL=$SENTRY_URL_ADMIN
 # Set work directory
 WORKDIR /app/frontend-admin
 
-# Copy package.json and package-lock.json to Docker environment
-COPY ./frontend-admin/package*.json /app/frontend-admin/
+# Copy manifest, pnpm lockfile and workspace config to Docker environment
+COPY ./frontend-admin/package.json ./frontend-admin/pnpm-lock.yaml ./frontend-admin/pnpm-workspace.yaml /app/frontend-admin/
 
-# Install all required node packages
-RUN npm install --silent
+# Enable pnpm via Corepack and install all required node packages
+RUN corepack enable
+RUN pnpm install --frozen-lockfile
 
 # Copy everything over to Docker environment
 COPY ./frontend-admin /app/frontend-admin
 
 # Build the frontend
-RUN npm run build
+RUN pnpm run build
 
 ##################################################
 

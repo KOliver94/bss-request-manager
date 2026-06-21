@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@11.8.0",
   "dependencies": {
     "@sentry/react": "10.59.0",
     "@tanstack/react-query": "5.101.0",
