@@ -21,6 +21,7 @@ DEPENDENCIES_TO_IGNORE = [
     "vite",
     "vite-plugin-pwa",
     "vite-tsconfig-paths",
+    "workbox-window",
 ]
 REPOS_TO_CHECK = ["eslint"]
 

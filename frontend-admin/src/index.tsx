@@ -1,6 +1,10 @@
 import { StrictMode, useEffect } from 'react';
 
-import * as Sentry from '@sentry/react';
+import {
+  init as sentryInit,
+  reactRouterBrowserTracingIntegration,
+  showReportDialog,
+} from '@sentry/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as locales from 'primelocale/hu.json';
@@ -28,11 +32,11 @@ import 'primeflex/primeflex.css';
 import 'index.css';
 
 if (import.meta.env.PROD) {
-  Sentry.init({
+  sentryInit({
     beforeSend(event) {
       // Check if it is an exception, and if so, show the report dialog
       if (event.exception) {
-        Sentry.showReportDialog({
+        showReportDialog({
           eventId: event.event_id,
           user: {
             name: getName(),
@@ -43,7 +47,7 @@ if (import.meta.env.PROD) {
     },
     dsn: import.meta.env.VITE_SENTRY_URL_ADMIN,
     integrations: [
-      Sentry.reactRouterBrowserTracingIntegration({
+      reactRouterBrowserTracingIntegration({
         createRoutesFromChildren,
         matchRoutes,
         useEffect,

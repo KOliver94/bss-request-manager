@@ -7,14 +7,15 @@ Yup · Progressive Web App · Sentry
 
 ## Setup
 
-Requires Node.js (version pinned in [`.nvmrc`](.nvmrc); run `nvm use` to switch)
-and a running [backend](../backend/README.md).
+Requires Node.js (version pinned in [`.nvmrc`](.nvmrc); run `nvm use` to switch),
+pnpm (run `corepack enable` to activate the version pinned in `package.json`) and a
+running [backend](../backend/README.md).
 
 ```bash
 cd frontend
-npm install
+pnpm install
 cp .env.sample .env     # then edit it (see below)
-npm start
+pnpm start
 ```
 
 The dev server runs at <https://localhost:5173>. It uses a self-signed
@@ -30,17 +31,17 @@ important one is `VITE_API_URL`, which points at the backend (default
 
 ## Scripts
 
-| Script                        | Description                                    |
-| ----------------------------- | ---------------------------------------------- |
-| `npm start`                   | Start the Vite dev server (HTTPS, port 5173).  |
-| `npm run start:network`       | Same, exposed on the local network (`--host`). |
-| `npm run build`               | Production build into `build/`.                |
-| `npm run preview`             | Serve the production build locally.            |
-| `npm run lint`                | Run ESLint.                                    |
-| `npm run lint:fix`            | Run ESLint with autofix.                       |
-| `npm run format`              | Format sources with Prettier.                  |
-| `npm run analyze`             | Inspect the bundle with source-map-explorer.   |
-| `npm run generate-pwa-assets` | Regenerate PWA icons from `public/logo.svg`.   |
+| Script                     | Description                                    |
+| -------------------------- | ---------------------------------------------- |
+| `pnpm start`               | Start the Vite dev server (HTTPS, port 5173).  |
+| `pnpm start:network`       | Same, exposed on the local network (`--host`). |
+| `pnpm build`               | Production build into `build/`.                |
+| `pnpm preview`             | Serve the production build locally.            |
+| `pnpm lint`                | Run ESLint.                                    |
+| `pnpm lint:fix`            | Run ESLint with autofix.                       |
+| `pnpm format`              | Format sources with Prettier.                  |
+| `pnpm analyze`             | Inspect the bundle with source-map-explorer.   |
+| `pnpm generate-pwa-assets` | Regenerate PWA icons from `public/logo.svg`.   |
 
 ## Code style
 

@@ -1,7 +1,11 @@
 import { StrictMode, useEffect } from 'react';
 
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
-import * as Sentry from '@sentry/react';
+import {
+  init as sentryInit,
+  reactRouterBrowserTracingIntegration,
+  showReportDialog,
+} from '@sentry/react';
 import { SnackbarProvider } from 'notistack';
 import { createRoot } from 'react-dom/client';
 import {
@@ -20,11 +24,11 @@ import 'assets/scss/custom-icon-font.scss';
 import 'assets/scss/material-kit-react.scss';
 
 if (import.meta.env.PROD) {
-  Sentry.init({
+  sentryInit({
     beforeSend(event) {
       // Check if it is an exception, and if so, show the report dialog
       if (event.exception) {
-        Sentry.showReportDialog({
+        showReportDialog({
           eventId: event.event_id,
         });
       }
@@ -32,7 +36,7 @@ if (import.meta.env.PROD) {
     },
     dsn: import.meta.env.VITE_SENTRY_URL,
     integrations: [
-      Sentry.reactRouterBrowserTracingIntegration({
+      reactRouterBrowserTracingIntegration({
         createRoutesFromChildren,
         matchRoutes,
         useEffect,

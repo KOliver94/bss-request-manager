@@ -1,0 +1,4 @@
+allowBuilds:
+  '@openapitools/openapi-generator-cli': true
+  primelocale@https://codeload.github.com/primefaces/primelocale/tar.gz/1facb95b6d204de019cfb564eb910cc44597d54e: true
+  unrs-resolver: true

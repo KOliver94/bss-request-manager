@@ -72,6 +72,8 @@ module.exports = tseslint.config(
         '^(api|assets|components|helpers|hooks|pages|providers|themes|types|router|localConstants|Layout)(/|$)',
       'import/resolver': {
         node: {
+          extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.json'],
+          moduleDirectory: ['node_modules', 'src'],
           paths: [path.resolve(currentDir, 'src')],
         },
         typescript: {
