@@ -111,7 +111,7 @@ repos:
           ]
         additional_dependencies:
           - '@eslint/js@9.39.4'
-          - '@typescript-eslint/parser@8.61.1'
+          - '@typescript-eslint/parser@8.62.0'
           - eslint-config-prettier@10.1.8
           - eslint-import-resolver-typescript@4.4.5
           - eslint-plugin-import@2.32.0
@@ -120,9 +120,9 @@ repos:
           - eslint-plugin-react-hooks@7.1.1
           - eslint-plugin-react@7.37.5
           - eslint@9.39.4
-          - globals@17.6.0
+          - globals@17.7.0
           - prettier@3.8.4
-          - typescript-eslint@8.61.1
+          - typescript-eslint@8.62.0
       - id: eslint
         name: 'Lint TypeScript code (Admin dashboard)'
         files: ^frontend-admin/
