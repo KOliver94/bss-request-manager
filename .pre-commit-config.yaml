@@ -38,14 +38,12 @@ repos:
     hooks:
       - id: pyupgrade
         name: 'Upgrade Python syntax to newer versions'
-        # Bump --pyXXX-plus when the minimum Python version rises
         args: [--py314-plus]
   - repo: https://github.com/adamchainz/django-upgrade
     rev: 1.30.0
     hooks:
       - id: django-upgrade
         name: 'Upgrade Django syntax to newer versions'
-        # Bump --target-version when the minimum Django version rises
         args: [--target-version, '6.0']
   - repo: https://github.com/hadialqattan/pycln
     rev: v2.6.0
@@ -145,7 +143,7 @@ repos:
           ]
         additional_dependencies:
           - '@eslint/js@9.39.4'
-          - '@tanstack/eslint-plugin-query@5.101.0'
+          - '@tanstack/eslint-plugin-query@5.101.1'
           - eslint-config-prettier@10.1.8
           - eslint-import-resolver-typescript@4.4.5
           - eslint-plugin-import@2.32.0
@@ -153,7 +151,7 @@ repos:
           - eslint-plugin-react-hooks@7.1.1
           - eslint-plugin-react@7.37.5
           - eslint@9.39.4
-          - globals@17.6.0
+          - globals@17.7.0
           - prettier@3.8.4
-          - typescript-eslint@8.61.1
+          - typescript-eslint@8.62.0
           - typescript@6.0.3
