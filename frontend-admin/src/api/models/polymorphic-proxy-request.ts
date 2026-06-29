@@ -24,5 +24,4 @@ import { RequestCreateRequest } from './request-create-request';
  * @export
  */
 export type PolymorphicProxyRequest =
-  | RequestAnonymousCreateRequest
-  | RequestCreateRequest;
+  RequestAnonymousCreateRequest | RequestCreateRequest;
