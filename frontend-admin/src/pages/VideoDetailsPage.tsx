@@ -99,7 +99,7 @@ const VideoDetailsPage = () => {
 
   const onAdditionalDataSave = async (data: { additional_data: string }) => {
     setLoading(true);
-    let additional_data = {};
+    let additional_data: object;
 
     try {
       additional_data = JSON.parse(data.additional_data);

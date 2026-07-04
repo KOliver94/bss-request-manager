@@ -171,7 +171,7 @@ const Ratings = ({
 
   const numberOfRating = (rating: number) => {
     return data.reduce(
-      (total, next) => (next.rating == rating ? ++total : total),
+      (total, next) => (next.rating == rating ? total + 1 : total),
       0,
     );
   };
