@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useSnackbar } from 'notistack';
-// eslint-disable-next-line import/no-unresolved
+// eslint-disable-next-line import-x/no-unresolved
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
 export default function ServiceWorkerUpdate() {

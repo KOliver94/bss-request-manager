@@ -1,7 +1,7 @@
 const eslint = require('@eslint/js');
 const pluginQuery = require('@tanstack/eslint-plugin-query');
 const eslintConfigPrettier = require('eslint-config-prettier');
-const pluginImport = require('eslint-plugin-import');
+const pluginImport = require('eslint-plugin-import-x');
 const pluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
 const pluginReact = require('eslint-plugin-react');
 const pluginReactHooks = require('eslint-plugin-react-hooks');
@@ -44,7 +44,7 @@ module.exports = tseslint.config(
         { allowInterfaces: 'with-single-extends' },
       ],
       '@typescript-eslint/no-floating-promises': 'error',
-      'import/order': [
+      'import-x/order': [
         'error',
         {
           alphabetize: {
@@ -68,9 +68,9 @@ module.exports = tseslint.config(
       'sort-keys': ['error', 'asc', { caseSensitive: true, natural: true }],
     },
     settings: {
-      'import/internal-regex':
+      'import-x/internal-regex':
         '^(api|assets|components|helpers|hooks|pages|providers|themes|types|router|localConstants|Layout)(/|$)',
-      'import/resolver': {
+      'import-x/resolver': {
         node: {
           extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.json'],
           moduleDirectory: ['node_modules', 'src'],

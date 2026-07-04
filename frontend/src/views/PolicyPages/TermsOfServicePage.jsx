@@ -161,5 +161,5 @@ function TermsOfServicePage() {
   );
 }
 
-// eslint-disable-next-line import/prefer-default-export
+// eslint-disable-next-line import-x/prefer-default-export
 export { TermsOfServicePage as Component };
