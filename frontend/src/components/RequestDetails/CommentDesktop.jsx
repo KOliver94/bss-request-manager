@@ -147,7 +147,13 @@ export default function CommentDesktop({
             </Avatar>
           </Grid>
           <Grid size="grow">
-            <Stack direction="row" alignItems="center" spacing={1}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                alignItems: 'center',
+              }}
+            >
               <h4 className={stylesModule.commentAuthor}>{userName}</h4>
               {comment.author.id === requesterId && (
                 <Badge color="info">Felkérő</Badge>

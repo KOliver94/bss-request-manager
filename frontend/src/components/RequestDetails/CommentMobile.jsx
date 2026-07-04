@@ -70,7 +70,13 @@ export default function CommentMobile({
       {isEditing || isNew ? (
         <form onSubmit={hooksSubmit(onSubmit)}>
           <Stack direction="column" spacing={2}>
-            <Stack direction="row" alignItems="center" spacing={1.5}>
+            <Stack
+              direction="row"
+              spacing={1.5}
+              sx={{
+                alignItems: 'center',
+              }}
+            >
               <Avatar
                 src={avatarUrl}
                 sx={{
@@ -99,9 +105,11 @@ export default function CommentMobile({
             />
             <Stack
               direction="row"
-              justifyContent="flex-end"
-              alignItems="center"
               className={stylesModule.buttonStack}
+              sx={{
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}
             >
               {!isNew && (
                 <Tooltip title="Elvetés" arrow>
@@ -127,7 +135,13 @@ export default function CommentMobile({
         </form>
       ) : (
         <Stack direction="column" spacing={2}>
-          <Stack direction="row" alignItems="center" spacing={1.5}>
+          <Stack
+            direction="row"
+            spacing={1.5}
+            sx={{
+              alignItems: 'center',
+            }}
+          >
             <Avatar
               src={avatarUrl}
               sx={{
@@ -138,7 +152,12 @@ export default function CommentMobile({
             </Avatar>
             <Stack direction="column">
               <h4 className={stylesModule.commentAuthor}>{userName}</h4>
-              <Stack direction="row" alignItems="center">
+              <Stack
+                direction="row"
+                sx={{
+                  alignItems: 'center',
+                }}
+              >
                 {comment.author.id === requesterId && (
                   <Badge color="info">Felkérő</Badge>
                 )}
@@ -162,9 +181,11 @@ export default function CommentMobile({
           {isSelf(comment.author.id) && (
             <Stack
               direction="row"
-              justifyContent="flex-end"
-              alignItems="center"
               className={stylesModule.buttonStack}
+              sx={{
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}
             >
               <Tooltip title="Törlés" arrow>
                 <span>

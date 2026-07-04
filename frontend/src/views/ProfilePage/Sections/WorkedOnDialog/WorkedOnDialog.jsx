@@ -114,8 +114,19 @@ export default function WorkedOnDialog({
       fullScreen={fullScreen}
     >
       <DialogTitle id="ratings-dialog">
-        <Box display="flex" alignItems="center">
-          <Box flexGrow={1}>Készített anyagok</Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              flexGrow: 1,
+            }}
+          >
+            Készített anyagok
+          </Box>
           <Box>
             <IconButton onClick={closeDialog}>
               <CloseIcon />
