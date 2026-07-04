@@ -451,8 +451,10 @@ export default function ProfilePage() {
                                           <Typography
                                             variant="h6"
                                             component="h2"
-                                            display="block"
                                             className={stylesModule.textAvatar}
+                                            sx={{
+                                              display: 'block',
+                                            }}
                                           >
                                             {avatarProviders(avatar[0])}{' '}
                                             {avatar[1] ===
