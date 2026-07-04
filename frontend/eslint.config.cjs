@@ -3,7 +3,7 @@ const eslintPlugin = require('@eslint/js');
 const reactPlugin = require('eslint-plugin-react');
 const reactHooksPlugin = require('eslint-plugin-react-hooks');
 const jsxA11yPlugin = require('eslint-plugin-jsx-a11y');
-const importPlugin = require('eslint-plugin-import');
+const importPlugin = require('eslint-plugin-import-x');
 const prettierPluginRecommended = require('eslint-plugin-prettier/recommended');
 const prettierConfig = require('eslint-config-prettier');
 const tseslint = require('typescript-eslint');
@@ -42,14 +42,17 @@ module.exports = tseslint.config(
     },
     rules: {
       '@typescript-eslint/no-deprecated': 'error',
-      'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-      'import/no-unresolved': [
+      'import-x/no-extraneous-dependencies': [
+        'error',
+        { devDependencies: true },
+      ],
+      'import-x/no-unresolved': [
         'error',
         {
           ignore: ['router/dom'],
         },
       ],
-      'import/order': [
+      'import-x/order': [
         'error',
         {
           alphabetize: {
@@ -79,9 +82,9 @@ module.exports = tseslint.config(
       'react-hooks/set-state-in-effect': 'off', // TODO: Check later
     },
     settings: {
-      'import/internal-regex':
+      'import-x/internal-regex':
         '^(api|assets|components|helpers|views|router|Layout)(/|$)',
-      'import/resolver': {
+      'import-x/resolver': {
         node: {
           extensions: ['.js', '.jsx', '.mjs'],
           paths: [path.resolve(currentDir, 'src')],
@@ -95,7 +98,7 @@ module.exports = tseslint.config(
           ],
         },
       },
-      'import/parsers': {
+      'import-x/parsers': {
         '@typescript-eslint/parser': ['.js', '.jsx', '.mjs'],
       },
     },
