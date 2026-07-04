@@ -105,7 +105,7 @@ repos:
             --config,
             ./frontend/eslint.config.cjs,
             --rule,
-            'import/no-unresolved:
+            'import-x/no-unresolved:
             off',
             --fix,
           ]
@@ -137,7 +137,7 @@ repos:
             --config,
             ./frontend-admin/eslint.config.cjs,
             --rule,
-            'import/no-unresolved:
+            'import-x/no-unresolved:
             off',
             --fix,
           ]
