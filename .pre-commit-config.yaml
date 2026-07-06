@@ -14,7 +14,7 @@ repos:
         name: 'Replace mixed line endings'
         args: [--fix=lf]
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.37.3
+    rev: 0.37.4
     hooks:
       - id: check-github-workflows
       - id: check-renovate
@@ -82,7 +82,7 @@ repos:
         name: 'Check Python security issues'
         args: [-c, ./backend/pyproject.toml]
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: v3.9.1
+    rev: v3.9.4
     hooks:
       - id: prettier
         name: 'Format JavaScript and TypeScript code'
