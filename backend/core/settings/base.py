@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
+    "django_celery_beat",
     "django_celery_results",
     "cacheops",
     "rest_framework",
@@ -162,6 +163,10 @@ CELERY_TIMEZONE = config("TIME_ZONE", default="Europe/Budapest")
 
 # Scheduled tasks
 # https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html
+
+# Store schedule + last-run in the database, not a local shelve file, so beat
+# works on a read-only root filesystem and survives pod restarts.
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CELERY_BEAT_SCHEDULE = {
     "update_request_status": {
