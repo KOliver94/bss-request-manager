@@ -187,4 +187,4 @@ HEALTHCHECK --start-period=20s --interval=30s --retries=5 --timeout=30s \
     CMD python manage.py health_check readyz --no-http
 
 # Start the server
-CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=5", "--threads=2", "core.wsgi"]
+CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=5", "--threads=2", "--timeout=60", "--graceful-timeout=30", "core.wsgi"]

@@ -161,6 +161,10 @@ CELERY_IMPORTS = [
 ]
 CELERY_TIMEZONE = config("TIME_ZONE", default="Europe/Budapest")
 
+# One task per worker process. task_acks_late stays off: most tasks send emails
+# or external notifications and aren't idempotent, so redelivery would double-send.
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+
 # Scheduled tasks
 # https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html
 

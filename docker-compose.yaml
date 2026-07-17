@@ -2,7 +2,7 @@ services:
   server:
     image: ghcr.io/koliver94/bss-request-manager:main
     restart: unless-stopped
-    command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 core.wsgi
+    command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 --timeout=60 --graceful-timeout=30 core.wsgi
     volumes:
       - credentials:/app/backend/credentials
     ports:
