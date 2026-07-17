@@ -183,7 +183,7 @@ ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Set health check
 HEALTHCHECK --start-period=20s --interval=30s --retries=5 --timeout=30s \
-    CMD python manage.py health_check health_check --no-http
+    CMD python manage.py health_check readyz --no-http
 
 # Start the server
 CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=5", "--threads=2", "core.wsgi"]

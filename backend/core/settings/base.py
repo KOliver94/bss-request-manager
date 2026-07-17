@@ -354,12 +354,23 @@ except AttributeError:
     raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
 
 HEALTH_CHECK_URL_TOKEN = config("HEALTH_CHECK_URL_TOKEN", default=None)
+
+# Full deep check for /health (dashboards, manual): everything.
 HEALTH_CHECK_ENABLED_CHECKS = [
     "health_check.Cache",
     "health_check.Database",
     "health_check.Mail",
     "health_check.Storage",
     "health_check.contrib.celery.Ping",
+    (
+        "health_check.contrib.redis.Redis",
+        {"client_factory": lambda: RedisClient.from_url(REDIS_URL)},
+    ),
+]
+
+# Traffic-gating subset for /readyz: only DB and redis.
+HEALTH_CHECK_READINESS_CHECKS = [
+    "health_check.Database",
     (
         "health_check.contrib.redis.Redis",
         {"client_factory": lambda: RedisClient.from_url(REDIS_URL)},
