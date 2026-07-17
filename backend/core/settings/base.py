@@ -291,9 +291,6 @@ LOGGING = {
         "default": {
             "format": "%(asctime)s [%(module)s | %(levelname)s] %(message)s",
         },
-        "error": {
-            "format": "%(asctime)s [%(module)s | %(levelname)s] %(message)s @ %(pathname)s : %(lineno)d : %(funcName)s",
-        },
     },
     "handlers": {
         "console": {
@@ -301,32 +298,16 @@ LOGGING = {
             "level": "WARNING",
             "formatter": "default",
         },
-        "info": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": BACKEND_DIR / "logs" / "info.log",
-            "maxBytes": 1024 * 1024 * 25,
-            "backupCount": 3,
-            "level": "INFO",
-            "formatter": "default",
-        },
-        "error": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": BACKEND_DIR / "logs" / "error.log",
-            "maxBytes": 1024 * 1024 * 50,
-            "backupCount": 5,
-            "level": "ERROR",
-            "formatter": "error",
-        },
     },
     "loggers": {
-        "": {"handlers": ["console", "info", "error"], "level": "INFO"},
+        "": {"handlers": ["console"], "level": "INFO"},
         "django.request": {
-            "handlers": ["error"],
+            "handlers": ["console"],
             "level": "ERROR",
             "propagate": False,
         },
         "api.access": {
-            "handlers": ["console", "info"],
+            "handlers": ["console"],
             "level": "WARNING",
             "propagate": False,
         },

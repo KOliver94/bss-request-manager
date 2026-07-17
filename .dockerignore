@@ -30,8 +30,6 @@ backend/.coverage
 backend/.pytest_cache
 backend/health_check_storage_test
 backend/htmlcov
-backend/logs/**/*.log
-backend/logs/**/*.err
 backend/staticfiles
 backend/schema.yaml
 

@@ -5,7 +5,6 @@ services:
     command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 core.wsgi
     volumes:
       - credentials:/app/backend/credentials
-      - logs:/app/backend/logs
     ports:
       - '127.0.0.1:8000:8000'
     extra_hosts:
@@ -79,6 +78,5 @@ services:
 
 volumes:
   credentials:
-  logs:
   postgres:
   redis:
