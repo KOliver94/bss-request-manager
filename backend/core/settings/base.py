@@ -334,7 +334,7 @@ if DJANGO_ADMIN:
 # Health check
 # https://django-health-check.readthedocs.io/en/stable/
 try:
-    REDIS_URL = match("^redis://[a-zA-Z0-9]+:[0-9]+", CACHEOPS_REDIS).group(0)
+    REDIS_URL = match(r"^rediss?://[\w.-]+:\d+", CACHEOPS_REDIS).group(0)
 except AttributeError:
     raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
 
