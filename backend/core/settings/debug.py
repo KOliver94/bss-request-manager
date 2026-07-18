@@ -44,18 +44,6 @@ SIMPLE_JWT.update(
     }
 )
 
-# Enable debug log file
-LOGGING["handlers"].update(
-    {
-        "debug": {
-            "class": "logging.FileHandler",
-            "filename": BACKEND_DIR / "logs" / "debug.log",
-            "level": "DEBUG",
-            "formatter": "default",
-        }
-    }
-)
-LOGGING["loggers"][""] = {
-    "handlers": ["console", "info", "error", "debug"],
-    "level": "DEBUG",
-}
+# Show debug output on the console
+LOGGING["handlers"]["console"]["level"] = "DEBUG"
+LOGGING["loggers"][""] = {"handlers": ["console"], "level": "DEBUG"}

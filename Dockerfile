@@ -141,8 +141,8 @@ RUN --mount=type=cache,target=/root/.cache \
 # Use backend-base image as base
 FROM backend-base AS request-manager-production
 
-# Create the app user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Fixed non-root UID/GID; k8s runAsNonRoot cannot verify a named user.
+RUN addgroup -S -g 1000 appgroup && adduser -S -u 1000 -G appgroup appuser
 
 # Copy built runtime dependencies from builder container
 COPY --from=backend-builder $PYSETUP_PATH $PYSETUP_PATH
@@ -166,7 +166,8 @@ RUN mkdir build/root && mv build-temp/index.html build/index.html && mv build-te
 RUN chown -R appuser:appgroup /app
 
 # Change to the app user
-USER appuser
+LABEL image.uid="1000" image.gid="1000"
+USER 1000
 
 # Collect static files
 WORKDIR /app/backend
@@ -183,7 +184,7 @@ ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Set health check
 HEALTHCHECK --start-period=20s --interval=30s --retries=5 --timeout=30s \
-    CMD python manage.py health_check health_check --no-http
+    CMD python manage.py health_check readyz --no-http
 
 # Start the server
-CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=5", "--threads=2", "core.wsgi"]
+CMD ["gunicorn", "--bind=0.0.0.0:8000", "--workers=5", "--threads=2", "--timeout=60", "--graceful-timeout=30", "core.wsgi"]

@@ -16,11 +16,18 @@ Including another URLconf
 
 from django.conf import settings
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 from health_check.views import HealthCheckView
 
 urlpatterns = [
+    path("livez", lambda request: HttpResponse("ok"), name="livez"),
+    path(
+        "readyz",
+        HealthCheckView.as_view(checks=settings.HEALTH_CHECK_READINESS_CHECKS),
+        name="readyz",
+    ),
     path("api/", include(("api.urls", "api"), namespace="api")),
     re_path(
         r"admin", TemplateView.as_view(template_name="admin.html")

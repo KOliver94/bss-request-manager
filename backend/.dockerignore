@@ -12,10 +12,6 @@ htmlcov
 **/*.pyc
 **/__pycache__
 
-# logs
-logs/**/*.log
-logs/**/*.err
-
 # static
 staticfiles
 

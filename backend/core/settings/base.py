@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
+    "django_celery_beat",
     "django_celery_results",
     "cacheops",
     "rest_framework",
@@ -160,8 +161,16 @@ CELERY_IMPORTS = [
 ]
 CELERY_TIMEZONE = config("TIME_ZONE", default="Europe/Budapest")
 
+# One task per worker process. task_acks_late stays off: most tasks send emails
+# or external notifications and aren't idempotent, so redelivery would double-send.
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+
 # Scheduled tasks
 # https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html
+
+# Store schedule + last-run in the database, not a local shelve file, so beat
+# works on a read-only root filesystem and survives pod restarts.
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CELERY_BEAT_SCHEDULE = {
     "update_request_status": {
@@ -286,9 +295,6 @@ LOGGING = {
         "default": {
             "format": "%(asctime)s [%(module)s | %(levelname)s] %(message)s",
         },
-        "error": {
-            "format": "%(asctime)s [%(module)s | %(levelname)s] %(message)s @ %(pathname)s : %(lineno)d : %(funcName)s",
-        },
     },
     "handlers": {
         "console": {
@@ -296,32 +302,16 @@ LOGGING = {
             "level": "WARNING",
             "formatter": "default",
         },
-        "info": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": BACKEND_DIR / "logs" / "info.log",
-            "maxBytes": 1024 * 1024 * 25,
-            "backupCount": 3,
-            "level": "INFO",
-            "formatter": "default",
-        },
-        "error": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": BACKEND_DIR / "logs" / "error.log",
-            "maxBytes": 1024 * 1024 * 50,
-            "backupCount": 5,
-            "level": "ERROR",
-            "formatter": "error",
-        },
     },
     "loggers": {
-        "": {"handlers": ["console", "info", "error"], "level": "INFO"},
+        "": {"handlers": ["console"], "level": "INFO"},
         "django.request": {
-            "handlers": ["error"],
+            "handlers": ["console"],
             "level": "ERROR",
             "propagate": False,
         },
         "api.access": {
-            "handlers": ["console", "info"],
+            "handlers": ["console"],
             "level": "WARNING",
             "propagate": False,
         },
@@ -349,12 +339,23 @@ except AttributeError:
     raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
 
 HEALTH_CHECK_URL_TOKEN = config("HEALTH_CHECK_URL_TOKEN", default=None)
+
+# Full deep check for /health (dashboards, manual): everything.
 HEALTH_CHECK_ENABLED_CHECKS = [
     "health_check.Cache",
     "health_check.Database",
     "health_check.Mail",
     "health_check.Storage",
     "health_check.contrib.celery.Ping",
+    (
+        "health_check.contrib.redis.Redis",
+        {"client_factory": lambda: RedisClient.from_url(REDIS_URL)},
+    ),
+]
+
+# Traffic-gating subset for /readyz: only DB and redis.
+HEALTH_CHECK_READINESS_CHECKS = [
+    "health_check.Database",
     (
         "health_check.contrib.redis.Redis",
         {"client_factory": lambda: RedisClient.from_url(REDIS_URL)},

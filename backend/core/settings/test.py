@@ -96,6 +96,17 @@ HEALTH_CHECK_ENABLED_CHECKS = [
     ),
 ]
 
+HEALTH_CHECK_READINESS_CHECKS = [
+    check
+    for check in HEALTH_CHECK_READINESS_CHECKS
+    if not (isinstance(check, tuple) and "Redis" in check[0])
+] + [
+    (
+        "health_check.contrib.redis.Redis",
+        {"client_factory": lambda: RedisClient.from_url(REDIS_URL)},
+    ),
+]
+
 # Set Cloudflare Turnstile to test mode
 TURNSTILE_TESTING = True
 
