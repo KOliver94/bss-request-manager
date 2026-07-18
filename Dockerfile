@@ -142,7 +142,8 @@ RUN --mount=type=cache,target=/root/.cache \
 FROM backend-base AS request-manager-production
 
 # Fixed non-root UID/GID; k8s runAsNonRoot cannot verify a named user.
-RUN addgroup -S -g 1000 appgroup && adduser -S -u 1000 -G appgroup appuser
+# High UID so it maps to no host account if the container escapes.
+RUN addgroup -S -g 65532 appgroup && adduser -S -u 65532 -G appgroup appuser
 
 # Copy built runtime dependencies from builder container
 COPY --from=backend-builder $PYSETUP_PATH $PYSETUP_PATH
@@ -166,8 +167,8 @@ RUN mkdir build/root && mv build-temp/index.html build/index.html && mv build-te
 RUN chown -R appuser:appgroup /app
 
 # Change to the app user
-LABEL image.uid="1000" image.gid="1000"
-USER 1000
+LABEL image.uid="65532" image.gid="65532"
+USER 65532
 
 # Collect static files
 WORKDIR /app/backend
