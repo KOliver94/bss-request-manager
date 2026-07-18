@@ -80,7 +80,7 @@ SCH_EVENTS_TOKEN = "123456789abcdef"  # nosec
 
 # Remove celery and update Redis health check to use the local REDIS_URL
 try:
-    REDIS_URL = match("^redis://[a-zA-Z0-9]+:[0-9]+", CACHEOPS_REDIS).group(0)
+    REDIS_URL = match(r"^rediss?://[\w.-]+:\d+", CACHEOPS_REDIS).group(0)
 except AttributeError:
     raise ImproperlyConfigured("Cannot extract proper Redis URL from CACHE_REDIS.")
 
