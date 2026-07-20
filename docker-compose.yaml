@@ -1,6 +1,6 @@
 services:
   server:
-    image: ghcr.io/koliver94/bss-request-manager:main
+    image: ghcr.io/bsstudio/request-manager:main
     restart: unless-stopped
     command: gunicorn --bind=0.0.0.0:8000 --workers=5 --threads=2 --timeout=60 --graceful-timeout=30 core.wsgi
     volumes:
@@ -16,7 +16,7 @@ services:
       - redis
 
   worker:
-    image: ghcr.io/koliver94/bss-request-manager:main
+    image: ghcr.io/bsstudio/request-manager:main
     restart: unless-stopped
     command: celery -A core worker
     env_file:
@@ -33,7 +33,7 @@ services:
       - redis
 
   beat:
-    image: ghcr.io/koliver94/bss-request-manager:main
+    image: ghcr.io/bsstudio/request-manager:main
     restart: unless-stopped
     command: celery -A core beat
     env_file:

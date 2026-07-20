@@ -9,9 +9,9 @@
 Workflow Support System for managing video shooting, filming and live-streaming
 requests of [Budavári Schönherz Stúdió](https://bsstudio.hu).
 
-[![Backend CI](https://github.com/KOliver94/bss-request-manager/actions/workflows/backend.yml/badge.svg)](https://github.com/KOliver94/bss-request-manager/actions/workflows/backend.yml)
-[![Frontend CI](https://github.com/KOliver94/bss-request-manager/actions/workflows/frontend.yml/badge.svg)](https://github.com/KOliver94/bss-request-manager/actions/workflows/frontend.yml)
-[![Frontend CI - Admin Dashboard](https://github.com/KOliver94/bss-request-manager/actions/workflows/frontend-admin.yml/badge.svg)](https://github.com/KOliver94/bss-request-manager/actions/workflows/frontend-admin.yml)
+[![Backend CI](https://github.com/BSStudio/request-manager/actions/workflows/backend.yml/badge.svg)](https://github.com/BSStudio/request-manager/actions/workflows/backend.yml)
+[![Frontend CI](https://github.com/BSStudio/request-manager/actions/workflows/frontend.yml/badge.svg)](https://github.com/BSStudio/request-manager/actions/workflows/frontend.yml)
+[![Frontend CI - Admin Dashboard](https://github.com/BSStudio/request-manager/actions/workflows/frontend-admin.yml/badge.svg)](https://github.com/BSStudio/request-manager/actions/workflows/frontend-admin.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
 ## Overview
