@@ -89,6 +89,11 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # Provenance handled by the attest step below. Disabling buildkit's own
+          # attestations avoids duplicate provenance and the untagged
+          # "unknown/unknown" manifests it otherwise pushes to ghcr.
+          provenance: false
+          sbom: false
 
       # Generate a build provenance attestation for the published image except on
       # PRs. Stored as an OCI referrer (no extra tags) and shown under the repo's
@@ -101,4 +106,6 @@ jobs:
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.build-and-push.outputs.digest }}
-          push-to-registry: true
+          # Keep the attestation in GitHub's store only — pushing it to ghcr would
+          # add an untagged referrer artifact. Verify via digest + --owner instead.
+          push-to-registry: false
