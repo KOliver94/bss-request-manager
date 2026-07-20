@@ -1,10 +1,5 @@
 name: Docker
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 on:
   push:
     branches: [main]
@@ -19,9 +14,7 @@ on:
   workflow_dispatch:
 
 env:
-  # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
@@ -39,14 +32,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7.0.0
 
-      # Set up BuildKit Docker container builder to be able to build
-      # multi-platform images and export cache
-      # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4.2.0
 
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v4.4.0
@@ -55,8 +43,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v6.2.0
@@ -68,8 +54,6 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v7.3.0
@@ -89,23 +73,18 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # Provenance handled by the attest step below. Disabling buildkit's own
-          # attestations avoids duplicate provenance and the untagged
-          # "unknown/unknown" manifests it otherwise pushes to ghcr.
+          # Provenance handled by the attest step below; buildkit's own
+          # attestations would push untagged "unknown/unknown" manifests to ghcr.
           provenance: false
           sbom: false
 
-      # Generate a build provenance attestation for the published image except on
-      # PRs. Stored as an OCI referrer (no extra tags) and shown under the repo's
-      # Attestations. Verify with:
-      #   gh attestation verify oci://ghcr.io/bsstudio/request-manager:main --owner BSStudio
-      # https://github.com/actions/attest-build-provenance
       - name: Attest build provenance
         if: ${{ github.event_name != 'pull_request' }}
         uses: actions/attest-build-provenance@v4.1.1
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.build-and-push.outputs.digest }}
-          # Keep the attestation in GitHub's store only — pushing it to ghcr would
-          # add an untagged referrer artifact. Verify via digest + --owner instead.
+          # Keep the attestation in GitHub's store only; pushing to ghcr would add
+          # an untagged referrer artifact. Verify with:
+          #   gh attestation verify oci://<image> --owner BSStudio
           push-to-registry: false
