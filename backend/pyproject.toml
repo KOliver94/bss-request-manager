@@ -3,7 +3,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [project]
-name = "bss-request-manager-backend"
+name = "request-manager-backend"
 authors = [
     {name = "Olivér Kecskeméty", email = "kecskemety.oliver@simonyi.bme.hu"}
 ]

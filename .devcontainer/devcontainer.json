@@ -1,10 +1,10 @@
 {
-  "name": "bss-request-manager",
+  "name": "request-manager",
   // Reuse the existing dev stack (postgres + redis) and add an `app` workspace
   // container on the same compose network so `postgres` / `redis` hostnames resolve.
   "dockerComposeFile": ["../docker-compose.dev.yaml", "docker-compose.yml"],
   "service": "app",
-  "workspaceFolder": "/workspaces/bss-request-manager",
+  "workspaceFolder": "/workspaces/request-manager",
   "features": {
     "ghcr.io/devcontainers/features/python:1": { "version": "3.14" },
     "ghcr.io/devcontainers/features/node:2": {
@@ -33,7 +33,7 @@
         "editorconfig.editorconfig"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/workspaces/bss-request-manager/backend/.venv/bin/python"
+        "python.defaultInterpreterPath": "/workspaces/request-manager/backend/.venv/bin/python"
       }
     }
   },
