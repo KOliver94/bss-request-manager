@@ -24,52 +24,9 @@ permissions:
   contents: read
 
 jobs:
-  generate-lockfile:
-    name: Generate lockfile
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request'}}
-
-    outputs:
-      files_changed: ${{ steps.verify-changed-files.outputs.files_changed }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7.0.0
-        with:
-          ref: ${{ github.head_ref }}
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      - name: Install Poetry
-        run: pipx install poetry
-      - name: Set up Python
-        uses: actions/setup-python@v6.3.0
-        with:
-          python-version-file: 'backend/.python-version'
-          cache: 'poetry'
-          cache-dependency-path: backend/poetry.lock
-      - name: Generate lockfile
-        working-directory: backend
-        run: poetry lock
-      - name: Verify lockfile has changed
-        uses: tj-actions/verify-changed-files@v20.0.4
-        id: verify-changed-files
-        with:
-          files: |
-            **/poetry.lock
-      - name: Push lockfile changes
-        if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add backend/poetry.lock
-          git commit -m "Update poetry.lock"
-          git push
-
   run-tests:
     name: Run tests
     runs-on: ubuntu-latest
-    needs: generate-lockfile
-    if: ${{ always() && (needs.generate-lockfile.result == 'skipped' ||
-      (needs.generate-lockfile.result == 'success' && needs.generate-lockfile.outputs.files_changed == 'false'))}}
     defaults:
       run:
         working-directory: backend
